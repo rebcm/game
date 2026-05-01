@@ -1,0 +1,9 @@
+name = "construcao-criativa"
+compatibility_date = "2024-01-01"
+account_id = "b49966e4988319be806b465fef646d81"
+
+[site]
+bucket = "./build/web"
+
+[env.production]
+name = "construcao-criativa"
