@@ -35,22 +35,13 @@ jobs:
 
       - name: Decodificar keystore
         if: ${{ secrets.ANDROID_KEYSTORE_B64 != '' }}
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android/app/rebeca.jks
+        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android/app/rebeca.jks
 
       - name: Build APK
         run: |
-          if [ -f android/app/rebeca.jks ]; then
-            flutter build apk --release \
-              --dart-define=FLAVOR=production \
-              --build-name="${{ github.ref_name }}" \
-              --build-number="${{ github.run_number }}"
-          else
-            flutter build apk --release \
-              --dart-define=FLAVOR=production \
-              --build-name="${{ github.ref_name }}" \
-              --build-number="${{ github.run_number }}"
-          fi
+          flutter build apk --release \
+            --build-name="$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)" \
+            --build-number="${{ github.run_number }}"
         env:
           ANDROID_KEYSTORE_PATH: android/app/rebeca.jks
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -60,8 +51,12 @@ jobs:
       - name: Build AAB
         run: |
           flutter build appbundle --release \
-            --build-name="${{ github.ref_name }}" \
             --build-number="${{ github.run_number }}"
+        env:
+          ANDROID_KEYSTORE_PATH: android/app/rebeca.jks
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -88,7 +83,6 @@ jobs:
       - name: Build iOS (sem assinatura)
         run: |
           flutter build ios --release --no-codesign \
-            --build-name="${{ github.ref_name }}" \
             --build-number="${{ github.run_number }}"
 
       - uses: actions/upload-artifact@v4
@@ -112,17 +106,13 @@ jobs:
         run: flutter pub get
 
       - name: Build Web
-        run: |
-          flutter build web --release \
-            --dart-define=FLAVOR=production \
-            --web-renderer=canvaskit \
-            --base-href=/
+        run: flutter build web --release --base-href=/
 
       - name: Deploy Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: b49966e4988319be806b465fef646d81
           command: pages deploy build/web --project-name=construcao-criativa --commit-dirty=true
 
   create-release:
@@ -152,7 +142,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          name: "Construção Criativa ${{ steps.tag.outputs.version }} — ${{ github.run_number }}"
+          name: "Construção Criativa ${{ steps.tag.outputs.version }} — Build ${{ github.run_number }}"
           body: |
             ## Construção Criativa da Rebeca
 
