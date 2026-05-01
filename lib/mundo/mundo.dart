@@ -3,15 +3,31 @@ import '../config/constantes.dart';
 import 'chunk.dart';
 import 'gerador.dart';
 import 'posicao3d.dart';
+import 'persistencia.dart';
 
 class Mundo {
   final Map<String, Chunk> _chunks = {};
   final GeradorMundo _gerador;
+  final int semente;
   final int raioRenderizacao = 4;
 
-  Mundo({int? semente}) : _gerador = GeradorMundo(semente: semente);
+  Mundo({int? semente})
+      : semente = semente ?? DateTime.now().millisecondsSinceEpoch,
+        _gerador = GeradorMundo(semente: semente);
 
   static String _chaveChunk(int cx, int cz) => '$cx,$cz';
+
+  List<Chunk> get chunksModificados =>
+      _chunks.values.where((c) => c.modificado).toList();
+
+  Future<Chunk> pegarOuCarregarChunk(int cx, int cz) async {
+    final chave = _chaveChunk(cx, cz);
+    if (_chunks.containsKey(chave)) return _chunks[chave]!;
+    final salvo = await PersistenciaMundo.carregarChunk(cx, cz);
+    final chunk = salvo ?? _gerador.gerarChunk(cx, cz);
+    _chunks[chave] = chunk;
+    return chunk;
+  }
 
   Chunk pegarOuGerarChunk(int cx, int cz) {
     final chave = _chaveChunk(cx, cz);
@@ -40,7 +56,6 @@ class Mundo {
     final lx = x - cx * Constantes.tamanhoChunk;
     final lz = z - cz * Constantes.tamanhoChunk;
     final chunk = pegarOuGerarChunk(cx, cz);
-
     for (var y = Constantes.alturaMaxima - 1; y >= 0; y--) {
       if (chunk.pegarBloco(lx, y, lz).solido) return y + 1;
     }
@@ -55,5 +70,12 @@ class Mundo {
       }
     }
     return visivel;
+  }
+
+  Future<void> salvar(String nome) async {
+    await PersistenciaMundo.salvarMundo(this, nome, semente);
+    for (final chunk in chunksModificados) {
+      chunk.modificado = false;
+    }
   }
 }

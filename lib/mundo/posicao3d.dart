@@ -30,8 +30,8 @@ class Posicao3D {
   ];
 
   @override
-  bool operator ==(Object outro) =>
-      outro is Posicao3D && x == outro.x && y == outro.y && z == outro.z;
+  bool operator ==(Object other) =>
+      other is Posicao3D && x == other.x && y == other.y && z == other.z;
 
   @override
   int get hashCode => Object.hash(x, y, z);

@@ -48,7 +48,7 @@ class HUD extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -68,7 +68,7 @@ class HUD extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
+        color: Colors.black.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white24),
       ),
@@ -86,7 +86,7 @@ class HUD extends StatelessWidget {
               margin: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 color: selecionado
-                    ? Colors.white.withOpacity(0.25)
+                    ? Colors.white.withValues(alpha: 0.25)
                     : Colors.black38,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
@@ -105,7 +105,7 @@ class HUD extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       boxShadow: [
                         BoxShadow(
-                          color: bloco.cor.withOpacity(0.4),
+                          color: bloco.cor.withValues(alpha: 0.4),
                           blurRadius: 4,
                         ),
                       ],
@@ -134,7 +134,7 @@ class HUD extends StatelessWidget {
       width: 360,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.85),
+        color: Colors.black.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white24),
       ),

@@ -15,7 +15,7 @@ class TelaJogo extends StatefulWidget {
 }
 
 class _TelaJogoState extends State<TelaJogo> {
-  Offset? _offsetArrasto;
+  
   double _escala = 1.0;
   double _escalaBase = 1.0;
 

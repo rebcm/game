@@ -55,7 +55,9 @@ class GeradorMundo {
   void _plantarArvore(Chunk chunk, int x, int alturaSolo, int z) {
     final alturaArvore = 4 + _random.nextInt(3);
     if (x < 2 || x > Constantes.tamanhoChunk - 3 ||
-        z < 2 || z > Constantes.tamanhoChunk - 3) return;
+        z < 2 || z > Constantes.tamanhoChunk - 3) {
+      return;
+    }
 
     // Tronco
     for (var y = alturaSolo; y < alturaSolo + alturaArvore; y++) {
@@ -72,8 +74,10 @@ class GeradorMundo {
           final fy = topoArvore + dy;
           final fz = z + dz;
           if (fx < 0 || fx >= Constantes.tamanhoChunk ||
-              fz < 0 || fz >= Constantes.tamanhoChunk) continue;
-          if (fy >= Constantes.alturaMaxima) continue;
+              fz < 0 || fz >= Constantes.tamanhoChunk) {
+            continue;
+          }
+          if (fy >= Constantes.alturaMaxima) { continue; }
           chunk.definirBloco(fx, fy, fz, TipoBloco.folhas);
         }
       }

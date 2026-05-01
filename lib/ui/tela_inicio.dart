@@ -12,64 +12,72 @@ class TelaInicio extends StatefulWidget {
 }
 
 class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
-  late AnimationController _animController;
-  late Animation<double> _fadeAnim;
-  final _ctrlNome = TextEditingController(text: 'Mundo da Rebeca');
+  late AnimationController _pulseCtrl;
+  late Animation<double> _pulseAnim;
+  final _ctrlNome = TextEditingController();
+  bool _mostrarNovoMundo = false;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
+    _pulseCtrl = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _fadeAnim = Tween<double>(begin: 0.7, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
-    );
+    _pulseAnim = Tween<double>(begin: 0.85, end: 1.0)
+        .animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
-    _animController.dispose();
+    _pulseCtrl.dispose();
     _ctrlNome.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final estado = context.watch<EstadoJogo>();
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1565C0), Color(0xFF4CAF50), Color(0xFF795548)],
+            colors: [
+              Color(0xFF0D47A1),
+              Color(0xFF1565C0),
+              Color(0xFF388E3C),
+              Color(0xFF2E7D32),
+              Color(0xFF5D4037),
+            ],
+            stops: [0.0, 0.35, 0.55, 0.75, 1.0],
           ),
         ),
         child: Stack(
           children: [
-            _fundo(),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeTransition(
-                    opacity: _fadeAnim,
-                    child: _titulo(),
+            const _FundoDecorado(),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ScaleTransition(scale: _pulseAnim, child: _titulo()),
+                      const SizedBox(height: 36),
+                      _mostrarNovoMundo
+                          ? _cartaoNovoMundo(estado)
+                          : _botoesPrincipais(estado),
+                      const SizedBox(height: 24),
+                      Text(
+                        'v${Constantes.versao} • ${Constantes.autora}',
+                        style: const TextStyle(color: Colors.white38, fontSize: 11),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 32),
-                  _cartaoNomeMundo(),
-                  const SizedBox(height: 24),
-                  _botoes(),
-                  const SizedBox(height: 16),
-                  Text(
-                    'v${Constantes.versao} • ${Constantes.autora}',
-                    style: const TextStyle(
-                      color: Colors.white54,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
@@ -78,116 +86,244 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
     );
   }
 
-  Widget _fundo() {
-    return CustomPaint(
-      painter: _FundoNuvens(),
-      child: const SizedBox.expand(),
-    );
-  }
-
   Widget _titulo() {
     return Column(
       children: [
-        Text(
-          '🏗️',
-          style: TextStyle(fontSize: 64, shadows: [
-            Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 8),
-          ]),
-        ),
+        const Text('🏗️', style: TextStyle(fontSize: 72)),
         const SizedBox(height: 8),
-        Text(
-          Constantes.nomeJogo,
-          style: const TextStyle(
+        const Text(
+          'Construção Criativa',
+          style: TextStyle(
             color: Colors.white,
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            shadows: [Shadow(color: Colors.black54, blurRadius: 4)],
+            shadows: [Shadow(color: Colors.black54, blurRadius: 6)],
           ),
           textAlign: TextAlign.center,
         ),
         const Text(
-          'Modo Criativo',
-          style: TextStyle(color: Colors.greenAccent, fontSize: 16),
+          'da Rebeca',
+          style: TextStyle(
+            color: Color(0xFFA5D6A7),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
+          ),
+          child: const Text(
+            '✨ Modo Criativo Puro',
+            style: TextStyle(color: Colors.greenAccent, fontSize: 13),
+          ),
         ),
       ],
     );
   }
 
-  Widget _cartaoNomeMundo() {
+  Widget _botoesPrincipais(EstadoJogo estado) {
+    return Column(
+      children: [
+        if (estado.mundoExisteSalvo) ...[
+          _botaoPrimario(
+            icone: Icons.play_arrow_rounded,
+            rotulo: 'Continuar',
+            subtitulo: estado.nomeDoMundo,
+            cor: const Color(0xFF43A047),
+            onPressed: () => _jogar(estado, novoMundo: false),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: 300,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                _ctrlNome.text = '';
+                setState(() => _mostrarNovoMundo = true);
+              },
+              icon: const Icon(Icons.add_circle_outline, color: Colors.white70),
+              label: const Text(
+                'Novo Mundo',
+                style: TextStyle(color: Colors.white70, fontSize: 15),
+              ),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                side: const BorderSide(color: Colors.white24),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+        ] else ...[
+          _botaoPrimario(
+            icone: Icons.play_arrow_rounded,
+            rotulo: 'Jogar!',
+            subtitulo: 'Criar novo mundo',
+            cor: const Color(0xFF43A047),
+            onPressed: () {
+              _ctrlNome.text = 'Mundo da Rebeca';
+              setState(() => _mostrarNovoMundo = true);
+            },
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _cartaoNovoMundo(EstadoJogo estado) {
     return Container(
-      width: 320,
-      padding: const EdgeInsets.all(16),
+      width: 340,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green.withOpacity(0.5)),
+        color: Colors.black.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Nome do Mundo',
-            style: TextStyle(color: Colors.green, fontSize: 13),
+            'Novo Mundo',
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
+          const Text('Nome do Mundo', style: TextStyle(color: Colors.green, fontSize: 13)),
+          const SizedBox(height: 6),
           TextField(
             controller: _ctrlNome,
             style: const TextStyle(color: Colors.white),
+            autofocus: true,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.black38,
+              fillColor: Colors.white10,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
+                borderSide: BorderSide(color: Colors.green.withValues(alpha: 0.3)),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.greenAccent),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              hintText: 'Mundo da Rebeca',
+              hintStyle: const TextStyle(color: Colors.white30),
             ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => setState(() => _mostrarNovoMundo = false),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white70,
+                    side: const BorderSide(color: Colors.white24),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Voltar'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton.icon(
+                  onPressed: () => _jogar(estado, novoMundo: true),
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('Criar e Jogar!', style: TextStyle(fontSize: 15)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF43A047),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _botoes() {
-    return Column(
-      children: [
-        ElevatedButton.icon(
-          onPressed: _iniciarJogo,
-          icon: const Icon(Icons.play_arrow),
-          label: const Text('Jogar!', style: TextStyle(fontSize: 18)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF4CAF50),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
+  Widget _botaoPrimario({
+    required IconData icone,
+    required String rotulo,
+    required String subtitulo,
+    required Color cor,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      width: 300,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: cor,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 4,
         ),
-        const SizedBox(height: 12),
-        TextButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.settings, color: Colors.white70),
-          label: const Text('Configurações', style: TextStyle(color: Colors.white70)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icone, size: 28),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(rotulo,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(subtitulo,
+                    style: const TextStyle(fontSize: 12, color: Colors.white70)),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  void _iniciarJogo() {
-    context.read<EstadoJogo>().iniciarJogo(nome: _ctrlNome.text);
-    Navigator.of(context).pushReplacement(
+  Future<void> _jogar(EstadoJogo estado, {required bool novoMundo}) async {
+    final nome =
+        _ctrlNome.text.trim().isEmpty ? estado.nomeDoMundo : _ctrlNome.text.trim();
+    await estado.iniciarJogo(nome: nome, novoMundo: novoMundo);
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const TelaJogo()),
     );
   }
 }
 
-class _FundoNuvens extends CustomPainter {
+class _FundoDecorado extends StatelessWidget {
+  const _FundoDecorado();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _FundoPainter(),
+      child: const SizedBox.expand(),
+    );
+  }
+}
+
+class _FundoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.08);
-    canvas.drawCircle(Offset(size.width * 0.1, size.height * 0.15), 60, paint);
-    canvas.drawCircle(Offset(size.width * 0.4, size.height * 0.1), 40, paint);
-    canvas.drawCircle(Offset(size.width * 0.75, size.height * 0.2), 80, paint);
-    canvas.drawCircle(Offset(size.width * 0.9, size.height * 0.35), 50, paint);
+    final paint = Paint()..color = Colors.white.withValues(alpha: 0.06);
+    canvas.drawCircle(Offset(size.width * 0.1, size.height * 0.12), 60, paint);
+    canvas.drawCircle(Offset(size.width * 0.45, size.height * 0.08), 40, paint);
+    canvas.drawCircle(Offset(size.width * 0.82, size.height * 0.18), 75, paint);
+    canvas.drawCircle(Offset(size.width * 0.92, size.height * 0.35), 45, paint);
   }
 
   @override

@@ -72,14 +72,14 @@ class RenderizadorIsometrico extends CustomPainter {
       ..close();
     canvas.drawPath(path, paint);
     paint
-      ..color = Colors.black.withOpacity(0.15)
+      ..color = Colors.black.withValues(alpha: 0.15)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
     canvas.drawPath(path, paint);
   }
 
   void _faceEsquerda(Canvas canvas, Offset pos, TipoBloco tipo) {
-    final paint = Paint()..color = tipo.cor.withOpacity(0.7);
+    final paint = Paint()..color = tipo.cor.withValues(alpha: 0.7);
     final path = Path()
       ..moveTo(pos.dx - lb / 2, pos.dy - ab / 2)
       ..lineTo(pos.dx, pos.dy)
@@ -90,7 +90,7 @@ class RenderizadorIsometrico extends CustomPainter {
   }
 
   void _faceDireita(Canvas canvas, Offset pos, TipoBloco tipo) {
-    final paint = Paint()..color = tipo.cor.withOpacity(0.55);
+    final paint = Paint()..color = tipo.cor.withValues(alpha: 0.55);
     final path = Path()
       ..moveTo(pos.dx, pos.dy)
       ..lineTo(pos.dx + lb / 2, pos.dy - ab / 2)
