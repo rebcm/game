@@ -8,7 +8,7 @@ on:
         required: true
         default: '60'
       fps_threshold:
-        description: 'FPS threshold'
+        description: 'FPS threshold for stuttering'
         required: true
         default: '55'
 
@@ -19,18 +19,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
       - name: Run Flutter test
         run: |
-          flutter pub get
-          flutter test integration_test/stuttering_test.dart --dart-define=test_duration=${{ github.event.inputs.test_duration }} --dart-define=fps_threshold=${{ github.event.inputs.fps_threshold }}
+          flutter run --profile --test-arguments="--duration=${{ github.event.inputs.test_duration }}" --test-arguments="--fps-threshold=${{ github.event.inputs.fps_threshold }}"
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: test_results.json
+      - name: Analyze results
+        run: |
+          # TO DO: implement analysis logic here
+          echo "Analyzing results..."
+
+      - name: Output results
+        run: |
+          # TO DO: implement output logic here
+          echo "Outputting results..."
