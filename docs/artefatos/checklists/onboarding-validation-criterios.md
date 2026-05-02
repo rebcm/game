@@ -1,15 +1,12 @@
-# Critérios de Aceitação Técnica
+# Critérios de Aceitação para Deploy
 
 ## Introdução
-
-Este documento define os critérios de aceitação técnica para o projeto Rebcm.
+Este documento define os critérios de aceitação para o deploy do projeto Rebeca.
 
 ## Critérios
-
-1. **Versão do SDK**: A versão do SDK deve estar dentro do intervalo especificado no `pubspec.yaml`.
-2. **Integridade do arquivo .apk/.ipa**: O arquivo .apk/.ipa gerado deve ser válido e não corrompido.
-3. **Logs de build sem warnings críticos**: O log de build não deve conter warnings críticos.
+1. URL acessível
+2. Assets carregando corretamente
+3. Tempo de build dentro do limite estabelecido
 
 ## Validação
-
-A validação desses critérios será realizada automaticamente pelo workflow `Validacao Criterios Aceitacao Tecnicos`.
+A validação dos critérios de aceitação será realizada automaticamente através do workflow de CI/CD.

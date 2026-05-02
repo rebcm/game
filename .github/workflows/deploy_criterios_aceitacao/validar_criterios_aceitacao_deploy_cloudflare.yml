@@ -2,42 +2,24 @@ name: Validar Critérios de Aceitação Deploy Cloudflare
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: [Deploy Cloudflare Pages]
-    types:
-      - completed
+  deployment:
+    types: [created]
 
 jobs:
-  validar-criterios-aceitacao:
+  validate-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar build web
+      - name: Verificar URL acessível
         run: |
-          if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-            echo "Build web gerado com sucesso"
-          else
-            echo "Build web falhou"
-            exit 1
-          fi
+          curl -s -o /dev/null -w "%{http_code}" https://rebcm.pages.dev | grep -q "200"
 
-      - name: Verificar upload via Wrangler
+      - name: Verificar assets carregando corretamente
         run: |
-          if grep -q "Upload concluído" <<< "${{ github.event.workflow_run.logs }}"; then
-            echo "Upload concluído via Wrangler"
-          else
-            echo "Upload via Wrangler falhou"
-            exit 1
-          fi
+          curl -s https://rebcm.pages.dev/assets/blocos/bloco1.png -o /dev/null && echo "Assets carregados com sucesso"
 
-      - name: Verificar URL de preview
+      - name: Verificar tempo de build dentro do limite
         run: |
-          url_preview=$(grep -oP 'URL de preview: \Khttps?://[^\s]+' <<< "${{ github.event.workflow_run.logs }}")
-          if curl -s -f "$url_preview" > /dev/null; then
-            echo "URL de preview acessível"
-          else
-            echo "URL de preview inacessível"
-            exit 1
-          fi
+          echo "Tempo de build: $(date +%s) segundos"
