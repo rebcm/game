@@ -6,5 +6,5 @@ class LimitesCaracteres {
   static const int playStoreDescricaoCurta = 80;
   static const int playStoreDescricaoLonga = 4000;
   static const int documentacaoInternaTitulo = 100;
-  static const int documentacaoInternaDescricao = 10000;
+  static const int documentacaoInternaDescricao = 5000;
 }
