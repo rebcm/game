@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:passdriver/features/transitions/providers/transition_provider.dart';
-import 'package:passdriver/features/transitions/widgets/transition_widget.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rebcm/i18n/i18n_service.dart';
+import 'package:rebcm/jogo.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TransitionProvider()),
+    MaterialApp(
+      title: 'Construção Criativa',
+      localizationsDelegates: [
+        AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
-      child: MyApp(),
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('pt', 'BR'),
+      ],
+      home: Jogo(),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: TransitionWidget(),
-      ),
-    );
-  }
 }
