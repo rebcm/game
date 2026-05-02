@@ -41,3 +41,8 @@ flutter:
     - assets/audio/optimized/sfx/
     - assets/i18n/
     - assets/characters/
+
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
