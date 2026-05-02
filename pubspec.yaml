@@ -56,3 +56,5 @@ flutter:
 
   test_audio_codec:
     path: test/audio/audio_codec_test.dart
+
+  test_driver/integration_test.dart:

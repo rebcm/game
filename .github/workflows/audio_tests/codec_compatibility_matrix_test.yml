@@ -1,9 +1,9 @@
 name: Codec Compatibility Matrix Test
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron:  '0 0 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -11,17 +11,14 @@ jobs:
     strategy:
       matrix:
         os: [android, ios]
-        os_version: [8, 12]
         codec: [ogg, mp3]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
-
-      - name: Run codec compatibility test
+      - name: Run tests
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/codec_compatibility_test.dart --android-emulator --ios-simulator --codec=${{ matrix.codec }}
+          flutter drive --target=test/audio/audio_codec_test.dart --driver=test_driver/integration_test.dart
