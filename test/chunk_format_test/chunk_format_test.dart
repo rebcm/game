@@ -3,27 +3,51 @@ import 'package:rebcm/services/chunk_service.dart';
 
 void main() {
   group('Chunk Format Test', () {
-    test('Valid chunk format should be accepted', () async {
-      final validChunkData = 'valid_chunk_data';
-      final result = await ChunkService.validateChunkFormat(validChunkData);
+    test('should accept valid chunk file format', () async {
+      // Arrange
+      final validChunkFile = File('assets/test/valid_chunk.bin');
+      final chunkService = ChunkService();
+
+      // Act
+      final result = await chunkService.validateChunkFile(validChunkFile);
+
+      // Assert
       expect(result, isTrue);
     });
 
-    test('Invalid chunk format should be rejected', () async {
-      final invalidChunkData = 'invalid_chunk_data';
-      final result = await ChunkService.validateChunkFormat(invalidChunkData);
+    test('should reject invalid chunk file format', () async {
+      // Arrange
+      final invalidChunkFile = File('assets/test/invalid_chunk.txt');
+      final chunkService = ChunkService();
+
+      // Act
+      final result = await chunkService.validateChunkFile(invalidChunkFile);
+
+      // Assert
       expect(result, isFalse);
     });
 
-    test('Empty chunk data should be rejected', () async {
-      final emptyChunkData = '';
-      final result = await ChunkService.validateChunkFormat(emptyChunkData);
+    test('should reject chunk file with incorrect magic number', () async {
+      // Arrange
+      final invalidMagicNumberChunkFile = File('assets/test/invalid_magic_number_chunk.bin');
+      final chunkService = ChunkService();
+
+      // Act
+      final result = await chunkService.validateChunkFile(invalidMagicNumberChunkFile);
+
+      // Assert
       expect(result, isFalse);
     });
 
-    test('Null chunk data should be rejected', () async {
-      final nullChunkData = null;
-      final result = await ChunkService.validateChunkFormat(nullChunkData);
+    test('should reject chunk file with incorrect version', () async {
+      // Arrange
+      final invalidVersionChunkFile = File('assets/test/invalid_version_chunk.bin');
+      final chunkService = ChunkService();
+
+      // Act
+      final result = await chunkService.validateChunkFile(invalidVersionChunkFile);
+
+      // Assert
       expect(result, isFalse);
     });
   });
