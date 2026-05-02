@@ -7,7 +7,7 @@ class MovementAnimation extends StatefulWidget {
   _MovementAnimationState createState() => _MovementAnimationState();
 }
 
-class _MovementAnimationState extends State<MovementAnimation> with TickerProviderStateMixin {
+class _MovementAnimationState extends State<MovementAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

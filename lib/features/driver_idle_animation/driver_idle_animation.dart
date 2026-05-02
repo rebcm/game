@@ -3,12 +3,12 @@ class DriverIdleAnimation extends StatefulWidget {
   @override
   _DriverIdleAnimationState createState() => _DriverIdleAnimationState();
 }
-class _DriverIdleAnimationState extends State<DriverIdleAnimation> with TickerProviderStateMixin {
+class _DriverIdleAnimationState extends State<DriverIdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2))..repeat();
+    _animationController = addAnimationController(AnimationController(vsync: this, duration: Duration(seconds: 2))..repeat());
   }
   @override
   void dispose() {

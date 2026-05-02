@@ -6,7 +6,7 @@ class IdleAnimation extends StatefulWidget {
   _IdleAnimationState createState() => _IdleAnimationState();
 }
 
-class _IdleAnimationState extends State<IdleAnimation> with TickerProviderStateMixin {
+class _IdleAnimationState extends State<IdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

@@ -10,7 +10,7 @@ class AnimacaoPersonagem extends StatefulWidget {
   _AnimacaoPersonagemState createState() => _AnimacaoPersonagemState();
 }
 
-class _AnimacaoPersonagemState extends State<AnimacaoPersonagem> with TickerProviderStateMixin {
+class _AnimacaoPersonagemState extends State<AnimacaoPersonagem> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

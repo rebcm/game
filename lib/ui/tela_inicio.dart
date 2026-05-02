@@ -11,7 +11,7 @@ class TelaInicio extends StatefulWidget {
   State<TelaInicio> createState() => _TelaInicioState();
 }
 
-class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
+class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _pulseCtrl;
   late Animation<double> _pulseAnim;
   final _ctrlNome = TextEditingController();

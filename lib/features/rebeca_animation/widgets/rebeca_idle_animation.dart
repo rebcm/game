@@ -8,13 +8,13 @@ class RebecaIdleAnimation extends StatefulWidget {
   State<RebecaIdleAnimation> createState() => _RebecaIdleAnimationState();
 }
 
-class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin {
+class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late RebecaAnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
-    _animationController = RebecaAnimationController(context);
+    _animationController = RebecaaddAnimationController(AnimationController(context));
   }
 
   @override

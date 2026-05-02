@@ -5,7 +5,7 @@ class RideRequestAnimation extends StatefulWidget {
   _RideRequestAnimationState createState() => _RideRequestAnimationState();
 }
 
-class _RideRequestAnimationState extends State<RideRequestAnimation> with TickerProviderStateMixin {
+class _RideRequestAnimationState extends State<RideRequestAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

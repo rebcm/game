@@ -6,7 +6,7 @@ class RebecaIdleAnimation extends StatefulWidget {
   _RebecaIdleAnimationState createState() => _RebecaIdleAnimationState();
 }
 
-class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin {
+class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
   late Animation<double> _animation;
 

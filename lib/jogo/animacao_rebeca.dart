@@ -5,7 +5,7 @@ class AnimacaoRebeca extends StatefulWidget {
   _AnimacaoRebecaState createState() => _AnimacaoRebecaState();
 }
 
-class _AnimacaoRebecaState extends State<AnimacaoRebeca> with TickerProviderStateMixin {
+class _AnimacaoRebecaState extends State<AnimacaoRebeca> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _controller;
 
   @override

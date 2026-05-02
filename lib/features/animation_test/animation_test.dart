@@ -5,7 +5,7 @@ class AnimationTest extends StatefulWidget {
   _AnimationTestState createState() => _AnimationTestState();
 }
 
-class _AnimationTestState extends State<AnimationTest> with TickerProviderStateMixin {
+class _AnimationTestState extends State<AnimationTest> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

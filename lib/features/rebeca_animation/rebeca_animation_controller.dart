@@ -5,7 +5,7 @@ class RebecaAnimationController with ChangeNotifier {
   late AnimationController _animationController;
   late Animation<double> _rebecaAnimation;
 
-  RebecaAnimationController(BuildContext context) {
+  RebecaaddAnimationController(AnimationController(BuildContext context)) {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),

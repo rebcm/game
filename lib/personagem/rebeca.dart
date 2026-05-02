@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 class Rebeca extends StatefulWidget {
+  @override
+  void dispose() { 
+    // Dispose AnimationControllers here
+    super.dispose();
+  }
   static double velocidade = 0;
 
   @override
   _RebecaState createState() => _RebecaState();
 }
 
-class _RebecaState extends State<Rebeca> with TickerProviderStateMixin {
+class _RebecaState extends State<Rebeca> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _animationController;
 
   @override

@@ -5,7 +5,7 @@ class Skybox extends StatefulWidget {
   _SkyboxState createState() => _SkyboxState();
 }
 
-class _SkyboxState extends State<Skybox> with TickerProviderStateMixin {
+class _SkyboxState extends State<Skybox> with TickerProviderStateMixin { with AnimationControllerDisposer {
   late AnimationController _dayNightController;
   late Animation<double> _dayNightAnimation;
 

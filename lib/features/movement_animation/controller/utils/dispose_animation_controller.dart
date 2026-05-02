@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-void disposeAnimationController(AnimationController? controller) {
+void disposeaddAnimationController(AnimationController(AnimationController? controller)) {
   controller?.dispose();
 }
