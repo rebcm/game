@@ -8,22 +8,36 @@ on:
       - completed
 
 jobs:
-  validar-deploy:
+  validar-deploy-cloudflare:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar URL de Preview
+      - name: Verificar build web
         run: |
-          URL_PREVIEW=$(cat ./preview_url.txt)
-          if [ -z "$URL_PREVIEW" ]; then
-            echo "URL de preview não encontrada."
+          if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+            echo "Build web gerado com sucesso"
+          else
+            echo "Build web falhou"
             exit 1
           fi
-          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL_PREVIEW)
-          if [ "$RESPONSE_CODE" != "200" ]; then
-            echo "URL de preview retornou código $RESPONSE_CODE"
+
+      - name: Verificar upload via Wrangler
+        run: |
+          if grep -q "Uploaded successfully" <<< "${{ github.event.workflow_run.logs }}"; then
+            echo "Upload concluído via Wrangler"
+          else
+            echo "Upload via Wrangler falhou"
             exit 1
           fi
-          echo "URL de preview validada com sucesso."
+
+      - name: Verificar URL de preview
+        run: |
+          url_preview=$(grep -oP 'Preview URL: \Khttps?://[^\s]+' <<< "${{ github.event.workflow_run.logs }}")
+          if curl -s -f "$url_preview" > /dev/null; then
+            echo "URL de preview acessível"
+          else
+            echo "URL de preview inacessível"
+            exit 1
+          fi
