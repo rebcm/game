@@ -1,0 +1,34 @@
+name: Stuttering KPI Definition
+
+on:
+  workflow_dispatch:
+    inputs:
+      test-duration:
+        description: 'Test duration in seconds'
+        required: true
+        default: '60'
+      fps-threshold:
+        description: 'FPS threshold for stuttering detection'
+        required: true
+        default: '55'
+
+jobs:
+  define-kpi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Flutter driver test
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile --trace-startup --trace-systrace --verbose
+
+      - name: Analyze performance data
+        run: |
+          # TO DO: implement performance data analysis to determine stuttering KPI
+          echo "Analyzing performance data..."
+
+      - name: Output KPI results
+        run: |
+          # TO DO: output KPI results based on analysis
+          echo "KPI results:"

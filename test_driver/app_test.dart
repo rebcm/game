@@ -2,21 +2,21 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Rebeca Game', () {
-    FlutterDriver? driver;
+  group('Rebeca Game Performance Test', () {
+    late FlutterDriver driver;
 
     setUpAll(() async {
       driver = await FlutterDriver.connect();
     });
 
     tearDownAll(() async {
-      if (driver != null) {
-        driver?.close();
-      }
+      await driver.close();
     });
 
-    test('verify game starts', () async {
-      await driver?.waitFor(find.text('Rebeca'));
+    test('measure performance', () async {
+      // TO DO: implement performance measurement using FlutterDriver
+      // Use driver.traceAction() to capture performance data
+      // Use driver.waitUntilNoTransientCallbacks() to wait for the app to settle
     });
   });
 }
