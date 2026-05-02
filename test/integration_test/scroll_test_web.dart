@@ -5,7 +5,7 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('scroll test', (tester) async {
+  testWidgets('scroll test on web', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 

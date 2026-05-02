@@ -1,17 +1,17 @@
 name: Scroll Cross-Platform Test
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron:  '0 2 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
-  test-scroll:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        browser: ['chrome', 'firefox']
+        browser: [chrome, firefox, safari]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,12 +20,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
-          channel: 'stable'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run scroll test on ${{ matrix.browser }}
+      - name: Run Scroll Test on ${{ matrix.os }} ${{ matrix.browser }}
         run: |
           flutter config --enable-web
-          flutter drive --target=integration_test/scroll_test.dart --browser=${{ matrix.browser }} --driver=test_driver/integration_test.dart
+          flutter test integration_test/scroll_test.dart --browser ${{ matrix.browser }}
