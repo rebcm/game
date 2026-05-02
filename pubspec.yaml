@@ -60,3 +60,6 @@ flutter:
     path: test/audio/audio_codec_test.dart
 
   test_driver/integration_test.dart:
+
+  test_secrets_validation:
+    path: test/secrets_validation_test.dart
