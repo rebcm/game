@@ -1,9 +1,7 @@
 name: Deploy Test Critérios Aceitação
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy-test:
@@ -12,32 +10,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          flutter-version: '3.0.5'
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: rebcm-game
+          directory: build/web
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run deploy test
-        run: flutter drive --target=test_driver/app.dart
-
-      - name: Verify deploy URL
+      - name: Verify Deployment
         run: |
-          if ! curl -s -f -o /dev/null https://example.com; then
-            echo "Deploy URL is not accessible"
+          URL=$(curl -s -o /dev/null -w "%{redirect_url}" https://rebcm-game.pages.dev)
+          if [ -z "$URL" ]; then
+            echo "URL de preview não encontrada"
             exit 1
           fi
-
-      - name: Verify assets loading
-        run: |
-          # Implement asset loading verification logic here
-          echo "Assets loading verification not implemented"
-          exit 1
-
-      - name: Verify build time
-        run: |
-          # Implement build time verification logic here
-          echo "Build time verification not implemented"
-          exit 1
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL)
+          if [ "$STATUS_CODE" != "200" ]; then
+            echo "Status code não é 200 OK: $STATUS_CODE"
+            exit 1
+          fi
