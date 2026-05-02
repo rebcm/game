@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  final String _baseUrl;
+  final http.Client _httpClient;
 
-  ApiClient(this._baseUrl);
+  ApiClient(this._httpClient);
 
-  Future<http.Response> getWorlds() async {
-    final response = await http.get(Uri.parse('$_baseUrl/api/worlds'));
-    return response;
+  Future<String> getData() async {
+    final response = await _httpClient.get(Uri.parse('https://example.com/api/data'));
+    return response.body;
   }
 }
