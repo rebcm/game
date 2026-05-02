@@ -16,4 +16,5 @@ dev_dependencies:
   shared_preferences_mocks: ^0.0.1+1
 
 assets:
+    - assets/audio_compressed/
   - assets/audio/sfx/colocar_bloco.ogg
