@@ -1,9 +1,9 @@
 name: Integracao API Staging Test
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron:  '0 0 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
   integracao-api-staging-test:
@@ -16,12 +16,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
-          channel: 'stable'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run integration tests against staging API
+      - name: Run integration test against staging API
+        run: |
+          flutter pub get
+          flutter test integration_test/integracao_api_staging_test.dart
         env:
-          API_URL: https://staging.example.com/api
-        run: flutter drive --target=test_driver/app.dart --driver=test_driver/integration_test.dart --flavor=staging
+          API_URL: ${{ secrets.STAGING_API_URL }}
