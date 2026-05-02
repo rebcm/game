@@ -58,3 +58,5 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/voice-tone-validation-checklist.md
     - docs/ar
+  assets:
+    - docs/artefatos/checklists/secrets-obrigatorias.md
