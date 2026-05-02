@@ -1,4 +1,4 @@
-name: Flutter e Dart Version Check
+name: Flutter and Dart Version Check
 
 on:
   push:
@@ -12,27 +12,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar versão do Flutter e Dart
+      - name: Check Flutter version
         run: |
-          echo "Verificando versão do Flutter..."
+          echo "Checking Flutter version..."
           flutter --version
-          echo "Verificando versão do Dart..."
+
+      - name: Check Dart version
+        run: |
+          echo "Checking Dart version..."
           dart --version
 
-      - name: Validar versão do Flutter
+      - name: Validate Flutter version
         run: |
-          required_flutter_version=$(yq e '.environment.flutter' pubspec.yaml | tr -d '>=<')
-          current_flutter_version=$(flutter --version --machine | yq e '.flutter_version')
-          if ! [[ "$current_flutter_version" =~ ^$required_flutter_version ]]; then
-            echo "Versão do Flutter inválida. Esperado: $required_flutter_version, Atual: $current_flutter_version"
+          echo "Validating Flutter version..."
+          FLUTTER_VERSION=$(flutter --version | grep "Flutter" | awk '{print $2}')
+          echo "Flutter version: $FLUTTER_VERSION"
+          if [[ ! "$FLUTTER_VERSION" =~ ^3\.0\. ]]; then
+            echo "Flutter version mismatch"
             exit 1
           fi
 
-      - name: Validar versão do Dart
+      - name: Validate Dart version
         run: |
-          required_dart_version=$(yq e '.environment.sdk' pubspec.yaml | tr -d '>=<')
-          current_dart_version=$(dart --version --machine | yq e '.sdk_version' | cut -d' ' -f1)
-          if ! [[ "$current_dart_version" =~ ^$required_dart_version ]]; then
-            echo "Versão do Dart inválida. Esperado: $required_dart_version, Atual: $current_dart_version"
+          echo "Validating Dart version..."
+          DART_VERSION=$(dart --version | grep "Dart" | awk '{print $4}' | tr -d ',')
+          echo "Dart version: $DART_VERSION"
+          if [[ ! "$DART_VERSION" =~ ^2\.17\. ]]; then
+            echo "Dart version mismatch"
             exit 1
           fi

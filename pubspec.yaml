@@ -54,3 +54,6 @@ flutter:
     - docs/localizacao/README.md
     - docs/localizacao/lista_idiomas.md
   uses-material-design: true
+
+  test_flutter_dart_version:
+    path: test/flutter_dart_version_test.dart
