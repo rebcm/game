@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 class InstallationGuide extends StatelessWidget {
   @override
@@ -7,16 +8,23 @@ class InstallationGuide extends StatelessWidget {
       appBar: AppBar(
         title: Text('Guia de Instalação'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            Text('### Pré-requisitos para Instalação', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 16),
-            Text('- Flutter SDK versão 3.10.0 ou superior'),
-            Text('- Dart SDK versão 3.0.0 ou superior (incluso no Flutter SDK)'),
-            Text('- Android Studio ou Xcode para desenvolvimento mobile'),
-            Text('- CocoaPods para gerenciamento de dependências iOS'),
+            Text('Versão do Flutter/Dart: 3.16.5 ou superior'),
+            Text('Android SDK: API nível 33 ou superior'),
+            Text('iOS SDK: 17.0 ou superior'),
+            Text('Variáveis de Ambiente: FLUTTER_ROOT e ANDROID_HOME'),
+            Text('Chave da API do OpenStreetMap: ${ApiKeys.openStreetMapApiKey}'),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Implementar lógica para verificar os pré-requisitos
+              },
+              child: Text('Verificar Pré-requisitos'),
+            ),
+            MapWidget(
+              // Implementar mapa com flutter_map
+            ),
           ],
         ),
       ),
