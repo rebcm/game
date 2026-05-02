@@ -1,0 +1,22 @@
+name: Passdriver Flutter Persistence Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run test
+        run: |
+          flutter drive --target=test_driver/persistence_test/main.dart --driver=test_driver/persistence_test/persistence_test.dart
