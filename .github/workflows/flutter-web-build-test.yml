@@ -6,12 +6,30 @@ on:
       - main
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter test test/web_build_test/web_build_test.dart
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Web
+        run: flutter build web --release
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "build/web" ]; then
+            echo "Web build directory not found"
+            exit 1
+          fi
+          if [ -z "$(ls -A build/web)" ]; then
+            echo "Web build directory is empty"
+            exit 1
+          fi
