@@ -55,6 +55,8 @@ flutter:
   uses-material-design: true
 
   test_audio_codec:
+  test_integration_audio:
+    path: test/integration_tests/audio_integration_test/audio_integration_test.dart
     path: test/audio/audio_codec_test.dart
 
   test_driver/integration_test.dart:
