@@ -32,3 +32,4 @@ flutter:
   test/configuracoes/configuracoes_test.dart
 
   test/memory_leak_test/estado_jogo_memory_leak_test.dart
+  audioplayers: ^1.0.1

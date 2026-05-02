@@ -17,3 +17,4 @@
     "validate:deploy": "bash .github/workflows/scripts/validate_deploy.sh https://construcao-criativa.pages.dev"
   }
 }
+    "test:flutter:audio": "flutter test test/audio",
