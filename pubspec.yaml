@@ -38,3 +38,6 @@ flutter:
     - assets/audio/optimized/music/
   uses-material-design: true
   generate: true
+
+  flutter_test:
+    sdk: flutter

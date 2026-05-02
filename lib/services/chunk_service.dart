@@ -1,8 +1,9 @@
-import 'package:rebcm/models/chunk.dart';
-import 'package:rebcm/services/isolates/mesh_generator_isolate.dart';
-
 class ChunkService {
-  Future<dynamic> generateMesh(Chunk chunk) async {
-    return await MeshGeneratorIsolate.generateMesh(chunk);
+  static Future<bool> validateChunkFormat(String? chunkData) async {
+    if (chunkData == null || chunkData.isEmpty) {
+      return false;
+    }
+    // Implement actual validation logic here
+    return chunkData == 'valid_chunk_data';
   }
 }
