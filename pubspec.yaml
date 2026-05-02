@@ -43,6 +43,8 @@ flutter:
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
     - assets/docs/checklists/voice-tone-validation-checklist.md
+    - assets/docs/checklists/onboarding-validation-checklist.md
+    - assets/docs/checklists/onboarding-validation-checklist.md
   uses-material-design: true
   generate: true
 
@@ -54,7 +56,11 @@ flutter:
 
   assets:
     - docs/especificacoes/matriz_limites_caracteres_canal.md
+    - docs/checklists/onboarding-validation-checklist.md
+    - docs/checklists/onboarding-validation-checklist.md
     - docs/checklists/validacao_limites_caracteres.md
 
   assets:
     - docs/criterios-aceitacao/definicao-pronta.md
+    - docs/checklists/onboarding-validation-checklist.md
+    - docs/checklists/onboarding-validation-checklist.md
