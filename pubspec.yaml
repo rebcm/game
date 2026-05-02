@@ -60,3 +60,5 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+  assets:
+    - assets/docs/guias/guia-diferenciacao-secrets-vars.md
