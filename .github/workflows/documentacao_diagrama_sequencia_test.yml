@@ -1,4 +1,4 @@
-name: Testar Documentação do Diagrama de Sequência
+name: Testar Diagrama de Sequência
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'docs/diagramas/sequencia/**'
-      - 'docs/criterios_aceitacao/documentacao.md'
 
 jobs:
   test:
@@ -14,11 +13,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Verificar diagramas
+
+      - name: Instalar PlantUML
         run: |
-          # Adicione aqui comandos para verificar a existência e conteúdo dos diagramas
-          test -f docs/diagramas/sequencia/integracao.puml
-      - name: Verificar documentação
+          sudo apt-get update
+          sudo apt-get install -y plantuml
+
+      - name: Validar Diagrama
         run: |
-          # Adicione aqui comandos para verificar a existência e conteúdo da documentação
-          test -f docs/criterios_aceitacao/documentacao.md
+          plantuml docs/diagramas/sequencia/flutter-cloudflare-autenticacao-comunicacao.puml -o docs/diagramas/sequencia/output
+          if [ ! -f docs/diagramas/sequencia/output/flutter-cloudflare-autenticacao-comunicacao.png ]; then
+            echo "Falha ao gerar diagrama"
+            exit 1
+          fi

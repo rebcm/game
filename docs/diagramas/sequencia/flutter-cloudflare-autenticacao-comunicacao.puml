@@ -1,0 +1,18 @@
+@startuml
+participant FlutterApp as "Aplicativo Flutter"
+participant CloudflareWorker as "Cloudflare Worker"
+participant CloudflareKV as "Cloudflare KV"
+participant CloudflareR2 as "Cloudflare R2"
+participant CloudflareD1 as "Cloudflare D1"
+
+FlutterApp ->> CloudflareWorker: Requisição de Autenticação
+CloudflareWorker ->> CloudflareWorker: Verificar Token/Credenciais
+CloudflareWorker ->> FlutterApp: Resposta de Autenticação
+
+FlutterApp ->> CloudflareWorker: Requisição de Dados (KV/R2/D1)
+CloudflareWorker ->> CloudflareKV: Acessar Dados (KV)
+CloudflareWorker ->> CloudflareR2: Acessar Armazenamento (R2)
+CloudflareWorker ->> CloudflareD1: Executar Consulta (D1)
+CloudflareWorker ->> FlutterApp: Resposta com Dados
+
+@enduml
