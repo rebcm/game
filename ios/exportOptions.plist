@@ -6,10 +6,5 @@
     <string>ad-hoc</string>
     <key>teamID</key>
     <string>YOUR_TEAM_ID</string>
-    <key>provisioningProfiles</key>
-    <dict>
-        <key>com.rebcm.game</key>
-        <string>YOUR_PROVISIONING_PROFILE_NAME</string>
-    </dict>
 </dict>
 </plist>
