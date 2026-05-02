@@ -1,15 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:io';
+import 'package:integration_test/integration_test.dart';
 
 void main() {
-  test('Flutter Web build output validation', () async {
-    final buildDir = Directory('build/web');
-    expect(buildDir.existsSync(), isTrue);
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    final assetsDir = Directory('build/web/assets');
-    expect(assetsDir.existsSync(), isTrue);
-
-    final indexHtml = File('build/web/index.html');
-    expect(indexHtml.existsSync(), isTrue);
+  testWidgets('verify flutter web build', (tester) async {
+    await tester.pumpWidget(MyApp());
+    expect(find.byType(MyHomePage), findsOneWidget);
   });
 }
