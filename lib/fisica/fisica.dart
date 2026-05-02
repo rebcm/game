@@ -1,16 +1,9 @@
-import 'package:rebcm/engine_3d/engine_3d.dart';
-
 class Fisica {
-  final Engine3D _engine3d;
-
-  Fisica(this._engine3d);
-
-  void aplicarFisica() {
-    // Implement physics logic here
+  void atualizar() {
+    // Implementação da atualização da física
   }
 
-  void atualizar() {
-    // Implement physics update logic here
-    aplicarFisica();
+  void aplicarGravidade() {
+    // Implementação da aplicação da gravidade
   }
 }

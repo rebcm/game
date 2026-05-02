@@ -1,7 +1,7 @@
 name: rebcm
 description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua criatividade e construa estruturas incríveis em um ambiente de blocos voxel.
 
-version: 1.0.0+14
+version: 1.0.0+15
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -62,8 +62,3 @@ flutter:
     path: test/secrets_validation_test.dart
   cold_build_test:
     path: test/cold_build_test.dart
-
-  # No changes needed here as the assets are already configured
-
-  zstd: ^0.1.0
-  archive: ^3.3.2
