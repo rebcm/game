@@ -1,23 +1,30 @@
-import 'package:flame/game.dart';
-import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/jogo/gameplay_fisica_integracao.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/performance/analisador_performance.dart';
 
-class RenderizadorIsometrico extends FlameGame {
-  late GameplayFisicaIntegracao _gameplayFisicaIntegracao;
-
+class RenderizadorIsometrico extends StatelessWidget {
   @override
-  Future<void> onLoad() async {
-    _gameplayFisicaIntegracao = GameplayFisicaIntegracao(ColisaoHandler(), Rebeca());
+  Widget build(BuildContext context) {
+    return Consumer<AnalisadorPerformance>(
+      builder: (context, analisador, child) {
+        return analisador.wrapWithRepaintRainbow(
+          CustomPaint(
+            painter: _RenderizadorIsometricoPainter(),
+          ),
+        );
+      },
+    );
   }
+}
 
+class _RenderizadorIsometricoPainter extends CustomPainter {
   @override
-  void update(double dt) {
-    _gameplayFisicaIntegracao.atualizar();
-    super.update(dt);
-  }
-
-  @override
-  void render(Canvas canvas) {
+  void paint(Canvas canvas, Size size) {
     // Lógica de renderização existente
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // Lógica de shouldRepaint existente
   }
 }

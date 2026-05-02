@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/audio/gerenciador_audio.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/performance/analisador_performance.dart';
 
 class HUD extends StatelessWidget {
-        ControleVolume(),
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Lógica de UI existente
-      child: ElevatedButton(
-        onPressed: () async {
-          await GerenciadorAudio.tocarAudio('assets/audio/optimized/sfx/button_click.mp3');
-        },
-        child: Text(PseudoLocalizacao.traduzir('Clique aqui'),
-      ),
+    return Consumer<AnalisadorPerformance>(
+      builder: (context, analisador, child) {
+        return Column(
+          children: [
+            // Outros elementos do HUD
+            ElevatedButton(
+              onPressed: analisador.toggleRepaintRainbow,
+              child: Text(analisador.repaintRainbow ? 'Desativar Repaint Rainbow' : 'Ativar Repaint Rainbow'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
