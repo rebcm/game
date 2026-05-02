@@ -79,3 +79,5 @@ flutter:
   integration_test/impacto_performance_test/fps_bateria_test.dart:
 
   integration_test/stress_performance_test/idle_animation_jank_test.dart:
+
+  integration_test/validar_artefato_build_final_test.dart:

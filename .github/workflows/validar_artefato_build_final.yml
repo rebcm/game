@@ -1,0 +1,33 @@
+name: Validar Artefato de Build Final
+
+on:
+  workflow_run:
+    workflows: ["flutter-build"]
+    types:
+      - completed
+
+jobs:
+  validar-artefato:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: build/web
+
+      - name: Validate build artifact
+        run: |
+          # Add your validation logic here
+          echo "Validating build artifact..."
