@@ -1,4 +1,4 @@
-name: Integration Test Frame Sync
+name: Integração - Sincronização de Frames
 
 on:
   push:
@@ -15,9 +15,8 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.1'
 
       - name: Run integration test
         run: |
-          flutter pub get
-          flutter test test/integration_tests/frame_sync_test.dart
+          flutter drive --target=test/integration_test/frame_sync_test.dart --driver=test_driver/integration_test.dart
