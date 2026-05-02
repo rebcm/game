@@ -65,3 +65,6 @@ flutter:
   test_secrets_validation:
     path: test/secrets_validation_test.dart
   cached_network_image: ^3.2.3
+
+  cold_build_test:
+    path: test/cold_build_test.dart

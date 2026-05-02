@@ -1,0 +1,25 @@
+name: Cold Build Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  cold-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Flutter pub get
+        run: flutter pub get
+
+      - name: Run Cold Build Test
+        run: flutter run --verbose --target-platform=android --release
