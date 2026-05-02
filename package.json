@@ -4,5 +4,8 @@
   "scripts": {
     "deploy:cloudflare-worker:staging": "wrangler deploy --env=staging",
     "deploy:cloudflare-worker:production": "wrangler deploy --env=production"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
   }
 }

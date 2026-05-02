@@ -23,14 +23,11 @@ dev_dependencies:
   json_serializable: ^6.3.1
   json_annotation: ^4.6.0
   http_mock: ^0.3.0
-  http_mock: ^0.3.0
-  audioplayers: ^5.2.0
   test_coverage: ^0.6.1
   flutter_test:
     sdk: flutter
   test: ^1.21.4
   intl_translation: ^0.17.10+1
-  http_mock: ^0.3.0
   integration_test:
     sdk: flutter
   shared_preferences_platform_interface: ^2.1.0
@@ -45,8 +42,3 @@ flutter:
     - assets/audio/optimized/sfx/
     - assets/i18n/
     - assets/characters/
-
-  flutter_test:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
