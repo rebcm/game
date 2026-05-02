@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/screens/screen1.dart';
-import 'package:rebcm/screens/screen2.dart';
+import 'package:rebcm/game.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,15 +9,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebcm Game',
-      home: Scaffold(
-        body: Column(
-          children: [
-            Expanded(child: Screen1()),
-            Expanded(child: Screen2()),
-          ],
-        ),
-      ),
+      title: 'Rebeca\'s Game',
+      home: GamePage(),
+    );
+  }
+}
+
+class GamePage extends StatefulWidget {
+  @override
+  _GamePageState createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Game(),
     );
   }
 }
