@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 
 class I18nService {
-  Locale? _locale;
+  static final I18nService _instance = I18nService._();
+  factory I18nService() => _instance;
+  I18nService._();
 
-  static final Map<String, Map<String, String>> _localizedValues = {};
+  static Locale? _locale;
 
-  Future<void> loadLocale(BuildContext context, Locale locale) async {
-    final String jsonString = await rootBundle.loadString('assets/i18n/${locale.toString()}.json');
-    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    _localizedValues[locale.toString()] = jsonMap.map((key, value) => MapEntry(key, value.toString()));
+  Locale? get locale => _locale;
+
+  void changeLocale(Locale locale) {
     _locale = locale;
+    Intl.defaultLocale = locale.toString();
   }
 
-  String? getTranslation(String key) {
-    return _localizedValues[_locale?.toString() ?? 'pt_BR']?[key];
+  String? getTitle() {
+    return Intl.message(
+      'Construção Criativa',
+      name: 'titulo',
+      desc: 'Título do jogo',
+    );
   }
 
-  static String translate(BuildContext context, String key) {
-    final i18nService = Provider.of<I18nService>(context, listen: false);
-    return i18nService.getTranslation(key) ?? key;
+  String? getInventoryText() {
+    return Intl.message(
+      'Inventário',
+      name: 'inventario',
+      desc: 'Texto do inventário',
+    );
+  }
+
+  String? getSelectedBlockText() {
+    return Intl.message(
+      'Bloco Selecionado',
+      name: 'bloco_selecionado',
+      desc: 'Texto do bloco selecionado',
+    );
   }
 }

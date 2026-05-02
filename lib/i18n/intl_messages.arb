@@ -1,0 +1,14 @@
+{
+  "titulo": "Construção Criativa",
+  "inventario": "Inventário",
+  "bloco_selecionado": "Bloco Selecionado",
+  "@titulo": {
+    "description": "Título do jogo"
+  },
+  "@inventario": {
+    "description": "Texto do inventário"
+  },
+  "@bloco_selecionado": {
+    "description": "Texto do bloco selecionado"
+  }
+}
