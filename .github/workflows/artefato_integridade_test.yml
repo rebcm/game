@@ -1,12 +1,9 @@
-name: Artefato Integridade Test
+name: Testes de Integridade do Artefato
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - 'assets/blocos/**'
 
 jobs:
   test:
@@ -23,6 +20,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Testar integridade do artefato
+      - name: Run integration tests
         run: |
-          flutter test integration_test/artefato_integridade_test.dart
+          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test_results/
