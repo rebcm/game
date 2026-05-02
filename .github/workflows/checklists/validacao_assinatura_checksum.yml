@@ -1,0 +1,24 @@
+name: Validação de Assinatura e Checksum
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar assinatura do binário
+        run: |
+          # Implementar lógica para validar a assinatura do binário gerado para staging
+          echo "Validando assinatura do binário..."
+
+      - name: Validar checksum do arquivo
+        run: |
+          # Implementar lógica para calcular e validar o checksum do arquivo
+          echo "Validando checksum do arquivo..."

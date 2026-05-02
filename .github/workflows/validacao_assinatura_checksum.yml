@@ -1,0 +1,17 @@
+name: Validação de Assinatura e Checksum
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Executar script de validação de assinatura e checksum
+        run: ./scripts/validar_assinatura_checksum.sh

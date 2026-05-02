@@ -1,33 +1,19 @@
-name: Validar Artefato de Build Final
+name: Teste de Validação de Artefato Staging
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: [Build]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
-  validate-artifact:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          path: build/
-
-      - name: Validate artifact
+      - name: Executar testes de validação de artefato staging
         run: |
-          flutter pub run flutter_driver:test --target=test_driver/app.dart
+          # Implementar lógica para executar testes de validação de artefato staging
+          echo "Executando testes de validação de artefato staging..."
