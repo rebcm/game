@@ -1,44 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/map_view/providers/map_culling_provider.dart';
 import 'package:passdriver/features/map_view/widgets/culling_marker.dart';
 
-class MapView extends StatefulWidget {
-  @override
-  State<MapView> createState() => _MapViewState();
-}
-
-class _MapViewState extends State<MapView> {
-  final List<CullingMarker> _markers = [];
-
+class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        onMapEvent: (event) {
-          if (event is MapEventMoveEnd || event is MapEventZoomEnd) {
-            _updateMarkersVisibility(event.camera);
-          }
-        },
+    final mapController = MapController();
+    return ChangeNotifierProvider(
+      create: (_) => MapCullingProvider(mapController),
+      child: FlutterMap(
+        mapController: mapController,
+        options: MapOptions(),
+        layers: [
+          TileLayerOptions(
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            subdomains: ['a', 'b', 'c'],
+          ),
+          MarkerLayerOptions(
+            markers: [
+              Marker(
+                point: LatLng(-23.55052, -46.633308),
+                builder: (ctx) => CullingMarker(
+                  latLng: LatLng(-23.55052, -46.633308),
+                  child: const Icon(Icons.place),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: const ['a', 'b', 'c'],
-        ),
-        MarkerLayer(markers: _markers.map((marker) => marker.build(context)).toList()),
-      ],
     );
-  }
-
-  void _updateMarkersVisibility(MapCamera camera) {
-    for (var marker in _markers) {
-      marker.updateVisibility(camera);
-    }
-  }
-
-  void addMarker(CullingMarker marker) {
-    setState(() {
-      _markers.add(marker);
-    });
   }
 }
