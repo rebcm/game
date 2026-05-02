@@ -12,101 +12,73 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v3
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-
-      - name: flutter pub get
-        run: flutter pub get
-
-      - name: flutter analyze
-        run: dart analyze
-
-      - name: flutter test
-        run: flutter test
-
-      - name: flutter build web --release
-        run: flutter build web --release
-
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: dart analyze
+      - run: flutter test
+      - run: flutter build web --release
       - name: Deploy para Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy web --project-name=construcao-criativa
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          curl -X POST \
+          "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/rebcm-game/deployments" \
+          -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+          -H "Content-Type: application/json" \
+          --data '{"branch":"main","working_directory":"/web"}'
 
   build-android:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v3
       - name: Setup Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
-
+          distribution: 'temurin'
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-
-      - name: flutter pub get
-        run: flutter pub get
-
-      - name: flutter build apk --release
-        run: flutter build apk --release
-        env:
-          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: flutter build apk --release
       - name: Upload APK como artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
+          name: rebcm-android.apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
   build-ios:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v3
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-
-      - name: flutter pub get
-        run: flutter pub get
-
-      - name: flutter build ios --no-codesign
-        run: flutter build ios --no-codesign
-
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: flutter build ios --no-codesign
       - name: Upload IPA como artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: Runner.ipa
-          path: build/ios/iphoneos/Runner.ipa
+          name: rebcm-ios.ipa
+          path: build/ios/ipa/RebecaCriativa.ipa
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: npm install -g wrangler
-        run: npm install -g wrangler
-
-      - name: wrangler deploy
-        working-directory: workers
-        run: wrangler deploy
+        uses: actions/checkout@v3
+      - run: npm install -g wrangler
+      - run: wrangler deploy
+        working-directory: worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -116,8 +88,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: POST para Neuron API notificando resultado do build
+        env:
+          NEURON_API_URL: ${{ secrets.NEURON_API_URL }}
         run: |
           curl -X POST \
-          https://api.neuron.com/endpoint \
-          -H 'Content-Type: application/json' \
-          -d '{"status": "success"}'
+          "${NEURON_API_URL}" \
+          -H "Content-Type: application/json" \
+          --data '{"status":"success","project":"rebcm/game"}'
