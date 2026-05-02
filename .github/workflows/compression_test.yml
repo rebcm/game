@@ -10,12 +10,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run compression test
-        run: |
-          ./.github/workflows/scripts/validate_binary_version.sh
-          ./scripts/define_compression_kpi.sh
+      - name: Download KPI artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: compression-kpi
 
-      - name: Compare APK size with KPI
+      - name: Run Flutter build
         run: |
-          # Add logic to compare the APK size with the target size defined in the KPI report
-          echo "Comparing APK size with KPI"
+          flutter build apk
+
+      - name: Validate compression KPI
+        run: |
+          ./scripts/validate_compression_kpi.sh

@@ -3,10 +3,9 @@ name: Define Compression KPI
 on:
   workflow_dispatch:
     inputs:
-      asset-type:
-        description: 'Type of asset to compress'
+      target-size:
+        description: 'Target size in bytes'
         required: true
-        default: 'all'
 
 jobs:
   define-kpi:
@@ -17,11 +16,10 @@ jobs:
 
       - name: Define KPI
         run: |
-          echo "Defining KPI for asset type: ${{ github.event.inputs.asset-type }}"
-          # Add logic to define KPI based on asset type
+          echo "target_size=${{ github.event.inputs.target-size }}" > compression_kpi.txt
 
-      - name: Upload KPI report
+      - name: Upload KPI artifact
         uses: actions/upload-artifact@v3
         with:
-          name: kpi-report
-          path: kpi-report.txt
+          name: compression-kpi
+          path: compression_kpi.txt
