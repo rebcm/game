@@ -1,7 +1,7 @@
-import 'package:flutter_driver/flutter_driver.dart' as driver;
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter_driver/driver_extension.dart';
+import 'package:rebcm/main.dart' as app;
 
-Future<void> main() async {
-  driverFlutterDriver = await driverFlutterDriver.createDriver();
-  await integrationDriver();
+void main() {
+  enableFlutterDriverExtension();
+  app.main();
 }
