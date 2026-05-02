@@ -6,13 +6,6 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    expect(find.text('1'), findsOneWidget);
-    expect(find.text('0'), findsNothing);
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
