@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class OptimizedAnimation extends HookWidget {
-  const OptimizedAnimation({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final animationController = useAnimationController(
@@ -15,13 +13,12 @@ class OptimizedAnimation extends HookWidget {
       child: AnimatedBuilder(
         animation: animationController,
         builder: (context, child) {
-          // Implement the animation logic here
-          return Transform.scale(
-            scale: animationController.value,
-            child: child,
+          // Assuming the animation is driven by a sprite sheet or similar
+          return Transform.translate(
+            offset: Offset(animationController.value * 100, 0),
+            child: Image.asset('assets/animations/optimized_animation.png'),
           );
         },
-        child: // Your animated child widget here,
       ),
     );
   }
