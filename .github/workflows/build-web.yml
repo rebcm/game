@@ -1,7 +1,6 @@
 name: Build Web
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -17,14 +16,15 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.3.10'
+          channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build web
+      - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Install wrangler
+      - name: Install Wrangler
         run: npm install -g wrangler
 
       - name: Deploy to Cloudflare Pages
