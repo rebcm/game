@@ -17,6 +17,6 @@ jobs:
         with:
           flutter-version: '3.0.1'
 
-      - name: Run Persistência Crash Test
+      - name: Run integration test
         run: |
-          flutter drive --driver=test_driver/persistencia_crash_test.dart --target=integration_test/persistencia_crash_test.dart
+          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/persistence_crash_test/main.dart
