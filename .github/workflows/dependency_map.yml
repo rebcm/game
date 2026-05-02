@@ -1,0 +1,30 @@
+name: Dependency Map
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  update_dependency_map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install yq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yq
+
+      - name: Generate dependency map
+        run: |
+          ./scripts/generate_dependency_map.sh
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/dependencies/README.md
+          git commit -m "Update dependency map" || echo "No changes to commit"
+          git push origin main || echo "No changes to push"
