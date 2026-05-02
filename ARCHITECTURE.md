@@ -1,36 +1,23 @@
-# Arquitetura do Projeto
+# Arquitetura do Sistema de Áudio
 
 ## Visão Geral
 
-O projeto Construção Criativa da Rebeca é um jogo voxel criativo desenvolvido em Flutter utilizando o framework Flame.
+O sistema de áudio é responsável por gerenciar a reprodução de sons, músicas e efeitos sonoros no jogo. É composto por dois principais componentes: `GerenciadorAudio` e `OtimizadorAudio`.
 
-## Componentes Principais
+## GerenciadorAudio
 
-- **Gerador de Mundo**: Responsável por gerar o mundo do jogo.
-- **Rebeca**: Representa o personagem principal do jogo.
-- **ColisaoHandler**: Lida com as colisões entre Rebeca e os blocos do mundo.
-- **IntegracaoFisicaGameplay**: Integra a física do jogo com a lógica de gameplay.
+O `GerenciadorAudio` é responsável por carregar e tocar arquivos de áudio. Utiliza a biblioteca `audioplayers` para manipular a reprodução de áudio.
 
-## Fluxo de Execução
+## OtimizadorAudio
 
-1. O `GeradorMundo` gera o mundo do jogo.
-2. A `Rebeca` é inicializada com uma posição e velocidade.
-3. O `ColisaoHandler` verifica as colisões entre Rebeca e os blocos do mundo.
-4. A `IntegracaoFisicaGameplay` atualiza o estado do jogo com base nas colisões e outras condições físicas.
+O `OtimizadorAudio` ajusta as configurações de áudio para melhorar a performance do jogo. Atualmente, está previsto para futuras implementações.
 
-## Regras de Negócio
+## Fluxo de Áudio
 
-- O jogo deve permanecer em modo criativo puro.
-- Não deve haver NPCs ou monstros.
-- A autoria do projeto deve ser preservada.
+1. O `GerenciadorAudio` carrega o arquivo de áudio desejado.
+2. O `GerenciadorAudio` toca o áudio carregado.
+3. O `OtimizadorAudio` ajusta as configurações de áudio para otimizar a performance.
 
-## Tecnologias Utilizadas
+## Configurações
 
-- Flutter
-- Flame
-- Dart
-
-## Considerações de Design
-
-- O código deve ser simples, estável e divertido.
-- A complexidade desnecessária deve ser evitada.
+As configurações de áudio, como o volume padrão, são definidas em `Constantes`.

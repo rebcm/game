@@ -1,23 +1,35 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 
+/// Gerencia a reprodução de áudio no jogo.
+///
+/// Responsável por carregar e tocar sons, músicas e efeitos sonoros.
 class GerenciadorAudio {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  Future<void> carregarAudio(String path) async {
-    await _audioPlayer.setSource(AssetSource(path));
+  /// Carrega um arquivo de áudio.
+  Future<void> carregarAudio(String caminho) async {
+    await _audioPlayer.setSource(AssetSource(caminho));
   }
 
-  Future<void> reproduzirAudio(String path) async {
-    await carregarAudio(path);
+  /// Toca um som ou música.
+  Future<void> tocarAudio(String caminho) async {
+    await carregarAudio(caminho);
     await _audioPlayer.resume();
   }
 
+  /// Pausa a reprodução de áudio.
+  Future<void> pausarAudio() async {
+    await _audioPlayer.pause();
+  }
+
+  /// Para a reprodução de áudio.
   Future<void> pararAudio() async {
     await _audioPlayer.stop();
   }
 
-  Future<void> pausarAudio() async {
-    await _audioPlayer.pause();
+  /// Libera recursos do player de áudio.
+  Future<void> dispose() async {
+    await _audioPlayer.dispose();
   }
 }

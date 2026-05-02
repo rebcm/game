@@ -1,8 +1,10 @@
+/// Otimiza a reprodução de áudio para melhor performance.
+///
+/// Ajusta configurações de áudio para minimizar o impacto no desempenho do jogo.
 class OtimizadorAudio {
-  /// Otimiza o áudio para melhor performance.
-  /// 
-  /// Atualmente, essa classe serve como um placeholder para futuras implementações de otimização de áudio.
+  /// Otimiza as configurações de áudio.
   void otimizar() {
-    // Implementar lógica de otimização aqui.
+    // Implementar lógica de otimização de áudio aqui
+    // Por exemplo, ajustar volume, frequência de amostragem, etc.
   }
 }
