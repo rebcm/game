@@ -37,3 +37,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'package:provider/provider.dart';
+import 'package:rebcm/persistencia/gerenciador_persistencia.dart';
+import 'package:rebcm/jogo/inicializador_jogo.dart';
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GerenciadorPersistencia()),
+      ],
+      child: InicializadorJogo(
+        child: MyApp(),
+      ),
+    ),
+  );
+}
