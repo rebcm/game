@@ -13,10 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
+          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
@@ -25,10 +25,10 @@ jobs:
         run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact.zip artifact.zip
 
       - name: Build Flutter project
-        run: flutter build apk --release
+        run: flutter build web
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: artifact.zip
-          path: artifact.zip
+          name: flutter-web-build
+          path: build/web
