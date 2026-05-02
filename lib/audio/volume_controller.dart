@@ -1,13 +1,18 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/audio/audio_manager.dart';
 
-class VolumeController {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  Future<void> setVolume(double volume) async {
-    await _audioPlayer.setVolume(volume);
-  }
-
-  Future<double> getVolume() async {
-    return await _audioPlayer.getVolume();
+class VolumeController extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final audioManager = Provider.of<AudioManager>(context);
+    return Slider(
+      value: 0.5, // Default volume
+      min: 0.0,
+      max: 1.0,
+      onChanged: (value) async {
+        await audioManager.setVolume(value);
+      },
+    );
   }
 }
