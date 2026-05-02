@@ -2,23 +2,6 @@
   "name": "passdriver",
   "version": "1.0.0",
   "scripts": {
-    "test:flutter:api-integration": "flutter test integration_test/api/api_integration_test.dart",
-    "test:flutter:audio-latency-stress": "flutter test integration_test/audio/audio_latency_stress_test.dart",
-    "test:flutter:mock-api": "flutter test integration_test/api/mock_api_test.dart",
-    "test:flutter:upload-stress": "flutter test integration_test/sincronizacao/upload_stress_test.dart",
-    "test:flutter:scroll-cross-platform": "flutter test integration_test/scroll/scroll_cross_platform_test.dart",
-    "test:flutter:tipo-bloco": "flutter test lib/blocos/test/tipo_bloco_test.dart",
-    "test:flutter:gerador": "flutter test lib/mundo/test/gerador_test.dart",
-    "test:flutter:rebeca": "flutter test lib/personagem/test/rebeca_test.dart",
-    "test:flutter:renderizador-isometrico": "flutter test lib/jogo/test/renderizador_isometrico_test.dart",
-    "test:flutter:hud": "flutter test lib/ui/test/hud_test.dart",
-    "test:flutter:tipo-bloco-integration": "flutter test integration_test/blocos/tipo_bloco_integration_test.dart",
-    "test:flutter:gerador-integration": "flutter test integration_test/mundo/gerador_integration_test.dart"
+    "test:flutter:audio-latency-stress": "flutter test integration_test/audio/audio_latency_stress_test.dart"
   }
 }
-  "scripts": {
-    "test:flutter:input-stress": "flutter test integration_test/input/input_stress_test.dart"
-  }
-  "scripts": {
-    "test:flutter:api-integration": "flutter test integration_test/api/api_integration_test.dart"
-  }
