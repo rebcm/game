@@ -20,11 +20,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run Cloudflare auth test
+      - name: Run Cloudflare Auth Test
         env:
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
         run: |
-          curl -X GET \
-          https://api.cloudflare.com/client/v4/user/tokens/verify \
-          -H 'Authorization: Bearer '$CLOUDFLARE_TOKEN \
-          -H 'Content-Type: application/json'
+          dart test_cloudflare_auth.dart
