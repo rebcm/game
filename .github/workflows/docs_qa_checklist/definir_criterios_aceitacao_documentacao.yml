@@ -1,0 +1,38 @@
+name: Definir Critérios de Aceitação para Documentação
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+
+jobs:
+  definir-criterios:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar presença de seção de controles
+        run: |
+          if ! grep -q "## Controles" docs/instrucoes.md; then
+            echo "Erro: Seção de controles não encontrada"
+            exit 1
+          fi
+
+      - name: Verificar objetivos claros
+        run: |
+          if ! grep -q "## Objetivos" docs/instrucoes.md; then
+            echo "Erro: Objetivos não encontrados"
+            exit 1
+          fi
+
+      - name: Verificar limite de caracteres para a UI
+        run: |
+          UI_LENGTH=$(cat docs/instrucoes.md | wc -c)
+          if [ $UI_LENGTH -gt 1000 ]; then
+            echo "Erro: Limite de caracteres excedido"
+            exit 1
+          fi

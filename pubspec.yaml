@@ -41,3 +41,7 @@ flutter:
 
   flutter_test:
     sdk: flutter
+
+  flutter:
+    assets:
+      - assets/docs/instrucoes.md
