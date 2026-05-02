@@ -62,3 +62,5 @@ flutter:
         - asset: assets/fonts/Roboto-Regular.ttf
   assets:
     - assets/docs/guias/guia-diferenciacao-secrets-vars.md
+
+  # No new dependencies should be added
