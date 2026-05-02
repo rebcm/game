@@ -62,3 +62,5 @@ flutter:
     path: test/secrets_validation_test.dart
   cold_build_test:
     path: test/cold_build_test.dart
+
+  # No changes needed here as the assets are already configured
