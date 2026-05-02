@@ -1,10 +1,11 @@
 name: Chunk Render Stress Test
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
-  stress-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,4 +18,4 @@ jobs:
 
       - name: Run stress test
         run: |
-          flutter drive --target=test_driver/integration_test/stress_test/chunk_render_stress_test.dart --driver=test_driver/integration_test/stress_test/chunk_render_stress_test_driver.dart --profile
+          flutter test test/stress_tests/chunk_render_stress_test.dart

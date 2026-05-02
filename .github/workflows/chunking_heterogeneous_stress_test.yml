@@ -1,9 +1,8 @@
 name: Chunking Heterogeneous Stress Test
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
   test:
@@ -12,6 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run chunking heterogeneous stress test
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run stress test
         run: |
-          flutter test test/chunking_heterogeneous_stress_test/chunking_heterogeneous_stress_test.dart
+          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/stress_tests/chunking_heterogeneous_stress_test.dart
