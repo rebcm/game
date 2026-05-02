@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/services/notificacao/notificacao_service.dart';
+import 'package:rebcm/jogo/renderizador_isometrico.dart';
 
-class Jogo extends StatefulWidget {
-  @override
-  _JogoState createState() => _JogoState();
-}
-
-class _JogoState extends State<Jogo> {
-  final NotificacaoService _notificacaoService = NotificacaoService();
-
-  @override
-  void initState() {
-    super.initState();
-    _notificacaoService.notificarNeuronAPI('jogo_iniciado');
-  }
-
+class Jogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(); // Implemente o jogo aqui
+    return Scaffold(
+      body: Center(
+        child: CustomPaint(
+          painter: RenderizadorIsometrico(),
+          size: Size(200, 200),
+        ),
+      ),
+    );
   }
 }

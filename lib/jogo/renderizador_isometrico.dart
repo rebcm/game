@@ -1,27 +1,27 @@
-import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/mundo/gerador.dart';
-import 'package:rebcm/audio/gerenciador_audio.dart';
 
-class RenderizadorIsometrico extends FlameGame {
+class RenderizadorIsometrico extends CustomPainter {
   @override
-  Future<void> onLoad() async {
-    await GeradorMundo.inicializar();
-    await GerenciadorAudio.carregarAudio('assets/audio/optimized/sfx/place_block.mp3');
+  void paint(Canvas canvas, Size size) {
+    // Desenhar um cubo simples como protótipo
+    Paint paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.fill;
+
+    // Projeção isométrica básica
+    Offset centro = Offset(size.width / 2, size.height / 2);
+    canvas.drawPath(
+      Path()
+        ..moveTo(centro.dx, centro.dy - 20)
+        ..lineTo(centro.dx + 20, centro.dy)
+        ..lineTo(centro.dx, centro.dy + 20)
+        ..lineTo(centro.dx - 20, centro.dy)
+        ..close(),
+      paint,
+    );
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    // Lógica de renderização existente
-  }
-
-  void tocarSomColocacaoBloco() async {
-    await GerenciadorAudio.tocarAudio('assets/audio/optimized/sfx/place_block.mp3');
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
