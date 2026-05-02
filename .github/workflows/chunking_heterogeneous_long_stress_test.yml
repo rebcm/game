@@ -1,0 +1,25 @@
+name: Chunking Heterogeneous Long Stress Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Test duration in minutes'
+        required: true
+        default: '60'
+
+jobs:
+  stress-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run stress test
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/stress_test.dart --duration=${{ github.event.inputs.duration }}m
