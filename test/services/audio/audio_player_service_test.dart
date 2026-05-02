@@ -10,19 +10,23 @@ void main() {
     });
 
     test('initial volume is 1.0', () {
-      expect(audioPlayerService.getVolume(), 1.0);
+      expect(audioPlayerService.volume, 1.0);
+    });
+
+    test('initial isMuted is false', () {
+      expect(audioPlayerService.isMuted, false);
     });
 
     test('setVolume changes volume', () async {
       await audioPlayerService.setVolume(0.5);
-      expect(audioPlayerService.getVolume(), 0.5);
+      expect(audioPlayerService.volume, 0.5);
     });
 
     test('toggleMute mutes and unmutes', () async {
       await audioPlayerService.toggleMute();
-      expect(audioPlayerService.isMuted(), true);
+      expect(audioPlayerService.isMuted, true);
       await audioPlayerService.toggleMute();
-      expect(audioPlayerService.isMuted(), false);
+      expect(audioPlayerService.isMuted, false);
     });
   });
 }

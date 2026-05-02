@@ -10,12 +10,17 @@ class AudioPlayerService {
     await _audioPlayer.setVolume(_volume);
   }
 
-  Future<void> play() async {
+  Future<void> play(String assetPath) async {
+    await _audioPlayer.setAsset(assetPath);
     await _audioPlayer.play();
   }
 
   Future<void> pause() async {
     await _audioPlayer.pause();
+  }
+
+  Future<void> stop() async {
+    await _audioPlayer.stop();
   }
 
   Future<void> setVolume(double volume) async {
@@ -27,13 +32,9 @@ class AudioPlayerService {
 
   Future<void> toggleMute() async {
     _isMuted = !_isMuted;
-    if (_isMuted) {
-      await _audioPlayer.setVolume(0.0);
-    } else {
-      await _audioPlayer.setVolume(_volume);
-    }
+    await _audioPlayer.setVolume(_isMuted ? 0.0 : _volume);
   }
 
-  double getVolume() => _volume;
-  bool isMuted() => _isMuted;
+  double get volume => _volume;
+  bool get isMuted => _isMuted;
 }
