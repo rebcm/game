@@ -1,0 +1,22 @@
+name: Documentação Prova Leitura Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  prova-leitura:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar descrição do jogo
+        run: |
+          descricao=$(cat pubspec.yaml | grep "description:")
+          if [ -z "$descricao" ]; then
+            echo "Descrição do jogo não encontrada"
+            exit 1
+          fi
+          echo "Descrição do jogo: $descricao"
