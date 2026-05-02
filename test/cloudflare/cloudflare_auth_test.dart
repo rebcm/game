@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 
 void main() {
-  test('Cloudflare auth test', () async {
+  test('Cloudflare Auth Test', () async {
     final token = const String.fromEnvironment('CLOUDFLARE_TOKEN');
     final response = await http.get(
       Uri.parse('https://api.cloudflare.com/client/v4/user/tokens/verify'),
@@ -11,6 +11,8 @@ void main() {
         'Content-Type': 'application/json',
       },
     );
+
     expect(response.statusCode, 200);
+    expect(response.body, contains('"result":"success"'));
   });
 }
