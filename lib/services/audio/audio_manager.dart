@@ -1,50 +1,41 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:rebcm/services/audio/audio_player_service.dart';
 
 class AudioManager {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final AudioService _audioService = AudioService();
+  final AudioPlayer _ambientPlayer = AudioPlayer();
+  final AudioPlayer _effectPlayer = AudioPlayer();
+  final AudioPlayer _musicPlayer = AudioPlayer();
 
   Future<void> init() async {
-    await _audioPlayer.setAsset('assets/audio/optimized/music/main_theme.mp3');
-    await _audioService.start(
-      backgroundTaskInit: () async {
-        return await AudioServiceBackground.run(
-          child: AudioServiceBackgroundChild(),
-          androidNotificationChannelName: 'Rebeca Game',
-          androidNotificationColor: 0xFF2196f3,
-          androidNotificationIcon: 'drawable/ic_stat_notification',
-        );
-      },
-    );
+    await _ambientPlayer.setVolume(1.0);
+    await _effectPlayer.setVolume(1.0);
+    await _musicPlayer.setVolume(1.0);
   }
 
-  void play() {
-    _audioPlayer.play();
+  Future<void> playAmbient(String assetPath) async {
+    await _ambientPlayer.setAsset(assetPath);
+    _ambientPlayer.play();
   }
 
-  void pause() {
-    _audioPlayer.pause();
+  Future<void> playEffect(String assetPath) async {
+    await _effectPlayer.setAsset(assetPath);
+    _effectPlayer.play();
   }
 
-  void stop() {
-    _audioPlayer.stop();
+  Future<void> playMusic(String assetPath) async {
+    await _musicPlayer.setAsset(assetPath);
+    _musicPlayer.play();
   }
-}
 
-class AudioServiceBackgroundChild extends BackgroundAudioTask {
-  @override
-  Future<void> onStart(Map<String, dynamic> params) async {}
+  void stopAmbient() {
+    _ambientPlayer.stop();
+  }
 
-  @override
-  Future<void> onStop() async {}
+  void stopEffect() {
+    _effectPlayer.stop();
+  }
 
-  @override
-  Future<void> onPlay() async {}
-
-  @override
-  Future<void> onPause() async {}
-
-  @override
-  Future<void> onSeekTo(Duration position) async {}
+  void stopMusic() {
+    _musicPlayer.stop();
+  }
 }
