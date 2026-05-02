@@ -47,3 +47,5 @@ dev_dependencies:
   audioplayers: ^1.0.1
   http_mock_adapter: ^1.0.0
   http_testing_controller: ^2.0.0
+
+  test: ^1.21.4
