@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomScrollView extends StatefulWidget {
+class ScrollView extends StatefulWidget {
   @override
-  _CustomScrollViewState createState() => _CustomScrollViewState();
+  _ScrollViewState createState() => _ScrollViewState();
 }
 
-class _CustomScrollViewState extends State<CustomScrollView> {
+class _ScrollViewState extends State<ScrollView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

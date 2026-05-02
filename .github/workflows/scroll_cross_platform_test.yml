@@ -6,7 +6,7 @@ on:
     - cron:  '0 2 * * *'
 
 jobs:
-  test:
+  test-scroll:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -24,11 +24,38 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run scroll test on ${{ matrix.os }}
-        run: flutter test test/scroll_test.dart
+      - name: Run scroll test
+        run: flutter test integration_test/scroll_test.dart
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: scroll-test-results-${{ matrix.os }}
+          path: test-results.xml
+
+  test-web:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run web scroll test
+        run: flutter drive --target=integration_test/scroll_test.dart --browser=${{ matrix.browser }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: scroll-test-results-web-${{ matrix.browser }}
           path: test-results.xml
