@@ -17,6 +17,6 @@ jobs:
         with:
           flutter-version: '3.0.1'
 
-      - name: Run idle animation jank test
+      - name: Run Idle Animation Jank Test
         run: |
-          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/stress_performance_test/idle_animation_jank_test.dart
+          flutter drive --target=test/performance/idle_animation_jank_test.dart --driver=test_driver/integration_test.dart
