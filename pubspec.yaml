@@ -4,10 +4,8 @@ description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua cr
 version: 1.0.0+14
 
 environment:
-audio_codec_config: AAC
   sdk: ">=2.17.0 <3.0.0"
   flutter: "^3.0.0"
-  audio_codec_config: ^1.0.0
 
 dependencies:
   version: ^2.0.0
@@ -26,8 +24,8 @@ dependencies:
   json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
   flutter:
-  audio_codec_config: ^1.0.0
     sdk: flutter
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   version: ^2.0.0
@@ -47,19 +45,14 @@ dev_dependencies:
   mocktail: ^0.3.0
 
 flutter:
-  audio_codec_config: ^1.0.0
   assets:
     - assets/audio/optimized/
     - assets/blocos/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
-    - assets/docs/checklists/onboarding-validation-checklist.md
-    - assets/docs/guias/style_guide_pt_BR.md
-    - assets/docs/guias/style_guide_pt_BR.md
-    - docs/artefatos/checklists/onboarding-validation-criterios.md
+    - assets/docs/checklists/documentacao-validacao-checklist.md
+    - docs/artefatos/checklists/documentacao-validacao-criterios.md
     - docs/glossario/README.md
-    - docs/guias/style_guide.md
-    - docs/guias/style_guide.md
     - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
     - .env
@@ -67,7 +60,5 @@ flutter:
 
   test_secrets_validation:
     path: test/secrets_validation_test.dart
-  cached_network_image: ^3.2.3
-
   cold_build_test:
     path: test/cold_build_test.dart
