@@ -1,19 +1,18 @@
 name: Docs QA Checklist
 
 on:
-  workflow_dispatch:
   pull_request:
     paths:
-      - 'docs/**'
+      - '**.md'
 
 jobs:
-  docs-qa-checklist:
+  validate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Docs QA Checklist
+      - name: Validate Markdown files
         run: |
-          echo "Validating docs QA checklist..."
+          echo "Validating Markdown files..."
           # Add validation logic here
