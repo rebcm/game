@@ -1,11 +1,7 @@
 import { Hono } from 'hono';
 import { Context } from 'hono';
-
-const dataMappingRoute = new Hono();
-
-dataMappingRoute.get('/data-mapping', async (c: Context) => {
-  // TO BE IMPLEMENTED
-  return c.json({});
+const app = new Hono();
+app.get('/data_mapping', async (c: Context) => {
+  return c.json({ message: 'Mapeamento de Requisitos de Dados' });
 });
-
-export default dataMappingRoute;
+export default app;
