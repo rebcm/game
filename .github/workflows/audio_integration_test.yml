@@ -14,4 +14,4 @@ jobs:
         with:
           flutter-version: '3.0.0'
       - run: flutter pub get
-      - run: flutter test integration_test/audio_integration_test.dart
+      - run: flutter drive --driver=test/integration_tests/audio_integration_test.dart --target=integration_test/main.dart

@@ -24,8 +24,6 @@ dependencies:
   shared_preferences: ^2.1.1
   flutter:
     sdk: flutter
-  assets:
-    - assets/audio/optimized/
 
 dev_dependencies:
   leak_tracker: ^9.0.0
