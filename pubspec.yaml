@@ -63,3 +63,6 @@ flutter:
 
   rebcm:
     path: .
+
+  flutter_test:
+    sdk: flutter
