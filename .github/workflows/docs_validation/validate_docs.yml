@@ -1,0 +1,19 @@
+name: Validate Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Validate docs
+        run: |
+          echo "Validating docs..."
+          # Adicionar comandos de validação de docs aqui
