@@ -9,6 +9,11 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar integridade do artefato
+        run: ./scripts/verify_artifact_integrity.sh
+
+      - name: Verificar assinatura digital
+        run: ./scripts/verify_digital_signature.sh
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -17,16 +22,12 @@ jobs:
         with:
           name: build-artifact
 
-      - name: Validate artifact
+      - name: Verificar integridade do artefato
         run: |
-          # Implement validation logic here
-          echo "Validating artifact..."
-          # Check if artifact is installable
-          # Check if artifact has correct digital signature
-          echo "Artifact validation completed successfully"
+          # Implementar lógica para verificar a integridade do artefato
+          echo "Verificando integridade do artefato..."
 
-      - name: Upload validation results
-        uses: actions/upload-artifact@v3
-        with:
-          name: validation-results
-          path: validation-results.txt
+      - name: Verificar assinatura digital
+        run: |
+          # Implementar lógica para verificar a assinatura digital do artefato
+          echo "Verificando assinatura digital do artefato..."
