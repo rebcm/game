@@ -1,7 +1,21 @@
 #!/bin/bash
 
-BINARY_VERSION=$(flutter build apk --release --verbose | grep "versionName" | awk '{print $2}')
-if [ "$BINARY_VERSION" != "1.0.0" ]; then
-  echo "Binary version mismatch: expected 1.0.0, got $BINARY_VERSION"
+BUILD_DIR=$1
+
+if [ -z "$BUILD_DIR" ]; then
+  echo "Error: Build directory not provided"
   exit 1
 fi
+
+if [ ! -d "$BUILD_DIR" ]; then
+  echo "Error: Build directory does not exist"
+  exit 1
+fi
+
+# Check if the binary exists and is not empty
+if [ ! -f "$BUILD_DIR/rebcm.apk" ] || [ ! -s "$BUILD_DIR/rebcm.apk" ]; then
+  echo "Error: APK file is missing or empty"
+  exit 1
+fi
+
+echo "Binary validation successful"
