@@ -22,23 +22,14 @@ dependencies:
   shared_preferences: ^2.1.1
 
 dev_dependencies:
-  just_audio: ^0.9.34
-  flutter_gl: ^1.0.0
-  flutter_hooks: ^0.18.5
-  flutter_hooks: ^0.18.5
-  build_runner: ^2.1.8
-  equatable: ^2.0.3
-  audio_service: ^0.18.9
-  build_runner: ^2.1.8
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  intl_translation: ^0.17.10+1
+  build_runner: ^2.1.8
   json_serializable: ^6.3.1
   mocktail: ^0.3.0
   test: ^1.21.4
-  test_coverage: ^0.6.1
 
 flutter:
   generate: true
@@ -53,31 +44,5 @@ flutter:
     - assets/blocos/
     - assets/i18n/
     - assets/configuracoes.json
-    - assets/i18n/
     - assets/characters/rebeca_skin.png
 
-  assets:
-    - assets/configuracoes.json
-
-  flutter_test:
-    sdk: flutter
-
-  rebcm:
-    path: .
-
-  flutter_test:
-    sdk: flutter
-
-  integration_test/scroll_compatibility_test.dart:
-
-  integration_test/flutter_ci_test.dart:
-  assets/docs/personagem_rebeca.md
-
-  assets/docs/coeficientes_atrito_elasticidade.md
-
-  test/widget_test/animacao_test/transicao_estado_animacao_test.dart:
-  integration_test/impacto_performance_test/fps_bateria_test.dart:
-
-  integration_test/stress_performance_test/idle_animation_jank_test.dart:
-
-  integration_test/validar_artefato_build_final_test.dart:

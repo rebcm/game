@@ -5,9 +5,11 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test if the app starts', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    expect(find.text('Rebeca'), findsOneWidget);
+  group('Flutter CI Test', () {
+    testWidgets('Test if app launches successfully', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      expect(find.text('Rebeca'), findsOneWidget);
+    });
   });
 }

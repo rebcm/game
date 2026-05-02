@@ -17,11 +17,8 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Analyze code
-        run: dart analyze
-
-      - name: Run tests
-        run: flutter test
+      - name: Run Flutter CI Test
+        run: |
+          flutter pub get
+          flutter config --enable-web
+          flutter test integration_test/flutter_ci_test.dart
