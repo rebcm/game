@@ -7,3 +7,4 @@ void main() {
     expect(find.text('Rebeca'), findsOneWidget);
   });
 }
+test/chunk_validation/chunk_format_test.dart
