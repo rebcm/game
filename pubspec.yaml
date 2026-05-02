@@ -71,3 +71,6 @@ dev_dependencies:
 
 dependency_overrides:
   just_audio: ^0.9.34
+
+  integration_test/onboarding_test/onboarding_test.dart:
+    - assets/docs/checklists/validacao-onboarding-checklist.md
