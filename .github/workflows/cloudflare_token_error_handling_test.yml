@@ -1,4 +1,4 @@
-name: Test Cloudflare Token Error Handling
+name: Cloudflare Token Error Handling Test
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run test
+      - name: Test Cloudflare token error handling
         run: |
-          echo "Running test for Cloudflare token error handling"
-          # Implement test logic here
+          echo "Testing Cloudflare token error handling..."
+          # Add test script here
