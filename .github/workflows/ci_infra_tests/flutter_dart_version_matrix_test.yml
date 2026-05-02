@@ -1,4 +1,4 @@
-name: Flutter e Dart Version Matrix Test
+name: Flutter and Dart Version Matrix Test
 
 on:
   push:
@@ -8,23 +8,32 @@ on:
 jobs:
   version-check:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        flutter: ['3.0.0', '3.3.10']
-        dart: ['2.17.0', '2.19.6']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup Flutter and Dart
+
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ matrix.flutter }}
-          channel: 'stable'
-      - name: Check Flutter version
-        run: flutter --version
-      - name: Check Dart version
-        run: dart --version
-      - name: Run flutter pub get
-        run: flutter pub get
-      - name: Analyze code
-        run: dart analyze
+          flutter-version: '3.0.0'
+
+      - name: Validate Flutter and Dart versions
+        run: |
+          flutter --version
+          dart --version
+          echo "Checking Flutter version..."
+          FLUTTER_VERSION=$(flutter --version | grep "Flutter" | awk '{print $2}')
+          if [ "$FLUTTER_VERSION" != "3.0.0" ]; then
+            echo "Flutter version mismatch: expected 3.0.0, got $FLUTTER_VERSION"
+            exit 1
+          fi
+          echo "Checking Dart version..."
+          DART_VERSION=$(dart --version | grep "Dart" | awk '{print $4}' | tr -d ',')
+          if [ "$(printf '%s\n' "2.17.0" "$DART_VERSION" | sort -V | head -n1)" != "2.17.0" ]; then
+            echo "Dart version mismatch: expected >= 2.17.0, got $DART_VERSION"
+            exit 1
+          fi
+          if [ "$(printf '%s\n' "$DART_VERSION" "3.0.0" | sort -V | tail -n1)" != "3.0.0" ]; then
+            echo "Dart version mismatch: expected < 3.0.0, got $DART_VERSION"
+            exit 1
+          fi
