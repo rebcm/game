@@ -64,3 +64,6 @@ flutter:
     path: test/cold_build_test.dart
 
   # No changes needed here as the assets are already configured
+
+  zstd: ^0.1.0
+  archive: ^3.3.2
