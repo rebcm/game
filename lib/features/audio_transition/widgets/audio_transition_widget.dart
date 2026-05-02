@@ -13,11 +13,11 @@ class _AudioTransitionWidgetState extends State<AudioTransitionWidget> {
     return Consumer<AudioTransitionProvider>(
       builder: (context, provider, child) {
         return TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: 1),
-          duration: Duration(milliseconds: 2000),
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: Duration(milliseconds: 500),
           builder: (context, value, child) {
             provider.transition(value);
-            return Container(); // placeholder widget
+            return Container(); // Your widget tree here
           },
         );
       },

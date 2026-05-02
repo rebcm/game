@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:passdriver/features/localization/localization_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:passdriver/features/audio_transition/providers/audio_transition_provider.dart';
+import 'package:passdriver/features/audio_transition/widgets/audio_transition_widget.dart';
 
 void main() {
+  final currentPlayer = AudioPlayer();
+  final nextPlayer = AudioPlayer();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LocalizationProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AudioTransitionProvider(
+            currentPlayer: currentPlayer,
+            nextPlayer: nextPlayer,
+          ),
+        ),
       ],
       child: MyApp(),
     ),
@@ -17,9 +27,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: FlutterI18n.translate(context, 'title'),
-      home: MyHomePage(),
-      locale: Provider.of<LocalizationProvider>(context).locale,
+      home: Scaffold(
+        body: AudioTransitionWidget(),
+      ),
     );
   }
 }
