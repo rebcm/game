@@ -1,30 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/ui/gerenciador_excecoes.dart';
+import 'package:flame/game.dart';
+import 'package:rebcm/blocos/tipo_bloco.dart';
+import 'package:rebcm/config/constantes.dart';
+import 'package:rebcm/mundo/gerador.dart';
+import 'package:rebcm/jogo/renderizador_isometrico_otimizado.dart';
 
-class RenderizadorIsometrico extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    try {
-      // Simulação de renderização
-      return CustomPaint(
-        painter: _IsometricPainter(),
-      );
-    } catch (e) {
-      context.read<GerenciadorExcecoes>().lidarComExcecao(e);
-      return Container();
+class RenderizadorIsometrico {
+  final RenderizadorIsometricoOtimizado _otimizador;
+
+  RenderizadorIsometrico() : _otimizador = RenderizadorIsometricoOtimizado();
+
+  void renderizar(Canvas canvas, List<Chunk> chunks) {
+    for (var chunk in chunks) {
+      _otimizador.renderizarChunk(canvas, chunk);
     }
-  }
-}
-
-class _IsometricPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Implementação da pintura isométrica
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }
