@@ -53,3 +53,8 @@ flutter:
     - assets/characters/
     - assets/i18n/
   generate: true
+
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
