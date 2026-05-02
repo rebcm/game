@@ -48,8 +48,8 @@ flutter:
     - assets/blocos/
     - assets/i18n/
     - assets/configuracoes.json
-    - assets/characters/rebeca_skin.png
     - assets/i18n/
 
   flutter_driver:
     sdk: flutter
+    - assets/characters/rebeca_skin.png
