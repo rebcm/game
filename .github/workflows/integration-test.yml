@@ -12,11 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.10.6'
-
       - name: Run integration tests
         run: |
-          flutter drive --target=app/test/integration/game_performance_test.dart --driver=test_driver/integration_test.dart
+          flutter test --dart-define=INTEGRATION_TEST=true integration_test/
