@@ -49,3 +49,7 @@ flutter:
     - assets/docs/checklists/criterios-mapeamento-canais-distribuicao.md
     - docs/artefatos/checklists/criterios-revisao-texto.md
 
+
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
