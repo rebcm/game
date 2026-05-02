@@ -1,0 +1,24 @@
+name: Documentação Controles Integração Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration test for documentação controles
+        run: flutter drive --target=test_driver/documentacao_controles_integracao_test.dart
