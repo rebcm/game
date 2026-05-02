@@ -1,17 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:rebcm/personagem/rebecca_animacao.dart';
 
-class Rebeca with ChangeNotifier {
-  String _estado = 'Idle';
+class Rebeca {
+  AnimacaoRebeca _animacao = AnimacaoRebeca();
 
-  String get estado => _estado;
-
-  void mover() {
-    _estado = 'Walking';
-    notifyListeners();
-  }
-
-  void parar() {
-    _estado = 'Idle';
-    notifyListeners();
+  void atualizar(double frameRate, double velocidadeTranslacao) {
+    _animacao.atualizar(frameRate, velocidadeTranslacao);
+    if (!_animacao.estaSincronizada()) {
+      // ajustar animação ou velocidade de translação
+    }
   }
 }
