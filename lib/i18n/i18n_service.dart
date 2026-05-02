@@ -4,45 +4,19 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class I18nService {
-  static final I18nService _instance = I18nService._internal();
+  static final I18nService _instance = I18nService._();
+  static I18nService get instance => _instance;
+  I18nService._();
 
-  factory I18nService() => _instance;
+  Map<String, String> _localizedStrings;
 
-  I18nService._internal();
-
-  Locale? _locale;
-
-  Future<void> init(Locale locale) async {
-    _locale = locale;
+  Future<void> loadLocale(String locale) async {
+    final jsonString = await rootBundle.loadString('assets/i18n/$locale.json');
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    _localizedStrings = jsonMap.map((key, value) => MapEntry(key, value.toString()));
   }
 
   String translate(String key) {
-    if (_locale == null) return key;
-    return _getTranslation(_locale!.languageCode)[key] ?? key;
+    return _localizedStrings[key] ?? key;
   }
-
-  Map<String, dynamic> _getTranslation(String languageCode) {
-    switch (languageCode) {
-      case 'en':
-        return jsonDecode(_enJson);
-      case 'pt':
-        return jsonDecode(_ptJson);
-      default:
-        return {};
-    }
-  }
-
-  static const String _enJson = '''
-{
-  "hello": "Hello",
-  "world": "World"
-}
-''';
-
-  static const String _ptJson = '''
-{
-  "hello": "Olá",
-  "world": "Mundo"
-}
-''';
 }
