@@ -1,4 +1,4 @@
-name: Integração - Sincronização de Frames
+name: Integration Test Frame Sync
 
 on:
   push:
@@ -9,14 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
-
-      - name: Run integration test
-        run: |
-          flutter drive --target=test/integration_test/frame_sync_test.dart --driver=test_driver/integration_test.dart
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: flutter test integration_test/sincronizacao_frame_test.dart
