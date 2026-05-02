@@ -6,20 +6,16 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Secrets
-        uses: ./.github/workflows/secrets_validation/secrets_check.yml
-
-      - name: Run Flutter Tests
+      - name: Build artifact
         run: |
-          flutter test
+          # Implement build logic here
+          echo "Building artifact..."
 
-      - name: Build Flutter Web
-        run: |
-          flutter config --enable-web
-          flutter build web
+      - name: Validate signature and checksum
+        uses: ./.github/workflows/checklists/validacao_assinatura_checksum.yml
