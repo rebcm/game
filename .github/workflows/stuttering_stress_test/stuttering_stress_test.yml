@@ -1,0 +1,17 @@
+name: Stuttering Stress Test
+
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  stress_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Stress Test
+        run: |
+          # Implement stress test logic here
+          echo "Running stress test..."
