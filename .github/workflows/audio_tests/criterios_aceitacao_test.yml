@@ -1,0 +1,22 @@
+name: Critérios de Aceitação de Áudio
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  audio-acceptance-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run audio acceptance tests
+        run: |
+          flutter test --dart-define=RUN_AUDIO_TESTS=true
+
+      - name: Validate test results
+        run: |
+          cat test_results.txt | grep "All tests passed"
+

@@ -64,3 +64,5 @@ flutter:
     path: test/cold_build_test.dart
   readme_setup_test:
     path: test/readme_validation/readme_setup_test.dart
+
+  assets/docs/criterios_aceitacao/audio.md
