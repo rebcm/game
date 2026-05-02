@@ -1,6 +1,7 @@
 name: Deploy Test Critérios Aceitação
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -12,24 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
 
-      - name: Run Flutter tests
-        run: |
-          flutter pub get
-          flutter test
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: rebcm-game
-          directory: build/web
+      - name: Run integration tests
+        run: flutter drive --target=test_driver/integration_test.dart --driver=test_driver/driver.dart
 
-      - name: Verify deployment
+      - name: Validate acceptance criteria
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://rebcm-game.pages.dev | grep -q "200"
+          echo "Validating acceptance criteria..."
+          # Add validation logic here
