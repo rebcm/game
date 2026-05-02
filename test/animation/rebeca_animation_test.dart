@@ -5,11 +5,9 @@ void main() {
   group('RebecaAnimation', () {
     test('should animate correctly', () {
       final animation = RebecaAnimation();
-      expect(animation.animate(), isNotNull);
-    });
-
-    test('should stop animation correctly', () {
-      final animation = RebecaAnimation();
+      expect(animation.isAnimating, isFalse);
+      animation.start();
+      expect(animation.isAnimating, isTrue);
       animation.stop();
       expect(animation.isAnimating, isFalse);
     });
