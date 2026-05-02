@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:passdriver/features/ride_hailing/services/ride_hailing_logger.dart';
 
 class RideHailingProvider with ChangeNotifier {
-  late RideHailingLogger _logger;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
-  RideHailingProvider(BuildContext context) {
-    _logger = RideHailingLogger(Logger());
+  Animation<double> get animation => _animation;
+
+  RideHailingProvider({required TickerProvider vsync}) {
+    _animationController = AnimationController(
+      vsync: vsync,
+      duration: Duration(seconds: 2),
+    )..repeat();
+    _animation = Tween<double>(begin: 0.8, end: 1.2).animate(_animationController);
   }
 
-  void handleError(dynamic error) {
-    if (error is AuthenticationError) {
-      _logger.logAuthenticationError(error.message);
-    } else if (error is TimeoutError) {
-      _logger.logTimeoutError(error.message);
-    } else if (error is PayloadLimitError) {
-      _logger.logPayloadLimitError(error.message);
-    }
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 }

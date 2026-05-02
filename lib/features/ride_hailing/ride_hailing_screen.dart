@@ -1,38 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:passdriver/features/ride_hailing/ride_hailing_performance_optimizer.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/ride_hailing/providers/ride_hailing_provider.dart';
+import 'package:passdriver/features/ride_hailing/widgets/ride_hailing_animation.dart';
 
-class RideHailingScreen extends StatefulWidget {
-  @override
-  _RideHailingScreenState createState() => _RideHailingScreenState();
-}
-
-class _RideHailingScreenState extends State<RideHailingScreen> {
-  List<LatLng> markers = [];
-
+class RideHailingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        center: LatLng(-23.55052, -46.633308),
-        zoom: 13.0,
+    return ChangeNotifierProvider(
+      create: (_) => RideHailingProvider(vsync: Navigator.of(context)),
+      child: Scaffold(
+        body: Center(
+          child: RideHailingAnimation(),
+        ),
       ),
-      layers: [
-        TileLayerOptions(
-          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
-        ),
-        MarkerLayerOptions(
-          markers: RideHailingPerformanceOptimizer().optimizeMarkers(markers).map((latLng) {
-            return Marker(
-              width: 40.0,
-              height: 40.0,
-              point: latLng,
-              builder: (ctx) => Icon(Icons.place),
-            );
-          }).toList(),
-        ),
-      ],
     );
   }
 }
