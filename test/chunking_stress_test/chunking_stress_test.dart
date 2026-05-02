@@ -1,24 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/jogo/renderizador_isometrico.dart';
-import 'package:rebcm/mundo/gerador.dart';
-import 'package:rebcm/mundo/mundo.dart';
+import 'package:rebcm/services/chunking_service.dart';
 
 void main() {
-  testWidgets('Stress test para movimentação rápida entre chunks',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
+  group('Chunking Stress Test', () {
+    test('should handle chunks above the allowed limit', () async {
+      final chunkingService = ChunkingService();
+      final largeChunk = List.generate(1000000, (index) => index);
+      expect(() => chunkingService.processChunk(largeChunk), throwsException);
+    });
 
-    final mundo = Mundo(GeradorMundo());
-    await mundo.inicializar();
-
-    final renderizador = RenderizadorIsometrico(mundo);
-
-    for (var i = 0; i < 100; i++) {
-      mundo.atualizar(0.01);
-      renderizador.renderizar();
-      await tester.pump();
-    }
-
-    expect(mundo.chunksCarregados, isNotEmpty);
+    test('should handle multiple large chunks', () async {
+      final chunkingService = ChunkingService();
+      final largeChunks = List.generate(10, (_) => List.generate(1000000, (index) => index));
+      for (var chunk in largeChunks) {
+        expect(() => chunkingService.processChunk(chunk), throwsException);
+      }
+    });
   });
 }
