@@ -12,18 +12,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar versão do Flutter
+      - name: Verificar versão do Flutter e Dart
         run: |
-          echo "Versão do Flutter: $(flutter --version)"
-          if ! flutter --version | grep -q "Flutter $FLUTTER_VERSION"; then
-            echo "Versão do Flutter incorreta"
+          echo "Verificando versão do Flutter..."
+          flutter --version
+          echo "Verificando versão do Dart..."
+          dart --version
+
+      - name: Validar versão do Flutter
+        run: |
+          required_flutter_version=$(yq e '.environment.flutter' pubspec.yaml | tr -d '>=<')
+          current_flutter_version=$(flutter --version --machine | yq e '.flutter_version')
+          if ! [[ "$current_flutter_version" =~ ^$required_flutter_version ]]; then
+            echo "Versão do Flutter inválida. Esperado: $required_flutter_version, Atual: $current_flutter_version"
             exit 1
           fi
 
-      - name: Verificar versão do Dart
+      - name: Validar versão do Dart
         run: |
-          echo "Versão do Dart: $(dart --version)"
-          if ! dart --version | grep -q "Dart $DART_VERSION"; then
-            echo "Versão do Dart incorreta"
+          required_dart_version=$(yq e '.environment.sdk' pubspec.yaml | tr -d '>=<')
+          current_dart_version=$(dart --version --machine | yq e '.sdk_version' | cut -d' ' -f1)
+          if ! [[ "$current_dart_version" =~ ^$required_dart_version ]]; then
+            echo "Versão do Dart inválida. Esperado: $required_dart_version, Atual: $current_dart_version"
             exit 1
           fi

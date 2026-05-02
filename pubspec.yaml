@@ -4,11 +4,12 @@ description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua cr
 version: 1.0.0+14
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: "^3.0.0"
 
 dependencies:
   flutter_driver:
-  flutter_driver:
+    sdk: flutter
   dotenv: ^4.0.0
   http: ^0.13.5
   just_audio: ^0.9.34
@@ -16,23 +17,18 @@ dependencies:
   flutter_hooks: ^0.18.5
   equatable: ^2.0.3
   audio_service: ^0.18.9
-  flutter:
-  assets:
-    - assets/audio/optimized/
-    sdk: flutter
   flame: ^1.2.1  
   provider: ^6.0.3
   intl: ^0.17.0
   json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
+  flutter:
+    sdk: flutter
+  assets:
+    - assets/audio/optimized/
 
 dev_dependencies:
   test: ^1.21.4
-  flutter_driver:
-  test: ^1.21.4
-  flutter_driver:
-  integration_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
   integration_test:
@@ -40,20 +36,16 @@ dev_dependencies:
   http: ^0.13.5
   flutter_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
   build_runner: ^2.1.8
   json_serializable: ^6.3.1
   mocktail: ^0.3.0
-  test: ^1.21.4
 
 flutter:
   assets:
     - assets/audio/optimized/
-  uses-material-design: true
-  assets:
     - assets/blocos/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
     - assets/docs/checklists/onboarding-validation-checklist.md
     - docs/artefatos/checklists/onboarding-validation-criterios.md
+  uses-material-design: true
