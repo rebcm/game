@@ -22,4 +22,4 @@ jobs:
 
       - name: Run stress test
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/stress_test.dart --duration=${{ github.event.inputs.duration }}m
+          flutter drive --target=test_driver/chunking_heterogeneous_long_stress_test.dart --driver=test_driver/chunking_heterogeneous_long_stress_test_driver.dart --duration=${{ github.event.inputs.duration }}
