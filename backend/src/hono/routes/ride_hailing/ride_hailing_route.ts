@@ -1,22 +1,24 @@
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
+import { Context } from 'hono/context';
 
-const app = new Hono();
+const rideHailingRoute = new Hono();
 
-app.use('*', logger());
-
-app.post('/ride_hailing', async (c) => {
+rideHailingRoute.post('/ride-hailing', async (c: Context) => {
   try {
-    // existing route logic
+    // Simulating an error
+    throw new Error('Invalid request');
   } catch (error) {
-    if (error instanceof AuthenticationError) {
-      return c.json({ error: 'Erro de autenticação' }, 401);
-    } else if (error instanceof TimeoutError) {
-      return c.json({ error: 'Timeout' }, 408);
-    } else if (error instanceof PayloadLimitError) {
-      return c.json({ error: 'Limite de payload excedido' }, 413);
+    if (error instanceof Error) {
+      if (error.message.includes('auth')) {
+        return c.json({ error: 'Erro de autenticação' }, 401);
+      } else if (error.message.includes('timeout')) {
+        return c.json({ error: 'Timeout' }, 408);
+      } else if (error.message.includes('payload')) {
+        return c.json({ error: 'Limite de payload excedido' }, 413);
+      }
     }
+    return c.json({ error: 'Erro desconhecido' }, 500);
   }
 });
 
-export default app;
+export default rideHailingRoute;
