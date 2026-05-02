@@ -2,24 +2,28 @@ name: Validar Critérios de Aceitação Deploy Cloudflare
 
 on:
   workflow_dispatch:
-  deployment:
-    types: [created]
+  workflow_run:
+    workflows: [Deploy Cloudflare Pages]
+    types:
+      - completed
 
 jobs:
-  validate-deploy:
+  validar-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar URL acessível
+      - name: Verificar URL de Preview
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://rebcm.pages.dev | grep -q "200"
-
-      - name: Verificar assets carregando corretamente
-        run: |
-          curl -s https://rebcm.pages.dev/assets/blocos/bloco1.png -o /dev/null && echo "Assets carregados com sucesso"
-
-      - name: Verificar tempo de build dentro do limite
-        run: |
-          echo "Tempo de build: $(date +%s) segundos"
+          URL_PREVIEW=$(cat ./preview_url.txt)
+          if [ -z "$URL_PREVIEW" ]; then
+            echo "URL de preview não encontrada."
+            exit 1
+          fi
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL_PREVIEW)
+          if [ "$RESPONSE_CODE" != "200" ]; then
+            echo "URL de preview retornou código $RESPONSE_CODE"
+            exit 1
+          fi
+          echo "URL de preview validada com sucesso."
