@@ -7,7 +7,7 @@ class Engine3D {
 
   void render() {
     // Implementação da renderização 3D
-    _glContext.clearColor(0.0, 0.0, 0.0, 1.0);
+    _glContext.clearColor(1.0, 1.0, 1.0, 1.0);
     _glContext.clear(0x00004000);
   }
 
