@@ -1,4 +1,4 @@
 class Constantes {
   static const String autor = 'Rebeca Alves Moreira';
-  static const double volumePadrao = 0.5;
+  static const int versaoChunk = VersionadorChunk.versaoAtual;
 }
