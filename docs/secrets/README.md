@@ -1,20 +1,37 @@
-# Secrets Necessárias para CI/CD
+# Matriz de Secrets
 
-Este documento lista as secrets necessárias para a configuração do ambiente de CI/CD do projeto rebcm/game.
+Este documento lista todas as chaves de API e variáveis de ambiente necessárias para o deploy no Cloudflare Pages.
 
-## Secrets Obrigatórias
+## Variáveis de Ambiente
 
-* `CLOUDFLARE_API_TOKEN`: Token de API da Cloudflare para autenticação e autorização.
-* `CLOUDFLARE_ACCOUNT_ID`: ID da conta da Cloudflare para identificação da conta.
+As seguintes variáveis de ambiente são necessárias para o deploy:
 
-## Configuração
+| Nome | Descrição | Exemplo |
+| --- | --- | --- |
+| CLOUDFLARE_API_TOKEN | Token de API do Cloudflare | xxxxxxxxxxxxxxxxxxxx |
+| CLOUDFLARE_ACCOUNT_ID | ID da conta do Cloudflare | xxxxxxxxxxxxxxxxxxxx |
+| CLOUDFLARE_PROJECT_NAME | Nome do projeto no Cloudflare Pages | rebcm-game |
 
-Para configurar essas secrets no ambiente de CI/CD, siga os passos abaixo:
+## Chaves de API
 
-1. Acesse as configurações do seu repositório no GitHub.
-2. Navegue até a seção "Actions" e clique em "Secrets".
-3. Adicione as secrets `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` com os valores correspondentes.
+As seguintes chaves de API são utilizadas no projeto:
 
-## Uso
+| Nome | Descrição | Exemplo |
+| --- | --- | --- |
+| API_KEY_1 | Chave de API 1 | xxxxxxxxxxxxxxxxxxxx |
+| API_KEY_2 | Chave de API 2 | xxxxxxxxxxxxxxxxxxxx |
 
-Essas secrets são utilizadas nos workflows de CI/CD para autenticação e autorização com a Cloudflare.
+## Configuração no .env
+
+O arquivo `.env` deve conter as seguintes variáveis:
+
+```makefile
+CLOUDFLARE_API_TOKEN=xxxxxxxxxxxxxxxxxxxx
+CLOUDFLARE_ACCOUNT_ID=xxxxxxxxxxxxxxxxxxxx
+CLOUDFLARE_PROJECT_NAME=rebcm-game
+```
+
+## Observações
+
+* Certifique-se de manter as chaves de API e variáveis de ambiente seguras e não commitá-las ao repositório.
+* Utilize o arquivo `.env` para armazenar as variáveis de ambiente localmente.
