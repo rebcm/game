@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import Intl.message('package:flutter/material.dart');
 
 class SoundSettingsProvider with ChangeNotifier {
   double _volume = 1.0;

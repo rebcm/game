@@ -1,9 +1,9 @@
-import '../blocos/tipo_bloco.dart';
-import '../config/constantes.dart';
-import 'chunk.dart';
-import 'gerador.dart';
-import 'posicao3d.dart';
-import 'persistencia.dart';
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('../config/constantes.dart');
+import Intl.message('chunk.dart');
+import Intl.message('gerador.dart');
+import Intl.message('posicao3d.dart');
+import Intl.message('persistencia.dart');
 
 class Mundo {
   final Map<String, Chunk> _chunks = {};
@@ -15,7 +15,7 @@ class Mundo {
       : semente = semente ?? DateTime.now().millisecondsSinceEpoch,
         _gerador = GeradorMundo(semente: semente);
 
-  static String _chaveChunk(int cx, int cz) => '$cx,$cz';
+  static String _chaveChunk(int cx, int cz) => Intl.message('$cx,$cz');
 
   List<Chunk> get chunksModificados =>
       _chunks.values.where((c) => c.modificado).toList();

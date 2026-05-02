@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:audio_optimizer/audio_optimizer.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:audio_optimizer/audio_optimizer.dart');
 
 class AudioOptimizerScreen extends StatefulWidget {
   @override
@@ -13,12 +13,12 @@ class _AudioOptimizerScreenState extends State<AudioOptimizerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Otimização de Áudio'),
+        title: Text(Intl.message('Otimização de Áudio')),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: _audioOptimizer.optimizeAudioFiles,
-          child: Text('Otimizar Áudio'),
+          child: Text(Intl.message('Otimizar Áudio')),
         ),
       ),
     );

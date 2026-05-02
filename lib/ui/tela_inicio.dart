@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../jogo/estado_jogo.dart';
-import '../config/constantes.dart';
-import 'tela_jogo.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:provider/provider.dart');
+import Intl.message('../jogo/estado_jogo.dart');
+import Intl.message('../config/constantes.dart');
+import Intl.message('tela_jogo.dart');
 
 class TelaInicio extends StatefulWidget {
   const TelaInicio({super.key});
@@ -72,7 +72,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
                           : _botoesPrincipais(estado),
                       const SizedBox(height: 24),
                       Text(
-                        'v${Constantes.versao} • ${Constantes.autora}',
+                        Intl.message('v${Constantes.versao} • ${Constantes.autora}'),
                         style: const TextStyle(color: Colors.white38, fontSize: 11),
                       ),
                     ],
@@ -89,10 +89,10 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
   Widget _titulo() {
     return Column(
       children: [
-        const Text('🏗️', style: TextStyle(fontSize: 72)),
+        const Text(Intl.message('🏗️'), style: TextStyle(fontSize: 72)),
         const SizedBox(height: 8),
         const Text(
-          'Construção Criativa',
+          Intl.message('Construção Criativa'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 28,
@@ -102,7 +102,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
           textAlign: TextAlign.center,
         ),
         const Text(
-          'da Rebeca',
+          Intl.message('da Rebeca'),
           style: TextStyle(
             color: Color(0xFFA5D6A7),
             fontSize: 20,
@@ -118,7 +118,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
             border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
           ),
           child: const Text(
-            '✨ Modo Criativo Puro',
+            Intl.message('✨ Modo Criativo Puro'),
             style: TextStyle(color: Colors.greenAccent, fontSize: 13),
           ),
         ),
@@ -132,7 +132,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
         if (estado.mundoExisteSalvo) ...[
           _botaoPrimario(
             icone: Icons.play_arrow_rounded,
-            rotulo: 'Continuar',
+            rotulo: Intl.message('Continuar'),
             subtitulo: estado.nomeDoMundo,
             cor: const Color(0xFF43A047),
             onPressed: () => _jogar(estado, novoMundo: false),
@@ -142,12 +142,12 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
             width: 300,
             child: OutlinedButton.icon(
               onPressed: () {
-                _ctrlNome.text = '';
+                _ctrlNome.text = Intl.message('');
                 setState(() => _mostrarNovoMundo = true);
               },
               icon: const Icon(Icons.add_circle_outline, color: Colors.white70),
               label: const Text(
-                'Novo Mundo',
+                Intl.message('Novo Mundo'),
                 style: TextStyle(color: Colors.white70, fontSize: 15),
               ),
               style: OutlinedButton.styleFrom(
@@ -162,11 +162,11 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
         ] else ...[
           _botaoPrimario(
             icone: Icons.play_arrow_rounded,
-            rotulo: 'Jogar!',
-            subtitulo: 'Criar novo mundo',
+            rotulo: Intl.message('Jogar!'),
+            subtitulo: Intl.message('Criar novo mundo'),
             cor: const Color(0xFF43A047),
             onPressed: () {
-              _ctrlNome.text = 'Mundo da Rebeca';
+              _ctrlNome.text = Intl.message('Mundo da Rebeca');
               setState(() => _mostrarNovoMundo = true);
             },
           ),
@@ -188,11 +188,11 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Novo Mundo',
+            Intl.message('Novo Mundo'),
             style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          const Text('Nome do Mundo', style: TextStyle(color: Colors.green, fontSize: 13)),
+          const Text(Intl.message('Nome do Mundo'), style: TextStyle(color: Colors.green, fontSize: 13)),
           const SizedBox(height: 6),
           TextField(
             controller: _ctrlNome,
@@ -210,7 +210,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
                 borderSide: const BorderSide(color: Colors.greenAccent),
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              hintText: 'Mundo da Rebeca',
+              hintText: Intl.message('Mundo da Rebeca'),
               hintStyle: const TextStyle(color: Colors.white30),
             ),
           ),
@@ -228,7 +228,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Voltar'),
+                  child: const Text(Intl.message('Voltar')),
                 ),
               ),
               const SizedBox(width: 12),
@@ -237,7 +237,7 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
                 child: ElevatedButton.icon(
                   onPressed: () => _jogar(estado, novoMundo: true),
                   icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('Criar e Jogar!', style: TextStyle(fontSize: 15)),
+                  label: const Text(Intl.message('Criar e Jogar!'), style: TextStyle(fontSize: 15)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF43A047),
                     foregroundColor: Colors.white,

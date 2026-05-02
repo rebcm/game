@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:passdriver/features/cloudflare/cloudflare_config.dart';
-import 'package:provider/provider.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:passdriver/features/cloudflare/cloudflare_config.dart');
+import Intl.message('package:provider/provider.dart');
 
 class CloudflareConfigScreen extends StatelessWidget {
   @override
@@ -10,9 +10,9 @@ class CloudflareConfigScreen extends StatelessWidget {
       child: Consumer<CloudflareConfig>(
         builder: (context, config, child) {
           if (!config.isConfigured) {
-            return Text('Erro: Variáveis de ambiente do Cloudflare não configuradas');
+            return Text(Intl.message('Erro: Variáveis de ambiente do Cloudflare não configuradas'));
           }
-          return Text('Cloudflare configurado corretamente');
+          return Text(Intl.message('Cloudflare configurado corretamente'));
         },
       ),
     );

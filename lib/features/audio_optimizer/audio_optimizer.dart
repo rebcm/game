@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart' library;
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import Intl.message('package:flutter/services.dart') library;
+import Intl.message('package:path_provider/path_provider.dart');
+import Intl.message('package:path/path.dart');
 
 class AudioOptimizer {
   Future<void> optimizeAudioFiles() async {
@@ -8,10 +8,10 @@ class AudioOptimizer {
     final files = await directory.list().toList();
 
     for (var file in files) {
-      if (file.path.endsWith('.wav')) {
+      if (file.path.endsWith(Intl.message('.wav'))) {
         final filePath = file.path;
         final fileName = basenameWithoutExtension(file.path);
-        final optimizedFilePath = join(directory.path, '.ogg');
+        final optimizedFilePath = join(directory.path, Intl.message('.ogg'));
 
         await _convertToOgg(filePath, optimizedFilePath);
         await file.delete();
@@ -21,14 +21,14 @@ class AudioOptimizer {
 
   Future<void> _convertToOgg(String inputFilePath, String outputFilePath) async {
     final process = await Process.start(
-      'ffmpeg',
+      Intl.message('ffmpeg'),
       [
-        '-i',
+        Intl.message('-i'),
         inputFilePath,
-        '-c:a',
-        'libvorbis',
-        '-b:a',
-        '128k',
+        Intl.message('-c:a'),
+        Intl.message('libvorbis'),
+        Intl.message('-b:a'),
+        Intl.message('128k'),
         outputFilePath,
       ],
     );

@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
-import '../mundo/mundo.dart';
-import '../mundo/persistencia.dart';
-import '../personagem/rebeca.dart';
+import Intl.message('dart:async');
+import Intl.message('package:flutter/foundation.dart');
+import Intl.message('../mundo/mundo.dart');
+import Intl.message('../mundo/persistencia.dart');
+import Intl.message('../personagem/rebeca.dart');
 
 enum EstadoTela { inicio, jogando, pausado }
 
@@ -14,7 +14,7 @@ class EstadoJogo extends ChangeNotifier {
   int totalBlocosColocados = 0;
   int totalBlocosRemovidos = 0;
   DateTime? inicioSessao;
-  String nomeDoMundo = 'Mundo da Rebeca';
+  String nomeDoMundo = Intl.message('Mundo da Rebeca');
   bool mundoExisteSalvo = false;
   Timer? _autoSave;
 

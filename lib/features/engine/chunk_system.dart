@@ -1,5 +1,5 @@
-import 'package:flame/flame.dart';
-import 'package:flutter/material.dart';
+import Intl.message('package:flame/flame.dart');
+import Intl.message('package:flutter/material.dart');
 
 class ChunkSystem {
   void generateChunk() {

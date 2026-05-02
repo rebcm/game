@@ -1,7 +1,7 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../config/constantes.dart';
-import '../mundo/chunk.dart';
+import Intl.message('dart:convert');
+import Intl.message('package:http/http.dart') as http;
+import Intl.message('../config/constantes.dart');
+import Intl.message('../mundo/chunk.dart');
 
 class ApiCliente {
   static final ApiCliente _instancia = ApiCliente._();
@@ -14,23 +14,23 @@ class ApiCliente {
   bool get autenticado => _tokenJwt != null;
 
   Map<String, String> get _cabecalhos => {
-    'Content-Type': 'application/json',
-    if (_tokenJwt != null) 'Authorization': 'Bearer $_tokenJwt',
+    Intl.message('Content-Type'): Intl.message('application/json'),
+    if (_tokenJwt != null) Intl.message('Authorization'): Intl.message('Bearer $_tokenJwt'),
   };
 
   Future<bool> entrar(String nomeUsuario, String senha) async {
     try {
       final resp = await _http
           .post(
-            Uri.parse('${Constantes.urlApi}/auth/login'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({'username': nomeUsuario, 'password': senha}),
+            Uri.parse(Intl.message('${Constantes.urlApi}/auth/login')),
+            headers: {Intl.message('Content-Type'): Intl.message('application/json')},
+            body: jsonEncode({Intl.message('username'): nomeUsuario, Intl.message('password'): senha}),
           )
           .timeout(Constantes.timeoutRequisicao);
 
       if (resp.statusCode == 200) {
         final dados = jsonDecode(resp.body) as Map<String, dynamic>;
-        _tokenJwt = dados['token'] as String?;
+        _tokenJwt = dados[Intl.message('token')] as String?;
         return _tokenJwt != null;
       }
     } catch (_) {}
@@ -42,7 +42,7 @@ class ApiCliente {
     try {
       final resp = await _http
           .post(
-            Uri.parse('${Constantes.urlApi}/mundos/chunks'),
+            Uri.parse(Intl.message('${Constantes.urlApi}/mundos/chunks')),
             headers: _cabecalhos,
             body: jsonEncode(chunk.paraJson()),
           )
@@ -58,7 +58,7 @@ class ApiCliente {
     try {
       final resp = await _http
           .get(
-            Uri.parse('${Constantes.urlApi}/mundos/chunks/$cx/$cz'),
+            Uri.parse(Intl.message('${Constantes.urlApi}/mundos/chunks/$cx/$cz')),
             headers: _cabecalhos,
           )
           .timeout(Constantes.timeoutRequisicao);
@@ -74,7 +74,7 @@ class ApiCliente {
     try {
       final resp = await _http
           .get(
-            Uri.parse('${Constantes.urlApi}/mundos'),
+            Uri.parse(Intl.message('${Constantes.urlApi}/mundos')),
             headers: _cabecalhos,
           )
           .timeout(Constantes.timeoutRequisicao);

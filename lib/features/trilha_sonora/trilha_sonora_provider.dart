@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'trilha_sonora.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:provider/provider.dart');
+import Intl.message('trilha_sonora.dart');
 
 class TrilhaSonoraProvider with ChangeNotifier {
   TrilhaSonora _trilhaSonora;

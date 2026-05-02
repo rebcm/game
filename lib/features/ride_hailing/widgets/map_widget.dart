@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:flutter_map/flutter_map.dart');
 
 class RideHailingMap extends StatelessWidget {
   @override
@@ -11,8 +11,8 @@ class RideHailingMap extends StatelessWidget {
         interactive: true,
         tileProvider: TileProvider(
           delegate: NetworkTileProvider(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+            urlTemplate: Intl.message('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+            subdomains: [Intl.message('a'), Intl.message('b'), Intl.message('c')],
           ),
           noWrap: true,
           tileRetainPadding: EdgeInsets.zero,
@@ -21,14 +21,14 @@ class RideHailingMap extends StatelessWidget {
           tileScale: 1.0,
           maxZoom: 19,
           minZoom: 0,
-          errorImage: Image.asset('assets/error_image.png'),
-          placeholderImage: Image.asset('assets/placeholder_image.png'),
-          loadingImage: Image.asset('assets/loading_image.png'),
-          loadingErrorImage: Image.asset('assets/loading_error_image.png'),
+          errorImage: Image.asset(Intl.message('assets/error_image.png')),
+          placeholderImage: Image.asset(Intl.message('assets/placeholder_image.png')),
+          loadingImage: Image.asset(Intl.message('assets/loading_image.png')),
+          loadingErrorImage: Image.asset(Intl.message('assets/loading_error_image.png')),
           tileRequestFactory: (url, headers) => NetworkTileRequest(url, headers),
           tileProviderFactory: () => NetworkTileProvider(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+            urlTemplate: Intl.message('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+            subdomains: [Intl.message('a'), Intl.message('b'), Intl.message('c')],
           ),
         ),
       ),
@@ -36,8 +36,8 @@ class RideHailingMap extends StatelessWidget {
         TileLayerOptions(
           tileProvider: TileProvider(
             delegate: NetworkTileProvider(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: ['a', 'b', 'c'],
+              urlTemplate: Intl.message('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+              subdomains: [Intl.message('a'), Intl.message('b'), Intl.message('c')],
             ),
             noWrap: true,
             tileRetainPadding: EdgeInsets.zero,
@@ -46,14 +46,14 @@ class RideHailingMap extends StatelessWidget {
             tileScale: 1.0,
             maxZoom: 19,
             minZoom: 0,
-            errorImage: Image.asset('assets/error_image.png'),
-            placeholderImage: Image.asset('assets/placeholder_image.png'),
-            loadingImage: Image.asset('assets/loading_image.png'),
-            loadingErrorImage: Image.asset('assets/loading_error_image.png'),
+            errorImage: Image.asset(Intl.message('assets/error_image.png')),
+            placeholderImage: Image.asset(Intl.message('assets/placeholder_image.png')),
+            loadingImage: Image.asset(Intl.message('assets/loading_image.png')),
+            loadingErrorImage: Image.asset(Intl.message('assets/loading_error_image.png')),
             tileRequestFactory: (url, headers) => NetworkTileRequest(url, headers),
             tileProviderFactory: () => NetworkTileProvider(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: ['a', 'b', 'c'],
+              urlTemplate: Intl.message('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+              subdomains: [Intl.message('a'), Intl.message('b'), Intl.message('c')],
             ),
           ),
         ),

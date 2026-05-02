@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import Intl.message('package:flutter/material.dart');
 
 class Chunk {
   void updateChunk() {

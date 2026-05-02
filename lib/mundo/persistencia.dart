@@ -1,19 +1,19 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../blocos/tipo_bloco.dart';
-import '../config/constantes.dart';
-import 'chunk.dart';
-import 'mundo.dart';
-import 'posicao3d.dart';
+import Intl.message('dart:convert');
+import Intl.message('package:shared_preferences/shared_preferences.dart');
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('../config/constantes.dart');
+import Intl.message('chunk.dart');
+import Intl.message('mundo.dart');
+import Intl.message('posicao3d.dart');
 
 class PersistenciaMundo {
-  static const _prefixoChunk = 'chunk_';
-  static const _chaveRebecaX = 'rebeca_x';
-  static const _chaveRebecaY = 'rebeca_y';
-  static const _chaveRebecaZ = 'rebeca_z';
-  static const _chaveSemente = 'semente';
-  static const _chaveNome = 'nome_mundo';
-  static const _chaveExiste = 'mundo_salvo';
+  static const _prefixoChunk = Intl.message('chunk_');
+  static const _chaveRebecaX = Intl.message('rebeca_x');
+  static const _chaveRebecaY = Intl.message('rebeca_y');
+  static const _chaveRebecaZ = Intl.message('rebeca_z');
+  static const _chaveSemente = Intl.message('semente');
+  static const _chaveNome = Intl.message('nome_mundo');
+  static const _chaveExiste = Intl.message('mundo_salvo');
 
   static Future<bool> mundoExiste() async {
     final prefs = await SharedPreferences.getInstance();
@@ -38,7 +38,7 @@ class PersistenciaMundo {
 
   static Future<void> salvarChunk(Chunk chunk) async {
     final prefs = await SharedPreferences.getInstance();
-    final chave = '$_prefixoChunk${chunk.chunkX}_${chunk.chunkZ}';
+    final chave = Intl.message('$_prefixoChunk${chunk.chunkX}_${chunk.chunkZ}');
 
     final blocos = <int>[];
     for (var x = 0; x < Constantes.tamanhoChunk; x++) {
@@ -55,7 +55,7 @@ class PersistenciaMundo {
 
   static Future<Chunk?> carregarChunk(int cx, int cz) async {
     final prefs = await SharedPreferences.getInstance();
-    final chave = '$_prefixoChunk${cx}_$cz';
+    final chave = Intl.message('$_prefixoChunk${cx}_$cz');
     final dados = prefs.getString(chave);
     if (dados == null) return null;
 
@@ -94,7 +94,7 @@ class PersistenciaMundo {
 
   static Future<String> carregarNome() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_chaveNome) ?? 'Mundo da Rebeca';
+    return prefs.getString(_chaveNome) ?? Intl.message('Mundo da Rebeca');
   }
 
   static Future<void> limparMundo() async {

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../jogo/estado_jogo.dart';
-import '../ui/tela_inicio.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:provider/provider.dart');
+import Intl.message('../jogo/estado_jogo.dart');
+import Intl.message('../ui/tela_inicio.dart');
 
 class AppRebeca extends StatelessWidget {
   const AppRebeca({super.key});
@@ -11,14 +11,14 @@ class AppRebeca extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => EstadoJogo(),
       child: MaterialApp(
-        title: 'Construção Criativa da Rebeca',
+        title: Intl.message('Construção Criativa da Rebeca'),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF4CAF50),
             brightness: Brightness.dark,
           ),
-          fontFamily: 'monospace',
+          fontFamily: Intl.message('monospace'),
         ),
         home: const TelaInicio(),
       ),

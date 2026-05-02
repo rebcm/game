@@ -1,7 +1,7 @@
-import 'dart:math';
-import '../blocos/tipo_bloco.dart';
-import '../config/constantes.dart';
-import 'chunk.dart';
+import Intl.message('dart:math');
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('../config/constantes.dart');
+import Intl.message('chunk.dart');
 
 class GeradorMundo {
   final int semente;

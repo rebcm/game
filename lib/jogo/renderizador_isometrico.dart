@@ -1,10 +1,10 @@
-import 'dart:math';
-import 'package:flutter/material.dart';
-import '../blocos/tipo_bloco.dart';
-import '../mundo/mundo.dart';
-import '../mundo/posicao3d.dart';
-import '../personagem/rebeca.dart';
-import '../config/constantes.dart';
+import Intl.message('dart:math');
+import Intl.message('package:flutter/material.dart');
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('../mundo/mundo.dart');
+import Intl.message('../mundo/posicao3d.dart');
+import Intl.message('../personagem/rebeca.dart');
+import Intl.message('../config/constantes.dart');
 
 class RenderizadorIsometrico extends CustomPainter {
   final Mundo mundo;

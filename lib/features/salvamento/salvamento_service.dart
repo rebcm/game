@@ -1,4 +1,4 @@
-import 'package:passdriver/features/salvamento/salvamento_repository.dart';
+import Intl.message('package:passdriver/features/salvamento/salvamento_repository.dart');
 
 class SalvamentoService {
   final SalvamentoRepository _repository;

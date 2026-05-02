@@ -1,7 +1,7 @@
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gl/flutter_gl.dart';
+import Intl.message('package:flame/flame.dart');
+import Intl.message('package:flame/game.dart');
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:flutter_gl/flutter_gl.dart');
 
 class EngineGame extends FlameGame {
   @override

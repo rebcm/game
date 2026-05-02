@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:passdriver/features/auth/domain/auth_usecase.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:passdriver/features/auth/domain/auth_usecase.dart');
 
 class LoginForm extends StatefulWidget {
   @override
@@ -18,11 +18,11 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'E-mail'),
+            decoration: InputDecoration(labelText: Intl.message('E-mail')),
           ),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Senha'),
+            decoration: InputDecoration(labelText: Intl.message('Senha')),
             obscureText: true,
           ),
           ElevatedButton(
@@ -30,10 +30,10 @@ class _LoginFormState extends State<LoginForm> {
               final result = await _authUsecase(_emailController.text, _passwordController.text);
               result.fold(
                 (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error))),
-                (token) => Navigator.pushReplacementNamed(context, '/home'),
+                (token) => Navigator.pushReplacementNamed(context, Intl.message('/home')),
               );
             },
-            child: Text('Entrar'),
+            child: Text(Intl.message('Entrar')),
           ),
         ],
       ),

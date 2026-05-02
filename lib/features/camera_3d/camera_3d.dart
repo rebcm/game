@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:passdriver/features/camera_3d/widgets/camera_3d_widget.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:passdriver/features/camera_3d/widgets/camera_3d_widget.dart');
 
 class Camera3D extends StatelessWidget {
   @override

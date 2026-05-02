@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import '../jogo/estado_jogo.dart';
-import '../jogo/renderizador_isometrico.dart';
-import '../personagem/rebeca.dart';
-import '../blocos/tipo_bloco.dart';
-import 'hud.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:flutter/services.dart');
+import Intl.message('package:provider/provider.dart');
+import Intl.message('../jogo/estado_jogo.dart');
+import Intl.message('../jogo/renderizador_isometrico.dart');
+import Intl.message('../personagem/rebeca.dart');
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('hud.dart');
 
 class TelaJogo extends StatefulWidget {
   const TelaJogo({super.key});
@@ -101,7 +101,7 @@ class _TelaJogoState extends State<TelaJogo> {
     } else {
       // Slots 1-9
       for (var i = 0; i < 9; i++) {
-        if (evento.character == '${i + 1}') {
+        if (evento.character == Intl.message('${i + 1}')) {
           rebeca.selecionarSlot(i);
         }
       }
@@ -139,13 +139,13 @@ class _TelaJogoState extends State<TelaJogo> {
       context: ctx,
       builder: (_) => AlertDialog(
         backgroundColor: const Color(0xFF1E1E1E),
-        title: const Text('Pausado', style: TextStyle(color: Colors.white)),
+        title: const Text(Intl.message('Pausado'), style: TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Continuar'),
+              child: const Text(Intl.message('Continuar')),
             ),
             const SizedBox(height: 8),
             TextButton(
@@ -155,7 +155,7 @@ class _TelaJogoState extends State<TelaJogo> {
                 Navigator.of(ctx).pop();
               },
               child: const Text(
-                'Sair para o Menu',
+                Intl.message('Sair para o Menu'),
                 style: TextStyle(color: Colors.red),
               ),
             ),

@@ -1,4 +1,4 @@
-import 'dart:math';
+import Intl.message('dart:math');
 
 class Posicao3D {
   final int x;
@@ -37,5 +37,5 @@ class Posicao3D {
   int get hashCode => Object.hash(x, y, z);
 
   @override
-  String toString() => 'Posicao3D($x, $y, $z)';
+  String toString() => Intl.message('Posicao3D($x, $y, $z)');
 }

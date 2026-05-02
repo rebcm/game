@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:audioplayers/audioplayers.dart');
 
 class TrilhaSonora extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class TrilhaSonora extends StatefulWidget {
 class _TrilhaSonoraState extends State<TrilhaSonora> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   int _currentMusicIndex = 0;
-  List<String> _musicList = ['musica1.mp3', 'musica2.mp3', 'musica3.mp3', 'musica4.mp3'];
+  List<String> _musicList = [Intl.message('musica1.mp3'), Intl.message('musica2.mp3'), Intl.message('musica3.mp3'), Intl.message('musica4.mp3')];
 
   @override
   void initState() {
@@ -18,7 +18,7 @@ class _TrilhaSonoraState extends State<TrilhaSonora> {
   }
 
   void _playMusic() {
-    _audioPlayer.play('assets/audio/', isLocal: true);
+    _audioPlayer.play(Intl.message('assets/audio/'), isLocal: true);
     _audioPlayer.onPlayerCompletion.listen((event) {
       _nextMusic();
     });

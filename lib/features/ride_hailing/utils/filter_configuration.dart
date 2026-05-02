@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:flutter_map/flutter_map.dart');
 
 class FilterConfiguration {
-  static const String samplingFilter = 'nearest';
+  static const String samplingFilter = Intl.message('nearest');
 }
 

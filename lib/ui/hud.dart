@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import '../jogo/estado_jogo.dart';
-import '../blocos/tipo_bloco.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('../jogo/estado_jogo.dart');
+import Intl.message('../blocos/tipo_bloco.dart');
 
 class HUD extends StatelessWidget {
   final EstadoJogo estado;
@@ -33,12 +33,12 @@ class HUD extends StatelessWidget {
         children: [
           _plaquinha(
             Icons.place,
-            'X:${estado.rebeca!.x.toStringAsFixed(1)} '
-            'Y:${estado.rebeca!.y.toStringAsFixed(1)} '
-            'Z:${estado.rebeca!.z.toStringAsFixed(1)}',
+            Intl.message('X:${estado.rebeca!.x.toStringAsFixed(1)} ')
+            Intl.message('Y:${estado.rebeca!.y.toStringAsFixed(1)} ')
+            Intl.message('Z:${estado.rebeca!.z.toStringAsFixed(1)}'),
           ),
           const SizedBox(height: 4),
-          _plaquinha(Icons.grid_view, '+${estado.totalBlocosColocados} blocos'),
+          _plaquinha(Icons.grid_view, Intl.message('+${estado.totalBlocosColocados} blocos')),
         ],
       ),
     );
@@ -113,7 +113,7 @@ class HUD extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${i + 1}',
+                    Intl.message('${i + 1}'),
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 9,
@@ -142,7 +142,7 @@ class HUD extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            '🎒 Inventário Criativo',
+            Intl.message('🎒 Inventário Criativo'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -196,7 +196,7 @@ class HUD extends StatelessWidget {
           const SizedBox(height: 12),
           TextButton(
             onPressed: estado.abrirInventario,
-            child: const Text('Fechar [E]', style: TextStyle(color: Colors.white70)),
+            child: const Text(Intl.message('Fechar [E]'), style: TextStyle(color: Colors.white70)),
           ),
         ],
       ),

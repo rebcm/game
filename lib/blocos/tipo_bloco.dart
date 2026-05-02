@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import Intl.message('package:flutter/material.dart');
 
 enum TipoBloco {
   ar,
@@ -21,21 +21,21 @@ enum TipoBloco {
 extension TipoBlocoExt on TipoBloco {
   String get nome {
     switch (this) {
-      case TipoBloco.ar: return 'Ar';
-      case TipoBloco.grama: return 'Grama';
-      case TipoBloco.terra: return 'Terra';
-      case TipoBloco.pedra: return 'Pedra';
-      case TipoBloco.areia: return 'Areia';
-      case TipoBloco.agua: return 'Água';
-      case TipoBloco.madeira: return 'Madeira';
-      case TipoBloco.folhas: return 'Folhas';
-      case TipoBloco.vidro: return 'Vidro';
-      case TipoBloco.tijolos: return 'Tijolos';
-      case TipoBloco.neve: return 'Neve';
-      case TipoBloco.tronco: return 'Tronco';
-      case TipoBloco.ouro: return 'Ouro';
-      case TipoBloco.diamante: return 'Diamante';
-      case TipoBloco.luz: return 'Luz';
+      case TipoBloco.ar: return Intl.message('Ar');
+      case TipoBloco.grama: return Intl.message('Grama');
+      case TipoBloco.terra: return Intl.message('Terra');
+      case TipoBloco.pedra: return Intl.message('Pedra');
+      case TipoBloco.areia: return Intl.message('Areia');
+      case TipoBloco.agua: return Intl.message('Água');
+      case TipoBloco.madeira: return Intl.message('Madeira');
+      case TipoBloco.folhas: return Intl.message('Folhas');
+      case TipoBloco.vidro: return Intl.message('Vidro');
+      case TipoBloco.tijolos: return Intl.message('Tijolos');
+      case TipoBloco.neve: return Intl.message('Neve');
+      case TipoBloco.tronco: return Intl.message('Tronco');
+      case TipoBloco.ouro: return Intl.message('Ouro');
+      case TipoBloco.diamante: return Intl.message('Diamante');
+      case TipoBloco.luz: return Intl.message('Luz');
     }
   }
 

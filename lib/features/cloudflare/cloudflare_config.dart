@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:flutter_dotenv/flutter_dotenv.dart');
 
 class CloudflareConfig with ChangeNotifier {
   String? _apiToken;
@@ -10,8 +10,8 @@ class CloudflareConfig with ChangeNotifier {
 
   Future<void> loadEnv() async {
     await dotenv.load();
-    _apiToken = dotenv.env['CLOUDFLARE_API_TOKEN'];
-    _accountId = dotenv.env['CLOUDFLARE_ACCOUNT_ID'];
+    _apiToken = dotenv.env[Intl.message('CLOUDFLARE_API_TOKEN')];
+    _accountId = dotenv.env[Intl.message('CLOUDFLARE_ACCOUNT_ID')];
     notifyListeners();
   }
 

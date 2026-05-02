@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/sound_settings_provider.dart';
-import '../widgets/sound_settings_widget.dart';
+import Intl.message('package:flutter/material.dart');
+import Intl.message('package:provider/provider.dart');
+import Intl.message('../providers/sound_settings_provider.dart');
+import Intl.message('../widgets/sound_settings_widget.dart');
 
 class SoundSettingsScreen extends StatelessWidget {
   @override

@@ -1,6 +1,6 @@
-import '../blocos/tipo_bloco.dart';
-import '../config/constantes.dart';
-import 'posicao3d.dart';
+import Intl.message('../blocos/tipo_bloco.dart');
+import Intl.message('../config/constantes.dart');
+import Intl.message('posicao3d.dart');
 
 class Chunk {
   final int chunkX;
@@ -38,9 +38,9 @@ class Chunk {
 
   Map<String, dynamic> paraJson() {
     final dados = <String, dynamic>{
-      'chunkX': chunkX,
-      'chunkZ': chunkZ,
-      'blocos': <List<List<int>>>[],
+      Intl.message('chunkX'): chunkX,
+      Intl.message('chunkZ'): chunkZ,
+      Intl.message('blocos'): <List<List<int>>>[],
     };
     for (var x = 0; x < Constantes.tamanhoChunk; x++) {
       final camadaX = <List<int>>[];
@@ -52,7 +52,7 @@ class Chunk {
           ),
         );
       }
-      (dados['blocos'] as List).add(camadaX);
+      (dados[Intl.message('blocos')] as List).add(camadaX);
     }
     return dados;
   }

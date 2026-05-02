@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import Intl.message('package:flutter/material.dart');
 class DriverIdleAnimation extends StatefulWidget {
   @override
   _DriverIdleAnimationState createState() => _DriverIdleAnimationState();
@@ -22,7 +22,7 @@ class _DriverIdleAnimationState extends State<DriverIdleAnimation> with TickerPr
       builder: (context, child) {
         return Transform.rotate(
           angle: _animationController.value * 0.1,
-          child: Image.asset('assets/images/rebeca.png'),
+          child: Image.asset(Intl.message('assets/images/rebeca.png')),
         );
       },
     );

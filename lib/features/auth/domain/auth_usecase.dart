@@ -1,5 +1,5 @@
-import 'package:dartz/dartz.dart';
-import 'package:passdriver/features/auth/data/auth_repository.dart';
+import Intl.message('package:dartz/dartz.dart');
+import Intl.message('package:passdriver/features/auth/data/auth_repository.dart');
 
 class AuthUsecase {
   final AuthRepository _repository;
