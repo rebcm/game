@@ -1,4 +1,4 @@
-name: Persistence Integration Test
+name: Persistência Integração Test
 
 on:
   push:
