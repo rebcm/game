@@ -1,0 +1,17 @@
+name: Audio Edge Cases Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run audio edge cases test
+        run: |
+          flutter test test/audio_edge_cases/audio_edge_cases_test.dart
