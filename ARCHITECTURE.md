@@ -2,18 +2,35 @@
 
 ## Visão Geral
 
-O projeto é estruturado em features independentes, cada uma responsável por uma funcionalidade específica.
+O projeto Construção Criativa da Rebeca é um jogo voxel criativo desenvolvido em Flutter utilizando o framework Flame.
 
-## Features
+## Componentes Principais
 
-### Física
+- **Gerador de Mundo**: Responsável por gerar o mundo do jogo.
+- **Rebeca**: Representa o personagem principal do jogo.
+- **ColisaoHandler**: Lida com as colisões entre Rebeca e os blocos do mundo.
+- **IntegracaoFisicaGameplay**: Integra a física do jogo com a lógica de gameplay.
 
-A feature de física é responsável por gerenciar eventos de colisão e aplicação de forças.
+## Fluxo de Execução
 
-### Gameplay
+1. O `GeradorMundo` gera o mundo do jogo.
+2. A `Rebeca` é inicializada com uma posição e velocidade.
+3. O `ColisaoHandler` verifica as colisões entre Rebeca e os blocos do mundo.
+4. A `IntegracaoFisicaGameplay` atualiza o estado do jogo com base nas colisões e outras condições físicas.
 
-A feature de gameplay é responsável por gerenciar eventos de jogo, como impactos e aplicação de forças.
+## Regras de Negócio
 
-## Integração
+- O jogo deve permanecer em modo criativo puro.
+- Não deve haver NPCs ou monstros.
+- A autoria do projeto deve ser preservada.
 
-As features são integradas através de eventos e notificações.
+## Tecnologias Utilizadas
+
+- Flutter
+- Flame
+- Dart
+
+## Considerações de Design
+
+- O código deve ser simples, estável e divertido.
+- A complexidade desnecessária deve ser evitada.
