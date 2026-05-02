@@ -3,13 +3,13 @@ import 'package:http/http.dart' as http;
 class ApiClient {
   final http.Client _client;
 
-  ApiClient({required http.Client client}) : _client = client;
+  ApiClient(this._client);
 
-  Future<void> fetchResource() async {
-    final response = await _client.get(Uri.parse('https://example.com/api/resource'));
+  Future<http.Response> get(Uri url) async {
+    return _client.get(url);
+  }
 
-    if (response.statusCode != 200) {
-      throw http.ClientException('Failed to fetch resource');
-    }
+  Future<http.Response> post(Uri url, {Object? body}) async {
+    return _client.post(url, body: body);
   }
 }
