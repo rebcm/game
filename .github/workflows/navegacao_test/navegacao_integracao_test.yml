@@ -1,4 +1,4 @@
-name: Navegação Integração Test
+name: Navegacao Integracao Test
 
 on:
   push:
@@ -12,11 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
 
       - name: Run integration test
         run: |
-          flutter drive --target=test/integration_tests/navegacao_test/navegacao_test.dart --driver=test_driver/integration_test.dart
+          flutter drive --driver=test/integration_tests/navegacao_test/navegacao_test.dart --target=test/integration_tests/navegacao_test/navegacao_test.dart
