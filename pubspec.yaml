@@ -45,3 +45,5 @@ flutter:
 http: ^0.13.3
 assets:
   - assets/audio/
+deploy:
+  script: ./scripts/deploy-cloudflare-pages.sh

@@ -1,0 +1,13 @@
+name: Build e Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy para Cloudflare Pages
+        run: ./scripts/deploy-cloudflare-pages.sh
