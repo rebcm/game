@@ -1,0 +1,22 @@
+name: Validar Documentação
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/docs/**'
+      - '.github/workflows/docs_qa_checklist/validar_documentacao.yml'
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar Checklist de QA
+        run: |
+          # Implementar lógica para validar a documentação de acordo com o checklist
+          echo "Validando documentação..."
+          # Exemplo: grep -r "TODO" assets/docs/ && exit 1 || exit 0

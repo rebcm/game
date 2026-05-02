@@ -45,3 +45,5 @@ flutter:
     - assets/docs/checklists/onboarding-validation-checklist.md
   uses-material-design: true
   generate: true
+  assets:
+    - assets/docs/checklists/docs-qa-checklist.md
