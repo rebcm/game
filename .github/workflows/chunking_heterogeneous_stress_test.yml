@@ -1,0 +1,17 @@
+name: Chunking Heterogeneous Stress Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run chunking heterogeneous test
+        run: |
+          flutter test test/chunking_stress_test/chunking_heterogeneous_test.dart
