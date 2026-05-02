@@ -17,13 +17,18 @@ jobs:
         run: |
           #!/bin/bash
           echo "Validating environment variables..."
-          # List of expected environment variables
-          EXPECTED_VARS=("VARIABLE_1" "VARIABLE_2" "VARIABLE_3")
-          for var in "${EXPECTED_VARS[@]}"; do
-            if grep -q "$var" .env; then
-              echo "$var found in .env"
-            else
-              echo "$var not found in .env"
-              exit 1
-            fi
-          done
+          if [ -f .env ]; then
+            while IFS= read -r line; do
+              if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
+                var=${line%%=*}
+                var=${var%% }
+                if ! grep -rq "$var" .; then
+                  echo "Error: Variable $var is not used in the code."
+                  exit 1
+                fi
+              fi
+            done < .env
+          else
+            echo "No .env file found."
+            exit 1
+          fi

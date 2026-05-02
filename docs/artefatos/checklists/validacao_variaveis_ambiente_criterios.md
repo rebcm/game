@@ -1,11 +1,10 @@
 # Critérios de Aceitação para Variáveis de Ambiente
 
-1. Todas as variáveis de ambiente definidas no arquivo `.env` devem ter um correspondente no código.
-2. Todas as variáveis de ambiente devem ter um valor válido configurado no ambiente de produção e staging.
-3. O arquivo `.env` deve existir na raiz do projeto.
-4. A verificação das variáveis de ambiente deve ser realizada em um workflow dedicado no GitHub Actions.
+1. Todas as variáveis de ambiente definidas no arquivo `.env` devem ser utilizadas no código.
+2. Todas as variáveis de ambiente devem ter um valor válido nos ambientes de produção e staging.
+3. O código deve verificar a presença e a validade das variáveis de ambiente antes de utilizá-las.
 
-## Checklist
+## Checklist de Validação
 
-- [ ] Verificar se todas as variáveis de ambiente estão sendo utilizadas no código.
-- [ ] Validar se os valores das variáveis de ambiente estão corretos nos ambientes de produção e staging.
+- [ ] Verificar se todas as variáveis de ambiente definidas no `.env` são utilizadas no código.
+- [ ] Verificar se todas as variáveis de ambiente têm um valor válido nos ambientes de produção e staging.
