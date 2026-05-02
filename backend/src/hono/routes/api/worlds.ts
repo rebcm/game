@@ -1,12 +1,11 @@
 import { Hono } from 'hono';
-import { db } from '../../../database';
 
 const app = new Hono();
 
 app.get('/api/worlds', async (c) => {
-  const userId = c.get('userId');
-  const worlds = await db(c.env.DB).prepare('SELECT * FROM worlds WHERE user_id = ?').all(userId);
-  return c.json(worlds.results);
+  const db = c.env.DB;
+  const results = await db.prepare('SELECT * FROM mundos WHERE user_id = ?').all(c.get('userId'));
+  return c.json(results.results);
 });
 
 export default app;

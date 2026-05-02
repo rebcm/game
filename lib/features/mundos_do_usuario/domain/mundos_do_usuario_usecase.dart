@@ -1,12 +1,11 @@
-import 'package:dartz/dartz.dart';
 import 'package:passdriver/features/mundos_do_usuario/data/mundos_do_usuario_repository.dart';
 
-class MundosDoUsuarioUsecase {
+class MundosDoUsuarioUseCase {
   final MundosDoUsuarioRepository _repository;
 
-  MundosDoUsuarioUsecase(this._repository);
+  MundosDoUsuarioUseCase(this._repository);
 
-  Future<Either<Exception, List<MundosDoUsuario>>> call() async {
+  Future<String> getMundosDoUsuario() async {
     return await _repository.getMundosDoUsuario();
   }
 }

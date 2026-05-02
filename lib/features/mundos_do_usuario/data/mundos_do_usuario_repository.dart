@@ -1,21 +1,11 @@
-import 'package:dartz/dartz.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:passdriver/features/mundos_do_usuario/data/mundos_do_usuario_data_source.dart';
 
 class MundosDoUsuarioRepository {
-  final http.Client _client;
+  final MundosDoUsuarioDataSource _dataSource;
 
-  MundosDoUsuarioRepository(this._client);
+  MundosDoUsuarioRepository(this._dataSource);
 
-  Future<Either<Exception, List<MundosDoUsuario>>> getMundosDoUsuario() async {
-    final response = await _client.get(Uri.parse('/api/worlds'));
-
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      final mundosDoUsuario = jsonData.map((data) => MundosDoUsuario.fromJson(data)).toList();
-      return Right(mundosDoUsuario);
-    } else {
-      return Left(Exception('Falha ao carregar mundos do usuário'));
-    }
+  Future<String> getMundosDoUsuario() async {
+    return await _dataSource.getMundosDoUsuario();
   }
 }
