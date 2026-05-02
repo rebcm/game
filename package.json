@@ -12,6 +12,7 @@
     "test:flutter:memory-leak": "flutter test test/memory_leak_test",
   "test:flutter:limites-caracteres": "flutter test test/limites_caracteres",
   "test:flutter:chunking-stress": "flutter test test/chunking_stress_test",
+"test:flutter:jank": "flutter test test/jank_test"
     "test:flutter:chunking-heterogeneo": "flutter test test/chunking_stress_test",
     "test:configuracoes": "flutter test test/configuracoes",
     "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh",
