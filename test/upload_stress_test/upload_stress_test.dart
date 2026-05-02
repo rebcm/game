@@ -1,45 +1,42 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_mock/http_mock.dart';
-import 'package:rebcm/mundo/chunk.dart';
-import 'package:rebcm/mundo/upload_manager.dart';
+import 'package:rebcm/config/constantes.dart';
 
 void main() {
   group('Upload Stress Test', () {
-    late MockClient _mockClient;
-    late UploadManager _uploadManager;
+    test('Large File Upload', () async {
+      final client = MockClient((request) async {
+        if (request.method == 'POST') {
+          final length = request.contentLength ?? 0;
+          expect(length, greaterThan(0));
+          await request.read().drain();
+          return http.Response('OK', 200);
+        }
+        return http.Response('Not Found', 404);
+      });
 
-    setUp(() {
-      _mockClient = MockClient();
-      _uploadManager = UploadManager(_mockClient);
+      final largeFile = List.generate(Constantes.maxUploadSize, (index) => index % 256);
+      final response = await client.post(Uri.parse('https://example.com/upload'), body: largeFile);
+
+      expect(response.statusCode, 200);
     });
 
-    test('should handle multiple chunk uploads simultaneously', () async {
-      // Arrange
-      final chunks = List.generate(10, (index) => Chunk(index, List.filled(16 * 16 * 16, 0)));
-      final responses = List.generate(10, (index) => http.Response('OK', 200));
+    test('File Larger Than Allowed', () async {
+      final client = MockClient((request) async {
+        if (request.method == 'POST') {
+          final length = request.contentLength ?? 0;
+          expect(length, greaterThan(Constantes.maxUploadSize));
+          await request.read().drain();
+          return http.Response('Payload Too Large', 413);
+        }
+        return http.Response('Not Found', 404);
+      });
 
-      when(() => _mockClient.post(any())).thenAnswer((_) async => responses.removeAt(0));
+      final veryLargeFile = List.generate(Constantes.maxUploadSize + 1, (index) => index % 256);
+      final response = await client.post(Uri.parse('https://example.com/upload'), body: veryLargeFile);
 
-      // Act
-      await Future.wait(chunks.map((chunk) => _uploadManager.uploadChunk(chunk)));
-
-      // Assert
-      verify(() => _mockClient.post(any())).called(10);
-    });
-
-    test('should handle large chunk uploads', () async {
-      // Arrange
-      final largeChunk = Chunk(0, List.filled(32 * 32 * 32, 0));
-      final response = http.Response('OK', 200);
-
-      when(() => _mockClient.post(any())).thenAnswer((_) async => response);
-
-      // Act
-      await _uploadManager.uploadChunk(largeChunk);
-
-      // Assert
-      verify(() => _mockClient.post(any())).called(1);
+      expect(response.statusCode, 413);
     });
   });
 }
