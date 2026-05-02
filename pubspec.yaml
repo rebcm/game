@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  audio_service: ^0.18.9
   audioplayers: ^5.2.0
   flutter:
     sdk: flutter
@@ -18,6 +19,7 @@ dependencies:
   shared_preferences: ^2.1.1
 
 dev_dependencies:
+  audio_service: ^0.18.9
   build_runner: ^2.1.8
   flutter_test:
     sdk: flutter

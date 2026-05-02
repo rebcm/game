@@ -1,42 +1,18 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:rebcm/services/audio/audio_manager.dart';
 
 class AudioService {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _isMuted = false;
-  double _volume = 1.0;
+  final AudioManager _audioManager = AudioManager();
 
-  Future<void> init() async {
-    final prefs = await SharedPreferences.getInstance();
-    _isMuted = prefs.getBool('isMuted') ?? false;
-    _volume = prefs.getDouble('volume') ?? 1.0;
-    if (_isMuted) {
-      await _audioPlayer.setVolume(0);
-    } else {
-      await _audioPlayer.setVolume(_volume);
-    }
+  Future<void> playAudio(String assetPath) async {
+    await _audioManager.playAudio(assetPath);
   }
 
-  Future<void> toggleMute() async {
-    _isMuted = !_isMuted;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isMuted', _isMuted);
-    if (_isMuted) {
-      await _audioPlayer.setVolume(0);
-    } else {
-      await _audioPlayer.setVolume(_volume);
-    }
+  Future<void> stopAudio() async {
+    await _audioManager.stopAudio();
   }
 
   Future<void> setVolume(double volume) async {
-    _volume = volume;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('volume', _volume);
-    if (!_isMuted) {
-      await _audioPlayer.setVolume(_volume);
-    }
+    await _audioManager.setVolume(volume);
   }
-
-  double getVolume() => _volume;
-  bool isMuted() => _isMuted;
 }
