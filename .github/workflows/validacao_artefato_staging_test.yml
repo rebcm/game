@@ -2,9 +2,12 @@ name: Validacao Artefato Staging Test
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  test-artefato-staging:
+  validate-artifact:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -13,25 +16,20 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
+          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build and test
+      - name: Build and validate artifact
         run: |
           flutter config --enable-web
           flutter build web --release
           flutter test integration_test/validacao_artefato_staging_test.dart
 
-      - name: Deploy to staging
-        uses: cloudflare/wrangler-action@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: 'pages deploy ./build/web --project-name=rebcm-staging'
+          name: build-web
+          path: build/web
 
-      - name: Validate artifact
-        run: |
-          # Implement validation logic here
-          echo "Validating artifact..."
