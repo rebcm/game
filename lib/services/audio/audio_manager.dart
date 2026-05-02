@@ -1,18 +1,30 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
 
 class AudioManager {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioService _audioService = AudioService();
 
-  Future<void> playAudio(String assetPath) async {
-    await _audioPlayer.play(AssetSource(assetPath));
+  Future<void> initAudio() async {
+    await _audioPlayer.setAsset('assets/audio/optimized/music/main_theme.mp3');
+    await _audioService.start(
+      backgroundTaskId: 'audio_task',
+      config: AudioServiceConfig(
+        androidNotificationChannelId: 'com.rebcm.game.audio',
+        androidNotificationChannelName: 'Rebeca\'s World Audio',
+      ),
+    );
   }
 
-  Future<void> stopAudio() async {
-    await _audioPlayer.stop();
+  void playBackgroundMusic() {
+    _audioPlayer.play();
   }
 
-  Future<void> setVolume(double volume) async {
-    await _audioPlayer.setVolume(volume);
+  void pauseBackgroundMusic() {
+    _audioPlayer.pause();
+  }
+
+  void stopBackgroundMusic() {
+    _audioPlayer.stop();
   }
 }
