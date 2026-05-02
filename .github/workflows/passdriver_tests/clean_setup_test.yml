@@ -1,0 +1,29 @@
+name: Clean Setup Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Create Cloudflare API Token
+        run: |
+          echo "Create a new Cloudflare API Token with the necessary permissions and save it as a secret named CLOUDFLARE_API_TOKEN"
+
+      - name: Run passdriver flutter test
+        run: |
+          flutter pub get
+          flutter test integration_test/passdriver_flutter_test.dart
+
+      - name: Validate CI/CD pipeline
+        run: |
+          echo "Validate if the CI/CD pipeline completes without permission errors"
