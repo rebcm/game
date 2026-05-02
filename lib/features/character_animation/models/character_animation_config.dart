@@ -1,11 +1,7 @@
+import 'package:flutter/material.dart';
 class CharacterAnimationConfig {
+  final double maxTranslationSpeed;
+  final double maxFrameRate;
   final double tolerance;
-  final int maxFrameRate;
-  final int minFrameRate;
-
-  CharacterAnimationConfig({
-    required this.tolerance,
-    required this.maxFrameRate,
-    required this.minFrameRate,
-  });
+  CharacterAnimationConfig({required this.maxTranslationSpeed, required this.maxFrameRate, required this.tolerance});
 }
