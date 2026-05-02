@@ -11,12 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
       - name: Run jank test
         run: |
-          flutter test test/jank_test/jank_test.dart
+          flutter test lib/test/performance/jank_test.dart
