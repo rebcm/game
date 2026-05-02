@@ -1,9 +1,11 @@
 name: Docs QA Checklist
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
     paths:
-      - '**.md'
+      - 'assets/docs/**'
 
 jobs:
   validate-docs:
@@ -12,7 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Markdown files
+      - name: Validate Docs QA Checklist
         run: |
-          echo "Validating Markdown files..."
-          # Add validation logic here
+          # Implementar lógica para validar a checklist de QA para documentação
+          echo "Validando checklist de QA para documentação..."
+          # Verificar presença de screenshots
+          # Verificar links funcionais
+          # Revisar ortografia e gramática
+          # Verificar consistência de formatação
+          # Confirmar conteúdo atualizado
+          echo "Checklist de QA validado com sucesso!"

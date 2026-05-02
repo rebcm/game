@@ -46,3 +46,5 @@ flutter:
   flutter:
     assets:
       - assets/docs/instrucoes.md
+  assets:
+    - assets/docs/checklists/qa-checklist-docs.md
