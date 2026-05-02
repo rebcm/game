@@ -1,22 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
-class ImageCacheWidget extends StatelessWidget {
-  final String imageUrl;
-  final double? cacheWidth;
-  final double? cacheHeight;
-
-  const ImageCacheWidget({
-    Key? key,
-    required this.imageUrl,
-    this.cacheWidth,
-    this.cacheHeight,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+class ImageCacheManager {
+  static Widget cachedImage(String url, {double? cacheWidth, double? cacheHeight}) {
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: url,
+      cacheKey: url,
       width: cacheWidth,
       height: cacheHeight,
       fit: BoxFit.cover,

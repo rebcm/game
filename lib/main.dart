@@ -49,3 +49,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 }
+import 'package:rebcm/widgets/optimized_image.dart';
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return OptimizedImage(
+      imageUrl: 'https://example.com/image.jpg',
+      cacheWidth: 100,
+      cacheHeight: 100,
+    );
+  }
+}
