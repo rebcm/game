@@ -62,3 +62,5 @@ flutter:
     path: test/secrets_validation_test.dart
   cold_build_test:
     path: test/cold_build_test.dart
+  readme_setup_test:
+    path: test/readme_validation/readme_setup_test.dart
