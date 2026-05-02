@@ -1,22 +1,8 @@
-[env.production]
-name = "construcao-criativa"
+name = "rebcm-worker"
+main = "src/index.js"
+compatibility_date = "2023-01-01"
 account_id = "${CLOUDFLARE_ACCOUNT_ID}"
-workers_dev = false
-route = "construcao-criativa.workers.dev/*"
-compatibility_date = "2023-12-01"
-
-[env.staging]
-name = "construcao-criativa-staging"
-account_id = "${CLOUDFLARE_ACCOUNT_ID}"
-workers_dev = true
-route = "construcao-criativa-staging.workers.dev/*"
-compatibility_date = "2023-12-01"
-
-[vars]
-CLOUDFLARE_API_TOKEN = "${CLOUDFLARE_API_TOKEN}"
-
-[env.production.vars]
-API_URL = "https://construcao-criativa.workers.dev"
-
-[env.staging.vars]
-API_URL = "https://construcao-criativa-staging.workers.dev"
+vars = {
+  API_KEY = "${API_KEY}",
+  # Add other vars here
+}
