@@ -1,0 +1,23 @@
+name: Integration Test Frame Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run integration test
+        run: |
+          flutter pub get
+          flutter test test/integration_tests/frame_sync_test.dart
