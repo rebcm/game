@@ -6,7 +6,7 @@ on:
     - cron:  '0 2 * * *'
 
 jobs:
-  test-codecs:
+  test-codec:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,7 +17,7 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Run Codec Compatibility Test
+      - name: Run codec compatibility test
         run: |
           flutter pub get
           flutter test test/codec_compatibility_test.dart
