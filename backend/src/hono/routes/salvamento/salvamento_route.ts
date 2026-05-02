@@ -1,1 +1,4 @@
-import { Hono } from 'hono'; import { SalvamentoService } from '../../services/salvamento/salvamento_service'; const app = new Hono(); app.get('/salvamento', async (c) => { const service = new SalvamentoService(c.env.DB); const salvamentos = await service.getSalvamentos(); return c.json(salvamentos); }); export default app;
+import { Hono } from 'hono';
+const app = new Hono();
+app.get('/salvamento', async (c) => { return c.json({}); });
+export default app;

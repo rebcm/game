@@ -1,1 +1,1 @@
-import 'package:flutter/material.dart'; class SalvamentoScreen extends StatelessWidget { @override Widget build(BuildContext context) { return Scaffold( appBar: AppBar( title: Text('Salvamento'), ), body: Center( child: Text('Salvamento Screen'), ), ); } }
+import 'package:flutter_map/flutter_map.dart';
