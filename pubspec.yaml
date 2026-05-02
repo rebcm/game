@@ -77,3 +77,5 @@ flutter:
 
   test/widget_test/animacao_test/transicao_estado_animacao_test.dart:
   integration_test/impacto_performance_test/fps_bateria_test.dart:
+
+  integration_test/stress_performance_test/idle_animation_jank_test.dart:

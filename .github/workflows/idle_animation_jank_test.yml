@@ -11,10 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.1'
-      - name: Run test
+
+      - name: Run idle animation jank test
         run: |
-          flutter test test/stress_test/idle_animation_stress_test.dart
+          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/stress_performance_test/idle_animation_jank_test.dart
