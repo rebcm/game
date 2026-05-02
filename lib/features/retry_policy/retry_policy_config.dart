@@ -1,6 +1,6 @@
 class RetryPolicyConfig {
   final RetryPolicy policy;
-  final int maxAttempts;
+  final int maxRetries;
 
-  RetryPolicyConfig({required this.policy, required this.maxAttempts});
+  RetryPolicyConfig({required this.policy, required this.maxRetries});
 }

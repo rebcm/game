@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
-import { validateCloudflareSecrets } from '../middlewares/validate-cloudflare-secrets';
+import retryPolicy from './retry_policy_middleware';
+
 const app = new Hono();
-app.use('*', validateCloudflareSecrets);
-// existing routes...
+app.use('/api/*', retryPolicy);
+
+export default app;

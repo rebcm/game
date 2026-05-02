@@ -1,0 +1,4 @@
+enum RetryPolicy {
+  retry,
+  failFast
+}
