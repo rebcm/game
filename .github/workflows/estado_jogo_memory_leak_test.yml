@@ -1,0 +1,17 @@
+name: Estado Jogo Memory Leak Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+      - run: flutter pub get
+      - run: flutter test test/widget_tests/estado_jogo_memory_leak_test.dart
