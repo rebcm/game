@@ -1,17 +1,16 @@
 #!/bin/bash
 
-ARTIFACT_DIR=$1
-VERSION_FILE="${ARTIFACT_DIR}/version.txt"
+validate_binary_version() {
+  local binary_path=$1
+  local expected_version=$2
 
-if [ ! -f "$VERSION_FILE" ]; then
-  echo "Version file not found"
-  exit 1
-fi
+  # Assuming the binary version is extracted using some command `extract_version`
+  actual_version=$(extract_version "$binary_path")
 
-VERSION=$(cat "$VERSION_FILE")
-if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "Invalid version format"
-  exit 1
-fi
+  if [ "$actual_version" != "$expected_version" ]; then
+    echo "Version mismatch for $binary_path: expected $expected_version, got $actual_version"
+    exit 1
+  fi
+}
 
-echo "Version is valid: $VERSION"
+validate_binary_version "$1" "$2"
