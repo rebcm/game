@@ -71,3 +71,6 @@ flutter:
 
 dev_dependencies:
   http: ^0.13.5
+  assets:
+    - docs/criterios_aceitacao/checklist_qa_docs.md
+    - assets/docs/diagramas/sequencia/documentacao_qa.mmd
