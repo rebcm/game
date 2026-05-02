@@ -1,4 +1,4 @@
-import { Hono }  from 'hono';
+import { Hono } from 'hono';
 import { handle } from 'hono/cloudflare-workers';
 
 const app = new Hono().basePath('/api');

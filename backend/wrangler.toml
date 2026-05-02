@@ -3,14 +3,22 @@ main = "./src/index.ts"
 compatibility_date = "2023-12-01"
 
 [env.production]
-DB = "passdriver-db"
-KV = "passdriver-kv"
+DB = "passdriver-db-production"
+KV = "passdriver-kv-production"
 
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "passdriver-db"
-database_id = "your-database-id"
+[env.staging]
+DB = "passdriver-db-staging"
+KV = "passdriver-kv-staging"
 
 [[env.production.kv_namespaces]]
 binding = "KV"
-id = "your-kv-id"
+id = "${passdriver-kv-production}"
+
+[[env.staging.kv_namespaces]]
+binding = "KV"
+id = "${passdriver-kv-staging}"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "passdriver-db"
+database_id = "${passdriver-db-id}"
