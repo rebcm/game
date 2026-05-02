@@ -10,7 +10,7 @@ class HUD extends StatelessWidget {
         onPressed: () async {
           await GerenciadorAudio.tocarAudio('assets/audio/optimized/sfx/button_click.mp3');
         },
-        child: Text('Clique aqui'),
+        child: Text(PseudoLocalizacao.traduzir('Clique aqui'),
       ),
     );
   }
