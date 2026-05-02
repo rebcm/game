@@ -14,4 +14,4 @@ jobs:
         with:
           flutter-version: '3.0.5'
       - run: flutter pub get
-      - run: flutter test test/integration/persistence/atomic_consistency_test.dart
+      - run: flutter test test/persistence/atomic_consistency_test.dart
