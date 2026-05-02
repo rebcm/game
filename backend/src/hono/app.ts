@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { localizacaoRoute } from './localizacao/localizacao_route';
 import game from './routes/game';
 
 const app = new Hono();
