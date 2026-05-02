@@ -7,26 +7,38 @@ class NetworkInterceptor {
 
   NetworkInterceptor(this._dio, this._dioAdapter);
 
-  void setInterceptor() {
+  void setupInterceptors() {
     _dioAdapter.onGet(
       RegExp(r'/api/.*'),
-      (server) => server.reply(200, {'data': 'success'}),
+      (server) => server.reply(200, {'data': 'Mocked data'}),
     );
 
     _dioAdapter.onPost(
       RegExp(r'/api/.*'),
-      (server) => server.reply(200, {'data': 'success'}),
+      (server) => server.reply(200, {'data': 'Mocked data'}),
     );
 
-    _dio.httpClientAdapter = _dioAdapter;
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          return handler.next(options);
+        },
+        onError: (error, handler) {
+          if (error.response?.statusCode == 500) {
+            return handler.next(error);
+          } else if (error.type == DioExceptionType.connectionTimeout) {
+            return handler.next(error);
+          }
+          return handler.next(error);
+        },
+      ),
+    );
   }
 
   void simulateTimeout() {
     _dioAdapter.onGet(
       RegExp(r'/api/.*'),
-      (server) => server.throws(404, DioException.connectionError(
-        requestOptions: RequestOptions(path: '/api/test'),
-      )),
+      (server) => server.throws(404, DioException.connectionTimeout(null, null)),
     );
   }
 

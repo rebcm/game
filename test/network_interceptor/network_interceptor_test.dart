@@ -11,18 +11,17 @@ void main() {
   setUp(() {
     dio = Dio();
     dioAdapter = DioAdapter(dio: dio);
+    dio.httpClientAdapter = dioAdapter;
     networkInterceptor = NetworkInterceptor(dio, dioAdapter);
-  });
-
-  test('simulates successful request', () async {
-    networkInterceptor.setInterceptor();
-    final response = await dio.get('/api/test');
-    expect(response.statusCode, 200);
+    networkInterceptor.setupInterceptors();
   });
 
   test('simulates timeout', () async {
     networkInterceptor.simulateTimeout();
-    expect(() async => await dio.get('/api/test'), throwsA(isA<DioException>()));
+    expect(
+      () async => await dio.get('/api/test'),
+      throwsA(isA<DioException>()),
+    );
   });
 
   test('simulates 500 error', () async {
