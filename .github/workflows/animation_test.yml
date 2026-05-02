@@ -1,0 +1,16 @@
+name: Animation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run animation test
+        run: |
+          flutter test test/widget_test/animation_test/animation_state_transition_test.dart
