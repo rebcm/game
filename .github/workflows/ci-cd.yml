@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: ci-cd
 
 on:
   push:
@@ -6,17 +6,5 @@ on:
       - main
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Run smoke test
-        run: |
-          flutter drive --target=test_driver/integration_test/flutter_driver_test.dart --driver=test_driver/integration_test/integration_test.dart --profile
+  build-ios:
+    uses: ./.github/workflows/build-ios.yml
