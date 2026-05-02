@@ -21,20 +21,20 @@ void main() {
       expect(result, isFalse);
     });
 
-    test('should reject chunk file with incorrect dimensions', () async {
+    test('should reject chunk file with incorrect magic number', () async {
       // Arrange
-      final incorrectDimensionsChunkFile = File('assets/test/incorrect_dimensions_chunk.bin');
+      final invalidMagicNumberChunkFile = File('assets/test/invalid_magic_number_chunk.bin');
       // Act
-      final result = await ChunkService.validateChunkFile(incorrectDimensionsChunkFile);
+      final result = await ChunkService.validateChunkFile(invalidMagicNumberChunkFile);
       // Assert
       expect(result, isFalse);
     });
 
-    test('should reject chunk file with corrupted data', () async {
+    test('should reject chunk file with incorrect version', () async {
       // Arrange
-      final corruptedChunkFile = File('assets/test/corrupted_chunk.bin');
+      final invalidVersionChunkFile = File('assets/test/invalid_version_chunk.bin');
       // Act
-      final result = await ChunkService.validateChunkFile(corruptedChunkFile);
+      final result = await ChunkService.validateChunkFile(invalidVersionChunkFile);
       // Assert
       expect(result, isFalse);
     });
