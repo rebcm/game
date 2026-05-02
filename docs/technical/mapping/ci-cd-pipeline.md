@@ -2,56 +2,43 @@
 
 ## Introdução
 
-Este documento visa mapear as ferramentas de CI/CD utilizadas no projeto `rebcm/game`, detalhando os triggers de execução, horários programados (cron) e a sequência exata de etapas do pipeline.
+Este documento fornece um mapeamento detalhado do pipeline CI/CD utilizado no projeto rebcm/game. O pipeline é responsável por automatizar processos de build, teste e deploy do jogo.
 
 ## Ferramentas de CI/CD Utilizadas
 
-O projeto utiliza GitHub Actions como ferramenta de CI/CD.
+* GitHub Actions
 
-## Pipelines Configurados
+## Triggers de Execução
 
-Os pipelines estão configurados em `.github/workflows/`. Abaixo, listamos os principais pipelines e suas funcionalidades:
-
-### 1. `ci-cd.yml`
-
-- **Trigger:** `push` na branch principal.
-- **Etapas:**
-  1. Configuração do ambiente.
-  2. Execução de testes.
-  3. Build do projeto.
-  4. Deploy.
-
-### 2. `flutter-ci-cd.yml`
-
-- **Trigger:** `push` na branch principal.
-- **Etapas:**
-  1. Configuração do ambiente Flutter.
-  2. Execução de testes Flutter.
-  3. Build do projeto Flutter.
-
-### 3. `build.yml` e `build-web.yml`
-
-- **Trigger:** `push` na branch principal.
-- **Etapas:**
-  1. Build do projeto para diferentes plataformas.
-
-### 4. `deploy.yml` e `deploy-web.yml`
-
-- **Trigger:** Após o build bem-sucedido.
-- **Etapas:**
-  1. Deploy do projeto para as respectivas plataformas.
+O pipeline é acionado nos seguintes eventos:
+- Push para a branch main
+- Pull requests para a branch main
 
 ## Horários Programados (Cron)
 
-Não há jobs agendados por cron identificados nos arquivos de configuração.
+Não há horários programados configurados para o pipeline.
 
-## Sequência Exata de Etapas do Pipeline
+## Sequência de Etapas do Pipeline
 
-1. Configuração do ambiente e dependências.
-2. Execução de testes unitários e de integração.
-3. Build do projeto.
-4. Deploy para as plataformas configuradas.
+1. **Configuração de Secrets**: Configura as variáveis de ambiente necessárias para o pipeline.
+   - Arquivo: `.github/workflows/configure-secrets.yml`
+
+2. **Build do Projeto Flutter**:
+   - Arquivo: `.github/workflows/flutter-build.yml`
+
+3. **Testes de Integração**:
+   - Arquivo: `.github/workflows/integracao_test.yml`
+
+4. **Deploy para Cloudflare Pages**:
+   - Arquivo: `.github/workflows/deploy-cloudflare-pages.yml`
+
+5. **Limpeza de Artefatos**:
+   - Arquivo: `.github/workflows/cleanup.yml`
+
+## Observações
+
+O pipeline é definido em vários arquivos YAML dentro da pasta `.github/workflows`. Cada arquivo representa uma etapa ou um conjunto de etapas relacionadas no processo de CI/CD.
 
 ## Conclusão
 
-O pipeline CI/CD do projeto `rebcm/game` é robusto e cobre as etapas essenciais de teste, build e deploy. A utilização de GitHub Actions facilita a integração com o repositório GitHub.
+O pipeline CI/CD do projeto rebcm/game é robusto e cobre as principais etapas de build, teste e deploy. A utilização de GitHub Actions facilita a integração com o repositório e permite uma configuração flexível das etapas do pipeline.

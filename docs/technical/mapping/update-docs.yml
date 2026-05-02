@@ -1,0 +1,28 @@
+name: Atualizar Documentação de Mapeamento Técnico
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/**
+      - docs/technical/mapping/**
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Atualizar mapeamento técnico
+        run: |
+          echo "Atualizando documentação de mapeamento técnico..."
+          # Adicionar comandos para atualizar a documentação conforme necessário
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Atualiza documentação de mapeamento técnico" || echo "Nenhuma mudança para commitar"
