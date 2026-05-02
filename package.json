@@ -4,6 +4,7 @@
   "scripts": {
     "test:flutter:unit": "flutter test",
     "test:flutter:integration": "flutter test integration_test/",
-    "test:api": "flutter test test/api"
+    "test:api": "flutter test test/api",
+    "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh"
   }
 }
