@@ -1,10 +1,10 @@
-name: Deploy Edge Cases Test
+name: Edge Cases Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-deploy-edge-cases:
+  test-edge-cases:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,10 +31,4 @@ jobs:
         run: |
           # Simulate Flutter build failure
           echo "Simulating Flutter build failure..."
-          # Add your test logic here
-
-      - name: Verify pipeline error reporting
-        run: |
-          # Verify that the pipeline reports the error correctly
-          echo "Verifying pipeline error reporting..."
           # Add your test logic here
