@@ -1,22 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:rebcm/main.dart' as app;
+import 'package:rebcm/main.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('onboarding test', (tester) async {
-    app.main();
+  testWidgets('Onboarding test', (tester) async {
+    await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    // Validate the initial screen
-    expect(find.text('Rebeca Voxel World'), findsOneWidget);
+    // Verificar se o onboarding é exibido
+    expect(find.text('Bem-vindo ao Rebeca\'s World!'), findsOneWidget);
 
-    // Simulate user interactions
-    await tester.tap(find.text('Start'));
+    // Simular interação do usuário
+    await tester.tap(find.text('Próximo'));
     await tester.pumpAndSettle();
 
-    // Validate the world is loaded
-    expect(find.byType(GridView), findsOneWidget);
+    // Verificar se a tela de instruções é exibida
+    expect(find.text('Como construir'), findsOneWidget);
+
+    // Simular interação do usuário
+    await tester.tap(find.text('Próximo'));
+    await tester.pumpAndSettle();
+
+    // Verificar se a tela inicial do jogo é exibida
+    expect(find.byType(MyHomePage), findsOneWidget);
   });
 }
