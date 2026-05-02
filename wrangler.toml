@@ -1,2 +1,14 @@
+[env.production]
+name = "construcao-criativa-production"
+
 [env.staging]
-name = "passdriver-staging"
+name = "construcao-criativa-staging"
+
+[site]
+bucket = "./app/build/web"
+
+[env.production.vars]
+CF_PAGES_BRANCH = "main"
+
+[env.staging.vars]
+CF_PAGES_BRANCH = "staging"
