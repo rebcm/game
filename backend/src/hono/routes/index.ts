@@ -1,7 +1,5 @@
 import { Hono } from 'hono';
-import apiTestRoute from './api-test/api-test-route';
-
-const routes = new Hono();
-routes.route('/', apiTestRoute);
-
-export default routes;
+import { validateCloudflareSecrets } from '../middlewares/validate-cloudflare-secrets';
+const app = new Hono();
+app.use('*', validateCloudflareSecrets);
+// existing routes...
