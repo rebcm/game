@@ -12,21 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
-      - name: Check Flutter version
-        run: flutter --version
-
-      - name: Setup JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-
-      - name: Check Java version
-        run: java -version
-
       - name: Run Tests
-        run: flutter test
+        run: |
+          flutter test
+
+      - name: Check Secrets Configuration
+        uses: ./.github/workflows/secrets_validation/check_secrets.yml
+
+      - name: Build and Deploy
+        run: |
+          flutter build web
+          # deploy commands here
