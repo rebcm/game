@@ -1,0 +1,19 @@
+name: Integracao Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  integracao-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration tests
+        run: flutter test test/integracao/api_test.dart
