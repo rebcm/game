@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+flutter clean
+flutter pub get
+flutter run
