@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Flutter Driver Test', () {
+  group('Flutter Render Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,12 +11,13 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        await driver!.close();
+        driver?.close();
       }
     });
 
-    test('verify flutter view', () async {
-      await driver!.waitUntilFirstFrameRasterized();
+    test('check flutter view', () async {
+      final flutterView = await driver?.waitFor(find.byType('FlutterView'));
+      expect(flutterView, isNotNull);
     });
   });
 }

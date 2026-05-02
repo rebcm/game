@@ -5,9 +5,9 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Flutter DOM validation test', (tester) async {
+  testWidgets('check flutter view', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    expect(find.byType('flt-glass-pane'), findsOneWidget);
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
