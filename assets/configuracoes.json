@@ -1,3 +1,6 @@
 {
-  "versao": "1.0.0"
+  "compressao": {
+    "metaReducaoTamanho": 20,
+    "limitePerdaQualidade": 5
+  }
 }

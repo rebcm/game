@@ -3,9 +3,14 @@ name: Define Compression KPI
 on:
   workflow_dispatch:
     inputs:
-      target-size:
-        description: 'Target size in bytes'
+      target-size-reduction:
+        description: 'Target size reduction percentage'
         required: true
+        default: '20'
+      acceptable-quality-loss:
+        description: 'Acceptable quality loss percentage'
+        required: true
+        default: '5'
 
 jobs:
   define-kpi:
@@ -16,10 +21,29 @@ jobs:
 
       - name: Define KPI
         run: |
-          echo "target_size=${{ github.event.inputs.target-size }}" > compression_kpi.txt
+          echo "Target size reduction: ${{ github.event.inputs.target-size-reduction }}%"
+          echo "Acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
+          echo "KPI defined successfully"
 
-      - name: Upload KPI artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: compression-kpi
-          path: compression_kpi.txt
+      - name: Update workflow file
+        run: |
+          cat > .github/workflows/compression_test.yml << 'EOF2'
+name: Compression Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  compression-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run compression test
+        run: |
+          echo "Running compression test with target size reduction: ${{ github.event.inputs.target-size-reduction }}% and acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
+          # Add compression test logic here
+EOF2
