@@ -2,29 +2,21 @@ name: Mapear Canais de Distribuição da Documentação
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'docs/**'
-      - '.github/workflows/docs_qa_checklist/**'
 
 jobs:
-  mapear-canais:
+  map-documentation-distribution-channels:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Identificar critérios de aceitação
-        run: |
-          echo "Identificando critérios de aceitação para documentação..."
-          # Adicionar lógica para identificar critérios de aceitação
-
-      - name: Mapear canais de distribuição
+      - name: Generate documentation mapping
         run: |
           echo "Mapeando canais de distribuição da documentação..."
-          # Adicionar lógica para mapear canais de distribuição
+          # Adicionar lógica para gerar o mapeamento aqui
 
-      - name: Ajustar métricas de SEO e limite de caracteres
-        run: |
-          echo "Ajustando métricas de SEO e limite de caracteres..."
-          # Adicionar lógica para ajustar métricas de SEO e limite de caracteres
+      - name: Upload documentation mapping
+        uses: actions/upload-artifact@v3
+        with:
+          name: mapeamento-canais-distribuicao-documentacao
+          path: docs/artefatos/checklists/mapear-canais-distribuicao-documentacao.md
