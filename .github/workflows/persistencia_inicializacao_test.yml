@@ -2,7 +2,8 @@ name: Persistência Inicialização Test
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   test:
@@ -11,6 +12,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          channel: 'stable'
       - run: flutter pub get
-      - run: flutter test integration_test/persistencia/persistencia_test.dart
+      - run: flutter test test/persistencia/gerenciador_preferencias_test.dart
