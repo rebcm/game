@@ -12,3 +12,10 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^0.3.0
   http_mock_adapter: ^1.0.0
+dependencies:
+  mocktail: ^1.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
