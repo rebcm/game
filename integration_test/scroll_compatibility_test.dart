@@ -10,11 +10,12 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Perform scroll action and verify its consistency across platforms
-      await tester.drag(find.byType(ListView), Offset(0, -100));
+      // Perform scroll action
+      await tester.drag(find.byType(ListView), Offset(0, -300));
       await tester.pumpAndSettle();
 
-      expect(find.text('Expected Text After Scroll'), findsOneWidget);
+      // Verify scroll result
+      expect(find.text('Scrolled'), findsOneWidget);
     });
   });
 }

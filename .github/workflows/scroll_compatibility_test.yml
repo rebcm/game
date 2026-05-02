@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        browser: ['chrome', 'firefox', 'safari']
+        browser: [chrome, firefox, safari]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
         with:
           flutter-version: '3.0.1'
 
-      - name: Run Scroll Compatibility Test on ${{ matrix.browser }}
+      - name: Run Scroll Compatibility Test
         run: |
           flutter config --enable-web
-          flutter test integration_test/scroll_compatibility_test.dart --browser=${{ matrix.browser }}
+          flutter drive --target=integration_test/scroll_compatibility_test.dart --browser-name=${{ matrix.browser }}
