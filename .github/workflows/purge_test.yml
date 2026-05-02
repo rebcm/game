@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Run purge test
+      - name: Run Purge Script
         run: |
-          flutter test app/test/features/purge/purge_test.dart
+          .github/workflows/scripts/purge-artifacts.sh
