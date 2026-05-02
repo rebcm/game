@@ -5,3 +5,7 @@
     "test:flutter:audio-loop": "flutter test integration_test/audio/audio_loop_test.dart"
   }
 }
+  "scripts": {
+    "test:flutter:upload-stress": "flutter test integration_test/upload_stress_test/chunk_upload_stress_test.dart"
+  }
+}
