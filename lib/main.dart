@@ -1,30 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/services/audio/audio_player_service.dart';
-import 'package:rebcm/widgets/settings/audio_settings.dart';
+import 'package:rebcm/utils/fps_calculator.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<AudioPlayerService>(create: (_) => AudioPlayerService()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Rebeca\'s Game'),
-        ),
-        body: Center(
-          child: AudioSettings(),
-        ),
+      title: 'Rebeca\'s Voxel World',
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  late Ticker _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = createTicker((elapsed) {
+      // Use FPSCalculator here
+      final fps = FPSCalculator.calculateFPS();
+      print('Current FPS: $fps');
+    });
+    _ticker.start();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('Rebeca\'s Voxel World'),
       ),
     );
   }

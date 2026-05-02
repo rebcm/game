@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Flutter Render Test', () {
+  group('FPS KPI Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,13 +11,14 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver?.close();
+        driver!.close();
       }
     });
 
-    test('check flutter view', () async {
-      final flutterView = await driver?.waitFor(find.byType('FlutterView'));
-      expect(flutterView, isNotNull);
+    test('Validate FPS KPI', () async {
+      // Implement FPS KPI validation test logic here
+      final fps = await driver!.getFrameRate();
+      expect(fps, lessThanOrEqualTo(55));
     });
   });
 }
