@@ -1,24 +1,19 @@
 import { Hono } from 'hono';
-import { Context } from 'hono/context';
+import { timeout } from 'hono/timeout';
 
-const rideHailingRoute = new Hono();
+const app = new Hono();
 
-rideHailingRoute.post('/ride-hailing', async (c: Context) => {
+app.get('/ride_hailing/data', timeout(1000), async (c) => {
   try {
-    // Simulating an error
-    throw new Error('Invalid request');
+    // Simulate a slow response
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return c.json({ message: 'Ride hailing data' });
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes('auth')) {
-        return c.json({ error: 'Erro de autenticação' }, 401);
-      } else if (error.message.includes('timeout')) {
-        return c.json({ error: 'Timeout' }, 408);
-      } else if (error.message.includes('payload')) {
-        return c.json({ error: 'Limite de payload excedido' }, 413);
-      }
+    if (error instanceof TimeoutError) {
+      return c.json({ error: 'Timeout ao solicitar dados de ride hailing' }, 408);
     }
-    return c.json({ error: 'Erro desconhecido' }, 500);
+    throw error;
   }
 });
 
-export default rideHailingRoute;
+export default app;
