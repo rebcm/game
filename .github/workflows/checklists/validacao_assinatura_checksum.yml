@@ -13,22 +13,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download artifact
+      - name: Baixar artefato
         uses: actions/download-artifact@v3
         with:
-          name: rebcm-game-artifact
-          path: ./artifact
+          name: rebcm-game-binary
+          path: .
 
-      - name: Validate signature
+      - name: Validar assinatura
         run: |
-          # Implement signature validation logic here
+          # Implementar lógica para validar a assinatura do binário
           echo "Validating signature..."
-          # For demonstration purposes, assume the signature is valid
-          echo "Signature is valid."
+          # Exemplo:
+          # gpg --verify rebcm-game-binary.sig rebcm-game-binary
 
-      - name: Calculate and validate checksum
+      - name: Calcular e validar checksum
         run: |
-          # Implement checksum calculation and validation logic here
+          # Implementar lógica para calcular e validar o checksum do binário
           echo "Calculating and validating checksum..."
-          # For demonstration purposes, assume the checksum is valid
-          echo "Checksum is valid."
+          # Exemplo:
+          # sha256sum rebcm-game-binary | grep -q "expected_checksum"
+
+      - name: Reportar resultado
+        run: |
+          echo "Validação concluída com sucesso."

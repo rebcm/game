@@ -1,21 +1,20 @@
 #!/bin/bash
 
-# Implementar lógica para validar a assinatura do binário gerado para staging
-assinatura_valida=$(echo "Placeholder para lógica de validação de assinatura")
+# Baixar artefato
+echo "Baixando artefato..."
+# Implementar lógica para baixar o artefato
 
-if [ "$assinatura_valida" = "true" ]; then
-  echo "Assinatura válida"
+# Validar assinatura
+echo "Validando assinatura..."
+gpg --verify rebcm-game-binary.sig rebcm-game-binary
+
+# Calcular e validar checksum
+echo "Calculando e validando checksum..."
+EXPECTED_CHECKSUM="expected_checksum_value"
+ACTUAL_CHECKSUM=$(sha256sum rebcm-game-binary | cut -d' ' -f1)
+if [ "$ACTUAL_CHECKSUM" == "$EXPECTED_CHECKSUM" ]; then
+  echo "Checksum válido."
 else
-  echo "Assinatura inválida"
-  exit 1
-fi
-
-# Implementar lógica para calcular e validar o checksum do arquivo
-checksum_valido=$(echo "Placeholder para lógica de validação de checksum")
-
-if [ "$checksum_valido" = "true" ]; then
-  echo "Checksum válido"
-else
-  echo "Checksum inválido"
+  echo "Checksum inválido."
   exit 1
 fi
