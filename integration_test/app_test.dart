@@ -6,9 +6,11 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('example test', (tester) async {
-    app.main();
+  testWidgets('end-to-end test', (tester) async {
+    app.main(staging: true);
     await tester.pumpAndSettle();
-    // Implemente seus testes aqui
+
+    // Implement your test logic here
+    await Future.delayed(Duration(seconds: 10));
   });
 }

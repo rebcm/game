@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/widgets/characters/rebeca/rebeca_character.dart';
 
-void main() {
-  runApp(MyApp());
+void main({bool staging = false}) {
+  // Use the staging flag to configure your app
+  runApp(MyApp(staging: staging));
 }
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rebeca Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
+  final bool staging;
 
-class MyHomePage extends StatelessWidget {
+  MyApp({required this.staging});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: RebecaCharacter(),
+    // Implement your app logic here
+    return MaterialApp(
+      title: 'Rebcm Game',
+      home: Scaffold(
+        body: Center(
+          child: Text('Rebcm Game'),
+        ),
       ),
     );
   }

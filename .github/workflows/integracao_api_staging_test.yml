@@ -1,0 +1,24 @@
+name: Integracao API Staging Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  integracao-api-staging-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run integration test with staging API
+        run: |
+          flutter config --enable-web
+          flutter pub get
+          flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart --flavor=staging
