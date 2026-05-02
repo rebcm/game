@@ -47,3 +47,6 @@ flutter:
   generate: true
   assets:
     - assets/docs/checklists/docs-qa-checklist.md
+  assets:
+    - assets/docs/guias/guia-estilo-tom-voz.md
+    - assets/docs/checklists/voice-tone-validation-checklist.md
