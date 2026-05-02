@@ -5,14 +5,14 @@ enum EstadoRebeca {
 
 class TransicaoEstadoRebeca {
   EstadoRebeca estadoAtual;
-  bool inputMovimentacao;
+  bool movimentoPressionado;
 
-  TransicaoEstadoRebeca({required this.estadoAtual, required this.inputMovimentacao});
+  TransicaoEstadoRebeca(this.estadoAtual, this.movimentoPressionado);
 
-  EstadoRebeca transicionar() {
-    if (inputMovimentacao && estadoAtual == EstadoRebeca.parado) {
+  EstadoRebeca proximoEstado() {
+    if (movimentoPressionado && estadoAtual == EstadoRebeca.parado) {
       return EstadoRebeca.andando;
-    } else if (!inputMovimentacao && estadoAtual == EstadoRebeca.andando) {
+    } else if (!movimentoPressionado && estadoAtual == EstadoRebeca.andando) {
       return EstadoRebeca.parado;
     }
     return estadoAtual;

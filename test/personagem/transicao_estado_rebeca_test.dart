@@ -3,24 +3,29 @@ import 'package:rebcm/personagem/estado_rebeca.dart';
 
 void main() {
   group('TransicaoEstadoRebeca', () {
-    test('deve permanecer parado sem input de movimentação', () {
-      final transicao = TransicaoEstadoRebeca(estadoAtual: EstadoRebeca.parado, inputMovimentacao: false);
-      expect(transicao.transicionar(), EstadoRebeca.parado);
+    test('deve permanecer parado quando não há movimento', () {
+      final transicao = TransicaoEstadoRebeca(EstadoRebeca.parado, false);
+      expect(transicao.proximoEstado(), EstadoRebeca.parado);
     });
 
-    test('deve mudar para andando com input de movimentação', () {
-      final transicao = TransicaoEstadoRebeca(estadoAtual: EstadoRebeca.parado, inputMovimentacao: true);
-      expect(transicao.transicionar(), EstadoRebeca.andando);
+    test('deve mudar para andando quando movimento é pressionado', () {
+      final transicao = TransicaoEstadoRebeca(EstadoRebeca.parado, true);
+      expect(transicao.proximoEstado(), EstadoRebeca.andando);
     });
 
-    test('deve permanecer andando com input de movimentação', () {
-      final transicao = TransicaoEstadoRebeca(estadoAtual: EstadoRebeca.andando, inputMovimentacao: true);
-      expect(transicao.transicionar(), EstadoRebeca.andando);
+    test('deve permanecer andando quando movimento continua pressionado', () {
+      final transicao = TransicaoEstadoRebeca(EstadoRebeca.andando, true);
+      expect(transicao.proximoEstado(), EstadoRebeca.andando);
     });
 
-    test('deve mudar para parado sem input de movimentação', () {
-      final transicao = TransicaoEstadoRebeca(estadoAtual: EstadoRebeca.andando, inputMovimentacao: false);
-      expect(transicao.transicionar(), EstadoRebeca.parado);
+    test('deve mudar para parado quando movimento é liberado', () {
+      final transicao = TransicaoEstadoRebeca(EstadoRebeca.andando, false);
+      expect(transicao.proximoEstado(), EstadoRebeca.parado);
+    });
+
+    test('deve permanecer parado quando não há movimento pressionado', () {
+      final transicao = TransicaoEstadoRebeca(EstadoRebeca.parado, false);
+      expect(transicao.proximoEstado(), EstadoRebeca.parado);
     });
   });
 }
