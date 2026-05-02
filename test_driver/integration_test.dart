@@ -1,22 +1,3 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:integration_test/integration_test_driver.dart';
 
-void main() {
-  group('Input Stress Test', () {
-    FlutterDriver? driver;
-
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
-
-    tearDownAll(() async {
-      if (driver != null) {
-        driver?.close();
-      }
-    });
-
-    test('Input Stress Test', () async {
-      await driver?.requestData('input_stress_test');
-    });
-  });
-}
+Future<void> main() => integrationDriver();
