@@ -13,25 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar variáveis de ambiente
+      - name: Validate environment variables
         run: |
           #!/bin/bash
-          echo "Verificando variáveis de ambiente..."
-          if [ -f .env ]; then
-            echo ".env encontrado. Iniciando verificação..."
-            while IFS= read -r line; do
-              if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
-                var_name=${line%%=*}
-                var_name=${var_name%% }
-                var_name=${var_name## }
-                if ! grep -rq "$var_name" .; then
-                  echo "Erro: Variável '$var_name' não encontrada no código."
-                  exit 1
-                fi
-              fi
-            done < .env
-            echo "Variáveis de ambiente validadas com sucesso."
-          else
-            echo "Erro: Arquivo .env não encontrado."
-            exit 1
-          fi
+          echo "Validating environment variables..."
+          # List of expected environment variables
+          EXPECTED_VARS=("VARIABLE_1" "VARIABLE_2" "VARIABLE_3")
+          for var in "${EXPECTED_VARS[@]}"; do
+            if grep -q "$var" .env; then
+              echo "$var found in .env"
+            else
+              echo "$var not found in .env"
+              exit 1
+            fi
+          done
