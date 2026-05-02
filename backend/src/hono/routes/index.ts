@@ -1,6 +1,8 @@
-import { Router } from 'hono';
-import { deployRouter } from './deploy/deploy.routes';
+import { Hono } from 'hono';
+import iluminacaoRoute from './iluminacao/iluminacao_route';
 
-export const router = new Router();
+const app = new Hono();
 
-router.use('/deploy/*', deployRouter);
+app.route('/api', iluminacaoRoute);
+
+export default app;
