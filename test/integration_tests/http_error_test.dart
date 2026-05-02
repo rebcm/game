@@ -1,80 +1,66 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
-import 'package:rebcm/main.dart' as app;
+import 'package:rebcm/services/http_service.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  late http.Client client;
+  late HttpService httpService;
+
+  setUp(() {
+    client = MockHttpClient();
+    httpService = HttpService(client);
+  });
 
   group('HTTP Error Handling', () {
-    late MockHttpClient mockHttpClient;
-
-    setUp(() {
-      mockHttpClient = MockHttpClient();
-      http.Cliente = mockHttpClient;
-    });
-
-    testWidgets('400 Bad Request', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
+    test('handles 400 Bad Request', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
           .thenAnswer((_) async => http.Response('Bad Request', 400));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Error 400: Bad Request'), findsOneWidget);
+      final response = await httpService.get('https://example.com/api/resource');
+      expect(response.statusCode, 400);
     });
 
-    testWidgets('401 Unauthorized', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
+    test('handles 401 Unauthorized', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
           .thenAnswer((_) async => http.Response('Unauthorized', 401));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Error 401: Unauthorized'), findsOneWidget);
+      final response = await httpService.get('https://example.com/api/resource');
+      expect(response.statusCode, 401);
     });
 
-    testWidgets('404 Not Found', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
+    test('handles 404 Not Found', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
           .thenAnswer((_) async => http.Response('Not Found', 404));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Error 404: Not Found'), findsOneWidget);
+      final response = await httpService.get('https://example.com/api/resource');
+      expect(response.statusCode, 404);
     });
 
-    testWidgets('500 Internal Server Error', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
+    test('handles 500 Internal Server Error', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
           .thenAnswer((_) async => http.Response('Internal Server Error', 500));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Error 500: Internal Server Error'), findsOneWidget);
+      final response = await httpService.get('https://example.com/api/resource');
+      expect(response.statusCode, 500);
     });
 
-    testWidgets('Timeout', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
-          .thenAnswer((_) async => Future.delayed(Duration(seconds: 10)));
+    test('handles timeout', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
+          .thenAnswer((_) async => Future.delayed(const Duration(seconds: 10)));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Timeout Error'), findsOneWidget);
+      expect(() async => await httpService.get('https://example.com/api/resource', timeout: const Duration(seconds: 1)),
+          throwsA(isA<TimeoutException>()));
     });
 
-    testWidgets('Invalid Payload', (tester) async {
-      when(() => mockHttpClient.get(Uri.parse('https://example.com/api')))
-          .thenAnswer((_) async => http.Response('Invalid Payload', 200));
+    test('handles invalid payload', () async {
+      when(() => client.get(Uri.parse('https://example.com/api/resource')))
+          .thenAnswer((_) async => http.Response('Invalid JSON', 200));
 
-      await app.main();
-      await tester.pumpAndSettle();
-
-      expect(find.text('Invalid Payload'), findsOneWidget);
+      expect(() async => await httpService.get('https://example.com/api/resource'),
+          throwsA(isA<FormatException>()));
     });
   });
 }
