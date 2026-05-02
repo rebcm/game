@@ -8,3 +8,4 @@
     "test:flutter:checklist": "flutter test integration/performance/checklist_test.dart"
   }
 }
+    "test:flutter:audio-latency": "flutter test integration_test/audio/audio_latency_test.dart"

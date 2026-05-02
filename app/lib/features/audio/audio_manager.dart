@@ -1,22 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioManager {
-  final AudioPlayer _musicPlayer = AudioPlayer();
-  final AudioPlayer _sfxPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  Future<void> playMusic(String assetPath) async {
-    await _musicPlayer.play(AssetSource(assetPath), mode: PlayerMode.LOW_LATENCY);
+  Future<void> initAudio() async {
+    await _audioPlayer.setSource(AssetSource('audio/sfx/colocar_bloco.ogg'));
   }
 
-  Future<void> playSfx(String assetPath) async {
-    await _sfxPlayer.play(AssetSource(assetPath), mode: PlayerMode.LOW_LATENCY);
-  }
-
-  Future<void> stopMusic() async {
-    await _musicPlayer.stop();
-  }
-
-  Future<void> stopSfx() async {
-    await _sfxPlayer.stop();
+  Future<void> playSound(String soundPath) async {
+    await _audioPlayer.play(AssetSource('audio/$soundPath'));
   }
 }
