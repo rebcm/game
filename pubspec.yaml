@@ -24,6 +24,7 @@ dependencies:
   shared_preferences: ^2.1.1
   flutter:
     sdk: flutter
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_leak_detector: ^2.0.1
@@ -61,5 +62,3 @@ flutter:
 
   test_secrets_validation:
     path: test/secrets_validation_test.dart
-
-  cached_network_image: ^3.2.3

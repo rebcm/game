@@ -1,11 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
+import 'package:rebcm/main.dart' as app;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('verify flutter web build', (tester) async {
-    await tester.pumpWidget(MyApp());
-    expect(find.byType(MyHomePage), findsOneWidget);
+  testWidgets('Flutter Web Build Test', (tester) async {
+    await tester.pumpWidget(app.MyApp());
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }

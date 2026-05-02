@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  validate-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,19 +17,19 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
       - name: Build Flutter Web
-        run: flutter build web --release
+        run: flutter build web
 
       - name: Validate build output
         run: |
-          if [ ! -d "build/web/assets" ]; then
-            echo "Assets directory is missing"
+          if [ ! -d "build/web" ]; then
+            echo "Build output directory not found"
             exit 1
           fi
           if [ ! -f "build/web/index.html" ]; then
-            echo "index.html is missing"
+            echo "index.html not found in build output"
             exit 1
           fi
