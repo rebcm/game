@@ -1,0 +1,18 @@
+name: Documentação Fluxo CI/CD Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar Fluxo CI/CD
+        run: |
+          echo "Validando fluxo CI/CD..."
+          # Adicione aqui os comandos para validar o fluxo CI/CD
