@@ -1,0 +1,21 @@
+name: Ruby Fastlane Version Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test Ruby/Fastlane version conflicts
+        run: |
+          # Test for Ruby/Fastlane version conflicts
+          if ! bundle install; then
+            echo "Ruby/Fastlane version conflict detected"
+            exit 1
+          fi
