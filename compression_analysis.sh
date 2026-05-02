@@ -1,17 +1,16 @@
 #!/bin/bash
 
-original_size=$(stat -c%s original.apk)
-new_size=$(stat -c%s new.apk)
-
-echo "Original APK size: $original_size bytes"
-echo "New APK size: $new_size bytes"
-
-reduction=$(echo "scale=2; (($original_size - $new_size) / $original_size) * 100" | bc)
-echo "Reduction: $reduction%"
+# TO DO: implement logic to calculate the current APK/IPA size
+current_size=$(echo "1000") # placeholder value
 
 target_reduction=$(cat compression_target.txt)
-if (( $(echo "$reduction >= $target_reduction" | bc -l) )); then
-  echo "KPI achieved: $reduction% >= $target_reduction%"
+target_size=$(echo "scale=2; $current_size * (1 - $target_reduction / 100)" | bc)
+
+echo "Current size: $current_size"
+echo "Target size: $target_size"
+
+if (( $(echo "$current_size <= $target_size" | bc -l) )); then
+  echo "KPI achieved!"
 else
-  echo "KPI not achieved: $reduction% < $target_reduction%"
+  echo "KPI not achieved!"
 fi
