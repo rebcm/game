@@ -4,18 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('PreferenceService', () {
-    test('getVolume returns default when no preference exists', () async {
+    test('getVolume returns default when key is missing', () async {
       SharedPreferences.setMockInitialValues({});
       final service = PreferenceService();
-      final volume = await service.getVolume();
-      expect(volume, 1.0);
+      expect(await service.getVolume(), 1.0);
     });
 
     test('getVolume returns stored value', () async {
       SharedPreferences.setMockInitialValues({'volume': 0.5});
       final service = PreferenceService();
-      final volume = await service.getVolume();
-      expect(volume, 0.5);
+      expect(await service.getVolume(), 0.5);
     });
 
     test('setVolume stores value', () async {
