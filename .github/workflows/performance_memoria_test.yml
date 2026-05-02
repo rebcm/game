@@ -1,4 +1,4 @@
-name: Performance and Memory Test
+name: Performance e Memória Test
 
 on:
   push:
@@ -15,8 +15,9 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.0.5'
 
       - name: Run performance and memory tests
         run: |
-          flutter test test/performance/performance_test.dart
+          flutter pub get
+          flutter test --machine --reporter json integration_test/performance_memoria_test.dart

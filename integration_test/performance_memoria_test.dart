@@ -5,11 +5,14 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Performance and Memory Test', (tester) async {
+  testWidgets('Performance and memory test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Add performance and memory tests here
-    await Future.delayed(Duration(seconds: 5));
+    // Implement performance and memory tests here
+    // For example:
+    // await tester.tap(find.text('Start'));
+    // await tester.pumpAndSettle();
+    // expect(find.text('Expected text'), findsOneWidget);
   });
 }
