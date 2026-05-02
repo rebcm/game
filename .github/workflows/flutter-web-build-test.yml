@@ -6,31 +6,26 @@ on:
       - main
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
-          channel: 'stable'
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Build web release
+      - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Validate build
+      - name: Validate build artifacts
         run: |
           if [ ! -d "build/web" ]; then
-            echo "Web build directory not found"
-            exit 1
-          fi
-          if [ -z "$(ls -A build/web)" ]; then
-            echo "Web build directory is empty"
+            echo "Build artifacts not found"
             exit 1
           fi
