@@ -1,11 +1,13 @@
-import 'package:flutter_gl/flutter_gl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Chunk with EquatableMixin {
-  final int x;
-  final int z;
+part 'chunk.g.dart';
 
-  Chunk(this.x, this.z);
+@JsonSerializable()
+class Chunk {
+  final List<dynamic> data;
 
-  @override
-  List<Object> get props => [x, z];
+  Chunk({required this.data});
+
+  factory Chunk.fromJson(Map<String, dynamic> json) => _$ChunkFromJson(json);
+  Map<String, dynamic> toJson() => _$ChunkToJson(this);
 }
