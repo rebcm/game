@@ -2,96 +2,82 @@
 
 validate_android_signature() {
   if ! command -v apksigner &> /dev/null; then
-    echo "Error: apksigner not found"
-    return 1
+    echo "Erro: apksigner não encontrado. Instale o Android SDK Build-Tools."
+    exit 1
   fi
 
-  APK_SIGNER_OUTPUT=$(apksigner verify --verbose "$1" 2>&1)
-  if echo "$APK_SIGNER_OUTPUT" | grep -q "Verified using v1 scheme (JAR signing)"; then
-    echo "Android APK signature valid"
-    return 0
-  else
-    echo "Android APK signature invalid"
-    return 1
+  APK_PATH=$1
+  if [ ! -f "$APK_PATH" ]; then
+    echo "Erro: APK não encontrado em $APK_PATH"
+    exit 1
+  fi
+
+  apksigner verify --verbose "$APK_PATH"
+  if [ $? -ne 0 ]; then
+    echo "Erro: Assinatura do APK inválida"
+    exit 1
   fi
 }
 
 validate_ios_signature() {
   if ! command -v codesign &> /dev/null; then
-    echo "Error: codesign not found"
-    return 1
+    echo "Erro: codesign não encontrado. Certifique-se de estar em um ambiente macOS com Xcode configurado."
+    exit 1
   fi
 
-  CODESIGN_OUTPUT=$(codesign --verify --verbose "$1" 2>&1)
-  if echo "$CODESIGN_OUTPUT" | grep -q "valid on disk"; then
-    echo "iOS IPA signature valid"
-    return 0
-  else
-    echo "iOS IPA signature invalid"
-    return 1
-  fi
-}
-
-validate_android_checksum() {
-  if ! command -v sha256sum &> /dev/null; then
-    echo "Error: sha256sum not found"
-    return 1
+  APP_PATH=$1
+  if [ ! -d "$APP_PATH" ]; then
+    echo "Erro: Aplicativo iOS não encontrado em $APP_PATH"
+    exit 1
   fi
 
-  EXPECTED_CHECKSUM="$2"
-  ACTUAL_CHECKSUM=$(sha256sum "$1" | cut -d' ' -f1)
-  if [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; then
-    echo "Android APK checksum valid"
-    return 0
-  else
-    echo "Android APK checksum invalid"
-    return 1
+  codesign --verify --verbose "$APP_PATH"
+  if [ $? -ne 0 ]; then
+    echo "Erro: Assinatura do aplicativo iOS inválida"
+    exit 1
   fi
 }
 
-validate_ios_checksum() {
-  if ! command -v sha256sum &> /dev/null; then
-    echo "Error: sha256sum not found"
-    return 1
+validate_checksum() {
+  FILE_PATH=$1
+  EXPECTED_CHECKSUM=$2
+
+  if [ ! -f "$FILE_PATH" ]; then
+    echo "Erro: Arquivo não encontrado em $FILE_PATH"
+    exit 1
   fi
 
-  EXPECTED_CHECKSUM="$2"
-  ACTUAL_CHECKSUM=$(sha256sum "$1" | cut -d' ' -f1)
-  if [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; then
-    echo "iOS IPA checksum valid"
-    return 0
-  else
-    echo "iOS IPA checksum invalid"
-    return 1
+  ACTUAL_CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d' ' -f1)
+  if [ "$ACTUAL_CHECKSUM" != "$EXPECTED_CHECKSUM" ]; then
+    echo "Erro: Checksum do arquivo $FILE_PATH não confere. Esperado: $EXPECTED_CHECKSUM, Obtido: $ACTUAL_CHECKSUM"
+    exit 1
   fi
 }
 
-if [ "$#" -lt 2 ]; then
-  echo "Usage: $0 <platform> <file> [checksum]"
+usage() {
+  echo "Uso: $0 <plataforma> <caminho_do_arquivo> [checksum esperado]"
+  echo "Plataformas suportadas: android, ios, checksum"
   exit 1
-fi
+}
 
-PLATFORM="$1"
-FILE="$2"
-CHECKSUM="$3"
+PLATFORM=$1
+FILE_PATH=$2
+EXPECTED_CHECKSUM=$3
 
-case "$PLATFORM" in
+case $PLATFORM in
   android)
-    if [ -n "$CHECKSUM" ]; then
-      validate_android_checksum "$FILE" "$CHECKSUM"
-    else
-      validate_android_signature "$FILE"
-    fi
+    validate_android_signature "$FILE_PATH"
     ;;
   ios)
-    if [ -n "$CHECKSUM" ]; then
-      validate_ios_checksum "$FILE" "$CHECKSUM"
-    else
-      validate_ios_signature "$FILE"
+    validate_ios_signature "$FILE_PATH"
+    ;;
+  checksum)
+    if [ -z "$EXPECTED_CHECKSUM" ]; then
+      usage
     fi
+    validate_checksum "$FILE_PATH" "$EXPECTED_CHECKSUM"
     ;;
   *)
-    echo "Unsupported platform: $PLATFORM"
-    exit 1
+    usage
     ;;
 esac

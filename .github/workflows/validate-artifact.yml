@@ -1,13 +1,16 @@
-name: Validate Artifact
+name: Validate Artifact Signature
 
 on:
   workflow_dispatch:
     inputs:
       platform:
+        description: 'Plataforma (android, ios, checksum)'
         required: true
-      artifact:
+      file_path:
+        description: 'Caminho do arquivo'
         required: true
-      checksum:
+      expected_checksum:
+        description: 'Checksum esperado (para validação via checksum)'
         required: false
 
 jobs:
@@ -17,6 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate artifact
+      - name: Validate signature
         run: |
-          .github/workflows/scripts/validate_signature.sh ${{ inputs.platform }} ${{ inputs.artifact }} ${{ inputs.checksum }}
+          .github/workflows/scripts/validate_signature.sh ${{ inputs.platform }} ${{ inputs.file_path }} ${{ inputs.expected_checksum }}
