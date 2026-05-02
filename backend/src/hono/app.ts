@@ -1,12 +1,8 @@
 import { Hono } from 'hono';
-import { localizacaoRoute } from './localizacao/localizacao_route';
-import game from './routes/game';
+import controles from './routes/controles/controles';
 
 const app = new Hono();
 
-app.route('/game', game);
+app.route('/api', controles);
 
 export default app;
-import rebeccaCharacterRoute from './routes/rebecca/rebecca_character';
-
-app.route('/api', rebeccaCharacterRoute);
