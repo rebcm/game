@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+    builder: (context, child) => ...addAudioControlRoute(...),
       home: Scaffold(
         body: AudioTransitionWidget(),
       ),
