@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:passdriver/providers/dev_provider.dart';
+import 'audio.screen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => DevProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DevEnvironment(),
+      home: AudioScreen(),
     );
   }
 }
