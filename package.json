@@ -7,3 +7,7 @@
     "test:flutter:mock-api": "flutter test integration_test/api/mock_api_test.dart"
   }
 }
+  "scripts": {
+    "test:flutter:api-strategy": "flutter test integration_test/api/strategy/api_test_strategy.dart",
+    "test:flutter:api-suite": "flutter test integration_test/api/api_test_suite.dart"
+  }
