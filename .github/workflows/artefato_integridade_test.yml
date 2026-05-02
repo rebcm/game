@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'assets/blocos/**'
 
 jobs:
   test:
@@ -21,6 +23,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run integridade test
+      - name: Testar integridade do artefato
         run: |
-          flutter test test/artefato_integridade_test.dart
+          flutter test integration_test/artefato_integridade_test.dart
