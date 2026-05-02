@@ -1,43 +1,23 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:rebcm/features/player.dart';
 
-class Game extends StatefulWidget {
-  @override
-  _GameState createState() => _GameState();
-}
-
-class _GameState extends State<Game> with TickerProviderStateMixin {
-  late AnimationController _animationController;
+class MyGame extends FlameGame {
+  late Player _player;
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    )..repeat();
+  Future<void> onLoad() async {
+    await super.onLoad();
+    _player = Player();
+    add(_player);
   }
 
   @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
+  void update(double dt) {
+    super.update(dt);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(_animationController.value * 100, 0),
-          child: child,
-        );
-      },
-      child: Container(
-        color: Colors.blue,
-        width: 100,
-        height: 100,
-      ),
-    );
+  void onTap() {
+    _player.jump();
   }
 }
