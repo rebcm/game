@@ -1,0 +1,25 @@
+name: Testes de Documentação de Localização
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/docs/localizacao/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar arquivos de documentação
+        run: |
+          if [ -f "assets/docs/localizacao/criterios_aceitacao.md" ]; then
+            echo "Arquivo encontrado"
+          else
+            echo "Arquivo não encontrado"
+            exit 1
+          fi
+
