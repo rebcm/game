@@ -35,3 +35,5 @@ dev_dependencies:
     - assets/characters/rebeca_skin.png
 devDependencies:
   toxiproxy: ^2.0.0
+  assets:
+    - assets/images/rebeca.png
