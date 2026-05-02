@@ -1,63 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:your_app_name/features/salvamento/stores/salvamento_store.dart';
-import 'package:your_app_name/features/salvamento/repositories/salvamento_repository.dart';
-import 'package:your_app_name/features/salvamento/services/salvamento_service.dart';
+import 'package:rebcm/widgets/mouse_region_widget.dart';
 
 void main() {
-  final salvamentoService = SalvamentoService();
-  final salvamentoRepository = SalvamentoRepositoryImpl(salvamentoService);
-  final salvamentoStore = SalvamentoStore(salvamentoRepository);
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => salvamentoStore),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca Game',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final salvamentoStore = Provider.of<SalvamentoStore>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rebeca Game'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Mundo Salvo: ${salvamentoStore.mundoSalvo}'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                await salvamentoStore.carregarMundo();
-              },
-              child: Text('Carregar Mundo'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                await salvamentoStore.salvarMundo('novo_mundo');
-              },
-              child: Text('Salvar Mundo'),
-            ),
-          ],
+      home: Scaffold(
+        body: MouseRegionWidget(
+          child: Container(
+            width: 100,
+            height: 100,
+            color: Colors.red,
+          ),
         ),
       ),
     );
