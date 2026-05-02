@@ -1,41 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 class I18nService {
-  static final I18nService _instance = I18nService._();
+  static final I18nService _instance = I18nService._internal();
+
   factory I18nService() => _instance;
-  I18nService._();
 
-  static Locale? _locale;
+  I18nService._internal();
 
-  Locale? get locale => _locale;
+  Locale? _locale;
 
-  void changeLocale(Locale locale) {
+  Future<void> init(Locale locale) async {
     _locale = locale;
-    Intl.defaultLocale = locale.toString();
   }
 
-  String? getTitle() {
-    return Intl.message(
-      'Construção Criativa',
-      name: 'titulo',
-      desc: 'Título do jogo',
-    );
+  String translate(String key) {
+    if (_locale == null) return key;
+    return _getTranslation(_locale!.languageCode)[key] ?? key;
   }
 
-  String? getInventoryText() {
-    return Intl.message(
-      'Inventário',
-      name: 'inventario',
-      desc: 'Texto do inventário',
-    );
+  Map<String, dynamic> _getTranslation(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return jsonDecode(_enJson);
+      case 'pt':
+        return jsonDecode(_ptJson);
+      default:
+        return {};
+    }
   }
 
-  String? getSelectedBlockText() {
-    return Intl.message(
-      'Bloco Selecionado',
-      name: 'bloco_selecionado',
-      desc: 'Texto do bloco selecionado',
-    );
-  }
+  static const String _enJson = '''
+{
+  "hello": "Hello",
+  "world": "World"
+}
+''';
+
+  static const String _ptJson = '''
+{
+  "hello": "Olá",
+  "world": "Mundo"
+}
+''';
 }
