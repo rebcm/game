@@ -1,0 +1,28 @@
+name: Flutter Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run smoke test
+        run: |
+          flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart --browser=web-server --web-port=8080 &
+          sleep 30
+          curl -s -f http://localhost:8080/index.html | grep -q 'flt-glass-pane'
