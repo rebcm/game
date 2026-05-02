@@ -1,0 +1,16 @@
+name = "passdriver-backend"
+main = "./src/index.ts"
+compatibility_date = "2023-12-01"
+
+[env.production]
+DB = "passdriver-db"
+KV = "passdriver-kv"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "passdriver-db"
+database_id = "your-database-id"
+
+[[env.production.kv_namespaces]]
+binding = "KV"
+id = "your-kv-id"
