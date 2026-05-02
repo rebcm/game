@@ -1,11 +1,11 @@
 import 'package:flutter/animation.dart';
 
 class CustomAnimationController extends AnimationController {
-  CustomAnimationController({required super.vsync}) : super(duration: const Duration(seconds: 1));
+  CustomAnimationController({required super.vsync, required super.duration});
 
   @override
   void dispose() {
-    stop();
     super.dispose();
+    // Add any additional dispose logic here
   }
 }

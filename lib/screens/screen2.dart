@@ -12,7 +12,7 @@ class _Screen2State extends State<Screen2> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationController = CustomAnimationController(vsync: this);
+    _animationController = CustomAnimationController(vsync: this, duration: Duration(seconds: 1));
   }
 
   @override
@@ -28,8 +28,8 @@ class _Screen2State extends State<Screen2> with TickerProviderStateMixin {
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
-            return Transform.rotate(
-              angle: _animationController.value * 3.14159 * 2,
+            return Transform.scale(
+              scale: _animationController.value,
               child: child,
             );
           },
@@ -38,7 +38,7 @@ class _Screen2State extends State<Screen2> with TickerProviderStateMixin {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _animationController.forward(from: 0);
+          _animationController.forward();
         },
       ),
     );

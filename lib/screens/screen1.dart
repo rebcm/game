@@ -12,7 +12,7 @@ class _Screen1State extends State<Screen1> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationController = CustomAnimationController(vsync: this);
+    _animationController = CustomAnimationController(vsync: this, duration: Duration(seconds: 1));
   }
 
   @override
@@ -38,7 +38,7 @@ class _Screen1State extends State<Screen1> with TickerProviderStateMixin {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _animationController.forward(from: 0);
+          _animationController.forward();
         },
       ),
     );
