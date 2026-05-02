@@ -46,8 +46,6 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/blocos/
     - docs/artefatos/checklists/onboarding-validation-criterios.md
-    - assets/docs/checklists/onboarding-validation-checklist.md
-    - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/audio/optimized/ambient/
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/onboarding-validation-checklist.md
@@ -58,9 +56,3 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/voice-tone-validation-checklist.md
     - docs/ar
-
-  assets:
-    - docs/artefatos/checklists/mapear-canais-distribuicao-documentacao.md
-dependencies:
-  cached_network_image: ^3.2.1
-  cache_manager: ^3.3.1
