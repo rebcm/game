@@ -1,4 +1,4 @@
 class Constantes {
-  static const String urlApiCloudflare = 'https://construcao-criativa.workers.dev';
-  static const int tempoLimiteRequisicao = 10; // segundos
+  static const String URL_API = 'https://construcao-criativa.workers.dev';
+  static const String autora = 'Rebeca Alves Moreira';
 }

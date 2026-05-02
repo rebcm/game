@@ -1,4 +1,4 @@
-name: Testes de API
+name: Testes de Integração da API
 
 on:
   push:
@@ -6,12 +6,14 @@ on:
       - main
 
 jobs:
-  teste-api:
+  test-api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-      - run: flutter pub get
-      - run: flutter test test/integracao/api
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test lib/test/integracao/api/test_api.dart
