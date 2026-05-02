@@ -1,21 +1,17 @@
 name: Upload Stress Test
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 2 * * *'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
-
-      - name: Run upload stress test
-        run: flutter test test/upload_stress_test/upload_stress_test.dart
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: flutter test test/upload_stress_test/upload_stress_test.dart
