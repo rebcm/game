@@ -2,6 +2,6 @@
   "name": "passdriver",
   "version": "1.0.0",
   "scripts": {
-    "test:flutter:audio-latency": "flutter test integration_test/audio/audio_latency_test.dart"
+    "test:flutter:audio-loop": "flutter test integration_test/audio/audio_loop_test.dart"
   }
 }

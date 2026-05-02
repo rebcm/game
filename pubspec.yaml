@@ -22,3 +22,5 @@ dev_dependencies:
 
   flutter_driver:
     sdk: flutter
+dependencies:
+  audioplayers: ^1.0.1
