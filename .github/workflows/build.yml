@@ -1,4 +1,4 @@
-name: Build e Deploy — PassDriver
+name: Build e Deploy — Jogo da Rebeca
 
 on:
   schedule:
@@ -11,78 +11,109 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
-      - run: flutter build web --release
-      - name: Deploy para Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+          flutter-version: '3.22.0'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: dart analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build web release
+        run: flutter build web --release
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: passdriver
-          directory: build/web
+          apiToken: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy web --project-name=construcao-criativa
 
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-      - run: flutter pub get
-      - run: flutter build apk --release
-      - name: Upload APK como artifact
+          flutter-version: '3.22.0'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK release
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: passdriver.apk
+          name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
   build-ios:
     runs-on: macos-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
-      - run: flutter pub get
-      - run: flutter build ios --no-codesign
-      - name: Upload IPA como artifact
+          flutter-version: '3.22.0'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build IPA (no codesign)
+        run: flutter build ios --no-codesign
+
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: passdriver.ipa
-          path: build/ios/iphoneos/PassDriver.app
+          name: Runner.ipa
+          path: build/ios/iphoneos/Runner.app
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-      - run: npm install -g wrangler
-      - run: wrangler deploy
-        working-directory: backend
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Deploy to Cloudflare Workers
+        run: wrangler deploy
+        working-directory: workers
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   notify:
     needs: [build-web, build-android, deploy-backend]
     runs-on: ubuntu-latest
     steps:
-      - name: POST para Neuron API notificando resultado do build
-        run: curl -X POST https://neuron-api.example.com/build-result
+      - name: POST to Neuron API
+        uses: curl -X POST https://neuron-api.example.com/build-result
