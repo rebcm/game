@@ -1,0 +1,23 @@
+name: Fade Transition Stress Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  stress-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run Flutter Driver Test
+        run: |
+          flutter pub get
+          flutter drive --target=test_driver/fade_transition_stress_test.dart --driver=test_driver/fade_transition_stress_test_driver.dart

@@ -55,3 +55,8 @@ flutter:
   provider: ^6.0.3
   assets:
     - assets/docs/guias/guia-configuracao-documentacao.md
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
