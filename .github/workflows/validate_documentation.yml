@@ -1,0 +1,25 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate markdown
+        run: |
+          npm install -g markdownlint-cli
+          markdownlint docs/checklists/aceitacao_conteudo.md
+
+      - name: Check links
+        run: |
+          pip install linkchecker
+          linkchecker docs/checklists/aceitacao_conteudo.md
