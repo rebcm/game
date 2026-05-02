@@ -33,6 +33,10 @@ dev_dependencies:
   flutter_driver:
   integration_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
   http: ^0.13.5
   flutter_test:
     sdk: flutter
