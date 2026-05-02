@@ -1,10 +1,12 @@
 name: Onboarding Test
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  test-onboarding:
+  onboarding-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -13,13 +15,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.0.1'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Validate installation
-        run: flutter doctor
-
-      - name: Run integration test
-        run: flutter test integration_test/onboarding_test.dart
+      - name: Run onboarding test
+        run: |
+          flutter drive --driver=test_driver/integration_test.dart --target=test/onboarding_test/onboarding_test.dart
