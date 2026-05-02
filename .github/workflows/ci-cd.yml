@@ -1,0 +1,31 @@
+name: CI/CD PassDriver Flutter
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter build
+
+      - name: Test
+        run: flutter test
+
+      - name: Deploy
+        run: flutter pub run ... # comando específico para deploy
+
