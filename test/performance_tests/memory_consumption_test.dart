@@ -1,13 +1,24 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/main.dart' as app;
-import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
 void main() {
-  testWidgets('Memory Consumption Test', (tester) async {
-    await tester.pumpWidget(const app.RebecaApp());
-    await tester.pumpAndSettle();
+  group('Memory Consumption Test', () {
+    late FlutterDriver driver;
 
-    // Implement memory consumption test logic here
-    // For example, using FlutterDriver or other performance testing tools
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
+
+    tearDownAll(() async {
+      await driver.close();
+    });
+
+    test('Measure memory consumption', () async {
+      final memoryUsage = await driver.waitForFlutterDriverExtension('getMemoryUsage');
+      expect(memoryUsage, isNotNull);
+      // Define the acceptable memory consumption baseline
+      const acceptableMemoryUsage = 200 * 1024 * 1024; // 200 MB
+      expect(memoryUsage.usedMemory, lessThan(acceptableMemoryUsage));
+    });
   });
 }
