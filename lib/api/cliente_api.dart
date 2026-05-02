@@ -1,12 +1,11 @@
 import 'package:http/http.dart' as http;
 
 class ClienteApi {
-  final String _urlBase;
+  final http.Client _client;
 
-  ClienteApi(this._urlBase);
+  ClienteApi(this._client);
 
-  Future<http.Response> fazerRequisicao(String endpoint) async {
-    final url = Uri.parse('$_urlBase$endpoint');
-    return await http.get(url);
+  Future<http.Response> obterDados() async {
+    return await _client.get(Uri.parse('https://api.exemplo.com/dados'));
   }
 }
