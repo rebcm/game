@@ -12,18 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Wrangler CLI
-        run: npm install -g @cloudflare/wrangler
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
 
-      - name: Configure Secrets
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Flutter Driver Test
         run: |
-          wrangler secret put CF_API_TOKEN ${{ secrets.CF_API_TOKEN }}
-          wrangler secret put CF_ACCOUNT_ID ${{ secrets.CF_ACCOUNT_ID }}
-
-      - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy --project-name=rebcm-game --token=${{ secrets.CF_API_TOKEN }}
-
-      - name: Validate Deployment
-        run: |
-          # Implement validation logic here
-          echo "Validating deployment..."
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --web-port=8080 &
+          sleep 30
+          curl -s -f http://localhost:8080/index.html | grep -q 'flt-glass-pane'

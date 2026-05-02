@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Smoke Test', () {
+  group('Rebeca App', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -15,8 +15,9 @@ void main() {
       }
     });
 
-    test('Check if app is rendered', () async {
-      await driver?.waitUntilFirstFrameRasterized();
+    test('Verify flt-glass-pane is rendered', () async {
+      final glassPane = await driver?.waitFor(find.byType('flt-glass-pane'), timeout: Duration(seconds: 30));
+      expect(glassPane, isNotNull);
     });
   });
 }
