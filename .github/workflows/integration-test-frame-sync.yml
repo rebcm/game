@@ -1,4 +1,4 @@
-name: Integração - Sincronização Frame Flame
+name: Integration Test - Frame Sync
 
 on:
   push:
@@ -6,12 +6,17 @@ on:
       - main
 
 jobs:
-  test-frame-sync:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
-      - run: flutter pub get
-      - run: flutter test lib/testes/integracao/flame_loop_sincronizacao_test.dart
+          flutter-version: '3.0.0'
+
+      - name: Run integration test
+        run: |
+          flutter drive --target=test/integration_tests/frame_sync_test.dart --driver=test_driver/integration_test.dart
