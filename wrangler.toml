@@ -1,3 +1,5 @@
-string_variable = "example_string"
-boolean_variable = true
-number_variable = 10
+[env.staging]
+vars = { API_URL = "https://staging.api.rebcm.com" }
+
+[env.production]
+vars = { API_URL = "https://api.rebcm.com" }

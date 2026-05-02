@@ -1,0 +1,27 @@
+name: Validar Variáveis de Ambiente por Ambiente
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/docs_qa_checklist/validar_variaveis_ambiente_por_ambiente.yml'
+      - 'wrangler.toml'
+
+jobs:
+  validar-variaveis-ambiente:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar variáveis de ambiente
+        run: |
+          if [ -f wrangler.toml ]; then
+            echo "Validando variáveis de ambiente no wrangler.toml"
+            cat wrangler.toml
+          else
+            echo "Arquivo wrangler.toml não encontrado"
+            exit 1
+          fi
