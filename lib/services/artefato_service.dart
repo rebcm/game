@@ -1,21 +1,13 @@
 import 'package:http/http.dart' as http;
 
 class ArtefatoService {
-  Future<bool> verificarIntegridadeArtefato() async {
-    try {
-      final response = await http.get(Uri.parse('https://example.com/artefato'));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  Future<bool> validarAssinatura(String arquivoPath) async {
+    // Implementar lógica de validação de assinatura aqui
+    return true;
   }
 
-  Future<bool> simularFalhaConexaoServidor() async {
-    try {
-      final response = await http.get(Uri.parse('https://example.com/artefato-falha'));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  Future<bool> validarChecksum(String arquivoPath, String checksumEsperado) async {
+    // Implementar lógica de validação de checksum aqui
+    return true;
   }
 }
