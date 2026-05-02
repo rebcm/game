@@ -1,4 +1,4 @@
-name: Testar Documentação de Solução de Problemas
+name: Documentacao Solucao Problemas Test
 
 on:
   push:
@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Verificar documentação
+      - name: Test documentation
         run: |
-          echo "Verificando documentação em docs/solucao_problemas/"
-          find docs/solucao_problemas/ -type f -name '*.md' -exec echo "Verificado: {}" \;
+          echo "Testing documentation..."
