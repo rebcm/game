@@ -6,6 +6,7 @@ version: 1.0.0+14
 environment:
   sdk: ">=2.17.0 <3.0.0"
   flutter: "^3.0.0"
+  audio_codec_config: ^1.0.0
 
 dependencies:
   flutter_driver:
@@ -23,6 +24,7 @@ dependencies:
   json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
   flutter:
+  audio_codec_config: ^1.0.0
     sdk: flutter
 
 dev_dependencies:
@@ -42,6 +44,7 @@ dev_dependencies:
   mocktail: ^0.3.0
 
 flutter:
+  audio_codec_config: ^1.0.0
   assets:
     - assets/audio/optimized/
     - assets/blocos/
