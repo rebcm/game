@@ -15,3 +15,4 @@
   }
 }
     "test:flutter:codec-compatibility": "flutter test test/codec_compatibility/",
+    "test:flutter:memory-leak": "flutter test test/memory_leak_test",
