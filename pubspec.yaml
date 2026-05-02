@@ -57,3 +57,6 @@ flutter:
     - docs/glossario/README.md
     - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
+
+  assets:
+    - assets/docs/checklists/documentacao-validacao-checklist.md

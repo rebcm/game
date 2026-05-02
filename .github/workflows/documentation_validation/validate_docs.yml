@@ -1,0 +1,30 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'assets/docs/**'
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    container:
+      image: docker://ghcr.io/catthehacker/ubuntu:act-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Validate Documentation
+        run: |
+          echo "Validating documentation..."
+          dart analyze
+          flutter pub run test
+          echo "Documentation validation completed."
