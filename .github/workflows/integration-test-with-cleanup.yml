@@ -12,13 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
-      - name: Install dependencies
-        run: flutter pub get
-
       - name: Run integration test with cleanup
-        run: flutter test test/integration/cleanup_test.dart
+        run: |
+          flutter drive --target=test/integration_tests/cleanup_test.dart --driver=test_driver/integration_test.dart
