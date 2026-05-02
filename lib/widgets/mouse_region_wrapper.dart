@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
-class MouseRegionWrapper extends StatefulWidget {
+class MouseRegionWrapper extends StatelessWidget {
   final Widget child;
 
   const MouseRegionWrapper({Key? key, required this.child}) : super(key: key);
 
   @override
-  _MouseRegionWrapperState createState() => _MouseRegionWrapperState();
-}
-
-class _MouseRegionWrapperState extends State<MouseRegionWrapper> {
-  bool _isHovering = false;
-
-  @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
-      child: widget.child,
+      onEnter: (event) => _onEnter(context),
+      onExit: (event) => _onExit(context),
+      child: child,
     );
+  }
+
+  void _onEnter(BuildContext context) {
+    // Handle mouse enter event
+  }
+
+  void _onExit(BuildContext context) {
+    // Handle mouse exit event
   }
 }
