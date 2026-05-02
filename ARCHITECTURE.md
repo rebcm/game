@@ -1,23 +1,22 @@
-# Arquitetura do Sistema de Áudio
+# Arquitetura do Projeto
 
 ## Visão Geral
 
-O sistema de áudio é responsável por gerenciar a reprodução de sons, músicas e efeitos sonoros no jogo. É composto por dois principais componentes: `GerenciadorAudio` e `OtimizadorAudio`.
+O projeto segue uma arquitetura modular, com separação clara entre lógica de jogo, renderização e física.
 
-## GerenciadorAudio
+## Integração Física-Gameplay
 
-O `GerenciadorAudio` é responsável por carregar e tocar arquivos de áudio. Utiliza a biblioteca `audioplayers` para manipular a reprodução de áudio.
+A integração entre física e gameplay é realizada através da classe `GameplayFisicaIntegracao`, que utiliza o `ColisaoHandler` para detectar colisões e aplicar lógica de gameplay.
 
-## OtimizadorAudio
+## Componentes
 
-O `OtimizadorAudio` ajusta as configurações de áudio para melhorar a performance do jogo. Atualmente, está previsto para futuras implementações.
+- `ColisaoHandler`: responsável por lidar com colisões e detectar eventos de gameplay.
+- `GameplayFisicaIntegracao`: integra a lógica de física com a lógica de gameplay.
+- `RenderizadorIsometrico`: responsável por renderizar o jogo.
 
-## Fluxo de Áudio
+## Fluxo de Dados
 
-1. O `GerenciadorAudio` carrega o arquivo de áudio desejado.
-2. O `GerenciadorAudio` toca o áudio carregado.
-3. O `OtimizadorAudio` ajusta as configurações de áudio para otimizar a performance.
+O fluxo de dados entre os componentes é o seguinte:
 
-## Configurações
-
-As configurações de áudio, como o volume padrão, são definidas em `Constantes`.
+1. `RenderizadorIsometrico` atualiza a lógica de gameplay através de `GameplayFisicaIntegracao`.
+2. `GameplayFisicaIntegracao` utiliza `ColisaoHandler` para detectar colisões e aplicar lógica de gameplay.

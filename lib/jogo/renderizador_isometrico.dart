@@ -1,17 +1,23 @@
 import 'package:flame/game.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/config/constantes.dart';
-import 'package:rebcm/mundo/gerador.dart';
-import 'package:rebcm/jogo/renderizador_isometrico_otimizado.dart';
+import 'package:rebcm/jogo/gameplay_fisica_integracao.dart';
 
-class RenderizadorIsometrico {
-  final RenderizadorIsometricoOtimizado _otimizador;
+class RenderizadorIsometrico extends FlameGame {
+  late GameplayFisicaIntegracao _gameplayFisicaIntegracao;
 
-  RenderizadorIsometrico() : _otimizador = RenderizadorIsometricoOtimizado();
+  @override
+  Future<void> onLoad() async {
+    _gameplayFisicaIntegracao = GameplayFisicaIntegracao(ColisaoHandler(), Rebeca());
+  }
 
-  void renderizar(Canvas canvas, List<Chunk> chunks) {
-    for (var chunk in chunks) {
-      _otimizador.renderizarChunk(canvas, chunk);
-    }
+  @override
+  void update(double dt) {
+    _gameplayFisicaIntegracao.atualizar();
+    super.update(dt);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    // Lógica de renderização existente
   }
 }
