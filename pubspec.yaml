@@ -1,7 +1,7 @@
 name: rebcm
 description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua criatividade e construa estruturas incríveis em um ambiente de blocos voxel.
 
-version: 1.0.0+8
+version: 1.0.0+9
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -43,10 +43,6 @@ flutter:
     - assets/audio/optimized/music/
     - assets/docs/checklists/voice-tone-validation-checklist.md
     - assets/docs/checklists/onboarding-validation-checklist.md
+    - assets/docs/guias/guia-estilo-tom-voz.md
   uses-material-design: true
   generate: true
-  assets:
-    - assets/docs/checklists/docs-qa-checklist.md
-  assets:
-    - assets/docs/guias/guia-estilo-tom-voz.md
-    - assets/docs/checklists/voice-tone-validation-checklist.md

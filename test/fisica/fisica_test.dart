@@ -1,17 +1,10 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/fisica/fisica.dart';
 
 void main() {
-  group('Fisica', () {
-    late Fisica _fisica;
-
-    setUp(() {
-      _fisica = Fisica();
-    });
-
-    test('atualiza corretamente', () {
-      _fisica.atualizar();
-      // Verificações necessárias
-    });
+  test('Fisica atualizar test', () {
+    Fisica fisica = Fisica();
+    fisica.atualizar();
+    // Verificações da atualização da física
   });
 }
