@@ -1,4 +1,4 @@
-name: Testes de Integração da API
+name: Testes de API
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-api:
+  testes-api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,5 +15,5 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test lib/test/integracao/api/test_api.dart
+      - name: Run API tests
+        run: flutter test test/api_test/api_test.dart
