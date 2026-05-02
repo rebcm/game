@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-ios:
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -15,19 +15,21 @@ jobs:
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
-      - name: Check Flutter version
-        run: flutter --version
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.0'
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build IPA
-        run: flutter build ios --release --no-codesign
+        run: |
+          flutter build ios --release --no-codesign
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath ../build/Runner.xcarchive archive
+          xcodebuild -exportArchive -archivePath ../build/Runner.xcarchive -exportPath ../build/ipa -exportOptionsPlist exportOptions.plist
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: rebcm.ipa
-          path: build/ios/iphoneos/Runner.app
+          path: build/ipa/rebcm.ipa
