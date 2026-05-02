@@ -1,0 +1,30 @@
+name: Validate README
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-readme:
+    runs-on: ubuntu-latest
+    container:
+      image: docker://ghcr.io/catthehacker/ubuntu:act-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Validate README commands
+        run: |
+          # Implement the commands from README here
+          echo "Validating README commands..."
+          # Example command: flutter pub get
+          flutter pub get
