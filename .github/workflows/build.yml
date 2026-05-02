@@ -18,7 +18,7 @@ jobs:
         with:
           flutter-version: '3.0.5'
       - run: flutter pub get
-      - run: dart analyze
+      - run: flutter analyze
       - run: flutter test
       - run: flutter build web --release
       - name: Deploy para Cloudflare Pages
@@ -48,8 +48,8 @@ jobs:
       - name: Upload APK como artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rebcm-game.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: rebcm.apk
+          path: build/app/outputs/apk/release/app-release.apk
 
   build-ios:
     runs-on: macos-latest
@@ -65,17 +65,17 @@ jobs:
       - name: Upload IPA como artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rebcm-game.ipa
-          path: build/ios/ipa/RebecaCria.ipa
+          name: rebcm.ipa
+          path: build/ios/ipa/RebecaCriativa.ipa
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install wrangler
+      - name: npm install -g wrangler
         run: npm install -g wrangler
-      - name: Deploy to Cloudflare Workers
+      - name: wrangler deploy
         run: wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -85,5 +85,9 @@ jobs:
     needs: [build-web, build-android, deploy-backend]
     runs-on: ubuntu-latest
     steps:
-      - name: POST para Neuron API
-        run: curl -X POST https://neuron-api.example.com/build-result
+      - name: POST para Neuron API notificando resultado do build
+        run: |
+          curl -X POST \
+          https://neuron-api.example.com/build-result \
+          -H 'Content-Type: application/json' \
+          -d '{"status": "success"}'
