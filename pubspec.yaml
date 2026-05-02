@@ -130,3 +130,6 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/onboarding-validation-checklist.md
     - docs/artefatos/checklists/onboarding-validation-criterios.md
+
+  smoke_tests:
+    path: ./test/smoke_tests

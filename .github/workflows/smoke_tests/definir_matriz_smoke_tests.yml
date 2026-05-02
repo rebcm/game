@@ -1,0 +1,22 @@
+name: Definir Matriz de Testes de Sanidade (Smoke Tests)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Listar critérios de aceitação
+        run: |
+          echo "Critérios de Aceitação:"
+          echo "1. Inicialização do jogo sem erros"
+          echo "2. Renderização correta do mundo voxel"
+          echo "3. Funcionalidade de construção de blocos"
+          echo "4. Navegação básica pelo mundo"
+          echo "5. Áudio funcionando corretamente"
