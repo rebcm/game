@@ -40,7 +40,6 @@ flutter:
     - assets/audio/raw/music/
     - assets/audio/raw/sfx/
     - assets/blocos/
-    - assets/characters/
     - assets/i18n/
   generate: true
 
@@ -54,3 +53,6 @@ flutter:
 
   assets:
     - assets/configuracoes.json
+
+  assets:
+    - assets/characters/rebeca/
