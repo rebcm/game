@@ -1,4 +1,6 @@
 dependencies:
+  http_interceptor: ^1.0.2
+  http: ^0.13.5
   shared_preferences: ^2.0.0
   flutter:
   assets:
@@ -7,6 +9,8 @@ dependencies:
   provider: ^6.0.3
 
 dev_dependencies:
+  http_interceptor: ^1.0.2
+  http: ^0.13.5
   shared_preferences_mocks: ^0.0.1+1
   shared_preferences: ^2.0.0
   flutter_test:
