@@ -1,0 +1,18 @@
+name: build-web
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          flutter pub get
+      - name: Build and deploy
+        run: |
+          flutter build web
+          cloudflare pages deploy --token $CLOUDFLARE_TOKEN --project $CLOUDFLARE_PROJECT
