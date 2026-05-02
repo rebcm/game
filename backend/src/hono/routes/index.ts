@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
-import { errorHandlingMiddleware } from './error_handling/error_handling_middleware';
+import apiTestRoute from './api-test/api-test-route';
 
-const app = new Hono();
-app.use('*', errorHandlingMiddleware);
+const routes = new Hono();
+routes.route('/', apiTestRoute);
 
-// Existing route patterns...
-
+export default routes;
