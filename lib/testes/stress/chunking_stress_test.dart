@@ -1,24 +1,32 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/mundo/gerador.dart';
 import 'package:rebcm/jogo/renderizador_isometrico.dart';
+import 'package:rebcm/mundo/gerador.dart';
 import 'package:rebcm/personagem/rebeca.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   testWidgets('Teste de estresse de chunking', (tester) async {
-    await tester.pumpWidget(
-      RenderizadorIsometrico(
-        gerador: GeradorMundo(),
-        rebeca: Rebeca(),
-      ),
-    );
+    await tester.pumpWidget(MyApp());
+    final rebeca = tester.widget<Rebeca>(find.byType(Rebeca));
+    final gerador = GeradorMundo();
 
-    for (int i = 0; i < 100; i++) {
-      await tester.pumpAndSettle(Duration(milliseconds: 16));
-      // Simula movimentação rápida
+    for (var i = 0; i < 100; i++) {
+      rebeca.x += 10;
+      await tester.pump();
+      gerador.gerarChunk(rebeca.x ~/ 16, rebeca.z ~/ 16);
+      await tester.pump();
     }
 
-    expect(find.byType(RenderizadorIsometrico), findsOneWidget);
+    expect(find.byType(RenderizadorIsometrico), rendersProperly);
   });
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: RenderizadorIsometrico(),
+      ),
+    );
+  }
 }
