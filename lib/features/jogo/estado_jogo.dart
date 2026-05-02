@@ -1,28 +1,18 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-class EstadoJogo extends StatefulWidget {
-  @override
-  EstadoJogoState createState() => EstadoJogoState();
-}
+class EstadoJogo with ChangeNotifier {
+  Timer? _timer;
 
-class EstadoJogoState extends State<EstadoJogo> with TickerProviderStateMixin {
-  late final Ticker _ticker;
-
-  @override
-  void initState() {
-    super.initState();
-    _ticker = createTicker((_) {});
-    _ticker.start();
+  void iniciar() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      notifyListeners();
+    });
   }
 
   @override
   void dispose() {
-    _ticker.dispose();
+    _timer?.cancel();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
