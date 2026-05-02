@@ -1,5 +1,6 @@
 class DescriptionTranslationValidator {
-  bool isValid(String originalDescription, String translatedDescription) {
-    // Implement validation logic here
+  bool validate(String originalDescription, String translatedDescription) {
+    // Implement semantic validation logic here
+    return true;
   }
 }
