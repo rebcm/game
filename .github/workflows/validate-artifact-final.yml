@@ -3,11 +3,12 @@ name: Validate Artifact Final
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [release]
-    types: [completed]
+    workflows: [Build]
+    types:
+      - completed
 
 jobs:
-  validate-artifact:
+  validate-artifact-final:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,8 +18,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifact
-          path: build/
+          path: build-artifact
 
-      - name: Validate binary
+      - name: Validate artifact
         run: |
-          ./.github/workflows/scripts/validate_binary_version.sh build/
+          ./.github/workflows/scripts/validate_binary_version.sh build-artifact/rebcm.apk

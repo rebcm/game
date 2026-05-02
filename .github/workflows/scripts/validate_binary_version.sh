@@ -1,21 +1,24 @@
 #!/bin/bash
 
-BUILD_DIR=$1
+BINARY_PATH=$1
 
-if [ -z "$BUILD_DIR" ]; then
-  echo "Error: Build directory not provided"
+if [ ! -f "$BINARY_PATH" ]; then
+  echo "Binary not found: $BINARY_PATH"
   exit 1
 fi
 
-if [ ! -d "$BUILD_DIR" ]; then
-  echo "Error: Build directory does not exist"
+# Assuming the binary is a Flutter APK, we can use aapt to get its version
+VERSION_CODE=$(aapt dump badging "$BINARY_PATH" | grep "versionCode" | cut -d "'" -f 2)
+VERSION_NAME=$(aapt dump badging "$BINARY_PATH" | grep "versionName" | cut -d "'" -f 2)
+
+if [ "$VERSION_CODE" != "$(grep "version:" pubspec.yaml | cut -d ":" -f 2 | tr -d " ")" ]; then
+  echo "Version code mismatch: expected $(grep "version:" pubspec.yaml | cut -d ":" -f 2 | tr -d " "), got $VERSION_CODE"
   exit 1
 fi
 
-# Check if the binary exists and is not empty
-if [ ! -f "$BUILD_DIR/rebcm.apk" ] || [ ! -s "$BUILD_DIR/rebcm.apk" ]; then
-  echo "Error: APK file is missing or empty"
+if [ "$VERSION_NAME" != "$(grep "version:" pubspec.yaml | cut -d ":" -f 2 | cut -d "+" -f 1 | tr -d " ")" ]; then
+  echo "Version name mismatch: expected $(grep "version:" pubspec.yaml | cut -d ":" -f 2 | cut -d "+" -f 1 | tr -d " "), got $VERSION_NAME"
   exit 1
 fi
 
-echo "Binary validation successful"
+echo "Binary version validated successfully"
