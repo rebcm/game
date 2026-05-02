@@ -1,0 +1,24 @@
+name: Smoke Test - Content Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate content
+        run: |
+          curl -s -f https://example.com | grep -q 'passdriver'
+          if [ $? -eq 0 ]; then
+            echo "Content validation successful"
+          else
+            echo "Content validation failed"
+            exit 1
+          fi
