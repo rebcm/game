@@ -1,0 +1,30 @@
+name: Bundle Size Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Build web
+        run: flutter build web --release
+
+      - name: Measure bundle size
+        run: |
+          BUNDLE_SIZE=$(stat -c%s build/web/main.dart.js)
+          echo "Bundle size: $BUNDLE_SIZE bytes"
+          if [ $BUNDLE_SIZE -gt 5000000 ]; then
+            echo "Bundle size exceeds 5MB"
+            exit 1
+          fi

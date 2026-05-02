@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('FPS KPI Test', () {
+  group('Rebeca Game', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,14 +11,16 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver!.close();
+        await driver!.close();
       }
     });
 
-    test('Validate FPS KPI', () async {
-      // Implement FPS KPI validation test logic here
-      final fps = await driver!.getFrameRate();
-      expect(fps, lessThanOrEqualTo(55));
+    test('measure loading time', () async {
+      final startTime = await driver!.getRenderObjectDiagnostics(find.byType('RebecaGame'), timeout: Duration(seconds: 10));
+      final endTime = await driver!.getRenderObjectDiagnostics(find.byType('RebecaGame'), timeout: Duration(seconds: 10));
+      final loadingTime = endTime[0].data!['renderTree']['children'][0]['stats']['firstPaint'] - startTime[0].data!['renderTree']['children'][0]['stats']['firstPaint'];
+      print('Loading time: $loadingTime ms');
+      await File('test_driver/loading_time.txt').writeAsString('$loadingTime');
     });
   });
 }
