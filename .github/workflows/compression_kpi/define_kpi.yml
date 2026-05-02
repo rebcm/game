@@ -3,14 +3,10 @@ name: Define Compression KPI
 on:
   workflow_dispatch:
     inputs:
-      target-size-reduction:
-        description: 'Target size reduction percentage'
+      asset-type:
+        description: 'Type of asset to compress'
         required: true
-        default: '20'
-      acceptable-quality-loss:
-        description: 'Acceptable quality loss percentage'
-        required: true
-        default: '5'
+        default: 'all'
 
 jobs:
   define-kpi:
@@ -21,15 +17,11 @@ jobs:
 
       - name: Define KPI
         run: |
-          echo "Target size reduction: ${{ github.event.inputs.target-size-reduction }}%"
-          echo "Acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
-          echo "${{ github.event.inputs.target-size-reduction }}" > target_size_reduction.txt
-          echo "${{ github.event.inputs.acceptable-quality-loss }}" > acceptable_quality_loss.txt
+          echo "Defining KPI for asset type: ${{ github.event.inputs.asset-type }}"
+          # Add logic to define KPI based on asset type
 
-      - name: Upload KPI artifacts
+      - name: Upload KPI report
         uses: actions/upload-artifact@v3
         with:
-          name: kpi-artifacts
-          path: |
-            target_size_reduction.txt
-            acceptable_quality_loss.txt
+          name: kpi-report
+          path: kpi-report.txt

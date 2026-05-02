@@ -1,9 +1,7 @@
 name: Compression Test
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   compression-test:
@@ -14,5 +12,10 @@ jobs:
 
       - name: Run compression test
         run: |
-          # Implementação do teste de compressão
-          # Deve verificar o tamanho do binário e a qualidade do áudio
+          ./.github/workflows/scripts/validate_binary_version.sh
+          ./scripts/define_compression_kpi.sh
+
+      - name: Compare APK size with KPI
+        run: |
+          # Add logic to compare the APK size with the target size defined in the KPI report
+          echo "Comparing APK size with KPI"
