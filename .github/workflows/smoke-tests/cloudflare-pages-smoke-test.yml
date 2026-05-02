@@ -1,0 +1,17 @@
+name: Cloudflare Pages Smoke Test
+
+on:
+  workflow_dispatch:
+  deployment_status:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.environment == 'github-pages'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify Cloudflare Pages deployment
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://rebcm.pages.dev | grep -q "200" && echo "Smoke test passed" || (echo "Smoke test failed" && exit 1)
