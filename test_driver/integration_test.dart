@@ -2,22 +2,17 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Integration tests', () {
-    FlutterDriver? driver;
+  FlutterDriver? driver;
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
 
-    tearDownAll(() async {
-      if (driver != null) {
-        driver?.close();
-      }
-    });
+  tearDownAll(() async {
+    driver?.close();
+  });
 
-    test('Test deployment', () async {
-      // Add test logic here
-      expect(true, true);
-    });
+  test('test retenção script', () async {
+    // Implementação do teste de retenção script
   });
 }
