@@ -3,12 +3,18 @@ enum EstadoRebeca {
   andando,
 }
 
-class RebecaState {
-  EstadoRebeca estado;
+class MaquinaEstadoRebeca {
+  EstadoRebeca _estadoAtual;
 
-  RebecaState({this.estado = EstadoRebeca.parado});
+  MaquinaEstadoRebeca() : _estadoAtual = EstadoRebeca.parado;
 
-  void atualizarEstado(bool movimentando) {
-    estado = movimentando ? EstadoRebeca.andando : EstadoRebeca.parado;
+  EstadoRebeca get estado => _estadoAtual;
+
+  void atualizar(bool movimentando) {
+    if (movimentando && _estadoAtual == EstadoRebeca.parado) {
+      _estadoAtual = EstadoRebeca.andando;
+    } else if (!movimentando && _estadoAtual == EstadoRebeca.andando) {
+      _estadoAtual = EstadoRebeca.parado;
+    }
   }
 }
