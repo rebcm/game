@@ -10,13 +10,13 @@ class MouseRegionWidget extends StatefulWidget {
 }
 
 class _MouseRegionWidgetState extends State<MouseRegionWidget> {
-  bool _isHovered = false;
+  bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() => _isHovering = false),
       child: widget.child,
     );
   }
