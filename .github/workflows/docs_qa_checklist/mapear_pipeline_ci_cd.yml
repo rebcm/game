@@ -1,0 +1,33 @@
+name: Mapear Pipeline CI/CD
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  map-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: List workflows
+        run: |
+          echo "Workflows:"
+          ls .github/workflows
+
+      - name: Generate documentation
+        run: |
+          echo "# Pipeline CI/CD Mapeamento" > docs/mapeamento_pipeline_ci_cd.md
+          echo "## Visão Geral" >> docs/mapeamento_pipeline_ci_cd.md
+          echo "O pipeline CI/CD é composto pelos seguintes workflows:" >> docs/mapeamento_pipeline_ci_cd.md
+          for file in .github/workflows/*.yml; do
+            echo "- $file" >> docs/mapeamento_pipeline_ci_cd.md
+          done
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: mapeamento_pipeline_ci_cd
+          path: docs/mapeamento_pipeline_ci_cd.md
