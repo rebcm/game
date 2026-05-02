@@ -1,9 +1,8 @@
 import { Hono } from 'hono';
-import { loggingMiddleware } from './routes/logging/logging_middleware';
-import { routes } existingRouteFile;
+import game from './routes/game';
 
 const app = new Hono();
-app.use(loggingMiddleware);
-app.route('/', routes);
+
+app.route('/game', game);
 
 export default app;
