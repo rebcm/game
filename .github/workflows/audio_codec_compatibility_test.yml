@@ -11,14 +11,5 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-      - name: Check Flutter version
-        run: flutter --version
-        with:
-          flutter-version: '3.0.0'
-
-      - name: Run audio codec compatibility test
-        run: |
-          flutter test test/audio_codec_compatibility_test/audio_codec_compatibility_test.dart
+      - name: Run test
+        run: flutter test test/audio_codec_compatibility_test.dart
