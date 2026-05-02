@@ -1,9 +1,8 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/main.dart' as app;
 
 void main() {
-  test('Flutter and Dart version check', () {
-    // This test is handled in the CI workflow
-    expect(true, true);
+  testWidgets('Verificar Versão do Flutter e Dart', (tester) async {
+    // Não é necessário implementar teste aqui, pois a verificação será feita no CI
   });
 }
