@@ -12,8 +12,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run deploy test
-        run: |
-          echo "Running deploy test..."
-          # Adicionar comandos para executar os testes de deploy aqui
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
 
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build and deploy
+        run: |
+          flutter config --enable-web
+          flutter build web --release
+          echo "Deploying to Cloudflare Pages..."
+          # Add Cloudflare Pages deployment command here
+
+      - name: Verify deployment
+        run: |
+          # Verify URL is accessible
+          curl -s -f https://example.com # Replace with actual URL
+          # Verify assets are loaded correctly
+          # Add asset verification logic here
+          # Verify build time is within limit
+          # Add build time verification logic here

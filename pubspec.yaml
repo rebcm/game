@@ -46,3 +46,6 @@ flutter:
       - assets/audio/optimized/music/
     uses-material-design: true
     generate: true
+
+  integration_test:
+    path: test/deploy_test.dart
