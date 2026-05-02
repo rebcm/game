@@ -1,36 +1,14 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:rebcm/utils/performance_monitor.dart';
 
 void main() {
-  group('Performance Testing', () {
-    FlutterDriver driver;
+  testWidgets('Performance test', (tester) async {
+    final performanceMonitor = PerformanceMonitor();
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
+    await tester.pumpWidget(MyApp(performanceMonitor: performanceMonitor));
 
-    tearDownAll(() async {
-      if (driver != null) {
-        await driver.close();
-      }
-    });
+    await tester.pumpAndSettle();
 
-    test('Frame Time', () async {
-      await driver.waitFor(find.byType('PerformanceProfilingPage'));
-      await driver.tap(find.text('Toggle Performance Overlay'));
-      await driver.waitUntilNoTransientCallbacks();
-      final frameTime = await driver.getPerformance();
-      expect(frameTime, lessThan(1000));
-    });
-
-    test('CPU/GPU Utilization', () async {
-      await driver.waitFor(find.byType('PerformanceProfilingPage'));
-      await driver.tap(find.text('Toggle Performance Overlay'));
-      await driver.waitUntilNoTransientCallbacks();
-      final cpuUtilization = await driver.getCPUPerformance();
-      final gpuUtilization = await driver.getGPUPerformance();
-      expect(cpuUtilization, lessThan(100));
-      expect(gpuUtilization, lessThan(100));
-    });
+    expect(performanceMonitor.fps, greaterThan(55));
   });
 }

@@ -3,35 +3,36 @@ name: Define Stuttering KPI
 on:
   workflow_dispatch:
     inputs:
-      test_duration:
+      test-duration:
         description: 'Test duration in seconds'
         required: true
         default: '60'
-      fps_threshold:
+      fps-threshold:
         description: 'FPS threshold for stuttering'
         required: true
         default: '55'
 
 jobs:
-  define_stuttering_kpi:
+  define-stuttering-kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.10.6'
-
-      - name: Run Flutter driver test
+      - name: Run Flutter test
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile --trace-startup --verbose
-        env:
-          TEST_DURATION: ${{ github.event.inputs.test_duration }}
-          FPS_THRESHOLD: ${{ github.event.inputs.fps_threshold }}
+          flutter run --release --test --duration ${{ github.event.inputs.test-duration }}
 
-      - name: Parse test results
+      - name: Calculate FPS
         run: |
-          # TO DO: implement parsing logic here
-          echo "Parsing test results..."
+          fps=$(cat test_logs.txt | grep 'FPS' | awk '{print $2}' | awk -F '.' '{print $1}')
+          echo "Average FPS: $fps"
+
+      - name: Check stuttering
+        run: |
+          if (( $fps < ${{ github.event.inputs.fps-threshold }} )); then
+            echo "Stuttering detected!"
+            exit 1
+          else
+            echo "No stuttering detected."
+          fi
