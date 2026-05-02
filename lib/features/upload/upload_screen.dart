@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:passdriver/features/upload/providers/upload_notifier.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/upload/upload_provider.dart';
 
-class UploadScreen extends ConsumerWidget {
-  const UploadScreen({Key? key}) : super(key: key);
-
+class UploadScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isUploading = ref.watch(uploadNotifierProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upload Screen'),
-      ),
-      body: Center(
-        child: isUploading
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: () {
-                  ref.read(uploadNotifierProvider.notifier).uploadData();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => UploadProvider(),
+      child: Consumer<UploadProvider>(
+        builder: (context, provider, child) {
+          return Column(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final filePath = '/path/to/file';
+                  final uploaded = await provider.uploadFile(filePath);
+                  if (uploaded) {
+                    final checksumVerified = await provider.verifyChecksum(filePath, 'expected_checksum');
+                    if (!checksumVerified) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Erro ao verificar checksum')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Erro ao enviar arquivo')),
+                    );
+                  }
                 },
-                child: const Text('Upload'),
+                child: Text('Enviar Arquivo'),
               ),
+            ],
+          );
+        },
       ),
     );
   }
