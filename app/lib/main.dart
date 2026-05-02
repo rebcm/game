@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'features/rendering/rendering_widget.dart';
+import 'package:construcao_criativa/features/persistence/persistence_manager.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Construção Criativa',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: Scaffold(
-        body: RenderingWidget(),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              await PersistenceManager.saveState('test', 'New Block');
+            },
+            child: Text('New Block'),
+          ),
+        ),
       ),
     );
   }

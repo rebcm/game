@@ -1,16 +1,14 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PersistenceManager with ChangeNotifier {
-  static const String _key = 'game_data';
-
-  Future<void> saveData(String data) async {
+class PersistenceManager {
+  static Future<void> saveState(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, data);
+    await prefs.setString(key, value);
   }
 
-  Future<String?> loadData() async {
+  static Future<String?> loadState(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_key);
+    return prefs.getString(key);
   }
 }

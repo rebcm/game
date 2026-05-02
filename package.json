@@ -9,3 +9,6 @@
   }
 }
     "test:flutter:audio-latency": "flutter test integration_test/audio/audio_latency_test.dart"
+  "scripts": {
+    "test:flutter:persistence-crash": "flutter test integration_test/persistence/persistence_crash_test.dart"
+  }
