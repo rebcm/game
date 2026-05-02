@@ -1,0 +1,22 @@
+name: Flutter Smoke Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run Flutter Smoke Test
+        run: |
+          flutter drive --target=test_driver/flutter_smoke_test/flutter_smoke_test_driver.dart --driver=test_driver/flutter_smoke_test/flutter_smoke_test.dart
