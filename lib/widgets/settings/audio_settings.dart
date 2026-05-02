@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/services/audio/audio_service.dart';
+import 'package:rebcm/services/audio/audio_player_service.dart';
 
 class AudioSettings extends StatefulWidget {
   @override
@@ -8,12 +7,19 @@ class AudioSettings extends StatefulWidget {
 }
 
 class _AudioSettingsState extends State<AudioSettings> {
+  final AudioPlayerService _audioPlayerService = AudioPlayerService();
   double _volume = 1.0;
+  bool _isMuted = false;
 
   @override
   void initState() {
     super.initState();
-    _volume = context.read<AudioServiceImpl>().getVolume();
+    _audioPlayerService.init().then((_) {
+      setState(() {
+        _volume = _audioPlayerService._volume;
+        _isMuted = _audioPlayerService._isMuted;
+      });
+    });
   }
 
   @override
@@ -23,16 +29,20 @@ class _AudioSettingsState extends State<AudioSettings> {
         Slider(
           value: _volume,
           onChanged: (value) async {
-            await context.read<AudioServiceImpl>().setVolume(value);
-            setState(() => _volume = value);
+            await _audioPlayerService.setVolume(value);
+            setState(() {
+              _volume = value;
+            });
           },
         ),
-        ElevatedButton(
-          onPressed: () async {
-            await context.read<AudioServiceImpl>().toggleMute();
-            setState(() => _volume = context.read<AudioServiceImpl>().getVolume());
+        Switch(
+          value: _isMuted,
+          onChanged: (value) async {
+            await _audioPlayerService.toggleMute();
+            setState(() {
+              _isMuted = value;
+            });
           },
-          child: Text(_volume == 0 ? 'Unmute' : 'Mute'),
         ),
       ],
     );
