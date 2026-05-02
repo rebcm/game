@@ -4,10 +4,9 @@ dependencies:
   http: ^0.13.5
   shared_preferences: ^2.0.0
   flutter:
-  assets:
-    - assets/characters/rebeca_skin.png
     sdk: flutter
   provider: ^6.0.3
+  audioplayers: ^1.0.1
 
 dev_dependencies:
   dio: ^4.0.0
@@ -17,17 +16,7 @@ dev_dependencies:
   shared_preferences: ^2.0.0
   flutter_test:
     sdk: flutter
-  audioplayers: ^1.0.1
   integration_test:
     sdk: flutter
   audioplayers: ^1.0.1
-
-  flutter_driver:
-    sdk: flutter
-dependencies:
-  dio: ^4.0.0
-  audioplayers: ^1.0.1
-dev_dependencies:
-  dio: ^4.0.0
-  http: ^0.13.5
-    - assets/blocos/
+  http_mock_adapter: ^1.0.0
