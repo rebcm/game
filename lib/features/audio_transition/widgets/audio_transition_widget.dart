@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:passdriver/features/audio_transition/providers/audio_transition_provider.dart';
 
-class AudioTransitionWidget extends StatefulWidget {
-  @override
-  _AudioTransitionWidgetState createState() => _AudioTransitionWidgetState();
-}
+class AudioTransitionWidget extends StatelessWidget {
+  final AudioPlayer currentPlayer;
+  final AudioPlayer nextPlayer;
 
-class _AudioTransitionWidgetState extends State<AudioTransitionWidget> {
+  const AudioTransitionWidget({Key? key, required this.currentPlayer, required this.nextPlayer}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AudioTransitionProvider>(
-      builder: (context, provider, child) {
-        return TweenAnimationBuilder(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: Duration(milliseconds: 500),
-          builder: (context, value, child) {
-            provider.transition(value);
-            return Container(); // Your widget tree here
-          },
-        );
-      },
+    return ChangeNotifierProvider(
+      create: (_) => AudioTransitionProvider(currentPlayer, nextPlayer),
+      child: Consumer<AudioTransitionProvider>(
+        builder: (context, provider, child) {
+          return ElevatedButton(
+            onPressed: () async {
+              await provider.transition(3.0); // 3 seconds transition
+            },
+            child: const Text('Transição Suave'),
+          );
+        },
+      ),
     );
   }
 }

@@ -5,19 +5,32 @@ class AudioTransitionProvider with ChangeNotifier {
   final AudioPlayer _currentPlayer;
   final AudioPlayer _nextPlayer;
 
-  AudioTransitionProvider({
-    required AudioPlayer currentPlayer,
-    required AudioPlayer nextPlayer,
-  })  : _currentPlayer = currentPlayer,
-        _nextPlayer = nextPlayer;
+  AudioTransitionProvider(this._currentPlayer, this._nextPlayer);
 
-  void transition(double value) {
-    _currentPlayer.setVolume(1 - value);
-    _nextPlayer.setVolume(value);
+  void _interpolateVolume(double currentVolume, double nextVolume, double t) {
+    _currentPlayer.setVolume(currentVolume * (1 - t));
+    _nextPlayer.setVolume(nextVolume * t);
   }
 
-  void reset() {
-    _currentPlayer.setVolume(1);
-    _nextPlayer.setVolume(0);
+  Future<void> transition(double duration) async {
+    final currentVolume = _currentPlayer.volume ?? 1.0;
+    final nextVolume = _nextPlayer.volume ?? 1.0;
+
+    await _nextPlayer.play();
+    await _nextPlayer.seek(Duration.zero);
+
+    final startTime = DateTime.now().millisecondsSinceEpoch;
+    final endTime = startTime + (duration * 1000).toInt();
+
+    while (DateTime.now().millisecondsSinceEpoch < endTime) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final t = (now - startTime) / (endTime - startTime);
+      _interpolateVolume(currentVolume, nextVolume, t);
+      await Future.delayed(const Duration(milliseconds: 16)); // ~60 FPS
+    }
+
+    _interpolateVolume(currentVolume, nextVolume, 1.0);
+    await _currentPlayer.stop();
+    notifyListeners();
   }
 }
