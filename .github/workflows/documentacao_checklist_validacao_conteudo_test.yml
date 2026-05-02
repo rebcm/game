@@ -1,0 +1,22 @@
+name: Documentação Checklist Validação Conteúdo Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/docs/checklists/validacao_conteudo.md'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Test checklist
+        run: |
+          grep -q "Checklist de Validação de Conteúdo" assets/docs/checklists/validacao_conteudo.md
+          grep -q "Descrição para Lojas de Aplicativos" assets/docs/checklists/validacao_conteudo.md
+          grep -q "Conteúdo do Jogo" assets/docs/checklists/validacao_conteudo.md
+          grep -q "SEO e Descoberta" assets/docs/checklists/validacao_conteudo.md
+          grep -q "Internacionalização" assets/docs/checklists/validacao_conteudo.md
