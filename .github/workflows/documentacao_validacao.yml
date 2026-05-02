@@ -1,0 +1,20 @@
+name: Validacao Documentacao
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+
+jobs:
+  validar-documentacao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar critérios de aceitação
+        run: |
+          # Implementar lógica para validar os critérios de aceitação definidos em ./docs/criterios_aceitacao/documentacao.md
+          echo "Validando critérios de aceitação..."
