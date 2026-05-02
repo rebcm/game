@@ -46,3 +46,6 @@ flutter:
     - assets/configuracoes.json
     - assets/characters/rebeca_skin.png
     - assets/animations/optimized_animation.png
+
+  flutter_driver:
+    sdk: flutter

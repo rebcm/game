@@ -6,16 +6,17 @@ on:
       - main
 
 jobs:
-  test:
+  integration-test-with-cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run integration test
-        run: |
-          flutter drive --target=integration_test/app_test.dart
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
 
-      - name: Cleanup
+      - name: Run integration test with cleanup
         run: |
-          .github/workflows/scripts/cleanup_integration_test.sh
+          flutter drive --driver=test/integration_test/cleanup/cleanup_driver.dart --target=test/integration_test/cleanup/cleanup_test.dart
