@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:passdriver/chunk_manager/chunk_manager.dart';
+import 'package:audio_optimizer/audio_optimizer_screen.dart';
 
-void main() {
-  final chunkManager = ChunkManager();
-  runApp(MyApp());
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'PassDriver',
+      home: AudioOptimizerScreen(),
+    );
+  }
 }
