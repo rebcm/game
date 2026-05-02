@@ -136,3 +136,6 @@ flutter:
 
   assets:
     - docs/artefatos/matrizes/matriz-acs-por-tipo-de-feature.md
+
+dev_dependencies:
+  playwright: ^1.25.0
