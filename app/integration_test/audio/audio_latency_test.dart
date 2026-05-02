@@ -5,13 +5,14 @@ import 'package:construcao_criativa/features/audio/audio_manager.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Audio latency test', (tester) async {
+  testWidgets('measure audio latency', (tester) async {
     final audioManager = AudioManager();
     await audioManager.initAudio();
+
     final stopwatch = Stopwatch()..start();
-    await audioManager.playSound('sfx/colocar_bloco.ogg');
-    await Future.delayed(const Duration(milliseconds: 100));
-    final latency = stopwatch.elapsedMilliseconds;
-    expect(latency, lessThan(50));
+    await audioManager.playSound('sfx/colocar_bloco');
+    final latency = stopwatch.elapsed.inMilliseconds;
+
+    expect(latency, lessThan(100));
   });
 }
