@@ -1,9 +1,8 @@
-import { Hono } from 'hono'; 
-import { corsMiddleware } from '../middlewares/cors';
+import { Hono } from 'hono';
+import { errorHandlingMiddleware } from './error_handling/error_handling_middleware';
 
 const app = new Hono();
+app.use('*', errorHandlingMiddleware);
 
-app.use('*', corsMiddleware);
-
-// existing routes...
+// Existing route patterns...
 
