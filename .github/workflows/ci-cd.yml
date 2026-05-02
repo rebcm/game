@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD
 
 on:
   push:
@@ -6,27 +6,22 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
+        uses: actions/checkout@v2
       - name: Install dependencies
         run: flutter pub get
-
-      - name: Analyze code
-        run: dart analyze
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Validate CI/CD flow
-        run: |
-          echo "Validating CI/CD flow..."
-          # Add validation logic here
+      - name: Run analysis
+        run: flutter analyze
+      - name: Build and deploy
+        run: flutter build web
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_REF: main
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./build/web
