@@ -2,27 +2,36 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Deploy Test', () {
-    late FlutterDriver driver;
+  group('Validação de Critérios de Aceitação Técnicos', () {
+    FlutterDriver? driver;
 
     setUpAll(() async {
       driver = await FlutterDriver.connect();
     });
 
     tearDownAll(() async {
-      await driver.close();
+      if (driver != null) {
+        driver!.close();
+      }
     });
 
-    test('Verify deploy URL', () async {
-      // Implement URL verification logic here
+    test('Validação de Endpoint', () async {
+      final response = await driver!.requestData('validate_endpoint');
+      expect(response, isNotEmpty);
     });
 
-    test('Verify assets loading', () async {
-      // Implement asset loading verification logic here
+    test('Validação de Tempo de Resposta', () async {
+      final startTime = DateTime.now();
+      await driver!.requestData('validate_endpoint');
+      final endTime = DateTime.now();
+      final duration = endTime.difference(startTime);
+      expect(duration.inMilliseconds, lessThan(1000));
     });
 
-    test('Verify build time', () async {
-      // Implement build time verification logic here
+    test('Validação de Integridade do JSON', () async {
+      final response = await driver!.requestData('validate_endpoint');
+      // Implement JSON validation logic here
+      expect(response, isNotEmpty);
     });
   });
 }

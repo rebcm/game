@@ -1,0 +1,22 @@
+name: Validação de Critérios de Aceitação Técnicos
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run Flutter Driver Tests
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart
