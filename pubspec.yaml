@@ -58,3 +58,5 @@ flutter:
 
     - docs/artefatos/criterios-aceitacao-documentacao-instalacao.md
     - assets/docs/guias/guia-instalacao.md
+  assets:
+    - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
