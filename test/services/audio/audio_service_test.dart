@@ -28,9 +28,9 @@ void main() {
 
   test('toggleMute toggles the volume', () async {
     when(() => _audioPlayer.volume).thenReturn(1.0);
-    when(() => _audioPlayer.setVolume(0)).thenAnswer((_) async => null);
+    when(() => _audioPlayer.setVolume(0.0)).thenAnswer((_) async => null);
     await _audioService.toggleMute();
-    verify(() => _audioPlayer.setVolume(0)).called(1);
+    verify(() => _audioPlayer.setVolume(0.0)).called(1);
   });
 
   test('getVolume returns the current volume', () {
