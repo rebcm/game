@@ -2,23 +2,21 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver? driver;
+  group('Input Stress Test', () {
+    FlutterDriver? driver;
 
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-  tearDownAll(() async {
-    if (driver != null) {
-      driver?.close();
-    }
-  });
+    tearDownAll(() async {
+      if (driver != null) {
+        driver?.close();
+      }
+    });
 
-  test('verify artifact integrity', () async {
-    // Add test logic here
-  });
-
-  test('verify rejection of corrupted artifact', () async {
-    // Add test logic here
+    test('Input Stress Test', () async {
+      await driver?.requestData('input_stress_test');
+    });
   });
 }

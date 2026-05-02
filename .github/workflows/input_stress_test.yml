@@ -6,11 +6,17 @@ on:
       - main
 
 jobs:
-  test:
+  input_stress_test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
       - name: Run input stress test
         run: |
-          flutter drive --target=test/integration_tests/input_stress_test/input_stress_test.dart
+          flutter drive --target=test/integration/input_stress_test/input_stress_test.dart --driver=test_driver/integration_test.dart
