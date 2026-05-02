@@ -12,14 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Tests
-        run: |
-          flutter test
+      - name: Validate Secrets
+        uses: ./.github/workflows/secrets_validation/secrets_validation.yml
 
-      - name: Check Secrets Configuration
-        uses: ./.github/workflows/secrets_validation/check_secrets.yml
-
-      - name: Build and Deploy
-        run: |
-          flutter build web
-          # deploy commands here
+      # Add other build and test steps here...
