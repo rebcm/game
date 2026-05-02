@@ -19,4 +19,4 @@ jobs:
 
       - name: Run integration test
         run: |
-          flutter drive --driver=test/integration/flutter_gl_integration_test/flutter_gl_test_driver.dart --target=test/integration/flutter_gl_integration_test/flutter_gl_integration_test.dart
+          flutter drive --target=integration_test/flame_loop_flutter_gl_integration_test.dart --driver=test_driver/integration_test.dart
