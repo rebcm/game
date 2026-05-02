@@ -73,3 +73,6 @@ flutter:
   assets/docs/personagem_rebeca.md
 
   assets/docs/coeficientes_atrito_elasticidade.md
+
+  test/widget_test/animacao_test/transicao_estado_animacao_test.dart:
+  integration_test/impacto_performance_test/fps_bateria_test.dart:
