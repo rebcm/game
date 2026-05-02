@@ -1,4 +1,4 @@
-name: Testes de Configurações
+name: Configuracoes Test
 
 on:
   push:
@@ -9,10 +9,14 @@ jobs:
   test-configuracoes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
-      - run: flutter pub get
-      - run: flutter test test/widget_test/configuracoes_test.dart
-      - run: dart test lib/testes/configuracoes/ambiente_config_test.dart
+          flutter-version: '3.0.0'
+
+      - name: Run configuracoes test
+        run: |
+          flutter test test/configuracoes_test/configuracoes_test.dart
