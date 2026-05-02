@@ -1,0 +1,24 @@
+extends:
+  default: &default
+    stages:
+      - build
+      - deploy
+    variables:
+      IOS_SDK_VERSION: '16.2'
+      IOS_DEPLOYMENT_TARGET: '14.0'
+    before_script:
+      - echo 'Configurando o ambiente iOS...'
+    build:
+      stage: build
+      script:
+        - echo 'Construindo o IPA...'
+        - pod install
+        - fastlane build
+      artifacts:
+        paths:
+          - //.ipa
+    deploy:
+      stage: deploy
+      script:
+        - echo 'Enviando o IPA para o servidor...'
+
