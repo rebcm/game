@@ -56,6 +56,3 @@ flutter:
 
   test_flutter_dart_version:
     path: test/flutter_dart_version_test.dart
-
-  test_flutter_web_build:
-    path: test/flutter_web_build_test/flutter_web_build_test.dart

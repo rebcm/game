@@ -2,7 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/main.dart' as app;
 
 void main() {
-  testWidgets('Verificar Versão do Flutter e Dart', (tester) async {
-    // Não é necessário implementar teste aqui, pois a verificação será feita no CI
+  test('Verifica versão do Flutter e Dart', () {
+    expect(FlutterVersion.major, 3);
+    expect(FlutterVersion.minor, greaterThanOrEqualTo(0));
+    expect(DartVersion.major, 2);
+    expect(DartVersion.minor, greaterThanOrEqualTo(17));
   });
 }
