@@ -1,4 +1,4 @@
 class Constantes {
-  static const String autor = 'Rebeca Alves Moreira';
-  static const int bitrateMinimo = 128000; // 128 kbps
+  static const String urlApiCloudflare = 'https://construcao-criativa.workers.dev';
+  static const int tempoLimiteRequisicao = 10; // segundos
 }
