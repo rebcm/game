@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Tool Version Validation Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  validate-versions:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,6 +27,3 @@ jobs:
 
       - name: Check Java version
         run: java -version
-
-      - name: Run Tests
-        run: flutter test
