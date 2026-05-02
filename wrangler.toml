@@ -1,18 +1,9 @@
-# Configuração do Wrangler para Cloudflare Workers
-name = "construcao-criativa"
-main = "worker.js"
+name = "rebcm-worker"
+main = "src/index.js"
 compatibility_date = "2023-01-01"
-
-[env.staging]
-vars = {
-  API_TOKEN = { binding = "API_TOKEN", type = "secret" }
-}
-
-[env.production]
-vars = {
-  API_TOKEN = { binding = "API_TOKEN", type = "secret" }
-}
+account_id = ""
 
 [vars]
-CLOUDFLARE_API_TOKEN = "${CLOUDFLARE_API_TOKEN}"
-CLOUDFLARE_ACCOUNT_ID = "${CLOUDFLARE_ACCOUNT_ID}"
+DB_URL = ""
+DB_USER = ""
+DB_PASSWORD = ""
