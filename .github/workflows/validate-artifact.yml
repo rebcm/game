@@ -1,4 +1,4 @@
-name: Validate Artifact Signature
+name: Validate Artifact
 
 on:
   workflow_dispatch:
@@ -6,17 +6,22 @@ on:
     types: [created]
 
 jobs:
-  validate-signature:
+  validate-artifact:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download APK artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-release.apk
-          path: ./app-release.apk
+          name: release-artifact
+          path: artifacts/
 
-      - name: Validate APK signature
-        run: ./.github/workflows/scripts/validate_signature.sh ./app-release.apk
+      - name: Validate checksum
+        run: |
+          .github/workflows/scripts/validate_checksum.sh artifacts/
+
+      - name: Validate binary version
+        run: |
+          .github/workflows/scripts/validate_binary_version.sh artifacts/
