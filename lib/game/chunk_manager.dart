@@ -1,15 +1,15 @@
-import 'dart:collection';
-import 'package:rebcm/game/chunk.dart';
+import 'package:flutter/foundation.dart';
+import 'package:rebcm/utils/optimization/memory_optimizer.dart';
 
 class ChunkManager {
-  final Queue<Chunk> _chunksToUnload = Queue();
+  void manageChunks(List chunks) {
+    MemoryOptimizer.optimizeList(chunks);
+    // Other chunk management logic
+  }
 
-  void unloadChunk(Chunk chunk) {
-    _chunksToUnload.add(chunk);
-    // Unload chunks when they are no longer needed
-    if (_chunksToUnload.length > 10) {
-      Chunk chunkToUnload = _chunksToUnload.removeFirst();
-      chunkToUnload.dispose();
-    }
+  void renderChunks(int length) {
+    MemoryOptimizer.optimizeLoop((index) {
+      // Render chunk logic
+    }, length);
   }
 }
