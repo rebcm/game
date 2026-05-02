@@ -22,3 +22,13 @@ dev_dependencies:
   http_mock_adapter: ^1.0.0
   flutter_test:
     sdk: flutter
+import 'package:flutter_i18n/flutter_i18n.dart';
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_i18n: ^0.34.0
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
