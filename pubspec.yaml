@@ -60,3 +60,5 @@ flutter:
     - assets/docs/guias/guia-instalacao.md
   assets:
     - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
+  assets:
+    - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
