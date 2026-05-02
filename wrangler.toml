@@ -1,5 +1,12 @@
-[env.staging]
-vars = { API_URL = "https://staging.api.rebcm.com" }
+name = "rebcm-game"
+type = "javascript"
 
 [env.production]
-vars = { API_URL = "https://api.rebcm.com" }
+vars = {
+  API_URL = "https://api.rebcm.game"
+}
+
+[env.staging]
+vars = {
+  API_URL = "https://staging-api.rebcm.game"
+}
