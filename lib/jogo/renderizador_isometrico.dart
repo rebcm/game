@@ -1,28 +1,40 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flame/game.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/mundo/gerador.dart';
+import 'package:rebcm/config/constantes.dart';
 
-class RenderizadorIsometrico extends FlameGame {
-  late GeradorMundo _geradorMundo;
+class RenderizadorIsometrico extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (event) => print('Mouse entrou na área de renderização'),
+      onExit: (event) => print('Mouse saiu da área de renderização'),
+      onHover: (event) => print('Mouse está sobre a área de renderização'),
+      child: GameWidget(
+        game: _JogoIsometrico(),
+      ),
+    );
+  }
+}
 
+class _JogoIsometrico extends FlameGame {
   @override
   Future<void> onLoad() async {
-    _geradorMundo = GeradorMundo();
-    await super.onLoad();
+    // Carregar assets e inicializar jogo
   }
 
   @override
   void render(Canvas canvas) {
-    super.render(canvas);
-    // Implementação da renderização isométrica
-    // ...
+    // Renderizar cena isométrica
   }
 
   @override
   void update(double dt) {
-    super.update(dt);
-    // Sincronização com o loop de atualização do Flame
-    // ...
+    // Atualizar estado do jogo
+  }
+
+  @override
+  void onTap() {
+    // Lidar com eventos de toque/tap
   }
 }
