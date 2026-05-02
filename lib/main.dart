@@ -1,23 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/services/audio/audio_service.dart';
-import 'package:rebcm/services/audio/sound_effects_manager.dart';
-import 'package:rebcm/game_logic.dart';
+import 'package:rebcm/services/audio/audio_manager.dart';
 
 void main() {
-  final AudioService audioService = AudioService();
-  final SoundEffectsManager soundEffectsManager = SoundEffectsManager(audioService);
-  final GameLogic gameLogic = GameLogic(soundEffectsManager);
-
-  runApp(MyApp(gameLogic: gameLogic));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final GameLogic gameLogic;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Rebeca\'s Game',
+      home: MyHomePage(),
+    );
+  }
+}
 
-  const MyApp({Key? key, required this.gameLogic}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late AudioManager _audioManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioManager = AudioManager(AudioService()); // Initialize with actual params
+  }
+
+  @override
+  void dispose() {
+    _audioManager.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Existing app widget tree
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebeca\'s Game'),
+      ),
+      body: Center(
+        child: Text('Game Content'),
+      ),
+    );
   }
 }
