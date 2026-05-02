@@ -37,6 +37,9 @@ flutter:
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
     - assets/audio/optimized/sfx/
+    - assets/audio/raw/ambient/
+    - assets/audio/raw/music/
+    - assets/audio/raw/sfx/
     - assets/blocos/
     - assets/characters/
     - assets/i18n/
