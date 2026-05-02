@@ -1,0 +1,21 @@
+name: Artefato Integridade Após Upload Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run test
+        run: |
+          flutter pub get
+          flutter test test/artefato_integridade_apos_upload_test.dart
