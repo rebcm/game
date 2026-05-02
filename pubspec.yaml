@@ -4,6 +4,7 @@ description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua cr
 version: 1.0.0+14
 
 environment:
+audio_codec_config: AAC
   sdk: ">=2.17.0 <3.0.0"
   flutter: "^3.0.0"
   audio_codec_config: ^1.0.0
