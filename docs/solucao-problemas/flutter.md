@@ -2,21 +2,26 @@
 
 ## Erros de Instalação
 
-1. **Flutter não encontrado**: Certifique-se de que o Flutter está instalado e configurado corretamente no PATH do sistema.
-2. **Dependências não resolvidas**: Execute `flutter pub get` para resolver as dependências do projeto.
+1. **Flutter não encontrado**: Certifique-se de que o Flutter está instalado e configurado corretamente no seu PATH.
+2. **Permissão negada**: Execute os comandos com privilégios de administrador ou ajuste as permissões dos arquivos.
 
 ## Erros de Configuração
 
-1. **Versão do Flutter incompatível**: Verifique se a versão do Flutter está dentro do intervalo especificado no `pubspec.yaml`.
-2. **Configuração de assets**: Certifique-se de que os assets estão corretamente configurados no `pubspec.yaml`.
+1. **Dependências não resolvidas**: Execute `flutter pub get` para atualizar as dependências.
+2. **Versão do Flutter incompatível**: Verifique se a versão do Flutter está dentro do intervalo especificado no `pubspec.yaml`.
 
 ## Erros de Build
 
-1. **Erro ao compilar**: Execute `flutter clean` e depois `flutter pub get` para limpar e recriar as dependências.
-2. **Erro de compatibilidade**: Verifique se as versões das dependências são compatíveis com a versão do Flutter.
+1. **Erro ao compilar**: Limpe o projeto com `flutter clean` e tente compilar novamente.
+2. **Assets não encontrados**: Verifique se os assets estão corretamente configurados no `pubspec.yaml`.
 
-## Passos Gerais para Solução de Problemas
+## Outros Problemas
 
-1. **Verifique os logs**: Analise os logs de erro para entender a causa do problema.
-2. **Pesquise na documentação**: Consulte a documentação oficial do Flutter e das dependências utilizadas.
-3. **Pesquise na comunidade**: Busque soluções em fóruns e comunidades de desenvolvimento Flutter.
+1. **Aplicativo não inicia**: Verifique os logs de erro para identificar a causa.
+2. **Comportamento inesperado**: Execute o aplicativo em modo debug para identificar a causa.
+
+## Comandos Úteis
+
+- `flutter doctor`: Verifica a configuração do Flutter.
+- `flutter clean`: Limpa o projeto.
+- `flutter pub get`: Atualiza as dependências.

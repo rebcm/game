@@ -1,11 +1,11 @@
-name: Documentação Solução Problemas Test
+name: Documentação Solução de Problemas Test
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'docs/solucao_problemas/**'
+      - 'docs/solucao-problemas/**'
 
 jobs:
   test:
@@ -14,8 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Test Documentação
+      - name: Validate documentation
         run: |
-          echo "Testando documentação..."
-          # Adicione aqui comandos para testar a documentação, se necessário
-
+          echo "Validating documentation..."
+          # Adicione aqui comandos para validar a documentação
