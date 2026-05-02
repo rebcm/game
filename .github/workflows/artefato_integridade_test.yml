@@ -1,4 +1,4 @@
-name: Artefato Integridade Test
+name: Testes de Integridade de Artefato
 
 on:
   push:
@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run integration test
-        run: flutter drive --driver=test/driver/integration_test.dart --target=test/integration_test/artefato_integridade_test.dart
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/artefato_integridade_test.dart
 
       - name: Upload test logs
         uses: actions/upload-artifact@v3

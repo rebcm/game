@@ -6,13 +6,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Artefato Integridade Test', () {
-    testWidgets('Testar integridade do APK/IPA', (tester) async {
+    testWidgets('Testa integridade do artefato', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Implementar lógica para testar a integridade do artefato
-      // após o upload e testar cenários de falha de conexão
-      // com o servidor de artefatos.
+      // Simula a criação de um artefato íntegro
+      // Implemente aqui a lógica para criar um artefato íntegro
+
+      // Verifica se o artefato foi criado com sucesso
+      // Implemente aqui a lógica para verificar a criação do artefato
+
+      // Simula a criação de um artefato corrompido
+      // Implemente aqui a lógica para criar um artefato corrompido
+
+      // Verifica se o artefato corrompido foi rejeitado
+      // Implemente aqui a lógica para verificar a rejeição do artefato corrompido
     });
   });
 }
