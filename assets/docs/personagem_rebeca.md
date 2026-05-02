@@ -1,7 +1,7 @@
 # Personagem Rebeca
 
 ## Aparência
-A Rebeca é a protagonista do nosso jogo criativo de blocos voxel. Ela é representada de forma simples, com um design que prioriza a facilidade de identificação e a simpatia.
+A Rebeca é a personagem principal do jogo. Ela é representada por um modelo 3D simples, com uma textura colorida que a destaca no mundo voxel.
 
 ## Estilo
-O estilo da Rebeca é minimalista, alinhado com a estética geral do jogo, que valoriza a criatividade e a liberdade de construção.
+O estilo da Rebeca é inspirado em personagens de jogos criativos e de aventura, com uma abordagem minimalista que se integra ao estilo voxel do jogo.

@@ -70,3 +70,4 @@ flutter:
   integration_test/scroll_compatibility_test.dart:
 
   integration_test/flutter_ci_test.dart:
+  assets/docs/personagem_rebeca.md
