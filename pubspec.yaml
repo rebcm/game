@@ -54,8 +54,5 @@ flutter:
     - docs/localizacao/lista_idiomas.md
   uses-material-design: true
 
-  test_flutter_dart_version:
-    path: test/flutter_dart_version_test.dart
-
-  test_health_check:
-    path: test/health_check/preview_url_test.dart
+  test_audio_codec:
+    path: test/audio/audio_codec_test.dart

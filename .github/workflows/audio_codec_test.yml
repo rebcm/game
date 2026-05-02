@@ -11,6 +11,5 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Run audio codec tests
-        run: flutter test test/utils/audio/audio_codec_test.dart
+      - name: Run audio codec test
+        run: flutter test test/audio/audio_codec_test.dart
