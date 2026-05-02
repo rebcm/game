@@ -15,3 +15,5 @@ jobs:
         run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact artifact.zip
 
       # Rest of the workflow remains the same
+      - name: Validate Audio Assets
+        run: .github/workflows/scripts/validate_audio_assets.sh
