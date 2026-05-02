@@ -1,15 +1,16 @@
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  final http.Client _client;
+  final http.Client _httpClient;
 
-  ApiClient(this._client);
+  ApiClient(this._httpClient);
 
-  Future<http.Response> get(Uri url) async {
-    return _client.get(url);
-  }
-
-  Future<http.Response> post(Uri url, {Object? body}) async {
-    return _client.post(url, body: body);
+  Future<String> fetchData() async {
+    final response = await _httpClient.get(Uri.parse('https://example.com/api/data'));
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 }
