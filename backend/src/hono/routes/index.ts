@@ -6,3 +6,11 @@ const app = new Hono();
 app.route('/upload', uploadChunksRoute);
 
 export default app;
+import rebeccaProfileRoute from '../../rebecca_profile/rebecca_profile_route';
+
+const routes = [
+  // ... other routes
+  rebeccaProfileRoute,
+];
+
+export default routes;
