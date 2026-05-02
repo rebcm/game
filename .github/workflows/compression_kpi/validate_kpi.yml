@@ -2,41 +2,37 @@ name: Validate Compression KPI
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'assets/**'
-      - 'pubspec.yaml'
+    inputs:
+      original-size:
+        description: 'Original APK/IPA size'
+        required: true
+        type: string
+      new-size:
+        description: 'New APK/IPA size after conversion'
+        required: true
+        type: string
 
 jobs:
-  validate-compression-kpi:
+  validate-kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Measure APK size
-        run: |
-          APK_SIZE=$(stat -c%s "build/app/outputs/flutter-apk/app-release.apk")
-          echo "APK_SIZE=$APK_SIZE" >> $GITHUB_ENV
-
       - name: Validate KPI
         run: |
-          if [ $APK_SIZE -le 30000000 ]; then
-            echo "KPI achieved: APK size is $APK_SIZE bytes"
+          original_size=$(echo "${{ github.event.inputs.original-size }}" | numfmt --from=iec)
+          new_size=$(echo "${{ github.event.inputs.new-size }}" | numfmt --from=iec)
+          reduction=$(echo "scale=2; (($original_size - $new_size) / $original_size) * 100" | bc)
+
+          echo "Original size: $original_size bytes"
+          echo "New size: $new_size bytes"
+          echo "Reduction: $reduction%"
+
+          target_reduction=$(cat compression_target.txt)
+          if (( $(echo "$reduction >= $target_reduction" | bc -l) )); then
+            echo "KPI achieved: $reduction% >= $target_reduction%"
           else
-            echo "KPI not achieved: APK size is $APK_SIZE bytes"
+            echo "KPI not achieved: $reduction% < $target_reduction%"
             exit 1
           fi

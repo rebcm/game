@@ -2,30 +2,20 @@ name: Define Compression KPI
 
 on:
   workflow_dispatch:
+    inputs:
+      target-reduction:
+        description: 'Target reduction percentage'
+        required: true
+        type: string
 
 jobs:
-  define-compression-kpi:
+  define-kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Measure APK size
+      - name: Define KPI
         run: |
-          APK_SIZE=$(stat -c%s "build/app/outputs/flutter-apk/app-release.apk")
-          echo "Current APK size is $APK_SIZE bytes"
-
-      - name: Set KPI
-        run: |
-          echo "Current APK size is $APK_SIZE bytes. Consider setting KPI around this value."
+          echo "Target reduction: ${{ github.event.inputs.target-reduction }}%"
+          echo "${{ github.event.inputs.target-reduction }}" > compression_target.txt
