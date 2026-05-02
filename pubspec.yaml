@@ -61,3 +61,6 @@ flutter:
     - docs/ar
 
   playwright: ^0.1.1
+
+dev_dependencies:
+  test: ^1.21.4

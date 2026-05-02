@@ -1,0 +1,29 @@
+name: Flutter e Dart Version Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar versão do Flutter
+        run: |
+          echo "Versão do Flutter: $(flutter --version)"
+          if ! flutter --version | grep -q "Flutter $FLUTTER_VERSION"; then
+            echo "Versão do Flutter incorreta"
+            exit 1
+          fi
+
+      - name: Verificar versão do Dart
+        run: |
+          echo "Versão do Dart: $(dart --version)"
+          if ! dart --version | grep -q "Dart $DART_VERSION"; then
+            echo "Versão do Dart incorreta"
+            exit 1
+          fi
