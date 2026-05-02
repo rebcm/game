@@ -62,3 +62,5 @@ flutter:
     - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
   assets:
     - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
+
+  # No new dependencies are added as per the task requirements and existing project structure

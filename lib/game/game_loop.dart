@@ -6,13 +6,17 @@ class GameLoop extends FlameGame {
 
   @override
   Future<void> onLoad() async {
-    await _audioManager.initAudio();
-    _audioManager.playBackgroundMusic();
+    await _audioManager.init();
+    _audioManager.play();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    // Game loop logic here
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
   }
 }
