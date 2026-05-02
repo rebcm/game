@@ -1,0 +1,19 @@
+name: Testes de API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run testes
+        run: flutter test lib/testes/estrategia_testes.dart
+      - name: Run testes de integração
+        run: flutter drive --target=test/integracao/api_test.dart
