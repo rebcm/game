@@ -6,3 +6,6 @@
     "test:backend": "jest"
   }
 }
+  "scripts": {
+    "test:flutter:performance": "flutter test integration/performance"
+  }
