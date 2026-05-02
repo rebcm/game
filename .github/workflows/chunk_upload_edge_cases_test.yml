@@ -11,5 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Run tests
-        run: flutter test test/chunk_upload_test/chunk_upload_edge_cases_test.dart
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run edge cases tests for chunk upload
+        run: |
+          flutter test test/chunk_upload_edge_cases_test.dart
