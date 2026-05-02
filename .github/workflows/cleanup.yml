@@ -1,17 +1,16 @@
-name: Cleanup Artifacts
+name: Cleanup
 
 on:
   schedule:
-    - cron: '0 2 * * *' # Executa todos os dias às 02:00 UTC
+    - cron: '0 0 * * *'
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Purge old artifacts
+        uses: actions/checkout@v3
+      - name: Purge artifacts
+        run: .github/workflows/scripts/purge-artifacts.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./.github/workflows/scripts/purge-artifacts.sh

@@ -1,5 +1,7 @@
 #!/bin/bash
 
-# Simulating artifact purge logic
-echo "Purging artifacts..."
-# Add your purge logic here
+# Delete old artifacts
+for artifact in $(gh api /repos/rebcm/game/actions/artifacts --paginate --jq '.artifacts[] | select(.expired == false) | .id'); do
+  echo "Deleting artifact $artifact"
+  gh api /repos/rebcm/game/actions/artifacts/$artifact -X DELETE
+done
