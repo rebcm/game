@@ -14,9 +14,8 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
-    // Verify audio is playing
-    // This part depends on how you're handling audio playback in your app
-    // For example, if you're using just_audio, you might check the player's state
+    // Verify audio playback
+    // This is a simplified example; actual implementation depends on your audio handling code
     final player = AudioPlayer();
     expect(player.playing, true);
   });
