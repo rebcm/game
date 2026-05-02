@@ -1,6 +1,31 @@
-version: '3'
-steps:
-  build-web:
-    ...
-    - npm run deploy-to-cloudflare-pages
+name: Build Web
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Build Flutter Web
+        run: |
+          flutter config --enable-web
+          flutter pub get
+          flutter build web
+
+      - name: Deploy to Cloudflare Pages
+        run: wrangler pages deploy build/web --project-name=rebcm-game
