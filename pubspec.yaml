@@ -52,26 +52,8 @@ flutter:
     - docs/glossario/README.md
     - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
-    - docs/guias/style_guide.md
+    - .env
   uses-material-design: true
-
-  test_audio_codec:
-  test_integration_audio:
-    path: test/integration_tests/audio_integration_test/audio_integration_test.dart
-    path: test/audio/audio_codec_test.dart
-
-  test_driver/integration_test.dart:
 
   test_secrets_validation:
     path: test/secrets_validation_test.dart
-
-  test_d1_r2_integration:
-    path: test/integration_tests/d1_r2_integration_test/d1_r2_integration_test.dart
-
-  test_memory_consumption:
-    path: test/performance_tests/memory_consumption_test.dart
-
-  test_memory_stress:
-    path: test/integration_tests/memory_stress_test/memory_stress_test.dart
-  assets:
-    - docs/guias/style_guide.md

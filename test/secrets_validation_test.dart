@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/main.dart' as app;
 import 'package:dotenv/dotenv.dart';
 
 void main() {
-  test('Secrets are loaded', () async {
+  test('Secrets are loaded correctly', () async {
     final env = DotEnv();
     await env.load();
-    expect(env['MY_SECRET'], isNotNull);
+    expect(env['SECRET_KEY'], isNotNull);
+    expect(env['SECRET_KEY'], isNotEmpty);
   });
 }
