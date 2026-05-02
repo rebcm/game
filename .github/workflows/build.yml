@@ -18,19 +18,16 @@ jobs:
         with:
           flutter-version: '3.0.5'
       - run: flutter pub get
-      - run: dart analyze
+      - run: flutter analyze
       - run: flutter test
       - run: flutter build web --release
       - name: Deploy para Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          curl -X POST \
-          "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/rebcm-game/deployments" \
-          -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-          -H "Content-Type: application/json" \
-          --data '{"branch":"main","working_directory":"/web"}'
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: rebcm-game
+          directory: build/web
 
   build-android:
     runs-on: ubuntu-latest
@@ -51,7 +48,7 @@ jobs:
       - name: Upload APK como artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rebcm-android.apk
+          name: rebcm-game.apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
   build-ios:
@@ -68,30 +65,29 @@ jobs:
       - name: Upload IPA como artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rebcm-ios.ipa
-          path: build/ios/ipa/RebecaCriativa.ipa
+          name: rebcm-game.ipa
+          path: build/ios/ipa/RebecaGame.ipa
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - run: npm install -g wrangler
-      - run: wrangler deploy
-        working-directory: worker
+      - name: Install Wrangler
+        run: npm install -g wrangler
+      - name: Deploy to Cloudflare Workers
+        run: wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   notify:
-    needs: [build-web, build-android, build-ios]
+    needs: [build-web, build-android, deploy-backend]
     runs-on: ubuntu-latest
     steps:
       - name: POST para Neuron API notificando resultado do build
-        env:
-          NEURON_API_URL: ${{ secrets.NEURON_API_URL }}
         run: |
           curl -X POST \
-          "${NEURON_API_URL}" \
-          -H "Content-Type: application/json" \
-          --data '{"status":"success","project":"rebcm/game"}'
+          https://neuron-api.example.com/build-result \
+          -H 'Content-Type: application/json' \
+          -d '{"status": "success"}'
