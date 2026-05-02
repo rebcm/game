@@ -1,0 +1,19 @@
+name: Testar Diagrama de Fluxo de Requisições
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/diagramas/fluxo_requisicoes.md'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar diagrama
+        run: |
+          grep -q 'sequenceDiagram' docs/diagramas/fluxo_requisicoes.md
