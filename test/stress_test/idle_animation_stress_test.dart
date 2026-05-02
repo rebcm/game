@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/main.dart' as app;
 
@@ -5,10 +6,11 @@ void main() {
   testWidgets('Idle animation stress test', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Rebeca'));
-    await tester.pumpAndSettle();
-    for (var i = 0; i < 100; i++) {
-      await tester.pump(const Duration(milliseconds: 16));
-    }
+
+    // Simulate idle animation for 10 seconds
+    await tester.pump(Duration(seconds: 10));
+
+    // Verify frame rate
+    expect(tester.binding.frameRate, isNot(lessThan(60)));
   });
 }

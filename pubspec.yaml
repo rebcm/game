@@ -28,6 +28,8 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
   build_runner: ^2.1.8
   json_serializable: ^6.3.1
   mocktail: ^0.3.0
@@ -44,9 +46,3 @@ flutter:
 
   flutter_test:
     sdk: flutter
-
-  flutter:
-    assets:
-      - assets/docs/instrucoes.md
-  assets:
-    - assets/docs/checklists/qa-checklist-docs.md

@@ -1,0 +1,23 @@
+name: Idle Animation Stress Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  stress-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run stress test
+        run: |
+          flutter pub get
+          flutter drive --target=test/stress_test/idle_animation_stress_test.dart --driver=test/stress_test/idle_animation_stress_test_driver.dart
