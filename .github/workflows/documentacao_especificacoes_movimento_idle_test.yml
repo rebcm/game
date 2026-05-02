@@ -1,0 +1,20 @@
+name: Documentação Especificações Movimento Idle Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/especificacoes/movimento_idle.md'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate documentation
+        run: |
+          echo "Validating documentation..."
+          # Adicionar lógica de validação aqui
