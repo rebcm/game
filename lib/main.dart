@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:passdriver/features/trilha_sonora/providers/trilha_sonora_provider.dart';
+import 'package:passdriver/features/audio_transition/providers/audio_transition_provider.dart';
+import 'package:passdriver/features/audio_transition/widgets/audio_transition_widget.dart';
+import 'package:just_audio/just_audio.dart';
 
 void main() {
+  final currentPlayer = AudioPlayer();
+  final nextPlayer = AudioPlayer();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TrilhaSonoraProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AudioTransitionProvider(
+            currentPlayer: currentPlayer,
+            nextPlayer: nextPlayer,
+          ),
+        ),
       ],
       child: MyApp(),
     ),
@@ -17,13 +27,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PassDriver',
       home: Scaffold(
-        body: Consumer<TrilhaSonoraProvider>(
-          builder: (context, trilhaSonoraProvider, child) {
-            return trilhaSonoraProvider.trilhaSonora;
-          },
-        ),
+        body: AudioTransitionWidget(),
       ),
     );
   }
