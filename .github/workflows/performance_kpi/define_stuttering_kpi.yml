@@ -2,25 +2,30 @@ name: Define Stuttering KPI
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 23 * * *'
+    inputs:
+      fps_threshold:
+        description: 'FPS Threshold'
+        required: true
+        default: '55'
+      jank_frames_threshold:
+        description: 'Jank Frames Threshold'
+        required: true
+        default: '10'
 
 jobs:
-  define_stuttering_kpi:
+  define_kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
-      - name: Run Flutter doctor
-        run: flutter doctor
-
-      - name: Run define stuttering kpi script
+      - name: Define KPI
         run: |
-          echo "Defining stuttering KPI..."
-          # Add script to define stuttering KPI here
+          echo "FPS Threshold: ${{ github.event.inputs.fps_threshold }}"
+          echo "Jank Frames Threshold: ${{ github.event.inputs.jank_frames_threshold }}"
+          echo "Stuttering KPI defined successfully"
+
+      - name: Store KPI
+        run: |
+          echo "${{ github.event.inputs.fps_threshold }}" > .github/workflows/performance_kpi/fps_threshold.txt
+          echo "${{ github.event.inputs.jank_frames_threshold }}" > .github/workflows/performance_kpi/jank_frames_threshold.txt
