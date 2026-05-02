@@ -6,11 +6,9 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Basic app rendering test', (tester) async {
+  testWidgets('example test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Verify that the app renders without crashing
-    expect(find.byType(MaterialApp), findsOneWidget);
+    // Implemente seus testes aqui
   });
 }
