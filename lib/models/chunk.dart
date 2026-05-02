@@ -1,8 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Chunk extends Equatable {
-  // Chunk properties here
+part 'chunk.g.dart';
 
-  @override
-  List<Object> get props => [];
+@JsonSerializable()
+class Chunk {
+  final int x;
+  final int z;
+  final List<int> data;
+
+  Chunk({required this.x, required this.z, required this.data});
+
+  factory Chunk.fromJson(Map<String, dynamic> json) => _$ChunkFromJson(json);
+  Map<String, dynamic> toJson() => _$ChunkToJson(this);
 }
