@@ -1,0 +1,24 @@
+name: Build and Deploy
+
+on:
+  schedule:
+    - cron:  '0 20 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build and deploy
+        run: |
+          # TO DO: implementar deploy

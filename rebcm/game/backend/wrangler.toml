@@ -1,0 +1,8 @@
+name = "rebeca-criativa-backend"
+type = "javascript"
+
+[site]
+bucket = "./public"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
