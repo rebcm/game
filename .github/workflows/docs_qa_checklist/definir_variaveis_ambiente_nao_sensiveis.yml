@@ -1,0 +1,26 @@
+name: Definir Variáveis de Ambiente Não Sensíveis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  definir-variaveis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configurar wrangler.toml
+        run: |
+          cat > wrangler.toml << EOL
+          [vars]
+          API_URL = "https://api.example.com"
+          PROJETO_ID = "123456789"
+          EOL
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add wrangler.toml
+          git commit -m "Configura variáveis de ambiente não sensíveis"
