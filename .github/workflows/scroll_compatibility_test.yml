@@ -1,0 +1,27 @@
+name: Scroll Compatibility Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        browser: ['chrome', 'firefox', 'safari']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run Scroll Compatibility Test on ${{ matrix.browser }}
+        run: |
+          flutter config --enable-web
+          flutter test integration_test/scroll_compatibility_test.dart --browser=${{ matrix.browser }}
