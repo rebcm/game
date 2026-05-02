@@ -1,34 +1,4 @@
-name: passdriver
-description: PassDriver app
-
-dependencies:
-  provider:
-  flutter_map:
-  flutter:
-  assets:
-    - assets/characters/rebeca_skin.png
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  flutter_map: ^0.14.0
-  open_street_map: ^1.0.0
-
-dev_dependencies:
-  flutter_test:
-  provider:
-  flutter_map:
-  flutter_lints: ^2.0.0
-  cached_network_image: ^3.2.3
-dev_dependencies:
-  integration_test:
-    sdk: flutter
-  http_mock_adapter: ^0.3.3
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
 dependencies:
   flutter:
     sdk: flutter
-  flame: ^1.2.1
-  flutter_gl: ^0.17.0
+  simple_animation: ^1.0.0
