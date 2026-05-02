@@ -12,13 +12,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Check Flutter version
+        run: |
+          flutter_version=$(flutter --version | grep "Flutter" | awk '{print $2}')
+          min_flutter_version="3.0.0"
+          if [[ "$(printf '%s\n' "$min_flutter_version" "$flutter_version" | sort -V | head -n1)" != "$min_flutter_version" ]]; then
+            echo "Flutter version is valid: $flutter_version"
+          else
+            echo "Flutter version is not valid. Expected >= $min_flutter_version but got $flutter_version"
+            exit 1
+          fi
+
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Validate Flutter and Java versions
+      - name: Check Java version
         run: |
-          flutter --version > flutter_version.txt
-          java -version > java_version.txt 2>&1
-          dart test/flutter_dart_version_test.dart
+          java_version=$(java -version 2>&1 | grep "openjdk version" | awk '{print $3}' | tr -d '"')
+          required_java_version="17"
+          if [[ "$java_version" == "$required_java_version"* ]]; then
+            echo "Java version is valid: $java_version"
+          else
+            echo "Java version is not valid. Expected $required_java_version but got $java_version"
+            exit 1
+          fi
