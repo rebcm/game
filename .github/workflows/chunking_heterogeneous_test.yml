@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
       - name: Run chunking heterogeneous test
         run: |
           flutter test test/chunking_heterogeneous_test/chunking_heterogeneous_test.dart
