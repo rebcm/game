@@ -1,0 +1,22 @@
+name: Validar .gitignore
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validar-gitignore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar .gitignore
+        run: |
+          if git check-ignore .dev.vars; then
+            echo ".dev.vars está sendo ignorado pelo .gitignore"
+          else
+            echo ".dev.vars NÃO está sendo ignorado pelo .gitignore"
+            exit 1
+          fi
