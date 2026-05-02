@@ -67,3 +67,6 @@ dev_dependencies:
   assets:
     - assets/docs/checklists/validacao-onboarding-checklist.md
     - docs/validacao/criterios-aceitacao-onboarding.md
+
+dependency_overrides:
+  just_audio: ^0.9.34
