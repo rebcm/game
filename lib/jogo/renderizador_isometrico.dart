@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/utils/logger.dart';
 
-class RenderizadorIsometrico {
-  void renderizar(Canvas canvas, List<List<List<TipoBloco>>> chunks) {
-    try {
-      // Lógica de renderização existente
-    } catch (e) {
-      Logger.logError('Erro ao renderizar chunks', e);
-    }
+class RenderizadorIsometrico extends StatefulWidget {
+  @override
+  _RenderizadorIsometricoState createState() => _RenderizadorIsometricoState();
+}
+
+class _RenderizadorIsometricoState extends State<RenderizadorIsometrico> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomPaint(
+        painter: _IsometricPainter(),
+      ),
+    );
+  }
+}
+
+class _IsometricPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Implementação do renderizador isométrico
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

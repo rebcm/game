@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/utils/traducao.dart';
-import 'package:rebcm/jogo.dart';
+import 'package:rebcm/excecoes/tratador_excecoes.dart';
+import 'package:rebcm/jogo/renderizador_isometrico.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TraducaoService()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  FlutterError.onError = TratadorExcecoes.tratarExcecao;
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Creative Construction',
-      locale: context.watch<TraducaoService>().locale,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', ''),
-        Locale('pt', ''),
-      ],
-      home: Jogo(),
+      navigatorKey: navigatorKey,
+      home: RenderizadorIsometrico(),
     );
   }
 }
