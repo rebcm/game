@@ -33,3 +33,5 @@ dev_dependencies:
     sdk: flutter
   assets:
     - assets/characters/rebeca_skin.png
+devDependencies:
+  toxiproxy: ^2.0.0
