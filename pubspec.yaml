@@ -47,3 +47,7 @@ assets:
   - assets/audio/
 deploy:
   script: ./scripts/deploy-cloudflare-pages.sh
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_map: ^0.14.0
