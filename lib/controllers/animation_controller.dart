@@ -6,6 +6,5 @@ class CustomAnimationController extends AnimationController {
   @override
   void dispose() {
     super.dispose();
-    // Add any additional dispose logic here
   }
 }
