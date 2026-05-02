@@ -1,0 +1,30 @@
+name: Cloudflare Auth Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Cloudflare auth test
+        env:
+          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+        run: |
+          curl -X GET \
+          https://api.cloudflare.com/client/v4/user/tokens/verify \
+          -H 'Authorization: Bearer '$CLOUDFLARE_TOKEN \
+          -H 'Content-Type: application/json'

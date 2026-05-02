@@ -68,3 +68,6 @@ flutter:
     - docs/criterios_aceitacao/matriz_retencao_artefatos.md
 
   http: ^0.13.5
+
+dev_dependencies:
+  http: ^0.13.5
