@@ -1,13 +1,25 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 import 'package:rebcm/main.dart' as app;
 
 void main() {
-  testWidgets('Performance and Memory Test', (tester) async {
-    await app.main();
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('performance test', (tester) async {
+    app.main();
     await tester.pumpAndSettle();
 
-    // Add performance and memory test logic here
-    // For example, you can use tester.binding.watchPerformance() to monitor performance
-    // or tester.binding.memoryUsage to check memory usage
+    // Implement performance metrics collection using Flutter Driver or Integration Test
+    // For example, you can use tester.binding.framePolicy to control frame rendering
+    // and measure the time it takes to render frames.
+
+    // Example metric: frame rate
+    final stopwatch = Stopwatch()..start();
+    await tester.pumpAndSettle();
+    final elapsed = stopwatch.elapsed;
+    print('Frame rendering time: $elapsed');
+
+    // You can also use IntegrationTestWidgetsFlutterBinding.instance to access
+    // performance metrics such as frame rate, memory usage, etc.
   });
 }
