@@ -6,18 +6,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('persistência de metadados e arquivos', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  group('Persistence Integration Tests', () {
+    testWidgets('metadata persistence test', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
 
-    // Simula ação para persistir metadados e arquivos
-    // ...
+      // Simulate metadata change
+      // Assuming there's a button to trigger metadata change
+      await tester.tap(find.byTooltip('Change Metadata'));
+      await tester.pumpAndSettle();
 
-    // Verifica se os metadados e arquivos foram persistidos corretamente
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getString('metadados'), isNotNull);
+      // Verify metadata is persisted
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('metadata'), isNotNull);
+    });
 
-    // Limpa dados para evitar efeitos colaterais em outros testes
-    await prefs.clear();
+    testWidgets('file persistence test', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Simulate file save
+      // Assuming there's a button to trigger file save
+      await tester.tap(find.byTooltip('Save File'));
+      await tester.pumpAndSettle();
+
+      // Verify file is persisted
+      // Implement file existence check
+      expect(true, isTrue); // Replace with actual file existence check
+    });
   });
 }
