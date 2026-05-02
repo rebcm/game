@@ -8,3 +8,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_map: ^0.14.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
