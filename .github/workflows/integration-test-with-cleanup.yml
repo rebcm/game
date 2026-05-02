@@ -1,4 +1,4 @@
-name: Integração com Limpeza
+name: Integration Test with Cleanup
 
 on:
   push:
@@ -12,13 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run integration tests with cleanup
+      - name: Run integration test
         run: |
-          flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
-          .github/workflows/scripts/cleanup.sh
+          flutter drive --target=integration_test/app_test.dart
 
-      - name: Cleanup after tests
-        env:
-          CLEANUP_SCRIPT: .github/workflows/scripts/cleanup.sh
+      - name: Cleanup
         run: |
-          $CLEANUP_SCRIPT
+          .github/workflows/scripts/cleanup_integration_test.sh
