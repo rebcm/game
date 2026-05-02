@@ -1,33 +1,32 @@
 name: Validar Artefato de Build Final
 
 on:
+  workflow_dispatch:
   workflow_run:
-    workflows: ["flutter-build"]
+    workflows: [flutter-build.yml]
     types:
       - completed
 
 jobs:
-  validar-artefato:
+  validar-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Download build artifact
+      - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: build-artifact
-          path: build/web
+          path: build/
 
-      - name: Validate build artifact
+      - name: Validate artifact
         run: |
-          # Add your validation logic here
-          echo "Validating build artifact..."
+          flutter pub get
+          flutter test integration_test/validar_artefato_test.dart
+
+      - name: Deploy to staging
+        run: |
+          # Implement staging deployment logic here
+          echo "Deploying to staging environment"
+
