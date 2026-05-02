@@ -1,0 +1,7 @@
+build-web:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Deploy to Cloudflare Pages
+      run: ./scripts/deploy-to-cloudflare-pages.sh
