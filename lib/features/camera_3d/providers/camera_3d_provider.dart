@@ -1,4 +1,4 @@
-import Intl.message('package:flutter/material.dart');
+import 'package:flutter/material.dart';
 
 class Camera3DProvider with ChangeNotifier {
   double _rotation = 0;

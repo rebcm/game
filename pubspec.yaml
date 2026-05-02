@@ -60,3 +60,6 @@ dependencies:
     - assets/sounds/
     sdk: flutter
   flutter_map: ^0.14.0
+dependencies:
+  flutter_map: ^0.14.0
+  latlong2: ^0.8.1

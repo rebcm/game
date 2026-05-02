@@ -1,6 +1,5 @@
-import Intl.message('package:flutter/material.dart');
-import Intl.message('package:flutter_map/flutter_map.dart');
-import Intl.message('package:latlong2/latlong.dart');
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 class Camera3DWidget extends StatefulWidget {
   @override
@@ -28,7 +27,7 @@ class _Camera3DWidgetState extends State<Camera3DWidget> {
           layers: [
             TileLayerOptions(
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: [Intl.message('a'), Intl.message('b'), Intl.message('c')]
+              subdomains: ['a', 'b', 'c']
             ),
           ],
         ),
@@ -37,7 +36,7 @@ class _Camera3DWidgetState extends State<Camera3DWidget> {
           right: 20,
           child: ElevatedButton(
             onPressed: _togglePerspective,
-            child: Text(_isFirstPerson ? Intl.message('Terceira Pessoa') : Intl.message('Primeira Pessoa')),
+            child: Text(_isFirstPerson ? 'Terceira Pessoa' : 'Primeira Pessoa'),
           ),
         ),
       ],
