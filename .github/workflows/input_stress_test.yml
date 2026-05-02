@@ -9,9 +9,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-      - run: flutter pub get
-      - run: flutter test lib/testes/stress/input_stress_test.dart
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run input stress test
+        run: |
+          flutter test lib/testes/input_stress_test/input_stress_test.dart
