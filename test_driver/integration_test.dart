@@ -1,18 +1,3 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:integration_test/integration_test_driver.dart';
 
-void main() {
-  FlutterDriver? driver;
-
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
-
-  tearDownAll(() async {
-    driver?.close();
-  });
-
-  test('test retenção script', () async {
-    // Implementação do teste de retenção script
-  });
-}
+Future<void> main() => integrationDriver();
