@@ -1,25 +1,19 @@
-import 'package:flutter/material.dart';
-
-class DataType {
-  final String name;
-  final String structure; // chave-valor, binário or relacional
-  final int volume;
-  final int frequency;
-
-  DataType({required this.name, required this.structure, required this.volume, required this.frequency});
+enum DataType {
+  lowVolume,
+  mediumVolume,
+  highVolume,
 }
 
-class DataTypes with ChangeNotifier {
-  List<DataType> _dataTypes = [];
+enum DataStructure {
+  keyValue,
+  binary,
+  relational,
+}
 
-  List<DataType> get dataTypes => _dataTypes;
+class DataClassification {
+  final DataType type;
+  final DataStructure structure;
+  final String frequency;
 
-  void addDataType(DataType dataType) {
-    _dataTypes.add(dataType);
-    notifyListeners();
-  }
-
-  void classifyDataTypes() {
-    // TO BE IMPLEMENTED: classify data types by volume, frequency and structure
-  }
+  DataClassification({required this.type, required this.structure, required this.frequency});
 }
