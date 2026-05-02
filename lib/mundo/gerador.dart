@@ -1,8 +1,11 @@
 import 'package:rebcm/blocos/tipo_bloco.dart';
 
 class GeradorMundo {
-  static const int tamanhoChunk = 16; // Valor existente
-  static List<Chunk> chunks = []; // Lista existente de chunks
+  static void colocarBloco(TipoBloco tipo, int x, int y, int z) {
+    // Lógica para colocar bloco
+  }
 
-  // Restante da implementação existente
+  static void quebrarBloco(int x, int y, int z) {
+    // Lógica para quebrar bloco
+  }
 }
