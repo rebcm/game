@@ -1,0 +1,17 @@
+name: Pipeline de CI/CD
+on:
+  schedule:
+    - cron: 0 0 * * *
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          flutter pub get
+      - name: Build and deploy
+        run: |
+          flutter build apk
+          ./deploy.sh
