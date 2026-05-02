@@ -1,36 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:passdriver/features/upload/upload_chunk_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:passdriver/features/upload/upload_provider.dart';
 
 class UploadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => UploadProvider(),
-      child: Consumer<UploadProvider>(
+      create: (_) => UploadChunkProvider(R2Service()),
+      child: Consumer<UploadChunkProvider>(
         builder: (context, provider, child) {
-          return Column(
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  final filePath = '/path/to/file';
-                  final uploaded = await provider.uploadFile(filePath);
-                  if (uploaded) {
-                    final checksumVerified = await provider.verifyChecksum(filePath, 'expected_checksum');
-                    if (!checksumVerified) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Erro ao verificar checksum')),
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Erro ao enviar arquivo')),
-                    );
-                  }
-                },
-                child: Text('Enviar Arquivo'),
-              ),
-            ],
+          return ElevatedButton(
+            onPressed: () async {
+              try {
+                await provider.uploadChunk('chunk', 'metadataId');
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Falha no upload: ')),
+                );
+              }
+            },
+            child: Text('Upload'),
           );
         },
       ),
