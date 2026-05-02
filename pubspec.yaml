@@ -36,7 +36,6 @@ dev_dependencies:
   test: ^1.21.4
 
 flutter:
-  assets:
     - docs/artefatos/matriz-retencao.md
     - assets/blocos/
     - assets/audio/optimized/ambient/
@@ -45,4 +44,17 @@ flutter:
     - assets/docs/checklists/onboarding-validation-checklist.md
     - assets/docs/guias/guia-estilo-tom-voz.md
   uses-material-design: true
+  assets:
+    - assets/blocos/
+    - assets/audio/optimized/ambient/
+    - assets/audio/optimized/music/
+    - assets/docs/checklists/voice-tone-validation-checklist.md
+    - assets/docs/checklists/onboarding-validation-checklist.md
+    - assets/docs/guias/guia-estilo-tom-voz.md
+    - assets/docs/guias/guia-instalacao.md
+    - docs/artefatos/criterios-aceitacao-documentacao-instalacao.md
+    - docs/artefatos/matriz-retencao.md
   generate: true
+
+    - docs/artefatos/criterios-aceitacao-documentacao-instalacao.md
+    - assets/docs/guias/guia-instalacao.md

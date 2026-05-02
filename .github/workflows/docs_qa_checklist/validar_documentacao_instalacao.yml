@@ -1,0 +1,22 @@
+name: Validar Documentação de Instalação
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/docs/guias/guia-instalacao.md'
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar checklist
+        run: |
+          if grep -q '\[ \]' assets/docs/guias/guia-instalacao.md; then
+            echo "Checklist não está completo"
+            exit 1
+          fi
