@@ -1,0 +1,35 @@
+name: Flutter Web Build Validation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Validate build output
+        run: |
+          if [ ! -d "build/web" ]; then
+            echo "Build output directory not found"
+            exit 1
+          fi
+          if [ ! -f "build/web/index.html" ]; then
+            echo "index.html not found in build output"
+            exit 1
+          fi
