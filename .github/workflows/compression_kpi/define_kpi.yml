@@ -3,10 +3,9 @@ name: Define Compression KPI
 on:
   workflow_dispatch:
     inputs:
-      target-reduction:
-        description: 'Target reduction percentage'
+      payload-size:
+        description: 'Payload size in bytes'
         required: true
-        default: '20'
 
 jobs:
   define-kpi:
@@ -15,7 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Define KPI
+      - name: Calculate compression ratio
         run: |
-          echo "Target reduction: ${{ github.event.inputs.target-reduction }}%"
-          echo "${{ github.event.inputs.target-reduction }}" > compression_target.txt
+          original_size=${{ github.event.inputs.payload-size }}
+          compressed_size=$(gzip -c payload.dat | wc -c)
+          compression_ratio=$(echo "scale=2; ($original_size - $compressed_size) / $original_size * 100" | bc)
+          echo "Compression ratio: $compression_ratio%"
+          echo "COMPRESSION_RATIO=$compression_ratio" >> $GITHUB_ENV
+
+      - name: Store KPI
+        run: |
+          echo "Compression KPI: $COMPRESSION_RATIO%"
+          echo "$COMPRESSION_RATIO" > compression_kpi.txt
