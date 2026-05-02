@@ -1,0 +1,15 @@
+class DiagramaFluxoRequisicoes {
+  String getDiagrama() {
+    return '''
+sequenceDiagram
+    participant App Flutter
+    participant Cloudflare Workers
+    participant Armazenamento
+
+    App Flutter->>Cloudflare Workers: Requisição de dados
+    Cloudflare Workers->>Armazenamento: Solicita dados
+    Armazenamento->>Cloudflare Workers: Retorna dados
+    Cloudflare Workers->>App Flutter: Retorna resposta
+''';
+  }
+}
