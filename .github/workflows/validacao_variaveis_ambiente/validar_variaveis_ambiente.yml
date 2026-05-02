@@ -1,0 +1,24 @@
+name: Validar Variáveis de Ambiente
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validar-variaveis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar variáveis de ambiente
+        run: |
+          #!/bin/bash
+          echo "Validando variáveis de ambiente..."
+          if [ -f .env ]; then
+            echo ".env encontrado. Iniciando validação..."
+            # Implementar lógica de validação aqui
+          else
+            echo ".env não encontrado. Pulando validação..."
+          fi
