@@ -1,30 +1,32 @@
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter/foundation.dart';
+import 'package:flutter_gl/flutter_gl.dart';
 
-class AssetManager with ChangeNotifier {
-  final Map<String, dynamic> _loadedAssets = {};
+class AssetManager {
+  final Map<String, Texture> _loadedTextures = {};
 
-  dynamic _loadAsset(String assetPath) async {
-    if (_loadedAssets.containsKey(assetPath)) {
-      return _loadedAssets[assetPath];
+  Future<Texture> loadTexture(String assetPath) async {
+    if (_loadedTextures.containsKey(assetPath)) {
+      return _loadedTextures[assetPath]!;
     }
 
-    try {
-      final ByteData data = await rootBundle.load(assetPath);
-      _loadedAssets[assetPath] = data.buffer.asUint8List();
-      notifyListeners();
-      return _loadedAssets[assetPath];
-    } catch (e) {
-      print('Error loading asset: $e');
-      return null;
+    final ByteData data = await rootBundle.load(assetPath);
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final Texture texture = await FlutterGL.createTexture(bytes);
+    _loadedTextures[assetPath] = texture;
+
+    return texture;
+  }
+
+  void unloadTexture(String assetPath) {
+    if (_loadedTextures.containsKey(assetPath)) {
+      FlutterGL.deleteTexture(_loadedTextures[assetPath]!);
+      _loadedTextures.remove(assetPath);
     }
   }
 
-  Future<dynamic> loadTexture(String texturePath) async {
-    return await _loadAsset('assets/blocos/$texturePath.png');
-  }
-
-  Future<dynamic> loadModel(String modelPath) async {
-    return await _loadAsset('assets/models/$modelPath.obj');
+  void unloadAllTextures() {
+    _loadedTextures.forEach((_, texture) => FlutterGL.deleteTexture(texture));
+    _loadedTextures.clear();
   }
 }

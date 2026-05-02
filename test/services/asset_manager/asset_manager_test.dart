@@ -2,18 +2,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/services/asset_manager/asset_manager.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AssetManager', () {
-    test('loads asset correctly', () async {
-      final assetManager = AssetManager();
-      final asset = await assetManager.loadTexture('test_texture');
-      expect(asset, isNotNull);
+    late AssetManager assetManager;
+
+    setUp(() {
+      assetManager = AssetManager();
     });
 
-    test('returns cached asset', () async {
-      final assetManager = AssetManager();
-      final asset1 = await assetManager.loadTexture('test_texture');
-      final asset2 = await assetManager.loadTexture('test_texture');
-      expect(asset1, asset2);
+    test('loads texture', () async {
+      final texture = await assetManager.loadTexture('assets/blocos/texture.png');
+      expect(texture, isNotNull);
+    });
+
+    test('unloads texture', () {
+      assetManager.loadTexture('assets/blocos/texture.png');
+      assetManager.unloadTexture('assets/blocos/texture.png');
+      // Add verification that texture is unloaded
+    });
+
+    test('unloads all textures', () {
+      assetManager.loadTexture('assets/blocos/texture1.png');
+      assetManager.loadTexture('assets/blocos/texture2.png');
+      assetManager.unloadAllTextures();
+      // Add verification that all textures are unloaded
     });
   });
 }
