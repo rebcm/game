@@ -1,17 +1,20 @@
-[env.staging]
-name = "construcao-criativa-staging"
-route = "construcao-criativa-staging.workers.dev/*"
+[env]
+  [env.staging]
+    name = "construcao-criativa-staging"
+    workers_dev = true
+    route = ""
+    zone_id = ""
+    vars = { ENVIRONMENT = "staging" }
+    kv_namespaces = [
+      { binding = "KV_MUNDOS", id = "" },
+    ]
 
-[env.production]
-name = "construcao-criativa-production"
-route = "construcao-criativa.workers.dev/*"
-
-[vars]
-BUCKET_NAME_STAGING = "rebcm-staging"
-BUCKET_NAME_PRODUCTION = "rebcm-production"
-
-[env.staging.vars]
-BUCKET_NAME = "rebcm-staging"
-
-[env.production.vars]
-BUCKET_NAME = "rebcm-production"
+  [env.production]
+    name = "construcao-criativa-production"
+    workers_dev = false
+    route = "*construcao-criativa.workers.dev/*"
+    zone_id = ""
+    vars = { ENVIRONMENT = "production" }
+    kv_namespaces = [
+      { binding = "KV_MUNDOS", id = "" },
+    ]
