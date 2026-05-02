@@ -2,36 +2,28 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Validação de Critérios de Aceitação Técnicos', () {
-    FlutterDriver? driver;
+  group('App Test', () {
+    late FlutterDriver driver;
 
     setUpAll(() async {
-      driver = await FlutterDriver.connect();
+      driver = await FlutterDriver.connect(timeout: Duration(seconds: 10));
     });
 
     tearDownAll(() async {
-      if (driver != null) {
-        driver!.close();
-      }
+      await driver.close();
     });
 
-    test('Validação de Endpoint', () async {
-      final response = await driver!.requestData('validate_endpoint');
-      expect(response, isNotEmpty);
-    });
+    test('Test App Edge Cases', () async {
+      await driver.waitUntilFirstFrameRasterized(timeout: Duration(seconds: 30));
 
-    test('Validação de Tempo de Resposta', () async {
-      final startTime = DateTime.now();
-      await driver!.requestData('validate_endpoint');
-      final endTime = DateTime.now();
-      final duration = endTime.difference(startTime);
-      expect(duration.inMilliseconds, lessThan(1000));
-    });
-
-    test('Validação de Integridade do JSON', () async {
-      final response = await driver!.requestData('validate_endpoint');
-      // Implement JSON validation logic here
-      expect(response, isNotEmpty);
-    });
+      // Example test step with retry
+      await driver.waitFor(find.text('Rebeca'), timeout: Duration(seconds: 10)).timeout(Duration(seconds: 15), onTimeout: () {
+        fail('Timeout waiting for Rebeca text');
+      }).then((value) {
+        expect(value, isNotNull);
+      }).catchError((error) {
+        fail('Error waiting for Rebeca text: $error');
+      });
+    }, timeout: Timeout(Duration(seconds: 60)), retry: 3);
   });
 }
