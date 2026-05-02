@@ -1,19 +1,36 @@
 # Critérios para Revisão de Documentação
 
-## Introdução
-
-Este documento define os critérios para a revisão da documentação do projeto Rebeca.
+## Objetivo
+Estabelecer critérios claros para a revisão da documentação do projeto Rebeca, garantindo que ela seja precisa, clara e útil para os desenvolvedores e usuários.
 
 ## Critérios
 
-1. **Clareza**: A documentação deve ser clara e fácil de entender.
-2. **Precisão**: A documentação deve ser precisa e refletir a funcionalidade atual do software.
-3. **Completude**: A documentação deve cobrir todos os aspectos relevantes do software.
-4. **Consistência**: A documentação deve ser consistente em termos de formatação e estilo.
+1. **Precisão Técnica**
+   - A documentação reflete com precisão a funcionalidade e características técnicas do projeto.
 
-## Guia de Revisão
+2. **Clareza e Compreensibilidade**
+   - A documentação é escrita de forma clara e fácil de entender para o público-alvo.
 
-1. Leia a documentação cuidadosamente para identificar áreas que precisam de melhoria.
-2. Verifique a precisão das informações apresentadas.
-3. Avalie a completude da documentação em relação às funcionalidades do software.
-4. Verifique a consistência da formatação e do estilo em toda a documentação.
+3. **Completude**
+   - Todos os aspectos relevantes do projeto estão documentados.
+
+4. **Consistência**
+   - A documentação segue um estilo e estrutura consistentes.
+
+5. **Relevância**
+   - A informação fornecida é relevante para o entendimento e uso do projeto.
+
+## Processo de Revisão
+1. **Revisão Inicial**
+   - Verificar se a documentação atende aos critérios estabelecidos.
+
+2. **Feedback e Correções**
+   - Fornecer feedback construtivo para as áreas que necessitam melhoria.
+   - Realizar as correções necessárias baseadas no feedback.
+
+3. **Aprovação Final**
+   - Após as correções, a documentação é revisada novamente para aprovação final.
+
+## Responsabilidades
+- A equipe técnica é responsável por realizar a revisão e fornecer feedback.
+- O responsável pela documentação deve implementar as correções e melhorias sugeridas.
