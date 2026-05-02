@@ -1,19 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Volume {
-  static const defaultValue = 0.5;
-  final SharedPreferences _prefs;
+  final double value;
 
-  Volume(this._prefs);
+  Volume(this.value);
 
-  double get value {
-    final storedValue = _prefs.getDouble('volume');
-    if (storedValue == null) return defaultValue;
-    if (storedValue < 0.0 || storedValue > 1.0) return defaultValue;
-    return storedValue;
-  }
-
-  set value(double value) {
-    _prefs.setDouble('volume', value);
+  factory Volume.fromPersistence(SharedPreferences prefs) {
+    try {
+      final volume = prefs.getString('volume');
+      if (volume == null) {
+        throw Exception('Volume not found');
+      }
+      final volumeValue = double.parse(volume);
+      if (volumeValue < 0.0 || volumeValue > 1.0) {
+        throw Exception('Volume out of range');
+      }
+      return Volume(volumeValue);
+    } catch (e) {
+      throw Exception('Failed to parse volume: $e');
+    }
   }
 }
