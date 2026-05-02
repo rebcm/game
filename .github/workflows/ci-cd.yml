@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,22 +6,15 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: flutter pub get
-      - name: Run analysis
-        run: flutter analyze
-      - name: Build and deploy
-        run: flutter build web
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_REF: main
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./build/web
+        uses: actions/checkout@v3
+
+      - name: Configure Secrets
+        uses: ./.github/workflows/configure-secrets.yml@main
+
+      - name: Run Flutter Tests
+        run: |
+          flutter test
