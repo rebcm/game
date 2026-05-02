@@ -60,6 +60,9 @@ lib/
 4. O bloco aparece automaticamente no inventário criativo (via `TipoBloco.values`)
 
 ## Como Melhorar o Renderizador
+## Como Otimizar Áudio
+- Otimização de áudio em `lib/audio/otimizador_audio.dart`
+- Gerenciamento de áudio em `lib/audio/gerenciador_audio.dart`
 
 - O renderer está em `lib/jogo/renderizador_isometrico.dart`
 - Cada bloco renderiza 3 faces: topo, esquerda, direita
