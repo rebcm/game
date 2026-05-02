@@ -6,13 +6,26 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Secrets
-        uses: ./.github/workflows/secrets_validation/secrets_validation.yml
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
 
-      # Add other build and test steps here...
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy
+        uses: ./.github/workflows/deploy_automation/deploy_web_via_cloudflare.yml
