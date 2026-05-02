@@ -14,3 +14,6 @@
   "scripts": {
     "test:flutter:cleanup": "flutter test integration_test/cleanup/cleanup_suite.dart"
   }
+  "scripts": {
+    "test:flutter:persistence": "flutter test integration_test/persistence/persistence_test.dart"
+  }
