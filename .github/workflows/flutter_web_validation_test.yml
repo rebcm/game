@@ -1,0 +1,30 @@
+name: Flutter Web Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate_flutter_web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Flutter Web Test
+        run: |
+          flutter config --enable-web
+          flutter drive --target=integration_test/flutter_web_test.dart --driver=test_driver/flutter_web_test_driver.dart --browser=chrome --web-renderer=html
+
+      - name: Validate Flutter Web Content
+        run: |
+          curl -s -f http://localhost:8080/index.html | grep '<flutter-view>'
