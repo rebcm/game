@@ -45,6 +45,7 @@ dev_dependencies:
   mocktail: ^0.3.0
 
 flutter:
+  wrangler: ^1.0.0
   assets:
     - assets/docs/checklists/validacao-onboarding-checklist.md
     - assets/audio/optimized/

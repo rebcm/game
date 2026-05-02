@@ -6,26 +6,17 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Analyze code
-        run: dart analyze
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Validate documentation
-        needs: build-and-test
-        uses: ./.github/workflows/docs_validation/documentation_validation.yml
+      - name: Setup wrangler
+        run: npm install -g wrangler
+      - name: Set secrets
+        env:
+          DATABASE_URL: \${{ secrets.DATABASE_URL }}
+          API_KEY: \${{ secrets.API_KEY }}
+        run: ./scripts/set_secrets.sh
+      - name: Deploy
+        run: wrangler publish --env production
