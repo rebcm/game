@@ -1,0 +1,27 @@
+name: Validate Artifact Matrix
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+
+jobs:
+  validate-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Validate checksum
+        run: |
+          bash .github/workflows/scripts/validate_checksum.sh artifacts
+
+      - name: Validate binary version
+        run: |
+          bash .github/workflows/scripts/validate_binary_version.sh artifacts

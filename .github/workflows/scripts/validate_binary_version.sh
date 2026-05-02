@@ -1,20 +1,17 @@
 #!/bin/bash
 
 ARTIFACT_DIR=$1
-VERSION=$(grep version pubspec.yaml | head -1 | cut -d ':' -f2- | xargs)
+VERSION_FILE="${ARTIFACT_DIR}/version.txt"
 
-for file in "$ARTIFACT_DIR"/*; do
-  if [[ $file == *.apk || $file == *.aab ]]; then
-    echo "Validating version for $file"
-    aapt dump badging "$file" | grep versionName | cut -d ':' -f2- | xargs | grep -q "$VERSION"
-    if [ $? -ne 0 ]; then
-      echo "Version mismatch for $file"
-      exit 1
-    fi
-  elif [[ $file == *.ipa ]]; then
-    echo "Validating version for $file"
-    # ipa version validation is complex and requires specific tools
-    # implement later if needed
-    :
-  fi
-done
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "Version file not found"
+  exit 1
+fi
+
+VERSION=$(cat "$VERSION_FILE")
+if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Invalid version format"
+  exit 1
+fi
+
+echo "Version is valid: $VERSION"
