@@ -13,7 +13,9 @@ class _MovementAnimationState extends State<MovementAnimation> with TickerProvid
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this);
+    _animationController = AnimationController(
+    vsync: this,vsync: this);
+    _movement_animationAnimationController.dispose();
     context.read<MovementAnimationController>(_animationController);
   }
 

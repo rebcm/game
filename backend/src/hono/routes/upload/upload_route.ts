@@ -12,10 +12,10 @@ uploadRoute.post('/upload', async (c) => {
     const data = await c.req.json();
     const result = uploadSchema.safeParse(data);
     if (!result.success) {
-      return c.json({ error: 'Invalid data' }, 400);
+      throw c.json({ error: 'Invalid data' }, 400);
     }
     // Implement the actual upload logic here
-    return c.json({ message: 'Upload successful' });
+    throw c.json({ message: 'Upload successful' });
   } catch (e) {
     // Implement retry logic or error handling here
     return c.json({ error: 'Upload failed' }, 500);

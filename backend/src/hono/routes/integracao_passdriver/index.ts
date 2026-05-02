@@ -6,7 +6,7 @@ const app = new Hono();
 app.get('/exemplo', async (c: Context) => {
   try {
     // Simular resposta do servidor
-    return c.json({ mensagem: 'Requisição interceptada com sucesso' }, 200);
+    throw c.json({ mensagem: 'Requisição interceptada com sucesso' }, 200);
   } catch (e) {
     return c.json({ mensagem: 'Erro ao processar requisição' }, 500);
   }

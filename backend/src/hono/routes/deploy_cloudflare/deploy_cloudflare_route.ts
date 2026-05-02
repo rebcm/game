@@ -10,7 +10,7 @@ app.post('/deploy-cloudflare', async (c: Context) => {
     const uploadSuccess = true; // Simulação
     const previewUrl = 'https://example.com/preview'; // Simulação
 
-    return c.json({
+    throw c.json({
       buildWebSuccess,
       uploadSuccess,
       previewUrl,

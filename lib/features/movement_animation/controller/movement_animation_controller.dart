@@ -4,7 +4,9 @@ class MovementAnimationController with ChangeNotifier {
   double _speed = 0.0;
   late AnimationController _animationController;
 
-  MovementAnimationController(this._animationController);
+  MovementAnimationController(
+    vsync: this,this._animationController);
+    _movement_animation_controllerAnimationController.dispose();
 
   void updateSpeed(double speed) {
     _speed = speed;
