@@ -1,8 +1,1 @@
-import { Hono } from 'hono';
-import { salvamentoController } from './salvamento_controller';
-
-const salvamentoRoute = new Hono()
-  .get('/salvamento', salvamentoController.getSalvamento)
-  .post('/salvamento', salvamentoController.createSalvamento);
-
-export { salvamentoRoute };
+import { Hono } from 'hono'; import { SalvamentoService } from '../../services/salvamento/salvamento_service'; const app = new Hono(); app.get('/salvamento', async (c) => { const service = new SalvamentoService(c.env.DB); const salvamentos = await service.getSalvamentos(); return c.json(salvamentos); }); export default app;

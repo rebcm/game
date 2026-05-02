@@ -1,0 +1,1 @@
+import 'package:passdriver/features/salvamento/data/salvamento_repository.dart'; class SalvamentoUsecase { final SalvamentoRepository _repository; SalvamentoUsecase(this._repository); Future<List<SalvamentoEntity>> execute() async { return _repository.getSalvamentos(); } }

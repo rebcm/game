@@ -1,0 +1,1 @@
+import { D1Database } from '@cloudflare/workers-types'; class SalvamentoService { private db: D1Database; constructor(db: D1Database) { this.db = db; } async getSalvamentos() { const { results } = await this.db.prepare('SELECT * FROM salvamentos').all(); return results; } }
