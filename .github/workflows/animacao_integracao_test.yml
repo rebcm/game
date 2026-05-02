@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Run integration test
+
+      - name: Run tests
         run: |
-          flutter drive --target=test/integration_test/impacto_performance_test/fps_bateria_test.dart
+          flutter test test/integration_tests/animacao/animacao_integracao_test.dart

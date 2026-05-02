@@ -1,12 +1,17 @@
-import 'package:flutter/animation.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter/material.dart';
 
-class CustomAnimationController extends AnimationController {
-  CustomAnimationController({required TickerProvider vsync}) : super(vsync: vsync);
+class AnimationController with ChangeNotifier {
+  bool _isAnimating = false;
 
-  @override
-  void dispose() {
-    stop();
-    super.dispose();
+  bool get isAnimating => _isAnimating;
+
+  void startAnimation() {
+    _isAnimating = true;
+    notifyListeners();
+  }
+
+  void stopAnimation() {
+    _isAnimating = false;
+    notifyListeners();
   }
 }
