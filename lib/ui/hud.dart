@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rebcm/audio/gerenciador_audio.dart';
 
 class HUD extends StatelessWidget {
+        ControleVolume(),
   @override
   Widget build(BuildContext context) {
     return Container(

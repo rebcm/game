@@ -5,6 +5,12 @@ import 'package:rebcm/ui/gerenciador_excecoes.dart';
 import 'package:rebcm/ui/tela_erro.dart';
 
 void main() {
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => GerenciadorAudio()),
+    ],
+    child: MyApp(),
+  )
   runApp(
     MultiProvider(
       providers: [
