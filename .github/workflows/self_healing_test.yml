@@ -1,0 +1,15 @@
+name: Self Healing Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.6'
+      - run: flutter pub get
+      - run: flutter test integration/self_healing/self_healing_test.dart

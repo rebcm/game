@@ -7,3 +7,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   audioplayers: ^1.0.1
+  integration_test:
+    sdk: flutter
