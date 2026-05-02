@@ -49,3 +49,5 @@ flutter:
 
   integration_test:
     path: test/deploy_test.dart
+
+  test/chunk_format_test/chunk_format_test.dart:
