@@ -1,4 +1,5 @@
 {
-  "descricaoJogo": "Construção Criativa",
-  "tituloJogo": "Jogo da Rebeca"
+  "titulo": "Construção Criativa",
+  "inventario": "Inventário",
+  "blocoSelecionado": "Bloco Selecionado"
 }

@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/jogo/animacao_personagem.dart';
-import 'package:rebcm/personagem/rebeca.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/i18n/i18n_service.dart';
 
 class HUD extends StatelessWidget {
-  final Rebeca rebeca;
-
-  const HUD({Key? key, required this.rebeca}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 10,
-          left: 10,
-          child: AnimacaoPersonagem(rebeca: rebeca),
-        ),
-      ],
+    return Container(
+      child: Text(I18nService.translate(context, 'inventario')),
     );
   }
 }

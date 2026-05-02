@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 class I18nService {
-  static final I18nService _instance = I18nService._();
-  factory I18nService() => _instance;
-  I18nService._();
+  Locale? _locale;
 
-  static Locale? _locale;
+  static final Map<String, Map<String, String>> _localizedValues = {};
 
-  Locale? get locale => _locale;
-
-  void init(Locale locale) {
+  Future<void> loadLocale(BuildContext context, Locale locale) async {
+    final String jsonString = await rootBundle.loadString('assets/i18n/${locale.toString()}.json');
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    _localizedValues[locale.toString()] = jsonMap.map((key, value) => MapEntry(key, value.toString()));
     _locale = locale;
-    Intl.defaultLocale = locale.toString();
   }
 
-  String get gameTitle => Intl.message('Creative Construction', name: 'gameTitle');
-  String get inventory => Intl.message('Inventory', name: 'inventory');
-  String get block => Intl.message('Block', name: 'block');
+  String? getTranslation(String key) {
+    return _localizedValues[_locale?.toString() ?? 'pt_BR']?[key];
+  }
+
+  static String translate(BuildContext context, String key) {
+    final i18nService = Provider.of<I18nService>(context, listen: false);
+    return i18nService.getTranslation(key) ?? key;
+  }
 }

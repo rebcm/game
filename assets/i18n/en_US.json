@@ -1,4 +1,5 @@
 {
-  "descricaoJogo": "Creative Building",
-  "tituloJogo": "Rebeca\'s Game"
+  "titulo": "Creative Construction",
+  "inventario": "Inventory",
+  "blocoSelecionado": "Selected Block"
 }
