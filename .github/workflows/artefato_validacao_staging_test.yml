@@ -1,0 +1,33 @@
+name: Validar Artefato de Build Final
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Build]
+    types:
+      - completed
+
+jobs:
+  validate-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: build/
+
+      - name: Validate artifact
+        run: |
+          flutter pub run flutter_driver:test --target=test_driver/app.dart
