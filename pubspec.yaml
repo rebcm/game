@@ -28,8 +28,6 @@ dev_dependencies:
   http: ^0.13.5
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
   build_runner: ^2.1.8
@@ -59,8 +57,3 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/voice-tone-validation-checklist.md
     - docs/ar
-
-  playwright: ^0.1.1
-
-dev_dependencies:
-  test: ^1.21.4
