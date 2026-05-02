@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "deploy:cloudflare-worker:staging": "wrangler deploy --env=staging",
-    "deploy:cloudflare-worker:production": "wrangler deploy --env=production"
+    "deploy:cloudflare-worker:production": "wrangler deploy --env=production",
+    "deploy:cloudflare-pages": "wrangler pages deploy build/web --project-name=construcao-criativa"
   }
 }
