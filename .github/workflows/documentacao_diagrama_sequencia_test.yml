@@ -1,0 +1,24 @@
+name: Testar Documentação do Diagrama de Sequência
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/diagramas/sequencia/**'
+      - 'docs/criterios_aceitacao/documentacao.md'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Verificar diagramas
+        run: |
+          # Adicione aqui comandos para verificar a existência e conteúdo dos diagramas
+          test -f docs/diagramas/sequencia/integracao.puml
+      - name: Verificar documentação
+        run: |
+          # Adicione aqui comandos para verificar a existência e conteúdo da documentação
+          test -f docs/criterios_aceitacao/documentacao.md

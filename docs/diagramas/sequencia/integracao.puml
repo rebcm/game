@@ -1,0 +1,11 @@
+@startuml
+participant App Flutter as "App Flutter"
+participant Cloudflare Worker as "Cloudflare Worker"
+participant Serviço de Armazenamento as "Serviço de Armazenamento"
+
+App Flutter ->> Cloudflare Worker: Requisição de Armazenamento
+Cloudflare Worker ->> Serviço de Armazenamento: Requisição de Armazenamento
+Serviço de Armazenamento ->> Cloudflare Worker: Resposta de Armazenamento
+Cloudflare Worker ->> App Flutter: Resposta de Armazenamento
+
+@enduml
