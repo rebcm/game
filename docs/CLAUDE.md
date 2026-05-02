@@ -1,17 +1,13 @@
 # Instruções para Agentes
 ## Introdução
-Este documento fornece instruções para agentes do PassDriver.
+Este documento fornece instruções para agentes utilizarem o PassDriver.
 ## Requisitos
 - Flutter instalado
-- Conhecimento básico de Dart e TypeScript
-## Configuração Inicial
-1. Clone o repositório do PassDriver.
-2. Execute `flutter pub get` para instalar as dependências.
-## Executando o Aplicativo
-1. Execute `flutter run` para iniciar o aplicativo.
-## Guia para Agentes
-- Utilize o aplicativo conforme as instruções fornecidas.
-- Em caso de dúvidas, consulte a seção de FAQ.
-## FAQ
-- Q: Como resolver problemas de conexão?
-  A: Verifique sua conexão de internet e tente novamente.
+- Chave de API do OpenStreetMap
+## Configuração
+1. Clone o repositório
+2. Execute `flutter pub get`
+3. Configure a chave de API do OpenStreetMap em `lib/config.dart`
+## Utilização
+1. Execute `flutter run`
+2. Siga as instruções na tela
