@@ -37,3 +37,7 @@ flutter:
   # Add test dependency if not already present
   integration_test:
     sdk: flutter
+
+  # Add test dependency if not already present
+  integration_test:
+    sdk: flutter
