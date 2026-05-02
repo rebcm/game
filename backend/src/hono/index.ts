@@ -1,8 +1,8 @@
-import { Hono } from 'hono';
-import createWorld from './routes/worlds/create';
+import { Router } from 'hono';
+import { audioRouter } from './routes/audio/audio_route';
 
-const app = new Hono();
+const app = new Router();
 
-app.post('/api/worlds', createWorld);
+app.use('/audio', audioRouter);
 
-export default app;
+export { app };

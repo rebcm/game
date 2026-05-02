@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'audio.screen.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/audio_optimization/audio_optimization_feature.dart';
+import 'package:passdriver/providers/audio_provider.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-    RebecaSkin(),
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PassDriver',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: AudioScreen(),
-    );
-  }
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AudioProvider()),
+      ],
+      child: AudioOptimizationFeature(),
+    ),
+  );
 }
