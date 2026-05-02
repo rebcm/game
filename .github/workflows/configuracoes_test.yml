@@ -6,16 +6,16 @@ on:
       - main
 
 jobs:
-  test-configuracoes:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.0.1'
 
       - name: Run configuracoes test
         run: |

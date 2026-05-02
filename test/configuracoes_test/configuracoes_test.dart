@@ -17,8 +17,8 @@ void main() {
     test('validar estrutura de configuracoes', () async {
       final configuracoesJson = await rootBundle.loadString('assets/configuracoes.json');
       final configuracoesMap = jsonDecode(configuracoesJson);
-      expect(configuracoesMap.keys, contains('ambiente'));
-      expect(configuracoesMap['ambiente'], isA<String>());
+      expect(configuracoesMap.keys, contains('som'));
+      expect(configuracoesMap['som'], isA<Map<String, dynamic>>());
     });
   });
 }
