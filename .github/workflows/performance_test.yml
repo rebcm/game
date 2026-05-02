@@ -1,0 +1,25 @@
+name: Performance Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run performance test
+        run: |
+          flutter drive --target=test_driver/performance/main.dart --driver=test_driver/performance/performance_test.dart --profile
