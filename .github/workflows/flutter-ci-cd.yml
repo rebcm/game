@@ -1,0 +1,39 @@
+name: Flutter CI/CD
+
+on:
+  schedule:
+    - cron:  '0 2 * * *'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.6'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: |
+          flutter build apk
+          flutter build ios --no-codesign
+
+      - name: Test
+        run: flutter test
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Deploy
+        env:
+          GOOGLE_PLAY_STORE_CREDENTIALS: ${{ secrets.GOOGLE_PLAY_STORE_CREDENTIALS }}
+          APPLE_APP_STORE_CREDENTIALS: ${{ secrets.APPLE_APP_STORE_CREDENTIALS }}
+        run: |
+          # Implementar deploy para Google Play Store e Apple App Store
+          echo "Deploying to stores..."
