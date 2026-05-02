@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:passdriver/features/animation_speed_control/screens/speed_matrix_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/volume_controls/providers/volume_controls_provider.dart';
+import 'package:passdriver/features/volume_controls/volume_controls.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => VolumeControlsProvider()..init()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PassDriver',
-      home: SpeedMatrixScreen(),
+      home: Scaffold(
+        body: VolumeControls(),
+      ),
     );
   }
 }
