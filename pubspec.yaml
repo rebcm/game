@@ -1,4 +1,5 @@
 dependencies:
+  flutter_driver:
   provider: ^6.0.3
   flutter_localizations:
     sdk: flutter
@@ -16,6 +17,8 @@ dependencies:
   audioplayers: ^1.0.1
 
 dev_dependencies:
+  integration_test:
+  flutter_driver:
   provider: ^6.0.3
   provider: ^6.0.3
   flutter_localizations:

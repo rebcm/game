@@ -9,3 +9,6 @@
     "test:flutter:scroll-cross-platform": "flutter test integration_test/scroll/scroll_cross_platform_test.dart"
   }
 }
+  "scripts": {
+    "test:flutter:input-stress": "flutter test integration_test/input/input_stress_test.dart"
+  }
