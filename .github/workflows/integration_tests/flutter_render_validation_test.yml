@@ -1,0 +1,26 @@
+name: Flutter Render Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Flutter Driver Test
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart
+
+      - name: Validate Flutter Render
+        run: |
+          curl -s -f http://localhost:8080/index.html | grep '<flutter-view>'
