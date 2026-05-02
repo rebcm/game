@@ -57,3 +57,5 @@ flutter:
 
   test_secrets_validation:
     path: test/secrets_validation_test.dart
+
+  cached_network_image: ^3.2.3

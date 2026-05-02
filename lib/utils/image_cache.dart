@@ -1,26 +1,27 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class ImageCache {
-  static void init() {
-    CachedNetworkImage.imageCache = CacheManager(
-      Config(
-        maxWidth: 500,
-        maxHeight: 500,
-        max_entries: 100,
-        stalePeriod: Duration(days: 7),
-      ),
-    );
-  }
+class ImageCacheWidget extends StatelessWidget {
+  final String imageUrl;
+  final double? cacheWidth;
+  final double? cacheHeight;
 
-  static Widget cachedImage(String url) {
+  const ImageCacheWidget({
+    Key? key,
+    required this.imageUrl,
+    this.cacheWidth,
+    this.cacheHeight,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: url,
-      placeholder: (context, url) => Center(
-        child: CircularProgressIndicator(),
-      ),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      imageUrl: imageUrl,
+      width: cacheWidth,
+      height: cacheHeight,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 }
