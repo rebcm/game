@@ -1,12 +1,11 @@
 name: Release
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 23 * * *'
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,5 +23,6 @@ jobs:
         run: flutter pub get
 
       - name: Build and release
+        # Add your existing build and release steps here
         run: |
-          # Existing build and release commands here
+          echo "Build and release steps go here"
