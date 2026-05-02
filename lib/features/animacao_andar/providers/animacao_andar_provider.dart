@@ -11,7 +11,9 @@ class AnimacaoAndarProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool validarCriteriosDeAceitacao() {
-    return _animacaoAndar.fps >= 30 && _animacaoAndar.sincroniaBracoPerna >= 0.8 && _animacaoAndar.loopAtivo;
+  bool get estaDentroDosCriteriosDeAceitacao {
+    return _animacaoAndar.fps >= 24 &&
+           _animacaoAndar.sincroniaBracoPerna >= 0.8 &&
+           _animacaoAndar.loopAtivo;
   }
 }
