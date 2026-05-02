@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Integration Test Driver', () {
+  group('Flutter Render Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,12 +11,12 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        await driver?.close();
+        driver?.close();
       }
     });
 
-    test('Integration Test', () async {
-      await driver?.waitUntilNoTransientCallbacks();
+    test('Check Flutter View', () async {
+      await driver?.waitUntilFirstFrameRasterized();
     });
   });
 }
