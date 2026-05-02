@@ -1,0 +1,19 @@
+name: Deploy Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run deploy test
+        run: |
+          echo "Running deploy test..."
+          # Adicionar comandos para executar os testes de deploy aqui
+
