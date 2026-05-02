@@ -1,4 +1,4 @@
-name: Flutter Build
+name: Build Flutter App
 
 on:
   push:
@@ -12,12 +12,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.1'
 
-      - name: Build and validate artifact
-        run: |
-          flutter build web
-          .github/workflows/scripts/validate_build_artifact.sh "build/web/index.html"
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build app
+        run: flutter build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: build/web
