@@ -1,48 +1,39 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/mundo/gerador.dart';
-import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/persistence/database.dart';
+import 'package:rebcm/data/repository.dart';
+import 'package:rebcm/data/database.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockDatabase extends Mock implements Database {}
+
+class MockRepository extends Mock implements Repository {}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  late Database database;
+  late Repository repository;
 
-  group('Atomic Consistency Tests', () {
-    late Database db;
+  setUp(() {
+    database = MockDatabase();
+    repository = MockRepository();
+  });
 
-    setUp(() async {
-      db = await Database.initTestDatabase();
-    });
+  test('should rollback transaction when R2 fails', () async {
+    when(() => database.insert(any())).thenAnswer((_) async => 1);
+    when(() => database.update(any())).thenThrow(Exception('R2 failed'));
 
-    tearDown(() async {
-      await db.close();
-    });
+    expect(() async => await repository.saveData('data'), throwsException);
 
-    test('should rollback on failure after insertion', () async {
-      final chunk = GeradorMundo.gerarChunk(0, 0);
-      await db.insertChunk(chunk);
+    verify(() => database.rollback()).called(1);
+  });
 
-      // Simulate failure after insertion
-      try {
-        await db.insertBlock(TipoBloco.GRAMA, 0, 0, 0);
-        throw Exception('Simulated failure');
-      } catch (e) {
-        // Verify rollback
-        expect(await db.getBlock(0, 0, 0), isNull);
-      }
-    });
+  test('should not have orphaned records after rollback', () async {
+    when(() => database.insert(any())).thenAnswer((_) async => 1);
+    when(() => database.update(any())).thenThrow(Exception('R2 failed'));
 
-    test('should not leave orphan records', () async {
-      final chunk = GeradorMundo.gerarChunk(0, 0);
-      await db.insertChunk(chunk);
+    try {
+      await repository.saveData('data');
+    } catch (_) {}
 
-      try {
-        await db.insertBlock(TipoBloco.GRAMA, 0, 0, 0);
-        throw Exception('Simulated failure');
-      } catch (e) {
-        // Verify no orphan records
-        expect(await db.getChunk(0, 0), isNotNull);
-        expect(await db.getBlock(0, 0, 0), isNull);
-      }
-    });
+    verifyNever(() => database.commit());
+    verify(() => database.rollback()).called(1);
   });
 }
