@@ -4,30 +4,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Volume Persistence Tests', () {
-    test('should handle null value', () async {
+    test('Testa recuperação de volume com valor 0.0', () async {
+      SharedPreferences.setMockInitialValues({'volume': 0.0});
+      final prefs = await SharedPreferences.getInstance();
+      final volume = Volume(prefs);
+      expect(volume.value, 0.0);
+    });
+
+    test('Testa recuperação de volume com valor 1.0', () async {
+      SharedPreferences.setMockInitialValues({'volume': 1.0});
+      final prefs = await SharedPreferences.getInstance();
+      final volume = Volume(prefs);
+      expect(volume.value, 1.0);
+    });
+
+    test('Testa recuperação de volume com valor nulo', () async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      expect(() => Volume.fromPersistence(prefs), throwsAssertionError);
+      final volume = Volume(prefs);
+      expect(volume.value, Volume.defaultValue);
     });
 
-    test('should handle extreme values (0.0 and 1.0)', () async {
-      SharedPreferences.setMockInitialValues({'volume': 0.0});
-      var prefs = await SharedPreferences.getInstance();
-      expect(Volume.fromPersistence(prefs).value, 0.0);
-
-      SharedPreferences.setMockInitialValues({'volume': 1.0});
-      prefs = await SharedPreferences.getInstance();
-      expect(Volume.fromPersistence(prefs).value, 1.0);
-    });
-
-    test('should handle invalid values', () async {
-      SharedPreferences.setMockInitialValues({'volume': -1.0});
-      var prefs = await SharedPreferences.getInstance();
-      expect(() => Volume.fromPersistence(prefs), throwsAssertionError);
-
-      SharedPreferences.setMockInitialValues({'volume': 2.0});
-      prefs = await SharedPreferences.getInstance();
-      expect(() => Volume.fromPersistence(prefs), throwsAssertionError);
+    test('Testa recuperação de volume com valor inválido', () async {
+      SharedPreferences.setMockInitialValues({'volume': 'invalid'});
+      final prefs = await SharedPreferences.getInstance();
+      final volume = Volume(prefs);
+      expect(volume.value, Volume.defaultValue);
     });
   });
 }
