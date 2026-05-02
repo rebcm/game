@@ -1,0 +1,35 @@
+name: Define Compression KPI
+
+on:
+  workflow_dispatch:
+    inputs:
+      target-size-reduction:
+        description: 'Target size reduction percentage'
+        required: true
+        default: '20'
+      acceptable-quality-loss:
+        description: 'Acceptable quality loss percentage'
+        required: true
+        default: '5'
+
+jobs:
+  define-kpi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Define KPI
+        run: |
+          echo "Target size reduction: ${{ github.event.inputs.target-size-reduction }}%"
+          echo "Acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
+          echo "${{ github.event.inputs.target-size-reduction }}" > target_size_reduction.txt
+          echo "${{ github.event.inputs.acceptable-quality-loss }}" > acceptable_quality_loss.txt
+
+      - name: Upload KPI artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: kpi-artifacts
+          path: |
+            target_size_reduction.txt
+            acceptable_quality_loss.txt
