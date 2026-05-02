@@ -1,4 +1,4 @@
 class Constantes {
-  static const String autora = 'Rebeca Alves Moreira';
-  static const String versao = '1.0.0';
+  static const String autor = 'Rebeca Alves Moreira';
+  static const int maxMundosPorUsuario = 5;
 }
