@@ -1,0 +1,21 @@
+name: Teste Upload
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  teste-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run teste upload
+        run: flutter test lib/testes/integracao/upload/teste_upload.dart
