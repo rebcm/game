@@ -1,16 +1,8 @@
 import { Hono } from 'hono';
-import uploadChunksRoute from './upload/upload_chunks';
+import api from './api/data';
 
 const app = new Hono();
 
-app.route('/upload', uploadChunksRoute);
+app.route('/api', api);
 
 export default app;
-import rebeccaProfileRoute from '../../rebecca_profile/rebecca_profile_route';
-
-const routes = [
-  // ... other routes
-  rebeccaProfileRoute,
-];
-
-export default routes;
