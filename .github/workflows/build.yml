@@ -11,37 +11,37 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.16.5'
 
-      - name: Get dependencies
+      - name: flutter pub get
         run: flutter pub get
 
-      - name: Analyze code
+      - name: flutter analyze
         run: dart analyze
 
-      - name: Run tests
+      - name: flutter test
         run: flutter test
 
-      - name: Build web release
+      - name: flutter build web --release
         run: flutter build web --release
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy para Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: \${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy web --project-name=construcao-criativa
 
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java 17
@@ -53,15 +53,20 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.16.5'
 
-      - name: Get dependencies
+      - name: flutter pub get
         run: flutter pub get
 
-      - name: Build APK release
+      - name: flutter build apk --release
         run: flutter build apk --release
+        env:
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
-      - name: Upload APK artifact
+      - name: Upload APK como artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
@@ -70,50 +75,49 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.16.5'
 
-      - name: Get dependencies
+      - name: flutter pub get
         run: flutter pub get
 
-      - name: Build IPA (no codesign)
+      - name: flutter build ios --no-codesign
         run: flutter build ios --no-codesign
 
-      - name: Upload IPA artifact
+      - name: Upload IPA como artifact
         uses: actions/upload-artifact@v4
         with:
           name: Runner.ipa
-          path: build/ios/iphoneos/Runner.app
+          path: build/ios/iphoneos/Runner.ipa
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Wrangler
+      - name: npm install -g wrangler
         run: npm install -g wrangler
 
-      - name: Deploy to Cloudflare Workers
-        run: wrangler deploy
+      - name: wrangler deploy
         working-directory: workers
+        run: wrangler deploy
         env:
-          CLOUDFLARE_API_TOKEN: \${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   notify:
-    needs: [build-web, build-android, deploy-backend]
+    needs: [build-web, build-android, build-ios]
     runs-on: ubuntu-latest
     steps:
-      - name: POST to Neuron API
-        uses: curl -X POST https://neuron-api.example.com/build-result
+      - name: POST para Neuron API notificando resultado do build
+        run: |
+          curl -X POST \
+          https://api.neuron.com/endpoint \
+          -H 'Content-Type: application/json' \
+          -d '{"status": "success"}'
