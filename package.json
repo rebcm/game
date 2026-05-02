@@ -2,23 +2,7 @@
   "name": "passdriver",
   "version": "1.0.0",
   "scripts": {
-    "test:flutter:unit": "flutter test",
-    "test:flutter:input-stress": "flutter test test/input_stress/",
-    "test:flutter:performance": "flutter test test/performance",
-    "test:flutter:integration": "flutter test integration_test/",
-    "test:flutter:ci": "flutter test test/integracao_continua",
-    "test:flutter:integration:with-cleanup": "flutter test integration_test/",
-    "test:api": "flutter test test/api",
-    "test:flutter:codec-compatibility": "flutter test test/codec_compatibility/",
-    "test:flutter:memory-leak": "flutter test test/memory_leak_test",
-  "test:flutter:limites-caracteres": "flutter test test/limites_caracteres",
-  "test:flutter:chunking-stress": "flutter test test/chunking_stress_test",
-"test:flutter:jank": "flutter test test/jank_test"
-    "test:flutter:chunking-heterogeneo": "flutter test test/chunking_stress_test",
-    "test:configuracoes": "flutter test test/configuracoes",
-    "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh",
-    "deploy:cloudflare-pages": "wrangler pages deploy build/web --project-name=construcao-criativa",
-    "validate:deploy": "bash .github/workflows/scripts/validate_deploy.sh https://construcao-criativa.pages.dev"
+    "deploy:cloudflare-worker:staging": "wrangler deploy --env=staging",
+    "deploy:cloudflare-worker:production": "wrangler deploy --env=production"
   }
 }
-    "test:flutter:audio": "flutter test test/audio",

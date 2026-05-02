@@ -1,16 +1,22 @@
 [env.production]
-name = "construcao-criativa-production"
-route = "https://construcao-criativa.workers.dev/*"
+name = "construcao-criativa"
+account_id = "${CLOUDFLARE_ACCOUNT_ID}"
+workers_dev = false
+route = "construcao-criativa.workers.dev/*"
+compatibility_date = "2023-12-01"
 
 [env.staging]
 name = "construcao-criativa-staging"
-route = "https://staging.construcao-criativa.workers.dev/*"
+account_id = "${CLOUDFLARE_ACCOUNT_ID}"
+workers_dev = true
+route = "construcao-criativa-staging.workers.dev/*"
+compatibility_date = "2023-12-01"
 
 [vars]
-API_URL = "https://construcao-criativa.workers.dev"
+CLOUDFLARE_API_TOKEN = "${CLOUDFLARE_API_TOKEN}"
 
 [env.production.vars]
 API_URL = "https://construcao-criativa.workers.dev"
 
 [env.staging.vars]
-API_URL = "https://staging.construcao-criativa.workers.dev"
+API_URL = "https://construcao-criativa-staging.workers.dev"
