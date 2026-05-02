@@ -51,3 +51,6 @@ flutter:
 
   integration_test:
     sdk: flutter
+
+  assets:
+    - assets/configuracoes.json
