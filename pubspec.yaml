@@ -12,8 +12,10 @@ dependencies:
   driver_idle_animation:
   flutter:
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/sounds/
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/sounds/
     sdk: flutter
   flame: ^1.21.0
@@ -33,17 +35,21 @@ dev_dependencies:
 
 flutter:
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/sounds/
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/sounds/
   - assets/images/rebeca.png
   uses-material-design: true
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/blocos/
     - assets/personagens/
     - assets/sons/
     - assets/ui/
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/audio/musica1.mp3
     - assets/audio/musica2.mp3
     - assets/audio/musica3.mp3
@@ -57,6 +63,7 @@ dependencies:
   audioplayers: ^1.0.1
   flutter:
   assets:
+    - lib/features/rebeca_skin/assets/rebeca_skin.png
     - assets/sounds/
     sdk: flutter
   flutter_map: ^0.14.0

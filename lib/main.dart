@@ -13,6 +13,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+    RebecaSkin(),
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
