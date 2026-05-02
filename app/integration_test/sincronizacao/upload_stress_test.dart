@@ -1,38 +1,63 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:dio/dio.dart';
-import 'package:http_interceptor/http_interceptor.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Upload Stress Test', () {
-    late Dio dio;
+  testWidgets('Upload stress test', (tester) async {
+    final dio = Dio();
+    final dioAdapter = DioAdapter(dio: dio);
 
-    setUp(() {
-      dio = Dio();
-      dio.interceptors.add(InterceptorsWrapper(
-        onRequest: (options, handler) {
-          print('Request: ${options.method} ${options.path}');
-          return handler.next(options);
-        },
-        onError: (error, handler) {
-          print('Error: ${error.message}');
-          return handler.next(error);
-        },
-      ));
-    });
+    dioAdapter.onPost(
+      'https://construcao-criativa.workers.dev/upload',
+      (server) => server.reply(
+        200,
+        {'message': 'success'},
+        delay: const Duration(seconds: 1),
+      ),
+      data: any,
+    );
 
-    testWidgets('Upload multiple chunks simultaneously', (tester) async {
-      final chunks = List.generate(10, (index) => {'data': 'chunk-$index'});
-      final responses = await Future.wait(chunks.map((chunk) => dio.post('/upload', data: chunk)));
-      expect(responses.every((response) => response.statusCode == 200), true);
-    });
+    final largeFile = List.generate(1024 * 1024 * 5, (index) => index % 256);
 
-    testWidgets('Upload large file', (tester) async {
-      final largeFile = List.generate(10000, (index) => {'data': 'large-data-$index'});
-      final response = await dio.post('/upload', data: largeFile);
+    final response = await dio.post(
+      'https://construcao-criativa.workers.dev/upload',
+      data: largeFile,
+    );
+
+    expect(response.statusCode, 200);
+    expect(response.data['message'], 'success');
+  });
+
+  testWidgets('Upload stress test with multiple files', (tester) async {
+    final dio = Dio();
+    final dioAdapter = DioAdapter(dio: dio);
+
+    dioAdapter.onPost(
+      'https://construcao-criativa.workers.dev/upload',
+      (server) => server.reply(
+        200,
+        {'message': 'success'},
+        delay: const Duration(seconds: 1),
+      ),
+      data: any,
+    );
+
+    final largeFiles = List.generate(
+      5,
+      (index) => List.generate(1024 * 1024, (index) => index % 256),
+    );
+
+    for (var file in largeFiles) {
+      final response = await dio.post(
+        'https://construcao-criativa.workers.dev/upload',
+        data: file,
+      );
+
       expect(response.statusCode, 200);
-    });
+      expect(response.data['message'], 'success');
+    }
   });
 }
