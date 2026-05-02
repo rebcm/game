@@ -1,14 +1,17 @@
-[env.production]
-name = "construcao-criativa-production"
-
 [env.staging]
 name = "construcao-criativa-staging"
+route = "construcao-criativa-staging.workers.dev/*"
 
-[site]
-bucket = "./app/build/web"
+[env.production]
+name = "construcao-criativa-production"
+route = "construcao-criativa.workers.dev/*"
 
-[env.production.vars]
-CF_PAGES_BRANCH = "main"
+[vars]
+BUCKET_NAME_STAGING = "rebcm-staging"
+BUCKET_NAME_PRODUCTION = "rebcm-production"
 
 [env.staging.vars]
-CF_PAGES_BRANCH = "staging"
+BUCKET_NAME = "rebcm-staging"
+
+[env.production.vars]
+BUCKET_NAME = "rebcm-production"
