@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/services/audio/audio_player_service.dart';
+import 'package:rebcm/widgets/settings/audio_settings.dart';
 
-import package:leak_tracker/leak_tracker.dart;
 void main() {
-  LeakTracker.start();
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<AudioPlayerService>(create: (_) => AudioPlayerService()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca Voxel Game',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Rebeca Voxel Game'),
+          title: Text('Rebeca\'s Game'),
         ),
         body: Center(
-          child: ElevatedButton(
-            key: Key('upload_binarios'),
-            onPressed: () {
-              // Simula o upload de binários e dispara a política de retenção
-              print('Política de retenção disparada');
-            },
-            child: Text('Upload Binários'),
-          ),
+          child: AudioSettings(),
         ),
       ),
     );
