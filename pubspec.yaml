@@ -13,6 +13,7 @@ dependencies:
   shared_preferences: ^2.0.0
   flutter:
   assets:
+    - assets/audio/music/dia_01.mp3
     - assets/translations/
     sdk: flutter
   provider: ^6.0.3
@@ -20,9 +21,11 @@ dependencies:
 
 dev_dependencies:
   integration_test:
+  codec_compatibility_test:
   flutter_driver:
   http_testing_controller: ^2.0.0
   integration_test:
+  codec_compatibility_test:
   flutter_driver:
   provider: ^6.0.3
   provider: ^6.0.3
@@ -39,6 +42,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   integration_test:
+  codec_compatibility_test:
     sdk: flutter
   audioplayers: ^1.0.1
   http_mock_adapter: ^1.0.0
