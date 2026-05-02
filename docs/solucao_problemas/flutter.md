@@ -1,30 +1,34 @@
 # Solução de Problemas Comuns no Ambiente Flutter
 
-## Introdução
-
-Este documento visa fornecer soluções para problemas comuns enfrentados durante o desenvolvimento e execução do projeto Flutter.
+Este documento visa ajudar a resolver problemas comuns relacionados ao ambiente Flutter durante o desenvolvimento do projeto Rebeca.
 
 ## Erros de Instalação
 
-### Problema: Falha ao instalar o Flutter
-
-- **Solução**: Verifique se o SDK do Flutter está corretamente configurado no PATH do sistema. Execute `flutter doctor` para diagnosticar problemas.
+1. **Flutter não encontrado**: Certifique-se de que o Flutter está instalado e configurado corretamente no seu sistema. Adicione o caminho do Flutter ao seu `PATH` ambiente.
+2. **Dependências não resolvidas**: Execute `flutter pub get` para garantir que todas as dependências estejam atualizadas.
 
 ## Erros de Configuração
 
-### Problema: Erro ao executar `flutter pub get`
-
-- **Solução**: Verifique a versão do Dart e do Flutter. Execute `flutter clean` e tente novamente.
+1. **Configuração do ambiente**: Verifique se as variáveis de ambiente necessárias estão configuradas corretamente, como `FLUTTER_ROOT`.
+2. **Versão do Flutter**: Certifique-se de que a versão do Flutter instalada é compatível com o projeto. Consulte o arquivo `pubspec.yaml` para verificar a versão necessária.
 
 ## Erros de Build
 
-### Problema: Erro ao compilar o projeto
+1. **Erro ao compilar**: Execute `flutter clean` seguido de `flutter pub get` para limpar e recriar as dependências do projeto.
+2. **Problemas de compatibilidade**: Verifique se as dependências listadas no `pubspec.yaml` são compatíveis entre si e com a versão do Flutter.
 
-- **Solução**: Execute `flutter clean` e `flutter pub get`. Verifique se há erros no código executando `dart analyze`.
+## Passos Gerais para Solução de Problemas
 
-## Outros Problemas
+1. **Verifique os logs**: Analise os logs de erro para identificar a causa raiz do problema.
+2. **Pesquise na documentação oficial**: A documentação oficial do Flutter e das bibliotecas utilizadas pode conter soluções para problemas comuns.
+3. **Comunidade Flutter**: Busque ajuda em fóruns e comunidades de desenvolvedores Flutter.
 
-### Problema: Aplicativo não inicia corretamente
+## Exemplo de Solução de Erro Comum
 
-- **Solução**: Verifique os logs de erro. Execute o aplicativo em modo de depuração para obter mais informações.
+### Erro: "Unable to find Flutter SDK"
+
+**Solução**:
+- Verifique se o Flutter está instalado.
+- Adicione o caminho do Flutter ao `PATH` do sistema.
+- Execute `flutter doctor` para diagnosticar problemas.
 
