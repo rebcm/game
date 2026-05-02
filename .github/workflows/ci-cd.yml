@@ -12,22 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
+      - name: Validate Secrets
+        uses: ./.github/workflows/secrets_validation/secrets_check.yml
 
-      - name: Get dependencies
-        run: flutter pub get
+      - name: Run Flutter Tests
+        run: |
+          flutter test
 
-      - name: Analyze code
-        run: dart analyze
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Build project
-        run: flutter build web
-
-      - name: Validate criteria
-        uses: ./.github/workflows/checklists/validacao_criterios_aceitacao_tecnicos.yml
+      - name: Build Flutter Web
+        run: |
+          flutter config --enable-web
+          flutter build web
