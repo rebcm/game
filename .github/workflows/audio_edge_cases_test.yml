@@ -14,4 +14,4 @@ jobs:
 
       - name: Run audio edge cases test
         run: |
-          flutter test test/audio_edge_cases/audio_edge_cases_test.dart
+          flutter test test/audio_edge_cases_test/audio_edge_cases_test.dart
