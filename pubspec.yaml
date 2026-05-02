@@ -15,9 +15,7 @@ dependencies:
   assets:
     - assets/translations/en.json
     - assets/translations/pt_BR.json
-    - assets/audio/music/dia_01.mp3
-    - assets/translations/
-    sdk: flutter
+    - assets/audio_optimized/
   provider: ^6.0.3
   audioplayers: ^1.0.1
 
