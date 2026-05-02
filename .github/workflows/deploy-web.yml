@@ -16,7 +16,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.6'
+          flutter-version: '3.3.10'
 
       - name: Install dependencies
         run: flutter pub get
@@ -25,12 +25,7 @@ jobs:
         run: flutter build web --release
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: 'construcao-criativa'
-          directory: 'build/web'
+        run: wrangler pages deploy build/web --project-name=construcao-criativa
 
       - name: Validate deploy
         run: .github/workflows/scripts/validate_deploy.sh https://construcao-criativa.pages.dev

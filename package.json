@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "scripts": {
     "test:flutter:unit": "flutter test",
-"test:flutter:input-stress": "flutter test test/input_stress/"
-"test:flutter:performance": "flutter test test/performance"
+    "test:flutter:input-stress": "flutter test test/input_stress/",
+    "test:flutter:performance": "flutter test test/performance",
     "test:flutter:integration": "flutter test integration_test/",
     "test:flutter:integration:with-cleanup": "flutter test integration_test/",
     "test:api": "flutter test test/api",
-"test:flutter:codec-compatibility": "flutter test test/codec_compatibility/"
-    "test:configuracoes": "flutter test test/configuracoes",
-    "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh",
-    "deploy:cloudflare-pages": "wrangler pages deploy build/web --project-name=construcao-criativa"
-  }
-}
     "test:flutter:codec-compatibility": "flutter test test/codec_compatibility/",
     "test:flutter:memory-leak": "flutter test test/memory_leak_test",
+    "test:configuracoes": "flutter test test/configuracoes",
+    "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh",
+    "deploy:cloudflare-pages": "wrangler pages deploy build/web --project-name=construcao-criativa",
+    "validate:deploy": "bash .github/workflows/scripts/validate_deploy.sh https://construcao-criativa.pages.dev"
+  }
+}
