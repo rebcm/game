@@ -35,3 +35,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'features/audio_transition/audio_transition_provider.dart';
+import 'features/music_player/music_player_provider.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AudioTransitionProvider(
+      child: MusicPlayerProvider(
+        child: MaterialApp(
+          // restante do código
+        ),
+      ),
+    );
+  }
+}
