@@ -1,4 +1,4 @@
-name: Performance e Memória Test
+name: Performance and Memory Test
 
 on:
   push:
@@ -15,10 +15,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
-
-      - name: Install dependencies
-        run: flutter pub get
+          flutter-version: '3.0.0'
 
       - name: Run performance and memory tests
-        run: flutter drive --target=test_driver/app.dart --driver=test_driver/performance_test.dart
+        run: |
+          flutter test test/performance/performance_test.dart
