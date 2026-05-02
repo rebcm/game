@@ -1,6 +1,9 @@
-import { Hono } from 'hono'; 
-import { corsMiddleware } from './middlewares/cors';
+import { Hono } from 'hono';
+import { loggingMiddleware } from './routes/logging/logging_middleware';
+import { routes } existingRouteFile;
 
 const app = new Hono();
-app.use('*', corsMiddleware); 
-// existing routes here...
+app.use(loggingMiddleware);
+app.route('/', routes);
+
+export default app;
