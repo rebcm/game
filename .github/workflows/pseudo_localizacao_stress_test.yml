@@ -1,4 +1,4 @@
-name: Pseudo-localização Stress Test
+name: Pseudo Localização Stress Test
 
 on:
   push:
@@ -12,5 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run tests
-        run: flutter test test/ui/pseudo_localizacao_stress_test.dart
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run pseudo-localização stress test
+        run: |
+          flutter test test/widget_test/pseudo_localizacao_test/main_screen_pseudo_localizacao_test.dart
