@@ -15,7 +15,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -25,11 +25,11 @@ jobs:
 
       - name: Validate build output
         run: |
-          if [ ! -d "build/web" ]; then
-            echo "Build output directory not found"
+          if [ ! -d "build/web/assets" ]; then
+            echo "Assets directory is missing"
             exit 1
           fi
           if [ ! -f "build/web/index.html" ]; then
-            echo "index.html not found in build output"
+            echo "index.html is missing"
             exit 1
           fi
