@@ -54,3 +54,6 @@ flutter:
     - assets/configuracoes.json
     - assets/i18n/
     - assets/characters/rebeca_skin.png
+
+  assets:
+    - assets/configuracoes.json

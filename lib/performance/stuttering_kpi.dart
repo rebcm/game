@@ -1,11 +1,8 @@
 class StutteringKPI {
-  final int fpsThreshold;
-  final int jankFramesThreshold;
+  static const int fpsThreshold = 55;
+  static const int jankFramesThreshold = 10;
 
-  StutteringKPI({required this.fpsThreshold, required this.jankFramesThreshold});
-
-  factory StutteringKPI.fromFile(String filePath) {
-    // TODO: implement reading KPI from file
-    return StutteringKPI(fpsThreshold: 55, jankFramesThreshold: 10);
+  bool isStuttering(int fps, int jankFrames) {
+    return fps < fpsThreshold || jankFrames > jankFramesThreshold;
   }
 }

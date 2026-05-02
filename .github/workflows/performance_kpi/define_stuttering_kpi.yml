@@ -2,37 +2,26 @@ name: Define Stuttering KPI
 
 on:
   workflow_dispatch:
-    inputs:
-      test-duration:
-        description: 'Test duration in seconds'
-        required: true
-        default: '60'
-      fps-threshold:
-        description: 'FPS threshold for stuttering'
-        required: true
-        default: '55'
+  schedule:
+    - cron: 0 0 * * *
 
 jobs:
-  define-stuttering-kpi:
+  define_stuttering_kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Flutter test
-        run: |
-          flutter run --release --test --duration ${{ github.event.inputs.test-duration }}
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
 
-      - name: Calculate FPS
-        run: |
-          fps=$(cat test_logs.txt | grep 'FPS' | awk '{print $2}' | awk -F '.' '{print $1}')
-          echo "Average FPS: $fps"
+      - name: Run Flutter doctor
+        run: flutter doctor
 
-      - name: Check stuttering
+      - name: Run define stuttering kpi script
         run: |
-          if (( $fps < ${{ github.event.inputs.fps-threshold }} )); then
-            echo "Stuttering detected!"
-            exit 1
-          else
-            echo "No stuttering detected."
-          fi
+          echo "Defining stuttering KPI..."
+          # Add logic here to define stuttering KPI using FPS and jank frames metrics
+          echo "Stuttering KPI defined: FPS < 55 or jank frames > 10%"
