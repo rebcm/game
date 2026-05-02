@@ -2,3 +2,8 @@ dependencies:
   flutter:
     sdk: flutter
   three: ^0.4.0
+  assets:
+    - assets/musicas/musica1.mp3
+    - assets/musicas/musica2.mp3
+    - assets/musicas/musica3.mp3
+    - assets/musicas/musica4.mp3

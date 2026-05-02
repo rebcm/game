@@ -1,25 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:passdriver/features/trilha_sonora/trilha_sonora.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
-class TrilhaSonoraProvider with ChangeNotifier {
-  late TrilhaSonora _trilhaSonora;
+class TrilhaSonoraProvider {
+  List<Audio> _musicas = [
+    Audio('assets/musicas/musica1.mp3'),
+    Audio('assets/musicas/musica2.mp3'),
+    Audio('assets/musicas/musica3.mp3'),
+    Audio('assets/musicas/musica4.mp3'),
+  ];
 
-  TrilhaSonora get trilhaSonora => _trilhaSonora;
-
-  TrilhaSonoraProvider() {
-    _trilhaSonora = TrilhaSonora();
+  void init(AssetsAudioPlayer assetsAudioPlayer) {
+    assetsAudioPlayer.open(
+      Playlist(audios: _musicas),
+      loopMode: LoopMode.playlist,
+      transitionMode: TransitionMode.fadeIn(500),
+    );
   }
-
-  void iniciar() {
-    // Inicia a trilha sonora
-  }
-}
-
-void main() {
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => TrilhaSonoraProvider()),
-    ],
-  );
 }
