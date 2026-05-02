@@ -1,7 +1,11 @@
-name: Investigate Previous Test Run
+name: Investigate Previous Test Failure
 
 on:
   workflow_dispatch:
+    inputs:
+      previous_run_id:
+        description: 'ID da execução anterior'
+        required: true
 
 jobs:
   investigate:
@@ -10,5 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run investigation script
-        run: ./.github/workflows/scripts/validate_previous_test_run.sh
+      - name: Download previous test logs
+        uses: actions/download-artifact@v3
+        with:
+          name: test-logs-${{ github.event.inputs.previous_run_id }}
+          path: test-logs
+
+      - name: Analyze logs
+        run: |
+          echo "Analyzing logs..."
+          cat test-logs/*.log
+
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v3
+        with:
+          name: analysis-results
+          path: analysis-results.txt

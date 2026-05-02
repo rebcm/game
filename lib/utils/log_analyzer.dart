@@ -1,15 +1,16 @@
 import 'dart:io';
 
 class LogAnalyzer {
-  Future<void> analyzeLogFile(String logFilePath) async {
-    final logFile = File(logFilePath);
-    if (await logFile.exists()) {
-      print('Analyzing log file...');
-      final logContent = await logFile.readAsString();
-      final errors = logContent.split('\n').where((line) => line.toLowerCase().contains('error'));
-      errors.forEach((error) => print(error));
+  void analyzeLogs(String logPath) {
+    File logFile = File(logPath);
+    if (logFile.existsSync()) {
+      List<String> logs = logFile.readAsLinesSync();
+      for (String log in logs) {
+        print(log);
+        // Implement log analysis logic here
+      }
     } else {
-      print('Log file not found.');
+      print('Log file not found: $logPath');
     }
   }
 }
