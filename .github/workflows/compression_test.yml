@@ -1,0 +1,17 @@
+name: Compression Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+      - run: flutter pub get
+      - run: flutter test test/features/compression/compression_manager_test.dart
