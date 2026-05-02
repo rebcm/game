@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/player/rebeca_player_controller.dart';
+import 'package:flame/game.dart';
+import 'package:rebcm/core/game_loop.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rebeca Game',
-      home: RebecaPlayerController(),
-    );
-  }
+  runApp(
+    GameWidget(
+      game: GameLoop(),
+    ),
+  );
 }
