@@ -1,17 +1,22 @@
 import { Hono } from 'hono';
-import { Context } from 'hono';
+import { logger } from 'hono/logger';
 
-const rideHailingRoute = new Hono();
+const app = new Hono();
 
-rideHailingRoute.get('/ride_hailing/chunk_size', async (c: Context) => {
-  const chunkSize = await c.env.KV.get('chunk_size');
-  return c.json({ chunkSize: chunkSize ? parseInt(chunkSize) : 10 });
+app.use('*', logger());
+
+app.post('/ride_hailing', async (c) => {
+  try {
+    // existing route logic
+  } catch (error) {
+    if (error instanceof AuthenticationError) {
+      return c.json({ error: 'Erro de autenticação' }, 401);
+    } else if (error instanceof TimeoutError) {
+      return c.json({ error: 'Timeout' }, 408);
+    } else if (error instanceof PayloadLimitError) {
+      return c.json({ error: 'Limite de payload excedido' }, 413);
+    }
+  }
 });
 
-rideHailingRoute.post('/ride_hailing/chunk_size', async (c: Context) => {
-  const { size } = await c.req.json();
-  await c.env.KV.put('chunk_size', size.toString());
-  return c.json({ message: 'Tamanho do chunk atualizado com sucesso' });
-});
-
-export default rideHailingRoute;
+export default app;
