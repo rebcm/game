@@ -1,4 +1,4 @@
 class Constantes {
-  static const String urlApi = 'https://construcao-criativa.workers.dev';
   static const String autora = 'Rebeca Alves Moreira';
+  static const double maxAudioLatency = 0.1; // seconds
 }

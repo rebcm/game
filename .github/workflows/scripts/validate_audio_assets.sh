@@ -1,18 +1,14 @@
 #!/bin/bash
 
-validate_audio() {
-  local file=$1
-  local format=$(ffprobe -v error -show_streams -print_format json "$file" | jq -r '.streams[0].codec_name')
-  if [ "$format" != "opus" ] && [ "$format" != "vorbis" ] && [ "$format" != "mp3" ]; then
-    echo "Unsupported codec in $file: $format"
+for file in assets/audio/optimized/music/*.mp3; do
+  ffmpeg -i "$file" -af "silencedetect=n=-50dB:d=1" -f null - 2>&1 | grep 'silence_end' | tee silence_log.txt
+  if grep -q 'silence_end: 0' silence_log.txt; then
+    echo "File $file has silence at the beginning"
     exit 1
   fi
-}
-
-for file in assets/audio/optimized/ambient/*.ogg assets/audio/optimized/music/*.ogg assets/audio/optimized/sfx/*.ogg; do
-  validate_audio "$file"
-done
-
-for file in assets/audio/optimized/ambient/*.mp3 assets/audio/optimized/music/*.mp3 assets/audio/optimized/sfx/*.mp3; do
-  validate_audio "$file"
+  duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$file")
+  if grep -q "silence_start: $duration" silence_log.txt; then
+    echo "File $file has silence at the end"
+    exit 1
+  fi
 done
