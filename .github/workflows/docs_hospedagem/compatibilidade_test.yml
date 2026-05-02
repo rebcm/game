@@ -1,0 +1,21 @@
+name: Compatibilidade Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  compatibilidade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar versões
+        run: |
+          flutter --version
+          ./gradlew --version
+          grep "com.android.tools.build:gradle:" build.gradle
+          java --version
+
