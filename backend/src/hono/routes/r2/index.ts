@@ -1,8 +1,22 @@
 import { Hono } from 'hono';
-import r2 from './r2_list_chunks';
+import { getChunkKey } from './chunk-naming';
 
-const app = new Hono();
+const r2 = new Hono();
 
-app.get('/r2/chunks', r2);
+r2.get('/r2/chunk/:chunkName/:version', async (c) => {
+  const chunkName = c.req.param('chunkName');
+  const version = c.req.param('version');
+  const key = getChunkKey(version, chunkName);
+  const object = await c.env.R2.get(key);
+  if (!object) {
+    return c.text('Chunk não encontrado', 404);
+  }
+  return c.body(object.body, {
+    headers: {
+      'Content-Disposition': `attachment; filename=${key}`,
+      'Content-Type': 'application/octet-stream',
+    },
+  });
+});
 
-export default app;
+export default r2;
