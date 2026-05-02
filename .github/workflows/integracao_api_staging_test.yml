@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  integracao-api-staging-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,4 +19,5 @@ jobs:
 
       - name: Run integration test
         run: |
-          flutter drive --target=integration_test/api_staging_test/rebeca_api_staging_test.dart --driver=test_driver/integration_test.dart
+          flutter pub get
+          flutter test integration_test/integracao_api_staging_test.dart

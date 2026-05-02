@@ -5,11 +5,11 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('test API', (tester) async {
+  testWidgets('test API staging', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Implement API test logic here
+    // Implement API staging test logic here
     expect(true, true);
   });
 }
