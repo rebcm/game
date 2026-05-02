@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:passdriver/features/ride/data/ride_repository.dart';
-import 'package:passdriver/features/ride/domain/ride.dart';
+import 'package:passdriver/features/ride/providers/ride_repository.dart';
+import 'package:passdriver/features/ride/models/ride.dart';
 
 void main() {
   group('RideRepository', () {
