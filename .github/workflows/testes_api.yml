@@ -6,14 +6,12 @@ on:
       - main
 
 jobs:
-  testes-api:
+  teste-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run testes de API
-        run: flutter test lib/testes/api/estrategia_testes_api.dart
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+      - run: flutter pub get
+      - run: flutter test test/integracao/api
