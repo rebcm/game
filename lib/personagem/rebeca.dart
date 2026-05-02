@@ -1,11 +1,26 @@
-import 'package:game/personagem/maquina_estado/maquina_estado_rebeca.dart';
+import 'package:flutter/material.dart';
+import 'package:game/personagem/estados/estado_rebeca.dart';
 
-class Rebeca {
-  final MaquinaEstadoRebeca _maquinaEstado;
+class Rebeca extends StatefulWidget {
+  @override
+  _RebecaState createState() => _RebecaState();
+}
 
-  Rebeca() : _maquinaEstado = MaquinaEstadoRebeca();
+class _RebecaState extends State<Rebeca> {
+  final MaquinaEstadosRebeca _maquinaEstados = MaquinaEstadosRebeca();
 
-  void atualizar() {
-    _maquinaEstado.atualizar();
+  @override
+  Widget build(BuildContext context) {
+    return _maquinaEstados.renderizar();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 abstract class EstadoRebeca {
   void entrar();
-  void atualizar();
   void sair();
+  void atualizar();
+  Widget renderizar();
 }
 
 class EstadoParado extends EstadoRebeca {
@@ -9,10 +12,15 @@ class EstadoParado extends EstadoRebeca {
   void entrar() {}
 
   @override
+  void sair() {}
+
+  @override
   void atualizar() {}
 
   @override
-  void sair() {}
+  Widget renderizar() {
+    return Container(); // Implementar renderização para estado parado
+  }
 }
 
 class EstadoPulando extends EstadoRebeca {
@@ -20,19 +28,35 @@ class EstadoPulando extends EstadoRebeca {
   void entrar() {}
 
   @override
+  void sair() {}
+
+  @override
   void atualizar() {}
 
   @override
-  void sair() {}
+  Widget renderizar() {
+    return Container(); // Implementar renderização para estado pulando
+  }
 }
 
-class EstadoVoando extends EstadoRebeca {
-  @override
-  void entrar() {}
+class MaquinaEstadosRebeca {
+  EstadoRebeca _estadoAtual;
 
-  @override
-  void atualizar() {}
+  MaquinaEstadosRebeca() : _estadoAtual = EstadoParado() {
+    _estadoAtual.entrar();
+  }
 
-  @override
-  void sair() {}
+  void mudarEstado(EstadoRebeca novoEstado) {
+    _estadoAtual.sair();
+    _estadoAtual = novoEstado;
+    _estadoAtual.entrar();
+  }
+
+  void atualizar() {
+    _estadoAtual.atualizar();
+  }
+
+  Widget renderizar() {
+    return _estadoAtual.renderizar();
+  }
 }
