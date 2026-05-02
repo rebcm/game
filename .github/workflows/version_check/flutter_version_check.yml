@@ -1,4 +1,4 @@
-name: Network Edge Cases Test
+name: Flutter Version Check
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  version-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,11 +14,17 @@ jobs:
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
       - name: Check Flutter version
         run: flutter --version
-        with:
-          flutter-version: '3.0.5'
 
-      - name: Run network edge cases test
-        run: |
-          flutter test test/network_edge_cases_test.dart
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Check Java version
+        run: java -version

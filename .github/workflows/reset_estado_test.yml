@@ -14,6 +14,8 @@ jobs:
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
+      - name: Check Flutter version
+        run: flutter --version
         with:
           flutter-version: '3.0.0'
 
