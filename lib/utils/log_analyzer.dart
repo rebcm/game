@@ -1,16 +1,17 @@
 import 'dart:io';
 
 class LogAnalyzer {
-  void analyzeLogs(String logPath) {
-    File logFile = File(logPath);
+  static void analyzeLogs(String logPath) {
+    final logFile = File(logPath);
     if (logFile.existsSync()) {
-      List<String> logs = logFile.readAsLinesSync();
-      for (String log in logs) {
-        print(log);
-        // Implement log analysis logic here
+      final logs = logFile.readAsLinesSync();
+      for (var log in logs) {
+        if (log.contains('error')) {
+          print('Erro encontrado: $log');
+        }
       }
     } else {
-      print('Log file not found: $logPath');
+      print('Arquivo de log não encontrado: $logPath');
     }
   }
 }
