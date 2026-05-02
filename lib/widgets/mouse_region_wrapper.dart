@@ -15,10 +15,10 @@ class MouseRegionWrapper extends StatelessWidget {
   }
 
   void _onEnter(BuildContext context) {
-    // Handle mouse enter event
+    // Implement hover enter logic here
   }
 
   void _onExit(BuildContext context) {
-    // Handle mouse exit event
+    // Implement hover exit logic here
   }
 }
