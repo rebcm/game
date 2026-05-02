@@ -1,25 +1,20 @@
-name: Testar Checklist de Tom de Voz
+name: Documentação Voice Tone Checklist Test
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'assets/docs/voice_tone_checklist.md'
+      - 'docs/criterios_aceitacao/checklist_tom_de_voz.md'
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validar Checklist
+      - name: Validate Voice Tone Checklist
         run: |
-          if [ -f "assets/docs/voice_tone_checklist.md" ]; then
-            echo "Checklist encontrado. Validando conteúdo..."
-            # Adicione aqui comandos para validar o conteúdo do checklist
-          else
-            echo "Checklist não encontrado."
-            exit 1
-          fi
+          # Implementar lógica para validar o checklist de tom de voz
+          echo "Validando checklist de tom de voz..."

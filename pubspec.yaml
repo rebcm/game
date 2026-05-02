@@ -47,6 +47,7 @@ flutter:
     - assets/characters/rebeca_skin.png
     - assets/animations/optimized_animation.png
     - docs/criterios_aceitacao/documentacao.md
+    - docs/criterios_aceitacao/checklist_tom_de_voz.md
 
   flutter_driver:
     sdk: flutter
