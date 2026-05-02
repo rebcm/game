@@ -1,13 +1,17 @@
 # Checklist de Validação de Documentação
 
 ## Introdução
-Este checklist visa garantir que a documentação do projeto esteja atualizada e correta.
+
+Este checklist visa garantir que a documentação do projeto esteja atualizada e siga os padrões estabelecidos.
 
 ## Itens de Verificação
-- [ ] A documentação está atualizada com as últimas alterações do projeto.
-- [ ] Todos os arquivos de documentação estão presentes e corretos.
-- [ ] As checklists de validação estão sendo executadas corretamente.
+
+1. [ ] Glossário atualizado
+2. [ ] Guia de estilo atualizado
+3. [ ] Lista de idiomas suportados atualizada
+4. [ ] Critérios de aceitação técnicos documentados
+5. [ ] Checklists de validação presentes e atualizados
 
 ## Ação Corretiva
-- Atualizar a documentação conforme necessário.
-- Corrigir quaisquer erros ou omissões nos arquivos de documentação.
+
+- Para qualquer item não conforme, atualizar a documentação relevante.

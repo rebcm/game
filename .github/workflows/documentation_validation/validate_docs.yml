@@ -12,7 +12,7 @@ jobs:
   validate-docs:
     runs-on: ubuntu-latest
     container:
-      image: docker://ghcr.io/catthehacker/ubuntu:act-latest
+      image: docker://ghcr.io/rebcm/flutter-env:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,9 +22,17 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Validate Documentation
+      - name: Validate Documentation Checklist
         run: |
-          echo "Validating documentation..."
-          dart analyze
-          flutter pub run test
-          echo "Documentation validation completed."
+          if ! grep -q "documentacao-validacao-checklist.md" assets/docs/checklists/validacao-onboarding-checklist.md; then
+            echo "Documentation checklist not found"
+            exit 1
+          fi
+
+      - name: Run Flutter Doctor
+        run: flutter doctor
+
+      - name: Validate Docs Commands
+        run: |
+          passdriver flutter pub get
+          passdriver flutter pub run build_runner build --delete-conflicting-outputs
