@@ -4,27 +4,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Volume Edge Cases Test', () {
-    test('Testa recuperação de volume com valor 0.0', () async {
-      SharedPreferences.setMockInitialValues({'volume': 0.0});
-      final volume = await Volume.getVolume();
-      expect(volume, 0.0);
-    });
-
-    test('Testa recuperação de volume com valor 1.0', () async {
-      SharedPreferences.setMockInitialValues({'volume': 1.0});
-      final volume = await Volume.getVolume();
-      expect(volume, 1.0);
-    });
-
-    test('Testa recuperação de volume com valor nulo', () async {
+    test('Test volume with extreme values (0.0 and 1.0)', () async {
       SharedPreferences.setMockInitialValues({});
-      final volume = await Volume.getVolume();
-      expect(volume, 0.5); // Valor padrão
+      await Volume().save(0.0);
+      expect(await Volume().load(), 0.0);
+      await Volume().save(1.0);
+      expect(await Volume().load(), 1.0);
     });
 
-    test('Testa recuperação de volume com valor inválido', () async {
+    test('Test volume with null value', () async {
+      SharedPreferences.setMockInitialValues({'volume': null});
+      expect(await Volume().load(), Volume().defaultValue);
+    });
+
+    test('Test volume with invalid value', () async {
       SharedPreferences.setMockInitialValues({'volume': 'invalid'});
-      expect(() async => await Volume.getVolume(), throwsA(isA<TypeError>()));
+      expect(await Volume().load(), Volume().defaultValue);
     });
   });
 }
