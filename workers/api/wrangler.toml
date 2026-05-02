@@ -1,0 +1,13 @@
+name = "construcao-criativa-api"
+type = "javascript"
+
+[env.production]
+workers_dev = false
+route = { pattern = "https://construcao-criativa.workers.dev/*", zone_name = "workers.dev" }
+
+[build]
+command = ""
+upload.format = "service-worker"
+
+[site]
+bucket = "./public"
