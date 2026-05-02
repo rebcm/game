@@ -8,39 +8,20 @@ on:
       - 'docs/instalacao/**'
 
 jobs:
-  test:
+  test-documentacao-instalacao:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar documentação
+      - name: Verificar critérios de aceitação
         run: |
-          if [ ! -f docs/instalacao/criterios_aceitacao.md ]; then
-            echo "Arquivo criterios_aceitacao.md não encontrado"
-            exit 1
-          fi
-
-          grep -q "Versão do Flutter" docs/instalacao/criterios_aceitacao.md
-          if [ $? -ne 0 ]; then
-            echo "Critério 'Versão do Flutter' não encontrado"
-            exit 1
-          fi
-
-          grep -q "Versão do Dart SDK" docs/instalacao/criterios_aceitacao.md
-          if [ $? -ne 0 ]; then
-            echo "Critério 'Versão do Dart SDK' não encontrado"
-            exit 1
-          fi
-
-          grep -q "Configuração de Emulador" docs/instalacao/criterios_aceitacao.md
-          if [ $? -ne 0 ]; then
-            echo "Critério 'Configuração de Emulador' não encontrado"
-            exit 1
-          fi
-
-          grep -q "Variáveis de Ambiente" docs/instalacao/criterios_aceitacao.md
-          if [ $? -ne 0 ]; then
-            echo "Critério 'Variáveis de Ambiente' não encontrado"
+          if grep -q "Versão do Flutter" docs/instalacao/criterios_aceitacao.md && \
+             grep -q "Versão do Dart SDK" docs/instalacao/criterios_aceitacao.md && \
+             grep -q "Configuração de Emulador" docs/instalacao/criterios_aceitacao.md && \
+             grep -q "Variáveis de Ambiente" docs/instalacao/criterios_aceitacao.md; then
+            echo "Critérios de aceitação atendidos"
+          else
+            echo "Critérios de aceitação não atendidos"
             exit 1
           fi
