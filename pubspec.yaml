@@ -13,6 +13,8 @@ dependencies:
   shared_preferences: ^2.0.0
   flutter:
   assets:
+    - assets/translations/en.json
+    - assets/translations/pt_BR.json
     - assets/audio/music/dia_01.mp3
     - assets/translations/
     sdk: flutter
