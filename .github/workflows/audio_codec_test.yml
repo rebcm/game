@@ -1,0 +1,16 @@
+name: Audio Codec Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run audio codec tests
+        run: flutter test test/utils/audio/audio_codec_test.dart
