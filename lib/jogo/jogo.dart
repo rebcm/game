@@ -1,18 +1,22 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:rebcm/jogo/renderizador_isometrico_otimizado.dart';
+import 'package:rebcm/services/notificacao/notificacao_service.dart';
 
-class Jogo extends FlameGame {
-  late RenderizadorIsometricoOtimizacao _renderizador;
+class Jogo extends StatefulWidget {
+  @override
+  _JogoState createState() => _JogoState();
+}
+
+class _JogoState extends State<Jogo> {
+  final NotificacaoService _notificacaoService = NotificacaoService();
 
   @override
-  Future<void> onLoad() async {
-    _renderizador = RenderizadorIsometricoOtimizacao();
-    // Initialize the renderer
+  void initState() {
+    super.initState();
+    _notificacaoService.notificarNeuronAPI('jogo_iniciado');
   }
 
   @override
-  Widget render(BuildContext context) {
-    return _renderizador.build(context);
+  Widget build(BuildContext context) {
+    return Container(); // Implemente o jogo aqui
   }
 }
