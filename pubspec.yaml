@@ -29,3 +29,8 @@ flutter:
     - assets/personagens/
     - assets/sons/
     - assets/ui/
+  assets:
+    - assets/audio/musica1.mp3
+    - assets/audio/musica2.mp3
+    - assets/audio/musica3.mp3
+    - assets/audio/musica4.mp3
