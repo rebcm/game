@@ -9,13 +9,11 @@ class AudioSettings extends StatefulWidget {
 
 class _AudioSettingsState extends State<AudioSettings> {
   double _volume = 1.0;
-  bool _isMuted = false;
 
   @override
   void initState() {
     super.initState();
     _volume = context.read<AudioServiceImpl>().getVolume();
-    _isMuted = context.read<AudioServiceImpl>().isMuted();
   }
 
   @override
@@ -26,22 +24,15 @@ class _AudioSettingsState extends State<AudioSettings> {
           value: _volume,
           onChanged: (value) async {
             await context.read<AudioServiceImpl>().setVolume(value);
-            setState(() {
-              _volume = value;
-              _isMuted = value == 0;
-            });
+            setState(() => _volume = value);
           },
         ),
-        SwitchListTile(
-          title: Text('Mute'),
-          value: _isMuted,
-          onChanged: (value) async {
-            await context.read<AudioServiceImpl>().setMute(value);
-            setState(() {
-              _isMuted = value;
-              _volume = value ? 0 : 1;
-            });
+        ElevatedButton(
+          onPressed: () async {
+            await context.read<AudioServiceImpl>().toggleMute();
+            setState(() => _volume = context.read<AudioServiceImpl>().getVolume());
           },
+          child: Text(_volume == 0 ? 'Unmute' : 'Mute'),
         ),
       ],
     );

@@ -1,36 +1,40 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:rebcm/services/audio/audio_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  group('AudioService', () {
-    late AudioService audioService;
+  late AudioServiceImpl _audioService;
+  late MockAudioPlayer _audioPlayer;
 
-    setUp(() async {
-      SharedPreferences.setMockInitialValues({});
-      audioService = AudioService();
-      await audioService.init();
-    });
+  setUp(() {
+    _audioPlayer = MockAudioPlayer();
+    _audioService = AudioServiceImpl(_audioPlayer);
+  });
 
-    test('initial volume is 1.0', () {
-      expect(audioService.getVolume(), 1.0);
-    });
+  test('init sets volume to 1.0', () async {
+    when(() => _audioPlayer.setVolume(1.0)).thenAnswer((_) async => null);
+    await _audioService.init();
+    verify(() => _audioPlayer.setVolume(1.0)).called(1);
+  });
 
-    test('initial is not muted', () {
-      expect(audioService.isMuted(), false);
-    });
+  test('setVolume sets the volume', () async {
+    when(() => _audioPlayer.setVolume(0.5)).thenAnswer((_) async => null);
+    await _audioService.setVolume(0.5);
+    verify(() => _audioPlayer.setVolume(0.5)).called(1);
+  });
 
-    test('toggle mute', () async {
-      await audioService.toggleMute();
-      expect(audioService.isMuted(), true);
-      await audioService.toggleMute();
-      expect(audioService.isMuted(), false);
-    });
+  test('toggleMute toggles the volume', () async {
+    when(() => _audioPlayer.volume).thenReturn(1.0);
+    when(() => _audioPlayer.setVolume(0)).thenAnswer((_) async => null);
+    await _audioService.toggleMute();
+    verify(() => _audioPlayer.setVolume(0)).called(1);
+  });
 
-    test('set volume', () async {
-      await audioService.setVolume(0.5);
-      expect(audioService.getVolume(), 0.5);
-    });
+  test('getVolume returns the current volume', () {
+    when(() => _audioPlayer.volume).thenReturn(0.5);
+    expect(_audioService.getVolume(), 0.5);
   });
 }

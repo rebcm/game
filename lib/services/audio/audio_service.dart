@@ -7,30 +7,16 @@ class AudioServiceImpl {
   AudioServiceImpl(this._audioPlayer);
 
   Future<void> init() async {
-    await _audioPlayer.initialize();
-  }
-
-  Future<void> play() async {
-    await _audioPlayer.play();
-  }
-
-  Future<void> pause() async {
-    await _audioPlayer.pause();
+    await _audioPlayer.setVolume(1.0);
   }
 
   Future<void> setVolume(double volume) async {
     await _audioPlayer.setVolume(volume);
   }
 
-  Future<void> setMute(bool mute) async {
-    await _audioPlayer.setVolume(mute ? 0 : 1);
+  Future<void> toggleMute() async {
+    await _audioPlayer.setVolume(_audioPlayer.volume == 0 ? 1 : 0);
   }
 
-  double getVolume() {
-    return _audioPlayer.volume;
-  }
-
-  bool isMuted() {
-    return _audioPlayer.volume == 0;
-  }
+  double getVolume() => _audioPlayer.volume;
 }
