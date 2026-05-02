@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rebcm/configuracoes/volume/volume_provider.dart';
-import 'package:rebcm/widgets/configuracoes/volume_settings.dart';
+import 'audio/audio_pool.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final volumeProvider = VolumeProvider();
-  await volumeProvider.loadVolumeConfig();
-
+void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => volumeProvider),
+        ChangeNotifierProvider(create: (_) => AudioPool()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s World',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Rebeca\'s World'),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final audioPool = Provider.of<AudioPool>(context);
+
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            await audioPool.play('assets/audio/optimized/break_block.mp3');
+          },
+          child: Text('Play Sound'),
         ),
-        body: const VolumeSettings(),
       ),
     );
   }
