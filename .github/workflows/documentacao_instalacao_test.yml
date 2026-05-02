@@ -5,17 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'assets/docs/guias/guia-instalacao.md'
-      - 'docs/artefatos/criterios-aceitacao-documentacao-instalacao.md'
+      - 'docs/artefatos/checklists/criterios-instalacao.md'
+      - 'assets/docs/checklists/instalacao-validation-checklist.md'
 
 jobs:
-  testar-documentacao:
+  validate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Verificar critérios de aceitação
+      - name: Validar checklist de instalação
         run: |
-          # Adicione aqui os comandos para verificar os critérios de aceitação
-          echo "Verificando critérios de aceitação..."
+          # Adicionar lógica para validar o checklist de instalação
+          echo "Validando checklist de instalação..."
