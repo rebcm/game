@@ -5,6 +5,8 @@ import 'package:passdriver/features/audio_transition/providers/audio_transition_
 import 'package:passdriver/features/audio_transition/widgets/audio_transition_widget.dart';
 
 void main() {
+  await dotenv.initialize();
+  runApp(MultiProvider(providers: [ChangeNotifierProvider(create: (_) => BuildConfig()),], child: MyApp()));
   final currentPlayer = AudioPlayer();
   final nextPlayer = AudioPlayer();
 
