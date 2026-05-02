@@ -17,6 +17,8 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Run integration test with cleanup
-        run: |
-          flutter drive --driver=test/integration_tests/cleanup_test.dart --target=integration_test/app.dart
+        run: flutter test test/integration/cleanup_test.dart
