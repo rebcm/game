@@ -1,20 +1,26 @@
-name: Testes da Documentação de CI/CD
+name: Documentação CI/CD Test
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/ci-cd/**'
 
 jobs:
-  test-documentacao-ci-cd:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validar documentação
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run Flutter doctor
+        run: flutter doctor
+
+      - name: Run CI/CD pipeline
         run: |
-          echo "Validando documentação de CI/CD..."
-          # Adicionar comandos para validar a documentação, se necessário
+          echo "Executando pipeline CI/CD..."
+          # Adicione aqui os passos para executar o pipeline CI/CD
