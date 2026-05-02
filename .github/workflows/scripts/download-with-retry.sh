@@ -5,14 +5,16 @@ OUTPUT=$2
 MAX_RETRIES=${3:-3}
 RETRY_DELAY=${4:-5}
 
-for ((i=0; i<MAX_RETRIES; i++)); do
-  if curl -f -o "$OUTPUT" "$URL"; then
+retry_count=0
+while [ $retry_count -lt $MAX_RETRIES ]; do
+  if curl -f -o $OUTPUT $URL; then
     echo "Download successful: $URL"
     exit 0
   else
-    echo "Download failed (attempt $((i+1))/$MAX_RETRIES): $URL"
-    if (( i < MAX_RETRIES - 1 )); then
-      sleep "$RETRY_DELAY"
+    retry_count=$((retry_count + 1))
+    echo "Download failed (attempt $retry_count/$MAX_RETRIES): $URL"
+    if [ $retry_count -lt $MAX_RETRIES ]; then
+      sleep $RETRY_DELAY
     fi
   fi
 done
