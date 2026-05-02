@@ -56,3 +56,6 @@ flutter:
 
   assets:
     - assets/docs/diagramas/sequencia/integracao_fisica_gameplay.mmd
+
+  assets:
+    - docs/criterios_aceitacao/matriz_retencao_artefatos.md

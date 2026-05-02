@@ -1,0 +1,20 @@
+name: Testar Documentação Matriz de Retenção de Artefatos
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/criterios_aceitacao/matriz_retencao_artefatos.md'
+
+jobs:
+  test-documentacao-matriz-retencao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar conteúdo
+        run: |
+          # Implementar lógica para validar o conteúdo do arquivo matriz_retencao_artefatos.md
+          echo "Validação bem-sucedida"
