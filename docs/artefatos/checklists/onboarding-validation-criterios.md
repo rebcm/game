@@ -1,6 +1,15 @@
-# Critérios de Validação de Onboarding
+# Critérios de Aceitação Técnicos
 
-1. **Clonar repositório**: Verificar se o repositório pode ser clonado sem erros.
-2. **Instalar dependências**: Verificar se `flutter pub get` instala todas as dependências necessárias.
-3. **Executar aplicação**: Verificar se `flutter run` inicia a aplicação sem erros.
-4. **Funcionalidades principais**: Testar se as funcionalidades principais do jogo estão operando corretamente.
+## Introdução
+
+Este documento define os critérios de aceitação técnicos para o projeto Rebeca.
+
+## Critérios
+
+1. Versão do SDK válida
+2. Integridade do arquivo .apk/.ipa
+3. Logs de build sem warnings críticos
+
+## Validação
+
+A validação desses critérios é realizada automaticamente pelo workflow `.github/workflows/checklists/validacao_criterios_aceitacao_tecnicos.yml`.

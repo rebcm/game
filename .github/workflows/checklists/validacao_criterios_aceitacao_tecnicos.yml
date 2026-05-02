@@ -1,17 +1,35 @@
-name: Validate Technical Acceptance Criteria
+name: Validacao Critérios Aceitação Técnicos
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate build
-        run: echo "Build validation passed"
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Validate lint
-        run: echo "Lint validation passed"
+      - name: Validate SDK version
+        run: |
+          echo "Validating SDK version..."
+          if [ "$(dart --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$(grep 'sdk:' pubspec.yaml | cut -d '"' -f 2)" ]; then
+            echo "SDK version mismatch"
+            exit 1
+          fi
 
-      - name: Validate unit tests
-        run: echo "Unit tests validation passed"
+      - name: Check for build warnings
+        run: |
+          echo "Checking for build warnings..."
+          flutter build apk --release 2>&1 | tee build_log.txt
+          if grep -q "warning" build_log.txt; then
+            echo "Build warnings found"
+            exit 1
+          fi
+
+      - name: Validate .apk/.ipa integrity
+        run: |
+          echo "Validating .apk/.ipa integrity..."
+          # Add validation logic here

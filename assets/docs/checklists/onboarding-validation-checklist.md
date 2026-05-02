@@ -1,16 +1,7 @@
-# Checklist de Validação de Onboarding
+# Checklist de Validação
 
-## Pré-requisitos
-- Flutter instalado na versão especificada em `pubspec.yaml`
-- Dependências do projeto instaladas (`flutter pub get`)
+## Critérios de Aceitação Técnicos
 
-## Passos para Validação
-1. Clonar o repositório
-2. Executar `flutter pub get`
-3. Executar `flutter run`
-4. Verificar se o jogo inicia corretamente
-5. Testar as principais funcionalidades do jogo
-
-## Critérios de Aceitação
-- O jogo inicia sem erros
-- Todas as funcionalidades principais funcionam como esperado
+- [ ] Versão do SDK válida
+- [ ] Integridade do arquivo .apk/.ipa
+- [ ] Logs de build sem warnings críticos
