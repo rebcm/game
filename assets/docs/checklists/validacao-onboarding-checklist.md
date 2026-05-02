@@ -2,33 +2,28 @@
 
 ## Pré-requisitos
 - [ ] Flutter instalado na versão especificada em `pubspec.yaml`
-- [ ] Dart instalado na versão especificada em `pubspec.yaml`
 - [ ] Dependências do projeto instaladas (`flutter pub get`)
 
-## Passos para Validação
-1. **Clonar o Repositório**
-   - [ ] Clonar o repositório `https://github.com/rebcm/game` para uma pasta local
+## Configuração Inicial
+- [ ] Clonar o repositório (`git clone https://github.com/rebcm/game`)
+- [ ] Executar `flutter pub get` para instalar dependências
 
-2. **Configurar Variáveis de Ambiente**
-   - [ ] Criar um arquivo `.env` na raiz do projeto com as variáveis necessárias (verificar `.env.example` se disponível)
+## Execução do Aplicativo
+- [ ] Executar o aplicativo em um emulador ou dispositivo físico (`flutter run`)
+- [ ] Verificar se o aplicativo inicia corretamente
 
-3. **Executar o Projeto**
-   - [ ] Executar `flutter run` e verificar se o projeto compila e executa sem erros
+## Implementação de Feature
+- [ ] Criar uma nova feature simples (ex: adicionar um novo bloco voxel)
+- [ ] Implementar a feature seguindo as regras do projeto
+- [ ] Executar `flutter analyze` e verificar se não há erros
 
-4. **Testar Funcionalidades Básicas**
-   - [ ] Verificar se os blocos voxel são renderizados corretamente
-   - [ ] Testar a interação básica com os blocos (construção/destruição)
+## Testes
+- [ ] Executar testes unitários (`flutter test`)
+- [ ] Executar testes de integração (`flutter drive --target=integration_test/app_test.dart`)
 
-5. **Validar Áudio**
-   - [ ] Verificar se o áudio ambiente está funcionando corretamente
-   - [ ] Testar se a música está funcionando corretamente
+## Validação
+- [ ] Verificar se a feature implementada funciona corretamente
+- [ ] Verificar se os testes passam sem erros
 
-## Critérios de Aceitação
-- [ ] O projeto compila e executa sem erros
-- [ ] As funcionalidades básicas estão operando conforme esperado
-- [ ] O áudio está funcionando corretamente
-
-## Registro de Resultados
-- Data de teste: 
-- Resultado: 
-- Observações:
+## Documentação
+- [ ] Verificar se a documentação do projeto está atualizada e clara

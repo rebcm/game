@@ -63,3 +63,7 @@ flutter:
 
 dev_dependencies:
   test: ^1.21.4
+
+  assets:
+    - assets/docs/checklists/validacao-onboarding-checklist.md
+    - docs/validacao/criterios-aceitacao-onboarding.md
