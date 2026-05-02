@@ -1,19 +1,9 @@
 import 'package:rebcm/models/chunk.dart';
+import 'package:rebcm/services/isolates/mesh_generator_isolate.dart';
 
 class ChunkService {
-  List<Chunk> chunks;
-
-  ChunkService(this.chunks);
-
-  void optimizeChunks() {
-    for (var chunk in chunks) {
-      chunk.optimizeMemoryAllocation();
-    }
-  }
-
-  void iterateChunks(void Function(Chunk) callback) {
-    for (var chunk in chunks) {
-      callback(chunk);
-    }
+  Future<void> generateMesh(Chunk chunk) async {
+    final SendPort sendPort = await MeshGeneratorIsolate._initIsolate();
+    sendPort.send(chunk);
   }
 }
