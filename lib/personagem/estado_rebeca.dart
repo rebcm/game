@@ -3,18 +3,18 @@ enum EstadoRebeca {
   andando,
 }
 
-class MaquinaEstadoRebeca {
-  EstadoRebeca _estadoAtual;
+class TransicaoEstadoRebeca {
+  EstadoRebeca estadoAtual;
+  bool inputMovimentacao;
 
-  MaquinaEstadoRebeca() : _estadoAtual = EstadoRebeca.parado;
+  TransicaoEstadoRebeca({required this.estadoAtual, required this.inputMovimentacao});
 
-  EstadoRebeca get estado => _estadoAtual;
-
-  void atualizar(bool movimentando) {
-    if (movimentando && _estadoAtual == EstadoRebeca.parado) {
-      _estadoAtual = EstadoRebeca.andando;
-    } else if (!movimentando && _estadoAtual == EstadoRebeca.andando) {
-      _estadoAtual = EstadoRebeca.parado;
+  EstadoRebeca transicionar() {
+    if (inputMovimentacao && estadoAtual == EstadoRebeca.parado) {
+      return EstadoRebeca.andando;
+    } else if (!inputMovimentacao && estadoAtual == EstadoRebeca.andando) {
+      return EstadoRebeca.parado;
     }
+    return estadoAtual;
   }
 }
