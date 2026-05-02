@@ -2,18 +2,17 @@ import 'dart:isolate';
 import 'package:rebcm/models/chunk.dart';
 
 class MeshGeneratorIsolate {
-  static Future<SendPort> _initIsolate() async {
-    final ReceivePort receivePort = ReceivePort();
-    await Isolate.spawn(_meshGeneratorIsolateEntry, receivePort.sendPort);
+  static Future<SendPort> _getIsolate() async {
+    final receivePort = ReceivePort();
+    await Isolate.spawn(_meshGeneratorIsolate, receivePort.sendPort);
     return await receivePort.first;
   }
 
-  static Future<void> _meshGeneratorIsolateEntry(SendPort sendPort) async {
-    final ReceivePort receivePort = ReceivePort();
+  static void _meshGeneratorIsolate(SendPort sendPort) async {
+    final receivePort = ReceivePort();
     sendPort.send(receivePort.sendPort);
     await for (var message in receivePort) {
       if (message is Chunk) {
-        // Generate mesh for the chunk
         final mesh = _generateMesh(message);
         sendPort.send(mesh);
       }
@@ -21,7 +20,15 @@ class MeshGeneratorIsolate {
   }
 
   static dynamic _generateMesh(Chunk chunk) {
-    // Mesh generation logic here
-    return null; // Replace with actual mesh data
+    // Implement mesh generation logic here
+    return null;
+  }
+
+  static Future<dynamic> generateMesh(Chunk chunk) async {
+    final sendPort = await _getIsolate();
+    final receivePort = ReceivePort();
+    sendPort.send(chunk);
+    sendPort.send(receivePort.sendPort);
+    return await receivePort.first;
   }
 }
