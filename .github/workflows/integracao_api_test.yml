@@ -1,4 +1,4 @@
-name: Integração API Test
+name: Integracao API Test
 
 on:
   push:
@@ -12,13 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run integration tests
-        run: flutter test lib/test/integracao/api_test.dart
+      - name: Run tests
+        run: flutter test lib/testes/api/estrategia_testes_api.dart
