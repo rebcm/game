@@ -68,3 +68,5 @@ flutter:
     sdk: flutter
 
   integration_test/scroll_compatibility_test.dart:
+
+  integration_test/flutter_ci_test.dart:
