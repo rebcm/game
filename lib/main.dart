@@ -16,3 +16,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'package:rebcm/ui/scroll_behavior.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      scrollBehavior: CustomScrollBehavior(),
+      // ... existing code
+    );
+  }
+}
