@@ -14,11 +14,10 @@ jobs:
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
-      - name: Check Flutter version
-        run: flutter --version
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.0'
 
-      - name: Run Flutter Driver Tests with Edge Cases
+      - name: Run edge cases tests for artifact cleanup
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --timeout=300s
+          flutter pub get
+          flutter test test/artefato_limpeza_edge_cases_test.dart
