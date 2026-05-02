@@ -6,9 +6,15 @@ void main() {
     test('should animate correctly', () {
       final animation = RebecaAnimation();
       expect(animation.isAnimating, isFalse);
-      animation.start();
+      animation.startAnimation();
       expect(animation.isAnimating, isTrue);
-      animation.stop();
+    });
+
+    test('should stop animating correctly', () {
+      final animation = RebecaAnimation();
+      animation.startAnimation();
+      expect(animation.isAnimating, isTrue);
+      animation.stopAnimation();
       expect(animation.isAnimating, isFalse);
     });
   });
