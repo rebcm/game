@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Camera3DUtils {
-  static void animateCamera(MapController mapController, LatLng target) {
-    mapController.animateTo(
-      target,
-      zoom: 16,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+  static double calculateRotation(double currentRotation, double delta) {
+    return currentRotation + delta;
   }
 }
