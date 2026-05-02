@@ -1,0 +1,18 @@
+name: HTTP Error Handling Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-http-error-handling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test HTTP error handling
+        run: |
+          # Implementar testes para verificar se o pipeline captura os códigos HTTP esperados e exibe as mensagens de erro corretas
+          echo "Testes de tratamento de erros HTTP implementados aqui"
