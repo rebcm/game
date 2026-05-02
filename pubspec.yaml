@@ -53,3 +53,6 @@ flutter:
 dev_dependencies:
   flutter_driver:
     sdk: flutter
+
+  assets:
+    - assets/personagens/rebeca/rebeca.png

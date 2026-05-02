@@ -54,3 +54,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+import 'package:rebcm/personagens/rebeca.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Rebeca Criativa',
+      home: Scaffold(
+        body: Rebeca.renderizar(),
+      ),
+    );
+  }
+}
