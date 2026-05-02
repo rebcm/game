@@ -1,0 +1,15 @@
+name: Purge Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  purge-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run purge test
+        run: |
+          flutter test app/test/features/purge/purge_test.dart

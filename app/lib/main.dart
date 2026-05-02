@@ -58,3 +58,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+import 'package:construcao_criativa/features/purge/purge_manager.dart';
+
+void main() {
+  // ...
+  final purgeManager = PurgeManager(PersistenceManager());
+  runApp(MyApp(purgeManager: purgeManager));
+}
+
+class MyApp extends StatelessWidget {
+  final PurgeManager _purgeManager;
+
+  MyApp({required PurgeManager purgeManager}) : _purgeManager = purgeManager;
+
+  @override
+  Widget build(BuildContext context) {
+    // ...
+  }
+}
