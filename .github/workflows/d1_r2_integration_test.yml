@@ -1,0 +1,21 @@
+name: D1/R2 Integration Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run integration test
+        uses: flutter/flutter-github-actions@v1
+        with:
+          flutter-version: '3.0.0'
+          channel: 'stable'
+          script: |
+            flutter drive --target=test/integration_tests/d1_r2_integration_test/d1_r2_integration_test.dart --driver=test_driver/integration_test.dart --flavor=dev

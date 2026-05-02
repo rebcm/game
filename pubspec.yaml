@@ -63,3 +63,6 @@ flutter:
 
   test_secrets_validation:
     path: test/secrets_validation_test.dart
+
+  test_d1_r2_integration:
+    path: test/integration_tests/d1_r2_integration_test/d1_r2_integration_test.dart
