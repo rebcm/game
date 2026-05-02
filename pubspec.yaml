@@ -8,41 +8,31 @@ environment:
 
 dependencies:
   audioplayers: ^5.2.0
-  integration_test: ^1.0.0
-  mocktail: ^0.3.0
-  json_annotation: ^4.6.0
-  http_mock: ^0.3.0
-  audioplayers: ^5.2.0
   flutter:
     sdk: flutter
   flame: ^1.2.1  
   provider: ^6.0.3
   http: ^0.13.5
   intl: ^0.17.0
+  json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
 
 dev_dependencies:
-  mocktail: ^0.3.0
   audioplayers: ^5.2.0
   build_runner: ^2.1.8
-  json_serializable: ^6.3.1
-  test_coverage: ^0.6.1
   flutter_test:
     sdk: flutter
-  test: ^1.21.4
-  intl_translation: ^0.17.10+1
   integration_test:
     sdk: flutter
+  intl_translation: ^0.17.10+1
+  json_serializable: ^6.3.1
+  mocktail: ^0.3.0
+  test: ^1.21.4
+  test_coverage: ^0.6.1
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/audio/optimized/ambient/
-    - assets/audio/optimized/music/
-    - assets/audio/optimized/sfx/
-    - assets/audio/raw/ambient/
-    - assets/audio/raw/music/
-    - assets/audio/raw/sfx/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
     - assets/audio/optimized/sfx/
