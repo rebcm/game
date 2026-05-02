@@ -19,5 +19,4 @@ jobs:
 
       - name: Run network edge cases test
         run: |
-          flutter pub get
-          flutter test integration_test/network_edge_cases_test.dart
+          flutter test test/network_edge_cases_test.dart
