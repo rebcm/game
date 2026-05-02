@@ -64,3 +64,6 @@ flutter:
     - assets/docs/guias/guia-diferenciacao-secrets-vars.md
 
   # No new dependencies should be added
+
+  toml: ^1.0.0
+  toml: ^1.0.0

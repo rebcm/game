@@ -1,9 +1,3 @@
-name = "rebcm-worker"
-main = "src/index.js"
-compatibility_date = "2023-01-01"
-account_id = ""
-
-[vars]
-DB_URL = ""
-DB_USER = ""
-DB_PASSWORD = ""
+string_variable = "example_string"
+boolean_variable = true
+number_variable = 10
