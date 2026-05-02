@@ -1,18 +1,11 @@
-# Glossário de Termos Técnicos e Leigos
+# Glossário
 
-Este glossário visa esclarecer termos técnicos e leigos utilizados no projeto Rebeca.
+## Introdução
 
-## Termos Técnicos
+Este glossário define termos técnicos e conceitos utilizados no projeto PassDriver Flutter.
 
-| Termo | Descrição |
-| --- | --- |
-| Voxel | Unidade cúbica que compõe um modelo 3D |
-| Flutter | Framework de desenvolvimento de aplicativos multiplataforma |
+## Termos
 
-## Termos Leigos
-
-| Termo | Descrição |
-| --- | --- |
-| Modo Criativo | Modo de jogo que permite construção livre |
-| Blocos Voxel | Blocos cúbicos que formam o mundo do jogo |
+* **PassDriver**: Plataforma de gerenciamento de drivers.
+* **Flutter**: Framework de desenvolvimento de aplicativos móveis.
 

@@ -50,8 +50,9 @@ flutter:
     - assets/docs/checklists/onboarding-validation-checklist.md
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - docs/glossario/README.md
-    - docs/localizacao/README.md
+    - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
+    - docs/guias/style_guide.md
   uses-material-design: true
 
   test_audio_codec:
@@ -72,3 +73,5 @@ flutter:
 
   test_memory_stress:
     path: test/integration_tests/memory_stress_test/memory_stress_test.dart
+  assets:
+    - docs/guias/style_guide.md

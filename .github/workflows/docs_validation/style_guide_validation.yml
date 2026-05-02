@@ -1,0 +1,19 @@
+name: Style Guide Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/guias/style_guide.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Validate Style Guide
+        run: |
+          echo "Validating style guide..."
+          # Adicionar lógica de validação aqui
