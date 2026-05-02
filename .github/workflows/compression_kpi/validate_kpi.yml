@@ -1,10 +1,16 @@
-name: Define Compression KPI
+name: Validate Compression KPI
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/**'
+      - 'pubspec.yaml'
 
 jobs:
-  define-compression-kpi:
+  validate-compression-kpi:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,8 +30,13 @@ jobs:
       - name: Measure APK size
         run: |
           APK_SIZE=$(stat -c%s "build/app/outputs/flutter-apk/app-release.apk")
-          echo "Current APK size is $APK_SIZE bytes"
+          echo "APK_SIZE=$APK_SIZE" >> $GITHUB_ENV
 
-      - name: Set KPI
+      - name: Validate KPI
         run: |
-          echo "Current APK size is $APK_SIZE bytes. Consider setting KPI around this value."
+          if [ $APK_SIZE -le 30000000 ]; then
+            echo "KPI achieved: APK size is $APK_SIZE bytes"
+          else
+            echo "KPI not achieved: APK size is $APK_SIZE bytes"
+            exit 1
+          fi
