@@ -1,0 +1,18 @@
+name: Documentação CI/CD Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-documentacao-ci-cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test documentation CI/CD
+        run: |
+          echo "Testando documentação CI/CD"
+          # Adicione aqui comandos para testar a documentação CI/CD
