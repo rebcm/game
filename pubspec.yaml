@@ -36,3 +36,4 @@ flutter:
     - assets/audio/musica2.mp3
     - assets/audio/musica3.mp3
     - assets/audio/musica4.mp3
+http: ^0.13.3
