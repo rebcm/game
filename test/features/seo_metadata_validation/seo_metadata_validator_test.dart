@@ -4,32 +4,36 @@ import 'package:passdriver/features/seo_metadata_validation/validators/seo_metad
 
 void main() {
   group('SeoMetadataValidator', () {
-    test('isValidDescription should return true for valid descriptions', () {
-      expect(SeoMetadataValidator.isValidDescription('A valid description that contains ride or hail'), true);
+    late SeoMetadataValidator validator;
+
+    setUp(() {
+      validator = SeoMetadataValidator();
     });
 
-    test('isValidDescription should return false for invalid descriptions', () {
-      expect(SeoMetadataValidator.isValidDescription('Too short'), false);
+    test('should validate description length', () {
+      expect(validator.validateDescription('a' * 149), false);
+      expect(validator.validateDescription('a' * 150), true);
+      expect(validator.validateDescription('a' * 255), true);
+      expect(validator.validateDescription('a' * 256), false);
     });
 
-    test('areValidKeywords should return true for valid keywords', () {
-      final requiredKeywords = SeoMetadataValidator.getRequiredKeywords();
-      expect(SeoMetadataValidator.areValidKeywords([...requiredKeywords, 'extra keyword'], requiredKeywords), true);
+    test('should validate required keywords', () {
+      expect(validator.validateKeywords(['PassDriver']), false);
+      expect(validator.validateKeywords(SeoMetadataValidator.requiredKeywords), true);
     });
 
-    test('areValidKeywords should return false for invalid keywords', () {
-      final requiredKeywords = SeoMetadataValidator.getRequiredKeywords();
-      expect(SeoMetadataValidator.areValidKeywords(['invalid keyword'], requiredKeywords), false);
-    });
+    test('should validate SeoMetadata', () {
+      final validSeoMetadata = SeoMetadata(
+        description: 'a' * 150,
+        keywords: SeoMetadataValidator.requiredKeywords,
+      );
+      final invalidSeoMetadata = SeoMetadata(
+        description: 'a' * 149,
+        keywords: ['invalid'],
+      );
 
-    test('isValidSeoMetadata should return true for valid SEO metadata', () {
-      final validSeoMetadata = SeoMetadata(description: 'A valid description', keywords: SeoMetadataValidator.getRequiredKeywords());
-      expect(SeoMetadataValidator.isValidSeoMetadata(validSeoMetadata), true);
-    });
-
-    test('isValidSeoMetadata should return false for invalid SEO metadata', () {
-      final invalidSeoMetadata = SeoMetadata(description: 'Too short', keywords: []);
-      expect(SeoMetadataValidator.isValidSeoMetadata(invalidSeoMetadata), false);
+      expect(validator.validateSeoMetadata(validSeoMetadata), true);
+      expect(validator.validateSeoMetadata(invalidSeoMetadata), false);
     });
   });
 }

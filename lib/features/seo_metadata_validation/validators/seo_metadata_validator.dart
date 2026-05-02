@@ -1,23 +1,17 @@
 import 'package:passdriver/features/seo_metadata_validation/models/seo_metadata.dart';
 
 class SeoMetadataValidator {
-  static bool isValidDescription(String description) {
-    // Implement description validation logic here
-    // For example, checking if it contains certain keywords or has a minimum length
-    return description.length > 50 && description.contains(RegExp(r'\b(ride|hail|transport)\b'));
+  static const List<String> requiredKeywords = ['PassDriver', 'ride-hailing', 'Brazil'];
+
+  bool validateDescription(String description) {
+    return description.length >= 150 && description.length <= 255;
   }
 
-  static bool areValidKeywords(List<String> keywords, List<String> requiredKeywords) {
+  bool validateKeywords(List<String> keywords) {
     return requiredKeywords.every((keyword) => keywords.contains(keyword));
   }
 
-  static List<String> getRequiredKeywords() {
-    // Define the list of required keywords for SEO
-    return ['PassDriver', 'ride hailing', 'Brazil'];
-  }
-
-  static bool isValidSeoMetadata(SeoMetadata seoMetadata) {
-    final requiredKeywords = getRequiredKeywords();
-    return isValidDescription(seoMetadata.description) && areValidKeywords(seoMetadata.keywords, requiredKeywords);
+  bool validateSeoMetadata(SeoMetadata seoMetadata) {
+    return validateDescription(seoMetadata.description) && validateKeywords(seoMetadata.keywords);
   }
 }
