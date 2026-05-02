@@ -19,3 +19,6 @@
   "scripts": {
     "test:flutter:input-stress": "flutter test integration_test/input/input_stress_test.dart"
   }
+  "scripts": {
+    "test:flutter:api-integration": "flutter test integration_test/api/api_integration_test.dart"
+  }

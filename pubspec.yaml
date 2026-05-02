@@ -1,4 +1,5 @@
 dependencies:
+  http_testing_controller: ^2.0.0
   flutter_driver:
   provider: ^6.0.3
   flutter_localizations:
@@ -17,6 +18,7 @@ dependencies:
   audioplayers: ^1.0.1
 
 dev_dependencies:
+  http_testing_controller: ^2.0.0
   integration_test:
   flutter_driver:
   provider: ^6.0.3
@@ -37,3 +39,4 @@ dev_dependencies:
     sdk: flutter
   audioplayers: ^1.0.1
   http_mock_adapter: ^1.0.0
+  http_testing_controller: ^2.0.0
