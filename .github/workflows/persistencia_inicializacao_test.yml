@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter test test/persistencia/gerenciador_preferencias_test.dart
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - run: dart test test/persistencia/armazenamento_local_test.dart
