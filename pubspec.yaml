@@ -45,7 +45,4 @@ flutter:
     - assets/i18n/
     - assets/configuracoes.json
     - assets/characters/rebeca_skin.png
-
-
-  flutter_hooks:
-    sdk: flutter
+    - assets/animations/optimized_animation.png
