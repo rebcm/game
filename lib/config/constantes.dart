@@ -1,4 +1,4 @@
 class Constantes {
-  static const String autor = 'Rebeca Alves Moreira';
-  static const int maxMundosPorUsuario = 5;
+  static const String urlApi = 'https://construcao-criativa.workers.dev';
+  static const String autora = 'Rebeca Alves Moreira';
 }
