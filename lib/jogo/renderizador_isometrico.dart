@@ -1,10 +1,11 @@
-import 'package:rebcm/mundo/chunks/gerenciador_chunks.dart';
+import 'package:rebcm/personagem/rebeca.dart';
 
-class RenderizadorIsometrico {
-  final GerenciadorChunks _gerenciadorChunks;
+class RenderizadorIsometrico extends FlameGame {
+  late Rebeca _rebeca;
 
-  RenderizadorIsometrico(this._gerenciadorChunks);
-
-  void renderizar() {
+  @override
+  Future<void> onLoad() async {
+    _rebeca = Rebeca();
+    add(_rebeca);
   }
 }
