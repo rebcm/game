@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Performance Tests', () {
+  group('Performance Test', () {
     late FlutterDriver driver;
 
     setUpAll(() async {
@@ -13,13 +13,15 @@ void main() {
       await driver.close();
     });
 
-    test('Measure frame timing', () async {
+    test('Measure performance', () async {
       final timeline = await driver.traceAction(() async {
+        await driver.tap(find.byTooltip('Build Mode'));
         await Future.delayed(Duration(seconds: 5));
       });
-      final timelineSummary = TimelineSummary.summarize(timeline);
-      timelineSummary.writeSummaryToFile('performance_test', pretty: true);
-      timelineSummary.writeTimelineToFile('performance_test', pretty: true);
+
+      final summary = TimelineSummary.summarize(timeline);
+      summary.writeSummaryToFile('performance_results', pretty: true);
+      summary.writeTimelineToFile('performance_timeline', pretty: true);
     });
   });
 }
