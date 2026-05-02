@@ -1,0 +1,30 @@
+name: Smoke Test Validation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run Flutter Driver Test
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart
+
+      - name: Validate HTML Content
+        run: |
+          RESPONSE=$(curl -s -f https://rebcm-game.pages.dev)
+          if [[ "$RESPONSE" != *"<flutter-view>"* ]]; then
+            echo "Validation failed: <flutter-view> not found in response"
+            exit 1
+          fi
