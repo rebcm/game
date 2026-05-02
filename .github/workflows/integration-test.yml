@@ -19,3 +19,11 @@ jobs:
 
       - name: Run integration tests
         run: ./run_integration_tests.sh
+  jank-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run jank test
+        run: |
+          flutter drive --target=integration_test/performance/jank_test.dart --driver=test_driver/integration_test.dart
