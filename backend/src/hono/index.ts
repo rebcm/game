@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import renderizacao3D from './routes/renderizacao_3d';
+import fisicaRoute from './routes/fisica/route';
 
 const app = new Hono();
 
-app.route('/api/renderizacao-3d', renderizacao3D);
+app.route('/fisica', fisicaRoute);
 
 export default app;
