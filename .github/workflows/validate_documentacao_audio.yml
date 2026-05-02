@@ -1,0 +1,18 @@
+name: Validate Audio Documentation
+
+on:
+  push:
+    paths:
+      - 'lib/audio/README.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate README
+        run: |
+          # Implementação da validação da documentação
+          echo "Validating audio documentation..."

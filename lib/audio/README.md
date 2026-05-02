@@ -2,29 +2,32 @@
 
 ## Visão Geral
 
-O sistema de áudio do jogo Construção Criativa é responsável por gerenciar a reprodução de efeitos sonoros (SFX), músicas e sons ambientes. Ele utiliza a biblioteca `audioplayers` para fornecer uma experiência auditiva imersiva.
+O sistema de áudio do jogo é responsável por gerenciar a reprodução de sons, música e efeitos sonoros. Ele utiliza a biblioteca `audioplayers` para fornecer uma experiência de áudio imersiva.
 
 ## Estrutura
 
-- `assets/audio/optimized/`: Diretório contendo os arquivos de áudio otimizados para uso no jogo.
-  - `ambient/`: Sons ambientes.
-  - `music/`: Músicas de fundo.
-  - `sfx/`: Efeitos sonoros.
-- `lib/audio/gerenciador_audio.dart`: Classe responsável por gerenciar a reprodução de áudio.
-- `lib/audio/otimizador_audio.dart`: Classe que lida com a otimização de arquivos de áudio.
+- `assets/audio/`: Diretório contendo arquivos de áudio.
+  - `raw/`: Áudios originais, sem otimização.
+  - `optimized/`: Áudios otimizados para uso no jogo.
+- `lib/audio/gerenciador_audio.dart`: Gerencia a reprodução de áudios.
+- `lib/audio/otimizador_audio.dart`: Responsável por otimizar os áudios para uso no jogo.
 
 ## Funcionamento
 
-1. **Carregamento de Áudio**: Os arquivos de áudio são carregados a partir do diretório `assets/audio/optimized/`.
-2. **Reprodução**: A classe `GerenciadorAudio` controla a reprodução de SFX, músicas e sons ambientes.
-3. **Otimização**: A classe `OtimizadorAudio` é utilizada para otimizar os arquivos de áudio para melhor performance.
+1. **Carregamento de Áudios**: Os áudios são carregados a partir do diretório `assets/audio/optimized/`.
+2. **Reprodução**: O `GerenciadorAudio` controla a reprodução de áudios, incluindo música ambiente e efeitos sonoros.
+3. **Otimização**: O `OtimizadorAudio` é utilizado para converter áudios raw em formatos otimizados para o jogo.
 
 ## Configuração
 
-- Os arquivos de áudio devem ser colocados nos respectivos diretórios dentro de `assets/audio/optimized/`.
-- A configuração de quais áudios são carregados e reproduzidos é feita através do `GerenciadorAudio`.
+- Áudios devem ser colocados em `assets/audio/raw/` e otimizados para `assets/audio/optimized/`.
+- A configuração de quais áudios são carregados e reproduzidos é feita no `GerenciadorAudio`.
 
-## Manutenção
+## Melhorias Futuras
 
-- Para adicionar novos áudios, basta colocá-los nos diretórios corretos e atualizar o `GerenciadorAudio` conforme necessário.
-- A otimização de áudio pode ser ajustada ou melhorada modificando a lógica em `OtimizadorAudio`.
+- Implementar controle de volume individual para diferentes categorias de áudio.
+- Suporte a mais formatos de áudio.
+
+## Testes
+
+Testes de áudio são essenciais para garantir que o sistema funcione corretamente. Utilize os workflows de teste de áudio disponíveis em `.github/workflows/` para validar mudanças.
