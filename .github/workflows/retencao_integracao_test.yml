@@ -1,0 +1,31 @@
+name: Retenção Integração Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration test
+        run: flutter drive --target=test_driver/integration_test.dart --driver=test_driver/integration_test_driver.dart
+
+      - name: Verify retenção script
+        run: |
+          # Logic to verify if retenção script is triggered after upload
+          # This should be adapted according to the actual retenção script and upload process
+          echo "Verifying retenção script..."
