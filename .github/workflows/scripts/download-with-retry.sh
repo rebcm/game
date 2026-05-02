@@ -13,10 +13,7 @@ while [ $retry_count -lt $MAX_RETRIES ]; do
   else
     retry_count=$((retry_count + 1))
     echo "Download failed (attempt $retry_count/$MAX_RETRIES): $URL"
-    if [ $retry_count -lt $MAX_RETRIES ]; then
-      echo "Retrying in $RETRY_DELAY seconds..."
-      sleep $RETRY_DELAY
-    fi
+    sleep $RETRY_DELAY
   fi
 done
 
