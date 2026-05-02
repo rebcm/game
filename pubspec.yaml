@@ -16,6 +16,7 @@ dependencies:
   intl: ^0.17.0
 
 dev_dependencies:
+  http_mock: ^0.3.0
   audioplayers: ^1.0.1
   test_coverage: ^0.6.1
   flutter_test:
