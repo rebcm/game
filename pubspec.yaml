@@ -41,6 +41,10 @@ flutter:
     - assets/audio/raw/sfx/
     - assets/blocos/
     - assets/i18n/
+  internationalization:
+    localizations:
+      - intl
+      - intl_translation
   generate: true
 
   flutter_test:
