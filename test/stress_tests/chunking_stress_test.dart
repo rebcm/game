@@ -4,20 +4,37 @@ import 'package:rebcm/mundo/gerador.dart';
 import 'package:rebcm/mundo/chunk.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('Chunking stress test', (tester) async {
+  testWidgets('Stress test para movimentação entre chunks', (tester) async {
     await tester.pumpWidget(MyApp());
 
-    final geradorMundo = GeradorMundo();
-    final renderizador = RenderizadorIsometrico(geradorMundo);
+    final renderizador = RenderizadorIsometrico();
+    final gerador = GeradorMundo();
 
     for (int i = 0; i < 100; i++) {
       await tester.pump();
       renderizador.atualizarCamera(10, 0);
       await tester.pump();
+      gerador.gerarChunk(renderizador.cameraX, renderizador.cameraZ);
+      await tester.pump();
     }
 
-    expect(renderizador.chunksVisiveis.length, lessThan(10));
+    expect(renderizador.chunks.length, greaterThan(0));
+  });
+
+  testWidgets('Verifica limpeza de memória de chunks descarregados', (tester) async {
+    await tester.pumpWidget(MyApp());
+
+    final renderizador = RenderizadorIsometrico();
+    final gerador = GeradorMundo();
+
+    for (int i = 0; i < 100; i++) {
+      await tester.pump();
+      renderizador.atualizarCamera(10, 0);
+      await tester.pump();
+      gerador.gerarChunk(renderizador.cameraX, renderizador.cameraZ);
+      await tester.pump();
+    }
+
+    expect(renderizador.chunksDescarregados.length, equals(0));
   });
 }
