@@ -1,8 +1,8 @@
-# Guia de Estilo e Tom de Voz
+# Guia de Estilo e Tom de Voz (Português Brasileiro)
 
 ## Introdução
 
-Este guia define o tom de voz e estilo de escrita para a documentação do PassDriver Flutter, garantindo consistência entre diferentes autores e contribuidores.
+Este guia define o tom de voz e estilo de escrita para a documentação do PassDriver Flutter em Português Brasileiro, garantindo consistência entre diferentes autores e contribuidores.
 
 ## Princípios Gerais
 

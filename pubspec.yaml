@@ -48,8 +48,12 @@ flutter:
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
     - assets/docs/checklists/onboarding-validation-checklist.md
+    - assets/docs/guias/style_guide_pt_BR.md
+    - assets/docs/guias/style_guide_pt_BR.md
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - docs/glossario/README.md
+    - docs/guias/style_guide.md
+    - docs/guias/style_guide.md
     - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
     - .env
