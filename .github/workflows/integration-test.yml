@@ -16,4 +16,4 @@ jobs:
         run: flutter pub get
 
       - name: Run integration tests
-        run: flutter test integration_test/api/api_integration_test.dart
+        run: flutter test integration_test/
