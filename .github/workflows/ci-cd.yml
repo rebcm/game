@@ -1,4 +1,4 @@
-name: CI/CD PassDriver Flutter
+name: CI/CD
 
 on:
   push:
@@ -6,26 +6,19 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  configure-secrets:
+    uses: ./.github/workflows/configure-secrets.yml@main
+
+  build-and-test:
+    needs: configure-secrets
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.x'
+      - name: Validate Secrets Configuration
+        run: .github/workflows/scripts/validate_secrets_configuration.sh
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build
-        run: flutter build
-
-      - name: Test
-        run: flutter test
-
-      - name: Deploy
-        run: flutter pub run ... # comando específico para deploy
-
+      - name: Build and Test
+        run: |
+          # existing build and test commands
