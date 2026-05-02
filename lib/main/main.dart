@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/game/game.dart';
+import 'package:rebcm/services/asset_manager/asset_manager_provider.dart';
+import 'package:rebcm/app.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      home: GameWidget(
-        game: RebecaGame(),
-      ),
+    AssetManagerProvider(
+      child: MyApp(),
     ),
   );
 }
