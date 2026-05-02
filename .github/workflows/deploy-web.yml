@@ -1,18 +1,19 @@
 name: Deploy Web
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-  build-web:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.10.6'
@@ -20,14 +21,16 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web
-        run: flutter build web
-
-      - name: Install Wrangler
-        run: npm install -g wrangler
+      - name: Build web
+        run: flutter build web --release
 
       - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy build/web
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'construcao-criativa'
+          directory: 'build/web'
+
+      - name: Validate deploy
+        run: .github/workflows/scripts/validate_deploy.sh https://construcao-criativa.pages.dev
