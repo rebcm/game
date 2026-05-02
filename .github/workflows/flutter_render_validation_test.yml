@@ -1,0 +1,22 @@
+name: Flutter Render Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Flutter Driver Test
+        run: |
+          flutter drive --target=test_driver/flutter_driver/render_validation_integration_test.dart --driver=test_driver/flutter_driver/render_validation_test.dart
