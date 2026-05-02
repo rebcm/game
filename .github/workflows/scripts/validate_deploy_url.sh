@@ -7,13 +7,13 @@ DELAY=5
 for ((i=0; i<$RETRIES; i++)); do
   STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL)
   if [ $STATUS_CODE -eq 200 ]; then
-    echo "Deploy validated successfully: $URL"
+    echo "Deploy validation successful: $URL returned 200"
     exit 0
   else
-    echo "Attempt $((i+1)) failed with status code $STATUS_CODE. Retrying in $DELAY seconds..."
+    echo "Attempt $((i+1))/$RETRIES: $URL returned $STATUS_CODE. Retrying in $DELAY seconds..."
     sleep $DELAY
   fi
 done
 
-echo "Failed to validate deploy after $RETRIES attempts: $URL"
+echo "Deploy validation failed: $URL did not return 200 after $RETRIES attempts"
 exit 1
