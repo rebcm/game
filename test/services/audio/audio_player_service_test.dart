@@ -17,7 +17,7 @@ void main() {
       expect(audioPlayerService.isMuted, false);
     });
 
-    test('setVolume changes volume', () async {
+    test('setVolume sets the volume', () async {
       await audioPlayerService.setVolume(0.5);
       expect(audioPlayerService.volume, 0.5);
     });

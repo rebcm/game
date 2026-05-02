@@ -10,17 +10,12 @@ class AudioPlayerService {
     await _audioPlayer.setVolume(_volume);
   }
 
-  Future<void> play(String assetPath) async {
-    await _audioPlayer.setAsset(assetPath);
+  Future<void> play() async {
     await _audioPlayer.play();
   }
 
   Future<void> pause() async {
     await _audioPlayer.pause();
-  }
-
-  Future<void> stop() async {
-    await _audioPlayer.stop();
   }
 
   Future<void> setVolume(double volume) async {
