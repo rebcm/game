@@ -5,6 +5,8 @@ dependencies:
   provider:
   flutter_map:
   flutter:
+  assets:
+    - assets/characters/rebeca_skin.png
     sdk: flutter
   flutter_test:
     sdk: flutter
