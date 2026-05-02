@@ -1,0 +1,19 @@
+name: Documentação Matriz de Erro
+
+on:
+  workflow_dispatch:
+
+jobs:
+  documentacao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Executar script de definição de matriz de erro
+        run: ./.github/workflows/scripts/define_error_matrix.sh
+
+      - name: Gerar documentação da matriz de erro
+        run: |
+          echo "Matriz de Comportamento de Erro:" > error_matrix.md
+          ./.github/workflows/scripts/define_error_matrix.sh >> error_matrix.md
