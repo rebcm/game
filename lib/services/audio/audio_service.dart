@@ -1,22 +1,17 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioService {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+class AudioServiceImpl {
+  final AudioPlayer _audioPlayer;
 
-  Future<void> play(String assetPath) async {
-    await _audioPlayer.setAsset(assetPath);
+  AudioServiceImpl(this._audioPlayer);
+
+  void playAmbient(String ambientPath) async {
+    await _audioPlayer.setAsset(ambientPath);
     _audioPlayer.play();
   }
 
-  Future<void> stop() async {
+  void stopAmbient() async {
     await _audioPlayer.stop();
-  }
-
-  Future<void> setVolume(double volume) async {
-    _audioPlayer.setVolume(volume);
-  }
-
-  Future<void> setLoopMode(bool loop) async {
-    await _audioPlayer.setLoopMode(loop ? LoopMode.all : LoopMode.off);
   }
 }
