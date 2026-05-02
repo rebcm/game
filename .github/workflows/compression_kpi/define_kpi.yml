@@ -6,7 +6,7 @@ on:
       target-reduction:
         description: 'Target reduction percentage'
         required: true
-        type: string
+        default: '20'
 
 jobs:
   define-kpi:

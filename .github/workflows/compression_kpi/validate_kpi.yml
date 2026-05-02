@@ -2,15 +2,6 @@ name: Validate Compression KPI
 
 on:
   workflow_dispatch:
-    inputs:
-      original-size:
-        description: 'Original APK/IPA size'
-        required: true
-        type: string
-      new-size:
-        description: 'New APK/IPA size after conversion'
-        required: true
-        type: string
 
 jobs:
   validate-kpi:
@@ -21,18 +12,13 @@ jobs:
 
       - name: Validate KPI
         run: |
-          original_size=$(echo "${{ github.event.inputs.original-size }}" | numfmt --from=iec)
-          new_size=$(echo "${{ github.event.inputs.new-size }}" | numfmt --from=iec)
-          reduction=$(echo "scale=2; (($original_size - $new_size) / $original_size) * 100" | bc)
-
-          echo "Original size: $original_size bytes"
-          echo "New size: $new_size bytes"
-          echo "Reduction: $reduction%"
-
           target_reduction=$(cat compression_target.txt)
+          current_size=$(stat -c%s rebcm.apk)
+          new_size=$(stat -c%s rebcm_new.apk)
+          reduction=$(echo "scale=2; (($current_size - $new_size) / $current_size) * 100" | bc)
           if (( $(echo "$reduction >= $target_reduction" | bc -l) )); then
-            echo "KPI achieved: $reduction% >= $target_reduction%"
+            echo "KPI achieved: $reduction% reduction"
           else
-            echo "KPI not achieved: $reduction% < $target_reduction%"
+            echo "KPI not achieved: $reduction% reduction"
             exit 1
           fi
