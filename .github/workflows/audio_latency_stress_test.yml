@@ -1,0 +1,17 @@
+name: Audio Latency Stress Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 12 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+      - run: flutter pub get
+      - run: flutter test integration_test/audio/audio_latency_stress_test.dart

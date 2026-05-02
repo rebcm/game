@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test:flutter:api-integration": "flutter test integration_test/api/api_integration_test.dart",
+    "test:flutter:audio-latency-stress": "flutter test integration_test/audio/audio_latency_stress_test.dart",
     "test:flutter:mock-api": "flutter test integration_test/api/mock_api_test.dart"
   }
 }
