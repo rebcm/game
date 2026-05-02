@@ -1,8 +1,10 @@
-import { Router } from 'hono';
-import { audioRouter } from './routes/audio/audio_route';
+import { Hono } from 'hono';
+import { cors } from './middlewares/cors';
+// existing imports...
 
-const app = new Router();
+const app = new Hono();
+// existing middlewares...
+app.use('*', cors);
+// existing routes...
 
-app.use('/audio', audioRouter);
-
-export { app };
+export default app;
