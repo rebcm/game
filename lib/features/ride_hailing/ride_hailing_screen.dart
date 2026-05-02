@@ -1,16 +1,16 @@
-import Intl.message('package:flutter/material.dart');
-import Intl.message('package:flutter_map/flutter_map.dart');
-import Intl.message('../utils/filter_configuration.dart');
-import Intl.message('../widgets/map_widget.dart');
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:passdriver/features/ride_hailing/providers/ride_hailing_provider.dart';
+import 'package:passdriver/features/ride_hailing/widgets/ride_hailing_map.dart';
 
 class RideHailingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: RideHailingMap(),
+    return ChangeNotifierProvider(
+      create: (_) => RideHailingProvider(),
+      child: Scaffold(
+        body: RideHailingMap(),
       ),
     );
   }
 }
-
