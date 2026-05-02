@@ -1,0 +1,23 @@
+name: Validate Artifact
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+
+jobs:
+  validate-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.apk
+          path: ./app-release.apk
+
+      - name: Validate APK signature
+        run: |
+          #!/bin/bash
+          set -e
+          jarsigner -verify ./app-release.apk
