@@ -36,7 +36,6 @@ dev_dependencies:
   test: ^1.21.4
 
 flutter:
-    - docs/artefatos/matriz-retencao.md
     - assets/blocos/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
@@ -45,22 +44,49 @@ flutter:
     - assets/docs/guias/guia-estilo-tom-voz.md
   uses-material-design: true
   assets:
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/blocos/
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/audio/optimized/ambient/
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/audio/optimized/music/
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/docs/checklists/voice-tone-validation-checklist.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/docs/checklists/onboarding-validation-checklist.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/docs/guias/guia-estilo-tom-voz.md
-    - assets/docs/guias/guia-instalacao.md
-    - docs/artefatos/criterios-aceitacao-documentacao-instalacao.md
-    - docs/artefatos/matriz-retencao.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
   generate: true
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
 
-    - docs/artefatos/criterios-aceitacao-documentacao-instalacao.md
-    - assets/docs/guias/guia-instalacao.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
   assets:
-    - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
   assets:
-    - docs/artefatos/checklists/criterios-validacao-documentacao-tecnica.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
 
+  - assets/docs/checklists/revisao-texto-validation-checklist.md
+    - docs/artefatos/checklists/criterios-revisao-texto.md
   # No new dependencies are added as per the task requirements and existing project structure
