@@ -1,8 +1,12 @@
 library audio_system;
-import 'package:audioplayers/audioplayers.dart';
+/// Classe responsável por gerenciar a reprodução de áudios
 class AudioSystem {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  Future<void> playAudio(String url) async {
-    await _audioPlayer.play(UrlSource(url));
+  /// Inicializa o sistema de áudio
+  void init() {
+    // Implementação da inicialização
+  }
+  /// Reproduz um áudio
+  void playAudio(String audioPath) {
+    // Implementação da reprodução de áudio
   }
 }
