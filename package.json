@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test:flutter:unit": "flutter test",
+"test:flutter:input-stress": "flutter test test/input_stress/"
 "test:flutter:performance": "flutter test test/performance"
     "test:flutter:integration": "flutter test integration_test/",
     "test:flutter:integration:with-cleanup": "flutter test integration_test/",
