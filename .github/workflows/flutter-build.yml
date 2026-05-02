@@ -1,23 +1,34 @@
 name: Flutter Build
 
 on:
-  schedule:
-    - cron: '0 23 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
+          flutter-version: '3.0.1'
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter app
+      - name: Download artifact with retry
+        run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact.zip artifact.zip
+
+      - name: Build Flutter project
         run: flutter build apk --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact.zip
+          path: artifact.zip
