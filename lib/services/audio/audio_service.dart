@@ -1,14 +1,13 @@
-import 'package:just_audio/just_audio.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:rebcm/services/audio/audio_handler.dart';
 
-class AudioService {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  Future<void> playSoundEffect(String assetPath) async {
-    await _audioPlayer.setAsset(assetPath);
-    _audioPlayer.play();
-  }
-
-  Future<void> stopSoundEffect() async {
-    await _audioPlayer.stop();
-  }
+Future<AudioHandler> initAudioService() async {
+  return await AudioService.init(
+    builder: () => AudioHandlerImpl(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.rebcm.game.channel.audio',
+      androidNotificationChannelName: 'Rebeca Game Audio',
+      androidNotificationOngoing: true,
+    ),
+  );
 }
