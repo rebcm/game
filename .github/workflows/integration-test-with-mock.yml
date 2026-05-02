@@ -12,11 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
 
-      - name: Run mock server test
+      - name: Run mock server integration test
         run: |
-          flutter test test/integration_test/mock_server_test.dart
+          flutter pub get
+          flutter test integration_test/artefato_test.dart

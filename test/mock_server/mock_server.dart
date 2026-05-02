@@ -6,7 +6,7 @@ class MockServer {
 
   Future<void> start() async {
     _server = await HttpServer.bind('localhost', 8080);
-    _server!.listen((request) async {
+    _server?.listen((request) async {
       if (request.uri.path == '/401') {
         request.response.statusCode = 401;
       } else if (request.uri.path == '/507') {
@@ -19,8 +19,6 @@ class MockServer {
   }
 
   Future<void> stop() async {
-    if (_server != null) {
-      await _server!.close(force: true);
-    }
+    await _server?.close(force: true);
   }
 }
