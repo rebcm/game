@@ -16,11 +16,13 @@ void main() {
     });
 
     test('measure loading time', () async {
-      final startTime = await driver!.getRenderObjectDiagnostics(find.byType('RebecaGame'), timeout: Duration(seconds: 10));
-      final endTime = await driver!.getRenderObjectDiagnostics(find.byType('RebecaGame'), timeout: Duration(seconds: 10));
-      final loadingTime = endTime[0].data!['renderTree']['children'][0]['stats']['firstPaint'] - startTime[0].data!['renderTree']['children'][0]['stats']['firstPaint'];
-      print('Loading time: $loadingTime ms');
-      await File('test_driver/loading_time.txt').writeAsString('$loadingTime');
+      final loadingTime = await driver!.measure(
+        () async {
+          await driver!.waitFor(find.text('Rebeca Game'));
+        },
+      );
+      print('Loading time: $loadingTime');
+      await File('test_driver/loading_time.txt').writeAsString(loadingTime.toString());
     });
   });
 }

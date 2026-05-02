@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  test-loading-time:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,7 +17,7 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Run flutter driver tests
+      - name: Run Flutter Driver tests
         run: |
           flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile
           LOADING_TIME=$(cat test_driver/loading_time.txt)
