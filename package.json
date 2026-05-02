@@ -8,3 +8,4 @@
     "validate:cloudflare-secrets": "bash .github/workflows/scripts/validate_cloudflare_secrets.sh"
   }
 }
+    "test:configuracoes": "flutter test test/configuracoes"
