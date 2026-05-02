@@ -1,7 +1,6 @@
 name: Flutter e Java Version Check
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,19 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Java
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
-      - name: Verificar Versão do Flutter
-        run: flutter --version
-
-      - name: Verificar Versão do Java
-        run: java -version
+      - name: Validate Flutter and Java versions
+        run: |
+          flutter --version > flutter_version.txt
+          java -version > java_version.txt 2>&1
+          dart test/flutter_dart_version_test.dart
