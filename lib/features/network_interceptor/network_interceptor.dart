@@ -10,12 +10,12 @@ class NetworkInterceptor {
   void setupInterceptors() {
     _dioAdapter.onGet(
       RegExp(r'/api/.*'),
-      (server) => server.reply(200, {'data': 'Mocked data'}),
+      (server) => server.reply(200, {'data': 'success'}),
     );
 
     _dioAdapter.onPost(
       RegExp(r'/api/.*'),
-      (server) => server.reply(200, {'data': 'Mocked data'}),
+      (server) => server.reply(200, {'data': 'success'}),
     );
 
     _dio.interceptors.add(
