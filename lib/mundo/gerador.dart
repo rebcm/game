@@ -1,11 +1,11 @@
-import 'package:rebcm/blocos/tipo_bloco.dart';
+import 'package:rebcm/mundo/chunks/gerenciador_chunks.dart';
 
 class GeradorMundo {
-  static void colocarBloco(TipoBloco tipo, int x, int y, int z) {
-    // Lógica para colocar bloco
-  }
+  final GerenciadorChunks _gerenciadorChunks;
 
-  static void quebrarBloco(int x, int y, int z) {
-    // Lógica para quebrar bloco
+  GeradorMundo(this._gerenciadorChunks);
+
+  void gerarMundo(int posicaoRebecaX, int posicaoRebecaZ) {
+    _gerenciadorChunks.atualizarChunksCarregados(posicaoRebecaX, posicaoRebecaZ, 2);
   }
 }
