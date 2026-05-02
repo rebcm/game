@@ -1,15 +1,17 @@
-import 'package:flutter/foundation.dart';
-
-enum ErrorType { timeout, connectionError, invalidResponse }
+import 'package:rebcm/services/logging/error_logger.dart';
 
 class ErrorHandler {
-  static const Map<ErrorType, String> errorMatrix = {
-    ErrorType.timeout: 'retry',
-    ErrorType.connectionError: 'retry',
-    ErrorType.invalidResponse: 'fail-fast',
-  };
+  final ErrorLogger _errorLogger;
 
-  static String handleError(ErrorType errorType) {
-    return errorMatrix[errorType] ?? 'fail-fast';
+  ErrorHandler(this._errorLogger);
+
+  void handleError(dynamic error, StackTrace stackTrace) {
+    if (error.toString().contains('auth')) {
+      _errorLogger.logAuthError(error, stackTrace);
+    } else if (error.toString().contains('network') || error.toString().contains('socket')) {
+      _errorLogger.logInfrastructureError(error, stackTrace);
+    } else {
+      _errorLogger.logPayloadError(error, stackTrace);
+    }
   }
 }
