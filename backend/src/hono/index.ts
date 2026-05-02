@@ -1,8 +1,8 @@
-import { Hono } from 'hono'; 
-import { cors } from './middlewares/cors';
-// existing imports...
+import { Hono } from 'hono';
+import integracaoPassdriver from './routes/integracao_passdriver';
+
 const app = new Hono();
-// existing middlewares...
-app.use('*', cors);
-// existing routes...
+
+app.route('/api', integracaoPassdriver);
+
 export default app;
