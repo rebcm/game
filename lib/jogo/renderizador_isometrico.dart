@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flame/game.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
-import 'package:rebcm/animações/animacao_blocos.dart';
+import 'package:rebcm/mundo/gerador.dart';
 
-class RenderizadorIsometrico extends StatelessWidget {
-  final AnimacaoBlocos _animacaoBlocos = AnimacaoBlocos();
+class RenderizadorIsometrico extends StatefulWidget {
+  @override
+  _RenderizadorIsometricoState createState() => _RenderizadorIsometricoState();
+}
 
+class _RenderizadorIsometricoState extends State<RenderizadorIsometrico> {
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _IsometricPainter(_animacaoBlocos),
+    return MouseRegion(
+      onEnter: (event) => print('Mouse entered'),
+      onExit: (event) => print('Mouse exited'),
+      onHover: (event) => print('Mouse hovered'),
+      child: GestureDetector(
+        onTap: () => print('Tapped'),
+        child: CustomPaint(
+          painter: _IsometricPainter(),
+        ),
+      ),
     );
   }
 }
 
 class _IsometricPainter extends CustomPainter {
-  final AnimacaoBlocos _animacaoBlocos;
-
-  _IsometricPainter(this._animacaoBlocos);
-
   @override
   void paint(Canvas canvas, Size size) {
-    // Implementação da pintura isométrica
+    // Existing painting logic here
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }
