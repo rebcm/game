@@ -19,14 +19,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
+          channel: 'stable'
 
-      - name: Run Flutter test
-        run: |
-          flutter config --enable-web
-          flutter test test/scroll_cross_platform_test.dart
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run scroll test on ${{ matrix.os }}
+        run: flutter test test/scroll_test.dart
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
-          name: test-results-${{ matrix.os }}
+          name: scroll-test-results-${{ matrix.os }}
           path: test-results.xml
