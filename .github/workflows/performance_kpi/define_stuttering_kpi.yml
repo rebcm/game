@@ -3,7 +3,7 @@ name: Define Stuttering KPI
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 23 * * *'
 
 jobs:
   define_stuttering_kpi:
