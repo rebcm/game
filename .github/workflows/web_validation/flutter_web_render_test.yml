@@ -1,0 +1,40 @@
+name: Flutter Web Render Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Flutter Web Test
+        run: |
+          flutter config --enable-web
+          flutter drive --target=test_driver/integration_test.dart --driver=test_driver/integration_test_driver.dart --web-port=8080 --browser=chrome --headless
+
+      - name: Validate Flutter Web Render
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/index.html)
+          if [ "$response" != "200" ]; then
+            echo "Failed to load index.html"
+            exit 1
+          fi
+          content=$(curl -s http://localhost:8080/index.html)
+          if [[ ! "$content" =~ "<flutter-view>" ]]; then
+            echo "Flutter content not found in index.html"
+            exit 1
+          fi
