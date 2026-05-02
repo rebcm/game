@@ -6,3 +6,4 @@ dependencies:
 
 dependency_overrides:
 
+  provider: ^6.0.3
