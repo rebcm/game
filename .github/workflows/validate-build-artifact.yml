@@ -1,6 +1,7 @@
 name: Validate Build Artifact
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Build"]
     types:
@@ -13,5 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate build artifact
-        run: .github/workflows/scripts/validate_build_artifact.sh
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: build-artifact
+
+      - name: Validate artifact
+        run: |
+          chmod +x .github/workflows/scripts/validate_binary_version.sh
+          .github/workflows/scripts/validate_binary_version.sh build-artifact/rebcm.apk
