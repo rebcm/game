@@ -60,3 +60,6 @@ flutter:
 
   assets:
     - assets/docs/checklists/documentacao-validacao-checklist.md
+
+dev_dependencies:
+  test: ^1.21.4
