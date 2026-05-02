@@ -3,47 +3,25 @@ name: Define Compression KPI
 on:
   workflow_dispatch:
     inputs:
-      target-size-reduction:
-        description: 'Target size reduction percentage'
+      previous_apk_size:
+        description: 'Previous APK size in bytes'
         required: true
-        default: '20'
-      acceptable-quality-loss:
-        description: 'Acceptable quality loss percentage'
+      current_apk_size:
+        description: 'Current APK size in bytes'
         required: true
-        default: '5'
 
 jobs:
-  define-kpi:
+  define_kpi:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Define KPI
+      - name: Calculate size reduction percentage
         run: |
-          echo "Target size reduction: ${{ github.event.inputs.target-size-reduction }}%"
-          echo "Acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
-          echo "KPI defined successfully"
+          previous_apk_size=${{ github.event.inputs.previous_apk_size }}
+          current_apk_size=${{ github.event.inputs.current_apk_size }}
+          size_reduction_percentage=$(echo "scale=2; (($previous_apk_size - $current_apk_size) / $previous_apk_size) * 100" | bc)
+          echo "Size reduction percentage: $size_reduction_percentage%"
+          echo "SIZE_REDUCTION_PERCENTAGE=$size_reduction_percentage" >> $GITHUB_ENV
 
-      - name: Update workflow file
+      - name: Output size reduction percentage
         run: |
-          cat > .github/workflows/compression_test.yml << 'EOF2'
-name: Compression Test
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  compression-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run compression test
-        run: |
-          echo "Running compression test with target size reduction: ${{ github.event.inputs.target-size-reduction }}% and acceptable quality loss: ${{ github.event.inputs.acceptable-quality-loss }}%"
-          # Add compression test logic here
-EOF2
+          echo "Size reduction percentage: ${{ env.SIZE_REDUCTION_PERCENTAGE }}%"
