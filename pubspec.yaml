@@ -38,3 +38,11 @@ flutter:
     - assets/audio/optimized/music/
   uses-material-design: true
   generate: true
+
+  flutter:
+    assets:
+      - assets/blocos/
+      - assets/audio/optimized/ambient/
+      - assets/audio/optimized/music/
+    uses-material-design: true
+    generate: true
