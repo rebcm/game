@@ -1,9 +1,11 @@
-name: Documentação CI/CD Test
+name: Testes da Documentação de CI/CD
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/ci-cd/**'
 
 jobs:
   test-documentacao-ci-cd:
@@ -12,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Test documentation CI/CD
+      - name: Validar documentação
         run: |
-          echo "Testando documentação CI/CD"
-          # Adicione aqui comandos para testar a documentação CI/CD
+          echo "Validando documentação de CI/CD..."
+          # Adicionar comandos para validar a documentação, se necessário

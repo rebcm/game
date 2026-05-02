@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant Developer as "Desenvolvedor"
+    participant GitHub as "GitHub"
+    participant GitHubActions as "GitHub Actions"
+    participant CloudflarePages as "Cloudflare Pages"
+
+    Developer->>GitHub: Push para main
+    GitHub->>GitHubActions: Aciona workflows
+    GitHubActions->>GitHubActions: Executa build e testes
+    GitHubActions->>CloudflarePages: Deploy para Cloudflare Pages
+    CloudflarePages->>CloudflarePages: Hospeda o jogo
