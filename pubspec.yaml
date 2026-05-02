@@ -50,5 +50,8 @@ flutter:
     - docs/artefatos/checklists/criterios-revisao-texto.md
     - assets/personagens/rebeca/rebeca.png
     - assets/docs/guias/guia-configuracao-secrets.md
+    - assets/docs/guias/guia-configuracao-documentacao.md
 
   provider: ^6.0.3
+  assets:
+    - assets/docs/guias/guia-configuracao-documentacao.md
