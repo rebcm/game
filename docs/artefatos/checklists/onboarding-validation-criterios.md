@@ -6,10 +6,10 @@ Este documento define os critérios de aceitação técnicos para o projeto Rebe
 
 ## Critérios
 
-1. Versão do SDK válida
-2. Integridade do arquivo .apk/.ipa
-3. Logs de build sem warnings críticos
+1. Versão do SDK compatível
+2. Logs de build sem warnings críticos
+3. Integridade do arquivo .ipa/.apk
 
 ## Validação
 
-A validação desses critérios é realizada automaticamente pelo workflow `.github/workflows/checklists/validacao_criterios_aceitacao_tecnicos.yml`.
+A validação dos critérios de aceitação técnicos é realizada através de testes automatizados.

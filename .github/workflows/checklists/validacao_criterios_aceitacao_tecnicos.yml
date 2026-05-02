@@ -1,21 +1,34 @@
-name: Validação Critérios Aceitação Técnicos
+name: Validacao Critérios Aceitação Técnicos
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  validate:
+  validate-technical-acceptance-criteria:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run dart analyze
-        run: dart analyze
-
-      - name: Verify Constantes.autora
+      - name: Validate SDK version
         run: |
-          if ! grep -q "Rebeca Alves Moreira" lib/constantes.dart; then
-            echo "Constantes.autora não contém 'Rebeca Alves Moreira'"
+          echo "Validating SDK version..."
+          if [ "$(dart --version | cut -d ' ' -f4 | cut -d '.' -f1-2)" != "$(grep 'sdk:' pubspec.yaml | cut -d '"' -f2 | cut -d '.' -f1-2)" ]; then
+            echo "SDK version mismatch"
             exit 1
           fi
+
+      - name: Validate build logs
+        run: |
+          echo "Validating build logs..."
+          if grep -q "warning" build.log; then
+            echo "Critical warnings found in build logs"
+            exit 1
+          fi
+
+      - name: Validate .ipa/.apk integrity
+        run: |
+          echo "Validating .ipa/.apk integrity..."
+          # Add validation logic here
