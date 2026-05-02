@@ -1,0 +1,7 @@
+{
+  "name": "deploy-to-cloudflare-pages",
+  "version": "1.0.0",
+  "scripts": {
+    "deploy-to-cloudflare-pages": "wrangler pages deploy"
+  }
+}

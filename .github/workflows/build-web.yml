@@ -1,50 +1,6 @@
-name: Build Web
-on:
-  push:
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
-    branches:
-      - main
-jobs:
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
+version: '3'
+steps:
   build-web:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup Java 17
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
-      - name: Build and deploy
-        run: |
-          flutter config --enable-web
-    - name: Setup Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: temurin
-          flutter build web
-          ls -l build/web
+    ...
+    - npm run deploy-to-cloudflare-pages
+
