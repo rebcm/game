@@ -1,29 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_mock/http_mock.dart';
-import 'package:rebcm/config/constantes.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
   group('Testes de API', () {
-    test('Verificar se a biblioteca http_mock está configurada corretamente', () async {
-      final client = MockClient((request) async {
-        if (request.url.toString() == '${Constantes.urlApi}/endpoint') {
-          return http.Response('{}', 200);
-        }
-        return http.Response('Not Found', 404);
-      });
+    late http.Client client;
 
-      final response = await client.get(Uri.parse('${Constantes.urlApi}/endpoint'));
-      expect(response.statusCode, 200);
+    setUp(() {
+      client = MockHttpClient();
     });
 
-    test('Testar se o mock funciona para chamadas de API', () async {
-      final client = MockClient((request) async {
-        return http.Response('{"key": "value"}', 200);
-      });
+    test('Teste de unidade com mock', () async {
+      when(() => client.get(Uri.parse('https://api.example.com/dados')))
+          .thenAnswer((_) async => http.Response('{"dados": "mockados"}', 200));
 
-      final response = await client.get(Uri.parse('${Constantes.urlApi}/mock'));
-      expect(response.body, '{"key": "value"}');
+      final response = await client.get(Uri.parse('https://api.example.com/dados'));
+      expect(response.statusCode, 200);
+      expect(response.body, '{"dados": "mockados"}');
     });
   });
 }
