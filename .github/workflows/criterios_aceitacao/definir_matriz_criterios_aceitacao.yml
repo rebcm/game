@@ -1,0 +1,31 @@
+name: Definir Matriz de Critérios de Aceitação
+
+on:
+  workflow_dispatch:
+    inputs:
+      volume-escala:
+        description: 'Escala de volume'
+        required: true
+        type: string
+      comportamento-botao-mute:
+        description: 'Comportamento do botão mute'
+        required: true
+        type: string
+      persistencia:
+        description: 'Persistência via SharedPreferences/Hive'
+        required: true
+        type: string
+
+jobs:
+  definir-matriz:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Definir critérios de aceitação
+        run: |
+          echo "Critérios de aceitação definidos:"
+          echo "Escala de volume: ${{ github.event.inputs.volume-escala }}"
+          echo "Comportamento do botão mute: ${{ github.event.inputs.comportamento-botao-mute }}"
+          echo "Persistência: ${{ github.event.inputs.persistencia }}"
