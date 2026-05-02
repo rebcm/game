@@ -1,22 +1,27 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 class GerenciadorAudio {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  Future<void> tocarAudio(String caminho) async {
-    await _audioPlayer.play(AssetSource(caminho));
+  Future<void> inicializar() async {
+    await _audioPlayer.setReleaseMode(ReleaseMode.STOP);
   }
 
-  Future<void> pararAudio() async {
+  Future<void> tocarMusica(String caminho) async {
+    await _audioPlayer.play(AssetSource(caminho), mode: PlayerMode.MEDIA_PLAYER);
+  }
+
+  Future<void> pararMusica() async {
     await _audioPlayer.stop();
   }
 
-  Future<void> pausarAudio() async {
-    await _audioPlayer.pause();
+  Future<void> tocarEfeitoSFX(String caminho) async {
+    await _audioPlayer.play(AssetSource(caminho), mode: PlayerMode.LOW_LATENCY);
   }
 
-  Future<void> resumirAudio() async {
-    await _audioPlayer.resume();
+  Future<void> pararEfeitoSFX() async {
+    await _audioPlayer.stop();
   }
 
   Future<void> ajustarVolume(double volume) async {

@@ -1,10 +1,10 @@
 import 'dart:typed_data';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 
 class OtimizadorAudio {
-  Future<Uint8List> otimizarAudio(String caminho) async {
-    // Implementar lógica de otimização de áudio aqui
-    // Por enquanto, apenas carregar o arquivo
-    return await rootBundle.load(caminho).then((value) => value.buffer.asUint8List());
+  Future<ByteData?> otimizarAudio(String caminho) async {
+    final ByteData? audioData = await rootBundle.load(caminho);
+    // Implementar lógica de otimização aqui
+    return audioData;
   }
 }
