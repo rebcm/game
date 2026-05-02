@@ -1,37 +1,43 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:rebcm/audio/audio_service_impl.dart';
 
 class AudioManager with ChangeNotifier {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _isPlaying = false;
+  final AudioServiceImpl _audioServiceImpl;
 
-  bool get isPlaying => _isPlaying;
+  AudioManager(this._audioServiceImpl);
 
-  Future<void> playAudio(String path) async {
-    await _audioPlayer.play(AssetSource(path));
-    _isPlaying = true;
+  Future<void> play(String assetPath) async {
+    await _audioServiceImpl.play(assetPath);
     notifyListeners();
   }
 
-  Future<void> stopAudio() async {
-    await _audioPlayer.stop();
-    _isPlaying = false;
+  Future<void> pause() async {
+    await _audioServiceImpl.pause();
     notifyListeners();
   }
 
-  Future<void> pauseAudio() async {
-    await _audioPlayer.pause();
-    _isPlaying = false;
-    notifyListeners();
-  }
-
-  Future<void> resumeAudio() async {
-    await _audioPlayer.resume();
-    _isPlaying = true;
+  Future<void> stop() async {
+    await _audioServiceImpl.stop();
     notifyListeners();
   }
 
   Future<void> setVolume(double volume) async {
-    await _audioPlayer.setVolume(volume);
+    await _audioServiceImpl.setVolume(volume);
+    notifyListeners();
+  }
+
+  Future<void> setPlaylist(List<String> assetPaths) async {
+    await _audioServiceImpl.setPlaylist(assetPaths);
+    notifyListeners();
+  }
+
+  Future<void> fadeIn() async {
+    await _audioServiceImpl.fadeIn();
+    notifyListeners();
+  }
+
+  Future<void> fadeOut() async {
+    await _audioServiceImpl.fadeOut();
+    notifyListeners();
   }
 }
