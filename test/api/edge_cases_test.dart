@@ -1,52 +1,37 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:http_mock/http_mock.dart';
+import 'package:rebcm/api/client.dart';
 
 void main() {
   group('API Edge Cases', () {
-    test('Null input handling', () async {
-      final response = await http.post(
-        Uri.parse('https://construcao-criativa.workers.dev/api/endpoint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(null),
-      );
-      expect(response.statusCode, 400);
+    test('null input handling', () async {
+      final client = ApiClient(http.Client());
+      expect(() => client.fetchData(null), throwsArgumentError);
     });
 
-    test('Expired token handling', () async {
-      final response = await http.post(
-        Uri.parse('https://construcao-criativa.workers.dev/api/endpoint'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer expired-token',
-        },
-        body: jsonEncode({'key': 'value'}),
-      );
-      expect(response.statusCode, 401);
+    test('expired token handling', () async {
+      final mockHttpClient = MockHttpClient();
+      when(() => mockHttpClient.get(Uri.parse('https://example.com/api/data')))
+          .thenAnswer((_) async => http.Response('Unauthorized', 401));
+      final client = ApiClient(mockHttpClient);
+      expect(() => client.fetchData('expired-token'), throwsException);
     });
 
-    test('Character limit handling', () async {
-      final longString = 'a' * 1025;
-      final response = await http.post(
-        Uri.parse('https://construcao-criativa.workers.dev/api/endpoint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'key': longString}),
-      );
-      expect(response.statusCode, 413);
+    test('character limit handling', () async {
+      final mockHttpClient = MockHttpClient();
+      when(() => mockHttpClient.get(Uri.parse('https://example.com/api/data')))
+          .thenAnswer((_) async => http.Response('OK', 200));
+      final client = ApiClient(mockHttpClient);
+      expect(() => client.fetchData('a' * 1001), throwsArgumentError);
     });
 
-    test('Network instability handling', () async {
-      // Simulate network failure
-      try {
-        final response = await http.post(
-          Uri.parse('https://non-existent-url.com/api/endpoint'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'key': 'value'}),
-        );
-        fail('Expected exception');
-      } on http.ClientException {
-        // Expected
-      }
+    test('network instability handling', () async {
+      final mockHttpClient = MockHttpClient();
+      when(() => mockHttpClient.get(Uri.parse('https://example.com/api/data')))
+          .thenThrow(SocketException('Connection failed'));
+      final client = ApiClient(mockHttpClient);
+      expect(() => client.fetchData('token'), throwsException);
     });
   });
 }
