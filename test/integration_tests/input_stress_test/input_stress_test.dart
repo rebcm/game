@@ -9,14 +9,15 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Simulate rapid input changes
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.drag(find.byType(GestureDetector), const Offset(100, 0));
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.drag(find.byType(GestureDetector), const Offset(-100, 0));
-    await tester.pump(const Duration(milliseconds: 100));
+    // Simulate input stress by rapidly changing the speed
+    await tester.tap(find.byKey(Key('speed_control')));
+    await tester.pump(Duration(milliseconds: 100));
+    await tester.tap(find.byKey(Key('max_speed_button')));
+    await tester.pump(Duration(milliseconds: 100));
+    await tester.tap(find.byKey(Key('min_speed_button')));
+    await tester.pump(Duration(milliseconds: 100));
 
-    // Verify no glitches
-    expect(find.byType(GestureDetector), findsOneWidget);
+    // Verify that there are no visual glitches
+    await expectLater(find.byType(app.RebecaGame), matchesGoldenFile('input_stress_test_golden.png'));
   });
 }
