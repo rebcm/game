@@ -18,4 +18,5 @@ jobs:
           flutter-version: '3.0.5'
 
       - name: Run chunking stress test
-        run: flutter test test/chunking_stress_test/chunking_stress_test.dart
+        run: |
+          flutter test test/chunking_stress_test/chunking_stress_test.dart

@@ -3,17 +3,26 @@ import 'package:rebcm/services/chunking_service.dart';
 
 void main() {
   group('Chunking Stress Test', () {
-    test('should handle chunks above the allowed limit', () async {
+    test('should handle chunk files above the allowed limit', () async {
       final chunkingService = ChunkingService();
-      final largeChunk = List.generate(1000000, (index) => index);
-      expect(() => chunkingService.processChunk(largeChunk), throwsException);
+      final largeChunk = List.generate(1000000, (index) => index.toString());
+      await expectLater(
+        () => chunkingService.processChunk(largeChunk),
+        throwsA(isA<Exception>()),
+      );
     });
 
-    test('should handle multiple large chunks', () async {
+    test('should handle multiple large chunk files', () async {
       final chunkingService = ChunkingService();
-      final largeChunks = List.generate(10, (_) => List.generate(1000000, (index) => index));
+      final largeChunks = List.generate(
+        10,
+        (index) => List.generate(1000000, (i) => '$index$i'),
+      );
       for (var chunk in largeChunks) {
-        expect(() => chunkingService.processChunk(chunk), throwsException);
+        await expectLater(
+          () => chunkingService.processChunk(chunk),
+          throwsA(isA<Exception>()),
+        );
       }
     });
   });
