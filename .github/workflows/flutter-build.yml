@@ -1,7 +1,6 @@
 name: Flutter Build
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,22 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.1'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Download artifact with retry
-        run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact.zip artifact.zip
-
-      - name: Build Flutter project
-        run: flutter build web
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: flutter-web-build
-          path: build/web
+      - name: Build and validate artifact
+        run: |
+          flutter build web
+          .github/workflows/scripts/validate_build_artifact.sh "build/web/index.html"
