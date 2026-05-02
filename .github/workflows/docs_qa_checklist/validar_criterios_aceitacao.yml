@@ -1,0 +1,20 @@
+name: Validar Critérios de Aceitação
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/criterios-aceitacao/**'
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar critérios de aceitação
+        run: |
+          echo "Validando critérios de aceitação..."
+          # Adicionar lógica para validar os critérios de aceitação

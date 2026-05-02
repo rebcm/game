@@ -55,3 +55,6 @@ flutter:
   assets:
     - docs/especificacoes/matriz_limites_caracteres_canal.md
     - docs/checklists/validacao_limites_caracteres.md
+
+  assets:
+    - docs/criterios-aceitacao/definicao-pronta.md
