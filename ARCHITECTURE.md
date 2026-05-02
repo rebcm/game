@@ -1,18 +1,19 @@
-# Arquitetura do Sistema de Áudio
+# Arquitetura do Projeto
 
 ## Visão Geral
 
-O sistema de áudio é responsável por gerenciar a reprodução de música e efeitos sonoros no jogo.
+O projeto é estruturado em features independentes, cada uma responsável por uma funcionalidade específica.
 
-## Componentes
+## Features
 
-- `AudioManager`: classe responsável por gerenciar a reprodução de áudio.
-- `AudioProvider`: provedor de estado que encapsula o `AudioManager` e notifica os widgets dependentes.
+### Física
 
-## Funcionamento
+A feature de física é responsável por gerenciar eventos de colisão e aplicação de forças.
 
-1. O `AudioManager` utiliza a biblioteca `audioplayers` para reproduzir música e efeitos sonoros.
-2. O `AudioProvider` é utilizado para fornecer o estado do áudio aos widgets.
-3. Os widgets podem utilizar o `AudioProvider` para reproduzir música e efeitos sonoros.
+### Gameplay
 
-## Exemplo de Uso
+A feature de gameplay é responsável por gerenciar eventos de jogo, como impactos e aplicação de forças.
+
+## Integração
+
+As features são integradas através de eventos e notificações.
