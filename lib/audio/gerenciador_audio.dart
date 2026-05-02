@@ -1,26 +1,25 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/services.dart';
+import 'package:rebcm/audio/otimizador_audio.dart';
 
 class GerenciadorAudio {
-  static final GerenciadorAudio _instance = GerenciadorAudio._();
-  factory GerenciadorAudio() => _instance;
-  GerenciadorAudio._();
+  static final Map<String, bool> _audiosCarregados = {};
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  Future<void> carregarAudio(String path) async {
-    await _audioPlayer.setSource(AssetSource(path));
+  static Future<void> carregarAudio(String assetPath) async {
+    if (!_audiosCarregados.containsKey(assetPath)) {
+      await OtimizadorAudio.preloadAudio(assetPath);
+      _audiosCarregados[assetPath] = true;
+    }
   }
 
-  Future<void> tocarAudio() async {
-    await _audioPlayer.resume();
+  static Future<void> tocarAudio(String assetPath) async {
+    await carregarAudio(assetPath);
+    await OtimizadorAudio.playAudio(assetPath);
   }
 
-  Future<void> pararAudio() async {
-    await _audioPlayer.pause();
+  static Future<void> pararAudio() async {
+    await OtimizadorAudio.stopAudio();
   }
 
-  Future<void> liberarRecursos() async {
-    await _audioPlayer.dispose();
+  static Future<void> liberarRecursos() async {
+    await OtimizadorAudio.releaseResources();
   }
 }

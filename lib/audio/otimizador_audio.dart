@@ -1,17 +1,26 @@
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
 
 class OtimizadorAudio {
-  static Future<void> otimizarAudio(String assetPath) async {
-    final ByteData data = await rootBundle.load(assetPath);
-    final Uint8List bytes = data.buffer.asUint8List();
+  static final AudioPlayer _audioPlayer = AudioPlayer();
 
-    // Logic to optimize audio goes here, for example, compressing or converting format
-    // For demonstration, we'll just write the bytes to a new file
-    final directory = await getApplicationDocumentsDirectory();
-    final File optimizedFile = File('${directory.path}/optimized_${assetPath.split('/').last}');
-    await optimizedFile.writeAsBytes(bytes);
+  static Future<void> preloadAudio(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    await _audioPlayer.setSourceBytes(data.buffer.asUint8List());
+    await _audioPlayer.stop();
+  }
+
+  static Future<void> playAudio(String assetPath) async {
+    await _audioPlayer.setSource(AssetSource(assetPath));
+    await _audioPlayer.resume();
+  }
+
+  static Future<void> stopAudio() async {
+    await _audioPlayer.stop();
+  }
+
+  static Future<void> releaseResources() async {
+    await _audioPlayer.dispose();
   }
 }
