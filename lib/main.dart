@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/widgets/mouse_region_wrapper.dart';
+import 'package:rebcm/screens/screen1.dart';
+import 'package:rebcm/screens/screen2.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,18 +10,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Game',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MouseRegionWrapper(
-        child: // Your existing widget tree here,
+      title: 'Rebcm Game',
+      home: Scaffold(
+        body: Column(
+          children: [
+            Expanded(child: Screen1()),
+            Expanded(child: Screen2()),
+          ],
+        ),
       ),
     );
   }

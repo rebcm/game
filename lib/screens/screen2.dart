@@ -1,45 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rebcm/controllers/animation_controller.dart';
 
-class Screen2 extends StatefulWidget {
-  @override
-  _Screen2State createState() => _Screen2State();
-}
-
-class _Screen2State extends State<Screen2> with TickerProviderStateMixin {
-  late CustomAnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = CustomAnimationController(vsync: this, duration: Duration(seconds: 1));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
+class Screen2 extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _animationController.value,
-              child: child,
-            );
-          },
-          child: FlutterLogo(size: 100),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _animationController.forward();
-        },
+    final animationController = useAnimationController(
+      duration: const Duration(seconds: 2),
+    )..repeat();
+
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: animationController.value,
+          child: child,
+        );
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        color: Colors.blue,
       ),
     );
   }
