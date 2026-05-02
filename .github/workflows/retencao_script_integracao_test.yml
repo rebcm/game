@@ -1,10 +1,15 @@
-name: Retencao Script Integracao Test
+name: Retenção Script Integração Test
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/retencao_script_integracao_test.yml'
 
 jobs:
-  test-retencao:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,4 +24,4 @@ jobs:
         run: flutter pub get
 
       - name: Run integration test
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/retencao_script_integracao_test.dart
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/retencao_script_test.dart
