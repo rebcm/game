@@ -38,3 +38,4 @@ devDependencies:
     sdk: flutter
 dependencies:
   http: ^0.13.3
+  shared_preferences: ^2.0.0
