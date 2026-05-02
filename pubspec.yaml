@@ -15,6 +15,7 @@ dependencies:
   assets:
     - assets/translations/en.json
     - assets/translations/pt_BR.json
+    - assets/characters/rebeca_skin.png
     - assets/audio_optimized/
   provider: ^6.0.3
   audioplayers: ^1.0.1
