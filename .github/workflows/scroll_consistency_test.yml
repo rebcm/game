@@ -1,0 +1,27 @@
+name: Scroll Consistency Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        browser: ['chrome', 'firefox', 'safari']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run scroll consistency test on ${{ matrix.os }} ${{ matrix.browser }}
+        run: |
+          flutter config --enable-web
+          flutter drive --target=test_driver/scroll_consistency_test.dart --browser-name=${{ matrix.browser }}
