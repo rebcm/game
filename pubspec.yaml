@@ -55,3 +55,6 @@ flutter:
 
   test_flutter_dart_version:
     path: test/flutter_dart_version_test.dart
+
+  chunk_render_stress_test:
+    path: test/stress_tests/chunk_render_stress_test.dart
