@@ -6,25 +6,27 @@ on:
     - cron:  '0 0 * * *'
 
 jobs:
-  update_dependency_map:
+  dependency-map:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install yq
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y yq
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.10'
+          channel: 'stable'
 
-      - name: Generate dependency map
+      - name: Generate Dependency Map
         run: |
-          ./scripts/generate_dependency_map.sh
+          echo "Flutter SDK: $(flutter --version)" > dependency_map.txt
+          echo "Dart SDK: $(dart --version)" >> dependency_map.txt
+          echo "Pubspec Dependencies:" >> dependency_map.txt
+          cat pubspec.yaml | grep '^  [a-zA-Z0-9_]' | sed 's/^[[:space:]]*//g' >> dependency_map.txt
 
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add docs/dependencies/README.md
-          git commit -m "Update dependency map" || echo "No changes to commit"
-          git push origin main || echo "No changes to push"
+      - name: Upload Dependency Map
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency_map.txt
+          path: dependency_map.txt
