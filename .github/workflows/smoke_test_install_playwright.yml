@@ -1,0 +1,19 @@
+name: Install Playwright
+
+on:
+  workflow_dispatch:
+
+jobs:
+  install-playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install Playwright
+        run: npm install -g @playwright/test

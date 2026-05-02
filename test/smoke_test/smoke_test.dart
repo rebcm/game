@@ -1,10 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
+import 'package:integration_test/integration_test.dart';
+import 'package:rebcm/main.dart' as app;
 
 void main() {
-  test('smoke test validation', () async {
-    final response = await http.get(Uri.parse('https://example.com'));
-    expect(response.statusCode, 200);
-    expect(response.body, contains('passdriver'));
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('smoke test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    expect(find.byType(CustomVoxelWidget), findsOneWidget);
   });
 }
