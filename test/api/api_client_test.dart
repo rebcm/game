@@ -1,36 +1,41 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:http/http.dart' as http;
 import 'package:rebcm/api/api_client.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
-  late http.Client _client;
+  late MockHttpClient _httpClient;
   late ApiClient _apiClient;
 
   setUp(() {
-    _client = MockHttpClient();
-    _apiClient = ApiClient(_client);
+    _httpClient = MockHttpClient();
+    _apiClient = ApiClient(_httpClient);
   });
 
   group('ApiClient', () {
-    test('get returns response', () async {
-      final response = http.Response('{}', 200);
-      when(() => _client.get(any())).thenAnswer((_) async => response);
+    test('should return data when the response is 200', () async {
+      // Arrange
+      final response = http.Response('{"data": "some data"}', 200);
+      when(() => _httpClient.get(any())).thenAnswer((_) async => response);
 
-      final result = await _apiClient.get(Uri.parse('https://example.com'));
+      // Act
+      final result = await _apiClient.fetchData();
 
-      expect(result.statusCode, 200);
+      // Assert
+      expect(result, '{"data": "some data"}');
+      verify(() => _httpClient.get(any())).called(1);
     });
 
-    test('post returns response', () async {
-      final response = http.Response('{}', 200);
-      when(() => _client.post(any())).thenAnswer((_) async => response);
+    test('should throw an exception when the response is not 200', () async {
+      // Arrange
+      final response = http.Response('Not Found', 404);
+      when(() => _httpClient.get(any())).thenAnswer((_) async => response);
 
-      final result = await _apiClient.post(Uri.parse('https://example.com'));
-
-      expect(result.statusCode, 200);
+      // Act and Assert
+      expect(() async => await _apiClient.fetchData(), throwsException);
+      verify(() => _httpClient.get(any())).called(1);
     });
   });
 }

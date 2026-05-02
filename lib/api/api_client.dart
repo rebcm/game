@@ -7,6 +7,7 @@ class ApiClient {
 
   Future<String> fetchData() async {
     final response = await _httpClient.get(Uri.parse('https://example.com/api/data'));
+
     if (response.statusCode == 200) {
       return response.body;
     } else {
