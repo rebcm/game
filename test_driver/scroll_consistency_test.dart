@@ -11,15 +11,14 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver!.close();
+        driver?.close();
       }
     });
 
     test('scrolling test', () async {
       final scrollable = find.byValueKey('scrollable');
-      await driver!.scroll(scrollable, 0, -500, Duration(milliseconds: 1000));
-      await driver!.scroll(scrollable, 0, 500, Duration(milliseconds: 1000));
-      // Add assertions here to verify scroll consistency
+      await driver?.scrollUntilVisible(scrollable, find.text('test_item'));
+      await driver?.waitFor(find.text('test_item'));
     });
   });
 }

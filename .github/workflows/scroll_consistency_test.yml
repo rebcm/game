@@ -24,4 +24,4 @@ jobs:
       - name: Run scroll consistency test on ${{ matrix.os }} ${{ matrix.browser }}
         run: |
           flutter config --enable-web
-          flutter drive --target=test_driver/scroll_consistency_test.dart --browser-name=${{ matrix.browser }}
+          flutter drive --target=test_driver/scroll_consistency_test.dart --browser-name=${{ matrix.browser }} --driver=test_driver/scroll_consistency_test_driver.dart
