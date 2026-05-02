@@ -23,6 +23,7 @@ jobs:
 
       - name: Run smoke test
         run: |
-          flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart --browser=web-server --web-port=8080 &
-          sleep 30
-          curl -s -f http://localhost:8080/index.html | grep -q 'flt-glass-pane'
+          flutter drive \
+            --target=integration_test/app_test.dart \
+            --driver=integration_test/driver.dart \
+            --flavor=web
