@@ -1,23 +1,11 @@
-# PassDriver Flutter
-## Instruções de Instalação
-Consulte [docs/instrucoes/instalacao.md](docs/instrucoes/instalacao.md) para instruções detalhadas.
+# Rebeca - Jogo de Blocos Voxel
 
-## Guia de Instalação
+Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua criatividade e construa estruturas incríveis em um ambiente de blocos voxel.
 
-Para configurar o ambiente de desenvolvimento, siga os passos abaixo:
+## Sobre o Projeto
 
-### Pré-requisitos
+Este projeto é um jogo de blocos voxel desenvolvido em Flutter, focado em proporcionar uma experiência criativa e divertida para os jogadores.
 
-* Versão do Flutter: ${GuiaInstalacao.versaoFlutter}
-* Versão do Dart: ${GuiaInstalacao.versaoDart}
-* SDKs necessários:
-  * Android: ${GuiaInstalacao.sdkAndroidNecessario.join(', ')}
-  * iOS: ${GuiaInstalacao.sdkIOSNecessario.join(', ')}
-* Variáveis de ambiente:
-  * ${GuiaInstalacao.variaveisAmbiente.join(', ')}
-* Chaves de API necessárias:
-  * ${GuiaInstalacao.chavesAPI.join(', ')}
+## Documentação
 
-### Passos de Validação
-
-1. ${GuiaInstalacao.passosValidacao.join('\n2. ')}
+Para mais informações sobre o projeto, incluindo detalhes de configuração, desenvolvimento e contribuição, consulte a [documentação da hospedagem](docs/artefatos/definicao_hospedagem_documentacao.md).

@@ -2,11 +2,12 @@ name: Definir Hospedagem da Documentação
 
 on:
   workflow_dispatch:
-    inputs:
-      docs-location:
-        description: 'Localização da documentação (README ou Wiki)'
-        required: true
-        default: 'README'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs_hospedagem/**'
 
 jobs:
   definir-hospedagem:
@@ -14,16 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Definir hospedagem
+      - name: Definir hospedagem da documentação
         run: |
-          if [ "${{ github.event.inputs.docs-location }}" == "README" ]; then
-            echo "Hospedagem definida para README.md"
-            # Lógica para configurar README.md
-          elif [ "${{ github.event.inputs.docs-location }}" == "Wiki" ]; then
-            echo "Hospedagem definida para Wiki"
-            # Lógica para configurar Wiki
-          else
-            echo "Opção inválida"
-            exit 1
-          fi
+          echo "Definindo hospedagem da documentação..."
+          echo "Documentação hospedada no README.md do repositório."

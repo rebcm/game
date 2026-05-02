@@ -37,6 +37,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - docs/artefatos/definicao_hospedagem_documentacao.md
     - assets/blocos/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/music/
@@ -58,3 +59,6 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+  assets:
+    - docs/artefatos/definicao_hospedagem_documentacao.md
+    - docs/artefatos/definicao_hospedagem_documentacao.md
