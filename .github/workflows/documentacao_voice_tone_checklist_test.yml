@@ -1,11 +1,11 @@
-name: Documentação Voice Tone Checklist Test
+name: Testar Checklist de Tom de Voz
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'docs/guidelines/voice_tone_checklist.md'
+      - 'assets/docs/voice_tone_checklist.md'
 
 jobs:
   test:
@@ -14,9 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Verificar arquivo
+      - name: Validar Checklist
         run: |
-          if [ ! -f "docs/guidelines/voice_tone_checklist.md" ]; then
-            echo "Arquivo voice_tone_checklist.md não encontrado"
+          if [ -f "assets/docs/voice_tone_checklist.md" ]; then
+            echo "Checklist encontrado. Validando conteúdo..."
+            # Adicione aqui comandos para validar o conteúdo do checklist
+          else
+            echo "Checklist não encontrado."
             exit 1
           fi
