@@ -1,0 +1,18 @@
+name: Technical Docs Audio Test
+
+on:
+  push:
+    paths:
+      - 'docs/audio/**'
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Validate audio docs
+        run: |
+          echo "Validating audio documentation..."
+          # Adicione comandos de validação aqui, se necessário
+
