@@ -1,20 +1,18 @@
-[env]
-  [env.staging]
-    name = "construcao-criativa-staging"
-    workers_dev = true
-    route = ""
-    zone_id = ""
-    vars = { ENVIRONMENT = "staging" }
-    kv_namespaces = [
-      { binding = "KV_MUNDOS", id = "" },
-    ]
+# Configuração do Wrangler para Cloudflare Workers
+name = "construcao-criativa"
+main = "worker.js"
+compatibility_date = "2023-01-01"
 
-  [env.production]
-    name = "construcao-criativa-production"
-    workers_dev = false
-    route = "*construcao-criativa.workers.dev/*"
-    zone_id = ""
-    vars = { ENVIRONMENT = "production" }
-    kv_namespaces = [
-      { binding = "KV_MUNDOS", id = "" },
-    ]
+[env.staging]
+vars = {
+  API_TOKEN = { binding = "API_TOKEN", type = "secret" }
+}
+
+[env.production]
+vars = {
+  API_TOKEN = { binding = "API_TOKEN", type = "secret" }
+}
+
+[vars]
+CLOUDFLARE_API_TOKEN = "${CLOUDFLARE_API_TOKEN}"
+CLOUDFLARE_ACCOUNT_ID = "${CLOUDFLARE_ACCOUNT_ID}"
