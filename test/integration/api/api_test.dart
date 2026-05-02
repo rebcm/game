@@ -8,21 +8,20 @@ void main() {
 
   group('API Integration Tests', () {
     testWidgets('Test API endpoint', (tester) async {
-      app.main();
+      await app.main();
       await tester.pumpAndSettle();
 
-      // Implement API test logic here
-      final response = await http.get(Uri.parse('https://example.com/api/endpoint'));
+      final response = await http.get(Uri.parse('https://api.example.com/endpoint'));
       expect(response.statusCode, 200);
     });
 
-    testWidgets('Test API exception handling', (tester) async {
-      app.main();
+    testWidgets('Test API error handling', (tester) async {
+      await app.main();
       await tester.pumpAndSettle();
 
-      // Implement API exception test logic here
       try {
-        await http.get(Uri.parse('https://example.com/api/non-existent-endpoint'));
+        await http.get(Uri.parse('https://api.example.com/non-existent-endpoint'));
+        fail('Expected exception not thrown');
       } catch (e) {
         expect(e, isA<http.ClientException>());
       }
