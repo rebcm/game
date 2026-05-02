@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Install Wrangler
-        run: npm install -g wrangler
+        run: npm install wrangler
 
       - name: Build Flutter Web
         run: |
@@ -28,4 +31,4 @@ jobs:
           flutter build web
 
       - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy build/web --project-name=rebcm-game
+        run: npx wrangler pages deploy build/web --project-name=rebcm-game
