@@ -19,4 +19,4 @@ jobs:
 
       - name: Run integration test
         run: |
-          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/persistence_crash_test/main.dart
+          flutter drive --target=integration_test/persistencia_test/simulacao_crash_app_test.dart --driver=test_driver/integration_test.dart --profile
