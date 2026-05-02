@@ -1,0 +1,22 @@
+{
+  "rideHailing": {
+    "testCases": [
+      {
+        "name": "Happy path",
+        "steps": [
+          "Request ride",
+          "Get ride status",
+          "Cancel ride"
+        ]
+      },
+      {
+        "name": "Edge case: UI interruption",
+        "steps": [
+          "Request ride",
+          "Interrupt UI",
+          "Get ride status"
+        ]
+      }
+    ]
+  }
+}
