@@ -21,6 +21,7 @@ dependencies:
   audioplayers: ^1.0.1
 
 dev_dependencies:
+  mockito: ^5.0.0
   integration_test:
   codec_compatibility_test:
   flutter_driver:
