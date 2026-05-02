@@ -1,4 +1,4 @@
-name: Validacao Critérios Aceitação Técnicos
+name: Validacao Criterios Aceitacao Tecnicos
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  validate-technical-acceptance-criteria:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,20 +15,26 @@ jobs:
       - name: Validate SDK version
         run: |
           echo "Validating SDK version..."
-          if [ "$(dart --version | cut -d ' ' -f4 | cut -d '.' -f1-2)" != "$(grep 'sdk:' pubspec.yaml | cut -d '"' -f2 | cut -d '.' -f1-2)" ]; then
+          if [ "$(dart --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$(grep 'sdk:' pubspec.yaml | cut -d '"' -f 2)" ]; then
             echo "SDK version mismatch"
             exit 1
           fi
 
-      - name: Validate build logs
+      - name: Check for build warnings
         run: |
-          echo "Validating build logs..."
-          if grep -q "warning" build.log; then
-            echo "Critical warnings found in build logs"
+          echo "Checking for build warnings..."
+          flutter build apk --release 2>&1 | tee build_log.txt
+          if grep -q "warning" build_log.txt; then
+            echo "Build warnings found"
             exit 1
           fi
 
-      - name: Validate .ipa/.apk integrity
+      - name: Validate .apk/.ipa integrity
         run: |
-          echo "Validating .ipa/.apk integrity..."
+          echo "Validating .apk/.ipa integrity..."
           # Add validation logic here
+
+      - name: Validate logs for critical warnings
+        run: |
+          echo "Validating logs for critical warnings..."
+          # Add log validation logic here
