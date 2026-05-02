@@ -1,8 +1,8 @@
-import { Hono } from 'hono';
-import fisicaRoute from './routes/fisica/route';
-
+import { Hono } from 'hono'; 
+import { cors } from './middlewares/cors';
+// existing imports...
 const app = new Hono();
-
-app.route('/fisica', fisicaRoute);
-
+// existing middlewares...
+app.use('*', cors);
+// existing routes...
 export default app;
