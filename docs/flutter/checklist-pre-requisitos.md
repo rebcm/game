@@ -1,26 +1,24 @@
-# Checklist de Pré-requisitos para Documentação do Flutter
+# Checklist de Pré-requisitos para Documentação do PassDriver Flutter
 
 ## Versão do Flutter/Dart
-- Versão do Flutter: 3.16.5 ou superior
-- Versão do Dart: 3.2.3 ou superior
+- Versão mínima do Flutter: 3.10.0
+- Versão mínima do Dart: 3.0.0
 
 ## SDKs Android/iOS
-- Android SDK: API nível 33 ou superior
-- iOS SDK: 17.0 ou superior
+- Android SDK mínimo: 21
+- iOS SDK mínimo: 13.0
 
 ## Variáveis de Ambiente
-- `FLUTTER_ROOT`: caminho para o diretório raiz do Flutter
-- `ANDROID_HOME`: caminho para o diretório do Android SDK
+- `PASSDRIVER_API_KEY`: Chave de API do PassDriver
+- `MAPS_API_KEY`: Chave de API para mapas (OpenStreetMap)
 
 ## Chaves de API Necessárias
-- Chave da API do OpenStreetMap (para uso com `flutter_map`)
+- Chave de API do PassDriver para autenticação e serviços
+- Chave de API para mapas (OpenStreetMap)
 
 ## Passos de Validação do Build
-1. Execute `flutter doctor` para verificar o ambiente de desenvolvimento.
-2. Execute `flutter pub get` para obter as dependências do projeto.
-3. Compile e execute o aplicativo em um emulador ou dispositivo físico.
-
-## Configuração Adicional
-- Certifique-se de ter configurado corretamente as variáveis de ambiente.
-- Verifique se as chaves de API necessárias estão configuradas corretamente no arquivo `lib/config/api_keys.dart`.
-
+1. Verifique se o Flutter e o Dart estão instalados e nas versões mínimas requeridas.
+2. Configure as variáveis de ambiente necessárias.
+3. Execute `flutter pub get` para instalar as dependências.
+4. Verifique se os SDKs Android e iOS estão configurados corretamente.
+5. Execute `flutter run` para validar o build em um emulador ou dispositivo físico.
