@@ -1,4 +1,4 @@
-name: Idle Animation Stress Test
+name: Idle Animation Performance Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  stress-test:
+  performance-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,6 +17,6 @@ jobs:
         with:
           flutter-version: '3.0.1'
 
-      - name: Run stress test
+      - name: Run performance test
         run: |
-          flutter drive --target=test_driver/stress_test/idle_animation_stress_test.dart --driver=test_driver/stress_test/idle_animation_stress_test_driver.dart
+          flutter drive --target=test_driver/performance_test/idle_animation_performance_test.dart --driver=test_driver/performance_test/idle_animation_performance_test_driver.dart
