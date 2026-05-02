@@ -6,12 +6,31 @@ class AudioServiceImpl {
 
   AudioServiceImpl(this._audioPlayer);
 
-  void playAmbient(String ambientPath) async {
-    await _audioPlayer.setAsset(ambientPath);
-    _audioPlayer.play();
+  Future<void> init() async {
+    await _audioPlayer.initialize();
   }
 
-  void stopAmbient() async {
-    await _audioPlayer.stop();
+  Future<void> play() async {
+    await _audioPlayer.play();
+  }
+
+  Future<void> pause() async {
+    await _audioPlayer.pause();
+  }
+
+  Future<void> setVolume(double volume) async {
+    await _audioPlayer.setVolume(volume);
+  }
+
+  Future<void> setMute(bool mute) async {
+    await _audioPlayer.setVolume(mute ? 0 : 1);
+  }
+
+  double getVolume() {
+    return _audioPlayer.volume;
+  }
+
+  bool isMuted() {
+    return _audioPlayer.volume == 0;
   }
 }
