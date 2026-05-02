@@ -1,53 +1,20 @@
+name: rebcm
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
 dependencies:
-  flutter_driver:
-  http_testing_controller: ^2.0.0
-  flutter_driver:
-  provider: ^6.0.3
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.17.0
-  mocktail: ^0.3.0
-  dio: ^4.0.0
-  http_interceptor: ^1.0.2
-  http: ^0.13.5
-  shared_preferences: ^2.0.0
   flutter:
-  assets:
-    - assets/translations/en.json
-    - assets/translations/pt_BR.json
-    - assets/characters/rebeca_skin.png
-    - assets/audio_optimized/
+    sdk: flutter
   provider: ^6.0.3
-  audioplayers: ^1.0.1
 
 dev_dependencies:
-  mockito: ^5.0.0
-  integration_test:
-  codec_compatibility_test:
-  flutter_driver:
-  http_testing_controller: ^2.0.0
-  integration_test:
-  codec_compatibility_test:
-  flutter_driver:
-  provider: ^6.0.3
-  provider: ^6.0.3
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.17.0
-  mocktail: ^0.3.0
-  mocktail: ^0.3.0
-  dio: ^4.0.0
-  http_interceptor: ^1.0.2
-  http: ^0.13.5
-  shared_preferences_mocks: ^0.0.1+1
-  shared_preferences: ^2.0.0
   flutter_test:
     sdk: flutter
-  integration_test:
-  codec_compatibility_test:
-    sdk: flutter
-  audioplayers: ^1.0.1
-  http_mock_adapter: ^1.0.0
-  http_testing_controller: ^2.0.0
-
   test: ^1.21.4
+
+flutter:
+  uses-material-design: true
