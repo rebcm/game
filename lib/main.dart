@@ -1,41 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'audio/audio_pool.dart';
+import 'package:rebcm/services/audio/audio_service.dart';
+import 'package:rebcm/services/audio/sound_effects_manager.dart';
+import 'package:rebcm/game_logic.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AudioPool()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  final AudioService audioService = AudioService();
+  final SoundEffectsManager soundEffectsManager = SoundEffectsManager(audioService);
+  final GameLogic gameLogic = GameLogic(soundEffectsManager);
+
+  runApp(MyApp(gameLogic: gameLogic));
 }
 
 class MyApp extends StatelessWidget {
+  final GameLogic gameLogic;
+
+  const MyApp({Key? key, required this.gameLogic}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final audioPool = Provider.of<AudioPool>(context);
-
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await audioPool.play('assets/audio/optimized/break_block.mp3');
-          },
-          child: Text('Play Sound'),
-        ),
-      ),
-    );
+    // Existing app widget tree
   }
 }

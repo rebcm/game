@@ -49,6 +49,7 @@ flutter:
     - assets/audio/optimized/    - assets/docs/checklists/validacao-onboarding-checklist.md
     - assets/blocos/    - assets/docs/checklists/validacao-onboarding-checklist.md
     - assets/audio/optimized/ambient/    - assets/docs/checklists/validacao-onboarding-checklist.md
+    - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/    - assets/docs/checklists/validacao-onboarding-checklist.md
     - assets/docs/checklists/documentacao-validacao-checklist.md    - assets/docs/checklists/validacao-onboarding-checklist.md
     - docs/artefatos/checklists/documentacao-validacao-criterios.md    - assets/docs/checklists/validacao-onboarding-checklist.md
