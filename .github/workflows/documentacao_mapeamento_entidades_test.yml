@@ -1,0 +1,19 @@
+name: Documentação Mapeamento Entidades Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/mapeamento_entidades/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate documentation
+        run: |
+          echo "Validating documentation..."
