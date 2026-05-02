@@ -1,4 +1,4 @@
-name: Integração - Sincronização Flame Loop
+name: Integração - Sincronização Frame Flame
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  test-frame-sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,4 +14,4 @@ jobs:
         with:
           flutter-version: '3.0.5'
       - run: flutter pub get
-      - run: flutter test lib/testes/integracao/flame_loop_sync_test.dart
+      - run: flutter test lib/testes/integracao/flame_loop_sincronizacao_test.dart

@@ -48,3 +48,6 @@ flutter:
     sdk: flutter
   integration_test:
     sdk: flutter
+
+  integration_test:
+    sdk: flutter
