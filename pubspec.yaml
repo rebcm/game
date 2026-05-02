@@ -61,3 +61,6 @@ flutter:
 
   assets:
     - docs/artefatos/checklists/mapear-canais-distribuicao-documentacao.md
+dependencies:
+  cached_network_image: ^3.2.1
+  cache_manager: ^3.3.1

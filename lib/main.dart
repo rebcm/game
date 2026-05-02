@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/services/image_cache/image_cache_service.dart';
+import 'package:rebcm/utils/image_cache.dart';
+import 'package:rebcm/widgets/image_widget.dart';
 
 void main() {
-  runApp(MyApp());
+  ImageCache.init();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ImageCacheService _imageCacheService = ImageCacheService();
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: FutureBuilder(
-          future: _imageCacheService.loadAndResize('https://example.com/image.png', width: 100, height: 100),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data as Image;
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
+      title: 'Rebeca Game',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ImageWidget(
+          url: 'https://example.com/image.jpg',
         ),
       ),
     );
