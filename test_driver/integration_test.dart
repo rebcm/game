@@ -1,11 +1,24 @@
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() async {
-  await integrationDriver(
-    onScreenshot: (FlutterDriver driver, String name, List<int> png) async {
-      // Process screenshot if needed
-      return true;
-    },
-  );
+void main() {
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    if (driver != null) {
+      driver?.close();
+    }
+  });
+
+  test('verify artifact integrity', () async {
+    // Add test logic here
+  });
+
+  test('verify rejection of corrupted artifact', () async {
+    // Add test logic here
+  });
 }

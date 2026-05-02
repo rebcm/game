@@ -5,11 +5,15 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('end-to-end test', (tester) async {
+  testWidgets('validate artifact integrity', (tester) async {
     app.main();
     await tester.pumpAndSettle();
+    // Add validation logic here
+  });
 
-    // Add test logic here to verify the retenção script integration
-    // For example, simulate uploading a new binary and verify if retenção is triggered
+  testWidgets('reject corrupted artifact', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Add rejection logic here
   });
 }
