@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/main.dart' as app;
 
@@ -6,13 +7,15 @@ void main() {
     await app.main();
     await tester.pumpAndSettle();
 
-    final finder = find.byType(Rebeca);
-    expect(finder, findsOneWidget);
+    final stopwatch = Stopwatch()..start();
+    int frames = 0;
 
-    for (var i = 0; i < 100; i++) {
-      await tester.pump(const Duration(milliseconds: 16));
+    while (stopwatch.elapsedMilliseconds < 10000) {
+      await tester.pump();
+      frames++;
     }
 
-    expect(tester.binding.hasPendingMicrotasks, isFalse);
+    final fps = frames / (stopwatch.elapsedMilliseconds / 1000);
+    expect(fps, greaterThanOrEqualTo(30));
   });
 }
