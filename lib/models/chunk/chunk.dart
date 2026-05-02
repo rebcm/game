@@ -1,6 +1,11 @@
-class Chunk {
-  final String id;
-  final List<int> data;
+import 'package:equatable/equatable.dart';
 
-  Chunk({required this.id, required this.data});
+class Chunk extends Equatable {
+  final int x;
+  final int z;
+
+  const Chunk({required this.x, required this.z});
+
+  @override
+  List<Object> get props => [x, z];
 }
