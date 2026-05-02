@@ -7,13 +7,18 @@ class RenderizadorIsometricoOtimizacao extends RenderizadorIsometrico {
   void render(Canvas canvas) {
     canvas.save();
     canvas.translate(0, 0);
-    // Adicionar RepaintBoundary
-    canvas.saveLayer(
+    canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
-      Paint()..isAntiAlias = true,
+      Paint()..color = Colors.transparent,
     );
     super.render(canvas);
     canvas.restore();
-    canvas.restore();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: super.build(context),
+    );
   }
 }

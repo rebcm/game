@@ -1,18 +1,18 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:rebcm/i18n/i18n_service.dart';
+import 'package:rebcm/jogo/renderizador_isometrico_otimizado.dart';
 
-class Jogo extends StatelessWidget {
-  const Jogo({Key? key}) : super(key: key);
+class Jogo extends FlameGame {
+  late RenderizadorIsometricoOtimizacao _renderizador;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(I18nService().gameTitle),
-      ),
-      body: Center(
-        child: Text(I18nService().block),
-      ),
-    );
+  Future<void> onLoad() async {
+    _renderizador = RenderizadorIsometricoOtimizacao();
+    // Initialize the renderer
+  }
+
+  @override
+  Widget render(BuildContext context) {
+    return _renderizador.build(context);
   }
 }
