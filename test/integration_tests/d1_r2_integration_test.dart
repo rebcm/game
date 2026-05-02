@@ -10,22 +10,23 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Simulate user interaction to create a new record in D1
-    await tester.tap(find.text('New Record'));
+    // Simulate creation of a new record in D1
+    await tester.tap(find.text('New Block'));
     await tester.pumpAndSettle();
 
-    // Verify that the record is created in D1
-    expect(find.text('Record Created'), findsOneWidget);
+    // Verify that the record is created
+    expect(find.text('Block Created'), findsOneWidget);
 
-    // Simulate user interaction to upload the first chunk to R2
+    // Simulate upload of the first chunk to R2
     await tester.tap(find.text('Upload Chunk'));
     await tester.pumpAndSettle();
 
-    // Verify that the chunk is uploaded to R2
+    // Verify that the chunk is uploaded
     expect(find.text('Chunk Uploaded'), findsOneWidget);
 
-    // Verify the integration by checking the HTTP request
-    final response = await http.get(Uri.parse('https://example.com/r2/bucket'));
+    // Verify that the D1 record is associated with the R2 chunk
+    final response = await http.get(Uri.parse('https://example.com/d1-record'));
     expect(response.statusCode, 200);
+    expect(response.body, contains('R2 Chunk ID'));
   });
 }
