@@ -4,18 +4,15 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'assets/docs/guias/guia-instalacao.md'
-      - 'docs/artefatos/criterios-aceitacao-documentacao-instalacao.md'
 
 jobs:
-  validar-documentacao:
+  validar:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Validar documentação
         run: |
-          # Adicione aqui os comandos para validar a documentação de instalação
+          # Implementar lógica para validar a documentação de instalação
+          # com base nos critérios de aceitação definidos
           echo "Validando documentação de instalação..."
