@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rebcm/utils/dispose.dart';
 
-class ExampleScreen extends StatefulWidget {
+class ExistingScreen extends StatefulWidget {
   @override
-  _ExampleScreenState createState() => _ExampleScreenState();
+  _ExistingScreenState createState() => _ExistingScreenState();
 }
 
-class _ExampleScreenState extends State<ExampleScreen> with TickerProviderStateMixin {
+class _ExistingScreenState extends State<ExistingScreen> with TickerProviderStateMixin {
   final List<TextEditingController> _textEditingControllers = [];
   final List<AnimationController> _animationControllers = [];
   final List<StreamSubscription> _streamSubscriptions = [];
@@ -31,10 +31,10 @@ class _ExampleScreenState extends State<ExampleScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Example Screen'),
+        title: Text('Existing Screen'),
       ),
       body: Center(
-        child: Text('Example Screen'),
+        child: Text('Existing Screen'),
       ),
     );
   }
