@@ -1,11 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 class ChunkRepository {
-  Future<void> loadChunk(int x, int y, int zoom) async {
-    // implement loading logic using existing providers/packages
+  final List<List<List<int>>> _chunks = [];
+
+  List<List<List<int>>> getChunks() => _chunks;
+
+  void loadChunk(int x, int y, int z) {
+    // Implement loading logic here
+    _chunks.add(List.generate(16, (_) => List.generate(16, (_) => List.generate(256, (_) => 0))));
   }
 
-  Future<void> unloadChunk(int x, int y, int zoom) async {
-    // implement unloading logic using existing providers/packages
+  void unloadChunk(int x, int y, int z) {
+    // Implement unloading logic here
   }
 }
