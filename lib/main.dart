@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import package:leak_tracker/leak_tracker.dart;
 void main() {
+  LeakTracker.start();
   runApp(MyApp());
 }
 
