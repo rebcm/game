@@ -62,3 +62,8 @@ assets/audio/optimized/sfx/
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
     - assets/audio/optimized/ambient/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.21.4
