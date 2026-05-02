@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import { Context } from 'hono';
+import { Context } from 'hono/context';
 
-const game = new Hono();
+const app = new Hono();
 
-game.get('/status', async (c: Context) => {
-  return c.json({ status: 'ok' });
+app.get('/game', async (c: Context) => {
+  return c.json({ message: 'Game route' });
 });
 
-export default game;
+export default app;
