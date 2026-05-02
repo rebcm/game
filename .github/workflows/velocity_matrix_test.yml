@@ -1,0 +1,17 @@
+name: Velocity Matrix Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run velocity matrix test
+        run: |
+          flutter test test/utils/velocity_matrix_test.dart

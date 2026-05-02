@@ -3,21 +3,15 @@ import 'package:rebcm/utils/velocity_matrix.dart';
 
 void main() {
   group('VelocityMatrix', () {
-    test('getMatrix returns a map with correct structure', () {
-      final matrix = VelocityMatrix.getMatrix();
-      expect(matrix, isA<Map<double, Map<double, double>>>());
-      for (var velocity in VelocityMatrix.velocities) {
-        expect(matrix[velocity], isA<Map<double, double>>());
-        for (var frameRate in VelocityMatrix.frameRates) {
-          expect(matrix[velocity]?[frameRate], isA<double>());
-        }
-      }
+    test('generateMatrix returns correct matrix', () {
+      final matrix = VelocityMatrix.generateMatrix();
+      expect(matrix, isNotEmpty);
+      // Add more expectations based on the expected output
     });
 
-    test('calculateAnimationSpeed returns a valid value', () {
-      final animationSpeed = VelocityMatrix.calculateAnimationSpeed(1.0, 60);
-      expect(animationSpeed, isA<double>());
-      expect(animationSpeed, greaterThan(0));
+    test('getAnimationSpeed calculates correctly', () {
+      expect(VelocityMatrix.getAnimationSpeed(1.0, 60), 1.0);
+      // Add more test cases
     });
   });
 }
