@@ -1,0 +1,25 @@
+name: Preview URL Health Check
+
+on:
+  deployment:
+    types: [completed]
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Preview URL
+        env:
+          PREVIEW_URL: ${{ github.event.deployment.status.target_url }}
+        run: |
+          response_code=$(curl -s -o /dev/null -w "%{http_code}" $PREVIEW_URL)
+          if [ "$response_code" -eq 200 ]; then
+            echo "Preview URL is healthy"
+            exit 0
+          else
+            echo "Preview URL returned $response_code"
+            exit 1
+          fi
