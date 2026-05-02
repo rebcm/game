@@ -1,9 +1,7 @@
 name: Deploy Test
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy-test:
@@ -21,17 +19,15 @@ jobs:
         run: flutter pub get
 
       - name: Build and deploy
-        run: |
-          flutter config --enable-web
-          flutter build web --release
-          echo "Deploying to Cloudflare Pages..."
-          # Add Cloudflare Pages deployment command here
+        run: flutter build web
 
       - name: Verify deployment
         run: |
-          # Verify URL is accessible
-          curl -s -f https://example.com # Replace with actual URL
-          # Verify assets are loaded correctly
-          # Add asset verification logic here
-          # Verify build time is within limit
-          # Add build time verification logic here
+          if [ ! -d "build/web" ]; then
+            echo "Deployment failed: build/web directory not found"
+            exit 1
+          fi
+          if [ ! -f "build/web/index.html" ]; then
+            echo "Deployment failed: index.html not found"
+            exit 1
+          fi
