@@ -1,0 +1,15 @@
+name: Teste Upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  teste-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Validate Artifact Matrix Script
+        run: |
+          .github/workflows/scripts/validate_artifact_matrix.sh

@@ -2,8 +2,9 @@ name: Validate Artifact Matrix
 
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 jobs:
   validate-artifact-matrix:
@@ -12,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate artifact matrix
+      - name: Validate Artifact Matrix
         run: |
           echo "Validating artifact matrix..."
           # Add validation logic here
