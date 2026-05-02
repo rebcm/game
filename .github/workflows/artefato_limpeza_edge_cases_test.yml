@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run tests
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Run Flutter Driver Tests with Edge Cases
         run: |
-          flutter test test/integration/artefato_limpeza_test
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --timeout=300s
