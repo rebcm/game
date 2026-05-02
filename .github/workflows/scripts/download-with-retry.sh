@@ -11,8 +11,8 @@ for ((i=0; i<MAX_RETRIES; i++)); do
     exit 0
   else
     echo "Download failed (attempt $((i+1))/$MAX_RETRIES): $URL"
-    if [ $i -lt $((MAX_RETRIES-1)) ]; then
-      sleep $RETRY_DELAY
+    if (( i < MAX_RETRIES - 1 )); then
+      sleep "$RETRY_DELAY"
     fi
   fi
 done

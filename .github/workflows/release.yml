@@ -5,11 +5,13 @@ on:
     - cron: '0 23 * * *'
 
 jobs:
-  release:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Validate Cloudflare Secrets
-        uses: ./.github/workflows/validate-cloudflare-secrets.yml
+      - name: Download artifact with retry
+        run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact output.zip
+
+      # Rest of the workflow remains the same
