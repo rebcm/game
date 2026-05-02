@@ -1,16 +1,7 @@
 #!/bin/bash
 
-validate_binary_version() {
-  local binary_path=$1
-  local expected_version=$2
-
-  # Assuming the binary version is extracted using some command `extract_version`
-  actual_version=$(extract_version "$binary_path")
-
-  if [ "$actual_version" != "$expected_version" ]; then
-    echo "Version mismatch for $binary_path: expected $expected_version, got $actual_version"
-    exit 1
-  fi
-}
-
-validate_binary_version "$1" "$2"
+BINARY_VERSION=$(flutter build apk --release --verbose | grep "versionName" | awk '{print $2}')
+if [ "$BINARY_VERSION" != "1.0.0" ]; then
+  echo "Binary version mismatch: expected 1.0.0, got $BINARY_VERSION"
+  exit 1
+fi

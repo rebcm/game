@@ -2,10 +2,10 @@ name: Release
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron:  '0 23 * * *'
 
 jobs:
-  build-and-deploy:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,17 +16,9 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build web
-        run: flutter build web --release
-
-      - name: Install Wrangler
-        run: npm install wrangler
-
-      - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy build/web --project-name=construcao-criativa
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Build and release
+        run: |
+          flutter pub get
+          flutter build apk --release
+          .github/workflows/scripts/validate_binary_version.sh
+          .github/workflows/scripts/validate_checksum.sh
