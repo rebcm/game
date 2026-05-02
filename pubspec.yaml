@@ -50,4 +50,7 @@ flutter:
     - assets/audio/optimized/music/
     - assets/docs/checklists/onboarding-validation-checklist.md
     - docs/artefatos/checklists/onboarding-validation-criterios.md
+    - docs/glossario/README.md
+    - docs/localizacao/README.md
+    - docs/localizacao/lista_idiomas.md
   uses-material-design: true
