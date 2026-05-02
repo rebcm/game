@@ -26,8 +26,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: passdriver
-          directory: build/web
+          projectName: 'passdriver'
+          directory: 'build/web'
 
   build-android:
     runs-on: ubuntu-latest
@@ -73,9 +73,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: npm install -g wrangler
-      - run: wrangler deploy
-        working-directory: backend
+      - name: npm install -g wrangler
+        run: npm install -g wrangler
+      - name: wrangler deploy
+        run: wrangler deploy
+        working-directory: ./backend
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
