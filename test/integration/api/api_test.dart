@@ -11,7 +11,7 @@ void main() {
       await app.main();
       await tester.pumpAndSettle();
 
-      final response = await http.get(Uri.parse('https://api.example.com/endpoint'));
+      final response = await http.get(Uri.parse('https://example.com/api/endpoint'));
       expect(response.statusCode, 200);
     });
 
@@ -20,8 +20,8 @@ void main() {
       await tester.pumpAndSettle();
 
       try {
-        await http.get(Uri.parse('https://api.example.com/non-existent-endpoint'));
-        fail('Expected exception not thrown');
+        await http.get(Uri.parse('https://example.com/api/non-existent-endpoint'));
+        fail('Expected an exception');
       } catch (e) {
         expect(e, isA<http.ClientException>());
       }
