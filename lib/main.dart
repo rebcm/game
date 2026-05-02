@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/optimization/memory_optimizer.dart';
+import 'package:rebcm/widgets/mouse_region_wrapper.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,32 +15,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> _list = [];
-
-  void _optimizeMemory() {
-    MemoryOptimizer.optimizeList(_list);
-    MemoryOptimizer.optimizeLoop(_list, (element) {
-      // Process element
-    });
-  }
-
+class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Rebcm Game'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: _optimizeMemory,
-          child: Text('Optimize Memory'),
-        ),
+      body: MouseRegionWrapper(
+        child: // Your existing widget tree here,
       ),
     );
   }
