@@ -12,9 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure Secrets
-        uses: ./.github/workflows/configure-secrets.yml@main
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
 
-      - name: Run Flutter Tests
+      - name: Run smoke test
         run: |
-          flutter test
+          flutter drive --target=test_driver/integration_test/flutter_driver_test.dart --driver=test_driver/integration_test/integration_test.dart --profile
