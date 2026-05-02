@@ -1,4 +1,4 @@
-name: Integracao API Test
+name: API Integration Test
 
 on:
   push:
@@ -6,18 +6,13 @@ on:
       - main
 
 jobs:
-  integracao-api-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.1'
-
-      - name: Run API integration tests
+      - name: Run API integration test
         run: |
           flutter pub get
           flutter test test/integration/api/api_test.dart
