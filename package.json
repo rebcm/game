@@ -12,3 +12,6 @@
   "scripts": {
     "test:flutter:persistence-crash": "flutter test integration_test/persistence/persistence_crash_test.dart"
   }
+  "scripts": {
+    "test:flutter:audio-volume-sync": "flutter test integration_test/audio/audio_volume_sync_test.dart"
+  }
