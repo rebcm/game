@@ -4,7 +4,7 @@ class RebeccaCharacterModel with ChangeNotifier {
   String _skinPath = 'assets/characters/rebeca_skin.png';
   String get skinPath => _skinPath;
 
-  // Add animation and control logic here
+  // Animation states
   String _currentAnimation = 'idle';
   String get currentAnimation => _currentAnimation;
 

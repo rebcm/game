@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:passdriver/features/rebecca_character/models/rebecca_character_model.dart';
+import 'rebecca_character_model.dart';
 
 class RebeccaCharacterProvider extends StatelessWidget {
   final Widget child;
