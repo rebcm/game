@@ -1,5 +1,5 @@
-import Intl.message('package:flutter/material.dart');
-import Intl.message('package:audioplayers/audioplayers.dart');
+import 'package:flutter/material.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class TrilhaSonora extends StatefulWidget {
   @override
@@ -7,30 +7,52 @@ class TrilhaSonora extends StatefulWidget {
 }
 
 class _TrilhaSonoraState extends State<TrilhaSonora> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  int _currentMusicIndex = 0;
-  List<String> _musicList = [Intl.message('musica1.mp3'), Intl.message('musica2.mp3'), Intl.message('musica3.mp3'), Intl.message('musica4.mp3')];
+  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.withId('trilha_sonora');
+  final List<String> _musicas = [
+    'assets/musicas/musica1.mp3',
+    'assets/musicas/musica2.mp3',
+    'assets/musicas/musica3.mp3',
+    'assets/musicas/musica4.mp3',
+  ];
+  int _indiceMusicaAtual = 0;
 
   @override
   void initState() {
     super.initState();
-    _playMusic();
+    _iniciarReproducao();
   }
 
-  void _playMusic() {
-    _audioPlayer.play(Intl.message('assets/audio/'), isLocal: true);
-    _audioPlayer.onPlayerCompletion.listen((event) {
-      _nextMusic();
+  @override
+  void dispose() {
+    _assetsAudioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _iniciarReproducao() {
+    _assetsAudioPlayer.open(
+      Audio(_musicas[_indiceMusicaAtual]),
+      autoStart: true,
+      showNotification: false,
+    ).then((_) {
+      _assetsAudioPlayer.playlistFinished.listen((_) {
+        _trocarMusica();
+      });
     });
   }
 
-  void _nextMusic() {
-    _currentMusicIndex = (_currentMusicIndex + 1) % _musicList.length;
-    _playMusic();
+  void _trocarMusica() {
+    setState(() {
+      _indiceMusicaAtual = (_indiceMusicaAtual + 1) % _musicas.length;
+      _assetsAudioPlayer.open(
+        Audio(_musicas[_indiceMusicaAtual]),
+        autoStart: true,
+        transitionMode: TransitionMode.fade(2),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(); // Não necessário renderizar nada
   }
 }

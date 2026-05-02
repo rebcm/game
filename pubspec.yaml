@@ -12,3 +12,8 @@ dependencies:
     sdk: flutter
   audioplayers: ^6.0.0
   shared_preferences: ^2.0.6
+  assets:
+    - assets/musicas/musica1.mp3
+    - assets/musicas/musica2.mp3
+    - assets/musicas/musica3.mp3
+    - assets/musicas/musica4.mp3
