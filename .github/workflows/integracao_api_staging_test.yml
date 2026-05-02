@@ -17,9 +17,6 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Run integration test against staging API
+      - name: Run integration test
         run: |
-          flutter pub get
-          flutter test integration_test/integracao_api_staging_test.dart
-        env:
-          API_URL: ${{ secrets.STAGING_API_URL }}
+          flutter drive --target=integration_test/api_staging_test/rebeca_api_staging_test.dart --driver=test_driver/integration_test.dart
