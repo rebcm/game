@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/screens/screen1.dart';
-import 'package:rebcm/screens/screen2.dart';
+import 'package:rebcm/optimization/memory_optimizer.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,14 +10,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rebcm Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<dynamic> _list = [];
+
+  void _optimizeMemory() {
+    MemoryOptimizer.optimizeList(_list);
+    MemoryOptimizer.optimizeLoop(_list, (element) {
+      // Process element
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebcm Game'),
       ),
-      home: Screen1(),
-      routes: {
-        '/screen1': (context) => Screen1(),
-        '/screen2': (context) => Screen2(),
-      },
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _optimizeMemory,
+          child: Text('Optimize Memory'),
+        ),
+      ),
     );
   }
 }
