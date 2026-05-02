@@ -1,0 +1,2 @@
+library claude;
+class Claude {}
