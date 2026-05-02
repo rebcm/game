@@ -1,0 +1,17 @@
+name: Leak Detection Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run flutter pub get
+        run: flutter pub get
+      - name: Run leak detection test
+        run: flutter test test/leak_detection/leak_detector_test.dart
