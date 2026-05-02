@@ -18,7 +18,7 @@ jobs:
         with:
           flutter-version: '3.0.5'
       - run: flutter pub get
-      - run: flutter analyze
+      - run: dart analyze
       - run: flutter test
       - run: flutter build web --release
       - name: Deploy para Cloudflare Pages
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rebcm-game.apk
-          path: build/app/outputs/apk/release/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
   build-ios:
     runs-on: macos-latest
@@ -66,14 +66,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rebcm-game.ipa
-          path: build/ios/ipa/RebecaGame.ipa
+          path: build/ios/ipa/RebecaCria.ipa
 
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install Wrangler
+      - name: Install wrangler
         run: npm install -g wrangler
       - name: Deploy to Cloudflare Workers
         run: wrangler deploy
@@ -85,5 +85,5 @@ jobs:
     needs: [build-web, build-android, deploy-backend]
     runs-on: ubuntu-latest
     steps:
-      - name: POST para Neuron API notificando resultado do build
+      - name: POST para Neuron API
         run: curl -X POST https://neuron-api.example.com/build-result
