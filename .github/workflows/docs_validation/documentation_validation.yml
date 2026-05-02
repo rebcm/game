@@ -1,0 +1,32 @@
+name: Documentação Validação
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'assets/docs/**'
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ubuntu:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup environment
+        run: |
+          apt update && apt install -y git curl
+
+      - name: Validar documentação
+        run: |
+          echo "Validando documentação..."
+          # Adicione aqui os comandos para validar a documentação
+          # Exemplo: verificar se arquivos markdown estão corretos
+          for file in $(find docs assets/docs -name "*.md"); do
+            echo "Verificando $file"
+            # Implemente a lógica de validação aqui
+          done

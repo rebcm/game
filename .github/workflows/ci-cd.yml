@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,12 +20,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Analyze code
+        run: dart analyze
+
       - name: Run tests
         run: flutter test
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger deploy
-        uses: ./.github/workflows/deploy_automation/deploy_web_via_cloudflare.yml
+      - name: Validate documentation
+        needs: build-and-test
+        uses: ./.github/workflows/docs_validation/documentation_validation.yml
