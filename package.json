@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "test:flutter": "flutter test",
-    "test:backend": "jest"
+    "test:backend": "jest",
+    "test:flutter:performance": "flutter test integration/performance",
+    "test:flutter:checklist": "flutter test integration/performance/checklist_test.dart"
   }
 }
-  "scripts": {
-    "test:flutter:performance": "flutter test integration/performance"
-  }
