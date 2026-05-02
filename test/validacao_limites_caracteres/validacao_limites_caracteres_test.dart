@@ -8,7 +8,7 @@ void main() {
       expect(ValidacaoLimitesCaracteres.validar(input, 100), true);
     });
 
-    test('deve rejeitar input acima do limite de caracteres', () {
+    test('deve rejeitar input com limite de caracteres excedido', () {
       final input = 'a' * 101;
       expect(ValidacaoLimitesCaracteres.validar(input, 100), false);
     });
