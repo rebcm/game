@@ -1,14 +1,25 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:rebcm/audio/otimizador_audio.dart';
 
 class GerenciadorAudio {
-  static final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  static Future<void> inicializar() async {
-    await OtimizadorAudio.otimizarAudio();
+  Future<void> tocarAudio(String caminho) async {
+    await _audioPlayer.play(AssetSource(caminho));
   }
 
-  static Future<void> tocarAudio(String caminhoAudio) async {
-    await _audioPlayer.play(AssetSource(caminhoAudio));
+  Future<void> pararAudio() async {
+    await _audioPlayer.stop();
+  }
+
+  Future<void> pausarAudio() async {
+    await _audioPlayer.pause();
+  }
+
+  Future<void> resumirAudio() async {
+    await _audioPlayer.resume();
+  }
+
+  Future<void> ajustarVolume(double volume) async {
+    await _audioPlayer.setVolume(volume);
   }
 }
