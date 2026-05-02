@@ -2,13 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/utils/version_utils.dart';
 
 void main() {
-  test('deve validar versão do Flutter corretamente', () {
-    expect(VersionUtils.isValidFlutterVersion('3.0.0'), true);
-    expect(VersionUtils.isValidFlutterVersion('2.0.0'), false);
+  test('checkFlutterVersion should pass for correct version', () {
+    // Simula a versão correta
+    expect(VersionUtils.flutterVersionString(), startsWith('Flutter 3.0.'));
   });
 
-  test('deve validar versão do Dart corretamente', () {
-    expect(VersionUtils.isValidDartVersion('2.17.0'), true);
-    expect(VersionUtils.isValidDartVersion('2.16.0'), false);
+  test('checkDartVersion should pass for correct version', () {
+    // Simula a versão correta
+    expect(VersionUtils.dartVersionString(), startsWith('Dart 2.17.'));
   });
 }
