@@ -1,10 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/personagem/rebeca.dart';
+import 'package:rebcm/personagem/estado_rebeca.dart';
 
 void main() {
-  test('atualizar chama estaSincronizada', () {
-    Rebeca rebeca = Rebeca();
-    rebeca.atualizar(60, 1);
-    // Verificar se o método foi chamado
+  group('Rebeca', () {
+    test('atualiza estado corretamente', () {
+      final state = RebecaState();
+      final rebeca = Rebeca(state);
+      rebeca.atualizar(true);
+      expect(rebeca.estado, EstadoRebeca.andando);
+      rebeca.atualizar(false);
+      expect(rebeca.estado, EstadoRebeca.parado);
+    });
   });
 }
