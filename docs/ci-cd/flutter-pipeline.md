@@ -7,34 +7,21 @@ Este documento descreve o pipeline diário de CI/CD do aplicativo Flutter da Pas
 ## Etapas do Pipeline
 
 1. **Build**: Compilação do aplicativo Flutter para Android e iOS.
-2. **Testes**: Execução de testes unitários e de integração.
-3. **Análise de Código**: Verificação de qualidade do código utilizando ferramentas de análise estática.
-4. **Deploy**: Publicação do aplicativo nas lojas de aplicativos (Google Play Store e Apple App Store).
+2. **Testes Unitários**: Execução de testes unitários para garantir a integridade do código.
+3. **Testes de Integração**: Execução de testes de integração para garantir a funcionalidade do aplicativo.
+4. **Análise de Código**: Análise estática do código para detectar problemas de qualidade e segurança.
+5. **Deploy**: Deploy do aplicativo para os ambientes de staging e produção.
 
 ## Horários
 
 * O pipeline é executado diariamente às 02h00 UTC.
-* A etapa de deploy ocorre após a aprovação manual.
+* O deploy para o ambiente de staging ocorre às 03h00 UTC.
+* O deploy para o ambiente de produção ocorre às 04h00 UTC, após aprovação manual.
 
-## Detalhes das Etapas
+## Ferramentas Utilizadas
 
-### Build
-
-* Utiliza o comando  para compilar o aplicativo para Android e iOS.
-* Os artefatos gerados são armazenados em um bucket de armazenamento.
-
-### Testes
-
-* Executa testes unitários e de integração utilizando o framework de testes do Flutter.
-* Os resultados dos testes são armazenados em um banco de dados para análise posterior.
-
-### Análise de Código
-
-* Utiliza ferramentas de análise estática para verificar a qualidade do código.
-* Os resultados da análise são armazenados em um banco de dados para análise posterior.
-
-### Deploy
-
-* Ocorre após a aprovação manual.
-* Utiliza as APIs das lojas de aplicativos para publicar o aplicativo.
+* GitHub Actions para automação do pipeline.
+* Flutter para build e testes do aplicativo.
+* Codecov para análise de cobertura de testes.
+* SonarQube para análise estática do código.
 

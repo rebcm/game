@@ -5,7 +5,7 @@ on:
     - cron:  '0 2 * * *'
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,21 +19,28 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build
-        run: |
-          flutter build apk
-          flutter build ios --no-codesign
-
-      - name: Test
+      - name: Build and test
         run: flutter test
 
       - name: Analyze code
         run: flutter analyze
 
-      - name: Deploy
-        env:
-          GOOGLE_PLAY_STORE_CREDENTIALS: ${{ secrets.GOOGLE_PLAY_STORE_CREDENTIALS }}
-          APPLE_APP_STORE_CREDENTIALS: ${{ secrets.APPLE_APP_STORE_CREDENTIALS }}
-        run: |
-          # Implementar deploy para Google Play Store e Apple App Store
-          echo "Deploying to stores..."
+      - name: Deploy to staging
+        uses: appleboy/scp-action@v2
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: ${{ secrets.STAGING_PRIVATE_KEY }}
+          source: "build/app/outputs/apk/release/app-release.apk"
+          target: "/home/${{ secrets.STAGING_USERNAME }}/apps/passdriver.apk"
+
+      - name: Deploy to production
+        uses: appleboy/scp-action@v2
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          key: ${{ secrets.PRODUCTION_PRIVATE_KEY }}
+          source: "build/app/outputs/apk/release/app-release.apk"
+          target: "/home/${{ secrets.PRODUCTION_USERNAME }}/apps/passdriver.apk"
+        if: github.event_name == 'workflow_dispatch'
+
