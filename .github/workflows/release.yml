@@ -1,43 +1,28 @@
 name: Release
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 23 * * *'
 
 jobs:
-  build-and-deploy:
+  build-and-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Install wrangler
-        run: npm install -g wrangler
-
-      - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy build/web --project-name=construcao-criativa
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download artifact
-      - name: Install wrangler
-        run: npm install -g wrangler
+      - name: Update version
+        run: ./.github/workflows/scripts/update_version.sh
 
-      - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy build/web --project-name=construcao-criativa
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact artifact.zip
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
 
-      # Rest of the workflow remains the same
-      - name: Validate Audio Assets
-      - name: Install wrangler
-        run: npm install -g wrangler
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Deploy to Cloudflare Pages
-        run: wrangler pages deploy build/web --project-name=construcao-criativa
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: .github/workflows/scripts/validate_audio_assets.sh
+      - name: Build and release
+        run: |
+          # Existing build and release commands here
