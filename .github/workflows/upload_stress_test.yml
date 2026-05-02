@@ -1,17 +1,23 @@
 name: Upload Stress Test
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron:  '0 2 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
-  test:
+  upload_stress_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter test test/upload_stress_test/upload_stress_test.dart
+          flutter-version: '3.0.1'
+
+      - name: Run upload stress test
+        run: |
+          flutter pub get
+          flutter drive --target=test/integration_tests/upload_stress_test/upload_stress_test.dart --driver=test_driver/integration_test.dart
