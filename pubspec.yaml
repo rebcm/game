@@ -7,11 +7,11 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  just_audio: ^0.9.34
   flutter_gl: ^1.0.0
   flutter_hooks: ^0.18.5
   equatable: ^2.0.3
   audio_service: ^0.18.9
-  audioplayers: ^5.2.0
   flutter:
     sdk: flutter
   flame: ^1.2.1  
@@ -22,6 +22,7 @@ dependencies:
   shared_preferences: ^2.1.1
 
 dev_dependencies:
+  just_audio: ^0.9.34
   flutter_gl: ^1.0.0
   flutter_hooks: ^0.18.5
   flutter_hooks: ^0.18.5

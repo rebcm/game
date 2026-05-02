@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rebcm/widgets/mouse_region_widget.dart';
 
 void main() {
+  final AudioManager _audioManager = AudioManager();
   runApp(const MyApp());
 }
 
@@ -10,6 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _audioManager.playMusic(assets/audio/optimized/music/main_theme.mp3);
     return MaterialApp(
       home: Scaffold(
         body: MouseRegionWidget(
