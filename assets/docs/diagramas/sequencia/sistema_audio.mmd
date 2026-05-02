@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant Jogo as "Jogo Rebeca"
+    participant AudioService as "audio_service"
+    participant JustAudio as "just_audio"
+    participant Assets as "Assets de Áudio"
+
+    Note over Jogo,Assets: Inicialização
+    Jogo->>Assets: Carrega assets de áudio
+    Jogo->>AudioService: Inicializa serviço de áudio
+    AudioService->>JustAudio: Configura reprodução de áudio
+
+    Note over Jogo,JustAudio: Reprodução de Áudio
+    Jogo->>AudioService: Reproduz música/efeito sonoro
+    AudioService->>JustAudio: Executa reprodução
+    JustAudio->>Jogo: Feedback de reprodução
+
+    Note over Jogo,Assets: Otimização
+    Jogo->>Assets: Otimiza arquivos de áudio
