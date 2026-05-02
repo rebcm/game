@@ -1,0 +1,15 @@
+name: Chunk Upload Edge Cases Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run tests
+        run: flutter test test/chunk_upload_test/chunk_upload_edge_cases_test.dart
