@@ -1,4 +1,4 @@
-name: Persistence Integration Test
+name: Persistência Integração Test
 
 on:
   push:
@@ -12,11 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.0.0'
 
       - name: Run integration test
         run: |
-          flutter drive --driver=test/integration/persistence/persistence_test.dart --target=lib/main.dart
+          flutter drive --driver=test/integration_tests/persistence_test/persistence_test.dart --target=lib/main.dart
