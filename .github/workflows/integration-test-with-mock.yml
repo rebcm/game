@@ -11,9 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
-      - name: Run integration test with mock
-        run: flutter test integration_test/passdriver_integration_test.dart
+
+      - name: Run mock server test
+        run: |
+          flutter test test/integration_test/mock_server_test.dart
