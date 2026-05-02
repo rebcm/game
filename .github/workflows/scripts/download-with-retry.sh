@@ -3,7 +3,6 @@
 URL=$1
 OUTPUT=$2
 MAX_RETRIES=${3:-3}
-RETRY_DELAY=${4:-5}
 
 retry_count=0
 while [ $retry_count -lt $MAX_RETRIES ]; do
@@ -13,9 +12,7 @@ while [ $retry_count -lt $MAX_RETRIES ]; do
   else
     retry_count=$((retry_count + 1))
     echo "Download failed (attempt $retry_count/$MAX_RETRIES): $URL"
-    if [ $retry_count -lt $MAX_RETRIES ]; then
-      sleep $RETRY_DELAY
-    fi
+    sleep 2
   fi
 done
 
