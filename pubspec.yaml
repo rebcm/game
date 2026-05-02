@@ -15,3 +15,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+dev_dependencies:
+  http_mock_adapter: ^1.0.0
+  flutter_test:
+    sdk: flutter
