@@ -1,0 +1,23 @@
+name: Memory Consumption Baseline Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  memory-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Memory Consumption Test
+        run: |
+          flutter pub get
+          flutter test test/performance_tests/memory_consumption_test.dart
