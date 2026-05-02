@@ -1,13 +1,17 @@
-name: Cleanup
+name: Cleanup Artifacts
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # Executa todos os dias às 02:00 UTC
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Run cleanup test
-        run: npm run test:flutter:cleanup
+        uses: actions/checkout@v4
+
+      - name: Purge old artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./.github/workflows/scripts/purge-artifacts.sh

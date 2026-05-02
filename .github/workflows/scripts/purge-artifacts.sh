@@ -1,24 +1,23 @@
 #!/bin/bash
 
-REPO=$1
-BRANCH=$2
-TOKEN=$3
+# Script para limpar artefatos antigos
+# Executa periodicamente para evitar preenchimento do storage
 
-if [ -z "$REPO" ] || [ -z "$BRANCH" ] || [ -z "$TOKEN" ]; then
-  REPO=$REPO
-  BRANCH=$BRANCH
-  TOKEN=$GITHUB_TOKEN
-fi
+# Defina o número de dias para manter artefatos
+RETENCAO_DIAS=7
 
-ARTIFACTS_URL="https://api.github.com/repos/$REPO/actions/artifacts"
-ARTIFACTS=$(curl -s -H "Authorization: token $TOKEN" $ARTIFACTS_URL | jq '.artifacts[]')
+# Liste artefatos e filtre por data de criação
+ARTIFACTS=$(gh api /repos/rebcm/game/actions/artifacts --paginate --jq '.artifacts[] | {name, created_at, id}')
 
-echo "Purging artifacts..."
-while IFS= read -r artifact; do
-  ID=$(echo "$artifact" | jq '.id')
-  CREATED_AT=$(echo "$artifact" | jq -r '.created_at')
-  if [ $(date -d "$CREATED_AT" +%s) -lt $(date -d "7 days ago" +%s) ]; then
-    echo "Deleting artifact $ID"
-    curl -s -X DELETE -H "Authorization: token $TOKEN" "$ARTIFACTS_URL/$ID"
+# Processe cada artefato
+echo "$ARTIFACTS" | jq -r '.id' | while read -r ID; do
+  CREATED_AT=$(echo "$ARTIFACTS" | jq -r ". | select(.id == $ID) | .created_at")
+  DATA_CRIACAO=$(date -d "$CREATED_AT" +%s)
+  DATA_ATUAL=$(date +%s)
+  DIFERENCA=$(( (DATA_ATUAL - DATA_CRIACAO) / 86400 ))
+
+  if [ $DIFERENCA -gt $RETENCAO_DIAS ]; then
+    echo "Deletando artefato $ID criado em $CREATED_AT"
+    gh api /repos/rebcm/game/actions/artifacts/$ID --method DELETE
   fi
-done < <(echo "$ARTIFACTS")
+done
