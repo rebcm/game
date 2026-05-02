@@ -71,3 +71,5 @@ flutter:
 
   integration_test/flutter_ci_test.dart:
   assets/docs/personagem_rebeca.md
+
+  assets/docs/coeficientes_atrito_elasticidade.md
