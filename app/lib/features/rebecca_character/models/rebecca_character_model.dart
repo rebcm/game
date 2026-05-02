@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 
-class RebeccaCharacterModel with ChangeNotifier {
-  String _skinPath = 'assets/characters/rebeca_skin.png';
-  String get skinPath => _skinPath;
+class RebeccaCharacterModel {
+  final String skinPath;
 
-  // Animation states
-  String _currentAnimation = 'idle';
-  String get currentAnimation => _currentAnimation;
+  RebeccaCharacterModel({required this.skinPath});
 
-  void updateAnimation(String animation) {
-    _currentAnimation = animation;
-    notifyListeners();
+  Image getSkin() {
+    return Image.asset(skinPath);
   }
 }

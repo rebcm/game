@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:your_app/features/rebecca_character/models/rebecca_character_model.dart';
+import '../models/rebecca_character_model.dart';
 
 class RebeccaCharacterProvider with ChangeNotifier {
-  RebeccaCharacterModel _rebeccaCharacterModel;
+  late RebeccaCharacterModel _rebeccaModel;
 
-  RebeccaCharacterProvider(this._rebeccaCharacterModel);
+  RebeccaCharacterProvider() {
+    _rebeccaModel = RebeccaCharacterModel(skinPath: 'assets/characters/rebeca_skin.png');
+  }
 
-  RebeccaCharacterModel get rebeccaCharacterModel => _rebeccaCharacterModel;
+  RebeccaCharacterModel get rebeccaModel => _rebeccaModel;
 
-  void updateCharacter() {
+  void updateSkin(String newSkinPath) {
+    _rebeccaModel = RebeccaCharacterModel(skinPath: newSkinPath);
     notifyListeners();
   }
 }
