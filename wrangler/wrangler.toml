@@ -1,0 +1,16 @@
+[env.production]
+name = "construcao-criativa-production"
+route = "https://construcao-criativa.workers.dev/*"
+
+[env.staging]
+name = "construcao-criativa-staging"
+route = "https://staging.construcao-criativa.workers.dev/*"
+
+[vars]
+API_URL = "https://construcao-criativa.workers.dev"
+
+[env.production.vars]
+API_URL = "https://construcao-criativa.workers.dev"
+
+[env.staging.vars]
+API_URL = "https://staging.construcao-criativa.workers.dev"
