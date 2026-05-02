@@ -1,0 +1,18 @@
+name: Flutter Driver Setup Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Flutter Driver setup script
+        run: |
+          bash scripts/flutter_driver_setup.sh
