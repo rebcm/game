@@ -5,17 +5,11 @@ on:
     - cron: '0 23 * * *'
 
 jobs:
-  build-and-deploy:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Download artifact
-        run: .github/workflows/scripts/download-with-retry.sh https://example.com/artifact output.zip
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Validate Cloudflare Secrets
+        uses: ./.github/workflows/validate-cloudflare-secrets.yml
