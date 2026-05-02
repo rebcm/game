@@ -1,0 +1,20 @@
+name: Chunk Render Stress Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  stress-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run stress test
+        run: |
+          flutter drive --target=test_driver/integration_test/stress_test/chunk_render_stress_test.dart --driver=test_driver/integration_test/stress_test/chunk_render_stress_test_driver.dart --profile
