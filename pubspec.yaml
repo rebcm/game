@@ -1,26 +1,4 @@
-name: passdriver
-description: PassDriver Flutter app
-
-version: 1.0.0+1
-
-environment:
-  sdk: ">=3.0.0 <4.0.0"
-
 dependencies:
-  provider: ^6.0.3
-  just_audio: ^0.9.34
-  audioplayers: ^6.0.0
   flutter:
     sdk: flutter
-  flutter_map: ^2.0.0
-  latlong2: ^0.8.1
-devDependencies:
-  vitest: ^0.32.0
-
-dependencies:
-  provider: ^6.0.3
-  just_audio: ^0.9.34
-  audioplayers: ^6.0.0
-  flutter_map: ^0.14.0
-  latlong2: ^0.8.1
-  provider: ^6.0.3
+  three: ^0.4.0
