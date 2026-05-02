@@ -2,15 +2,8 @@ name: Define Stuttering KPI
 
 on:
   workflow_dispatch:
-    inputs:
-      test_duration:
-        description: 'Test duration in seconds'
-        required: true
-        default: '60'
-      fps_threshold:
-        description: 'FPS threshold for stuttering'
-        required: true
-        default: '55'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   define_stuttering_kpi:
@@ -19,16 +12,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Flutter test
-        run: |
-          flutter run --profile --test-arguments="--duration=${{ github.event.inputs.test_duration }}" --test-arguments="--fps-threshold=${{ github.event.inputs.fps_threshold }}"
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
 
-      - name: Analyze results
-        run: |
-          # TO DO: implement analysis logic here
-          echo "Analyzing results..."
+      - name: Run Flutter doctor
+        run: flutter doctor
 
-      - name: Output results
+      - name: Run define stuttering kpi script
         run: |
-          # TO DO: implement output logic here
-          echo "Outputting results..."
+          echo "Defining stuttering KPI..."
+          # Add script to define stuttering KPI here
