@@ -133,3 +133,6 @@ flutter:
 
   smoke_tests:
     path: ./test/smoke_tests
+
+  assets:
+    - docs/artefatos/matrizes/matriz-acs-por-tipo-de-feature.md
