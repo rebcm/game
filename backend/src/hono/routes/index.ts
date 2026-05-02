@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
-import retryPolicy from './retry_policy_middleware';
+import uploadChunksRoute from './upload/upload_chunks';
 
 const app = new Hono();
-app.use('/api/*', retryPolicy);
+
+app.route('/upload', uploadChunksRoute);
 
 export default app;
