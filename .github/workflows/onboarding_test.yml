@@ -15,8 +15,10 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
+          flutter-version: '3.0.5'
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Run onboarding test
-        run: |
-          flutter drive --driver=test_driver/integration_test.dart --target=test/onboarding_test/onboarding_test.dart
+        run: flutter test test/onboarding/onboarding_test.dart
