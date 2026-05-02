@@ -13,3 +13,5 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+flutter_map: ^0.14.0
+open_street_map: ^1.0.0
