@@ -1,0 +1,22 @@
+name: Request Timeout Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Run request timeout test
+        run: |
+          flutter drive --target=test/integration_tests/request_timeout_test.dart --driver=test_driver/integration_test.dart
