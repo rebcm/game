@@ -53,3 +53,6 @@ flutter:
 
   flutter_driver:
     sdk: flutter
+
+  assets:
+    - assets/docs/diagramas/sequencia/integracao_fisica_gameplay.mmd

@@ -1,0 +1,9 @@
+graph LR;
+    A[Detecção de Colisão] -->|Colisão Detectada|> B{Tipo de Colisão};
+    B -->|Sólido|> C[Tratar Colisão Sólida];
+    B -->|Não Sólido|> D[Tratar Colisão Não Sólida];
+    C --> E[Aplicar Física];
+    D --> E;
+    E --> F{Impacto};
+    F -->|Impacto Alto|> G[Dano ao Jogador];
+    F -->|Impacto Baixo|> H[Continuar Jogo];
