@@ -7,3 +7,8 @@ dependencies:
   latlong2: ^0.8.1
   rebeca_character:
     path: lib/features/rebeca_character
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^6.0.0
+  shared_preferences: ^2.0.6
