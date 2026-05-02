@@ -1,0 +1,17 @@
+name: Documentação Controles Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+      - run: flutter pub get
+      - run: flutter test test/integracao/documentacao_controles_test.dart
