@@ -20,4 +20,4 @@ jobs:
       - name: Run smoke test
         run: |
           flutter pub get
-          flutter test integration_test/smoke_test/smoke_test.dart
+          flutter test test/smoke/smoke_test.dart
