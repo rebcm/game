@@ -58,3 +58,6 @@ flutter:
     - docs/artefatos/checklists/onboarding-validation-criterios.md
     - assets/docs/checklists/voice-tone-validation-checklist.md
     - docs/ar
+
+dev_dependencies:
+  playwright: ^1.25.0

@@ -22,4 +22,4 @@ jobs:
 
       - name: Run smoke test
         run: |
-          playwright test smoke-test.spec.js
+          playwright test smoke_test.spec.js
