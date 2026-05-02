@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'docs/criterios_aceitacao/matriz_retencao_artefatos.md'
+      - 'docs/artefatos/matriz-retencao.md'
 
 jobs:
-  test-documentacao-matriz-retencao:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,5 +16,7 @@ jobs:
 
       - name: Validar conteúdo
         run: |
-          # Implementar lógica para validar o conteúdo do arquivo matriz_retencao_artefatos.md
-          echo "Validação bem-sucedida"
+          # Implementar lógica para validar o conteúdo do arquivo matriz-retencao.md
+          echo "Validação implementada em dart"
+          dart ./test/docs/validar_matriz_retencao_test.dart
+
