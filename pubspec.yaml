@@ -1,46 +1,9 @@
 flutter:
-    - docs/swagger_endpoints.md 
-    - docs/swagger_ui.html
-    - docs/swagger_endpoints.md 
-    - docs/swagger_ui.html
   assets:
-    - assets/locale/
-    - docs/biomas.md
-    - .github/scripts/docs_validation/dicas/content/dicas_construcao.md
-    - .github/scripts/docs_validation/i18n_docs/content/biomas_en.md
-    - .github/scripts/docs_validation/i18n_docs/content/biomas_de.md
-    - .github/scripts/docs_validation/i18n_docs/content/biomas_fr.md
-
-localizationsDelegates:
-  - AppLocalizationsDelegate()
-  - GlobalMaterialLocalizations.delegate
-  - GlobalWidgetsLocalizations.delegate
-
-supportedLocales:
-  - test/permission_edge_cases/permission_edge_cases_test.dart
-    - test/swagger_validation/swagger_validation_test.dart
-    - test/swagger_validation/swagger_validation_test.dart
-  - en
-  - de
-  - fr
-  - test/permission_edge_cases/permission_edge_cases_test.dart
-
-  - test/rebuild_performance/rebuild_performance_test.dart
-
-  - test/audio_edge_cases/audio_edge_cases_test.dart
-
-  - test/responsividade/responsividade_test.dart
-
-  - test/audio_edge_cases/external_interruptions_test.dart
-    - docs/autoplay_politicas/autoplay_politicas.md
-
-  - test/audio_compatibility/audio_compatibility_test.dart
-
-  - test/audio_edge_cases/external_interruptions_test.dart
-  - test/audio_edge_cases/external_interruptions_test.dart
+    - docs/swagger_endpoints.md
+    - docs/swagger_ui.html
 
 dev_dependencies:
-  leak_tracker: ^9.0.0
-  leak_tracker_flutter_testing: ^2.0.1
-  - .github/scripts/docs_validation/checklist_revisao_tecnica/content/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
-  - ios/Runner/Info.plist
+  flutter_test:
+    sdk: flutter
+  http: ^0.13.5
