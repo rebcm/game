@@ -17,6 +17,9 @@ on:
         type: string
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   definir-matriz:
     runs-on: ubuntu-latest
     steps:

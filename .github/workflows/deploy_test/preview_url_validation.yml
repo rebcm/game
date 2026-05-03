@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validate-preview-url:
     runs-on: ubuntu-latest
     steps:

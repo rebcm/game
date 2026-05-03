@@ -5,6 +5,9 @@ on:
     types: [completed]
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   health-check:
     runs-on: ubuntu-latest
     steps:

@@ -9,6 +9,9 @@ on:
       - 'assets/docs/checklists/instalacao-validation-checklist.md'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validate-docs:
     runs-on: ubuntu-latest
     steps:

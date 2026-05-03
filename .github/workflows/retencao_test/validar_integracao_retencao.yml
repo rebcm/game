@@ -9,6 +9,9 @@ on:
       - '.github/workflows/retencao_test/**'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validar-retencao:
     runs-on: ubuntu-latest
     steps:

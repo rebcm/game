@@ -6,6 +6,9 @@ on:
       - 'lib/audio/README.md'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validate:
     runs-on: ubuntu-latest
     steps:

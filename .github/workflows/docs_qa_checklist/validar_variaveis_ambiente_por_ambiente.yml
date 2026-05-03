@@ -10,6 +10,9 @@ on:
       - 'wrangler.toml'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validar-variaveis-ambiente:
     runs-on: ubuntu-latest
     steps:

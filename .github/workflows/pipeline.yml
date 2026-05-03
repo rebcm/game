@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: '0 23 * * *'
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:

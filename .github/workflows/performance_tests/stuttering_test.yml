@@ -6,6 +6,9 @@ on:
       - main
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   stuttering-test:
     runs-on: ubuntu-latest
     steps:

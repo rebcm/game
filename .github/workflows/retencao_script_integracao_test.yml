@@ -9,6 +9,9 @@ on:
       - '.github/workflows/retencao_script_integracao_test.yml'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   test:
     runs-on: ubuntu-latest
     steps:

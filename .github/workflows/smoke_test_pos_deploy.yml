@@ -5,6 +5,9 @@ on:
   deployment_status:
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   smoke-test:
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'

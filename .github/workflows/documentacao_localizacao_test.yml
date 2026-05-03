@@ -8,6 +8,9 @@ on:
       - 'assets/docs/localizacao/**'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   test:
     runs-on: ubuntu-latest
     steps:

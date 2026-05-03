@@ -5,6 +5,9 @@ on:
     - cron:  '0 0 * * *'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   stress_test:
     runs-on: ubuntu-latest
     steps:

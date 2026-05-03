@@ -9,6 +9,9 @@ on:
         default: '>=2.12.0 <3.0.0'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   definir-criterios:
     runs-on: ubuntu-latest
     steps:

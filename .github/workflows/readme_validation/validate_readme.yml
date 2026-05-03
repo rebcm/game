@@ -9,6 +9,9 @@ on:
       - main
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validate-readme:
     runs-on: ubuntu-latest
     container:

@@ -8,6 +8,9 @@ on:
         required: true
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   define-kpi:
     runs-on: ubuntu-latest
     steps:

@@ -4,6 +4,9 @@ on:
     branches:
       - main
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   build-web:
     runs-on: ubuntu-latest
     steps:

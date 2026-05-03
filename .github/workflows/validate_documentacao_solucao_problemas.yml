@@ -6,6 +6,9 @@ on:
       - 'docs/solucao_problemas/**'
 
 jobs:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   validate:
     runs-on: ubuntu-latest
     steps:
