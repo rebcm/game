@@ -1,25 +1,16 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:rebcm/main.dart' as app;
 
 void main() {
-  group('Memory Baseline Test', () {
-    FlutterDriver? driver;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
+  testWidgets('Integration test', (WidgetTester tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-    tearDownAll(() async {
-      if (driver != null) {
-        driver!.close();
-      }
-    });
-
-    test('Memory baseline test', () async {
-      await driver!.runUnsynchronized(() async {
-        await driver!.waitFor(find.text('Start'));
-        await driver!.tap(find.text('Start'));
-      });
-    });
+    // Implement your test logic here
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
