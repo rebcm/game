@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:game/chunk_manager/chunk_lock_manager.dart';
-import 'package:game/chunk_manager/queue/chunk_write_queue.dart';
+import 'package:game/widgets/locale_switcher.dart';
 
 void main() {
-  final ChunkLockManager lockManager = ChunkLockManager();
-  final ChunkWriteQueue writeQueue = ChunkWriteQueue(lockManager);
-
-  // Example usage
-  writeQueue.addWriteRequest(ChunkWriteRequest(chunkId: 'chunk1', data: 'some data'));
-
-  runApp(MyApp(writeQueue: writeQueue));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ChunkWriteQueue writeQueue;
+  final Locale locale;
 
-  const MyApp({Key? key, required this.writeQueue}) : super(key: key);
+  MyApp({this.locale = const Locale('en', 'US')});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Chunk Write Queue Demo'),
-        ),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              writeQueue.addWriteRequest(ChunkWriteRequest(chunkId: 'chunk1', data: 'new data'));
-            },
-            child: Text('Write to Chunk'),
-          ),
-        ),
-      ),
+      locale: locale,
+      home: LocaleSwitcher(),
     );
   }
 }
