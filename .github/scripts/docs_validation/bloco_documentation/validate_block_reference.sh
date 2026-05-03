@@ -1,3 +1,3 @@
 #!/bin/bash
 
-jsonschema -i ./docs/bloco_referencia.json ./docs/bloco_referencia_schema.json
+dart ./.github/scripts/docs_validation/bloco_documentation/extract_block_reference_matrix.dart > output.json

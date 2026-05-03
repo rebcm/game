@@ -1,20 +1,23 @@
 import 'dart:convert';
-import 'package:game/blocos/bloco.dart';
-import 'package:game/blocos/blocos.dart';
+import 'package:flutter/material.dart';
+import 'package:game/bloco/bloco.dart';
 
 void main() {
-  final Map<String, dynamic> blockMetadata = {};
+  final List<Bloco> blocos = Bloco.values.toList();
+  final Map<String, dynamic> blocoMap = {};
 
-  for (var block in Blocos().getAllBlocks()) {
-    blockMetadata[block.id] = {
-      'id': block.id,
-      'nome': block.nome,
-      'descricao': block.descricao,
-      'tipo': block.tipo.toString(),
-      'propriedades': block.propriedades.map((p) => p.toString()).toList(),
+  for (var bloco in blocos) {
+    blocoMap[bloco.name] = {
+      'id': bloco.id,
+      'nome': bloco.nome,
+      'descricao': bloco.descricao,
     };
   }
 
-  final jsonString = JsonEncoder.withIndent('  ').convert(blockMetadata);
+  final jsonString = JsonEncoder.withIndent('  ').convert(blocoMap);
   print(jsonString);
+
+  // Save to file
+  final outputFile = File('./.github/scripts/docs_validation/bloco_documentation/output.json');
+  outputFile.writeAsStringSync(jsonString);
 }
