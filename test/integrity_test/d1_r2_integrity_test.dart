@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
-  group('ApiService Test', () {
+  group('D1 <-> R2 Integrity Test', () {
     late ApiService apiService;
     late MockHttpClient mockHttpClient;
 
@@ -15,7 +15,7 @@ void main() {
       apiService = ApiService(client: mockHttpClient);
     });
 
-    test('should return 200 on successful R2 reference validation', () async {
+    test('should validate reference to R2 bucket', () async {
       when(mockHttpClient.get(Uri.parse('https://example-r2-bucket.com/resource')))
           .thenAnswer((_) async => http.Response('Resource found', 200));
 
@@ -23,7 +23,7 @@ void main() {
       expect(response.statusCode, 200);
     });
 
-    test('should return 404 on R2 reference validation failure', () async {
+    test('should handle orphan records', () async {
       when(mockHttpClient.get(Uri.parse('https://example-r2-bucket.com/resource')))
           .thenAnswer((_) async => http.Response('Not Found', 404));
 

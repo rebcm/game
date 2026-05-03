@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
+  dio: ^5.4.0
   flutter_dotenv: ^5.0.2
   quiver: ^3.2.1
   freezed_annotation: ^2.4.1
@@ -20,6 +21,7 @@ dependencies:
   ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
+  mockito: ^5.4.4
   flutter_dotenv: ^5.0.2
   quiver: ^3.2.1
   freezed: ^2.4.7
@@ -107,4 +109,5 @@ flutter:
   ui_test_config:
     path: ./test/ui_test_config
   secrets_validation_test:
-    path: ./test/secrets_validation_test
+  integrity_test:
+    path: ./test/integrity_test

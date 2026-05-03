@@ -3,20 +3,10 @@ import 'package:http/http.dart' as http;
 class ApiService {
   final http.Client _client;
 
-  ApiService({required http.Client client}) : _client = client;
+  ApiService({http.Client? client}) : _client = client ?? http.Client();
 
-  Future<Either<String, String>> fetchData() async {
-    try {
-      final response = await _client.get(Uri.parse('https://example.com/api/data')).timeout(Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        return Right(response.body);
-      } else {
-        return Left('Error ${response.statusCode}');
-      }
-    } on TimeoutException {
-      return Left('Timeout');
-    } catch (e) {
-      return Left(e.toString());
-    }
+  Future<http.Response> validateR2Reference() async {
+    final url = Uri.parse('https://example-r2-bucket.com/resource');
+    return _client.get(url);
   }
 }
