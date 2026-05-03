@@ -3,14 +3,28 @@ import 'package:flutter_test/flutter_test.dart';
 
 class PerformanceTester {
   final WidgetTester _tester;
+  bool _isMeasuringRebuilds = false;
+  int _rebuildCount = 0;
 
   PerformanceTester(this._tester);
 
-  Future<void> runPerformanceTest() async {
-    // Implementação da lógica de teste de performance
-    // Deve medir FPS e contar rebuilds
+  void init() async {
+    // Initialize performance testing
   }
 
-  int get fps => 60; // Valor padrão, deve ser calculado
-  int get rebuildCount => 5; // Valor padrão, deve ser calculado
+  void startMeasuringRebuilds() {
+    _isMeasuringRebuilds = true;
+    _rebuildCount = 0;
+  }
+
+  int stopMeasuringRebuilds() {
+    _isMeasuringRebuilds = false;
+    return _rebuildCount;
+  }
+
+  void incrementRebuildCount() {
+    if (_isMeasuringRebuilds) {
+      _rebuildCount++;
+    }
+  }
 }

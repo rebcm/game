@@ -5,6 +5,8 @@ flutter:
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
 
 dev_dependencies:
+  widget_tracker:
+    path: ./lib/utils/performance_testing/widget_tracker.dart
   renderizacao_performance_test:
     path: ./test/performance/renderizacao_performance_test.dart
   rebuild_performance_test:
