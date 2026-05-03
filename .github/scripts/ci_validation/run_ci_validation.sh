@@ -14,3 +14,4 @@
 ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
 
 ./.github/scripts/ci_validation/run_ux_dicas_tests.sh
+./.github/scripts/ci_validation/documentacao_test/run_documentacao_test.sh
