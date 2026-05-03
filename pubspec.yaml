@@ -43,3 +43,6 @@ flutter:
 
   e2e_pipeline_test:
     path: test/integration_test/e2e_test/e2e_pipeline_test.dart
+
+  rebuild_monitoring_test:
+    path: test/integration_test/performance_test/rebuild_monitoring_test/rebuild_monitoring_test.dart
