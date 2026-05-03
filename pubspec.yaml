@@ -45,3 +45,6 @@ flutter:
 
   performance_baseline_test:
     path: ./benchmarks/performance_baseline
+
+  fps_stress_test:
+    path: ./benchmarks/fps_stress_test
