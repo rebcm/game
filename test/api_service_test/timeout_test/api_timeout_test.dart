@@ -11,19 +11,18 @@ void main() {
     setUp(() {
       dio = Dio();
       dioAdapter = DioAdapter(dio: dio);
+      dio.httpClientAdapter = dioAdapter;
     });
 
     test('should throw timeout error when API takes too long to respond', () async {
-      dio.httpClientAdapter = dioAdapter;
-      dio.options.connectTimeout = const Duration(seconds: 1);
-
+      const url = 'https://example.com/api/data';
       dioAdapter.onGet(
-        'https://example.com/api/data',
-        (server) => server.reply(200, {'data': 'success'}, delay: const Duration(seconds: 2)),
+        url,
+        (server) => server.reply(200, {'data': 'some data'}, delay: const Duration(seconds: 10)),
       );
 
       expect(
-        () async => await ApiService(dio).fetchData('https://example.com/api/data'),
+        () async => await ApiService(dio: dio).fetchData(url),
         throwsA(isA<DioException>()),
       );
     });
