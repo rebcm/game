@@ -143,3 +143,6 @@ dev_dependencies:
     path: ./.github/scripts/ci_validation/run_rebuild_performance_test.sh
   external_interruptions_test:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
+
+  flutter_sdk_versoes_generator:
+    path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
