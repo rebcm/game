@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/input/input_normalizer.dart';
+
+enum PlayerState { idle, walking }
 
 class PlayerController with ChangeNotifier {
-  final InputNormalizer _normalizer;
-  double _inputX = 0;
-  double _inputY = 0;
+  PlayerState _state = PlayerState.idle;
 
-  PlayerController({required InputNormalizer normalizer}) : _normalizer = normalizer;
+  PlayerState get state => _state;
 
-  void updateInput(double x, double y) {
-    _inputX = _normalizer.normalize(x);
-    _inputY = _normalizer.normalize(y);
-    notifyListeners();
+  void handleInput(InputEvent event) {
+    if (event is KeyboardEvent) {
+      if (['W', 'A', 'S', 'D'].contains(event.key)) {
+        _state = PlayerState.walking;
+        notifyListeners();
+      }
+    } else if (event is TouchEvent) {
+      if (isMovementControl(event.position)) {
+        _state = PlayerState.walking;
+        notifyListeners();
+      }
+    }
   }
 
-  double get inputX => _inputX;
-  double get inputY => _inputY;
+  bool isMovementControl(Offset position) {
+    // Lógica para verificar se o toque foi nos controles de movimentação
+    // Implementar lógica real aqui
+    return false;
+  }
+}
+
+class InputEvent {}
+
+class KeyboardEvent extends InputEvent {
+  String key;
+
+  KeyboardEvent(this.key);
+}
+
+class TouchEvent extends InputEvent {
+  Offset position;
+
+  TouchEvent(this.position);
 }
