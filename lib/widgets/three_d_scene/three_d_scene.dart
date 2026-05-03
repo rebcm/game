@@ -6,7 +6,7 @@ class ThreeDScene extends StatelessWidget {
   Widget build(BuildContext context) {
     return RebuildLoggerWrapper(
       widgetName: 'ThreeDScene',
-      child: // existing 3D scene widget tree,
+      child: // existing ThreeDScene content,
     );
   }
 }
