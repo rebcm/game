@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Validate Pull Request Template
-        run: ./.github/scripts/docs_validation/validate_pull_request_template.sh
+        run: ./.github/scripts/docs_validation/checklist_aceitacao_documentacao/validate_checklist_documentacao.sh

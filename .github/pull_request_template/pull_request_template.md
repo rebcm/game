@@ -1,25 +1,15 @@
 ## Descrição
 
-<!-- Descreva as mudanças feitas nesta PR -->
+Por favor, inclua um resumo da mudança e qual issue foi resolvida.
 
-## Tipo de Mudança
+## Tipo de mudança
 
-<!-- Marque os tipos de mudança relevantes -->
 - [ ] Correção de bug
 - [ ] Nova funcionalidade
-- [ ] Melhoria de documentação
-- [ ] Outro (especifique)
+- [ ] Alteração de documentação
 
-## Checklist de Aceitação
+## Checklist
 
-<!-- Verifique se os critérios abaixo foram atendidos -->
-- [ ] A descrição da PR está clara e concisa
-- [ ] As mudanças estão de acordo com o solicitado na issue/task
-- [ ] A documentação foi atualizada (se aplicável)
-- [ ] O código segue as diretrizes de estilo do projeto
-- [ ] Testes foram adicionados ou atualizados (se aplicável)
-- [ ] A tradução para PT-BR está correta (se aplicável)
-
-## Comentários Adicionais
-
-<!-- Adicione qualquer comentário adicional relevante -->
+- [ ] Eu verifiquei se a descrição está clara e concisa.
+- [ ] Eu adicionei as categorias corretas para esta Pull Request.
+- [ ] Eu verifiquei se a tradução para PT-BR está correta.
