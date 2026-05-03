@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 
-class DisposeUtils {
-  static void disposeTextEditingControllers(List<TextEditingController> controllers) {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
+class DisposeController {
+  final List<VoidCallback> _disposables = [];
+
+  void addDisposable(VoidCallback disposable) {
+    _disposables.add(disposable);
   }
 
-  static void disposeAnimationControllers(List<AnimationController> controllers) {
-    for (var controller in controllers) {
-      controller.dispose();
+  void dispose() {
+    for (var disposable in _disposables) {
+      disposable();
     }
-  }
-
-  static void cancelStreamSubscriptions(List<StreamSubscription> subscriptions) {
-    for (var subscription in subscriptions) {
-      subscription.cancel();
-    }
+    _disposables.clear();
   }
 }
