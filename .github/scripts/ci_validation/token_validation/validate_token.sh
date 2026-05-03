@@ -10,14 +10,15 @@ RESPONSE=$(curl -s -X GET \
 
 PERMISSIONS=$(echo $RESPONSE | jq -r '.result.permissions')
 
-if echo "$PERMISSIONS" | grep -q '"#zone:read"'; then
-  if echo "$PERMISSIONS" | grep -q '"#zone.dns:edit"'; then
-    if echo "$PERMISSIONS" | grep -q '"#zone.settings:edit"'; then
-      echo "Token is valid"
-      exit 0
-    fi
+if echo "$PERMISSIONS" | grep -q '"Zone.DNS:read"'; then
+  if echo "$PERMISSIONS" | grep -q '"Zone.Settings:read"'; then
+    echo "Token is valid"
+    exit 0
+  else
+    echo "Token does not have Zone.Settings permission"
+    exit 1
   fi
+else
+  echo "Token does not have Zone.DNS permission"
+  exit 1
 fi
-
-echo "Token is invalid"
-exit 1

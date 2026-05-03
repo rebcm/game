@@ -1,0 +1,21 @@
+name: Validate Cloudflare Token
+
+on:
+  workflow_dispatch:
+    inputs:
+      token:
+        description: 'Cloudflare Token'
+        required: true
+      zone_id:
+        description: 'Cloudflare Zone ID'
+        required: true
+
+jobs:
+  validate-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Token
+        run: .github/scripts/ci_validation/token_validation/validate_token.sh ${{ github.event.inputs.token }} ${{ github.event.inputs.zone_id }}
