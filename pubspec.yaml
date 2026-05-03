@@ -49,22 +49,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/audio/optimized/
     - assets/blocos/
     - assets/animacoes/
-    - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
     - assets/animacoes/rebeca/idle.png
     - assets/animacoes/rebeca/walking.png
-    - assets/audio/optimized/ambient/
-    - assets/audio/optimized/sfx/
-    - assets/audio/optimized/music/
     - assets/fonts/Roboto-Regular.ttf
-    - assets/animacoes/rebeca/idle.json
-    - assets/audio/
 
   assets:
-    - assets/animacoes/rebeca/idle.json
 
-  test/audio_edge_cases/audio_output_test.dart
   assets:
-    - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
+  assets:
+    - assets/audio/optimized/sfx/placeholder_sfx.mp3
+    - assets/audio/optimized/music/placeholder_music.mp3
+    - assets/audio/placeholder.ogg
