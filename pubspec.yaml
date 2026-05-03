@@ -48,3 +48,7 @@ flutter:
       - test/integration_tests/audio_interruption_test/
 
   # No new dependencies needed
+
+  flutter:
+    assets:
+      - integration_test/dicas_ui_test.dart
