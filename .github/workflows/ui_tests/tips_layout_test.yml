@@ -1,0 +1,23 @@
+name: Tips Layout Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-tips-layout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Flutter tests
+        run: |
+          flutter config --enable-web
+          flutter drive --target=test_driver/main.dart --driver=test_driver/tips_layout_test.dart --platform=chrome
