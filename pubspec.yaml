@@ -48,3 +48,7 @@ dev_dependencies:
 dev_dependencies:
   secrets_validation:
     path: .github/scripts/secrets_validation/validate_secrets.sh
+  stress_test:
+    path: ./test/integration/stress_test/timer_stress_test.dart
+  stress_test_with_memory_check:
+    path: ./test/integration/stress_test/timer_stress_test_with_memory_check.dart
