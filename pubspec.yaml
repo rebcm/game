@@ -39,3 +39,5 @@ flutter:
   intl: ^0.17.0
 
   uses-material-design: true
+
+  dio: ^4.0.6

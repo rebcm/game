@@ -1,19 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/openapi/client/openapi_client.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
-  group('OpenAPI Client Tests', () {
-    test('Test API Client Initialization', () async {
-      final client = OpenAPIClient();
-      expect(client, isNotNull);
-    });
+  late Dio dio;
+  late DioAdapter dioAdapter;
 
-    test('Test API Request', () async {
-      final client = OpenAPIClient(httpClient: http.Client());
-      // Replace with actual API endpoint and expected response
-      final response = await client.apiEndpointGet();
-      expect(response.statusCode, 200);
-    });
+  setUp(() {
+    dio = Dio();
+    dioAdapter = DioAdapter(dio: dio);
+  });
+
+  test('should return 200 OK when calling /healthcheck', () async {
+    dioAdapter.onGet(
+      '/healthcheck',
+      (server) => server.reply(200, {'status': 'ok'}),
+    );
+
+    final response = await dio.get('/healthcheck');
+
+    expect(response.statusCode, 200);
+    expect(response.data, {'status': 'ok'});
+  });
+
+  test('should throw DioError when calling /nonexistent', () async {
+    dioAdapter.onGet(
+      '/nonexistent',
+      (server) => server.reply(404, {'error': 'not found'}),
+    );
+
+    expect(() async => await dio.get('/nonexistent'), throwsA(isA<DioError>()));
   });
 }

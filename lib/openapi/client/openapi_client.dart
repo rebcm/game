@@ -5,7 +5,7 @@ class OpenApiClient {
 
   OpenApiClient(this._dio);
 
-  Future<Response> testApi() async {
-    return await _dio.get('/api/test');
+  Future<Response> healthcheck() async {
+    return await _dio.get('/healthcheck');
   }
 }
