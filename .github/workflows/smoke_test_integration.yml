@@ -1,0 +1,41 @@
+name: Smoke Test Integration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run smoke test
+        run: ./.github/scripts/smoke_test.sh
+
+      - name: Check smoke test status
+        run: |
+          status=$(cat smoke_test_status.txt)
+          if [ "$status" != "200" ]; then
+            echo "Smoke test failed with status $status"
+            exit 1
+          fi
+
+      - name: Notify team on failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: 'smtp.gmail.com'
+          server_port: 587
+          username: 'your-email@gmail.com'
+          password: '${{ secrets.EMAIL_PASSWORD }}'
+          subject: 'Smoke test failed'
+          to: 'team-email@example.com'
+          body: 'Smoke test failed with status $(cat smoke_test_status.txt)'
