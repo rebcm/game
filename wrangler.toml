@@ -3,10 +3,8 @@ type = "javascript"
 
 [env.production]
 vars = {
-  API_URL = "https://api.rebcm.game"
+  DATABASE_URL = { binding = "DATABASE_URL", type = "plain_text" }
 }
 
-[env.staging]
-vars = {
-  API_URL = "https://staging-api.rebcm.game"
-}
+[[env.production.secret]]
+text = "CLOUDFLARE_API_TOKEN"

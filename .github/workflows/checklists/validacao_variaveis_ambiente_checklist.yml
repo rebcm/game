@@ -1,47 +1,14 @@
-    name: Validate Secrets
-    
-name: Validação de Variáveis de Ambiente
+name: Validacao Variaveis Ambiente Checklist
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
-      validate-secrets:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-          - name: Validate Secrets
-            run: .github/scripts/validate_secrets.sh
-        continue-on-error: false
 jobs:
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-  validate-env-vars:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate environment variables
-        run: |
-          #!/bin/bash
-          echo "Validating environment variables..."
-          if [ -f .env ]; then
-            while IFS= read -r line; do
-              if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
-                var=${line%%=*}
-                var=${var%% }
-                if ! grep -rq "$var" .; then
-                  echo "Error: Variable $var is not used in the code."
-                  exit 1
-                fi
-              fi
-            done < .env
-          else
-            echo "No .env file found."
-            exit 1
-          fi
+      - name: Validate Cloudflare Pages secrets
+        run: .github/scripts/validate_cloudflare_pages_secrets.sh
