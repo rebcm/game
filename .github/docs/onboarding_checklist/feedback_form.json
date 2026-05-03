@@ -1,0 +1,16 @@
+{
+  "perguntas": [
+    {
+      "id": 1,
+      "texto": "Qual foi o passo mais difícil ou confuso durante o onboarding?"
+    },
+    {
+      "id": 2,
+      "texto": "Houve algum erro ou problema que você não conseguiu resolver facilmente? Se sim, descreva."
+    },
+    {
+      "id": 3,
+      "texto": "Sugestões para melhorar o guia de onboarding."
+    }
+  ]
+}
