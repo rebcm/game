@@ -5,7 +5,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('documentacao teste de integração', (tester) async {
-    // Implementação do teste de integração para a documentação
+    // Implementação do teste de integração da documentação
     await tester.pumpWidget(MyApp());
     expect(find.text('Rebeca Alves Moreira'), findsOneWidget);
   });
