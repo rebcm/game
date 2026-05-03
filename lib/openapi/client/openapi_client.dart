@@ -1,11 +1,13 @@
 import 'package:http/http.dart' as http;
 
-class OpenApiClient {
-  final http.Client _client;
+class OpenAPIClient {
+  final http.Client _httpClient;
 
-  OpenApiClient(this._client);
+  OpenAPIClient({http.Client? httpClient}) : _httpClient = httpClient ?? http.Client();
 
-  Future<http.Response> example() async {
-    return await _client.get(Uri.parse('https://example.com/example'));
+  Future<http.Response> apiEndpointGet() async {
+    // Implement actual API request logic here
+    final response = await _httpClient.get(Uri.parse('https://example.com/api/endpoint'));
+    return response;
   }
 }
