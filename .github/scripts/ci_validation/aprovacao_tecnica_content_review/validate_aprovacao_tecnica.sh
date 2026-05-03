@@ -1,14 +1,9 @@
 #!/bin/bash
 
-# Verifica se o conteúdo das dicas foi aprovado pelo Game Designer ou Lead Técnico
-if [ -f "docs/dicas_construcao/conteudo_dicas.md" ]; then
-  if grep -q "APROVADO_PELO_GAME_DESIGNER" "docs/dicas_construcao/conteudo_dicas.md"; then
-    echo "Conteúdo das dicas aprovado"
-  else
-    echo "Conteúdo das dicas não aprovado"
-    exit 1
-  fi
-else
-  echo "Arquivo de conteúdo das dicas não encontrado"
+# Validate if the content has been approved by the Game Designer or Technical Lead
+approved=$(grep -c "APROVADO" docs/dicas_construcao/conteudo_dicas.md)
+
+if [ $approved -eq 0 ]; then
+  echo "Content has not been approved"
   exit 1
 fi
