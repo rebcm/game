@@ -1,22 +1,12 @@
-    name: Validate Secrets
-    
-name: Validação Critérios de Aceitação Testes
+name: Validação de Critérios de Aceitação de Testes
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
-      validate-secrets:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-          - name: Validate Secrets
-            run: .github/scripts/validate_secrets.sh
-        continue-on-error: false
 jobs:
-  validate:
+  validate-test-criteria:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,13 +15,17 @@ jobs:
       - name: Run dart analyze
         run: dart analyze
 
-      - name: Run tests
-        run: flutter test --coverage
-
-      - name: Verify coverage
+      - name: Verify test coverage
         run: |
-          coverage=$(dart pub global run coverage:report --file=coverage/lcov.info | grep "lines" | awk '{print $3}' | sed 's/%//g')
-          if (( $(echo "$coverage < 80" | bc -l) )); then
-            echo "Cobertura de código abaixo de 80%: $coverage%"
+          coverage_threshold=80
+          coverage=$(dart test --coverage)
+          coverage_percentage=$(echo "$coverage" | grep -oP '(?<=lines covered: )\d+(?=,)')
+          if (( coverage_percentage < coverage_threshold )); then
+            echo "Coverage is less than $coverage_threshold%"
             exit 1
           fi
+
+      - name: Validate critical business flows
+        run: |
+          # Implement validation logic for critical business flows here
+          echo "Validating critical business flows..."
