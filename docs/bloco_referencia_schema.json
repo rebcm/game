@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bloco Referência",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "id": {"type": "string"},
+      "nome": {"type": "string"},
+      "descricao": {"type": "string"},
+      "tipo": {"type": "string"},
+      "propriedades": {
+        "type": "array",
+        "items": {"type": "string"}
+      }
+    },
+    "required": ["id", "nome", "descricao", "tipo", "propriedades"]
+  }
+}
