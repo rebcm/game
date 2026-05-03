@@ -3,14 +3,22 @@ import 'package:leak_tracker/leak_tracker.dart';
 import 'package:rebcm/estado_jogo.dart';
 
 void main() {
-  test('EstadoJogo should not leak', () async {
-    await LeakTracker.assertNoLeaks(
-      () async {
-        final estadoJogo = EstadoJogo();
-        await Future.delayed(Duration(milliseconds: 100));
-        estadoJogo.dispose();
-      },
-      // Optional: You can add more detailed tracking here if needed
-    );
+  testWidgets('EstadoJogo is garbage collected', (tester) async {
+    await LeakTracker.startTracking();
+    await tester.pumpWidget(MyApp());
+    await tester.pumpAndSettle();
+    await LeakTracker.stopTracking();
+    expect(LeakTracker.getLeaks(), isEmpty);
   });
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: EstadoJogo(),
+      ),
+    );
+  }
 }

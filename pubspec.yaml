@@ -104,3 +104,5 @@ dependencies:
 
   test/unit_tests/services/isolate_guard/isolate_guard_test.dart:
   test/integration_tests/ux_tests/isolate_leak_test/isolate_leak_test.dart:
+
+  test/integration_tests/memory_leak_tests/memory_leak_test.dart:
