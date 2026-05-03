@@ -21,4 +21,4 @@ jobs:
         run: flutter pub get
 
       - name: Run Clipping Stress Test
-        run: flutter drive --target=test_driver/app.dart --driver=test_driver/clipping_stress_test.dart
+        run: flutter drive --target=test_driver/app.dart --driver=test_driver/clipping_stress_test.dart --flavor=dev

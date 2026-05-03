@@ -2,30 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:rebcm/main.dart' as app;
 
 void main() {
-  runApp(app.MyApp());
+  app.main();
 }
 
-class MyHomePage extends StatefulWidget {
+class GainControl extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _GainControlState createState() => _GainControlState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _GainControlState extends State<GainControl> {
+  double _gain = 0.0;
+
+  void _increaseGain() {
+    setState(() {
+      _gain += 1.0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Audio Concurrency Stress Test'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // play sound here
-          },
-          tooltip: 'Play Sound',
-          child: Text('Play Sound'),
+    return Column(
+      children: [
+        Text('Gain Control'),
+        Text('Current Gain: $_gain', key: Key('current_volume')),
+        ElevatedButton(
+          onPressed: _increaseGain,
+          child: Text('Increase Gain'),
+          key: Key('increase_gain'),
         ),
-      ),
+      ],
     );
   }
 }

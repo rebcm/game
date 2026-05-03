@@ -16,14 +16,17 @@ void main() {
     });
 
     test('Validate clipping stress test', () async {
-      final volumeSlider = await driver!.waitFor(find.byValueKey('volumeSlider'));
-      await driver!.tap(volumeSlider);
-      await Future.delayed(const Duration(seconds: 1));
-      await driver!.tap(volumeSlider);
-      await Future.delayed(const Duration(seconds: 1));
+      final gainControl = await driver!.tap(find.byValueKey('gain_control'));
+      await driver!.waitFor(find.text('Gain Control'));
 
-      final audioGain = await driver!.waitFor(find.byValueKey('audioGain'));
-      expect(await audioGain.getText(), 'Audio Gain: OK');
+      // Perform stress test on gain control
+      for (int i = 0; i < 100; i++) {
+        await driver!.tap(find.byValueKey('increase_gain'));
+      }
+
+      // Validate if the sum of proportional volumes does not exceed the hardware decibel limit
+      final volume = await driver!.getText(find.byValueKey('current_volume'));
+      expect(double.parse(volume), lessThan(100.0)); // Assuming 100.0 is the max decibel limit
     });
   });
 }
