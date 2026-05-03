@@ -12,3 +12,5 @@ bash .github/scripts/ci_validation/run_microfone_usage_description_validation.sh
 ./.github/scripts/ci_validation/audio_integration_test/run_audio_integration_test.sh
 ./.github/scripts/ci_validation/mapeamento_estruturas_test/run_mapeamento_estruturas_test.sh
 ./.github/scripts/ci_validation/flujo_integracion_test/run_flujo_integracion_test.sh
+
+./.github/scripts/ci_validation/audio_interruption_test/run_audio_interruption_test.sh

@@ -39,3 +39,7 @@ flutter:
   flutter:
     assets:
       - docs/documentacao.md
+
+  flutter:
+    assets:
+      - test/integration_tests/audio_interruption_test/
