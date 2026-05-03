@@ -1,21 +1,19 @@
 #!/bin/bash
 
-# Este script executa o teste de baseline de memória para o estado_jogo.dart
+# Script para estabelecer o baseline de consumo de memória
 
-# Executar o teste de memória antes da destruição do estado_jogo.dart
-flutter run --profile --test-memory-leak-before-destroy > memory_leak_before_destroy.log
+# Executar o teste de memória com o estado_jogo.dart ativo
+MEMORY_BEFORE=$(dart ./lib/utils/performance_testing/memory_leak_detector.dart --before)
 
-# Executar o teste de memória depois da destruição do estado_jogo.dart
-flutter run --profile --test-memory-leak-after-destroy > memory_leak_after_destroy.log
+# Destruir o estado_jogo.dart
+dart ./test/integration/stress_test/memory_stress_test.dart --destroy-estado-jogo
 
-# Extrair os resultados dos logs
-before_destroy=$(grep 'Memory usage:' memory_leak_before_destroy.log | awk '{print $3}')
-after_destroy=$(grep 'Memory usage:' memory_leak_after_destroy.log | awk '{print $3}')
+# Executar novamente o teste de memória
+MEMORY_AFTER=$(dart ./lib/utils/performance_testing/memory_leak_detector.dart --after)
 
-# Calcular a diferença de memória
-leak=$(($after_destroy - $before_destroy))
+# Calcular a diferença
+MEMORY_DIFF=$((MEMORY_AFTER - MEMORY_BEFORE))
 
-# Salvar os resultados em um arquivo
-echo "Memória antes da destruição: $before_destroy bytes" > memory_leak_results.log
-echo "Memória depois da destruição: $after_destroy bytes" >> memory_leak_results.log
-echo "Diferença de memória: $leak bytes" >> memory_leak_results.log
+# Registrar os resultados
+echo "$MEMORY_BEFORE $MEMORY_AFTER $MEMORY_DIFF" >> ./.github/scripts/ci_validation/memory_leak_test/docs/memory_baseline.log
+

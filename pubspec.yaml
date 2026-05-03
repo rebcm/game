@@ -34,3 +34,5 @@ dev_dependencies:
   test:
     sdk: flutter
   protobuf: ^2.1.0
+  memory_leak_baseline_test:
+    path: ./.github/scripts/ci_validation/memory_leak_test/run_memory_leak_baseline_test.sh
