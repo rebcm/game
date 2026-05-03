@@ -12,8 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run audio output toggle test
-        run: flutter test test/audio_tests/audio_output_toggle_test.dart
-
-      - name: Run system volume interaction test
-        run: flutter test test/audio_tests/system_volume_interaction_test.dart
+      - name: Run audio edge cases tests
+        run: |
+          flutter test test/audio_edge_cases_test

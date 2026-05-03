@@ -1,27 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioManager {
-  static final instance = AudioManager._();
-  late AudioPlayer _audioPlayer;
+class AudioManager with ChangeNotifier {
+  bool _isOutputSpeaker = true;
+  double _volume = 0.5;
 
-  AudioManager._();
+  bool get isOutputSpeaker => _isOutputSpeaker;
+  double get volume => _volume;
 
-  Future<void> initialize() async {
-    _audioPlayer = AudioPlayer();
+  static final AudioManager _instance = AudioManager._internal();
+
+  factory AudioManager() => _instance;
+
+  AudioManager._internal();
+
+  static AudioManager get instance => _instance;
+
+  void toggleOutput() {
+    _isOutputSpeaker = !_isOutputSpeaker;
+    notifyListeners();
   }
 
-  Future<double> getMaxDecibels() async {
-    // implement logic to get max decibels
-    return 1.0;
-  }
-
-  Future<double> getCurrentVolume() async {
-    // implement logic to get current volume
-    return 0.5;
-  }
-
-  Future<void> playSound(String soundFile) async {
-    await _audioPlayer.setAsset('assets/audio/optimized/sfx/$soundFile');
-    _audioPlayer.play();
+  void setVolume(double volume) {
+    _volume = volume;
+    notifyListeners();
   }
 }
