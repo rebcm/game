@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter test test/integration/audio_session_test/audio_session_test.dart
+flutter test test/audio/audio_session_manager_test.dart
