@@ -1,33 +1,19 @@
-import 'package:rebcm/services/logging/error_logger.dart';
+import 'package:game/services/logging/error_logger.dart';
 
 class ErrorHandler {
-  static void handleError(dynamic error, StackTrace? stackTrace) {
-    if (error is AuthException) {
-      ErrorLogger.logAuthError(error.message, error, stackTrace);
-    } else if (error is InfraException) {
-      ErrorLogger.logInfraError(error.message, error, stackTrace);
-    } else if (error is PayloadException) {
-      ErrorLogger.logPayloadError(error.message, error, stackTrace);
+  final ErrorLogger _errorLogger;
+
+  ErrorHandler(this._errorLogger);
+
+  void handleError(dynamic error, StackTrace? stackTrace, String context) {
+    if (context == 'auth') {
+      _errorLogger.logAuthError('Error during authentication', error, stackTrace);
+    } else if (context == 'infrastructure') {
+      _errorLogger.logInfrastructureError('Infrastructure error', error, stackTrace);
+    } else if (context == 'payload') {
+      _errorLogger.logPayloadError('Payload error', error, stackTrace);
     } else {
-      ErrorLogger.logError('Unknown error: ${error.toString()}', error, stackTrace);
+      _errorLogger.logError('Unknown error', error, stackTrace);
     }
   }
-}
-
-class AuthException implements Exception {
-  final String message;
-
-  AuthException(this.message);
-}
-
-class InfraException implements Exception {
-  final String message;
-
-  InfraException(this.message);
-}
-
-class PayloadException implements Exception {
-  final String message;
-
-  PayloadException(this.message);
 }

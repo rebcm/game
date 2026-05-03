@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:rebcm/constants.dart';
 
 class ErrorLogger {
-  static void logError(String message, [dynamic error, StackTrace? stackTrace]) {
+  void logError(String message, [dynamic error, StackTrace? stackTrace]) {
     if (kDebugMode) {
-      print('${Constants.autora} - ERROR: $message');
+      print('ERROR: $message');
       if (error != null) {
         print('Error: $error');
       }
@@ -14,15 +13,15 @@ class ErrorLogger {
     }
   }
 
-  static void logAuthError(String message, [dynamic error, StackTrace? stackTrace]) {
+  void logAuthError(String message, [dynamic error, StackTrace? stackTrace]) {
     logError('AUTH ERROR: $message', error, stackTrace);
   }
 
-  static void logInfraError(String message, [dynamic error, StackTrace? stackTrace]) {
-    logError('INFRA ERROR: $message', error, stackTrace);
+  void logInfrastructureError(String message, [dynamic error, StackTrace? stackTrace]) {
+    logError('INFRASTRUCTURE ERROR: $message', error, stackTrace);
   }
 
-  static void logPayloadError(String message, [dynamic error, StackTrace? stackTrace]) {
+  void logPayloadError(String message, [dynamic error, StackTrace? stackTrace]) {
     logError('PAYLOAD ERROR: $message', error, stackTrace);
   }
 }
