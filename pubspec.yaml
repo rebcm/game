@@ -9,6 +9,7 @@ environment:
   uses-material-design: true
 
 dependencies:
+  isolate: ^2.1.1
   version: ^2.0.0
   flutter_driver:
     sdk: flutter
@@ -30,6 +31,7 @@ dependencies:
   cached_network_image: ^3.2.3
 
 dev_dependencies:
+  isolate: ^2.1.1
   version: ^2.0.0
   flutter_leak_detector: ^2.0.1
   leak_tracker: ^9.0.0
@@ -67,6 +69,7 @@ flutter:
     - assets/docs/checklists/documentacao-validacao-checklist.md
 
 dev_dependencies:
+  isolate: ^2.1.1
   test: ^1.21.4
 
   assets:

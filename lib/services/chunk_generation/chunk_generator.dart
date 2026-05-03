@@ -4,10 +4,8 @@ import 'package:rebcm/models/chunk/chunk.dart';
 class ChunkGenerator {
   static Future<Chunk> generateChunk(int x, int z) async {
     final receivePort = ReceivePort();
-    final isolate = await Isolate.spawn(_generateChunkIsolate, [x, z, receivePort.sendPort]);
-    final chunk = await receivePort.first;
-    isolate.kill();
-    return chunk;
+    await Isolate.spawn(_generateChunkIsolate, [x, z, receivePort.sendPort]);
+    return await receivePort.first;
   }
 
   static void _generateChunkIsolate(List<dynamic> args) {
