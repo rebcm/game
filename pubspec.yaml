@@ -38,15 +38,7 @@ flutter:
 scripts:
   build_and_test: flutter test && flutter build apk --debug
   swagger_validate: bash .github/scripts/ci_validation/swagger_validation/validate_swagger.sh
-
-  scripts:
-    test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart
-
-  scripts:
-    test:flutter_doctor: bash .github/scripts/ci_validation/flutter_doctor/validate_flutter_doctor.sh
-
-  scripts:
-    validate:cloudflare_token: bash .github/scripts/ci_validation/cloudflare_token_validation/validate_cloudflare_token.sh $CLOUDFLARE_TOKEN $ZONE_ID
-
-  scripts:
-    test:audio_edge_cases: flutter drive --driver=test/audio/edge_cases/audio_edge_cases_test.dart --target=test/app.dart
+  test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart
+  test:flutter_doctor: bash .github/scripts/ci_validation/flutter_doctor/validate_flutter_doctor.sh
+  validate:cloudflare_token: bash .github/scripts/ci_validation/cloudflare_token_validation/validate_cloudflare_token.sh \$CLOUDFLARE_TOKEN \$ZONE_ID
+  test:audio_edge_cases: flutter drive --driver=test/audio/edge_cases/audio_edge_cases_test.dart --target=test/app.dart
