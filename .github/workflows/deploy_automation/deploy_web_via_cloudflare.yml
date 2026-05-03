@@ -12,20 +12,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Cloudflare Token
-        run: ./.github/scripts/validate_cloudflare_token.sh
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
 
-      - name: Validate Cloudflare Secrets
-        run: ./.github/scripts/validate_cloudflare_secrets.sh
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Build Web
+      - name: Build web
         run: flutter build web
 
       - name: Deploy to Cloudflare
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_PAGES_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          npm install -g wrangler
-          wrangler pages deploy build/web --project-name=$CLOUDFLARE_PAGES_PROJECT_NAME --account-id=$CLOUDFLARE_ACCOUNT_ID --token=$CLOUDFLARE_API_TOKEN
+          curl -X POST \
+          https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/rebcm-game/deployments \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer ${CLOUDFLARE_API_TOKEN}' \
+          --data '{"branch":"main","working_directory":"/"}'
