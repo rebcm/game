@@ -1,29 +1,62 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart' as app;
 import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
+import 'package:mockito/mockito.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Audio Edge Cases Test', () {
-    testWidgets('Switch between speaker and headphones', (tester) async {
+    testWidgets('Connect and disconnect Bluetooth headphones', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simulate switching between speaker and headphones
-      // Add necessary code to test audio output switch
+      // Simulate connecting Bluetooth headphones
+      await simulateBluetoothConnection();
 
-      expect(true, true); // Replace with actual expectation
+      // Verify volume is not muted
+      expect(await getVolume(), isNot(0));
+
+      // Simulate disconnecting Bluetooth headphones
+      await simulateBluetoothDisconnection();
+
+      // Verify volume is still not muted
+      expect(await getVolume(), isNot(0));
     });
 
-    testWidgets('Interact with system volume', (tester) async {
+    testWidgets('Toggle "Do Not Disturb" mode', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simulate interacting with system volume
-      // Add necessary code to test volume interaction
+      // Simulate enabling "Do Not Disturb" mode
+      await simulateDoNotDisturbMode(true);
 
-      expect(true, true); // Replace with actual expectation
+      // Verify volume is muted
+      expect(await getVolume(), 0);
+
+      // Simulate disabling "Do Not Disturb" mode
+      await simulateDoNotDisturbMode(false);
+
+      // Verify volume is not muted
+      expect(await getVolume(), isNot(0));
     });
   });
+}
+
+Future<void> simulateBluetoothConnection() async {
+  // Implement simulation of Bluetooth connection
+}
+
+Future<void> simulateBluetoothDisconnection() async {
+  // Implement simulation of Bluetooth disconnection
+}
+
+Future<void> simulateDoNotDisturbMode(bool enabled) async {
+  // Implement simulation of "Do Not Disturb" mode
+}
+
+Future<int> getVolume() async {
+  // Implement getting the current volume
+  return 50; // Placeholder value
 }
