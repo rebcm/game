@@ -1,13 +1,8 @@
-// Código Dart para o walkthrough do jogo
-// Implementação da lógica para o walkthrough
-
+/// Walkthrough documentation for the game
 class Walkthrough {
-  // Lógica para o walkthrough
-  void init() {
-    // Inicialização do walkthrough
-  }
+  /// Initializes the walkthrough documentation
+  Walkthrough();
 
-  void nextStep() {
-    // Próximo passo do walkthrough
-  }
+  /// Provides a step-by-step guide for the player
+  String get guide => 'This is a sample walkthrough guide.';
 }
