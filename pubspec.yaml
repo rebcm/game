@@ -48,3 +48,6 @@ flutter:
 
   benchmark:
     path: ./benchmarks
+
+  cleanup:
+    path: ./integration_test/cleanup
