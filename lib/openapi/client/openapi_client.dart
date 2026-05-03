@@ -5,7 +5,12 @@ class OpenAPIClient {
 
   OpenAPIClient(this._dio);
 
-  Future<Response> get(String path) async {
-    return await _dio.get(path);
+  Future<Response> getTestEndpoint() async {
+    try {
+      final response = await _dio.get('/test-endpoint');
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

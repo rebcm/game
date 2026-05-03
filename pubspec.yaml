@@ -62,3 +62,5 @@ flutter:
     - lib/docs/peer_review/
   assets:
     - lib/docs/dicas/template_dica.md
+
+  dio: ^4.0.6
