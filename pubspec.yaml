@@ -39,3 +39,6 @@ flutter:
 
   flutter_test:
     path: ./test
+
+  integration_test:
+    path: ./integration_test
