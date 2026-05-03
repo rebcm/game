@@ -9,9 +9,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
-      - run: flutter pub get
-      - run: flutter test test/widget_test/dicas_construcao/dicas_construcao_test.dart
+
+      - name: Run tests
+        run: flutter test test/widget_test/dicas_construcao_test/dicas_construcao_test.dart
