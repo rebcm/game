@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class TipContextMapper {
   static Map<String, List<String>> getTipContexts() {
     return {
-      'construction_screen': ['block_selection', 'block_placement'],
-      'inventory_screen': ['item_selection'],
+      'construction_screen': ['block_selection', 'toolbar_interaction'],
+      'inventory_screen': ['item_drag', 'item_drop'],
     };
   }
 
@@ -14,7 +14,8 @@ class TipContextMapper {
   }
 
   static bool shouldShowModal(String context, String trigger) {
-    // For now, modals are shown for all other cases not covered by tooltips
-    return !shouldShowTooltip(context, trigger);
+    // For now, modals are shown on specific contexts and triggers
+    // This logic can be expanded as needed
+    return context == 'construction_screen' && trigger == 'first_block_placement';
   }
 }

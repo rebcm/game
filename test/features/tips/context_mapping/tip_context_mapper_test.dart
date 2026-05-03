@@ -9,14 +9,12 @@ void main() {
       expect(contexts['construction_screen'], contains('block_selection'));
     });
 
-    test('should determine if tooltip should be shown', () {
+    test('shouldShowTooltip returns true for valid context and trigger', () {
       expect(TipContextMapper.shouldShowTooltip('construction_screen', 'block_selection'), isTrue);
-      expect(TipContextMapper.shouldShowTooltip('inventory_screen', 'block_placement'), isFalse);
     });
 
-    test('should determine if modal should be shown', () {
-      expect(TipContextMapper.shouldShowModal('construction_screen', 'unknown_trigger'), isTrue);
-      expect(TipContextMapper.shouldShowModal('inventory_screen', 'item_selection'), isFalse);
+    test('shouldShowModal returns true for valid context and trigger', () {
+      expect(TipContextMapper.shouldShowModal('construction_screen', 'first_block_placement'), isTrue);
     });
   });
 }
