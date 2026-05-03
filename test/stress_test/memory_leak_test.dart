@@ -6,8 +6,10 @@ import 'package:rebcm/game.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Game screen stress test', (tester) async {
+  testWidgets('Memory leak test', (tester) async {
     await tester.pumpWidget(MyApp());
+
+    final initialMemoryUsage = MemoryInfo.currentHeapSize;
 
     for (int i = 0; i < 10; i++) {
       await tester.tap(find.text('Jogar'));
@@ -16,5 +18,9 @@ void main() {
       await tester.tap(find.text('Sair'));
       await tester.pumpAndSettle();
     }
+
+    final finalMemoryUsage = MemoryInfo.currentHeapSize;
+
+    expect(finalMemoryUsage - initialMemoryUsage, lessThan(1000000));
   });
 }

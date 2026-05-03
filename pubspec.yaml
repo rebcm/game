@@ -13,3 +13,5 @@ dev_dependencies:
 
   patform_device_id: ^1.0.0
     - .github/scripts/docs_validation/mapeamento_estruturas_sugeridas/mapeamento_estruturas_sugeridas.md
+
+  memory_info: ^0.2.0
