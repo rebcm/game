@@ -85,3 +85,5 @@ dependencies:
   test/integration_tests/ux_tests/responsividade_test/main.dart:
   assets:
     - docs/mapeamento_estruturas_sugeridas.md
+
+  test/integration_tests/ci_tests/clean_build_test.dart:

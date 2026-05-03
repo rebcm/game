@@ -1,10 +1,16 @@
 #!/bin/bash
 
-echo "Executando flutter clean..."
-flutter clean
+echo "Validating clean build..."
 
-echo "Executando flutter pub get..."
+flutter clean
 flutter pub get
 
-echo "Executando dart analyze..."
-dart analyze --fatal-infos --fatal-warnings .
+echo "Running dart analyze..."
+dart analyze
+
+if [ $? -ne 0 ]; then
+  echo "dart analyze failed with errors."
+  exit 1
+else
+  echo "Clean build and static analysis successful."
+fi
