@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart' as app;
-import 'package:game/utils/performance_testing/performance_tester.dart';
+import 'package:game/utils/performance_testing/widget_tracker.dart';
+import 'package:game/main.dart' as game;
 
 void main() {
   testWidgets('Rebuild performance test', (tester) async {
-    await app.main();
+    await tester.pumpWidget(game.MyApp());
+
+    // Wait for the game to load
     await tester.pumpAndSettle();
 
-    final performanceTester = PerformanceTester(tester);
-    await performanceTester.init();
+    // Track rebuilds
+    final widgetTracker = WidgetTracker();
+    widgetTracker.startTracking();
 
-    // Perform some actions to setup the test
-    await tester.tap(find.text('Some Button'));
-    await tester.pumpAndSettle();
+    // Perform an undo operation
+    await tester.tap(find.byIcon(Icons.undo));
+    await tester.pump();
 
-    // Start measuring rebuilds
-    performanceTester.startMeasuringRebuilds();
+    // Verify that unaffected widgets were not rebuilt
+    expect(widgetTracker.getRebuildCount('BlockWidget'), 0);
 
-    // Perform an Undo operation
-    await tester.tap(find.text('Undo'));
-    await tester.pumpAndSettle();
-
-    // Stop measuring rebuilds
-    final rebuildCount = await performanceTester.stopMeasuringRebuilds();
-
-    // Verify that the number of rebuilds is zero for unaffected widgets
-    expect(rebuildCount, 0);
+    widgetTracker.stopTracking();
   });
 }

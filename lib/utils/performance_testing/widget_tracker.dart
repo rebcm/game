@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:game/utils/performance_testing/performance_tester.dart';
 
-class RebuildTrackingWrapper extends StatefulWidget {
-  final Widget child;
+class WidgetTracker {
+  final Map<String, int> _rebuildCounts = {};
 
-  RebuildTrackingWrapper({required this.child});
+  void startTracking() {
+    // Implement logic to start tracking rebuilds
+  }
 
-  @override
-  _RebuildTrackingWrapperState createState() => _RebuildTrackingWrapperState();
-}
+  void stopTracking() {
+    // Implement logic to stop tracking rebuilds
+  }
 
-class _RebuildTrackingWrapperState extends State<RebuildTrackingWrapper> {
-  @override
-  Widget build(BuildContext context) {
-    PerformanceTester().incrementRebuildCount();
-    return widget.child;
+  int getRebuildCount(String widgetName) {
+    return _rebuildCounts[widgetName] ?? 0;
   }
 }

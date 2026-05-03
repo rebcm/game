@@ -6,6 +6,8 @@ flutter:
     - peer_review.md
 
 dev_dependencies:
+  widget_tracker_impl:
+    path: ./lib/utils/performance_testing/widget_tracker_impl.dart
   widget_tracker:
     path: ./lib/utils/performance_testing/widget_tracker.dart
   renderizacao_performance_test:
