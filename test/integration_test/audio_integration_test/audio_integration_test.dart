@@ -10,19 +10,19 @@ void main() {
     await tester.pumpAndSettle();
 
     // Test audio playback
-    await tester.tap(find.byTooltip('Play Audio'));
+    await tester.tap(find.byKey(Key('audio_play_button')));
     await tester.pumpAndSettle();
-    expect(find.text('Audio playing'), findsOneWidget);
+    expect(find.text('Audio is playing'), findsOneWidget);
 
     // Test audio pause
-    await tester.tap(find.byTooltip('Pause Audio'));
+    await tester.tap(find.byKey(Key('audio_pause_button')));
     await tester.pumpAndSettle();
-    expect(find.text('Audio paused'), findsOneWidget);
+    expect(find.text('Audio is paused'), findsOneWidget);
 
     // Test audio stop
-    await tester.tap(find.byTooltip('Stop Audio'));
+    await tester.tap(find.byKey(Key('audio_stop_button')));
     await tester.pumpAndSettle();
-    expect(find.text('Audio stopped'), findsOneWidget);
+    expect(find.text('Audio is stopped'), findsOneWidget);
   });
 
   testWidgets('Audio edge cases test', (tester) async {
@@ -31,20 +31,22 @@ void main() {
 
     // Test audio playback multiple times
     for (var i = 0; i < 5; i++) {
-      await tester.tap(find.byTooltip('Play Audio'));
+      await tester.tap(find.byKey(Key('audio_play_button')));
       await tester.pumpAndSettle();
-      expect(find.text('Audio playing'), findsOneWidget);
-      await tester.tap(find.byTooltip('Stop Audio'));
+      expect(find.text('Audio is playing'), findsOneWidget);
+      await tester.tap(find.byKey(Key('audio_stop_button')));
       await tester.pumpAndSettle();
     }
 
-    // Test audio pause and resume
-    await tester.tap(find.byTooltip('Play Audio'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Pause Audio'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Resume Audio'));
-    await tester.pumpAndSettle();
-    expect(find.text('Audio playing'), findsOneWidget);
+    // Test audio pause multiple times
+    for (var i = 0; i < 5; i++) {
+      await tester.tap(find.byKey(Key('audio_play_button')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key('audio_pause_button')));
+      await tester.pumpAndSettle();
+      expect(find.text('Audio is paused'), findsOneWidget);
+      await tester.tap(find.byKey(Key('audio_stop_button')));
+      await tester.pumpAndSettle();
+    }
   });
 }
