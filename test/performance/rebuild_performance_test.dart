@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart';
+import 'package:game/main.dart' as app;
+import 'package:game/utils/performance_testing/performance_tester.dart';
 
 void main() {
-  testWidgets('Rebuild performance test', (tester) async {
-    await tester.pumpWidget(MyApp());
-
-    // Initialize the world
+  testWidgets('Comparar FPS e rebuilds entre versão global e granular',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(app.MyApp());
     await tester.pumpAndSettle();
 
-    // Get the initial number of blocks
-    final initialBlocks = find.byType(BlockWidget);
+    final performanceTester = PerformanceTester(tester);
+    await performanceTester.runPerformanceTest();
 
-    // Perform an action that changes the world
-    await tester.tap(find.byType(AddBlockButton));
-    await tester.pumpAndSettle();
-
-    // Undo the action
-    await tester.tap(find.byType(UndoButton));
-    await tester.pumpAndSettle();
-
-    // Verify that the number of rebuilds is zero for unaffected blocks
-    expect(find.byType(BlockWidget), initialBlocks);
+    expect(performanceTester.fps, greaterThan(60));
+    expect(performanceTester.rebuildCount, lessThan(10));
   });
 }
