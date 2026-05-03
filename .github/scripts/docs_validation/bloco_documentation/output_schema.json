@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bloco Metadata",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string"},
+    "nome": {"type": "string"},
+    "descricao": {"type": "string"},
+    "categoria": {"type": "string"}
+  },
+  "required": ["id", "nome", "descricao", "categoria"]
+}
