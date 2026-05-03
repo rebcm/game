@@ -37,6 +37,8 @@ flutter:
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
 
+  assets:
+    - test/integration_tests/documentacao_test/
   uses-material-design: true
     - docs/flujo_integracion/flujo_integracion.md
     - docs/flujo_integracion/flujo_integracion.md
