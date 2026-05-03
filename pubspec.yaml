@@ -45,3 +45,5 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+
+  # No new dependencies needed for this task
