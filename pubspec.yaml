@@ -25,3 +25,5 @@ flutter:
     walkthrough_validation: ./.github/scripts/docs_validation/walkthrough_validation/validate_walkthrough.sh
   docs_validation:
     walkthrough_validation: ./.github/scripts/docs_validation/walkthrough_validation/validate_walkthrough.sh
+  docs_validation:
+    memory_leak_validation: ./.github/scripts/docs_validation/memory_leak_validation/validate_memory_leak_baseline.sh
