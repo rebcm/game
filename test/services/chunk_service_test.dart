@@ -1,28 +1,17 @@
-import 'package:test/test.dart';
-import 'package:http/http.dart' as http;
-import 'package:game/services/chunk_service.dart';
-import 'package:game/models/chunk_request.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:game/services/chunk_service/chunk_service.dart';
 
 void main() {
   group('ChunkService', () {
-    test('fetchChunk should return rate limit exceeded when exceeded', () async {
+    test('deve iniciar com chunk 0', () {
       final service = ChunkService();
-      final request = ChunkRequest(x: 0, y: 0, z: 0);
-
-      for (var i = 0; i < 61; i++) {
-        await service.fetchChunk(request);
-      }
-
-      final response = await service.fetchChunk(request);
-      expect(response.statusCode, 429);
+      expect(service.chunkAtual, 0);
     });
 
-    test('fetchChunk should return successful response when within limit', () async {
+    test('deve mudar o chunk', () {
       final service = ChunkService();
-      final request = ChunkRequest(x: 0, y: 0, z: 0);
-
-      final response = await service.fetchChunk(request);
-      expect(response.statusCode, 200); // Assuming the actual request is successful
+      service.mudarChunk();
+      expect(service.chunkAtual, 1);
     });
   });
 }
