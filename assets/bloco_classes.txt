@@ -1,0 +1,4 @@
+// List of bloco classes, one per line
+BlocoArvore
+BlocoCasa
+BlocoPedra

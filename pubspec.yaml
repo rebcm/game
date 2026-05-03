@@ -18,3 +18,5 @@ flutter:
   supportedLocales:
     - de
     - fr
+  assets:
+    - assets/bloco_classes.txt
