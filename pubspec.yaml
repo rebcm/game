@@ -5,6 +5,7 @@ flutter:
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
     - docs/bloco_documentation.json
+    - docs/seo/palavras-chave.md
 
 dev_dependencies:
   widget_tracker_impl:
@@ -49,4 +50,6 @@ dev_dependencies:
   stress_test_with_memory_check:
     path: ./test/integration/stress_test/time
   bloco_documentation_validation:
-    path: .github/scripts/docs_validation/bloco_documentation/validate_output_schema.sh
+    path: .github/scripts/docs_valid
+  seo_otimizacao_validation:
+    path: .github/scripts/docs_validation/seo_otimizacao/validate_seo_otimizacao.sh
