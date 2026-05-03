@@ -14,11 +14,8 @@ void main() {
                 onPressed: () async {
                   await showDialog(
                     context: context,
-                    builder: (context) => Dialog(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(FlutterI18n.translate(context, 'dicas.conteudo')),
-                      ),
+                    builder: (context) => AlertDialog(
+                      content: Text(FlutterI18n.translate(context, 'dicas.conteudo')),
                     ),
                   );
                 },
@@ -45,11 +42,8 @@ void main() {
                 onPressed: () async {
                   await showDialog(
                     context: context,
-                    builder: (context) => Dialog(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(FlutterI18n.translate(context, 'dicas.conteudo')),
-                      ),
+                    builder: (context) => AlertDialog(
+                      content: Text(FlutterI18n.translate(context, 'dicas.conteudo')),
                     ),
                   );
                 },
