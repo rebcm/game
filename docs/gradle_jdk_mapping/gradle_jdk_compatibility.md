@@ -1,17 +1,13 @@
-# Mapeamento de Versão Gradle vs JDK 17
+# Mapeamento de Versão Gradle vs JDK
 
-De acordo com a documentação oficial do Gradle, o suporte ao Java 17 é fornecido a partir da versão 7.3 do Gradle.
+Este documento fornece informações sobre a compatibilidade entre as versões do Gradle e do JDK.
 
-## Fonte Oficial
-
-Consulte a [documentação do Gradle](https://docs.gradle.org/current/userguide/compatibility.html) para obter informações atualizadas sobre compatibilidade.
-
-## Tabela de Compatibilidade
+## Compatibilidade
 
 | Versão Gradle | Versão JDK Suportada |
 |---------------|----------------------|
-| 7.3+          | JDK 17               |
+| 7.3+          | 17                   |
 
-## Recomendação
+## Referências
 
-Para utilizar o JDK 17, é recomendado usar o Gradle versão 7.3 ou superior.
+- [Documentação oficial do Gradle](https://docs.gradle.org/current/userguide/compatibility.html)
