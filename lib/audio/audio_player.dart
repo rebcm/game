@@ -1,20 +1,19 @@
+import 'package:audioplayers/audioplayers.dart';
+
 class AudioPlayer {
-  bool _isPlaying = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  bool get isPlaying => _isPlaying;
-
-  Future<void> play(String audioFile) async {
-    // Implement audio playback logic here
-    _isPlaying = true;
+  void play(String url) {
+    _audioPlayer.play(AssetSource(url));
   }
 
-  Future<void> pause() async {
-    // Implement audio pause logic here
-    _isPlaying = false;
+  void interrupt() {
+    _audioPlayer.pause();
   }
 
-  Future<void> resume() async {
-    // Implement audio resume logic here
-    _isPlaying = true;
+  void resume() {
+    _audioPlayer.resume();
   }
+
+  bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 }
