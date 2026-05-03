@@ -10,6 +10,7 @@ dependencies:
   http: ^0.13.5
   provider: ^6.0.3
   analyzer: ^5.2.0
+  dio: ^4.0.6
 
   openapi_client:
     path: ./lib/openapi/client
@@ -19,6 +20,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http_mock_adapter: ^1.0.0
+  dio_adapter: ^1.0.0
 
 flutter:
   assets:
@@ -29,7 +31,5 @@ flutter:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
-
-  uses-material-design: true
 
   uses-material-design: true

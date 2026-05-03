@@ -1,10 +1,9 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
-class OpenAPIClient {
-  final http.Client _httpClient;
+class OpenApiClient {
+  final Dio _dio;
 
-  OpenAPIClient(this._httpClient);
+  OpenApiClient(this._dio);
 
-  // Implement OpenAPI client logic here
-  // Define methods for each endpoint
+  // Implement API client methods here
 }
