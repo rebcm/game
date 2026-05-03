@@ -6,7 +6,7 @@ import 'package:rebcm/game.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('dicas widget responsividade test', (tester) async {
+  testWidgets('Dicas widget responsividade test', (tester) async {
     await tester.binding.setSurfaceSize(const Size(320, 480));
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
@@ -14,13 +14,7 @@ void main() {
     expect(find.text('Dicas'), findsOneWidget);
     expect(find.text('Construção'), findsOneWidget);
 
-    await tester.binding.setSurfaceSize(const Size(300, 480));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Dicas'), findsOneWidget);
-    expect(find.text('Construção'), findsOneWidget);
-
-    await tester.binding.setSurfaceSize(const Size(280, 480));
+    await tester.binding.setSurfaceSize(const Size(200, 400));
     await tester.pumpAndSettle();
 
     expect(find.text('Dicas'), findsOneWidget);
