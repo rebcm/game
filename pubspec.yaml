@@ -64,3 +64,6 @@ flutter:
   integration_test/dicas_ui_test/dicas_ui_test.dart:
     - .github/scripts/ci_validation/dicas_tests/docs/criterios_aceitacao_dicas.md
     - docs/seo/palavras-chave-dicas.md
+
+  integration_test/audio_integration_test/audio_integration_test.dart:
+    - docs/audio_api_comparativo/audio_api_comparativo.md

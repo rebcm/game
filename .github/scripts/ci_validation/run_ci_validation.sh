@@ -8,3 +8,5 @@ bash .github/scripts/ci_validation/run_microfone_usage_description_validation.sh
 # Executar validação de permissões
 ./.github/scripts/ci_validation/run_permission_validation.sh
 
+
+./.github/scripts/ci_validation/audio_integration_test/run_audio_integration_test.sh
