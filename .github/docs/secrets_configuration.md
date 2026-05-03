@@ -1,20 +1,13 @@
-# Configuração de Secrets
+# Configuring Secrets for GitHub Actions
 
-## Introdução
+To configure secrets for GitHub Actions, follow these steps:
 
-Este documento descreve como configurar os secrets necessários para o funcionamento do CI/CD do projeto.
+1. Go to your repository settings on GitHub.
+2. Click on "Actions" in the left sidebar.
+3. Click on "Secrets" and then "Actions".
+4. Click on "New repository secret".
+5. Add the following secrets:
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
 
-## Secrets Necessários
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-
-## Configuração
-
-1. Vá para as configurações do repositório no GitHub.
-2. Clique em "Actions" e depois em "Secrets".
-3. Adicione os secrets `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` com os valores correspondentes.
-
-## Uso
-
-Os secrets são usados no workflow `configure_secrets.yml` para autenticar o Wrangler no CI/CD.
+These secrets are required for the CI/CD pipeline to authenticate with Cloudflare.
