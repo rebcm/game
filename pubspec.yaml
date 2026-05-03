@@ -67,3 +67,6 @@ dev_dependencies:
 
   ui_integration_test:
     path: ./test/integration/ui_integration_test/ui_flow_integrator_test.dart
+
+  peer_review_test:
+    path: ./test/integration/peer_review_test/peer_review_test.dart

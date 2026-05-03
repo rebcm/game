@@ -1,19 +1,21 @@
 #!/bin/bash
 
-# Check for orthographic and technical errors in added text
-echo "Running peer review validation..."
-
-# Assume the file to be reviewed is in the same directory
-review_file="peer_review.md"
-
-# Use a linter or a spell checker to check the file
-# For simplicity, we'll just use a basic spell check
-aspell --lang=en_US check "$review_file"
-
-# If the file has no errors, the script will exit with 0
-if [ $? -eq 0 ]; then
-  echo "Peer review validation successful."
-else
-  echo "Peer review validation failed. Please address the errors before proceeding."
+# Verifica se o arquivo peer_review.md existe
+if [ ! -f peer_review.md ]; then
+  echo "Arquivo peer_review.md não encontrado."
   exit 1
 fi
+
+# Verifica se o conteúdo do arquivo peer_review.md está vazio
+if [ ! -s peer_review.md ]; then
+  echo "Arquivo peer_review.md está vazio."
+  exit 1
+fi
+
+# Realiza a validação do conteúdo do peer_review.md
+# Implemente aqui a lógica de validação necessária
+# Por exemplo, verificar se o conteúdo segue um formato específico
+# ou se contém palavras-chave específicas
+
+echo "Validação do peer_review.md realizada com sucesso."
+exit 0

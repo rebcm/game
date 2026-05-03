@@ -11,3 +11,6 @@ run_ci_validation() {
 run_ci_validation
 
 ./.github/scripts/ci_validation/run_ui_integration_test.sh
+
+# Executa a validação do peer review
+./.github/scripts/docs_validation/peer_review/validate_peer_review.sh

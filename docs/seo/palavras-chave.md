@@ -1,14 +1,9 @@
-# Palavras-Chave Estratégicas para SEO
+# Palavras-chave
 
-Este documento lista as palavras-chave estratégicas para otimização de SEO do projeto Rebeca.
+Lista de palavras-chave relevantes para o projeto.
 
-## Palavras-Chave
-
-- Flutter
-- Voxel
-- Criativo
 - Rebeca
-
-## Descrição
-
-Essas palavras-chave são fundamentais para a visibilidade do projeto em motores de busca e devem ser incluídas na documentação e conteúdo do site.
+- Jogo
+- Flutter
+- Blocos voxel
+- Modo criativo
