@@ -57,3 +57,6 @@ flutter:
 
   test:
     path: ./test/compatibilidade_test.dart
+
+  test:
+    path: ./test/pub_get_test.dart
