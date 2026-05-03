@@ -1,0 +1,12 @@
+openapi: 3.0.0
+info:
+  title: Rebeca Game API
+  description: API documentation for Rebeca Game
+  version: 1.0.0
+paths:
+  /example:
+    get:
+      summary: Example endpoint
+      responses:
+        '200':
+          description: OK
