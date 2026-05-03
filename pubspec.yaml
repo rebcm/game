@@ -39,3 +39,5 @@ flutter:
   integration_test/documentacao_test.dart:
 
   integration_test/responsividade_tela_pequena_test.dart:
+
+  integration_test/external_interruptions_test.dart:
