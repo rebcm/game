@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:game/services/api_service/interceptors/network_interceptor.dart';
 
 class ApiService {
-  Future<Map<String, dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse('https://api.example.com/endpoint'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load data');
-    }
+  final http.Client _client;
+  final NetworkInterceptor _networkInterceptor;
+
+  ApiService(this._client, this._networkInterceptor);
+
+  Future<http.Response> makeRequest(http.Request request) async {
+    return _networkInterceptor.interceptRequest(request);
   }
 }

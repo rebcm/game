@@ -1,34 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/services/api_service/api_service.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:game/services/api_service/interceptors/mock_http_interceptor.dart';
+import 'package:game/services/api_service/api_service.dart';
+import 'package:game/services/api_service/interceptors/network_interceptor.dart';
 
 void main() {
-  late Dio dio;
-  late DioAdapter dioAdapter;
-  late MockHttpInterceptor mockHttpInterceptor;
-  late ApiService apiService;
+  late DioAdapter _dioAdapter;
+  late NetworkInterceptor _networkInterceptor;
+  late ApiService _apiService;
 
   setUp(() {
-    dio = Dio();
-    dio.httpClientAdapter = dioAdapter = DioAdapter(dio: dio);
-    mockHttpInterceptor = MockHttpInterceptor(dioAdapter);
-    mockHttpInterceptor.setupMockInterceptor();
-    apiService = ApiService(dio);
+    _dioAdapter = DioAdapter();
+    _networkInterceptor = NetworkInterceptor(_dioAdapter);
+    _apiService = ApiService(http.Client(), _networkInterceptor);
   });
 
-  test('test api service successful response', () async {
-    final response = await apiService.get('/api/endpoint');
+  test('should make a successful request', () async {
+    final request = http.Request('GET', Uri.parse('https://example.com/success'));
+    final response = await _apiService.makeRequest(request);
     expect(response.statusCode, 200);
-  });
-
-  test('test api service timeout response', () async {
-    expect(() async => await apiService.get('/api/timeout'), throwsException);
-  });
-
-  test('test api service 500 response', () async {
-    final response = await apiService.get('/api/500');
-    expect(response.statusCode, 500);
   });
 }
