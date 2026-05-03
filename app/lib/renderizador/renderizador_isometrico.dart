@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flame/game.dart';
+import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
 import 'package:rebcm/mundo/mundo.dart';
 import 'package:rebcm/personagem/rebeca.dart';
