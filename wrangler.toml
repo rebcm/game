@@ -1,10 +1,12 @@
-name = "rebcm-game"
+name = "game-worker"
 type = "javascript"
 
 [env.production]
 vars = {
-  DATABASE_URL = { binding = "DATABASE_URL", type = "plain_text" }
+  DB_HOST = "",
+  DB_PORT = "",
+  DB_NAME = "",
+  DB_USER = "",
+  DB_PASSWORD = "",
+  API_KEY = ""
 }
-
-[[env.production.secret]]
-text = "CLOUDFLARE_API_TOKEN"
