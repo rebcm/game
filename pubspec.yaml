@@ -1,17 +1,14 @@
 flutter:
   assets:
     - assets/estruturas_sugeridas/
-  tests:
-    - test/responsividade/tela_pequena_test.dart
-  assets:
     - docs/glossario.md
+    - docs/checklist_documentacao.md
 
 dev_dependencies:
   analyzer: ^5.13.0
+  golden_toolkit: ^0.13.0
 
-  tests:
-    - test/dicas_test.dart
-  assets:
-    - docs/checklist_documentacao.md
-  tests:
-    - test/contract_tests/openapi_contract_test.dart
+tests:
+  - test/dicas_test.dart
+  - test/contract_tests/openapi_contract_test.dart
+  - test/golden_tests/tela_dicas_golden_test.dart
