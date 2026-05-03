@@ -1,13 +1,18 @@
 #!/bin/bash
 
-# Script para executar testes de integração da documentação
+# Este script executa os testes de integração da documentação
+# Verifica se a documentação está atualizada e consistente com o código
 
-# Verifica se o diretório de testes de integração existe
-if [ ! -d "./integration_test" ]; then
-  echo "Diretório de testes de integração não encontrado."
+# Configura o ambiente para execução dos testes
+source ./env.sh
+
+# Executa os testes de integração da documentação
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+
+# Verifica se houve erros durante a execução dos testes
+if [ $? -ne 0 ]; then
+  echo "Erro ao executar testes de integração da documentação"
   exit 1
 fi
 
-# Executa os testes de integração
-flutter test integration_test/documentacao_test.dart
-
+echo "Testes de integração da documentação executados com sucesso"

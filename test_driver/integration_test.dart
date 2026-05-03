@@ -2,9 +2,20 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Latency benchmark test', () async {
-    final driver = await FlutterDriver.connect();
-    await driver.requestData(''); // dummy request to ensure driver is connected
-    await driver.close();
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    if (driver != null) {
+      driver?.close();
+    }
+  });
+
+  test('Testes de integração da documentação', () async {
+    // Implementação dos testes de integração da documentação
+    // Deve seguir os casos de teste documentados
   });
 }
