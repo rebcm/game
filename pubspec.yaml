@@ -65,3 +65,6 @@ flutter:
 
   api_service:
     path: ./lib/services/api_service
+
+  api_service_test:
+    path: ./test/api_service_test
