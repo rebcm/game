@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class LocaleText extends StatelessWidget {
-  final String key;
+  final String englishText;
 
-  LocaleText(this.key);
+  LocaleText({required this.englishText});
 
   @override
   Widget build(BuildContext context) {
-    return Text(key);
+    // Implement locale-based text rendering here
+    return Text(englishText);
   }
 }

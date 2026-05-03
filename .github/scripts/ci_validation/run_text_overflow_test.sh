@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/integration/text_overflow_test/text_overflow_test.dart --target=lib/main.dart
+flutter drive --target=test_driver/app.dart --driver=test_driver/text_overflow_test.dart
