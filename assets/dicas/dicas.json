@@ -1,0 +1,12 @@
+{
+  "dicas": [
+    {
+      "id": 1,
+      "conteudo": "Dica 1"
+    },
+    {
+      "id": 2,
+      "conteudo": "Dica 2"
+    }
+  ]
+}
