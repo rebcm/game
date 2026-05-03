@@ -30,6 +30,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   integration_test:
     sdk: flutter
+  dio: ^5.4.0
 
 flutter:
   uses-material-design: true
@@ -68,10 +69,3 @@ flutter:
 
   api_service_test:
     path: ./test/api_service_test
-
-  dio: ^5.4.0
-
-dev_dependencies:
-  dio: ^5.4.0
-
-  dio: ^5.4.0
