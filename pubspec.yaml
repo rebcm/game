@@ -9,6 +9,7 @@ environment:
 dependencies:
   http: ^0.13.5
   provider: ^6.0.3
+  analyzer: ^5.2.0
 
   openapi_client:
     path: ./lib/openapi/client
@@ -16,15 +17,14 @@ dependencies:
 dev_dependencies:
   test: ^1.21.4
   flutter_test:
-  http_mock_adapter: ^1.0.0
     sdk: flutter
+  http_mock_adapter: ^1.0.0
 
 flutter:
   assets:
     - assets/translations/
     - lib/docs/
     - lib/docs/dicas/
-
 
   flutter_localizations:
     sdk: flutter
