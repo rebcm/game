@@ -101,3 +101,6 @@ flutter:
     path: ./test/key_mapping_test
   input_stress_test:
     path: ./test/input_stress_test
+
+  player_state_transition_test:
+    path: ./test/player_state_transition_test
