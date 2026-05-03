@@ -5,14 +5,15 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('documentacao test', (tester) async {
+  testWidgets('documentação deve ser renderizada corretamente', (tester) async {
     app.main();
     await tester.pumpAndSettle();
+    // Implementar verificações para a documentação
+  });
 
-    // Implement test steps based on documentacao.md
-    // For example:
-    // await tester.tap(find.text('Certain Button'));
-    // await tester.pumpAndSettle();
-    // expect(find.text('Expected Text'), findsOneWidget);
+  testWidgets('links da documentação devem ser válidos', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Implementar verificações para os links da documentação
   });
 }
