@@ -1,4 +1,4 @@
-name: Deploy Web via Cloudflare Pages
+name: Deploy Web via Cloudflare
 
 on:
   push:
@@ -12,21 +12,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
+      - name: Validate Cloudflare Token
+        run: ./.github/scripts/validate_cloudflare_token.sh
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Validate Cloudflare Pages Secrets
+        run: ./.github/scripts/validate_cloudflare_pages_secrets.sh
 
-      - name: Build web
-        run: flutter build web --release
+      - name: Build Web
+        run: flutter build web
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: build/web
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+          -H "Content-Type: application/json" \
+          --data '{"branch":"main"}' \
+          https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$CLOUDFLARE_PROJECT_NAME/deployments
