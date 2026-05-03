@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/constants/dicas_construcao.dart';
+import 'package:game/data/dicas_construcao.dart';
 
 class DicasWidget extends StatelessWidget {
   @override

@@ -2,23 +2,26 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para as dicas de construção exibidas no jogo. As dicas devem ser precisas, úteis e alinhadas com o modo criativo do jogo.
+Este documento define os critérios de aceitação para as dicas de construção exibidas no jogo. As dicas devem ser precisas, úteis e fáceis de entender.
 
 ## Critérios de Aceitação
 
-1. **Precisão Técnica**: As dicas devem ser tecnicamente precisas em relação às mecânicas do jogo e ao uso dos blocos voxel.
-2. **Relevância**: As dicas devem ser relevantes para o modo criativo e ajudar os jogadores a construir estruturas interessantes.
+1. **Precisão Técnica**: As dicas devem ser tecnicamente precisas em relação às mecânicas do jogo.
+2. **Relevância**: As dicas devem ser relevantes para o jogador e ajudá-lo a entender ou melhorar sua experiência no jogo.
 3. **Clareza**: A linguagem utilizada nas dicas deve ser clara e fácil de entender.
-4. **Formatação**: As dicas devem seguir um padrão de formatação definido para garantir consistência.
-
-## Validação
-
-As dicas serão validadas através de testes automatizados e revisão manual para garantir que atendam aos critérios acima.
+4. **Consistência**: As dicas devem seguir um padrão consistente em termos de formatação e estilo.
 
 ## Conteúdo das Dicas
 
-As dicas devem cobrir tópicos como:
-- Uso básico dos blocos voxel
-- Técnicas de construção de estruturas simples e complexas
-- Dicas para criar composições visuais interessantes
+As dicas devem cobrir os seguintes tópicos:
+- Introdução básica ao jogo e suas mecânicas
+- Dicas para iniciantes
+- Técnicas avançadas de construção
 
+## Formatação
+
+As dicas devem ser formatadas de acordo com as diretrizes de formatação definidas no documento `criterios_aceitacao_dicas_formatadas.md`.
+
+## Validação
+
+As dicas devem ser validadas de acordo com os critérios definidos neste documento e no `dicas_tests.sh`.
