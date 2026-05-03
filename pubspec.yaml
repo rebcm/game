@@ -16,3 +16,4 @@ supportedLocales:
   - en
   - de
   - fr
+  - test/permission_edge_cases/permission_edge_cases_test.dart
