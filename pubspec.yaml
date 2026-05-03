@@ -18,3 +18,5 @@ dev_dependencies:
 
   flutter_localizations:
     sdk: flutter
+
+  game/docs/glossario/glossario.md:

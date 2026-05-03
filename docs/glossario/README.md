@@ -1,11 +1,4 @@
-# Glossário
+# Glossário de Termos Técnicos
 
-## Introdução
-
-Este glossário define termos técnicos e conceitos utilizados no projeto PassDriver Flutter.
-
-## Termos
-
-* **PassDriver**: Plataforma de gerenciamento de drivers.
-* **Flutter**: Framework de desenvolvimento de aplicativos móveis.
+Para mais detalhes sobre os termos técnicos utilizados no projeto, consulte o [Glossário](./glossario.md).
 
