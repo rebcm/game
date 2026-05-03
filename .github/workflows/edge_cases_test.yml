@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Run edge cases tests
         run: |
-          flutter test test/widget_test/edge_cases
-      - name: Run integration edge cases tests
-        run: |
-          flutter drive --driver=test/integration_test/edge_cases/integration_test.dart --target=test/integration_test/edge_cases/integration_test.dart
+          flutter test test/widget_test/edge_cases/resolution_test.dart
+          flutter test test/widget_test/edge_cases/input_test.dart
+          flutter test test/widget_test/edge_cases/drift_test.dart

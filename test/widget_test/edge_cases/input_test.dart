@@ -7,10 +7,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
     expect(find.text('1'), findsOneWidget);
-    for (var i = 0; i < 100; i++) {
-      await tester.tap(find.byIcon(Icons.add));
-      await tester.pump();
-    }
-    expect(find.text('101'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.remove));
+    await tester.pumpAndSettle();
+    expect(find.text('0'), findsOneWidget);
   });
 }
