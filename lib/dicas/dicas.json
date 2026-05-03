@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "texto": "Dica 1",
+    "aprovada": true
+  },
+  {
+    "id": 2,
+    "texto": "Dica 2",
+    "aprovada": false
+  }
+]
