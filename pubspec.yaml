@@ -29,3 +29,6 @@ flutter:
 
   chunk_transition_stress_test:
     path: test/integration_test/performance_test/chunk_transition_test.dart
+
+  ui_resolution_test:
+    path: test/integration_test/ui_test/resolution_test/resolution_test.dart
