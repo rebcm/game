@@ -1,0 +1,22 @@
+name: Validacao Permissao Concedida Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-permission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run permission validation test
+        run: |
+          flutter test test/permissao_concedida_test.dart
