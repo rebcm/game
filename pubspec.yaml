@@ -39,3 +39,6 @@ flutter:
     - docs/audio_compatibility/audio_compatibility_matrix.md
     - test/integration/contract/contract_test.dart
 
+  # Cloudflare Pages pipeline permissions assets
+  - docs/cloudflare_pages_pipeline/minimum_permissions_matrix.md
+  - .github/scripts/ci_validation/cloudflare_pages_permissions/docs/criterios_aceitacao_permissoes.md
