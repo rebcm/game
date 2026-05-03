@@ -1,25 +1,18 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 
 class DicasService {
-  Future<List<Dica>> getDicas() async {
-    final response = await http.get(Uri.parse('assets/dicas/dicas.json'));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['dicas'].map((json) => Dica.fromJson(json)).toList();
-    } else {
-      throw Exception('Falha ao carregar dicas');
+  Future<void> validarAprovacaoTecnica() async {
+    final conteudo = await rootBundle.loadString('assets/dicas/dicas.json');
+    final jsonData = jsonDecode(conteudo);
+    if (jsonData['aprovado'] != true) {
+      throw Exception('Dicas não aprovadas tecnicamente.');
     }
   }
-}
 
-class Dica {
-  final int id;
-  final String conteudo;
-
-  Dica({required this.id, required this.conteudo});
-
-  factory Dica.fromJson(Map<String, dynamic> json) {
-    return Dica(id: json['id'], conteudo: json['conteudo']);
+  Future<void> carregarDicas() async {
+    await validarAprovacaoTecnica();
+    // Carregar dicas após validação
   }
 }

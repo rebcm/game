@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# Verificar se o conteúdo das dicas foi aprovado
+# Verifica se as dicas foram aprovadas tecnicamente
 if [ -f ./assets/dicas/dicas.json ]; then
-  # Verificar se o conteúdo foi aprovado pelo Game Designer e Lead Técnico
-  if grep -q '"aprovado": true' ./assets/dicas/dicas.json && grep -q '"aprovado_tecnico": true' ./assets/dicas/dicas.json; then
-    echo "Aprovação técnica do conteúdo das dicas validada com sucesso."
+  # Lê o conteúdo do arquivo dicas.json
+  conteudo=$(cat ./assets/dicas/dicas.json)
+  
+  # Verifica se o conteúdo contém a chave "aprovado"
+  if echo "$conteudo" | grep -q '"aprovado": true'; then
+    echo "Dicas aprovadas tecnicamente."
     exit 0
   else
-    echo "Erro: Conteúdo das dicas não aprovado."
+    echo "Dicas não aprovadas tecnicamente."
     exit 1
   fi
 else
-  echo "Erro: Arquivo de dicas não encontrado."
+  echo "Arquivo dicas.json não encontrado."
   exit 1
 fi

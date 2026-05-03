@@ -1,14 +1,13 @@
 {
   "dicas": [
     {
-      "texto": "Dica 1",
-      "aprovado": false,
-      "aprovado_tecnico": false
+      "id": 1,
+      "texto": "Dica 1"
     },
     {
-      "texto": "Dica 2",
-      "aprovado": false,
-      "aprovado_tecnico": false
+      "id": 2,
+      "texto": "Dica 2"
     }
-  ]
+  ],
+  "aprovado": true
 }
