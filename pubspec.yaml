@@ -73,3 +73,5 @@ dev_dependencies:
 
   dicas_service:
     path: ./lib/services/dicas
+  peer_review_test:
+    path: ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
