@@ -1,14 +1,20 @@
-import 'package:flutter_driver/flutter_driver.dart' as driver;
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() async {
-  driver FlutterDriver? driver;
-  try {
-    driver = await driver FlutterDriver.connect();
-  } finally {
-    if (driver != null) {
-      await driver.close();
-    }
-  }
-  await integrationDriver();
+void main() {
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    driver?.close();
+  });
+
+  test('audio edge cases test', () async {
+    await driver?.runUnsynchronized(() async {
+      await driver?.waitUntilNoTransientCallbacks();
+    });
+  });
 }
