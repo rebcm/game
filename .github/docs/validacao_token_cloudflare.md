@@ -1,23 +1,19 @@
-# Validação de Token Cloudflare
+# Validação do Token Cloudflare
 
 ## Introdução
 
-Este documento descreve o processo de validação do token Cloudflare utilizado no deploy do aplicativo Flutter.
+Este documento descreve o processo de validação do token Cloudflare utilizado no projeto.
 
 ## Script de Validação
 
-O script `validate_token.sh` localizado em `.github/scripts/ci_validation/token_validation` é responsável por validar o token Cloudflare.
-
-### Parâmetros
-
-- `TOKEN`: O token Cloudflare a ser validado.
-- `ZONE_ID`: O ID da zona Cloudflare.
+O script `validate_cloudflare_token.sh` localizado em `.github/scripts/validate_cloudflare_token` é responsável por validar o token Cloudflare.
 
 ### Funcionamento
 
-O script utiliza a API do Cloudflare para verificar as permissões do token fornecido. Ele verifica se o token possui as permissões `Zone.DNS` e `Zone.Settings`.
+1. Verifica se as variáveis de ambiente `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ZONE_ID` estão definidas.
+2. Realiza uma requisição GET para a API do Cloudflare usando o token e o zone ID fornecidos.
+3. Verifica se a resposta da API indica sucesso.
 
-### Retorno
+### Uso
 
-- `0`: Token válido.
-- `1`: Token inválido ou sem as permissões necessárias.
+O script deve ser executado em um ambiente onde as variáveis de ambiente `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ZONE_ID` estejam configuradas.
