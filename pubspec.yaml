@@ -100,3 +100,6 @@ flutter:
 
   secrets_fail_safe_test:
     path: ./integration_test/secrets_fail_safe_test
+
+  env_validation_test:
+    path: ./test/env_validation_test

@@ -1,18 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/main.dart' as app;
-import 'package:dotenv/dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() {
-  test('Validate environment variables', () async {
-    await app.main();
-    final env = Dotenv().env;
-    final variables = [
-      // List variables from wrangler.toml here
-      'VARIABLE_NAME_1',
-      'VARIABLE_NAME_2',
-    ];
-    for (var variable in variables) {
-      expect(env[variable], isNotNull, reason: '$variable is not set');
-    }
+  group('Environment Variables Validation', () {
+    test('should load .env file', () async {
+      await dotenv.load();
+      expect(dotenv.env, isNotNull);
+    });
+
+    test('should validate required environment variables', () async {
+      await dotenv.load();
+      final requiredVars = [
+        'API_KEY',
+        'API_SECRET',
+        'CLOUDFLARE_TOKEN',
+      ];
+      for (var variable in requiredVars) {
+        expect(dotenv.env[variable], isNotNull, reason: '$variable is missing');
+        expect(dotenv.env[variable], isNotEmpty, reason: '$variable is empty');
+      }
+    });
   });
 }
