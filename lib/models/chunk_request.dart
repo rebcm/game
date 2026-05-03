@@ -1,11 +1,15 @@
-import 'package:equatable/equatable.dart';
-
-class ChunkRequest extends Equatable {
+class ChunkRequest {
   final int x;
+  final int y;
   final int z;
 
-  const ChunkRequest({required this.x, required this.z});
+  ChunkRequest({required this.x, required this.y, required this.z});
 
-  @override
-  List<Object> get props => [x, z];
+  Map<String, dynamic> toJson() {
+    return {
+      'x': x,
+      'y': y,
+      'z': z,
+    };
+  }
 }

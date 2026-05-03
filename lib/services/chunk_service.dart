@@ -1,31 +1,29 @@
 import 'package:http/http.dart' as http;
-import 'package:rebcm/models/chunk_request.dart';
 import 'dart:convert';
+import '../models/chunk_request.dart';
 
 class ChunkService {
-  final http.Client _httpClient;
-  final Map<String, int> _requestTimestamps = {};
+  static const int maxRequestsPerMinute = 60;
+  static const Duration oneMinute = Duration(minutes: 1);
+  Map<String, List<DateTime>> _requestTimestamps = {};
 
-  ChunkService(this._httpClient);
+  Future<http.Response> fetchChunk(ChunkRequest request) async {
+    final clientIp = '127.0.0.1'; // Assuming a method to get client IP
+    final now = DateTime.now();
 
-  Future<void> fetchChunk(ChunkRequest request) async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final key = '${request.x},${request.z}';
-    final lastRequest = _requestTimestamps[key];
+    _requestTimestamps[clientIp] ??= [];
+    _requestTimestamps[clientIp]!.removeWhere((timestamp) => now.difference(timestamp) > oneMinute);
+    _requestTimestamps[clientIp]!.add(now);
 
-    if (lastRequest != null && now - lastRequest < 500) {
-      return;
+    if (_requestTimestamps[clientIp]!.length > maxRequestsPerMinute) {
+      return http.Response('Rate limit exceeded', 429);
     }
 
-    _requestTimestamps[key] = now;
+    final url = Uri.parse('https://example.com/chunk'); // Replace with actual URL
+    final response = await http.post(url, headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    }, body: jsonEncode(request.toJson()));
 
-    final response = await _httpClient.get(Uri.parse('https://example.com/chunks/${request.x}/${request.z}'));
-
-    if (response.statusCode == 200) {
-      // Process the chunk data
-      print('Chunk fetched: ${request.x}, ${request.z}');
-    } else {
-      print('Failed to fetch chunk: ${response.statusCode}');
-    }
+    return response;
   }
 }
