@@ -4,6 +4,7 @@ flutter:
     - docs/swagger_ui.html
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
+    - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
 
