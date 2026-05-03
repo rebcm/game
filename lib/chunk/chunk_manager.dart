@@ -1,25 +1,17 @@
-import 'package:game/cache/lru_cache.dart';
+import 'package:game/utils/cache/lru_cache.dart';
 
 class ChunkManager {
   final LRUCache<String, Chunk> _chunkCache;
 
-  ChunkManager(int capacity) : _chunkCache = LRUCache(capacity);
+  ChunkManager(int maxChunks) : _chunkCache = LRUCache<String, Chunk>(maxChunks);
 
-  Chunk? getChunk(String chunkKey) {
-    return _chunkCache.get(chunkKey);
-  }
+  Chunk? getChunk(String chunkKey) => _chunkCache.get(chunkKey);
 
-  void loadChunk(String chunkKey, Chunk chunk) {
-    _chunkCache.put(chunkKey, chunk);
-  }
+  void cacheChunk(String chunkKey, Chunk chunk) => _chunkCache.set(chunkKey, chunk);
 
-  void unloadChunk(String chunkKey) {
-    _chunkCache.remove(chunkKey);
-  }
+  void unloadChunk(String chunkKey) => _chunkCache.evict(chunkKey);
 
-  void clearChunks() {
-    _chunkCache.clear();
-  }
+  void clearCache() => _chunkCache.clear();
 }
 
 class Chunk {}
