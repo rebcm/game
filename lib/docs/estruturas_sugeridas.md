@@ -1,13 +1,24 @@
 # Estruturas Sugeridas
 
-Este documento apresenta estruturas sugeridas para o jogo.
+Este documento apresenta algumas estruturas que você pode construir no jogo.
 
-## Estruturas
+## Casa Simples
 
-1. **Castelo**: Uma estrutura complexa com torres e muralhas.
-2. **Casa**: Uma estrutura simples para habitação.
+- **Descrição**: Uma casa básica com paredes de madeira e um telhado de folhas.
+- **Materiais Necessários**:
+  - 10 Blocos de Madeira
+  - 5 Blocos de Folhas
 
-## Dicas
+## Torre Alta
 
-- Use blocos de pedra para construir estruturas duráveis.
-- Use blocos de madeira para construir estruturas mais leves.
+- **Descrição**: Uma torre alta feita de pedra.
+- **Materiais Necessários**:
+  - 20 Blocos de Pedra
+
+## Jardim
+
+- **Descrição**: Um jardim com flores e grama.
+- **Materiais Necessários**:
+  - 15 Blocos de Grama
+  - 5 Blocos de Flores
+

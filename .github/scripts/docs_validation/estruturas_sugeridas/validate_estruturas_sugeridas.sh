@@ -1,18 +1,10 @@
 #!/bin/bash
 
-# Define the estruturas sugeridas file path
-ESTRUTURAS_SUGERIDAS_FILE="./lib/docs/estruturas_sugeridas.md"
-
-# Check if the estruturas sugeridas file exists
-if [ ! -f "$ESTRUTURAS_SUGERIDAS_FILE" ]; then
-  echo "Estruturas sugeridas file not found: $ESTRUTURAS_SUGERIDAS_FILE"
+# Executa a validação das estruturas sugeridas
+./.github/scripts/docs_validation/estruturas_sugeridas/run_validation.sh
+if [ $? -ne 0 ]; then
+  echo "Falha ao validar estruturas sugeridas."
   exit 1
 fi
 
-# Validate the estruturas sugeridas content (example: check for specific keywords)
-if ! grep -q "Estruturas Sugeridas" "$ESTRUTURAS_SUGERIDAS_FILE"; then
-  echo "Estruturas sugeridas content is invalid or missing required keywords."
-  exit 1
-fi
-
-echo "Estruturas sugeridas validation successful."
+echo "Estruturas sugeridas validadas com sucesso."

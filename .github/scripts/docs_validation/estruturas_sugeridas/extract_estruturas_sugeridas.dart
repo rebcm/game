@@ -1,9 +1,6 @@
-import 'dart:io';
+import 'package:game/docs/estruturas_sugeridas.dart';
 
 void main() {
-  final file = File('lib/docs/estruturas_sugeridas.md');
-  final content = file.readAsStringSync();
-
-  // Implemente a lógica para extrair e validar as estruturas sugeridas
-  print(content);
+  // Implemente a lógica para extrair as estruturas sugeridas do arquivo Markdown
+  print('Extraindo estruturas sugeridas...');
 }
