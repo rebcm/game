@@ -135,3 +135,6 @@ dev_dependencies:
     path: ./.github/scripts/docs_validation/bloco_documentation/validate_bloco_documentation.sh
   timer_stress_test:
     path: ./test/integration/stress_test/timer_stress_test.dart
+
+  rate_limiter_test:
+    path: ./test/unit/rate_limiter_test.dart

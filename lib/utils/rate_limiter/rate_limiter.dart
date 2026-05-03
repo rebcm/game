@@ -1,19 +1,22 @@
-import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 class RateLimiter {
-  final int maxRequests;
-  final Duration timeWindow;
-  final List<DateTime> requestTimestamps = [];
+  final int _maxRequests;
+  final Duration _timeWindow;
+  final Map<String, List<DateTime>> _requestTimestamps = {};
 
-  RateLimiter({required this.maxRequests, required this.timeWindow});
+  RateLimiter({required int maxRequests, required Duration timeWindow})
+      : _maxRequests = maxRequests,
+        _timeWindow = timeWindow;
 
-  Future<bool> isAllowed() async {
+  bool isAllowed(String key) {
     final now = DateTime.now();
-    requestTimestamps.removeWhere((timestamp) => now.difference(timestamp) > timeWindow);
-    if (requestTimestamps.length >= maxRequests) {
-      return false;
-    }
-    requestTimestamps.add(now);
-    return true;
+    final timestamps = _requestTimestamps[key] ?? [];
+
+    _requestTimestamps[key] = timestamps
+      ..removeWhere((timestamp) => now.difference(timestamp) > _timeWindow)
+      ..add(now);
+
+    return _requestTimestamps[key]!.length <= _maxRequests;
   }
 }
