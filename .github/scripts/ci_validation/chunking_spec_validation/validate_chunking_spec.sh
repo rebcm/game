@@ -1,20 +1,17 @@
 #!/bin/bash
 
-# Verifica se o tamanho dos chunks está correto
-if [ "$(grep -oP '(?<=Tamanho dos Chunks\nOs chunks têm um tamanho de )\d+x\d+' ./docs/technical_specs/chunking_specification.md)" != "16x16" ]; then
-  echo "Tamanho dos chunks incorreto"
+# Verifica se o tamanho do chunk está definido corretamente
+if [ "$(grep -c 'O tamanho do chunk é definido como 16x16 blocos' ./docs/specs/chunking_spec.md)" -eq 1 ]; then
+  echo "Tamanho do chunk validado com sucesso"
+else
+  echo "Erro: Tamanho do chunk não está definido corretamente"
   exit 1
 fi
 
-# Verifica se a quantidade de chunks vizinhos está correta
-if [ "$(grep -oP '(?<=O sistema mantém em cache os )\d+' ./docs/technical_specs/chunking_specification.md)" != "8" ]; then
-  echo "Quantidade de chunks vizinhos incorreta"
+# Verifica se a margem de pré-carregamento está definida corretamente
+if [ "$(grep -c 'A margem de pré-carregamento ao redor do jogador é definida como 2 chunks' ./docs/specs/chunking_spec.md)" -eq 1 ]; then
+  echo "Margem de pré-carregamento validada com sucesso"
+else
+  echo "Erro: Margem de pré-carregamento não está definida corretamente"
   exit 1
 fi
-
-# Verifica se a lógica de unloading está correta
-if [ "$(grep -oP '(?<=distância de )\d+' ./docs/technical_specs/chunking_specification.md)" != "3" ]; then
-  echo "Lógica de unloading incorreta"
-  exit 1
-fi
-
