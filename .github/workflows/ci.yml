@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  test:
+  validate-secrets:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run upload edge cases test
-        run: .github/scripts/ci_validation/upload_edge_cases_test/run_upload_edge_cases_test.sh
+      - name: Validate secrets
+        run: .github/scripts/ci_validation/secrets_validation/validate_secrets.sh

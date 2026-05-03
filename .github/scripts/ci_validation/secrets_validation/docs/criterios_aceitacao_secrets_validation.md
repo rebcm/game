@@ -2,13 +2,14 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a validação de secrets no projeto.
+Este documento define os critérios de aceitação para a validação de secrets no pipeline de CI/CD.
 
 ## Critérios
 
-1. O script de validação de secrets deve verificar se as variáveis de ambiente necessárias estão setadas corretamente.
-2. O script de validação de secrets deve falhar se alguma variável de ambiente necessária não estiver setada corretamente.
+1. O script de validação deve verificar a presença do `CLOUDFLARE_API_TOKEN` no arquivo `.env`.
+2. O script de validação deve verificar a validade do `CLOUDFLARE_API_TOKEN` usando a API da Cloudflare.
+3. O script de validação deve retornar um código de saída não-zero se o token estiver ausente ou inválido.
 
-## Validação
+## Conclusão
 
-O script `validate_secrets.sh` deve ser executado durante o pipeline de CI para validar as chaves de assinatura.
+A validação de secrets é uma etapa crítica no pipeline de CI/CD. Este documento define os critérios de aceitação para garantir que a validação seja realizada corretamente.

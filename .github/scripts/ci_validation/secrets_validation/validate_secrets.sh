@@ -1,22 +1,19 @@
 #!/bin/bash
 
-validate_secret() {
-  local secret_name=$1
-  local secret_value=$2
+CLOUDFLARE_API_TOKEN=$(grep CLOUDFLARE_API_TOKEN .env | cut -d '=' -f2-)
 
-  if [ -z "$secret_value" ]; then
-    echo "Error: $secret_name is not set or is empty"
-    return 1
-  fi
-
-  echo "$secret_name is set correctly"
-  return 0
-}
-
-validate_secret "KEYSTORE_PASSWORD" "${KEYSTORE_PASSWORD}"
-validate_secret "KEYSTORE_ALIAS" "${KEYSTORE_ALIAS}"
-validate_secret "KEYSTORE_PATH" "${KEYSTORE_PATH}"
-
-if [ $? -ne 0 ]; then
+if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+  echo "CLOUDFLARE_API_TOKEN is missing"
   exit 1
 fi
+
+if ! curl -s -o /dev/null -w "%{http_code}" -X GET \
+  "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" | grep -q "200"; then
+  echo "CLOUDFLARE_API_TOKEN is invalid"
+  exit 1
+fi
+
+echo "CLOUDFLARE_API_TOKEN is valid"
+exit 0
