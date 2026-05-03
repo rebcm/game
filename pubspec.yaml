@@ -57,3 +57,7 @@ flutter:
     - assets/animacoes/
     - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
 
+
+  assets:
+    - assets/animacoes/rebeca/idle.png
+    - assets/animacoes/rebeca/walking.png
