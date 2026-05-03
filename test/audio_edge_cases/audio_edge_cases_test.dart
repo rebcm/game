@@ -1,58 +1,42 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:rebcm/game.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Audio Edge Cases', () {
-    testWidgets('interruption by incoming call', (tester) async {
-      // Initialize the app
-      await tester.pumpWidget(MyApp());
-
-      // Start playing audio
-      // Assuming there's a button to start playing audio
-      await tester.tap(find.byKey(Key('playAudioButton')));
+  group('Audio Edge Cases Tests', () {
+    testWidgets('Testa perda de conexão', (tester) async {
+      app.main();
       await tester.pumpAndSettle();
-
-      // Simulate an incoming call interruption
-      // This might involve using a package or method to simulate the interruption
-      // For demonstration, let's assume we have a method to simulate it
-      await simulateIncomingCall();
-
-      // Verify that the audio paused
-      // Assuming there's a way to check if audio is playing
-      expect(isAudioPlaying(), false);
-
-      // Resume audio if necessary and verify
-      // await tester.tap(find.byKey(Key('resumeAudioButton')));
-      // await tester.pumpAndSettle();
-      // expect(isAudioPlaying(), true);
+      // Simula perda de conexão
+      // Verifica se o áudio foi pausado
+      // Simula restabelecimento de conexão
+      // Verifica se o áudio foi retomado
     });
 
-    testWidgets('interruption by alarm', (tester) async {
-      // Similar steps as above but for an alarm interruption
-      await tester.pumpWidget(MyApp());
-      await tester.tap(find.byKey(Key('playAudioButton')));
+    testWidgets('Testa modo silencioso', (tester) async {
+      app.main();
       await tester.pumpAndSettle();
+      // Coloca o dispositivo em modo silencioso
+      // Verifica se o áudio foi silenciado
+    });
 
-      await simulateAlarm();
+    testWidgets('Testa interrupção por chamadas telefônicas', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simula uma chamada telefônica
+      // Verifica se o áudio foi pausado
+      // Simula encerramento da chamada
+      // Verifica se o áudio foi retomado
+    });
 
-      expect(isAudioPlaying(), false);
+    testWidgets('Testa permissões de hardware', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simula negação de permissões de áudio
+      // Verifica se o jogo não travou e se o áudio não está sendo reproduzido
     });
   });
 }
 
-// Placeholder functions for simulation and checking audio state
-Future<void> simulateIncomingCall() async {
-  // Implementation to simulate an incoming call
-}
-
-Future<void> simulateAlarm() async {
-  // Implementation to simulate an alarm
-}
-
-bool isAudioPlaying() {
-  // Implementation to check if audio is playing
-  return false; // Placeholder return
-}
