@@ -45,3 +45,6 @@ flutter:
 
   validation_test:
     path: test/integration_test/validation_test/validation_test.dart
+
+  chunking_edge_cases_test:
+    path: test/integration_test/chunking_test/chunking_edge_cases_test.dart

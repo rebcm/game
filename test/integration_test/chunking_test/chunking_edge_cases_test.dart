@@ -6,40 +6,34 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Chunking Edge Cases Test', () {
-    testWidgets('ultra-rapid player movement (teleportation)', (tester) async {
+    testWidgets('teleportation test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simulate ultra-rapid movement
-      // await tester.drag(...);
-      // await tester.pumpAndSettle();
-
-      // Verify chunk loading/unloading
-      // expect(find.byType(Chunk), findsOneWidget);
+      // Simulate teleportation
+      // Add your implementation here
+      await tester.pumpAndSettle();
+      expect(find.byType(app.Chunk), findsWidgets);
     });
 
-    testWidgets('chunk loading in high-density object areas', (tester) async {
+    testWidgets('high density chunk loading test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simulate high-density object area
-      // await tester.tap(...);
-      // await tester.pumpAndSettle();
-
-      // Verify chunk loading
-      // expect(find.byType(Chunk), findsNWidgets(n));
+      // Simulate high density chunk loading
+      // Add your implementation here
+      await tester.pumpAndSettle();
+      expect(find.byType(app.Chunk), findsWidgets);
     });
 
-    testWidgets('unload behavior in saturated memory', (tester) async {
+    testWidgets('memory saturation unload test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
       // Simulate memory saturation
-      // await tester.tap(...);
-      // await tester.pumpAndSettle();
-
-      // Verify chunk unloading
-      // expect(find.byType(Chunk), findsNWidgets(n));
+      // Add your implementation here
+      await tester.pumpAndSettle();
+      expect(find.byType(app.Chunk), findsWidgets);
     });
   });
 }
