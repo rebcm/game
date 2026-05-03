@@ -1,5 +1,5 @@
-// For the purpose of this task, assume main.dart exists and is properly configured
 import 'package:flutter/material.dart';
+import 'package:game/chunk/chunk_manager.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,41 +9,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Creative Game',
-      home: GameWidget(),
+      home: MyHomePage(),
     );
   }
 }
 
-class GameWidget extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  _GameWidgetState createState() => _GameWidgetState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _GameWidgetState extends State<GameWidget> {
-  @override
-  Widget build(BuildContext context) {
-    // Game widget implementation
-    return Container();
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:game/animation/animation_controller.dart';
+class _MyHomePageState extends State<MyHomePage> {
+  final ChunkManager _chunkManager = ChunkManager(capacity: 100);
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: AnimationControllerWidget(),
-        floatingActionButton: FloatingActionButton(
-          key: WidgetKeys.actionButton,
-          onPressed: () {},
-        ),
+    return Scaffold(
+      body: Center(
+        child: Text('Chunk Manager Example'),
       ),
     );
   }

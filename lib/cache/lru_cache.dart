@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class LRUCache<K, V> {
-  final int _capacity;
+  final int capacity;
   final Map<K, V> _cache = {};
   final List<K> _order = [];
 
-  LRUCache(this._capacity);
+  LRUCache({required this.capacity});
 
   V? get(K key) {
     if (_cache.containsKey(key)) {
@@ -19,7 +19,7 @@ class LRUCache<K, V> {
   void put(K key, V value) {
     if (_cache.containsKey(key)) {
       _order.remove(key);
-    } else if (_cache.length >= _capacity) {
+    } else if (_cache.length >= capacity) {
       final oldestKey = _order.removeAt(0);
       _cache.remove(oldestKey);
     }
