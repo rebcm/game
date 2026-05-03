@@ -46,3 +46,8 @@ protobuf: ^2.1.0
 
   flutter_test:
     sdk: flutter
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
