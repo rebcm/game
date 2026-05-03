@@ -2,23 +2,22 @@
 
 Este documento define os critérios para determinar as permissões mínimas necessárias para o pipeline do Cloudflare Pages.
 
-## Princípio do Menor Privilégio
+## Introdução
 
-O princípio do menor privilégio determina que um sistema, usuário ou processo deve ter apenas as permissões estritamente necessárias para realizar suas funções.
+O princípio do menor privilégio determina que um usuário ou sistema deve ter apenas as permissões estritamente necessárias para realizar suas funções. Este documento visa aplicar esse princípio ao pipeline do Cloudflare Pages.
 
-## Permissões Necessárias
+## Requisitos
 
-As permissões mínimas necessárias para o pipeline do Cloudflare Pages incluem:
-
-1. **Leitura e Escrita no Repositório**: Permissão para ler e escrever no repositório GitHub para obter o código-fonte e atualizar o status de deploy.
-2. **Execução de Builds e Deploys**: Permissão para executar builds e deploys no Cloudflare Pages.
+1. **Listagem de Ações do Pipeline**: Identificar todas as ações realizadas pelo pipeline do Cloudflare Pages durante a execução.
+2. **Mapeamento de Permissões**: Para cada ação identificada, determinar a permissão mínima necessária.
+3. **Verificação de Segurança**: Confirmar que as permissões atribuídas não introduzem vulnerabilidades de segurança.
 
 ## Critérios de Aceitação
 
-1. O pipeline do Cloudflare Pages deve ser capaz de ler o código-fonte do repositório GitHub.
-2. O pipeline do Cloudflare Pages deve ser capaz de executar builds e deploys sem erros.
-3. O pipeline do Cloudflare Pages deve ter apenas as permissões necessárias para realizar suas funções, sem privilégios excessivos.
+1. **Completeness**: Todas as ações do pipeline devem ter suas permissões mínimas documentadas.
+2. **Minimalidade**: As permissões atribuídas devem ser as mínimas necessárias para cada ação.
+3. **Segurança**: As permissões definidas não devem permitir ações não intencionais ou maliciosas.
 
-## Validação
+## Aprovação
 
-A validação das permissões mínimas será realizada por meio de testes automatizados e revisão manual.
+Este documento deve ser aprovado por um revisor designado antes de ser considerado válido.
