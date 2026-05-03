@@ -1,16 +1,22 @@
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
-  final Dio _dio;
+  final http.Client _client;
 
-  ApiService({required Dio dio}) : _dio = dio;
+  ApiService({required http.Client client}) : _client = client;
 
-  Future<dynamic> fetchData(String url) async {
+  Future<Either<String, String>> fetchData() async {
     try {
-      final response = await _dio.get(url);
-      return response.data;
-    } on DioException catch (e) {
-      throw e;
+      final response = await _client.get(Uri.parse('https://example.com/api/data')).timeout(Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return Right(response.body);
+      } else {
+        return Left('Error ${response.statusCode}');
+      }
+    } on TimeoutException {
+      return Left('Timeout');
+    } catch (e) {
+      return Left(e.toString());
     }
   }
 }
