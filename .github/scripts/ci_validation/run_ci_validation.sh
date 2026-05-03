@@ -23,3 +23,5 @@ run_ci_validation
 # Executa a validação das versões mínimas suportadas pelo Flutter SDK
 ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
 
+
+./.github/scripts/ci_validation/run_ui_integration_test.sh
