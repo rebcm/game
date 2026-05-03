@@ -1,8 +1,16 @@
-import 'package:just_audio/just_audio.dart';
-import 'package:rebcm/config/audio_codec_config.dart';
+import 'package:flutter/material.dart';
 
-class AudioService {
-  static AudioCodec getCodec() {
-    return AudioCodec.${AudioCodecConfig.codec.toLowerCase()};
+class AudioService with ChangeNotifier {
+  bool _isConnected = true;
+  bool get isConnected => _isConnected;
+
+  void onConnectionLost() {
+    _isConnected = false;
+    notifyListeners();
+  }
+
+  void onConnectionRecovered() {
+    _isConnected = true;
+    notifyListeners();
   }
 }
