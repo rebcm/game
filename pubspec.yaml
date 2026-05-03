@@ -46,3 +46,5 @@ dev_dependencies:
 
   external_interruptions_test:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
+  permission_test:
+    path: ./test/integration/permission_tests/permission_test.dart
