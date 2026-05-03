@@ -49,3 +49,5 @@ flutter:
   test/integration/audio_recovery_test/audio_recovery_test.dart:
   assets:
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
+
+  test/integration/flutter_doctor/flutter_doctor_test.dart:
