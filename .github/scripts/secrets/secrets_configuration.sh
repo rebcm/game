@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Set environment variables for CI/CD pipeline
+export REBCA_FLUTTER_GITHUB_TOKEN="YOUR_GITHUB_TOKEN"
+export REBCA_FLUTTER_CLOUDFLARE_TOKEN="YOUR_CLOUDFLARE_TOKEN"
+
+# Configure secrets for upload
+export REBCA_FLUTTER_UPLOAD_URL="https://your-upload-url.com"
+export REBCA_FLUTTER_UPLOAD_USERNAME="YOUR_UPLOAD_USERNAME"
+export REBCA_FLUTTER_UPLOAD_PASSWORD="YOUR_UPLOAD_PASSWORD"

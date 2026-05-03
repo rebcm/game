@@ -1,11 +1,13 @@
-# Configuração de Secrets
+# Secrets Configuration
+This document outlines the secrets configuration for the Rebeca Flutter game project.
 
-Para configurar os secrets necessários para o CI/CD, siga os passos abaixo:
+## Environment Variables
+The following environment variables are used in the CI/CD pipeline:
+* `REBCA_FLUTTER_GITHUB_TOKEN`: GitHub token for authentication
+* `REBCA_FLUTTER_CLOUDFLARE_TOKEN`: Cloudflare token for authentication
 
-1. Vá para as configurações do repositório no GitHub.
-2. Clique em "Actions" e depois em "Secrets".
-3. Adicione os seguintes secrets:
-   - CLOUDFLARE_API_TOKEN
-   - CLOUDFLARE_ACCOUNT_ID
-
-Esses secrets são necessários para a autenticação do Wrangler no CI/CD.
+## Upload Configuration
+The following environment variables are used for upload:
+* `REBCA_FLUTTER_UPLOAD_URL`: URL for upload
+* `REBCA_FLUTTER_UPLOAD_USERNAME`: Username for upload
+* `REBCA_FLUTTER_UPLOAD_PASSWORD`: Password for upload
