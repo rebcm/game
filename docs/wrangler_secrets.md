@@ -1,12 +1,13 @@
 # Wrangler Secrets Documentation
 
-This document describes the secrets used in the project.
+This document describes the secrets used in the Wrangler configuration.
 
 ## Secrets
 
-* `DB_PASSWORD`: Password for the database connection
-* `API_KEY`: API key for external services
+* `DB_URL`: The URL of the database
+* `API_KEY`: The API key for the service
+* `WRANGLER_TOKEN`: The token for Wrangler authentication
 
-## Setting Secrets
+## Configuration
 
-To set a secret, use the following command:
+To configure these secrets, use the following commands:
