@@ -97,3 +97,6 @@ flutter:
 
   release_guard_test:
     path: ./integration_test/release_guard_test
+
+  secrets_fail_safe_test:
+    path: ./integration_test/secrets_fail_safe_test
