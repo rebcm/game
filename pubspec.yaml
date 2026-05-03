@@ -41,3 +41,5 @@ dependencies:
   game/services/seo/seo_service.dart:
 
   test/seo/seo_service_test.dart:
+
+  test/internacionalizacao/text_overflow_test.dart:

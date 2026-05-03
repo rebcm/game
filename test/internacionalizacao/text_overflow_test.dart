@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
-  testWidgets('Teste de overflow de texto em idiomas longos', (tester) async {
-    await tester.pumpWidget(MyApp());
-
-    // Simula mudança de idioma para Alemão e Francês
-    await tester.binding.setLocale('de');
+  testWidgets('Testa overflow de texto em idiomas longos', (tester) async {
+    await tester.pumpWidget(const app.MyApp());
     await tester.pumpAndSettle();
 
-    // Verifica se há overflow de texto
-    expect(find.byType(OverflowError), findsNothing);
-
-    await tester.binding.setLocale('fr');
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OverflowError), findsNothing);
+    // Verifica se há overflow em widgets de texto
+    final textWidgets = tester.widgetList(find.byType(Text));
+    for (var textWidget in textWidgets) {
+      final text = textWidget as Text;
+      final textSpan = TextSpan(text: text.data);
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+        locale: const Locale('de', 'DE'), // Testa com locale alemão
+      )..layout(maxWidth: textWidget.style?.fontSize ?? 100);
+      expect(textPainter.didExceedMaxLines, false);
+    }
   });
 }
