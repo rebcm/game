@@ -1,28 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:mocktail/mocktail.dart';
 import 'package:rebcm/networking/http_client.dart';
+import 'package:mocktail/mocktail.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
-  late MockHttpClient _client;
-  late CustomHttpClient _customHttpClient;
+  late http.Client client;
+  late CustomHttpClient customClient;
 
   setUp(() {
-    _client = MockHttpClient();
-    _customHttpClient = CustomHttpClient(_client);
+    client = MockHttpClient();
+    customClient = CustomHttpClient(client);
   });
 
   test('get request includes Accept-Encoding header', () async {
-    when(() => _client.get(any(), headers: any(named: 'headers'))).thenAnswer((_) async => http.Response('{}', 200));
-    await _customHttpClient.get(Uri.parse('https://example.com'));
-    verify(() => _client.get(any(), headers: {'Accept-Encoding': 'gzip'})).called(1);
+    when(() => client.get(any(), headers: any(named: 'headers'))).thenAnswer((_) async => http.Response('{}', 200));
+    await customClient.get(Uri.parse('https://example.com'));
+    verify(() => client.get(any(), headers: {'Accept-Encoding': 'gzip'})).called(1);
   });
 
   test('post request includes Content-Encoding and Accept-Encoding headers', () async {
-    when(() => _client.post(any(), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => http.Response('{}', 200));
-    await _customHttpClient.post(Uri.parse('https://example.com'));
-    verify(() => _client.post(any(), headers: {'Content-Encoding': 'gzip', 'Accept-Encoding': 'gzip'}, body: null)).called(1);
+    when(() => client.post(any(), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => http.Response('{}', 200));
+    await customClient.post(Uri.parse('https://example.com'));
+    verify(() => client.post(any(), headers: {'Content-Encoding': 'gzip', 'Accept-Encoding': 'gzip'}, body: null)).called(1);
   });
 }
