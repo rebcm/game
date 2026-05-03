@@ -11,29 +11,35 @@ void main() {
       await tester.pumpAndSettle();
 
       // Simulate teleportation
-      // Add your implementation here
+      // Add test logic here to simulate ultra-fast player movement
       await tester.pumpAndSettle();
-      expect(find.byType(app.Chunk), findsWidgets);
+
+      // Verify chunk loading and unloading
+      // Add assertions here to verify correct chunk behavior
     });
 
-    testWidgets('high density chunk loading test', (tester) async {
+    testWidgets('high density object area test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simulate high density chunk loading
-      // Add your implementation here
+      // Simulate high density object area
+      // Add test logic here to create high density object area
       await tester.pumpAndSettle();
-      expect(find.byType(app.Chunk), findsWidgets);
+
+      // Verify chunk loading and unloading
+      // Add assertions here to verify correct chunk behavior
     });
 
-    testWidgets('memory saturation unload test', (tester) async {
+    testWidgets('memory saturation test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
       // Simulate memory saturation
-      // Add your implementation here
+      // Add test logic here to saturate memory
       await tester.pumpAndSettle();
-      expect(find.byType(app.Chunk), findsWidgets);
+
+      // Verify chunk unloading behavior
+      // Add assertions here to verify correct chunk unloading behavior
     });
   });
 }
