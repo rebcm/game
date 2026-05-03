@@ -1,26 +1,20 @@
 #!/bin/bash
 
-# Script para validar as versões mínimas do Flutter SDK suportadas
+# Obtém a versão do Flutter em uso
+flutter_version=$(flutter --version | grep 'Flutter' | awk '{print $2}')
 
-# Obtém a versão atual do Flutter
-flutter_version=$(flutter --version | grep 'Flutter' | cut -d' ' -f2)
+# Extrai as informações de versão mínima de Android e iOS suportadas
+android_min_version=$(flutter doctor -v | grep 'Android SDK version' -A 3 | grep 'minSdkVersion' | awk '{print $2}' | tr -d ',')
+ios_min_version=$(grep 'MinimumOSVersion' ios/Podfile.lock | awk '{print $2}')
 
-# Extrai as informações de versão mínima suportada para Android e iOS
-android_min_version=$(flutter doctor -v | grep 'Android API' | cut -d':' -f2- | xargs)
-ios_min_version=$(flutter doctor -v | grep 'iOS' | grep 'deployment target' | cut -d':' -f2- | xargs)
-
-# Cria ou atualiza o arquivo de documentação com as versões mínimas
-mkdir -p docs/flutter_sdk_versoes
-cat > docs/flutter_sdk_versoes/minimas_versoes_suportadas.md << EOM
+# Salva as informações em um arquivo markdown
+cat > docs/flutter_sdk_versoes.md << EOM
 # Versões Mínimas Suportadas pelo Flutter SDK
 
-## Versão atual do Flutter: $flutter_version
+- **Versão do Flutter:** $flutter_version
+- **Versão mínima do Android:** API Level $android_min_version
+- **Versão mínima do iOS:** $ios_min_version
 
-### Android
-- API Level mínimo suportado: $android_min_version
-
-### iOS
-- Versão mínima de deployment target: $ios_min_version
 EOM
 
 echo "Versões mínimas suportadas documentadas com sucesso."

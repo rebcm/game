@@ -19,3 +19,7 @@ run_ci_validation
 ./.github/scripts/ci_validation/run_audio_session_test.sh
 # Executar validação do peer review
 ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
+
+# Executa a validação das versões mínimas suportadas pelo Flutter SDK
+./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
+

@@ -78,3 +78,6 @@ dev_dependencies:
 
   docs_validation_test:
     path: ./test/integration/docs_validation/docs_validation_test.dart
+
+  flutter_sdk_versoes_generator:
+    path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
