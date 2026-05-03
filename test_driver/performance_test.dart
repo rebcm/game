@@ -15,8 +15,7 @@ void main() {
 
     test('CPU Stress Test', () async {
       final timeline = await driver.traceAction(() async {
-        // Perform actions to stress test CPU
-        await driver.tap(find.byTooltip('Build'));
+        await driver.tap(find.byValueKey('stress_test_button'));
         await Future.delayed(Duration(seconds: 10));
       });
 
