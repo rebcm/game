@@ -5,14 +5,3 @@ void main() {
   runApp(app.MyApp());
 }
 
-class MemoryProfilingTest extends StatefulWidget {
-  @override
-  _MemoryProfilingTestState createState() => _MemoryProfilingTestState();
-}
-
-class _MemoryProfilingTestState extends State<MemoryProfilingTest> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
