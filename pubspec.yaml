@@ -68,3 +68,8 @@ flutter:
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
