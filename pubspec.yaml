@@ -62,3 +62,6 @@ flutter:
 
   physics_engine_tests:
     path: ./test/physics_engine_tests
+
+  api_service:
+    path: ./lib/services/api_service
