@@ -12,11 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
       - name: Run smoke test
         run: ./.github/scripts/smoke_test.sh
 
@@ -29,13 +24,9 @@ jobs:
           fi
 
       - name: Notify team on failure
-        if: failure()
-        uses: dawidd6/action-send-mail@v3
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          server_address: 'smtp.gmail.com'
-          server_port: 587
-          username: 'your-email@gmail.com'
-          password: '${{ secrets.EMAIL_PASSWORD }}'
-          subject: 'Smoke test failed'
-          to: 'team-email@example.com'
-          body: 'Smoke test failed with status $(cat smoke_test_status.txt)'
+          payload: '{"text": "Smoke test failed in CI/CD pipeline"}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()

@@ -16,7 +16,8 @@ void main() {
     });
 
     test('Smoke test', () async {
-      await driver?.waitUntilFirstFrameRasterized();
+      // Implement your smoke test logic here
+      await driver?.waitUntilNoTransientCallbacks();
     });
   });
 }
