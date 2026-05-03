@@ -56,3 +56,6 @@ flutter:
   flutter:
     assets:
       - docs/dicas_construcao/conteudo_dicas.md
+  flutter:
+    assets:
+      - test/integration_tests/audio_interruption_test/

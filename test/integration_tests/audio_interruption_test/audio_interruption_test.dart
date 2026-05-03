@@ -5,77 +5,26 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Audio Interruption Test', () {
-    testWidgets('should pause audio on phone call interruption', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+  testWidgets('audio interruption test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      // Simulate phone call interruption
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      // await tester.pumpAndSettle();
+    // Start playing audio
+    // await tester.tap(find.byType(FloatingActionButton));
+    // await tester.pumpAndSettle();
 
-      // Verify audio is paused
-      // expect(find.text('Audio Paused'), findsOneWidget);
-    });
+    // Simulate incoming call or alarm
+    // await tester.binding.handlePhoneCallInterruption();
+    // await tester.pumpAndSettle();
 
-    testWidgets('should resume audio after phone call interruption ends', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+    // Verify audio playback is paused
+    // expect(find.text('Audio paused'), findsOneWidget);
 
-      // Simulate phone call interruption end
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      // await tester.pumpAndSettle();
+    // Resume audio playback after interruption
+    // await tester.binding.resumeAfterInterruption();
+    // await tester.pumpAndSettle();
 
-      // Verify audio is resumed
-      // expect(find.text('Audio Playing'), findsOneWidget);
-    });
-
-    testWidgets('should pause audio on alarm interruption', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate alarm interruption
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      // await tester.pumpAndSettle();
-
-      // Verify audio is paused
-      // expect(find.text('Audio Paused'), findsOneWidget);
-    });
-
-    testWidgets('should resume audio after alarm interruption ends', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate alarm interruption end
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      // await tester.pumpAndSettle();
-
-      // Verify audio is resumed
-      // expect(find.text('Audio Playing'), findsOneWidget);
-    });
-
-    testWidgets('should pause audio on push notification interruption', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate push notification interruption
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      // await tester.pumpAndSettle();
-
-      // Verify audio is paused
-      // expect(find.text('Audio Paused'), findsOneWidget);
-    });
-
-    testWidgets('should resume audio after push notification interruption ends', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate push notification interruption end
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      // await tester.pumpAndSettle();
-
-      // Verify audio is resumed
-      // expect(find.text('Audio Playing'), findsOneWidget);
-    });
+    // Verify audio playback is resumed
+    // expect(find.text('Audio playing'), findsOneWidget);
   });
 }
