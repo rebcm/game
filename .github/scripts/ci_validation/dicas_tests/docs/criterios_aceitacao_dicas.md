@@ -1,29 +1,30 @@
-# Critérios de Aceitação para Dicas de Construção
+# Critérios de Aceitação para UI de Dicas
 
 ## Introdução
 
-Este documento define os critérios de aceitação para as dicas de construção exibidas no jogo. As dicas devem seguir diretrizes específicas para garantir que sejam úteis, claras e alinhadas com o tom de voz do jogo.
+Este documento define os critérios de aceitação para a implementação da UI de dicas no jogo.
 
-## Critérios de Conteúdo
+## Critérios de Aceitação
 
-1. **Limite de Caracteres**: As dicas devem ter no máximo 150 caracteres.
-2. **Tom de Voz**: O tom de voz deve ser amigável e inspirador, encorajando a criatividade do jogador.
-3. **Relevância**: As dicas devem ser relevantes para o modo criativo do jogo, focando em técnicas de construção e ideias criativas.
+1. **Exibição de Dicas**:
+   - A dica deve ser exibida quando o usuário passar o mouse sobre um bloco por mais de 500ms.
+   - A dica deve conter o nome do bloco.
 
-## Critérios Técnicos
+2. **Comportamento Esperado**:
+   - A dica deve desaparecer quando o usuário mover o mouse para fora do bloco.
+   - A dica não deve ser exibida se o usuário clicar em um bloco.
 
-1. **Validação Técnica**: As dicas devem ser validadas tecnicamente para garantir que não contenham instruções impossíveis ou contraditórias.
-2. **Matriz de Validação**: Uma matriz de validação será usada para verificar a conformidade das dicas com os critérios técnicos.
+3. **Persistência**:
+   - A dica deve permanecer visível enquanto o usuário mantém o mouse sobre o bloco.
 
-## Matriz de Validação Técnica
+## Métricas de Sucesso
 
-| Critério | Descrição | Status |
-| --- | --- | --- |
-| Limite de Caracteres | A dica tem no máximo 150 caracteres. | Pendente |
-| Tom de Voz | A dica está no tom de voz correto. | Pendente |
-| Relevância | A dica é relevante para o modo criativo. | Pendente |
-| Validação Técnica | A dica foi validada tecnicamente. | Pendente |
+1. **Taxa de Exibição**:
+   - 100% das vezes que o usuário passar o mouse sobre um bloco por mais de 500ms, a dica deve ser exibida.
 
-## Conclusão
+2. **Taxa de Desaparecimento**:
+   - 100% das vezes que o usuário mover o mouse para fora do bloco, a dica deve desaparecer.
 
-As dicas de construção devem seguir os critérios definidos neste documento para garantir uma experiência de jogo de alta qualidade. A equipe de desenvolvimento é responsável por garantir que as dicas sejam criadas e validadas de acordo com esses critérios.
+## Testes
+
+Os critérios de aceitação devem ser testados utilizando testes de UI automatizados.
