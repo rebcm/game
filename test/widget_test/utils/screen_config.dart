@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ScreenConfig {
-  static const List<double> breakpoints = [320, 360, 414, 768, 1024];
-  static const List<DeviceOrientation> orientations = [
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-  ];
+  static const double minWidth = 320;
+  static const double maxWidth = 414;
+  static const double minHeight = 568;
+  static const double maxHeight = 896;
 
-  static Size getScreenSize(double breakpoint, DeviceOrientation orientation) {
-    if (orientation == DeviceOrientation.portraitUp) {
-      return Size(breakpoint, breakpoint * 1.77777777778); // 16:9 aspect ratio
-    } else {
-      return Size(breakpoint * 1.77777777778, breakpoint);
-    }
-  }
+  static Size getSmallScreenSize() => Size(minWidth, minHeight);
+  static Size getLargeScreenSize() => Size(maxWidth, maxHeight);
+
+  static List<Size> getScreenSizes() => [
+        getSmallScreenSize(),
+        Size(minWidth, maxHeight),
+        Size(maxWidth, minHeight),
+        getLargeScreenSize(),
+      ];
 }
