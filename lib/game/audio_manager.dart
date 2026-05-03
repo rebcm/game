@@ -1,24 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AudioManager {
   static AudioManager? _instance;
-  bool _isPlaying = false;
 
   static AudioManager get instance => _instance ??= AudioManager._();
 
   AudioManager._();
 
-  bool get isPlaying => _isPlaying;
-
-  Future<void> playAudio(String audioPath) async {
-    _isPlaying = true;
+  Future<void> init() async {
+    // Implement audio manager initialization
   }
 
-  Future<void> pauseAudio() async {
-    _isPlaying = false;
+  Future<void> disconnect() async {
+    // Implement audio disconnection logic
   }
 
-  Future<void> resumeAudio() async {
-    _isPlaying = true;
+  Future<void> reconnect() async {
+    // Implement audio reconnection logic
   }
 }

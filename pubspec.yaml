@@ -163,3 +163,6 @@ dev_dependencies:
     path: ./test/integration/ux_dicas_tests/ux_dicas_test.dart
   documentacao_test:
     path: ./test/integration/documentacao_test/documentacao_test.dart
+
+  audio_recovery_test:
+    path: ./test/integration/audio_recovery_test/audio_recovery_test.dart
