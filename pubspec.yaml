@@ -25,3 +25,7 @@ flutter:
     - lib/docs/
     - lib/docs/dicas/
 
+
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
