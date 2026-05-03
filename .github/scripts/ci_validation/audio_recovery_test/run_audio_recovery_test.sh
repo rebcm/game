@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# Run audio recovery test using Flutter Driver
-flutter drive --target=test_driver/integration/audio_recovery_test.dart
+# Test audio recovery after connection loss
+flutter drive --target=test_driver/audio_recovery_test.dart --driver=test_driver/audio_recovery_test_driver.dart
