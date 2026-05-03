@@ -23,3 +23,5 @@ dev_dependencies:
 
   memory_leak_detector:
     path: ./lib/utils/memory_leak_detector
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
