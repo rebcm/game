@@ -1,10 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Block Documentation Output",
   "type": "object",
   "properties": {
-    "id": {"type": "integer"},
-    "nome": {"type": "string"},
-    "descricao": {"type": "string"}
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"}
+        },
+        "required": ["id", "name", "description"]
+      }
+    }
   },
-  "required": ["id", "nome", "descricao"]
+  "required": ["blocks"]
 }
