@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/utils/colors/design_tokens.dart';
-import 'package:rebcm/utils/colors/flutter_colors.dart';
+import 'package:game/utils/colors/design_tokens.dart';
 
 class ColorMapper {
-  static Map<DesignTokens, Color> mapDesignTokensToFlutterColors() {
-    return {
-      DesignTokens.primaryColor: FlutterColors.primaryColor,
-      DesignTokens.secondaryColor: FlutterColors.secondaryColor,
-      // Add other mappings here
-    };
+  static Color mapDesignTokenToColor(String designToken) {
+    switch (designToken) {
+      case 'primaryColor':
+        return DesignTokens.primaryColor;
+      case 'secondaryColor':
+        return DesignTokens.secondaryColor;
+      // Add more cases as needed
+      default:
+        throw Exception('Unknown design token: $designToken');
+    }
   }
 }
