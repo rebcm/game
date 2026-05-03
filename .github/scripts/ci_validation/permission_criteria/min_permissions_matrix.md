@@ -1,18 +1,7 @@
-# Matriz Mínima de Permissões
+# Matriz de Permissões Mínimas
 
-## Visão Geral
-
-Este documento define a matriz mínima de permissões necessárias para o funcionamento do aplicativo.
-
-## Permissões Mínimas
-
-| Plataforma | Permissão | Descrição |
-| --- | --- | --- |
-| iOS | NSMicrophoneUsageDescription | Acesso ao microfone |
-| Android | RECORD_AUDIO | Gravação de áudio |
-
-## Requisitos
-
-1. O aplicativo deve ter as permissões mínimas listadas acima.
-2. As permissões devem ser configuradas corretamente nos arquivos de configuração (`Info.plist` e `AndroidManifest.xml`).
-
+| Ação do Pipeline | Permissão Mínima Necessária | Justificativa |
+|------------------|---------------------------|---------------|
+| Deploy Cloudflare Pages | Acesso ao token da Cloudflare | Necessário para autenticação e deploy |
+| Execução de Scripts CI | Permissão de execução de scripts | Necessário para rodar scripts de validação e build |
+| Acesso a Recursos do Flutter | Permissão de leitura e escrita para diretórios de build | Necessário para compilar e gerar artefatos |

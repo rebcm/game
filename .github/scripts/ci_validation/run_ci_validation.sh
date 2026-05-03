@@ -1,6 +1,4 @@
 #!/bin/bash
 
-# Validações de permissão
-.github/scripts/ci_validation/camera_usage_description_validation/validate_camera_usage_description.sh
-.github/scripts/ci_validation/microfone_usage_description_validation/validate_microfone_usage_description.sh
-.github/scripts/ci_validation/photo_library_usage_description_validation/validate_photo_library_usage_description.sh
+# Executar validações CI
+./.github/scripts/ci_validation/validate_min_permissions.sh
