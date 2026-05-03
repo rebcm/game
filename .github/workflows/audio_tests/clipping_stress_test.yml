@@ -1,0 +1,22 @@
+name: Clipping Stress Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Clipping Stress Test
+        run: |
+          flutter drive --target=test_driver/app.dart --driver=test_driver/clipping_stress_test.dart
