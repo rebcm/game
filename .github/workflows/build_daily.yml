@@ -1,8 +1,8 @@
-name: Build Diário
+name: Build Daily
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '0 23 * * *' # 20:00 BRT is 23:00 UTC
 
 jobs:
   build:
@@ -11,19 +11,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.3.10'
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build
-        run: flutter build web
+      - name: Analyze code
+        run: dart analyze
+
+      - name: Build Flutter
+        run: flutter build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-web
-          path: build/web
+          name: build
+          path: build/
