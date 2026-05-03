@@ -59,3 +59,5 @@ dev_dependencies:
 
   dicas_test:
     path: ./test/integration/dicas_test/dicas_test.dart
+  responsividade_test:
+    path: ./test/integration/responsividade_test/responsividade_test.dart
