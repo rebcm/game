@@ -1,8 +1,17 @@
 #!/bin/bash
 
-# Validar se a documentação de biomas existe e não está vazia
-if [ ! -f ./docs/biomas/descrição.md ] || [ ! -s ./docs/biomas/descrição.md ]; then
-  echo "Documentação de biomas está faltando ou vazia"
+# Validação da documentação de biomas
+
+# Verifica se o arquivo de descrição de biomas existe
+if [ ! -f ./game/docs/biomas/descrição_biomas.md ]; then
+  echo "Erro: Arquivo de descrição de biomas não encontrado."
   exit 1
 fi
 
+# Verifica se o conteúdo do arquivo não está vazio
+if [ ! -s ./game/docs/biomas/descrição_biomas.md ]; then
+  echo "Erro: Arquivo de descrição de biomas está vazio."
+  exit 1
+fi
+
+echo "Documentação de biomas validada com sucesso."
