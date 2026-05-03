@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: API do Jogo
+  description: Documentação da API do jogo voxel
+  version: 1.0.0
+
+paths:
+  /blocos:
+    get:
+      summary: Listar blocos
+      responses:
+        '200':
+          description: Lista de blocos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bloco'
+
+components:
+  schemas:
+    Bloco:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+
+Endpoints obrigatórios:
+- /blocos
+
+Tipos de dados:
+- Bloco: objeto com id e nome
+
+Exemplos de payloads:
+- GET /blocos: [{ id: 1, nome: "Bloco 1" }]
