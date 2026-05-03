@@ -73,3 +73,6 @@ flutter:
 
   fps_benchmark:
     path: ./benchmarks/fps_benchmark
+
+  benchmark:
+    path: ./benchmarks

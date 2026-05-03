@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/main.dart' as app;
-import 'package:integration_test/integration_test.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('FPS Benchmark', (tester) async {
+    await app.main();
+    await tester.pumpAndSettle();
 
-  group('FPS Benchmark', () {
-    testWidgets('Low density', (tester) async {
-      await app.main();
-      await tester.pumpAndSettle();
-      // Implement low density FPS test
-    });
+    // Wait for the game to load
+    await Future.delayed(const Duration(seconds: 5));
 
-    testWidgets('Medium density', (tester) async {
-      await app.main();
-      await tester.pumpAndSettle();
-      // Implement medium density FPS test
-    });
+    // Start measuring FPS
+    final stopwatch = Stopwatch()..start();
+    int frames = 0;
+    while (stopwatch.elapsedMilliseconds < 10000) {
+      await tester.pump();
+      frames++;
+    }
+    final fps = frames / (stopwatch.elapsedMilliseconds / 1000);
 
-    testWidgets('High density', (tester) async {
-      await app.main();
-      await tester.pumpAndSettle();
-      // Implement high density FPS test
-    });
+    // Print the result
+    print('FPS: $fps');
+    expect(fps, greaterThanOrEqualTo(30));
   });
 }
