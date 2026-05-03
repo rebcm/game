@@ -45,3 +45,6 @@ flutter:
   assets:
     - docs/audio_api_mapping/audio_api_comparison.md
 
+
+  test/integration/latency_benchmark_test/latency_benchmark_test.dart:
+
