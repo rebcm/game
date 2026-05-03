@@ -1,40 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:game/widgets/input_field.dart';
+import 'package:game/services/upload_service/upload_retry_logic.dart';
+import 'package:dio/dio.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Creative Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+      home: UploadExample(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class UploadExample extends StatefulWidget {
+  @override
+  _UploadExampleState createState() => _UploadExampleState();
+}
+
+class _UploadExampleState extends State<UploadExample> {
+  final Dio _dio = Dio();
+  final UploadRetryLogic _uploadRetryLogic = UploadRetryLogic(Dio());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rebeca\'s Creative Game'),
+        title: Text('Upload Example'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            InputField(label: 'Example Input'),
-          ],
+        child: ElevatedButton(
+          onPressed: () async {
+            await _uploadRetryLogic.uploadWithRetry('test_file.txt', '/upload');
+          },
+          child: Text('Upload File'),
         ),
       ),
     );
