@@ -1,47 +1,26 @@
-import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:typed_data';
 
 class AudioCacheManager {
-  final AudioPlayer _audioPlayer;
-  final Map<String, ByteData> _cache;
+  static final AudioCacheManager _instance = AudioCacheManager._internal();
+  final Map<String, Uint8List> _audioCache = {};
 
-  AudioCacheManager(this._audioPlayer) : _cache = {};
+  factory AudioCacheManager() => _instance;
 
-  Future<void> loadAsset(String assetPath) async {
-    if (!_cache.containsKey(assetPath)) {
+  AudioCacheManager._internal();
+
+  Future<void> preloadAudio(String assetPath) async {
+    if (!_audioCache.containsKey(assetPath)) {
       final ByteData data = await rootBundle.load(assetPath);
-      _cache[assetPath] = data;
+      _audioCache[assetPath] = data.buffer.asUint8List();
     }
   }
 
-  Future<void> playCachedAsset(String assetPath) async {
-    if (_cache.containsKey(assetPath)) {
-      await _audioPlayer.setAudioSource(
-        ByteDataSource(_cache[assetPath]!.buffer.asUint8List()),
-      );
-      await _audioPlayer.play();
-    } else {
-      await loadAsset(assetPath);
-      await playCachedAsset(assetPath);
-    }
-  }
-}
-
-class ByteDataSource extends StreamAudioSource {
-  final List<int> bytes;
-
-  ByteDataSource(this.bytes);
-
-  @override
-  Future<StreamAudioResponse> request([int? start, int? end]) async {
-    start ??= 0;
-    end ??= bytes.length;
-    return StreamAudioResponse(
-      sourceLength: bytes.length,
-      contentLength: end - start,
-      offset: start,
-      stream: Stream.value(bytes.sublist(start, end)),
-      contentType: 'audio/mpeg',
-    );
+  Future<AudioPlayer> getAudioPlayer(String assetPath) async {
+    await preloadAudio(assetPath);
+    final AudioPlayer player = AudioPlayer();
+    await player.setAudioData(_audioCache[assetPath]!, start: 0, end: _audioCache[assetPath]!.length);
+    return player;
   }
 }

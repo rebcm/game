@@ -1,21 +1,10 @@
-import 'package:rebcm/services/audio/audio_service.dart';
+import 'package:rebcm/services/audio/audio_cache_manager.dart';
+import 'package:just_audio/just_audio.dart';
 
 class AudioManager {
-  final AudioService _audioService = AudioService();
+  final AudioCacheManager _cacheManager = AudioCacheManager();
 
-  Future<void> playMusic(String assetPath) async {
-    await _audioService.stop();
-    await _audioService.setLoopMode(true);
-    await _audioService.play(assetPath);
-  }
-
-  Future<void> stopMusic() async {
-    await _audioService.stop();
-  }
-
-  Future<void> playSfx(String assetPath) async {
-    await _audioService.stop();
-    await _audioService.setLoopMode(false);
-    await _audioService.play(assetPath);
+  Future<AudioPlayer> playSound(String assetPath) async {
+    return await _cacheManager.getAudioPlayer(assetPath);
   }
 }
