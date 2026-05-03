@@ -118,3 +118,6 @@ flutter:
 
   release_guard_service_test:
     path: ./test/release_guard_service_test
+
+  markdown_lint_test:
+    path: ./test/markdown_lint_test
