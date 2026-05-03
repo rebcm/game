@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:game/estado_jogo.dart';
 
 void main() {
-  testWidgets('estado_jogo.dart is properly disposed', (tester) async {
+  testWidgets('estado_jogo is properly disposed', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: EstadoJogo(),

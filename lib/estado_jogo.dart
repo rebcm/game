@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 
 class EstadoJogo extends StatefulWidget {
-  EstadoJogo({Key? key}) : super(key: key);
-
   @override
   _EstadoJogoState createState() => _EstadoJogoState();
 }
 
-class _EstadoJogoState extends State<EstadoJogo> {
+class _EstadoJogoState extends State<EstadoJogo> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => false;
+
   @override
   void dispose() {
-    // Ensure proper cleanup here
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(); // Simplified for test purposes
+    super.build(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Estado Jogo'),
+      ),
+      body: Center(
+        child: Text('Conteúdo do estado do jogo'),
+      ),
+    );
   }
 }
