@@ -1,50 +1,23 @@
 name: game
-description: A voxel game built with Flutter.
+description: Construção Criativa da Rebeca - jogo voxel modo criativo
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.16.0"
 
 dependencies:
-  assets:
-    - assets/audio/
   flutter:
     sdk: flutter
-  http: ^0.13.5
-  flutter_i18n: ^0.32.0
-  provider: ^6.0.3
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
-  flutter_driver:
-    sdk: flutter
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
-  test: ^1.21.4
-  pact: ^1.6.1
-  pact_http: ^1.1.1
-  leak_tracker: ^9.0.0
-  memory_info: ^0.2.0
-  protobuf: ^2.1.0
+  flutter_lints: ^3.0.0
 
 flutter:
-  assets:
-    - assets/audio/
   uses-material-design: true
-  generate: true
-
-scripts:
-  build_and_test: flutter test && flutter build apk --debug
-  swagger_validate: bash .github/scripts/ci_validation/swagger_validation/validate_swagger.sh
-  test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart
-  test:flutter_doctor: bash .github/scripts/ci_validation/flutter_doctor/validate_flutter_doctor.sh
-  validate:cloudflare_token: bash .github/scripts/ci_validation/cloudflare_token_validation/validate_cloudflare_token.sh \$CLOUDFLARE_TOKEN \$ZONE_ID
-  test:audio_edge_cases: flutter drive --driver=test/audio/edge_cases/audio_edge_cases_test.dart --target=test/app.dart
-  test:rendering_integration: flutter drive --driver=test/integration/rendering/rendering_test_driver.dart --target=test/app.dart
-
-  test:rebuild_monitoring: flutter drive --driver=test/integration/rebuild_monitoring/rebuild_monitoring_test_driver.dart --target=test/integration/rebuild_monitoring/rebuild_monitoring_test.dart
-test:rendering_integration: flutter drive --driver=test/integration/rendering/rendering_test_driver.dart --target=test/app.dart
-
-  test:chunking_edge_cases: flutter drive --driver=test/integration/chunking/chunking_edge_cases_test_driver.dart --target=test/app.dart
+  assets:
+    - assets/
