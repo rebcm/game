@@ -71,3 +71,6 @@ flutter:
     - assets/audio/
   - test/integration/audio_recovery_test/audio_recovery_test.dart
     - assets/audio/
+
+  - test/integration/audio_integration_test/audio_integration_test.dart
+  - test/integration/audio_integration_test/main.dart

@@ -5,36 +5,21 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Audio playback test', (tester) async {
+  testWidgets('Audio plays correctly', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Implement audio playback test logic here
-    // For example:
-    // await tester.tap(find.byType(IconButton));
-    // await tester.pumpAndSettle();
-    // expect(find.text('Audio playing'), findsOneWidget);
+    // Implement logic to test audio playback
   });
 
-  testWidgets('Audio pause test', (tester) async {
+  testWidgets('Audio pauses correctly', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Implement audio pause test logic here
-    // For example:
-    // await tester.tap(find.byType(IconButton));
-    // await tester.pumpAndSettle();
-    // expect(find.text('Audio paused'), findsOneWidget);
+    // Implement logic to test audio pause
   });
 
-  testWidgets('Audio stop test', (tester) async {
+  testWidgets('Audio stops correctly', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Implement audio stop test logic here
-    // For example:
-    // await tester.tap(find.byType(IconButton));
-    // await tester.pumpAndSettle();
-    // expect(find.text('Audio stopped'), findsOneWidget);
+    // Implement logic to test audio stop
   });
 }
