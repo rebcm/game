@@ -1,4 +1,4 @@
 abstract class WidgetTracker {
-  Future<void> init();
-  Future<int> getRebuildCount();
+  Future<void> trackRebuilds(AsyncCallback callback);
+  int get rebuildCount;
 }

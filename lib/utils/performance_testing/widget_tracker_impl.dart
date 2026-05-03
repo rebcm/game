@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:game/utils/performance_testing/widget_tracker.dart';
 
 class WidgetTrackerImpl implements WidgetTracker {
+  int _rebuildCount = 0;
+
   @override
-  Future<void> init() async {
-    // Initialize widget tracker
+  Future<void> trackRebuilds(AsyncCallback callback) async {
+    _rebuildCount = 0;
+    await callback();
   }
 
   @override
-  Future<int> getRebuildCount() async {
-    // Return rebuild count
-    return 0;
+  int get rebuildCount => _rebuildCount;
+
+  void incrementRebuildCount() {
+    _rebuildCount++;
   }
 }
