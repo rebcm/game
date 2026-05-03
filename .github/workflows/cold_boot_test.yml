@@ -12,8 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
       - name: Run cold boot script
         run: .github/scripts/cold_boot.sh
 
       - name: Run integration tests
-        run: flutter drive --target=test_driver/app.dart
+        run: flutter drive --target=test_driver/integration_test.dart

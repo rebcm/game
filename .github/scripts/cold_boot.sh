@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Kill the app process if it's running
-pkill -f rebcm
+pkill -f "rebcm"
 
-# Wait for the process to be fully terminated
+# Wait for the process to be killed
 sleep 2
 
-# Restart the app
+# Start the app again
 flutter run &
