@@ -1,13 +1,15 @@
-# Implementação do Mascaramento de Secrets
+# Secrets Masking Implementation
 
-Este documento descreve a implementação do mascaramento de secrets no pipeline de CI.
+## Overview
 
-## Passos para Implementação
+This document outlines the implementation details for masking secrets in the CI pipeline.
 
-1. Criar um script para mascarar secrets.
-2. Integrar o script no pipeline de CI.
-3. Validar que todos os valores sensíveis são mascarados corretamente.
+## Masking Secrets
 
-## Referências
+To mask sensitive values, the `mask_secrets.sh` script is used. This script defines a function `mask_sensitive_values` that takes a value as input and prints the `::add-mask::` command followed by the sensitive value.
 
-- [Critérios de Aceitação para Mascaramento de Secrets](./ci_validation/secrets_masking/docs/criterios_aceitacao_secrets_masking.md)
+## Usage
+
+To mask a sensitive value, call the `mask_sensitive_values` function with the value as an argument.
+
+## Example
