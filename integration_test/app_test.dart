@@ -6,10 +6,9 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('upload test', (WidgetTester tester) async {
+  testWidgets('integration test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Implement upload test logic here
+    // implement integration test logic here
   });
 }

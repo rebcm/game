@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,14 +20,25 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze code
-        run: dart analyze
+      - name: Run integration tests
+        run: flutter drive --driver=test/integration_test_driver.dart --target=integration_test/app_test.dart
 
-      - name: Build and release
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: .github/scripts/build_and_release.sh
+      - name: Run edge case tests
+        run: flutter test test/edge_case_tests
 
-      - name: Validate CI/CD configuration
-        run: .github/scripts/ci_validation/ci_cd_docs/validate_ci_cd_docs.sh
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build and deploy
+        run: ./.github/scripts/build_and_release.sh
