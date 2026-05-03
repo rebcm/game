@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant App Flutter as "App Flutter"
+    participant Cloudflare Workers as "Cloudflare Workers"
+    participant Serviço de Armazenamento as "Serviço de Armazenamento"
+
+    App Flutter->>Cloudflare Workers: Requisição de dados/armazenamento
+    Cloudflare Workers->>Serviço de Armazenamento: Encaminha requisição
+    Serviço de Armazenamento->>Cloudflare Workers: Resposta com dados
+    Cloudflare Workers->>App Flutter: Resposta processada
+
+    Note over App Flutter,Serviço de Armazenamento: Fluxo simplificado de requisição e resposta

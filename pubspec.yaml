@@ -54,18 +54,6 @@ flutter:
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
     - assets/blocos/
-
-  test:
-    path: ./test/compatibilidade_test.dart
-
-  test:
-    path: ./test/pub_get_test.dart
-
-  assets:
     - assets/animacoes/
+    - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
 
-  assets:
-    - assets/audio/optimized/sfx/block_break.mp3
-
-  test:
-    path: ./test/arquitetura_test.dart
