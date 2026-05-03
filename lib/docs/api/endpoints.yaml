@@ -1,0 +1,35 @@
+endpoints:
+  - path: /blocos/listar
+    method: GET
+    response:
+      type: application/json
+      description: Lista de blocos existentes
+  - path: /blocos/criar
+    method: POST
+    request:
+      type: application/json
+      payload: '{"bloco":"novo_bloco"}'
+    response:
+      type: application/json
+      description: Bloco criado com sucesso
+  - path: /blocos/deletar
+    method: DELETE
+    request:
+      type: application/json
+      payload: '{"bloco":"bloco_existente"}'
+    response:
+      type: application/json
+      description: Bloco deletado com sucesso
+  - path: /jogador/posicao
+    method: GET
+    response:
+      type: application/json
+      description: Posição atual do jogador
+  - path: /jogador/movimentar
+    method: POST
+    request:
+      type: application/json
+      payload: '{"direcao":"frente"}'
+    response:
+      type: application/json
+      description: Jogador movimentado com sucesso
