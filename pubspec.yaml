@@ -34,45 +34,11 @@ flutter:
   assets:
     - assets/
 
-  integration_test:
-    path: ./integration_test
-
-  flutter_test:
-    path: ./test
-
-  integration_test:
-    path: ./integration_test
-
-  integration_test:
-    path: ./integration_test
-
   benchmark:
     path: ./benchmarks
-
-  cleanup:
-    path: ./integration_test/cleanup
-
-  benchmark:
-    path: ./benchmarks
-
-  archive: ^3.4.9
-
-  flutter_test:
-    path: ./test
-
-  benchmark:
-    path: ./benchmarks
-
-  integration_test:
-    path: ./integration_test
-
-  cleanup:
-    path: ./integration_test/cleanup
-  three_dart: ^0.1.0
-  ammo_dart: ^0.1.0
 
   fps_benchmark:
     path: ./benchmarks/fps_benchmark
 
-  benchmark:
-    path: ./benchmarks
+  performance_baseline:
+    path: ./benchmarks/performance_baseline
