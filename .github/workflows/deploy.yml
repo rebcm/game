@@ -1,27 +1,36 @@
-name: Deploy
+name: Build and Deploy Game
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.10'
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
 
-      - name: Install dependencies
+      - name: Get dependencies
+        working-directory: app
         run: flutter pub get
 
-      - name: Validate environment config
-        run: .github/scripts/ci_validation/env_config/validate_env_config.sh
+      - name: Analyze
+        working-directory: app
+        run: dart analyze --no-fatal-warnings
 
-      - name: Deploy
-        run: .github/scripts/deploy.sh
+      - name: Build web
+        working-directory: app
+        run: flutter build web --release --base-href /
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages deploy app/build/web --project-name=construcao-criativa --branch=main
