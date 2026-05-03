@@ -1,27 +1,25 @@
 #!/bin/bash
 
-# Validates the documentation acceptance criteria
-# Checks if the required dicas are present and in the correct format
+# Task ID: task-1777666324-13-sub-4-disc-1777777740-2-disc-1777778833-1
+# Title: [DOCS] Definição de Critérios de Aceitação (AC)
 
-# Check if the dicas file exists
-if [ ! -f ./docs/dicas.md ]; then
-  echo "Error: dicas.md file not found"
+# Verificar se o arquivo de critérios de aceitação existe
+if [ ! -f "./docs/criterios_aceitacao.md" ]; then
+  echo "Arquivo de critérios de aceitação não encontrado."
   exit 1
 fi
 
-# Check if the dicas file contains the required headers
-required_headers=("Dicas Obrigatórias" "Formato de Exibição" "Métrica de Validação")
-for header in "${required_headers[@]}"; do
-  if ! grep -q "^# $header$" ./docs/dicas.md; then
-    echo "Error: $header not found in dicas.md"
-    exit 1
-  fi
-done
-
-# Check if the dicas list is not empty
-if ! grep -q "^-\|^#" ./docs/dicas.md; then
-  echo "Error: dicas list is empty"
+# Verificar se o arquivo de critérios de aceitação está vazio
+if [ ! -s "./docs/criterios_aceitacao.md" ]; then
+  echo "Arquivo de critérios de aceitação está vazio."
   exit 1
 fi
 
-echo "Documentation acceptance criteria validated successfully"
+# Verificar se o arquivo de critérios de aceitação contém a definição de sucesso da tarefa
+if ! grep -q "O script deve documentar formalmente o que define o sucesso da tarefa" "./docs/criterios_aceitacao.md"; then
+  echo "Arquivo de critérios de aceitação não contém a definição de sucesso da tarefa."
+  exit 1
+fi
+
+echo "Critérios de aceitação validados com sucesso."
+exit 0
