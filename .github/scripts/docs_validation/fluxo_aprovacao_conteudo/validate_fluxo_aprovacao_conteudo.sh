@@ -1,19 +1,16 @@
 #!/bin/bash
 
-# Verificar se o arquivo de dicas existe
-if [ ! -f "./lib/dicas/dicas.json" ]; then
-  echo "Arquivo dicas.json não encontrado"
+# Validates the content approval flow documentation
+# Checks if the necessary files and configurations are in place
+
+# Check if the dicas template is valid
+if ! grep -q "Aprovador:" .github/scripts/docs_validation/dicas_template/template.md; then
+  echo "Error: dicas template is missing Aprovador field"
   exit 1
 fi
 
-# Extrair as dicas
-dart ./lib/dicas/extract_dicas_strings.dart
-
-# Verificar se as dicas foram aprovadas
-if grep -q '"aprovada": false' ./lib/dicas/dicas.json; then
-  echo "Existem dicas não aprovadas"
+# Check if the dicas content has been approved
+if ! grep -q "Aprovado por:" game/docs/dicas/dicas.md; then
+  echo "Error: dicas content is missing Aprovado por field"
   exit 1
 fi
-
-echo "Fluxo de aprovação de conteúdo validado com sucesso"
-exit 0

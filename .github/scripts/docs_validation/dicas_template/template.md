@@ -1,10 +1,13 @@
-# Título da Dica
+# Dicas de Construção
 
-## Problema
-Descreva o problema ou desafio que a dica visa resolver.
+## Título da Dica
 
-## Solução
-Forneça a solução ou dica para o problema descrito.
+Descrição da dica.
 
-## Estrutura Sugerida
-Apresente uma estrutura sugerida para a construção, se aplicável.
+### Aprovador:
+
+- Nome do aprovador
+
+### Histórico de Alterações
+
+- **Data**: Descrição da alteração
