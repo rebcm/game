@@ -12,22 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Decode Keystores
+      - name: Decrypt keystore
         env:
-          KEY_JKS_BASE64: ${{ secrets.KEY_JKS_BASE64 }}
-          KEY_P12_BASE64: ${{ secrets.KEY_P12_BASE64 }}
-        run: .github/scripts/decode_keystores.sh
+          KEYSTORE_ENCRYPTED: ${{ secrets.KEYSTORE_ENCRYPTED }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: .github/scripts/secrets_management/decrypt_keystore.sh
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.16.0'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build Flutter
-        run: flutter build apk --release
-
-      - name: Build IPA
-        run: flutter build ipa --release
+      - name: Build Flutter app
+        run: |
+          flutter pub get
+          flutter build apk --release
