@@ -8,6 +8,8 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  widget_tracker_impl:
+    path: ./lib/utils/performance_testing/widget_tracker_impl.dart
   external_interruptions_test:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   memory_leak_detector:

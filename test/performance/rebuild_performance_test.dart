@@ -6,21 +6,26 @@ import 'package:game/main.dart' as game;
 void main() {
   testWidgets('Rebuild performance test', (tester) async {
     await tester.pumpWidget(game.MyApp());
+    await tester.pumpAndSettle();
 
-    // Wait for the game to load
+    final widgetTracker = WidgetTracker();
+    await widgetTracker.init();
+
+    // Perform some actions to populate the world
+    await tester.tap(find.text('Build'));
     await tester.pumpAndSettle();
 
     // Track rebuilds
-    final widgetTracker = WidgetTracker();
-    widgetTracker.startTracking();
+    await widgetTracker.startTracking();
 
-    // Perform an undo operation
-    await tester.tap(find.byIcon(Icons.undo));
-    await tester.pump();
+    // Perform an Undo operation
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
 
-    // Verify that unaffected widgets were not rebuilt
-    expect(widgetTracker.getRebuildCount('BlockWidget'), 0);
+    // Stop tracking rebuilds
+    final rebuildCount = await widgetTracker.stopTracking();
 
-    widgetTracker.stopTracking();
+    // Verify that the number of rebuilds is zero for unaffected widgets
+    expect(rebuildCount, 0);
   });
 }

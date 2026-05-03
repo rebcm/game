@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
 class WidgetTracker {
-  final Map<String, int> _rebuildCounts = {};
+  int _rebuildCount = 0;
 
-  void startTracking() {
-    // Implement logic to start tracking rebuilds
+  Future<void> init() async {}
+
+  Future<void> startTracking() async {
+    // Implement tracking logic here
   }
 
-  void stopTracking() {
-    // Implement logic to stop tracking rebuilds
-  }
-
-  int getRebuildCount(String widgetName) {
-    return _rebuildCounts[widgetName] ?? 0;
+  Future<int> stopTracking() async {
+    return _rebuildCount;
   }
 }

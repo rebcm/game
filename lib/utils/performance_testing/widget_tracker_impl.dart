@@ -3,18 +3,16 @@ import 'package:game/utils/performance_testing/widget_tracker.dart';
 
 class WidgetTrackerImpl implements WidgetTracker {
   @override
-  void startTracking() {
-    // Implement logic to start tracking rebuilds using a diagnostic or other method
+  Future<void> init() async {}
+
+  @override
+  Future<void> startTracking() async {
+    // Implement actual tracking logic here
   }
 
   @override
-  void stopTracking() {
-    // Implement logic to stop tracking rebuilds
-  }
-
-  @override
-  int getRebuildCount(String widgetName) {
-    // Implement logic to get rebuild count for a specific widget
+  Future<int> stopTracking() async {
+    // Return actual rebuild count
     return 0;
   }
 }
