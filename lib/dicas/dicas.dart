@@ -1,18 +1,6 @@
-import 'package:flutter/material.dart';
-
-class Dicas extends StatelessWidget {
-  final String dica;
-
-  const Dicas({Key? key, required this.dica}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      dica,
-      maxLines: null,
-      overflow: TextOverflow.visible,
-      softWrap: true,
-      style: TextStyle(fontSize: 16),
-    );
+class Dicas {
+  static String wrapText(String text) {
+    // Implement text wrapping logic here, respecting the project's existing patterns
+    return text.substring(0, 100); // Simple example, adjust according to actual requirements
   }
 }
