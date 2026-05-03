@@ -1,17 +1,26 @@
 import 'package:flutter/foundation.dart';
 
-class TelemetriaDicas {
-  void dicaVisualizada(String idDica) {
-    // Implementar lógica para registrar visualização de dica
-    if (kDebugMode) {
-      print('Dica visualizada: $idDica');
-    }
+class TelemetriaDicas with ChangeNotifier {
+  int _dicasExibidas = 0;
+  int _dicasIgnoradas = 0;
+
+  int get dicasExibidas => _dicasExibidas;
+  int get dicasIgnoradas => _dicasIgnoradas;
+
+  void dicaExibida() {
+    _dicasExibidas++;
+    notifyListeners();
   }
 
-  void dicaInteragida(String idDica) {
-    // Implementar lógica para registrar interação com dica
-    if (kDebugMode) {
-      print('Dica interagida: $idDica');
-    }
+  void dicaIgnorada() {
+    _dicasIgnoradas++;
+    notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'dicasExibidas': _dicasExibidas,
+      'dicasIgnoradas': _dicasIgnoradas,
+    };
   }
 }

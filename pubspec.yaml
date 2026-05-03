@@ -6,6 +6,7 @@ flutter:
     - docs/checklist_documentacao.md
 
 dev_dependencies:
+  change_notifier_auto_dispose: ^2.0.0
   json_serializable: ^6.5.4
   openapi_generator: ^4.3.1
   protobuf: ^2.1.0
@@ -13,15 +14,22 @@ dev_dependencies:
   golden_toolkit: ^0.13.0
 
 tests:
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/dicas_documentacao_test.dart
   - test/contract_tests/chunk_api_contract_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/integration_tests/swagger_integration_test/swagger_integration_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/memory_tests/isolate_memory_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/dicas_test.dart
   - test/golden_tests/tela_dicas_golden_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
   - test/responsividade_test/tela_dicas_responsividade_test.dart 
   - test/golden_tests/tela_dicas_golden_responsividade_test.dart
+  - test/telemetria_test/telemetria_dicas_test.dart
 
   swagger_generator: ^1.0.0
 
