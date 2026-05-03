@@ -9,6 +9,8 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  rate_limiter_test:
+    path: ./test/unit/rate_limiter_test/rate_limiter_test.dart
   chunk_serialization_test:
     path: ./test/performance/chunk_serialization_test/chunk_serialization_test.dart
   timer_stress_test:

@@ -1,44 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:game/chunk_generation/chunk_generator.dart';
-import 'package:game/utils/isolate_guard/isolate_guard.dart';
+import 'package:game/services/chunk_service/chunk_service.dart';
+import 'package:game/utils/rate_limiter/rate_limiter.dart';
 
 void main() {
-  runApp(MyApp());
+  final rateLimiter = RateLimiter(maxRequests: 10, timeWindow: Duration(seconds: 1));
+  final chunkService = ChunkService(rateLimiter);
+  runApp(MyApp(chunkService));
 }
 
 class MyApp extends StatelessWidget {
+  final ChunkService _chunkService;
+
+  MyApp(this._chunkService);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void dispose() {
-    IsolateGuard.killAll();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chunk Generation'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await ChunkGenerator.generateChunk(0, 0);
-          },
-          child: Text('Generate Chunk'),
+      home: Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              await _chunkService.fetchChunk('some_chunk_id');
+            },
+            child: Text('Fetch Chunk'),
+          ),
         ),
       ),
     );
