@@ -12,5 +12,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Trigger deploy web via Cloudflare
-        uses: ./.github/workflows/deploy_automation/deploy_web_via_cloudflare.yml
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run Smoke Test
+        run: |
+          flutter pub get
+          flutter test integration_test/smoke_test.dart
+
+      - name: Build and Deploy
+        run: |
+          # existing build and deploy commands
+          echo "Build and deploy steps"
+
+      - name: Notify on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

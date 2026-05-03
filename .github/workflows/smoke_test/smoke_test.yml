@@ -1,37 +1,29 @@
 name: Smoke Test
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
   smoke-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          node-version: '14'
+          flutter-version: '3.0.0'
 
-      - name: Install dependencies
-        run: npm install -g @playwright/test
-
-      - name: Run smoke test
+      - name: Run Smoke Test
         run: |
-          playwright test smoke_test.spec.js
-        env:
-          URL: ${{ secrets.DEPLOY_URL }}
+          flutter pub get
+          flutter test integration_test/smoke_test.dart
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: smoke-test-results
-          path: test-results/
+      - name: Notify on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

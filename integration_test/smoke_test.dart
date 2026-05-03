@@ -5,10 +5,9 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Smoke test', (tester) async {
+  testWidgets('smoke test', (tester) async {
     app.main();
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    final fltGlassPane = find.byElementPredicate((element) => element.widget.runtimeType.toString() == '_FlutterView');
-    expect(fltGlassPane, findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
