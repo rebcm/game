@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  swagger: ^1.0.0
   http: ^0.13.5
 
 dev_dependencies:
@@ -26,12 +25,6 @@ dev_dependencies:
 
 flutter:
   assets:
-    - docs/swagger/swagger.json
-    - docs/swagger/swagger_ui.html
-    - docs/audio_api_comparativo/audio_api_comparativo.md
-    - docs/dicas_construcao/conteudo_dicas.md
-    - docs/audio_api_comparativo/audio_api_comparativo.md
-    - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
     - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
@@ -43,11 +36,6 @@ flutter:
     - docs/flutter_sdk_version.md
     - test/integration/documentacao/documentacao_test.dart
     - docs/dicas_construcao/conteudo_dicas_formatado.md
-
-  test/integration/documentacao/documentacao_test.dart:
-
-  test/integration/audio_recovery_test/audio_recovery_test.dart:
-  assets:
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
 
   test/integration/flutter_doctor/flutter_doctor_test.dart:
