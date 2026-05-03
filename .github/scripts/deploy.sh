@@ -1,20 +1,17 @@
 #!/bin/bash
 
-# Validate Cloudflare Pages secrets
-validate_cloudflare_pages_secrets() {
-  if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-    echo "Cloudflare secrets are not set"
-    exit 1
-  fi
-}
+# Deploy script for the game project
 
-# Deploy to Cloudflare Pages
-deploy_to_cloudflare_pages() {
-  # Implement your deploy logic here using Wrangler CLI
-  # For example:
-  # wrangler pages deploy build/web --project-name=your-project-name
-  echo "Deploying to Cloudflare Pages"
-}
+# Exit on error
+set -e
 
-validate_cloudflare_pages_secrets
-deploy_to_cloudflare_pages
+# Navigate to the project root
+cd "$(dirname "$0")/../../"
+
+# Validate and build the project
+flutter pub get
+dart analyze
+flutter build web
+
+# Deploy to GitHub Pages
+# This step is handled by the GitHub Actions workflow
