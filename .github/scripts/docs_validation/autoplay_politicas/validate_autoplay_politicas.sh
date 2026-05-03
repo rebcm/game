@@ -1,53 +1,29 @@
 #!/bin/bash
 
-# Documentar as políticas de autoplay de áudio para Chrome, Safari e Firefox
-echo "Documenting autoplay policies for Chrome, Safari, and Firefox..."
+# Validates autoplay policies documentation for Chrome, Safari, and Firefox
 
-# Criar ou modificar o arquivo de documentação das políticas de autoplay
-mkdir -p docs/autoplay_politicas
-cat > docs/autoplay_politicas/autoplay_politicas.md << 'DOC_EOF'
-# Políticas de Autoplay
+# Check if the documentation file exists
+if [ ! -f ./docs/autoplay_politicas.md ]; then
+  echo "Error: ./docs/autoplay_politicas.md not found"
+  exit 1
+fi
 
-Este documento descreve as políticas de autoplay de áudio para os principais navegadores: Chrome, Safari e Firefox.
+# Validate Chrome autoplay policy documentation
+if ! grep -q "Chrome" ./docs/autoplay_politicas.md; then
+  echo "Error: Chrome autoplay policy not documented"
+  exit 1
+fi
 
-## Chrome
+# Validate Safari autoplay policy documentation
+if ! grep -q "Safari" ./docs/autoplay_politicas.md; then
+  echo "Error: Safari autoplay policy not documented"
+  exit 1
+fi
 
-O Chrome tem uma política de autoplay que permite o autoplay de mídia com som se o usuário tiver interagido com o site anteriormente.
+# Validate Firefox autoplay policy documentation
+if ! grep -q "Firefox" ./docs/autoplay_politicas.md; then
+  echo "Error: Firefox autoplay policy not documented"
+  exit 1
+fi
 
-### Critérios de Autoplay no Chrome
-
-- O usuário interagiu com o domínio (clicou, tocou, etc.).
-- No desktop, o limite de Média de Engajamento com Mídia (MEI) do usuário foi atingido.
-- No mobile, o usuário adicionou o site à tela inicial.
-
-## Safari
-
-O Safari no iOS e iPadOS bloqueia o autoplay de mídia com som por padrão.
-
-### Critérios de Autoplay no Safari
-
-- O usuário interagiu com o site (clicou, tocou, etc.) antes do autoplay.
-
-## Firefox
-
-O Firefox permite o autoplay de mídia, mas com restrições baseadas nas preferências do usuário e no contexto da página.
-
-### Critérios de Autoplay no Firefox
-
-- A preferência do usuário em relação ao autoplay é respeitada.
-- O autoplay é permitido se o site foi configurado para permitir autoplay na configuração do Firefox.
-
-## Matriz de Critérios de Validação
-
-| Navegador | Critérios de Autoplay |
-|-----------|-----------------------|
-| Chrome    | Interação prévia, MEI atingido (desktop), adicionado à tela inicial (mobile) |
-| Safari    | Interação prévia |
-| Firefox   | Preferências do usuário, configuração do site |
-
-DOC_EOF
-
-# Atualizar o pubspec.yaml para incluir o novo arquivo de documentação
-sed -i '/docs\/swagger_endpoints.md/a \    - docs/autoplay_politicas/autoplay_politicas.md' pubspec.yaml
-
-echo "Autoplay policies documentation created and pubspec.yaml updated."
+echo "Autoplay policies documentation validated successfully"

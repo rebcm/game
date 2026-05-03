@@ -107,3 +107,5 @@ dev_dependencies:
 
   audio_integration_test:
     path: ./test/integration/audio_integration_test/audio_integration_test.dart
+  autoplay_test:
+    path: ./test/integration/autoplay_test/autoplay_test.dart
