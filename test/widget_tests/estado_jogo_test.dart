@@ -1,36 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/estado_jogo.dart';
+import 'package:game/estado_jogo.dart';
+import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 void main() {
-  testWidgets('EstadoJogo is properly disposed', (tester) async {
+  testWidgets('EstadoJogo dispõe corretamente os timers', (tester) async {
     await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => EstadoJogo()),
-        ],
-        child: const MyApp(),
+      MaterialApp(
+        home: EstadoJogo(),
       ),
     );
 
-    final estadoJogo = tester.state<EstadoJogo>(find.byType(EstadoJogo));
+    await tester.pumpAndSettle();
 
-    await tester.pumpWidget(Container());
+    final estadoJogo = tester.state<EstadoJogoState>(find.byType(EstadoJogo));
 
-    expect(estadoJogo.mounted, false);
+    expect(LeakTrackingTestResult(
+      leaks: estadoJogo.timersLeaks,
+    ).isNotLeaky, isTrue);
   });
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: EstadoJogo(),
-      ),
-    );
-  }
 }
