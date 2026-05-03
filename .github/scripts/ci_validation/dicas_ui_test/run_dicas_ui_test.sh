@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/integration_test/ui/dicas/dicas_integration_test_driver.dart --target=test/integration_test/ui/dicas/dicas_integration_test.dart
+flutter drive --driver=test/widget_tests/dicas_ui_test.dart --target=lib/main.dart
