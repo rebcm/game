@@ -60,3 +60,7 @@ flutter:
     - docs/seo/palavras-chave-dicas.md
 
   integration_test/stress_test/audio_stress_test/audio_stress_test.dart:
+
+  integration_test/dicas_ui_test/dicas_ui_test.dart:
+    - .github/scripts/ci_validation/dicas_tests/docs/criterios_aceitacao_dicas.md
+    - docs/seo/palavras-chave-dicas.md
