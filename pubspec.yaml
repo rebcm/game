@@ -1,27 +1,21 @@
-flutter:
-  assets:
-    - assets/swagger.yaml
+name: game
+description: A voxel game.
 
-dev_dependencies:
-  openapi_generator: ^4.3.1
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  swagger: ^1.0.0
+  flutter:
+    sdk: flutter
 
-  docs/walkthrough.md
+  protobuf: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  openapi_generator: ^4.3.1
 
 flutter:
   generate: true
-  localizationsDelegates:
-    - GlobalMaterialLocalizations.delegate
-    - GlobalWidgetsLocalizations.delegate
-  supportedLocales:
-    - de
-    - fr
-  assets:
-    - assets/bloco_classes.txt
-
-  assets:
-    - assets/tips/
-  assets:
-    - assets/swagger.yaml
