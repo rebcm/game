@@ -1,7 +1,7 @@
-name: Checklist de Aceitação da Arquitetura
+name: Validação Critérios de Aceitação Arquitetura
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -18,11 +18,11 @@ jobs:
             echo "Erro: Camada Data importando Presentation"
             exit 1
           fi
-          if grep -r 'import .*data.*' lib/domain; then
-            echo "Erro: Camada Domain importando Data"
+          if grep -r 'import .*data.*' lib/presentation; then
+            echo "Erro: Camada Presentation importando Data"
             exit 1
           fi
 
       - name: Verificar dart analyze
         run: |
-          dart analyze lib
+          dart analyze
