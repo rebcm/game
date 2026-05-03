@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Validate secrets
-        run: ./.github/scripts/secrets_validation/validate_secrets.sh
-
-      - name: Deploy
+      - name: Run deploy script
+        env:
+          WRANGLER_TOKEN: ${{ secrets.WRANGLER_TOKEN }}
+          WRANGLER_ACCOUNT_ID: ${{ secrets.WRANGLER_ACCOUNT_ID }}
         run: ./.github/scripts/deploy.sh
