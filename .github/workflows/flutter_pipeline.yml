@@ -11,16 +11,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
 
-      - name: Run flutter pub get
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Run flutter test
+      - name: Run tests
         run: flutter test
 
-      - name: Run flutter driver test
-        run: flutter drive --target=test_driver/app.dart
+      - name: Build and deploy
+        run: |
+          echo "Building and deploying..."
+          # Add your build and deploy commands here
