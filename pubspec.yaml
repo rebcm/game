@@ -1,37 +1,11 @@
-dev_dependencies:
-  flutter_driver: ^1.0.0
-  flutter_lints: ^2.0.0
-  integration_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  build_runner: ^2.3.3
-  json_serializable: ^6.5.4
-  markdown: ^4.0.0
-  test: ^1.16.0
-  flutter_test:
-    sdk: flutter
-  leak_tracker: ^9.0.0
-  freezed: ^2.3.2
-  json_annotation: ^4.6.0
-  http: ^0.13.5
-
-dependencies:
-  protobuf: ^2.1.0
-  flutter:
-    sdk: flutter
-  yaml: ^3.1.0
-
 flutter:
-  generate: true
   assets:
     - assets/locale/
     - docs/biomas.md
     - .github/scripts/docs_validation/dicas/content/dicas_construcao.md
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: fonts/Roboto-Regular.ttf
+    - .github/scripts/docs_validation/i18n_docs/content/biomas_en.md
+    - .github/scripts/docs_validation/i18n_docs/content/biomas_de.md
+    - .github/scripts/docs_validation/i18n_docs/content/biomas_fr.md
 
 localizationsDelegates:
   - AppLocalizationsDelegate()
@@ -39,30 +13,6 @@ localizationsDelegates:
   - GlobalWidgetsLocalizations.delegate
 
 supportedLocales:
+  - en
   - de
   - fr
-
-  integration_test:
-    path: test/integration_tests/ux_tests
-
-  envied: ^0.2.1
-  envied_annotation: ^0.2.1
-
-  http: ^0.13.5
-  integration_test:
-    path: test/integration_tests/audio_tests
-
-  integration_test:
-    path: test/integration_tests/audio_tests
-
-  assets:
-    - docs/mapeamento_estruturas_sugeridas.md
-
-  integration_test:
-    path: test/integration_tests/audio_tests/external_interruptions_test
-
-  integration_test:
-    path: test/integration_tests/permissions_tests
-
-  integration_test:
-    path: test/integration_tests/bloco_tests
