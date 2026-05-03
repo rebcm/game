@@ -26,29 +26,48 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/audio/
     - docs/dicas_construcao/conteudo_dicas.md
+    - assets/audio/
     - docs/dicas_construcao/conteudo_dicas_formatado.md
+    - assets/audio/
     - docs/bloco_documentation.json
+    - assets/audio/
     - docs/seo/palavras-chave.md
+    - assets/audio/
     - docs/audio_compatibility/audio_compatibility_matrix.md
+    - assets/audio/
     - test/integration/contract/contract_test.dart
+    - assets/audio/
     - docs/cloudflare_pages_pipeline/minimum_permissions_matrix.md
+    - assets/audio/
     - .github/scripts/ci_validation/cloudflare_pages_permissions/docs/criterios_aceitacao_permissoes.md
+    - assets/audio/
     - docs/flutter_sdk_version.md
+    - assets/audio/
     - test/integration/documentacao/documentacao_test.dart
+    - assets/audio/
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
+    - assets/audio/
     - docs/i18n/pt-BR/dicas_construcao/conteudo_dicas.md
+    - assets/audio/
     - docs/i18n/en-US/dicas_construcao/conteudo_dicas.md
+    - assets/audio/
     - docs/i18n/pt-BR/bloco_documentation.json
+    - assets/audio/
     - docs/i18n/en-US/bloco_documentation.json
+    - assets/audio/
     - docs/i18n/pt-BR/seo/palavras-chave.md
+    - assets/audio/
     - docs/i18n/en-US/seo/palavras-chave.md
+    - assets/audio/
     - docs/documentacao/conteudo_documentacao.md
-
+    - assets/audio/
   - test/integration/audio_stress_test/audio_stress_test.dart
-
+    - assets/audio/
   - test/integration/contract/contract_test.dart
-
+    - assets/audio/
   - test/integration/audio_integration_test/audio_integration_test.dart
-
+    - assets/audio/
   - test/integration/audio_recovery_test/audio_recovery_test.dart
+    - assets/audio/
