@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  http: ^0.13.5
   provider: ^6.0.3
   flutter:
     sdk: flutter
@@ -14,6 +15,8 @@ dependencies:
   leak_tracker: ^9.0.0
 
 dev_dependencies:
+  http: ^0.13.5
+  http: ^0.13.5
   provider: ^6.0.3
   flutter_test:
     sdk: flutter
