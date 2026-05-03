@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.0.0"
 
 dependencies:
+  archive: ^3.3.2
   isolate: ^2.1.1
   version: ^2.0.0
   flutter_driver:
@@ -29,6 +30,7 @@ dependencies:
   cached_network_image: ^3.2.3
 
 dev_dependencies:
+  archive: ^3.3.2
   flutter_test:
     sdk: flutter
   flutter_driver:
