@@ -1,3 +1,15 @@
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 
-Future<void> main() => integrationDriver();
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('Integration Test', (WidgetTester tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Add test logic here
+  });
+}
