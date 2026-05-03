@@ -64,3 +64,6 @@ flutter:
     - lib/docs/dicas/template_dica.md
 
   dio: ^4.0.6
+
+  assets:
+    - lib/docs/dicas/contexto/
