@@ -62,3 +62,6 @@ flutter:
     - assets/audio/optimized/sfx/placeholder_sfx.mp3
     - assets/audio/optimized/music/placeholder_music.mp3
     - assets/audio/placeholder.ogg
+
+  assets:
+    - assets/audio/optimized/sfx/corrupted_sound.mp3
