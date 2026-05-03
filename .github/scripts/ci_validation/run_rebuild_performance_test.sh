@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter test test/performance/rebuild_performance_test.dart
+flutter pub run flutter_devtools --profile --trace-rebuilds --rebuild-counts > rebuild_performance.log

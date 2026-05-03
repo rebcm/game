@@ -15,3 +15,6 @@ dev_dependencies:
     - .github/scripts/docs_validation/mapeamento_estruturas_sugeridas/mapeamento_estruturas_sugeridas.md
 
   memory_info: ^0.2.0
+
+  test:
+    sdk: flutter
