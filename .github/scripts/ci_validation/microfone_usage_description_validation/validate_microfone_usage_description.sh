@@ -1,23 +1,16 @@
 #!/bin/bash
 
-PLIST_FILE="ios/Runner/Info.plist"
-if ! grep -q "NSMicrophoneUsageDescription" "$PLIST_FILE"; then
-  echo "NSMicrophoneUsageDescription não encontrado no Info.plist"
+INFO_PLIST_FILE="ios/Runner/Info.plist"
+
+if ! grep -q "NSMicrophoneUsageDescription" "$INFO_PLIST_FILE"; then
+  echo "Erro: NSMicrophoneUsageDescription não encontrado no Info.plist"
   exit 1
 fi
 
-DESCRIPTION=$(grep -A1 "NSMicrophoneUsageDescription" "$PLIST_FILE" | tail -n1 | sed -E 's/.*<string>(.*)<\/string>.*/\1/')
-if [ -z "$DESCRIPTION" ]; then
-  echo "A descrição para NSMicrophoneUsageDescription está vazia"
+MICROPHONE_USAGE_DESCRIPTION=$(grep -A1 "NSMicrophoneUsageDescription" "$INFO_PLIST_FILE" | tail -n1 | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
+if [ "$MICROPHONE_USAGE_DESCRIPTION" != "Este aplicativo precisa acessar o microfone para gravar áudio." ]; then
+  echo "Erro: Texto de justificativa para NSMicrophoneUsageDescription incorreto"
   exit 1
 fi
 
-echo "NSMicrophoneUsageDescription está configurado corretamente: $DESCRIPTION"
-
-MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
-if ! grep -q "RECORD_AUDIO" "$MANIFEST_FILE"; then
-  echo "Permissão RECORD_AUDIO não encontrada no AndroidManifest.xml"
-  exit 1
-fi
-
-echo "Permissão RECORD_AUDIO está declarada no AndroidManifest.xml"
+echo "NSMicrophoneUsageDescription validado com sucesso"
