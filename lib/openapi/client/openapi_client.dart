@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 
-class OpenAPIClient {
+class OpenApiClient {
   final Dio _dio;
 
-  OpenAPIClient({required Dio dio}) : _dio = dio;
+  OpenApiClient(this._dio);
 
-  Future<Response> someEndpoint() async {
-    // Implement the actual API call here
-    return _dio.get('/some-endpoint');
+  Future<Response> getEndpoint() async {
+    return await _dio.get('https://example.com/api/endpoint');
   }
 }

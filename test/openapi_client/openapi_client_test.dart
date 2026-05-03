@@ -8,25 +8,28 @@ void main() {
   late DioAdapter dioAdapter;
 
   setUp(() {
-    dio = Dio();
+    dio = Dio(BaseOptions());
     dioAdapter = DioAdapter(dio: dio);
   });
 
-  test('OpenAPI Client Test', () async {
-    dio.httpClientAdapter = dioAdapter;
-
-    const path = '/example';
-    const statusCode = 200;
-    const responseData = {'message': 'Success'};
-
+  test('should return 200 for valid request', () async {
     dioAdapter.onGet(
-      path,
-      (server) => server.reply(statusCode, responseData),
+      'https://example.com/api/endpoint',
+      (server) => server.reply(200, {'message': 'success'}),
     );
 
-    final response = await dio.get(path);
+    final response = await dio.get('https://example.com/api/endpoint');
 
-    expect(response.statusCode, statusCode);
-    expect(response.data, responseData);
+    expect(response.statusCode, 200);
+    expect(response.data, {'message': 'success'});
+  });
+
+  test('should throw exception for invalid request', () async {
+    dioAdapter.onGet(
+      'https://example.com/api/endpoint',
+      (server) => server.reply(404, {'message': 'not found'}),
+    );
+
+    expect(() async => await dio.get('https://example.com/api/endpoint'), throwsA(isA<DioError>()));
   });
 }
