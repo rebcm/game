@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/services/audio/audio_cache_manager.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:rebcm/services/audio_manager/volume_guard.dart';
 
 class AudioProvider with ChangeNotifier {
-  late AudioCacheManager _audioCacheManager;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final VolumeGuard _volumeGuard = VolumeGuard();
 
-  AudioProvider() {
-    _audioCacheManager = AudioCacheManager(_audioPlayer);
-    _preloadAudioAssets();
+  double _globalVolume = 1.0;
+
+  double get globalVolume => _globalVolume;
+
+  void updateGlobalVolume(double volume) {
+    if (_volumeGuard.isUpdating) return;
+    _globalVolume = volume;
+    notifyListeners();
   }
 
-  Future<void> _preloadAudioAssets() async {
-    final List<String> audioAssets = [
-      'assets/audio/optimized/sfx/break_block.mp3',
-      // Add other necessary audio assets here
-    ];
-    for (var asset in audioAssets) {
-      await _audioCacheManager.preloadAudio(asset);
-    }
-  }
-
-  Future<void> playAudio(String assetPath) async {
-    await _audioCacheManager.playCachedAudio(assetPath);
-  }
-
-  @override
-  void dispose() {
-    _audioCacheManager.dispose();
-    super.dispose();
+  void updateIndividualVolume(double volume) {
+    _volumeGuard.updateVolume(volume);
+    // Logic to update individual volume
   }
 }
