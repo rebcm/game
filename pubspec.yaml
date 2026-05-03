@@ -112,3 +112,6 @@ dev_dependencies:
 
   rebuild_logger:
     path: ./lib/utils/performance_testing/rebuild_logger.dart
+
+  seo_validation:
+    path: ./.github/scripts/docs_validation/seo/validate_seo_documentation.sh
