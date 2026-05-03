@@ -3,14 +3,14 @@
 OUTPUT_FILE=$1
 
 if ! command -v jq &> /dev/null; then
-  echo "jq is required but not installed"
+  echo "jq is not installed. Please install jq to validate JSON."
   exit 1
 fi
 
-jq -e '.blocos | type == "array"' $OUTPUT_FILE > /dev/null
+jq -e '.blocos | length > 0' $OUTPUT_FILE > /dev/null
 if [ $? -ne 0 ]; then
-  echo "Invalid output schema: 'blocos' must be an array"
+  echo "Validation failed: Output schema is not valid."
   exit 1
 fi
 
-echo "Output schema is valid"
+echo "Validation successful: Output schema is valid."
