@@ -5,20 +5,14 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Audio Recovery Test', () {
-    testWidgets('should recover audio after connection loss', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+  testWidgets('Audio recovery test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      // Simulate connection loss
-      // await tester.binding.handleConnectionLoss();
-
-      // Verify audio buffer state
-      // expect(audioBufferState, isNotNull);
-
-      // Verify reconnection logic
-      // await tester.pumpAndSettle(Duration(seconds: 5));
-      // expect(audioBufferState.isRecovered, isTrue);
-    });
+    // Simulate connection loss and verify buffer behavior
+    // Implement logic to test audio buffer and reconnection
+    // await tester.tap(find.byType(SomeButton));
+    // await tester.pumpAndSettle();
+    // expect(find.text('Some expected text'), findsOneWidget);
   });
 }

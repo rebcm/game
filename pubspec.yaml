@@ -82,3 +82,4 @@ flutter:
   - test/integration/dicas_ui_test/dicas_ui_test.dart
   - test/integration/documentacao/documentacao_test.dart
   - test/integration/audio_integration_test/audio_integration_test.dart
+  - test/integration/audio_recovery_test/audio_recovery_test.dart
