@@ -1,4 +1,4 @@
-name: Concurrency Stress Test
+name: Audio Concurrency Stress Test
 
 on:
   push:
@@ -6,17 +6,17 @@ on:
       - main
 
 jobs:
-  test:
+  concurrency_stress_test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
 
       - name: Run concurrency stress test
         run: |
-          flutter test test/integration_test/audio_stress_test/audio_concurrency_stress_test.dart
+          flutter test test/stress_tests/audio_concurrency_stress_test.dart
