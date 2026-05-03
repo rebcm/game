@@ -2,15 +2,12 @@ name: Benchmark CPU Stress Test
 
 on:
   workflow_dispatch:
-    inputs:
-      device:
-        description: 'Device to test on'
-        required: true
-        default: 'low-end-android'
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
   benchmark:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,10 +19,4 @@ jobs:
 
       - name: Run Flutter Driver Test
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/performance_test.dart --profile --trace-systrace --cache-sksl
-
-      - name: Upload benchmark results
-        uses: actions/upload-artifact@v3
-        with:
-          name: benchmark-results
-          path: benchmark_results.json
+          flutter drive --target=test_driver/app.dart --driver=test_driver/performance_test.dart --profile

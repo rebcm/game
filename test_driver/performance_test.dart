@@ -15,13 +15,14 @@ void main() {
 
     test('CPU Stress Test', () async {
       final timeline = await driver.traceAction(() async {
-        await driver.tap(find.byTooltip('Build Button'));
+        // Perform actions to stress test CPU
+        await driver.tap(find.byTooltip('Build'));
         await Future.delayed(Duration(seconds: 10));
       });
 
       final summary = TimelineSummary.summarize(timeline);
-      summary.writeSummaryToFile('benchmark_results', pretty: true);
-      summary.writeTimelineToFile('benchmark_timeline', pretty: true);
+      summary.writeSummaryToFile('cpu_stress_test', pretty: true);
+      summary.writeTimelineToFile('cpu_stress_test', pretty: true);
     });
   });
 }
