@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 
-class OpenApiClient {
+class OpenAPIClient {
   final Dio _dio;
 
-  OpenApiClient(this._dio);
+  OpenAPIClient({required Dio dio}) : _dio = dio;
 
-  Future<Response> healthcheck() async {
-    return await _dio.get('/healthcheck');
+  Future<Response> someEndpoint() async {
+    // Implement the actual API call here
+    return _dio.get('/some-endpoint');
   }
 }

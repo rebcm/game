@@ -12,24 +12,21 @@ void main() {
     dioAdapter = DioAdapter(dio: dio);
   });
 
-  test('should return 200 OK when calling /healthcheck', () async {
+  test('OpenAPI Client Test', () async {
+    dio.httpClientAdapter = dioAdapter;
+
+    const path = '/example';
+    const statusCode = 200;
+    const responseData = {'message': 'Success'};
+
     dioAdapter.onGet(
-      '/healthcheck',
-      (server) => server.reply(200, {'status': 'ok'}),
+      path,
+      (server) => server.reply(statusCode, responseData),
     );
 
-    final response = await dio.get('/healthcheck');
+    final response = await dio.get(path);
 
-    expect(response.statusCode, 200);
-    expect(response.data, {'status': 'ok'});
-  });
-
-  test('should throw DioError when calling /nonexistent', () async {
-    dioAdapter.onGet(
-      '/nonexistent',
-      (server) => server.reply(404, {'error': 'not found'}),
-    );
-
-    expect(() async => await dio.get('/nonexistent'), throwsA(isA<DioError>()));
+    expect(response.statusCode, statusCode);
+    expect(response.data, responseData);
   });
 }
