@@ -35,3 +35,6 @@ dev_dependencies:
 
   assets:
     - assets/openapi/openapi.yaml
+
+  assets:
+    - assets/estruturas_sugeridas/

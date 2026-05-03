@@ -1,0 +1,8 @@
+{
+  "nome": "Labirinto",
+  "descricao": "Um labirinto simples",
+  "blocos": [
+    {"tipo": "pedra", "quantidade": 150},
+    {"tipo": "areia", "quantidade": 50}
+  ]
+}

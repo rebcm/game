@@ -1,0 +1,8 @@
+{
+  "nome": "Ponte",
+  "descricao": "Uma ponte simples sobre um rio",
+  "blocos": [
+    {"tipo": "madeira", "quantidade": 30},
+    {"tipo": "pedra", "quantidade": 20}
+  ]
+}

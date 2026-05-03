@@ -1,0 +1,8 @@
+{
+  "nome": "Castelo",
+  "descricao": "Um castelo medieval simples",
+  "blocos": [
+    {"tipo": "pedra", "quantidade": 100},
+    {"tipo": "madeira", "quantidade": 50}
+  ]
+}

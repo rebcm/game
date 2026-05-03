@@ -1,0 +1,8 @@
+{
+  "nome": "Cabana",
+  "descricao": "Uma cabana simples na floresta",
+  "blocos": [
+    {"tipo": "madeira", "quantidade": 50},
+    {"tipo": "folhas", "quantidade": 20}
+  ]
+}
