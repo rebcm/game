@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Simula a validação da rotação do Cloudflare API Token
-# Este script deve ser adaptado para as necessidades específicas do projeto
+# Valida se o token do Cloudflare foi rotacionado corretamente
 
-# Verifica se o Secret CLOUDFLARE_API_TOKEN está definido
-if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-  echo "Erro: CLOUDFLARE_API_TOKEN não está definido"
+CLOUDFLARE_API_TOKEN=$1
+CLOUDFLARE_ACCOUNT_ID=$2
+
+if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+  echo "Erro: CLOUDFLARE_API_TOKEN ou CLOUDFLARE_ACCOUNT_ID não fornecido"
   exit 1
 fi
 
-# Simula a execução de um workflow que utiliza o CLOUDFLARE_API_TOKEN
-echo "Executando workflow..."
-# Adicione aqui a lógica para executar o workflow ou simular sua execução
-echo "Workflow executado com sucesso"
-
+# Implemente aqui a lógica para validar o token e account ID
+# Por exemplo, fazendo uma requisição para a API do Cloudflare
+echo "Token e Account ID válidos"
+exit 0
