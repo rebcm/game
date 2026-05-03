@@ -1,9 +1,4 @@
 #!/bin/bash
 
-# Configura o ambiente para build do IPA
-echo "Configurando o ambiente para build do IPA..."
-
-# Exporta o IPA
-xcodebuild -exportArchive -archivePath ./build/ios/Runner.xcarchive -exportPath ./build/ios/ipa -exportOptionsPlist ./.github/scripts/ExportOptions.plist
-
-echo "Build do IPA concluído com sucesso."
+flutter build ios --release --no-codesign
+xcrun -sdk iphoneos PackageApplication -v build/ios/Release-iphoneos/Runner.app -o build/ios/ipa/game.ipa
