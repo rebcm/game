@@ -6,20 +6,12 @@ on:
       - main
 
 jobs:
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
   state-reset-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
       - name: Run state reset test
         run: |
-          flutter drive --driver=test/integration_tests/utils/test_utils.dart --target=test/integration_tests/state_reset_test.dart
+          flutter drive --driver=test/integration_tests/state_reset_test.dart --target=lib/main.dart
