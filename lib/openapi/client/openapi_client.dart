@@ -5,19 +5,11 @@ class OpenApiClient {
 
   OpenApiClient(this._dio);
 
-  Future<List<Block>> getBlocks() async {
-    final response = await _dio.get('/blocks');
-    return (response.data as List).map((e) => Block.fromJson(e)).toList();
+  Future<Response> getDocs() async {
+    return await _dio.get('/docs');
   }
-}
 
-class Block {
-  final int id;
-  final String name;
-
-  Block({required this.id, required this.name});
-
-  factory Block.fromJson(Map<String, dynamic> json) {
-    return Block(id: json['id'], name: json['name']);
+  Future<Response> getOpenApiJson() async {
+    return await _dio.get('/openapi.json');
   }
 }
