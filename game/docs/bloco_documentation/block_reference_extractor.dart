@@ -2,18 +2,18 @@ import 'dart:convert';
 import 'package:game/services/chunk_manager/chunk_lock_manager.dart';
 
 void main() async {
-  final blockReferenceMatrix = await extractBlockReferenceMatrix();
-  final output = jsonEncode(blockReferenceMatrix);
-  print(output);
+  final blockReference = await extractBlockReference();
+  final jsonOutput = jsonEncode(blockReference);
+  print(jsonOutput);
 }
 
-Future<Map<String, dynamic>> extractBlockReferenceMatrix() async {
-  // Implement the logic to extract block reference matrix
-  // For demonstration purposes, a simple map is returned
+Future<Map<String, dynamic>> extractBlockReference() async {
+  // Implement the logic to extract block reference metadata
+  // For demonstration, a simple map is returned
   return {
     "blocks": [
-      {"id": "1", "name": "Block 1", "description": "Description 1"},
-      {"id": "2", "name": "Block 2", "description": "Description 2"}
+      {"id": 1, "name": "Block 1", "description": "First block"},
+      {"id": 2, "name": "Block 2", "description": "Second block"}
     ]
   };
 }
