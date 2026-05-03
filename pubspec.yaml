@@ -169,3 +169,5 @@ dependencies:
     path: test/integration_tests/ux_tests
     additional_paths:
       - test/integration_tests/performance_tests/rebuild_performance_test.dart
+
+  test/integration_tests/ux_tests/dicas_test/dicas_test.dart:
