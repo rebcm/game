@@ -1,19 +1,13 @@
 # Versões Alvo
 
-## Introdução
+## Flutter SDK
 
-Este documento define as versões mínimas de Flutter SDK e AGP que serão testadas contra o JDK 17 para evitar testes aleatórios.
+A versão mínima suportada do Flutter SDK é **3.0.0**.
 
-## Versões Mínimas
+## Android Gradle Plugin (AGP)
 
-- Flutter SDK: 3.0.0
-- Dart SDK: 2.17.0
-- AGP: Verificar a versão compatível com o JDK 17 nos workflows de CI/CD.
+A versão mínima suportada do AGP é definida no workflow `build-jdk17.yml`.
 
-## Justificativa
+## JDK
 
-A escolha dessas versões mínimas visa garantir a compatibilidade com o JDK 17 e evitar problemas de compatibilidade durante os testes.
-
-## Manutenção
-
-Essas versões devem ser atualizadas sempre que necessário para garantir a compatibilidade com as dependências do projeto.
+O JDK 17 é utilizado para builds e testes.
