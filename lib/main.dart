@@ -1,44 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/widgets/audio_gain_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/config/input_config.dart';
+import 'package:rebcm/game_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => InputConfig()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Game',
+      title: 'Rebeca\'s Voxel World',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rebeca\'s Game'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            AudioGainWidget(),
-            SizedBox(height: 20),
-            // other widgets...
-          ],
-        ),
-      ),
+      home: GameScreen(),
     );
   }
 }
