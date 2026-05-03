@@ -1,13 +1,27 @@
-import 'package:http/http.dart' as http;
-import 'package:game/services/api_service/interceptors/network_interceptor.dart';
+import 'package:dio/dio.dart';
+import 'package:game/services/api_service/interceptors/mock_api_interceptor.dart';
 
 class ApiService {
-  final http.Client _client;
-  final NetworkInterceptor _networkInterceptor;
+  final Dio _dio;
 
-  ApiService(this._client, this._networkInterceptor);
+  ApiService(this._dio);
 
-  Future<http.Response> makeRequest(http.Request request) async {
-    return _networkInterceptor.interceptRequest(request);
+  Future<Response> get(String path) async {
+    try {
+      return await _dio.get(path);
+    } on DioException catch (e) {
+      // Handle Dio exceptions
+      rethrow;
+    }
+  }
+
+  factory ApiService.mocked() {
+    final dio = Dio();
+    final dioAdapter = DioAdapter(dio: dio);
+    dio.httpClientAdapter = dioAdapter;
+    final interceptor = MockApiInterceptor(dio, dioAdapter);
+    interceptor.setupMocks();
+    dio.interceptors.add(interceptor);
+    return ApiService(dio);
   }
 }

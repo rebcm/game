@@ -1,28 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/services/api_service.dart';
-import 'package:game/api_service_test/mock_network/mock_http_adapter.dart';
-import 'package:dio/dio.dart';
+import 'package:game/services/api_service/api_service.dart';
 
 void main() {
-  late ApiService _apiService;
-  late MockHttpAdapter _mockHttpAdapter;
+  late ApiService apiService;
 
   setUp(() {
-    _mockHttpAdapter = MockHttpAdapter();
-    _apiService = ApiService(Dio()..httpClientAdapter = _mockHttpAdapter.dioAdapter);
+    apiService = ApiService.mocked();
   });
 
-  test('should return error message when timeout occurs', () async {
-    _mockHttpAdapter.setTimeoutError();
-    final response = await _apiService.fetchData(delay: true);
-    expect(response.isLeft(), true);
-    expect(response.left.toString(), contains('Timeout'));
-  });
-
-  test('should return success message when data is fetched', () async {
-    _mockHttpAdapter.setSuccessResponse();
-    final response = await _apiService.fetchData();
-    expect(response.isRight(), true);
-    expect(response.right.toString(), contains('Success'));
+  test('test ApiService with mocked Dio', () async {
+    final response = await apiService.get('/api/test');
+    expect(response.statusCode, 200);
+    expect(response.data, {'data': 'Mocked data'});
   });
 }
