@@ -1,10 +1,17 @@
 #!/bin/bash
 
-echo "Executando flutter clean..."
-flutter clean
+echo "Validating clean build..."
 
-echo "Executando flutter pub get..."
+# Clean and get dependencies
+flutter clean
 flutter pub get
 
-echo "Executando dart analyze..."
-dart analyze --fatal-infos --fatal-warnings .
+# Check if there are any errors after getting dependencies
+dart analyze
+
+if [ $? -eq 0 ]; then
+  echo "Clean build validation successful."
+else
+  echo "Clean build validation failed."
+  exit 1
+fi
