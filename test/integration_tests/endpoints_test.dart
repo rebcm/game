@@ -12,7 +12,10 @@ void main() {
 
       dioAdapter.onGet(
         'https://example.com/api/endpoint',
-        (server) => server.reply(200, {'message': 'Success'}),
+        (server) => server.reply(
+          200,
+          {'message': 'Success'},
+        ),
       );
 
       final response = await dio.get('https://example.com/api/endpoint');
