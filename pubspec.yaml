@@ -25,3 +25,4 @@ supportedLocales:
   - test/responsividade/responsividade_test.dart
 
   - test/audio_edge_cases/external_interruptions_test.dart
+    - docs/autoplay_politicas/autoplay_politicas.md
