@@ -10,14 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Decode keystores
         env:
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
-          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
-        run: .github/scripts/keystore_decoding/decode_keystores.sh
+          KEYSTORE_JKS_BASE64: ${{ secrets.KEYSTORE_JKS_BASE64 }}
+          KEYSTORE_P12_BASE64: ${{ secrets.KEYSTORE_P12_BASE64 }}
+        run: .github/scripts/passdriver/decode_keystores.sh
 
-      - name: Build and release
-        run: .github/scripts/build_and_release.sh
+      - name: Build Flutter
+        run: |
+          flutter pub get
+          flutter build apk
+          flutter build ios --no-codesign
