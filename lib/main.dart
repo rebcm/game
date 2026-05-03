@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/blocos/blocos.dart';
+import 'package:rebcm/telas/blocos_tela.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Blocos()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,30 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: BlocosTela(),
     );
   }
 }
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final blocos = context.watch<Blocos>().blocos;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Blocos Disponíveis'),
-      ),
-      body: ListView.builder(
-        itemCount: blocos.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(blocos[index].nome),
-            subtitle: Text(blocos[index].descricao),
-          );
-        },
-      ),
-    );
-  }
-}
-
