@@ -77,3 +77,7 @@ dependencies:
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
   test/integration_tests/contract_tests/contract_test.dart:
+
+  test/integration_tests/ux_tests/audio_test/audio_test.dart:
+
+  test/integration_tests/ux_tests/audio_test/widgets/audio_widget_test.dart:
