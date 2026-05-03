@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy
 
 on:
   push:
@@ -24,8 +24,5 @@ jobs:
         run: flutter build web
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build/web --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
+        # Add your Cloudflare Pages deployment step here
+        run: echo "Deploying to Cloudflare Pages"
