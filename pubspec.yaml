@@ -156,3 +156,5 @@ dev_dependencies:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   external_interruptions_test:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
+  timer_stress_test:
+    path: ./test/integration/stress_test/timer_stress_test/timer_stress_test.dart
