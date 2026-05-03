@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/features/mobile_controls/mobile_controls.dart';
+import 'package:rebcm/widgets/joystick.dart';
 
 class GameScreen extends StatelessWidget {
   @override
@@ -7,8 +7,12 @@ class GameScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Game content here
-          MobileControls(),
+          // Other game elements...
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: Joystick(),
+          ),
         ],
       ),
     );
