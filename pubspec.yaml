@@ -141,3 +141,5 @@ dev_dependencies:
 
   rebuild_performance_baseline_test:
     path: ./.github/scripts/ci_validation/run_rebuild_performance_test.sh
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
