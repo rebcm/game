@@ -1,0 +1,28 @@
+name: Validação Critérios de Aceitação - Animação Idle Rebeca
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'assets/animacoes/rebeca/idle.png'
+      - 'docs/criterios_aceitacao/animacao_idle_rebeca.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verificar duração do ciclo da animação
+        run: |
+          # Implementar lógica para verificar a duração do ciclo da animação (2000ms)
+
+      - name: Verificar amplitude do movimento da animação
+        run: |
+          # Implementar lógica para verificar a amplitude do movimento da animação (10 pixels)
+
+      - name: Verificar easing da animação
+        run: |
+          # Implementar lógica para verificar se a animação utiliza easing `easeInOutSine`
