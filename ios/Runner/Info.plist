@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
     <key>NSMicrophoneUsageDescription</key>
-    <string>O aplicativo precisa acessar o microfone para funcionar corretamente.</string>
+    <string>O aplicativo precisa acessar o microfone para gravar sons personalizados para os blocos voxel.</string>
 </dict>
 </plist>
