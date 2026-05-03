@@ -3,10 +3,8 @@
 <plist version="1.0">
 <dict>
     <key>NSCameraUsageDescription</key>
-    <string>A câmera é usada para tirar fotos dos seus blocos criativos e compartilhá-los com a comunidade.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>O microfone é necessário para gravar áudios enquanto você constrói e compartilha suas criações.</string>
+    <string>Acesso à câmera para compartilhar criações</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>A biblioteca de fotos é usada para salvar e compartilhar suas criações.</string>
+    <string>Acesso à biblioteca de fotos para compartilhar criações</string>
 </dict>
 </plist>
