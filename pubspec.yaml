@@ -6,6 +6,7 @@ version: 1.0.0+15
 environment:
   sdk: ">=2.17.0 <3.0.0"
   flutter: "^3.0.0"
+  uses-material-design: true
 
 dependencies:
   version: ^2.0.0
@@ -24,6 +25,7 @@ dependencies:
   json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
   flutter:
+  uses-material-design: true
     sdk: flutter
   cached_network_image: ^3.2.3
 
@@ -45,6 +47,7 @@ dev_dependencies:
   mocktail: ^0.3.0
 
 flutter:
+  uses-material-design: true
   wrangler: ^1.0.0
   assets:
     - assets/docs/checklists/validacao-onboarding-checklist.md
