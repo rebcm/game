@@ -1,16 +1,17 @@
 class AudioAssetPaths {
-  static const List<String> sfxAssets = [
-    'assets/audio/optimized/sfx/block_break.mp3',
-    'assets/audio/optimized/sfx/block_place.mp3',
+  static const List<String> sfxPaths = [
+    'assets/audio/optimized/sfx/block_break.wav',
+    'assets/audio/optimized/sfx/block_place.wav',
+    // Add other SFX paths as needed
   ];
 
-  static const List<String> ambientAssets = [
-    'assets/audio/optimized/ambient/forest.mp3',
+  static const List<String> ambientPaths = [
+    'assets/audio/optimized/ambient/ambient_sound.wav',
+    // Add other ambient paths as needed
   ];
 
-  static const List<String> musicAssets = [
-    'assets/audio/optimized/music/theme.mp3',
+  static const List<String> musicPaths = [
+    'assets/audio/optimized/music/game_music.mp3',
+    // Add other music paths as needed
   ];
-
-  static List<String> get allAssets => [...sfxAssets, ...ambientAssets, ...musicAssets];
 }

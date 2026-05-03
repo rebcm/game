@@ -3,32 +3,28 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
 
 class AudioCacheManager {
-  final AudioPlayer _audioPlayer;
-  final Map<String, Uint8List> _cache = {};
+  static final AudioCacheManager _instance = AudioCacheManager._internal();
+  final Map<String, Uint8List> _audioCache = {};
 
-  AudioCacheManager(this._audioPlayer);
+  factory AudioCacheManager() => _instance;
 
-  Future<void> preloadAudio(String assetPath) async {
-    if (!_cache.containsKey(assetPath)) {
-      final ByteData data = await rootBundle.load(assetPath);
-      _cache[assetPath] = data.buffer.asUint8List();
+  AudioCacheManager._internal();
+
+  Future<void> preloadAudioAssets(List<String> assetPaths) async {
+    for (var path in assetPaths) {
+      if (!_audioCache.containsKey(path)) {
+        final ByteData data = await rootBundle.load(path);
+        _audioCache[path] = data.buffer.asUint8List();
+      }
     }
   }
 
-  Future<void> playCachedAudio(String assetPath) async {
-    if (_cache.containsKey(assetPath)) {
-      await _audioPlayer.setAudioSource(
-        AudioSource.bytes(_cache[assetPath]!),
-      );
-      await _audioPlayer.play();
-    } else {
-      await preloadAudio(assetPath);
-      await playCachedAudio(assetPath);
+  Future<AudioPlayer> getAudioPlayer(String assetPath) async {
+    if (!_audioCache.containsKey(assetPath)) {
+      await preloadAudioAssets([assetPath]);
     }
-  }
-
-  void dispose() {
-    _audioPlayer.dispose();
-    _cache.clear();
+    final player = AudioPlayer();
+    await player.setAudioData(_audioCache[assetPath]!, preload: true);
+    return player;
   }
 }

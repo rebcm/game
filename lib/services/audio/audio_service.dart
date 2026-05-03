@@ -1,27 +1,20 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rebcm/services/audio/audio_cache_manager.dart';
+import 'package:rebcm/utils/audio_asset_paths.dart';
 
 class AudioService {
-  late AudioPlayer _audioPlayer;
-  late AudioCacheManager _audioCacheManager;
+  final AudioCacheManager _cacheManager = AudioCacheManager();
 
   Future<void> init() async {
-    _audioPlayer = AudioPlayer();
-    _audioCacheManager = AudioCacheManager(_audioPlayer);
-    await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse('')));
+    await _cacheManager.preloadAudioAssets(AudioAssetPaths.sfxPaths);
+    await _cacheManager.preloadAudioAssets(AudioAssetPaths.ambientPaths);
+    await _cacheManager.preloadAudioAssets(AudioAssetPaths.musicPaths);
   }
 
-  Future<void> preloadAudio(String assetPath) async {
-    await _audioCacheManager.preloadAudio(assetPath);
+  Future<AudioPlayer> playSfx(String path) async {
+    return await _cacheManager.getAudioPlayer(path);
   }
 
-  Future<void> playAudio(String assetPath) async {
-    await _audioCacheManager.playCachedAudio(assetPath);
-  }
-
-  void dispose() {
-    _audioCacheManager.dispose();
-    _audioPlayer.dispose();
-  }
+  // Implement other audio service methods as needed
 }
