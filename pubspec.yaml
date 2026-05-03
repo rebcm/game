@@ -91,3 +91,5 @@ dependencies:
   test/integration_tests/ux_tests/dicas_tests/dicas_test.dart:
 
   test/integration_tests/ux_tests/dicas_tests/dicas_test.dart:
+
+  test/integration_tests/ux_tests/audio_test/audio_test.dart:

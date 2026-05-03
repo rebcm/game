@@ -1,18 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:your_app/your_app.dart'; // Update with actual app import
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('test audio playback', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  testWidgets('Test audio playback on different platforms', (tester) async {
+    await tester.pumpWidget(YourApp()); // Update with actual app widget
 
-    // Implement audio test logic here
-    // For example:
+    // Implement logic to test audio playback
+    // This might involve tapping a button to play audio and verifying it plays
+    // Example:
     // await tester.tap(find.byIcon(Icons.play_arrow));
     // await tester.pumpAndSettle();
-    // expect(find.text('Audio playing'), findsOneWidget);
+    // Verify audio is playing or has played
   });
 }

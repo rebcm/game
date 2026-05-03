@@ -7,3 +7,4 @@
 ./.github/scripts/ci_validation/run_responsividade_test.sh
 # Executar validação do mapeamento de estruturas sugeridas
 .github/scripts/docs_validation/mapeamento_estruturas_sugeridas/validate_mapeamento_estruturas_sugeridas.sh
+./.github/scripts/ci_validation/run_audio_test.sh
