@@ -5,25 +5,21 @@ class EstadoJogo extends StatefulWidget {
   _EstadoJogoState createState() => _EstadoJogoState();
 }
 
-class _EstadoJogoState extends State<EstadoJogo> with AutomaticKeepAliveClientMixin {
+class _EstadoJogoState extends State<EstadoJogo> with WidgetsBindingObserver {
   @override
-  bool get wantKeepAlive => false;
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Estado Jogo'),
-      ),
-      body: Center(
-        child: Text('Conteúdo do estado do jogo'),
-      ),
-    );
+    return Container(); // Implement your widget tree here
   }
 }

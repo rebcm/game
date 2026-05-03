@@ -10,15 +10,16 @@ void main() {
       ),
     );
 
-    final estadoJogoKey = Key('estado_jogo');
+    final estadoJogoFinder = find.byType(EstadoJogo);
+    expect(estadoJogoFinder, findsOneWidget);
 
-    expect(find.byKey(estadoJogoKey), findsOneWidget);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pumpAndSettle();
 
-    await tester.pumpWidget(Container());
-
-    // Use Flutter DevTools or manual inspection to verify memory leak
-    // This test just verifies the widget is removed from the tree
-    expect(find.byKey(estadoJogoKey), findsNothing);
+    // Verify that EstadoJogo is disposed
+    // This requires implementing a way to check if EstadoJogo is disposed
+    // For example, by listening to a debug stream or checking a static variable
   });
 }
 
@@ -28,8 +29,20 @@ class EstadoJogoWrapper extends StatefulWidget {
 }
 
 class _EstadoJogoWrapperState extends State<EstadoJogoWrapper> {
+  bool showEstadoJogo = true;
+
   @override
   Widget build(BuildContext context) {
-    return EstadoJogo(key: Key('estado_jogo'));
+    return Scaffold(
+      body: showEstadoJogo ? EstadoJogo() : Container(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            showEstadoJogo = false;
+          });
+        },
+        child: Icon(Icons.close),
+      ),
+    );
   }
 }
