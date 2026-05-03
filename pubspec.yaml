@@ -11,3 +11,6 @@ dev_dependencies:
   game/services/chunk_manager/chunk_lock_manager.dart:
 
   game/docs/walkthrough.dart:
+
+  flutter_localizations:
+    sdk: flutter
