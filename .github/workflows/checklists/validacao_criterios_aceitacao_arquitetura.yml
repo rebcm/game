@@ -14,15 +14,28 @@ jobs:
 
       - name: Verificar separação de camadas
         run: |
-          if grep -r 'import .*presentation.*' lib/data; then
-            echo "Erro: Camada Data importando Presentation"
+          if grep -r 'data/' lib/presentation; then
+            echo "Erro: Arquivos de dados encontrados na camada de apresentação"
             exit 1
           fi
-          if grep -r 'import .*data.*' lib/presentation; then
-            echo "Erro: Camada Presentation importando Data"
+          if grep -r 'presentation/' lib/data; then
+            echo "Erro: Arquivos de apresentação encontrados na camada de dados"
+            exit 1
+          fi
+          if grep -r 'domain/' lib/data; then
+            echo "Erro: Arquivos de domínio encontrados na camada de dados"
             exit 1
           fi
 
-      - name: Verificar dart analyze
+      - name: Verificar dependências
         run: |
-          dart analyze
+          if grep -r 'flame:' lib/data; then
+            echo "Erro: Dependência de apresentação encontrada na camada de dados"
+            exit 1
+          fi
+
+      - name: Dart analyze
+        run: dart analyze
+
+      - name: Flutter test
+        run: flutter test
