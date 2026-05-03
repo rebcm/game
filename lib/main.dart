@@ -23,3 +23,27 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'package:game/services/isolate_guard/isolate_guard.dart';
+
+void main() async {
+  // Existing main logic...
+
+  // Ensure isolates are killed on app exit
+  IsolateGuard.killAllIsolates();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Existing widget tree...
+
+    return WillPopScope(
+      onWillPop: () async {
+        IsolateGuard.killAllIsolates();
+        return true;
+      },
+      child: // Existing widget tree...
+    );
+  }
+}
