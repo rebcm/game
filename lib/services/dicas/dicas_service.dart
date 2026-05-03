@@ -11,26 +11,11 @@ class DicasService {
   DicasService._();
 
   void mostrarDica(BuildContext context, String mensagem) {
+    // Implementação da lógica de exibição de dicas
+    // Pode ser um modal, tooltip, etc.
+    // Deve ser configurável para evitar hardcode
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(mensagem)),
-    );
-  }
-
-  void mostrarTooltip(GlobalKey key, String mensagem) {
-    final dynamicOverlay = Overlay.of(key.currentContext!);
-    dynamicOverlay?.insert(
-      OverlayEntry(
-        builder: (context) => Positioned(
-          top: key.currentContext!.findRenderObject()?.getTransformTo(null).getTranslation().y,
-          left: 0,
-          child: Material(
-            child: Tooltip(
-              message: mensagem,
-              child: Container(),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
