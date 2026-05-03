@@ -1,18 +1,23 @@
-# Documentação do Pipeline de CI/CD
+# CI/CD Pipeline Documentation
 
-Este documento descreve as etapas do pipeline de CI/CD utilizado no projeto.
+## Overview
 
-## Etapas do Pipeline
+This pipeline automates the build, test, and deployment of the game.
 
-1. **Validação de Código**: Verifica se o código está de acordo com as regras de linting e se há erros de análise estática.
-2. **Testes de Integração**: Executa os testes de integração definidos no projeto.
-3. **Build e Release**: Compila o projeto e prepara o release para deploy.
+## Secrets
 
-## Scripts Utilizados
+The following secrets are required:
+- CLOUDFLARE_API_TOKEN
+- CLOUDFLARE_ACCOUNT_ID
 
-- `build_and_release.sh`: Script responsável por compilar o projeto e preparar o release.
-- `validate_pipeline.sh`: Script que valida a execução do pipeline.
+## Workflow
 
-## Configuração
+1. Checkout code
+2. Setup Flutter
+3. Install dependencies
+4. Analyze code
+5. Build and release
 
-A configuração do pipeline é feita através do arquivo `.github/workflows/main.yml`.
+## Troubleshooting
+
+Check the workflow logs for errors.
