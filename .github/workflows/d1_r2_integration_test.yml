@@ -1,4 +1,4 @@
-name: D1/R2 Integration Test
+name: D1 R2 Integration Test
 
 on:
   push:
@@ -14,7 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Run integration test
         run: |
-          flutter drive --target=test/integration_tests/d1_r2_integration_test.dart --driver=test_driver/integration_test.dart
+          flutter drive --driver=test/integration_tests/d1_r2_integration_test.dart --target=lib/main.dart
