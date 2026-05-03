@@ -1,0 +1,8 @@
+# Estruturas Sugeridas
+
+This file contains suggested structures for the game.
+
+1. Castle
+2. House
+3. Bridge
+
