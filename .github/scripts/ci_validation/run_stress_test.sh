@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/stress_test/integration_test_driver.dart --target=test/stress_test/game_screen_stress_test.dart
+flutter drive --driver=test/integration_tests/ux_tests/stress_test/stress_test.dart --target=test/integration_tests/ux_tests/stress_test/stress_test.dart

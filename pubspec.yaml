@@ -59,3 +59,5 @@ supportedLocales:
   test/integration_tests/ux_tests/responsividade_test/widgets/dicas_widget_test.dart:
 
   test/integration_tests/ux_tests/dicas_golden_tests/dicas_golden_test.dart:
+
+  test/integration_tests/ux_tests/stress_test/stress_test.dart:
