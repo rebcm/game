@@ -19,9 +19,4 @@ jobs:
 
       - name: Run Flutter Driver Test
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile
-          flutter pub run flutter_driver --profile --target=test_driver/app.dart --driver=test_driver/app_test.dart
-
-      - name: Generate Latency Metrics Report
-        run: |
-          cat test_driver/latency_metrics.txt
+          flutter drive --target=test_driver/app.dart --driver=test_driver/io_latency_test.dart --profile
