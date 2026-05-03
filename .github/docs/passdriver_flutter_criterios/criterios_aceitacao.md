@@ -1,39 +1,24 @@
-# Critérios de Aceitação para Configuração do Wrangler
+# Critérios de Aceitação para Passdriver Flutter
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a configuração do Wrangler nos ambientes de desenvolvimento (dev), staging e produção (prod). A configuração correta do Wrangler é crucial para o funcionamento adequado do projeto.
+Este documento define os critérios de aceitação para o uso do Passdriver no Flutter, especialmente em relação ao tratamento de falhas como Token, Conexão e Tamanho.
 
-## Variáveis e Segredos Necessários
+## Matriz de Respostas Esperadas
 
-A seguir estão listadas as variáveis e segredos que devem estar presentes no arquivo `wrangler.toml` para cada ambiente:
-
-### Ambiente de Desenvolvimento (dev)
-
-- `VAR_DEV_1`
-- `VAR_DEV_2`
-- `SECRET_DEV_1`
-
-### Ambiente de Staging
-
-- `VAR_STAGING_1`
-- `VAR_STAGING_2`
-- `SECRET_STAGING_1`
-
-### Ambiente de Produção (prod)
-
-- `VAR_PROD_1`
-- `VAR_PROD_2`
-- `SECRET_PROD_1`
+| Tipo de Falha | Resposta Esperada | Justificativa |
+| --- | --- | --- |
+| Token Inválido | Erro Crítico | Token inválido indica falha de autenticação, impossibilitando o uso do serviço. |
+| Conexão Falhou | Tentativa de Retry | Problemas de conexão podem ser temporários; retry pode resolver a falha. |
+| Tamanho Excedido | Alerta de Warning | Tamanho excedido deve alertar o usuário, mas não necessariamente parar o job. |
 
 ## Critérios de Aceitação
 
-1. O arquivo `wrangler.toml` deve existir na raiz do projeto.
-2. As variáveis e segredos listados acima devem estar configurados corretamente para cada ambiente.
-3. A configuração do Wrangler deve ser validada automaticamente durante o processo de CI/CD.
-4. A documentação deve ser atualizada para refletir qualquer mudança na configuração do Wrangler.
+1. **Token Inválido**: O sistema deve acusar erro crítico quando o token for inválido.
+2. **Conexão Falhou**: O sistema deve tentar reconectar (retry) em caso de falha de conexão.
+3. **Tamanho Excedido**: O sistema deve emitir um alerta de warning quando o tamanho for excedido.
 
-## Validação
+## Testes
 
-A validação da configuração do Wrangler será realizada através de scripts de CI/CD. O arquivo `.github/scripts/ci_validation/wrangler_config_validation.sh` será responsável por verificar a presença e os valores das variáveis e segredos necessários.
+Testes devem ser implementados para validar os critérios acima.
 
