@@ -79,3 +79,7 @@ dependency_overrides:
     - docs/guias/onboarding.md
 
   uses-material-design: true
+
+dependency_overrides:
+  json_serializable: ^6.3.1
+  build_runner: ^2.1.8
