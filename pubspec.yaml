@@ -62,7 +62,11 @@ flutter:
     path: ./benchmarks/performance_tracking
 
   physics_engine_tests:
+  slider_persistence_test:
+    path: ./test/slider_persistence_test
     path: ./test/physics_engine_tests
+  slider_persistence_test:
+    path: ./test/slider_persistence_test
 
   api_service:
     path: ./lib/services/api_service
