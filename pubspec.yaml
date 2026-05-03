@@ -56,3 +56,5 @@ flutter:
 
   assets:
     - lib/docs/bloco_documentation/
+  assets:
+    - lib/docs/guias_depuracao/
