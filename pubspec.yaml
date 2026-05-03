@@ -59,3 +59,6 @@ flutter:
 
   flutter_test:
     path: ./test
+
+  benchmark:
+    path: ./benchmarks
