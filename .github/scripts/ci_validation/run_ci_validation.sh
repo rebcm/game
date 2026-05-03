@@ -1,4 +1,7 @@
 #!/bin/bash
 
-# Executar validações CI
-./.github/scripts/ci_validation/validate_min_permissions.sh
+# existing code ...
+
+./.github/scripts/ci_validation/contract_test/run_contract_test.sh
+
+# existing code ...
