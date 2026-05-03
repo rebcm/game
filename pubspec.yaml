@@ -95,3 +95,5 @@ dependencies:
   test/integration_tests/ux_tests/audio_test/audio_test.dart:
 
   test/integration_tests/memory_leak_tests/memory_leak_test.dart:
+
+  test/integration_tests/ux_tests/text_overflow_test/text_overflow_test.dart:
