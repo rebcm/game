@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 class DicasService {
   static DicasService? _instance;
 
-  factory DicasService() => _instance ??= DicasService._();
+  factory DicasService() {
+    _instance ??= DicasService._();
+    return _instance!;
+  }
 
   DicasService._();
 
-  void mostrarDica(BuildContext context, String mensagem) {
+  void mostrarDica({required BuildContext context, required String mensagem}) {
     // Implementar lógica para exibir dicas
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
+    // Pode ser um modal, tooltip, etc.
+    // Deve ser configurável
   }
 }

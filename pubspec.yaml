@@ -87,3 +87,5 @@ dependencies:
     - docs/mapeamento_estruturas_sugeridas.md
 
   test/integration_tests/ci_tests/clean_build_test.dart:
+
+  test/integration_tests/ux_tests/dicas_tests/dicas_test.dart:
