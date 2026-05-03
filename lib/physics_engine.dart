@@ -1,7 +1,12 @@
 class PhysicsEngine {
-  bool checkCollision(double position) {
-    // Simplified logic for demonstration purposes
-    const chunkSize = 16.0;
-    return position >= 0 && position < chunkSize;
+  bool checkCollision(Vector3 position) {
+    // implementation of collision detection
+    // for demonstration purposes, assume collision if x is within 0 to 16
+    return position.x >= 0 && position.x <= 16;
   }
+}
+
+class Vector3 {
+  double x, y, z;
+  Vector3(this.x, this.y, this.z);
 }
