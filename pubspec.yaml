@@ -59,3 +59,6 @@ flutter:
     - assets/audio/placeholder.ogg
     - assets/audio/optimized/sfx/corrupted_sound.mp3
     - assets/audio/optimized/sfx/
+
+  assets:
+    - docs/taxonomia/categorias.md
