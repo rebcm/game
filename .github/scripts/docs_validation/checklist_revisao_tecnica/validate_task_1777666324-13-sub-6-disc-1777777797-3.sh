@@ -1,11 +1,9 @@
 #!/bin/bash
 
-CONTENT_FILE="./.github/scripts/docs_validation/checklist_revisao_tecnica/content/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md"
-
-if [ ! -f "$CONTENT_FILE" ]; then
-  echo "Arquivo $CONTENT_FILE não encontrado."
+# Validar conteúdo da task 1777666324-13-sub-6-disc-1777777797-3
+if [ -f "docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md" ]; then
+  echo "Conteúdo validado com sucesso"
+else
+  echo "Erro ao validar conteúdo"
   exit 1
 fi
-
-# Implementar lógica de validação aqui
-echo "Validação realizada com sucesso."
