@@ -1,7 +1,25 @@
-import 'package:flutter_driver/driver_extension.dart';
-import 'package:rebcm/main.dart' as app;
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
 void main() {
-  enableFlutterDriverExtension();
-  app.main();
+  group('Memory Baseline Test', () {
+    FlutterDriver? driver;
+
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
+
+    tearDownAll(() async {
+      if (driver != null) {
+        driver!.close();
+      }
+    });
+
+    test('Memory baseline test', () async {
+      await driver!.runUnsynchronized(() async {
+        await driver!.waitFor(find.text('Start'));
+        await driver!.tap(find.text('Start'));
+      });
+    });
+  });
 }
