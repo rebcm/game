@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  synchronized: ^3.0.0
   http: ^0.13.5
   provider: ^6.0.3
   analyzer: ^5.2.0
@@ -20,6 +21,8 @@ dependencies:
   intl: ^0.17.0
 
 dev_dependencies:
+  synchronized: ^3.0.0
+  synchronized: ^3.0.0
   openapi_generator: ^4.3.1
   build_runner: ^2.2.0
   freezed_annotation: ^2.1.0
