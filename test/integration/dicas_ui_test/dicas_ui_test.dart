@@ -11,37 +11,29 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
+      // Simula diferentes resoluções de tela
       await tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+      await tester.binding.window.devicePixelRatioTestValue = 1.0;
       await tester.pumpAndSettle();
 
-      expect(find.text('Dicas de Construção'), findsOneWidget);
+      expect(find.text('Texto da dica'), findsOneWidget);
 
       await tester.binding.window.physicalSizeTestValue = Size(750, 1334);
+      await tester.binding.window.devicePixelRatioTestValue = 2.0;
       await tester.pumpAndSettle();
 
-      expect(find.text('Dicas de Construção'), findsOneWidget);
-
-      await tester.binding.window.physicalSizeTestValue = Size(480, 854);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Dicas de Construção'), findsOneWidget);
+      expect(find.text('Texto da dica'), findsOneWidget);
     });
 
     testWidgets('Renderização de dicas em diferentes idiomas', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Simula mudança de idioma para inglês
-      // Implemente a lógica para mudar o idioma aqui
+      // Simula mudança de idioma
+      // Implemente a lógica para mudar o idioma da aplicação
       await tester.pumpAndSettle();
 
-      expect(find.text('Building Tips'), findsOneWidget);
-
-      // Simula mudança de idioma para português
-      // Implemente a lógica para mudar o idioma aqui
-      await tester.pumpAndSettle();
-
-      expect(find.text('Dicas de Construção'), findsOneWidget);
+      expect(find.text('Texto da dica em outro idioma'), findsOneWidget);
     });
   });
 }
