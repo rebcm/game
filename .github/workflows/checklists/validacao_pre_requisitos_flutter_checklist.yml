@@ -20,29 +20,13 @@ jobs:
           echo "Validating Dart version..."
           dart --version
 
-      - name: Validate System Dependencies
-        run: |
-          echo "Validating system dependencies..."
-          # Add validation for system dependencies here
-
-      - name: List Flutter SDK Version
-        run: |
-          echo "Flutter SDK version:"
-          flutter --version | grep "Flutter"
-
-      - name: List Dart SDK Version
-        run: |
-          echo "Dart SDK version:"
-          dart --version
-
       - name: List System Dependencies
         run: |
-          echo "System dependencies:"
-          # List system dependencies required by the project
+          echo "Listing system dependencies..."
+          apt list --installed
 
-      - name: Output Checklist
+      - name: Check Flutter Doctor
         run: |
-          echo "Checklist de Pré-requisitos Flutter:"
-          echo "1. Flutter SDK: >=3.0.0"
-          echo "2. Dart SDK: >=2.17.0 <3.0.0"
-          echo "3. System dependencies: List of required dependencies"
+          echo "Running Flutter Doctor..."
+          flutter doctor
+
