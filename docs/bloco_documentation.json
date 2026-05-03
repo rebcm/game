@@ -1,3 +1,13 @@
 {
-  "blocos": []
+  "blocos": [
+    {
+      "nome": "grama",
+      "descricao": "Bloco de grama"
+    },
+    {
+      "nome": "terra",
+      "descricao": "Bloco de terra"
+    },
+    // Adicione outros blocos aqui
+  ]
 }
