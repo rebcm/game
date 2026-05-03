@@ -1,14 +1,12 @@
 #!/bin/bash
 
-# Executar flutter doctor e capturar a saída
+# Execute flutter doctor and capture the output
 flutter doctor > flutter_doctor_output.txt 2>&1
 
-# Extrair erros de dependências ausentes
-echo "Erros de dependências ausentes:"
-grep -E '(!|Warning:)' flutter_doctor_output.txt | grep -i 'dependency'
-
-# Salvar os erros em um arquivo
-grep -E '(!|Warning:)' flutter_doctor_output.txt | grep -i 'dependency' > missing_dependencies.txt
-
-echo "Relatório de 'flutter doctor' gerado em flutter_doctor_output.txt"
-echo "Erros de dependências ausentes listados em missing_dependencies.txt"
+# Check if there are any missing dependencies
+if grep -q "X" flutter_doctor_output.txt; then
+  echo "Flutter doctor found issues:"
+  cat flutter_doctor_output.txt
+else
+  echo "Flutter doctor did not find any issues."
+fi

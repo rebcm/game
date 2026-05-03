@@ -12,12 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Flutter Doctor
-        run: |
-          .github/scripts/ci_validation/flutter_doctor/run_flutter_doctor.sh
-
-      - name: Upload Flutter Doctor errors
-        uses: actions/upload-artifact@v3
-        with:
-          name: flutter_doctor_errors.md
-          path: .github/scripts/ci_validation/flutter_doctor/flutter_doctor_errors.md
+      - name: Run flutter doctor
+        run: ./.github/scripts/ci_validation/flutter_doctor/run_flutter_doctor.sh
