@@ -61,3 +61,7 @@ flutter:
   assets:
     - assets/animacoes/rebeca/idle.png
     - assets/animacoes/rebeca/walking.png
+
+  test/widget_test/edge_cases/resolution_test.dart
+  test/widget_test/edge_cases/input_test.dart
+  test/widget_test/edge_cases/drift_test.dart
