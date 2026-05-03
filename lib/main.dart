@@ -1,63 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:game/utils/debug_profiler.dart';
-import 'package:game/widgets/debug_overlay.dart';
-import 'package:provider/provider.dart';
+import 'package:game/chunking_system/chunk_manager.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => DebugProfiler()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Voxel Game',
-      home: const MyHomePage(),
-      builder: (context, child) {
-        return Stack(
-          children: [
-            child!,
-            const DebugOverlay(),
-          ],
-        );
-      },
+      home: GamePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
+class GamePage extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _GamePageState createState() => _GamePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _GamePageState extends State<GamePage> {
+  final ChunkManager _chunkManager = ChunkManager(chunkSize: 16, renderDistance: 5);
+  int _playerX = 0;
+  int _playerZ = 0;
+
+  void _updatePlayerPosition(int x, int z) {
+    setState(() {
+      _playerX = x;
+      _playerZ = z;
+      _chunkManager.updateChunks(_playerX, _playerZ);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Voxel Game'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bug_report),
-            onPressed: () {
-              Provider.of<DebugProfiler>(context, listen: false).toggle();
-            },
-          ),
-        ],
+      body: Center(
+        child: Text('Chunks: ${_chunkManager.chunks.length}'),
       ),
-      body: const Center(
-        child: Text('Voxel Game Content'),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _updatePlayerPosition(_playerX + 16, _playerZ),
+        child: Icon(Icons.add),
       ),
     );
   }
