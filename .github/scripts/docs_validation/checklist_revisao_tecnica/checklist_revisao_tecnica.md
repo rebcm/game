@@ -1,16 +1,13 @@
-# Checklist de Revisão Técnica
+# Checklist Revisão Técnica
 
-## Ortografia
+Este documento contém a checklist para a revisão técnica das estruturas sugeridas.
 
-- [ ] Verificar ortografia das dicas
-- [ ] Verificar ortografia dos textos de ajuda
+## Critérios de Aceitação
 
-## Precisão Técnica
+1. A estrutura sugerida deve ser tecnicamente precisa.
+2. A estrutura sugerida deve ser relevante para o jogo.
 
-- [ ] Verificar se as estruturas sugeridas são tecnicamente precisas
-- [ ] Verificar se as dicas estão de acordo com o gameplay
+## Checklist
 
-## Formatação
-
-- [ ] Verificar formatação das dicas
-- [ ] Verificar formatação dos textos de ajuda
+- [ ] A estrutura sugerida está documentada corretamente.
+- [ ] A estrutura sugerida foi revisada por um membro da equipe.

@@ -58,3 +58,5 @@ flutter:
     - lib/docs/bloco_documentation/
   assets:
     - lib/docs/guias_depuracao/
+  assets:
+    - lib/docs/peer_review/
