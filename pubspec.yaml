@@ -9,3 +9,5 @@ dev_dependencies:
     path: test/responsividade
 
   game/services/chunk_manager/chunk_lock_manager.dart:
+
+  game/docs/walkthrough.dart:
