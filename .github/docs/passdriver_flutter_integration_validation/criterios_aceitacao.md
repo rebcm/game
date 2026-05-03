@@ -1,26 +1,25 @@
-# Critérios de Aceitação para Validação de Integração Técnica do Passdriver Flutter
+# Critérios de Aceitação para Validação de Integração do Passdriver Flutter
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a validação de integração técnica do passdriver Flutter, garantindo que a tecnologia escolhida (Lottie/Rive/Implicit) não cause jank (stuttering) na UI principal do passdriver.
+Este documento define os critérios de aceitação para a validação da integração técnica do Passdriver Flutter, garantindo que a tecnologia escolhida (Lottie/Rive/Implicit) não cause jank (stuttering) na UI principal do Passdriver.
 
 ## Critérios de Aceitação
 
-1. **Performance de Renderização**: A tecnologia escolhida não deve causar uma queda significativa na taxa de quadros (FPS) da UI principal.
-2. **Suavidade da Animação**: As animações na UI principal devem permanecer suaves e sem stuttering.
-3. **Consumo de Recursos**: O consumo de recursos (CPU, Memória) não deve aumentar significativamente com a integração da nova tecnologia.
-4. **Testes de Estresse**: A aplicação deve passar nos testes de estresse sem falhas ou degradação significativa da performance.
+1. **Performance de Renderização**: A UI principal do Passdriver deve renderizar sem jank ou stuttering.
+2. **Testes de Integração**: Testes de integração devem ser implementados para validar a performance da UI.
+3. **Benchmarking**: Benchmarks devem ser estabelecidos para medir a performance da UI antes e após a integração.
+4. **Documentação**: A documentação deve ser atualizada para refletir as mudanças implementadas.
 
 ## Métricas de Avaliação
 
-- Taxa de quadros (FPS) média durante a renderização da UI principal.
-- Métricas de consumo de CPU e memória durante a execução da aplicação.
-- Resultados dos testes de estresse.
+- Taxa de frames (FPS) durante a renderização da UI principal.
+- Tempo de renderização da UI principal.
 
-## Ferramentas de Teste
+## Ferramentas de Validação
 
-- Ferramentas de profiling do Flutter (DevTools).
-- Testes de integração automatizados.
+- Flutter DevTools para profiling e debugging.
+- Testes de integração utilizando o framework de testes do Flutter.
 
 ## Aprovação
 
