@@ -12,15 +12,15 @@ void main() {
 
       // Simulate multiple direction inputs
       await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowUp);
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowRight);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowLeft);
       await tester.pumpAndSettle();
 
       // Verify animation behavior
       expect(find.text('Rebeca'), findsOneWidget);
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      // Add more expectations based on the expected animation behavior
 
       await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowUp);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowRight);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowLeft);
       await tester.pumpAndSettle();
     });
 
@@ -29,17 +29,17 @@ void main() {
       await tester.pumpAndSettle();
 
       // Simulate sudden angle change
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowLeft);
-      await tester.pumpAndSettle(Duration(milliseconds: 100));
       await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowRight);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
 
       // Verify animation behavior
       expect(find.text('Rebeca'), findsOneWidget);
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      // Add more expectations based on the expected animation behavior
 
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowLeft);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowRight);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
     });
   });
