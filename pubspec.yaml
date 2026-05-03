@@ -123,3 +123,6 @@ flutter:
 
   markdown_lint_test:
     path: ./test/markdown_lint_test
+
+  memory_stress_test:
+    path: ./benchmarks/memory_stress_test
