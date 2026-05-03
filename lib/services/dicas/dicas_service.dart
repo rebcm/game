@@ -15,4 +15,22 @@ class DicasService {
       SnackBar(content: Text(mensagem)),
     );
   }
+
+  void mostrarTooltip(GlobalKey key, String mensagem) {
+    final dynamicOverlay = Overlay.of(key.currentContext!);
+    dynamicOverlay?.insert(
+      OverlayEntry(
+        builder: (context) => Positioned(
+          top: key.currentContext!.findRenderObject()?.getTransformTo(null).getTranslation().y,
+          left: 0,
+          child: Material(
+            child: Tooltip(
+              message: mensagem,
+              child: Container(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
