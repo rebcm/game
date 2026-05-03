@@ -11,10 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.3.10'
 
       - name: Get dependencies
         run: flutter pub get
@@ -22,5 +22,5 @@ jobs:
       - name: Analyze code
         run: dart analyze
 
-      - name: Build
+      - name: Build Flutter project
         run: flutter build apk --release
