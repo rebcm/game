@@ -1,25 +1,25 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-class EstadoJogo extends State {
-  Timer? _timer;
-
+class EstadoJogo extends StatefulWidget {
   @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      // Ação periódica
-    });
-  }
+  _EstadoJogoState createState() => _EstadoJogoState();
+}
 
+class _EstadoJogoState extends State<EstadoJogo> {
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Estado Jogo'),
+      ),
+      body: Center(
+        child: Text('Estado Jogo'),
+      ),
+    );
   }
 }
