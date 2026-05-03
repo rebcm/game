@@ -1,10 +1,7 @@
-name: Build iOS
+name: build-ios
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build-ios:
@@ -18,14 +15,10 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Build iOS
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
-        run: |
-          ./.github/scripts/build_ios.sh
+      - name: Build IPA
+        run: .github/scripts/build_ios.sh
 
-      - name: Upload IPA artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: rebcm.ipa
