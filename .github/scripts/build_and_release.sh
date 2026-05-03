@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Source the secrets masking script
-source .github/scripts/secrets_masking/mask_secrets.sh
+# Existing build and release script content...
+# ...
 
-# Rest of the build and release script remains the same
+# Call the cleanup script after signing
+. .github/scripts/ci_validation/cleanup_artifacts/cleanup_artifacts.sh
