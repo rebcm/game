@@ -69,3 +69,6 @@ flutter:
 
   api_service_test:
     path: ./test/api_service_test
+
+  integration_test:
+    path: ./integration_test
