@@ -1,60 +1,51 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:convert';
 import 'package:protobuf/protobuf.dart';
-import '../lib/models/chunk.pb.dart';
+import 'dart:convert';
+import 'package:your_game/chunk.dart'; // Adjust the import according to your actual chunk.dart location
 
 void main() {
   group('Chunk Serialization Performance Test', () {
-    test('JSON vs Protobuf serialization', () {
-      // Create a sample chunk
-      Chunk chunk = Chunk();
-      chunk.width = 16;
-      chunk.height = 16;
-      chunk.depth = 16;
-      // ... populate chunk data
+    late Chunk chunk;
 
-      // JSON serialization
-      Stopwatch jsonStopwatch = Stopwatch()..start();
-      String jsonString = jsonEncode(chunk.toJson());
-      jsonStopwatch.stop();
-      print('JSON serialization took ${jsonStopwatch.elapsedMilliseconds}ms');
-
-      // Protobuf serialization
-      Stopwatch protobufStopwatch = Stopwatch()..start();
-      List<int> protobufBytes = chunk.writeToBuffer();
-      protobufStopwatch.stop();
-      print('Protobuf serialization took ${protobufStopwatch.elapsedMilliseconds}ms');
-
-      // Compare sizes
-      print('JSON size: ${jsonString.length} bytes');
-      print('Protobuf size: ${protobufBytes.length} bytes');
+    setUp(() {
+      chunk = Chunk(); // Initialize your chunk with some data
+      // chunk.init(); // Uncomment and adjust according to your Chunk class initialization
     });
 
-    test('JSON vs Protobuf deserialization', () {
-      // Create a sample chunk
-      Chunk chunk = Chunk();
-      chunk.width = 16;
-      chunk.height = 16;
-      chunk.depth = 16;
-      // ... populate chunk data
+    test('JSON serialization performance', () {
+      final stopwatch = Stopwatch()..start();
+      final jsonData = jsonEncode(chunk.toJson());
+      stopwatch.stop();
+      print('JSON serialization took ${stopwatch.elapsedMilliseconds}ms');
+      expect(jsonData, isNotEmpty);
+    });
 
-      // JSON serialization
-      String jsonString = jsonEncode(chunk.toJson());
+    test('Protobuf serialization performance', () {
+      final protobufChunk = ChunkProtobuf()..fromChunk(chunk); // Assuming you have a protobuf representation
+      final stopwatch = Stopwatch()..start();
+      final protobufData = protobufChunk.writeToBuffer();
+      stopwatch.stop();
+      print('Protobuf serialization took ${stopwatch.elapsedMilliseconds}ms');
+      expect(protobufData, isNotEmpty);
+    });
 
-      // Protobuf serialization
-      List<int> protobufBytes = chunk.writeToBuffer();
+    test('JSON deserialization performance', () {
+      final jsonData = jsonEncode(chunk.toJson());
+      final stopwatch = Stopwatch()..start();
+      jsonDecode(jsonData);
+      stopwatch.stop();
+      print('JSON deserialization took ${stopwatch.elapsedMilliseconds}ms');
+      expect(jsonData, isNotEmpty);
+    });
 
-      // JSON deserialization
-      Stopwatch jsonStopwatch = Stopwatch()..start();
-      jsonDecode(jsonString);
-      jsonStopwatch.stop();
-      print('JSON deserialization took ${jsonStopwatch.elapsedMilliseconds}ms');
-
-      // Protobuf deserialization
-      Stopwatch protobufStopwatch = Stopwatch()..start();
-      Chunk.fromBuffer(protobufBytes);
-      protobufStopwatch.stop();
-      print('Protobuf deserialization took ${protobufStopwatch.elapsedMilliseconds}ms');
+    test('Protobuf deserialization performance', () {
+      final protobufChunk = ChunkProtobuf()..fromChunk(chunk);
+      final protobufData = protobufChunk.writeToBuffer();
+      final stopwatch = Stopwatch()..start();
+      ChunkProtobuf.fromBuffer(protobufData);
+      stopwatch.stop();
+      print('Protobuf deserialization took ${stopwatch.elapsedMilliseconds}ms');
+      expect(protobufData, isNotEmpty);
     });
   });
 }
