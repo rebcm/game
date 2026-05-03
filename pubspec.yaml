@@ -19,6 +19,8 @@ tests:
   - test/contract_tests/openapi_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
   - test/golden_tests/tela_dicas_golden_test.dart
+  - test/responsividade_test/tela_dicas_responsividade_test.dart 
+  - test/golden_tests/tela_dicas_golden_responsividade_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
 
   - test/memory_tests/memory_leak_profiling_test.dart
