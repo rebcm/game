@@ -1,14 +1,14 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/game.dart';
+import 'package:test/test.dart';
+import 'package:game/dicas.dart';
 
 void main() {
-  test('Dicas strings extraction test', () {
-    final dicas = Dicas();
-    final strings = dicas.getAllDicasStrings();
-    expect(strings, isNotEmpty);
+  test('Dicas should return valid content', () {
+    final dicas = Dicas().getDicas();
+    expect(dicas, isNotEmpty);
+  });
+
+  test('Estruturas Sugeridas should return valid content', () {
+    final estruturas = EstruturasSugeridas().getEstruturas();
+    expect(estruturas, isNotEmpty);
   });
 }
-  test('peer review dicas test', () {
-    // Implement the test for peer review dicas content
-    expect(true, true);
-  });

@@ -1,9 +1,17 @@
-// Extract dicas strings
-import 'dart:io';
-import 'package:game/docs/dicas/dicas.dart';
+import 'package:game/dicas.dart';
 
 void main() {
-  // Logic to extract strings from dicas
-  print('Extracting dicas strings...');
-  // Implement extraction logic here
+  final dicas = Dicas().getDicas();
+  final estruturas = EstruturasSugeridas().getEstruturas();
+
+  // Extract and validate dicas content
+  for (var dica in dicas) {
+    print(dica.titulo);
+    print(dica.descricao);
+  }
+
+  for (var estrutura in estruturas) {
+    print(estrutura.nome);
+    print(estrutura.descricao);
+  }
 }
