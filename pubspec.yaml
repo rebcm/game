@@ -41,3 +41,7 @@ flutter:
   test/integration/flutter_doctor/flutter_doctor_test.dart:
 
   test/integration/dicas_ui_test/dicas_ui_test.dart:
+
+  assets:
+    - docs/audio_api_mapping/audio_api_comparison.md
+
