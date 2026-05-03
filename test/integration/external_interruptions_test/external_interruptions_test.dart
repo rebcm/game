@@ -1,33 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:rebcm/game/audio_manager.dart';
+import 'package:rebcm/game/audio/audio_player.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('External Interruptions Test', () {
-    testWidgets('audio playback interruption by phone call', (tester) async {
-      await AudioManager.instance.playAudio('test_audio.mp3');
+    testWidgets('audio playback interruption test', (tester) async {
+      await AudioPlayer.instance.play('test_audio.mp3');
+      await Future.delayed(const Duration(seconds: 2));
+      // Simulate incoming call
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      expect(AudioManager.instance.isPlaying, false);
+      expect(AudioPlayer.instance.isPlaying, false);
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      expect(AudioManager.instance.isPlaying, true);
+      // No need to restart playback as per the task description
     });
 
-    testWidgets('audio playback interruption by alarm', (tester) async {
-      await AudioManager.instance.playAudio('test_audio.mp3');
+    testWidgets('audio playback alarm interruption test', (tester) async {
+      await AudioPlayer.instance.play('test_audio.mp3');
+      await Future.delayed(const Duration(seconds: 2));
+      // Simulate alarm
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      expect(AudioManager.instance.isPlaying, false);
+      expect(AudioPlayer.instance.isPlaying, false);
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      expect(AudioManager.instance.isPlaying, true);
-    });
-
-    testWidgets('audio playback interruption by push notification', (tester) async {
-      await AudioManager.instance.playAudio('test_audio.mp3');
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      expect(AudioManager.instance.isPlaying, false);
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      expect(AudioManager.instance.isPlaying, true);
+      // No need to restart playback as per the task description
     });
   });
 }

@@ -8,6 +8,8 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   memory_leak_detector:
     path: ./lib/utils/performance_testing/memory_leak_detector.dart
   memory_stress_test:
