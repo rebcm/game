@@ -1,22 +1,21 @@
 #!/bin/bash
 
 # Validates the documentation checklist
+# Checks if the required topics are present in dicas.md
 
-# Check if the documentation checklist file exists
-if [ ! -f ./docs/checklist_documentacao.md ]; then
-  echo "Documentation checklist file not found."
+required_topics=("Versão do Flutter" "Dependências" "Variáveis de Ambiente" "Comandos de Build")
+dicas_file="docs/dicas.md"
+
+if [ ! -f "$dicas_file" ]; then
+  echo "Error: $dicas_file not found"
   exit 1
 fi
 
-# Define the required topics
-required_topics=("Versão do Flutter" "Dependências" "Variáveis de Ambiente" "Comandos de Build")
-
-# Check if all required topics are present in the checklist
 for topic in "${required_topics[@]}"; do
-  if ! grep -q "$topic" ./docs/checklist_documentacao.md; then
-    echo "Topic '$topic' not found in the documentation checklist."
+  if ! grep -q "$topic" "$dicas_file"; then
+    echo "Error: $topic not found in $dicas_file"
     exit 1
   fi
 done
 
-echo "Documentation checklist is valid."
+echo "Documentation checklist validation successful"
