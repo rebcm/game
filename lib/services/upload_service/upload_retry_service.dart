@@ -1,39 +1,28 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class UploadRetryService {
-  final http.Client _httpClient;
+  final Dio _dio;
 
-  UploadRetryService(this._httpClient);
+  UploadRetryService(this._dio);
 
-  Future<bool> retryUpload(String url, String filePath) async {
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.files.add(await http.MultipartFile.fromPath('file', filePath));
-
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return await _retryUpload(request);
-      }
-    } catch (e) {
-      return await _retryUpload(http.MultipartRequest('POST', Uri.parse(url)));
-    }
-  }
-
-  Future<bool> _retryUpload(http.MultipartRequest request) async {
+  Future<void> uploadWithRetry(String filePath, String uploadUrl) async {
     int retryCount = 0;
-    while (retryCount < 3) {
+    const maxRetries = 3;
+
+    while (retryCount < maxRetries) {
       try {
-        var response = await request.send();
-        if (response.statusCode == 200) {
-          return true;
+        await _dio.post(uploadUrl, data: await MultipartFile.fromFile(filePath));
+        return;
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.connectionError) {
+          retryCount++;
+          await Future.delayed(Duration(seconds: retryCount * 2));
+        } else {
+          rethrow;
         }
-      } catch (e) {
-        retryCount++;
-        await Future.delayed(Duration(seconds: retryCount * 2));
       }
     }
-    return false;
+
+    throw Exception('Upload failed after $maxRetries retries');
   }
 }

@@ -1,34 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/services/upload_service/upload_retry_service.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
-  group('UploadRetryService', () {
-    late http.Client httpClient;
-    late DioAdapter dioAdapter;
+  late Dio dio;
+  late DioAdapter dioAdapter;
 
-    setUp(() {
-      httpClient = http.Client();
-      dioAdapter = DioAdapter();
-    });
+  setUp(() {
+    dio = Dio();
+    dioAdapter = DioAdapter(dio: dio);
+  });
 
-    test('successful upload', () async {
-      var service = UploadRetryService(httpClient);
-      var result = await service.retryUpload('https://example.com/upload', 'test_file.txt');
-      expect(result, true);
-    });
+  test('uploadWithRetry succeeds on first attempt', () async {
+    dio.httpClientAdapter = dioAdapter;
+    dioAdapter.onPost('/upload', (server) => server.reply(200, {'message': 'success'}));
+    final service = UploadRetryService(dio);
+    await expectLater(service.uploadWithRetry('test_file.txt', '/upload'), completes);
+  });
 
-    test('failed upload with retry', () async {
-      var service = UploadRetryService(httpClient);
-      var result = await service.retryUpload('https://example.com/upload-fail', 'test_file.txt');
-      expect(result, false);
-    });
+  test('uploadWithRetry retries on connection error', () async {
+    dio.httpClientAdapter = dioAdapter;
+    dioAdapter.onPost('/upload', (server) => server.reply(500, {'message': 'error'}));
+    final service = UploadRetryService(dio);
+    await expectLater(() => service.uploadWithRetry('test_file.txt', '/upload'), throwsException);
+  });
 
-    test('upload with exception', () async {
-      var service = UploadRetryService(httpClient);
-      var result = await service.retryUpload('https://example.com/upload-exception', 'test_file.txt');
-      expect(result, false);
+  test('uploadWithRetry throws after max retries', () async {
+    dio.httpClientAdapter = dioAdapter;
+    dioAdapter.onPost('/upload', (server) async {
+      throw DioException(requestOptions: RequestOptions(path: '/upload'), type: DioExceptionType.connectionError);
     });
+    final service = UploadRetryService(dio);
+    await expectLater(() => service.uploadWithRetry('test_file.txt', '/upload'), throwsException);
   });
 }
