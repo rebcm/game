@@ -150,3 +150,5 @@ dev_dependencies:
     path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
   ux_dicas_test:
     path: ./test/integration/ux_dicas_tests/ux_dicas_test.dart
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
