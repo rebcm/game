@@ -41,7 +41,7 @@ flutter:
     path: test/integration_test/chunking_test/chunking_edge_cases_test.dart
 
   rebuild_monitoring_test:
-    path: test/integration_test/performance_test/rebuild_monitoring_test/rebuild_monitoring_test.dart
+    path: test/integration_test/performance_test/rebuild_monitoring_test.dart
 
   validation_test:
     path: test/integration_test/validation_test/validation_test.dart
