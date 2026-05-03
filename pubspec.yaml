@@ -71,3 +71,5 @@ dependencies:
   http: ^0.13.5
 
   test/integration_tests/performance_tests/rebuild_performance_test/rebuild_performance_test.dart:
+  assets:
+    - docs/guia_estilo_pastas/guia_estilo_pastas.md
