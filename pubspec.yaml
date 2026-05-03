@@ -1,5 +1,6 @@
 flutter:
     - docs/dicas.md
+    - docs/matriz_conteudo_dicas.md
   assets:
     - assets/estruturas_sugeridas/
     - docs/glossario.md
