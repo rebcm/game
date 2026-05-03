@@ -37,3 +37,6 @@ flutter:
 
 scripts:
   build_and_test: flutter test && flutter build apk --debug
+
+  scripts:
+    test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart

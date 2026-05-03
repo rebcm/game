@@ -1,35 +1,27 @@
 # Critérios de Aceitação para Comparativo de Áudio
 
-Este documento define os critérios de aceitação para o comparativo de comportamento do áudio no jogo em diferentes plataformas (Android e iOS) e cenários (modo silencioso e alternância de hardware).
+Este documento define os critérios de aceitação para o comparativo de comportamento do áudio entre Android e iOS nos cenários de modo silencioso e alternância de hardware.
 
 ## Cenários de Teste
 
 1. **Modo Silencioso**
-   - Verificar se o áudio é silenciado corretamente em ambas as plataformas.
+   - Verificar se o áudio é silenciado corretamente em ambos os sistemas (Android e iOS) quando o dispositivo está no modo silencioso.
    
 2. **Alternância de Hardware**
-   - Verificar o comportamento do áudio ao alternar entre diferentes dispositivos de saída (e.g., fones de ouvido e alto-falantes) em ambas as plataformas.
+   - Testar a troca de saída de áudio (por exemplo, entre fones de ouvido e alto-falantes) e verificar se o áudio continua a funcionar corretamente em ambos os sistemas.
 
-## Comportamento Esperado
+## Matriz de Resultados Esperados
 
-| Plataforma | Cenário | Comportamento Esperado |
-|------------|---------|------------------------|
-| Android    | Modo Silencioso | Áudio silenciado |
-| Android    | Alternância de Hardware | Áudio continua a tocar após alternância |
-| iOS        | Modo Silencioso | Áudio silenciado |
-| iOS        | Alternância de Hardware | Áudio continua a tocar após alternância |
+| Cenário          | Android                          | iOS                              |
+|------------------|----------------------------------|----------------------------------|
+| Modo Silencioso  | Áudio silenciado                 | Áudio silenciado                 |
+| Alternância de Hardware | Áudio continua após troca       | Áudio continua após troca       |
 
 ## Critérios de Aceitação
 
-1. O áudio deve ser silenciado quando o dispositivo estiver no modo silencioso em ambas as plataformas.
-2. O áudio deve continuar a tocar sem interrupções ao alternar entre diferentes dispositivos de saída em ambas as plataformas.
-
-## Metodologia de Teste
-
-1. Executar o jogo em dispositivos Android e iOS.
-2. Testar o modo silencioso ativando o modo silencioso do dispositivo e verificar se o áudio é silenciado.
-3. Testar a alternância de hardware conectando e desconectando dispositivos de saída (e.g., fones de ouvido) e verificar se o áudio continua a tocar sem interrupções.
+1. O áudio deve ser silenciado em ambos os sistemas quando o dispositivo está no modo silencioso.
+2. A alternância de hardware não deve interromper a reprodução de áudio em nenhum dos sistemas.
 
 ## Aprovação
 
-Os critérios de aceitação são considerados aprovados se todos os cenários de teste forem concluídos com sucesso em ambas as plataformas.
+O comparativo de áudio será considerado aprovado se atender a todos os critérios de aceitação definidos nesta matriz.
