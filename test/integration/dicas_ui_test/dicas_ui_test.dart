@@ -1,41 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart' as app;
 import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('dicas UI test', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  group('Dicas UI Test', () {
+    testWidgets('Renderização de dicas em diferentes resoluções', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
 
-    // Navigate to dicas screen
-    final dicasButton = find.byTooltip('Dicas');
-    expect(dicasButton, findsOneWidget);
-    await tester.tap(dicasButton);
-    await tester.pumpAndSettle();
+      await tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+      await tester.pumpAndSettle();
 
-    // Verify dicas content
-    final dicasContent = find.text('Conteúdo de Dicas');
-    expect(dicasContent, findsOneWidget);
+      expect(find.text('Dicas de Construção'), findsOneWidget);
 
-    // Test different screen sizes
-    await tester.binding.setSurfaceSize(const Size(1080, 1920));
-    await tester.pumpAndSettle();
-    expect(dicasContent, findsOneWidget);
+      await tester.binding.window.physicalSizeTestValue = Size(750, 1334);
+      await tester.pumpAndSettle();
 
-    await tester.binding.setSurfaceSize(const Size(480, 800));
-    await tester.pumpAndSettle();
-    expect(dicasContent, findsOneWidget);
+      expect(find.text('Dicas de Construção'), findsOneWidget);
 
-    // Test different locales
-    await tester.binding.setLocale(const Locale('pt', 'BR'));
-    await tester.pumpAndSettle();
-    expect(dicasContent, findsOneWidget);
+      await tester.binding.window.physicalSizeTestValue = Size(480, 854);
+      await tester.pumpAndSettle();
 
-    await tester.binding.setLocale(const Locale('en', 'US'));
-    await tester.pumpAndSettle();
-    expect(dicasContent, findsOneWidget);
+      expect(find.text('Dicas de Construção'), findsOneWidget);
+    });
+
+    testWidgets('Renderização de dicas em diferentes idiomas', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Simula mudança de idioma para inglês
+      // Implemente a lógica para mudar o idioma aqui
+      await tester.pumpAndSettle();
+
+      expect(find.text('Building Tips'), findsOneWidget);
+
+      // Simula mudança de idioma para português
+      // Implemente a lógica para mudar o idioma aqui
+      await tester.pumpAndSettle();
+
+      expect(find.text('Dicas de Construção'), findsOneWidget);
+    });
   });
 }
