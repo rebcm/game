@@ -1,4 +1,8 @@
 dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
   build_runner: ^2.3.3
   json_serializable: ^6.5.4
   markdown: ^4.0.0
