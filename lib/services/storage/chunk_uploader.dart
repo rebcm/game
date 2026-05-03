@@ -1,31 +1,29 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:rebcm/services/storage/d1_storage.dart';
+import 'package:rebcm/models/chunk_model.dart';
 
 class ChunkUploader {
-  final D1Storage _d1Storage;
   final http.Client _httpClient;
 
-  ChunkUploader(this._d1Storage, this._httpClient);
+  ChunkUploader(this._httpClient);
 
-  Future<void> uploadChunk(String chunkId, List<int> chunkData) async {
+  Future<bool> uploadChunk(ChunkModel chunk) async {
     try {
       final response = await _httpClient.post(
-        Uri.parse('https://your-r2-storage.com/upload'),
+        Uri.parse('https://example.com/upload-chunk'),
         headers: {
-          'Content-Type': 'application/octet-stream',
+          'Content-Type': 'application/json',
         },
-        body: chunkData,
+        body: jsonEncode(chunk.toJson()),
       );
 
-      if (response.statusCode == 200) {
-        await _d1Storage.deleteChunkRecord(chunkId);
+      if (response.statusCode == 201) {
+        return true;
       } else {
-        throw Exception('Failed to upload chunk');
+        return false;
       }
     } catch (e) {
-      await _d1Storage.deleteChunkRecord(chunkId);
-      rethrow;
+      return false;
     }
   }
 }
