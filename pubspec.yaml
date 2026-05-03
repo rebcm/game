@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   audioplayers: ^5.2.0
   mockito: ^5.4.4
+  http: ^0.13.6
 
 dev_dependencies:
   freezed: ^2.4.7
