@@ -68,3 +68,5 @@ flutter:
 
   cleanup:
     path: ./integration_test/cleanup
+  three_dart: ^0.1.0
+  ammo_dart: ^0.1.0
