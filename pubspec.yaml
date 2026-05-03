@@ -65,3 +65,6 @@ flutter:
 
   assets:
     - assets/audio/optimized/sfx/corrupted_sound.mp3
+
+  assets:
+    - assets/audio/optimized/sfx/
