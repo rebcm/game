@@ -1,33 +1,28 @@
-name: Deploy Construção Criativa
+name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-  schedule:
-    - cron: '0 23 * * *'
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          flutter-version: '3.24.0'
-          channel: stable
-          cache: true
+          node-version: '14'
 
-      - name: Instalar dependências
-        run: flutter pub get
+      - name: Install Wrangler
+        run: npm install -g wrangler
 
-      - name: Build Flutter Web
-        run: flutter build web --release --web-renderer canvaskit --base-href /
-
-      - name: Deploy para Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build/web --project-name=construcao-criativa --commit-dirty=true
+      - name: Deploy to Cloudflare Pages
+        run: |
+          wrangler pages deploy --project-name=rebeca-game --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
