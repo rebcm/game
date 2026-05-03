@@ -1,15 +1,21 @@
-import 'dart:convert';
-import 'package:rebcm/api/world_api.dart';
-import 'package:rebcm/models/world_request.dart';
+import 'package:game/database/world_database.dart';
+import 'package:game/models/world_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 class WorldService {
-  final WorldApi _worldApi;
+  final Database _db;
 
-  WorldService(this._worldApi);
+  WorldService(this._db);
 
-  Future<bool> createWorld(String userId, String worldData) async {
-    final worldRequest = WorldRequest(data: worldData);
-    final response = await _worldApi.createWorld(userId, jsonEncode(worldRequest.toJson()));
-    return response.statusCode == 201;
+  Future<void> createTable() async {
+    await WorldDatabase.createTable(_db);
+  }
+
+  Future<void> saveWorld(WorldModel world) async {
+    await WorldDatabase.insertWorld(_db, world);
+  }
+
+  Future<List<WorldModel>> getWorlds() async {
+    return await WorldDatabase.getWorlds(_db);
   }
 }
