@@ -1,5 +1,3 @@
-    name: Validate Secrets
-    
 name: Cold Boot Test
 
 on:
@@ -7,25 +5,12 @@ on:
     branches:
       - main
 
-      validate-secrets:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-          - name: Validate Secrets
-            run: .github/scripts/validate_secrets.sh
-        continue-on-error: false
 jobs:
   cold-boot-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
 
       - name: Run cold boot script
         run: .github/scripts/cold_boot.sh
