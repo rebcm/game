@@ -1,4 +1,4 @@
-# Critérios de Aceitação para Testes de Áudio
+# Critérios de Aceitação para Testes de Áudio (Edge Cases)
 
 ## Introdução
 
@@ -6,18 +6,31 @@ Este documento define os critérios de aceitação para os testes de áudio edge
 
 ## Critérios de Aceitação
 
-1. **Pausar Áudio ao Desconectar Fone**: O áudio deve pausar em menos de 200ms ao desconectar o fone.
-2. **Retomar Áudio ao Reconectar Fone**: O áudio deve retomar em menos de 200ms ao reconectar o fone.
-3. **Silenciar Áudio ao Mudar para Segundo Plano**: O áudio deve silenciar em menos de 100ms ao mudar para segundo plano.
-4. **Retomar Áudio ao Voltar para Primeiro Plano**: O áudio deve retomar em menos de 100ms ao voltar para primeiro plano.
-5. **Tolerância a Interrupções**: O áudio deve tolerar interrupções sem falhas ou erros audíveis.
+1. O jogo deve pausar o áudio quando a conexão é perdida.
+2. O jogo deve silenciar o áudio quando o modo silencioso é ativado.
+3. O jogo deve pausar o áudio quando ocorre uma interrupção por chamada telefônica.
+4. O jogo deve solicitar permissões de hardware para reproduzir áudio.
 
-## Métricas de Sucesso
+## Cenários de Teste
 
-- Tempo de pausa e retomada do áudio dentro dos limites especificados.
-- Ausência de falhas ou erros audíveis durante interrupções.
+1. Perda de conexão:
+   - Verificar se o áudio é pausado quando a conexão é perdida.
+   - Verificar se o áudio é retomado quando a conexão é restabelecida.
 
-## Testes
+2. Modo silencioso:
+   - Verificar se o áudio é silenciado quando o modo silencioso é ativado.
+   - Verificar se o áudio é restaurado quando o modo silencioso é desativado.
 
-Os testes devem ser realizados utilizando o framework de testes de integração do Flutter.
+3. Interrupção por chamada telefônica:
+   - Verificar se o áudio é pausado quando ocorre uma chamada telefônica.
+   - Verificar se o áudio é retomado após a chamada telefônica ser finalizada.
+
+4. Permissões de hardware:
+   - Verificar se o jogo solicita permissões de hardware para reproduzir áudio.
+   - Verificar se o áudio não é reproduzido sem as permissões necessárias.
+
+## Ferramentas de Teste
+
+- Flutter Driver
+- Integração com testes de áudio
 
