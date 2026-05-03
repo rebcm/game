@@ -23,3 +23,5 @@ supportedLocales:
   - test/audio_edge_cases/audio_edge_cases_test.dart
 
   - test/responsividade/responsividade_test.dart
+
+  - test/audio_edge_cases/external_interruptions_test.dart
