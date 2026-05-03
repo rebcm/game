@@ -48,3 +48,6 @@ dev_dependencies:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   permission_test:
     path: ./test/integration/permission_tests/permission_test.dart
+
+  clean_build_test:
+    path: ./test/integration/clean_build_test/clean_build_test.dart
