@@ -1,12 +1,16 @@
-name = "game-worker"
+name = "rebcm-game"
 type = "javascript"
 
 [env.production]
 vars = {
-  DB_HOST = "",
-  DB_PORT = "",
-  DB_NAME = "",
-  DB_USER = "",
-  DB_PASSWORD = "",
-  API_KEY = ""
+  DATABASE_URL = "",
+  API_KEY = "",
+  # Add other vars as needed
+}
+
+[env.development]
+vars = {
+  DATABASE_URL = "",
+  API_KEY = "",
+  # Add other vars as needed
 }

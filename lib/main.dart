@@ -21,3 +21,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'package:rebcm/game/utils/environment_config.dart';
+
+void main() {
+  EnvironmentConfig.init();
+  // Rest of the main function
+}

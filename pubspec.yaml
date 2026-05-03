@@ -42,3 +42,6 @@ supportedLocales:
 
   integration_test:
     path: test/integration_tests/ux_tests
+
+  envied: ^0.2.1
+  envied_annotation: ^0.2.1
