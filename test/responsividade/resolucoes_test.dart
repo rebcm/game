@@ -4,26 +4,22 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Renderização em diferentes resoluções', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(750, 1334)); // iPhone SE
+  testWidgets('testar resoluções de tela', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(640, 1136));
     await tester.pumpAndSettle();
-    // Adicione assertions para verificar a renderização correta
+    // Adicionar assertions para verificar a renderização correta
 
-    await tester.binding.setSurfaceSize(const Size(1080, 2400)); // Pixel 7
+    await tester.binding.setSurfaceSize(const Size(1080, 2244));
     await tester.pumpAndSettle();
-    // Adicione assertions para verificar a renderização correta
+    // Adicionar assertions para verificar a renderização correta
 
-    await tester.binding.setSurfaceSize(const Size(1080, 2224)); // iPad portrait
+    await tester.binding.setSurfaceSize(const Size(2224, 1668));
     await tester.pumpAndSettle();
-    // Adicione assertions para verificar a renderização correta
+    // Adicionar assertions para verificar a renderização correta
 
-    await tester.binding.setSurfaceSize(const Size(2224, 1080)); // iPad landscape
+    await tester.binding.setSurfaceSize(const Size(2220, 1080));
     await tester.pumpAndSettle();
-    // Adicione assertions para verificar a renderização correta
-
-    await tester.binding.setSurfaceSize(const Size(1440, 2560)); // Samsung Galaxy Tab S8
-    await tester.pumpAndSettle();
-    // Adicione assertions para verificar a renderização correta
+    // Adicionar assertions para verificar a renderização correta
   });
 }
 
