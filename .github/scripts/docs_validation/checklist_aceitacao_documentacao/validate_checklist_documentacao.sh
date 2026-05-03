@@ -1,13 +1,18 @@
 #!/bin/bash
 
-template_file=".github/pull_request_template/pull_request_template.md"
-required_items=("Descrição" "Tipo de mudança" "Checklist")
+checklist_file="docs/checklist_aceitacao_documentacao.md"
+if [ ! -f "$checklist_file" ]; then
+  echo "Checklist de Aceitação para Documentação não encontrado."
+  exit 1
+fi
 
+required_items=("Material" "Tempo" "Dificuldade")
 for item in "${required_items[@]}"; do
-  if ! grep -q "$item" "$template_file"; then
-    echo "Erro: '$item' não encontrado no template de Pull Request."
+  if ! grep -q "$item" "$checklist_file"; then
+    echo "Item '$item' não encontrado na Checklist de Aceitação para Documentação."
     exit 1
   fi
 done
 
-echo "Template de Pull Request validado com sucesso."
+echo "Checklist de Aceitação para Documentação validada com sucesso."
+exit 0
