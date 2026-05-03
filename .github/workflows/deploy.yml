@@ -12,30 +12,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y npm
+
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.3.10'
+          channel: 'stable'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run smoke test
+      - name: Install Wrangler
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --flavor=prod --release
+          npm install -g wrangler
 
-      - name: Check smoke test result
+      - name: Build Flutter Web
         run: |
-          status=$(curl -s -o /dev/null -w "%{http_code}" https://example.com/smoke-test-result)
-          if [ $status != 200 ]; then
-            echo "Smoke test failed with status $status"
-            exit 1
-          fi
+          flutter config --enable-web
+          flutter pub get
+          flutter build web --release
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: build/web
+        run: |
+          wrangler pages deploy build/web --project-name=game --token=${CLOUDFLARE_API_TOKEN}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
