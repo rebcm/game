@@ -1,13 +1,15 @@
 # Wrangler Secrets Documentation
 
-This document describes the secrets used in the Wrangler configuration.
+This document describes the secrets used in the wrangler.toml configuration file.
 
-## Secrets
+## Required Secrets
 
-* `DB_URL`: The URL of the database
-* `API_KEY`: The API key for the service
-* `WRANGLER_TOKEN`: The token for Wrangler authentication
+* DB_HOST
+* DB_PORT
+* DB_USER
+* DB_PASSWORD
+* API_KEY
 
-## Configuration
+## Setting Secrets
 
-To configure these secrets, use the following commands:
+To set a secret, run the following command:
