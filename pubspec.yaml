@@ -90,3 +90,6 @@ flutter:
 
   reexecution_benchmark:
     path: ./benchmarks/reexecution_benchmark
+
+  release_guard_test:
+    path: ./integration_test/release_guard_test
