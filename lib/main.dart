@@ -5,6 +5,7 @@ import 'package:game/utils/rate_limiter/rate_limiter.dart';
 void main() {
   final rateLimiter = RateLimiter(maxRequests: 10, timeWindow: Duration(seconds: 1));
   final chunkService = ChunkService(rateLimiter: rateLimiter);
+
   runApp(MyApp(chunkService: chunkService));
 }
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              final response = await _chunkService.getChunk('chunk_key');
+              final response = await _chunkService.getChunk(0, 0);
               print(response.statusCode);
             },
             child: Text('Get Chunk'),

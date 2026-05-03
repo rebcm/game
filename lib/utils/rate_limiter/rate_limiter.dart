@@ -3,17 +3,17 @@ import 'package:http/http.dart' as http;
 class RateLimiter {
   final int maxRequests;
   final Duration timeWindow;
-  final Map<String, List<DateTime>> _requests = {};
+  final List<DateTime> requestTimestamps = [];
 
   RateLimiter({required this.maxRequests, required this.timeWindow});
 
-  Future<bool> isAllowed(String key) async {
+  Future<bool> isAllowed() async {
     final now = DateTime.now();
-    _requests[key] = _requests[key]?.where((time) => now.difference(time) < timeWindow).toList() ?? [];
-    if (_requests[key]!.length >= maxRequests) {
+    requestTimestamps.removeWhere((timestamp) => now.difference(timestamp) > timeWindow);
+    if (requestTimestamps.length >= maxRequests) {
       return false;
     }
-    _requests[key]!.add(now);
+    requestTimestamps.add(now);
     return true;
   }
 }

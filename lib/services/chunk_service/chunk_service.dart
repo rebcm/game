@@ -6,10 +6,12 @@ class ChunkService {
 
   ChunkService({required RateLimiter rateLimiter}) : _rateLimiter = rateLimiter;
 
-  Future<http.Response> getChunk(String key) async {
-    if (!await _rateLimiter.isAllowed(key)) {
+  Future<http.Response> getChunk(int x, int z) async {
+    if (!await _rateLimiter.isAllowed()) {
       return http.Response('Rate limit exceeded', 429);
     }
-    // Implement the logic to get the chunk
+    // Implement the logic to get the chunk here
+    // For now, it just returns a dummy response
+    return http.Response('Chunk data', 200);
   }
 }
