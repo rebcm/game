@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 class EstadoJogo extends StatefulWidget {
@@ -6,23 +5,25 @@ class EstadoJogo extends StatefulWidget {
   _EstadoJogoState createState() => _EstadoJogoState();
 }
 
-class _EstadoJogoState extends State<EstadoJogo> {
-  Timer? _timer;
-
+class _EstadoJogoState extends State<EstadoJogo> with AutomaticKeepAliveClientMixin {
   @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {});
-  }
+  bool get wantKeepAlive => false;
 
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    super.build(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Estado Jogo'),
+      ),
+      body: Center(
+        child: Text('Conteúdo'),
+      ),
+    );
   }
 }
