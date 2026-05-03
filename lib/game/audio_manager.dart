@@ -7,15 +7,22 @@ class AudioManager {
 
   AudioManager._();
 
-  Future<void> init() async {
-    // Implement audio manager initialization
+  bool _isPlaying = false;
+
+  bool get isPlaying => _isPlaying;
+
+  Future<void> playAudio(String audioPath) async {
+    // Implement audio playback logic
+    _isPlaying = true;
   }
 
-  Future<void> disconnect() async {
-    // Implement audio disconnection logic
+  Future<void> onInterruption(String interruptionType) async {
+    // Handle interruption logic
+    _isPlaying = false;
   }
 
-  Future<void> reconnect() async {
-    // Implement audio reconnection logic
+  Future<void> resumeAudio() async {
+    // Implement audio resume logic
+    _isPlaying = true;
   }
 }
