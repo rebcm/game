@@ -2,7 +2,7 @@ name: Build Daily
 
 on:
   schedule:
-    - cron: '0 23 * * *' # 20:00 BRT is 23:00 UTC
+    - cron: '0 23 * * *'
 
 jobs:
   build:
@@ -22,11 +22,11 @@ jobs:
       - name: Analyze code
         run: dart analyze
 
-      - name: Build Flutter
-        run: flutter build
+      - name: Build APK
+        run: flutter build apk --debug
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: build/
+          name: debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
