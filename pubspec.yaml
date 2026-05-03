@@ -73,3 +73,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+
+  assets:
+    - assets/animacoes/rebeca/idle.json
+
