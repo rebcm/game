@@ -1,0 +1,22 @@
+name: Audio Stress Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  audio_stress_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Run audio stress test
+        run: |
+          flutter test test/audio_stress_test/audio_stress_test.dart

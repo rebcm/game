@@ -73,3 +73,5 @@ dependency_overrides:
   assets:
     - docs/artefatos/criterios/criterios-aceitacao-documentacao.md
     - docs/guias/guia-documentacao.md
+
+  test/audio_stress_test/audio_stress_test.dart:
