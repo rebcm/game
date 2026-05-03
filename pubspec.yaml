@@ -28,3 +28,7 @@ flutter:
   http: ^0.13.5
 
   swagger_ui: ^1.0.0
+
+dev_dependencies:
+  test: ^1.21.4
+  http: ^0.13.5

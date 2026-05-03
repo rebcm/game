@@ -2,15 +2,15 @@ name: OpenAPI Contract Test
 
 on:
   push:
-    paths:
-      - 'docs/api/openapi.yaml'
+    branches:
+      - main
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate OpenAPI contract
+      - name: Run OpenAPI contract test
         run: ./.github/scripts/docs_validation/validate_openapi_contract_test.sh
