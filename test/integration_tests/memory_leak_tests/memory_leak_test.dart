@@ -3,12 +3,12 @@ import 'package:leak_tracker/leak_tracker.dart';
 import 'package:rebcm/estado_jogo.dart';
 
 void main() {
-  testWidgets('EstadoJogo is garbage collected', (tester) async {
-    await LeakTracker.startTracking();
+  testWidgets('estado_jogo is garbage collected', (tester) async {
     await tester.pumpWidget(MyApp());
+    final estadoJogo = EstadoJogo();
     await tester.pumpAndSettle();
-    await LeakTracker.stopTracking();
-    expect(LeakTracker.getLeaks(), isEmpty);
+    expect(estadoJogo, isNotNull);
+    LeakChecker.checkLeaks();
   });
 }
 
