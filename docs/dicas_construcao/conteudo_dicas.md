@@ -1,16 +1,17 @@
-# Dicas de Construção
+# Conteúdo das Dicas
 
 ## Introdução
 
-Este documento contém as dicas de construção que serão exibidas no jogo.
+Este documento define o conteúdo das dicas que serão exibidas na UI de Dicas.
 
 ## Conteúdo
 
-### Dica 1
-Construa uma casa com blocos de madeira.
+1. **Dicas de Construção**: Devem ser incluídas dicas sobre como construir estruturas básicas no jogo.
+2. **Dicas de Navegação**: Devem ser incluídas dicas sobre como navegar pelo mundo do jogo.
+3. **Dicas de Uso de Ferramentas**: Devem ser incluídas dicas sobre como usar as ferramentas disponíveis no jogo.
 
-### Dica 2
-Crie um jardim com blocos de grama e flores.
+## Formato
 
-## Aprovação
-APPROVED_BY_GAME_DESIGNER_OR_TECHNICAL_LEAD
+1. **Texto Claro e Conciso**: O conteúdo das dicas deve ser apresentado de forma clara e concisa.
+2. **Imagens Ilustrativas**: Devem ser incluídas imagens ilustrativas para ajudar a entender o conteúdo das dicas.
+

@@ -49,3 +49,6 @@ flutter:
 
   documentacao_test:
     path: test/integration_tests/documentacao_test/documentacao_test.dart
+
+  assets:
+    - docs/dicas_construcao/conteudo_dicas.md
