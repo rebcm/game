@@ -5,6 +5,8 @@ flutter:
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
 
 dev_dependencies:
+  rebuild_performance_test:
+    path: ./test/performance/rebuild_performance_test.dart
   flutter_test:
     sdk: flutter
   http: ^0.13.5
