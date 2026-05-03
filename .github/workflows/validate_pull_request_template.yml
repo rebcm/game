@@ -1,0 +1,16 @@
+name: Validate Pull Request Template
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Pull Request Template
+        run: ./.github/scripts/docs_validation/validate_pull_request_template.sh

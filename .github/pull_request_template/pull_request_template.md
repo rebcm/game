@@ -1,17 +1,25 @@
-## Checklist de PR para Documentação
+## Descrição
 
-### Critérios de Aceitação
+<!-- Descreva as mudanças feitas nesta PR -->
 
-- [ ] A descrição da PR está clara e concisa.
-- [ ] As categorias da PR estão corretamente atribuídas.
-- [ ] A tradução para PT-BR está correta e sem erros.
+## Tipo de Mudança
 
-### Documentação Específica
+<!-- Marque os tipos de mudança relevantes -->
+- [ ] Correção de bug
+- [ ] Nova funcionalidade
+- [ ] Melhoria de documentação
+- [ ] Outro (especifique)
 
-- [ ] A documentação foi atualizada conforme necessário.
-- [ ] Os critérios de aceitação específicos da tarefa foram atendidos.
+## Checklist de Aceitação
 
-### Revisão Final
+<!-- Verifique se os critérios abaixo foram atendidos -->
+- [ ] A descrição da PR está clara e concisa
+- [ ] As mudanças estão de acordo com o solicitado na issue/task
+- [ ] A documentação foi atualizada (se aplicável)
+- [ ] O código segue as diretrizes de estilo do projeto
+- [ ] Testes foram adicionados ou atualizados (se aplicável)
+- [ ] A tradução para PT-BR está correta (se aplicável)
 
-- [ ] O código está em conformidade com as regras do projeto.
-- [ ] O `dart analyze` foi executado sem erros.
+## Comentários Adicionais
+
+<!-- Adicione qualquer comentário adicional relevante -->
