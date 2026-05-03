@@ -1,0 +1,24 @@
+name: Validação de Variáveis de Ambiente
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-env-vars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y toml
+
+      - name: Validate environment variables
+        run: |
+          toml validate -f wrangler.toml
+          dart script/validate_env_vars.dart
