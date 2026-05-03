@@ -75,3 +75,6 @@ flutter:
 
   api_service:
     path: ./lib/services/api_service
+
+  api_validation_test:
+    path: ./integration_test/api_validation_test

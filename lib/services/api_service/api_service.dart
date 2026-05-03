@@ -1,24 +1,13 @@
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class ApiService {
-  final Dio _dio;
-
-  ApiService(this._dio);
-
-  Future<http.Response> get(String url) async {
-    try {
-      final response = await _dio.get(url);
-      return http.Response(
-        response.data.toString(),
-        response.statusCode ?? 500,
-      );
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout) {
-        throw Exception('Timeout');
-      } else {
-        throw Exception('Error ${e.response?.statusCode}');
-      }
+  Future<Map<String, dynamic>> fetchData() async {
+    final response = await http.get(Uri.parse('https://api.example.com/endpoint'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
     }
   }
 }
