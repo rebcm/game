@@ -1,44 +1,45 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
-import 'package:game/audio/audio_player.dart';
+import 'package:rebcm/game.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test audio interruption by phone call', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  group('External Interruptions Test', () {
+    testWidgets('pause and resume test', (tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
 
-    // Start playing audio
-    AudioPlayer().play('test_audio.mp3');
-    await tester.pumpAndSettle();
+      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pumpAndSettle();
 
-    // Simulate phone call interruption
-    // Assuming there's a method to simulate this in the audio player or a mock
-    AudioPlayer().interrupt();
+      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
 
-    // Verify audio state after interruption
-    expect(AudioPlayer().isPlaying, false);
+      expect(find.text('Rebeca'), findsOneWidget);
+    });
 
-    // Resume audio if necessary and verify
-    AudioPlayer().resume();
-    expect(AudioPlayer().isPlaying, true);
-  });
+    testWidgets('inactive and resumed test', (tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
 
-  testWidgets('Test audio interruption by alarm', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      await tester.pumpAndSettle();
 
-    // Start playing audio
-    AudioPlayer().play('test_audio.mp3');
-    await tester.pumpAndSettle();
+      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
 
-    // Simulate alarm interruption
-    AudioPlayer().interrupt();
+      expect(find.text('Rebeca'), findsOneWidget);
+    });
 
-    // Verify audio state after interruption
-    expect(AudioPlayer().isPlaying, false);
+    testWidgets('detached test', (tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
+
+      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.detached);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Rebeca'), findsNothing);
+    });
   });
 }
