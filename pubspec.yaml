@@ -45,3 +45,5 @@ flutter:
   integration_test/stress_test/timer_stress_test.dart:
   assets:
     - docs/arquitetura/guia_estilo_pastas.md
+
+  integration_test/latency_benchmark_test/latency_benchmark_test.dart:
