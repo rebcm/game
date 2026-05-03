@@ -18,3 +18,4 @@ tests:
   - test/memory_tests/memory_leak_profiling_test.dart
 
   - test/memory_tests/isolate_memory_test.dart
+    - docs/peer_review.md
