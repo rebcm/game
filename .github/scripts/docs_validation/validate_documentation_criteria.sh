@@ -32,3 +32,4 @@ done
 # Validate OpenAPI contract
 bash .github/scripts/docs_validation/validate_openapi_contract_test.sh
 . .github/scripts/validate_responsividade.sh
+./.github/scripts/docs_validation/env_validation/validate_env_example.sh
