@@ -1,2 +1,4 @@
 dev_dependencies:
   markdown: ^4.0.0
+
+  test: ^1.16.0
