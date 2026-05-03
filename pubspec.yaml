@@ -63,3 +63,6 @@ supportedLocales:
 
   integration_test:
     path: test/integration_tests/permissions_tests
+
+  integration_test:
+    path: test/integration_tests/bloco_tests
