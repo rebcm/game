@@ -13,15 +13,15 @@ void main() {
       await driver.close();
     });
 
-    test('Measure performance', () async {
+    test('CPU Stress Test', () async {
       final timeline = await driver.traceAction(() async {
-        await driver.tap(find.byTooltip('Build Mode'));
-        await Future.delayed(Duration(seconds: 5));
+        await driver.tap(find.byTooltip('Build Button'));
+        await Future.delayed(Duration(seconds: 10));
       });
 
       final summary = TimelineSummary.summarize(timeline);
-      summary.writeSummaryToFile('performance_results', pretty: true);
-      summary.writeTimelineToFile('performance_timeline', pretty: true);
+      summary.writeSummaryToFile('benchmark_results', pretty: true);
+      summary.writeTimelineToFile('benchmark_timeline', pretty: true);
     });
   });
 }
