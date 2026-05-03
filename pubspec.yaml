@@ -29,3 +29,7 @@ flutter:
   #   - key.jks
 
   # Remove or keep the assets declaration as is; key.jks is handled via GitHub Secrets
+
+dependencies:
+  audioplayers: ^5.2.0
+  mockito: ^5.4.4
