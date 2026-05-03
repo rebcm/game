@@ -81,3 +81,6 @@ dev_dependencies:
 
   flutter_sdk_versoes_generator:
     path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
+
+  rebuild_logging_test:
+    path: ./test/performance/rebuild_logging_test.dart

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/game/utils/performance_testing/rebuild_logger.dart';
+import 'package:game/widgets/three_d_scene/rebuild_logger_wrapper.dart';
 
-class ThreeDScene extends StatefulWidget {
-  @override
-  State<ThreeDScene> createState() => _ThreeDSceneState();
-}
-
-class _ThreeDSceneState extends State<ThreeDScene> {
+class ThreeDScene extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RebuildLoggerWrapper(
       widgetName: 'ThreeDScene',
-      child: // existing ThreeDScene content,
+      child: // existing 3D scene widget tree,
     );
   }
 }
