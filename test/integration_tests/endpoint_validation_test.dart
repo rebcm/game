@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:game/openapi/client.dart';
 
 void main() {
   group('Endpoint Validation Tests', () {
@@ -14,20 +13,27 @@ void main() {
     });
 
     test('Test endpoint response', () async {
-      const path = '/test-endpoint';
-      const responseBody = {'message': 'success'};
+      const url = 'https://example.com/api/test';
+      dioAdapter.onGet(url, (server) {
+        return server.reply(200, {'message': 'Success'});
+      });
 
-      dioAdapter.onGet(
-        path,
-        (server) => server.reply(200, responseBody),
-      );
-
-      final response = await dio.get(path);
+      final response = await dio.get(url);
 
       expect(response.statusCode, 200);
-      expect(response.data, responseBody);
+      expect(response.data, {'message': 'Success'});
     });
 
-    // Add more tests for other endpoints here
+    test('Test endpoint error response', () async {
+      const url = 'https://example.com/api/error';
+      dioAdapter.onGet(url, (server) {
+        return server.reply(404, {'message': 'Not Found'});
+      });
+
+      final response = await dio.get(url);
+
+      expect(response.statusCode, 404);
+      expect(response.data, {'message': 'Not Found'});
+    });
   });
 }

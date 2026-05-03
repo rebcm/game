@@ -11,7 +11,6 @@ dependencies:
   provider: ^6.0.3
   analyzer: ^5.2.0
   dio: ^4.0.6
-
   openapi_client: ^0.3.0
   freezed: ^2.1.0
   json_annotation: ^4.6.0
@@ -38,6 +37,13 @@ flutter:
     - lib/docs/guias_construcao/
     - lib/docs/dicas/
     - lib/docs/guias_construcao/
+    - lib/docs/biomas/
+    - lib/docs/estruturas_sugeridas.md
+    - lib/docs/bloco_documentation/
+    - lib/docs/guias_depuracao/
+    - lib/docs/peer_review/
+    - lib/docs/dicas/template_dica.md
+    - lib/docs/dicas/contexto/
 
   uses-material-design: true
 
@@ -45,25 +51,3 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
-
-  # No new dependencies needed for this task
-
-  assets:
-    - lib/docs/biomas/
-
-  assets:
-    - lib/docs/estruturas_sugeridas.md
-
-  assets:
-    - lib/docs/bloco_documentation/
-  assets:
-    - lib/docs/guias_depuracao/
-  assets:
-    - lib/docs/peer_review/
-  assets:
-    - lib/docs/dicas/template_dica.md
-
-  dio: ^4.0.6
-
-  assets:
-    - lib/docs/dicas/contexto/

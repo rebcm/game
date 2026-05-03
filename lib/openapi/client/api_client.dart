@@ -5,7 +5,7 @@ class ApiClient {
 
   ApiClient(this._dio);
 
-  Future<Response> getEndpoint() async {
-    return await _dio.get('https://example.com/api/endpoint');
+  Future<Response> get(String url) async {
+    return await _dio.get(url);
   }
 }
