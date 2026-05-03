@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.19.5'
 
-      - name: Run responsividade test
+      - name: Run responsividade tests
         run: |
-          flutter test test/responsividade_test/tela_pequena_test.dart
+          flutter test test/responsividade/tela_pequena_test.dart

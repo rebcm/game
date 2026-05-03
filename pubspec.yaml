@@ -1,3 +1,5 @@
 flutter:
   assets:
     - assets/estruturas_sugeridas/
+  tests:
+    - test/responsividade/tela_pequena_test.dart
