@@ -31,3 +31,5 @@ dependencies:
 
   flutter:
     sdk: flutter
+
+  game/docs/templates/template_widget.dart:
