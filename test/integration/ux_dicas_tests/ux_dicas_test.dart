@@ -6,30 +6,44 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('UX Dicas Tests', () {
-    testWidgets('should display dica when player is in specific scenario', (tester) async {
+    testWidgets('Dicas aparecem quando esperado', (tester) async {
       await tester.pumpWidget(MyApp());
-
-      // Simulate player interaction
-      await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
 
-      // Check if dica is displayed
-      expect(find.text('Dica: Você pode criar blocos!'), findsOneWidget);
+      // Simula interação do usuário
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+
+      // Verifica se a dica aparece
+      expect(find.text('Dica: Utilize o menu para selecionar blocos'), findsOneWidget);
     });
 
-    testWidgets('should not display dica when player is not in specific scenario', (tester) async {
+    testWidgets('Dicas são acessíveis e úteis', (tester) async {
       await tester.pumpWidget(MyApp());
-
-      // Simulate player interaction
-      await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
 
-      // Simulate player leaving the scenario
-      await tester.tap(find.byIcon(Icons.close));
+      // Simula interação do usuário
+      await tester.tap(find.byIcon(Icons.menu));
       await tester.pumpAndSettle();
 
-      // Check if dica is not displayed
-      expect(find.text('Dica: Você pode criar blocos!'), findsNothing);
+      // Verifica se a dica é acessível
+      expect(find.text('Dica: Selecione um bloco para construir'), findsOneWidget);
+      expect(tester.getSize(find.text('Dica: Selecione um bloco para construir')).height).isPositive;
+    });
+
+    testWidgets('Fluxo de interação com dicas', (tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
+
+      // Simula interação do usuário
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.menu));
+      await tester.pumpAndSettle();
+
+      // Verifica o fluxo de dicas
+      expect(find.text('Dica: Utilize o menu para selecionar blocos'), findsNothing);
+      expect(find.text('Dica: Selecione um bloco para construir'), findsOneWidget);
     });
   });
 }
