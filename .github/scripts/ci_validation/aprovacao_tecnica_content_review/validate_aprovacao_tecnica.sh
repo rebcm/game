@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# Validate if the content has been approved by the Game Designer or Technical Lead
-CONTENT_APPROVAL_STATUS=$(cat docs/dicas_construcao/conteudo_dicas.md | grep -c "APPROVED_BY_GAME_DESIGNER_OR_TECHNICAL_LEAD")
-
-if [ $CONTENT_APPROVAL_STATUS -eq 0 ]; then
-  echo "Content approval validation failed. The content has not been approved by the Game Designer or Technical Lead."
-  exit 1
+# Verifica se o conteúdo das dicas foi aprovado pelo Game Designer ou Lead Técnico
+if [ -f "docs/dicas_construcao/conteudo_dicas.md" ]; then
+  if grep -q "APROVADO_PELO_GAME_DESIGNER" "docs/dicas_construcao/conteudo_dicas.md"; then
+    echo "Conteúdo das dicas aprovado"
+  else
+    echo "Conteúdo das dicas não aprovado"
+    exit 1
+  fi
 else
-  echo "Content approval validation successful. The content has been approved by the Game Designer or Technical Lead."
-  exit 0
+  echo "Arquivo de conteúdo das dicas não encontrado"
+  exit 1
 fi

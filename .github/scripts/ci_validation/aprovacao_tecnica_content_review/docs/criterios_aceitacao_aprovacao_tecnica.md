@@ -1,14 +1,4 @@
-# Critérios de Aceitação para Aprovação Técnica
+# Critérios de Aceitação para Aprovação Técnica do Conteúdo
 
-## Introdução
-
-Este documento define os critérios de aceitação para a aprovação técnica do conteúdo.
-
-## Critérios
-
-1. O conteúdo deve ser aprovado pelo Game Designer ou Technical Lead.
-2. A aprovação deve ser documentada no arquivo `docs/dicas_construcao/conteudo_dicas.md`.
-
-## Verificação
-
-A verificação da aprovação técnica será realizada automaticamente pelo script `validate_aprovacao_tecnica.sh`.
+1. O conteúdo das dicas deve ser aprovado pelo Game Designer ou Lead Técnico.
+2. O arquivo `docs/dicas_construcao/conteudo_dicas.md` deve conter a marcação "APROVADO_PELO_GAME_DESIGNER".

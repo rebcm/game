@@ -1,15 +1,5 @@
-# Guia de Peer Review
+# Peer Review
 
-## Introdução
+## Aprovação Técnica do Conteúdo
 
-Este guia ajuda a realizar peer reviews eficazes no código do jogo.
-
-### Checklist
-
-- [ ] O código segue as diretrizes do projeto.
-- [ ] Testes unitários estão incluídos e passam.
-- [ ] Documentação atualizada.
-
-## Notas
-
-- Ser construtivo e respeitoso durante o review.
+O conteúdo das dicas deve ser aprovado pelo Game Designer ou Lead Técnico antes da implementação final no código.
