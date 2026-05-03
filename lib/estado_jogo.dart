@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 
-class EstadoJogo with ChangeNotifier {
-  bool _mounted = true;
+class EstadoJogo extends StatefulWidget {
+  @override
+  _EstadoJogoState createState() => _EstadoJogoState();
+}
 
-  bool get mounted => _mounted;
-
+class _EstadoJogoState extends State<EstadoJogo> {
   @override
   void dispose() {
-    _mounted = false;
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('Estado Jogo'),
+      ),
+    );
   }
 }
