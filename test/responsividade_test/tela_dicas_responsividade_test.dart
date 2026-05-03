@@ -4,31 +4,16 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:rebcm/game.dart';
 
 void main() {
-  group('Tela de Dicas Responsividade Test', () {
-    testGoldens('Tela de Dicas responsividade', (tester) async {
-      final screenSize = [
-        const Size(375, 812), // iPhone 12
-        const Size(414, 896), // iPhone 12 Pro Max
-        const Size(768, 1024), // iPad
-        const Size(1024, 1366), // iPad Pro
-      ];
-
-      await tester.pumpWidgetBuilder(
-        MaterialApp(
-          home: Scaffold(
-            body: TelaDicas(),
-          ),
-        ),
+  testGoldens('Tela de Dicas responsiva em tela pequena', (tester) async {
+    final builder = DeviceBuilder()
+      ..overrideFor(
+        Device.appleIPhoneSE,
+        (b) => b..textScaleFactor = 1,
       );
-
-      for (var size in screenSize) {
-        await tester.setScreenSize(size);
-        await tester.pumpAndSettle();
-        await tester.compareGolden(
-          tester.binding.window.physicalSize,
-          'tela_dicas_${size.width.toInt()}x${size.height.toInt()}',
-        );
-      }
-    });
+    await tester.pumpDeviceBuilder(builder);
+    await tester.pumpWidget(MyApp());
+    await tester.tap(find.text('Dicas'));
+    await tester.pumpAndSettle();
+    await screenMatchesGolden(tester, 'tela_dicas_responsiva');
   });
 }

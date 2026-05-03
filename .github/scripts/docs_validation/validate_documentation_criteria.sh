@@ -31,3 +31,4 @@ done
 
 # Validate OpenAPI contract
 bash .github/scripts/docs_validation/validate_openapi_contract_test.sh
+. .github/scripts/validate_responsividade.sh
