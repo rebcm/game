@@ -2,19 +2,12 @@
 
 ## Endpoints
 
-### Swagger UI
-The Swagger UI is available at `/swagger_ui`.
+### Blocks
 
-### API Endpoints
-- GET /api/version
-- GET /api/biome
-- POST /api/chunk
-
-## Models
-### Chunk
-- `id`: unique identifier
-- `data`: chunk data
+* GET /api/blocks - Retrieve a list of available blocks
+* POST /api/blocks - Create a new block
 
 ### Biome
-- `name`: biome name
-- `description`: biome description
+
+* GET /api/biome - Retrieve the current biome
+

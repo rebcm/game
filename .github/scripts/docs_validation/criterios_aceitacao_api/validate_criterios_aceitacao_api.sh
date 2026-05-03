@@ -1,16 +1,24 @@
 #!/bin/bash
 
-# Validate API endpoints documentation
-if ! grep -q "GET /api/v1/docs" ./game/docs/swagger.yaml; then
-  echo "Missing endpoint: GET /api/v1/docs"
-  exit 1
-fi
+# Validate API acceptance criteria
+validate_api_criteria() {
+  local api_docs_file="docs/api_documentation.md"
+  local required_endpoints=("GET /api/blocks" "POST /api/blocks" "GET /api/biome")
 
-if ! grep -q "GET /api/v1/endpoints" ./game/docs/swagger.yaml; then
-  echo "Missing endpoint: GET /api/v1/endpoints"
-  exit 1
-fi
+  if [ ! -f "$api_docs_file" ]; then
+    echo "API documentation file not found: $api_docs_file"
+    return 1
+  fi
 
-# Additional validation logic can be added here
+  for endpoint in "${required_endpoints[@]}"; do
+    if ! grep -q "$endpoint" "$api_docs_file"; then
+      echo "Missing endpoint in API documentation: $endpoint"
+      return 1
+    fi
+  done
 
-exit 0
+  echo "API acceptance criteria validated successfully"
+  return 0
+}
+
+validate_api_criteria
