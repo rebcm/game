@@ -33,3 +33,6 @@ flutter:
 
   chunking_edge_cases_test:
     path: test/integration_test/chunking_test/chunking_edge_cases_test.dart
+
+  memory_stress_test:
+    path: test/integration_test/memory_stress_test/memory_stress_test.dart

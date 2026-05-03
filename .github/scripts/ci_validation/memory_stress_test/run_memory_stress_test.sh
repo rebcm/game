@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/stress_tests/memory_stress_test_driver.dart --target=test/stress_tests/memory_stress_test.dart
+flutter drive --driver=test/integration_test/memory_stress_test/driver.dart --target=test/integration_test/memory_stress_test/memory_stress_test.dart
