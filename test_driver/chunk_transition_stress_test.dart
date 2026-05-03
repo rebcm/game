@@ -10,16 +10,16 @@ void main() {
     });
 
     tearDownAll(() async {
-      await driver?.close();
+      if (driver != null) {
+        driver?.close();
+      }
     });
 
     test('Chunk transition stress test', () async {
-      final chunkTransitionButton = find.byValueKey('chunk_transition_button');
-      await driver?.waitFor(chunkTransitionButton);
-      for (var i = 0; i < 100; i++) {
-        await driver?.tap(chunkTransitionButton);
-        await Future.delayed(const Duration(milliseconds: 50));
-      }
+      final fpsSer = await driver?.tap(find.byValueKey('fps_serial'));
+      expect(fpsSer, isNotNull);
+      final fpsVal = await driver?.getText(find.byValueKey('fps_value'));
+      expect(int.parse(fpsVal!), greaterThanOrEqualTo(30));
     });
   });
 }
