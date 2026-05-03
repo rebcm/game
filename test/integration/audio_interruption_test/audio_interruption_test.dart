@@ -9,19 +9,34 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Start audio playback
-    // await tester.tap(find.byType(ElevatedButton)); // Assuming a button to start audio
+    // Start playing audio
+    await tester.tap(find.byTooltip('Play Audio'));
+    await tester.pumpAndSettle();
 
-    // Simulate phone call interruption
-    // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-    // await tester.pumpAndSettle();
+    // Simulate incoming call interruption
+    await tester.binding.handlePlatformMessage(
+      'flutter/platform',
+      const StandardMethodCodec().encodeMethodCall(
+        const MethodCall('interruption', 'incoming_call'),
+      ),
+      (ByteData? data) {},
+    );
+    await tester.pumpAndSettle();
 
-    // Verify audio state after interruption
-    // expect(find.text('Audio paused'), findsOneWidget);
+    // Verify audio paused
+    expect(find.text('Audio Paused'), findsOneWidget);
 
-    // Resume app and verify audio resumes
-    // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-    // await tester.pumpAndSettle();
-    // expect(find.text('Audio playing'), findsOneWidget);
+    // Resume audio after interruption
+    await tester.binding.handlePlatformMessage(
+      'flutter/platform',
+      const StandardMethodCodec().encodeMethodCall(
+        const MethodCall('resume', 'audio'),
+      ),
+      (ByteData? data) {},
+    );
+    await tester.pumpAndSettle();
+
+    // Verify audio resumed
+    expect(find.text('Audio Playing'), findsOneWidget);
   });
 }

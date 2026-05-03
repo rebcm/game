@@ -1,10 +1,14 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter_driver/flutter_driver.dart' as driver;
+import 'package:integration_test/integration_test_driver.dart';
 
-void main() {
-  test('Latency benchmark test', () async {
-    final driver = await FlutterDriver.connect();
-    await driver.requestData('start');
-    await driver.close();
-  });
+Future<void> main() async {
+  driver FlutterDriver? driver;
+  try {
+    driver = await driver FlutterDriver.connect();
+  } finally {
+    if (driver != null) {
+      await driver.close();
+    }
+  }
+  await integrationDriver();
 }
