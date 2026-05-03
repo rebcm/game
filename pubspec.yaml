@@ -42,3 +42,8 @@ dev_dependencies:
   assets:
     - assets/estruturas_sugeridas/
   auto_size_text: ^3.0.0
+
+  flutter_localizations:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
