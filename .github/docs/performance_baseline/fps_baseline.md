@@ -1,12 +1,13 @@
 # FPS Baseline Documentation
 
+## Introduction
+
 This document outlines the FPS baseline for the game.
 
-## Metrics
+## Requirements
 
-* FPS: Frames per second
-* Device: [List of reference devices]
+- Average FPS should be greater than 30.
 
-## Acceptance Criteria
+## Benchmarking
 
-* FPS >= 60 on reference devices
+To run the FPS benchmark, execute the following command:

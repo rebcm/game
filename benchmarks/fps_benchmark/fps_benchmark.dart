@@ -4,23 +4,23 @@ import 'package:game/main.dart' as app;
 
 void main() {
   testWidgets('FPS Benchmark', (tester) async {
-    await app.main();
+    await tester.pumpWidget(const app.MyApp());
     await tester.pumpAndSettle();
 
-    // Wait for the game to load
-    await Future.delayed(const Duration(seconds: 5));
+    final fpsList = <double>[];
+    const duration = Duration(seconds: 10);
 
-    // Start measuring FPS
-    final stopwatch = Stopwatch()..start();
-    int frames = 0;
-    while (stopwatch.elapsedMilliseconds < 10000) {
-      await tester.pump();
-      frames++;
-    }
-    final fps = frames / (stopwatch.elapsedMilliseconds / 1000);
+    await tester.runAsync(() async {
+      final stopwatch = Stopwatch()..start();
+      while (stopwatch.elapsed < duration) {
+        await tester.pump();
+        fpsList.add(tester.binding.frameRate);
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+    });
 
-    // Print the result
-    print('FPS: $fps');
-    expect(fps, greaterThanOrEqualTo(30));
+    final averageFps = fpsList.reduce((a, b) => a + b) / fpsList.length;
+    print('Average FPS: $averageFps');
+    expect(averageFps, greaterThan(30.0));
   });
 }
