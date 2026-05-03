@@ -27,3 +27,7 @@ flutter:
 
 openapi_client:
   path: ./lib/openapi/client
+
+flutter:
+  assets:
+    - lib/docs/estruturas_sugeridas.md

@@ -1,18 +1,18 @@
 #!/bin/bash
 
-CHECKLIST_FILE=".github/scripts/docs_validation/checklist_revisao_tecnica/checklist_revisao_tecnica.md"
+# Define the checklist file path
+CHECKLIST_FILE="./.github/scripts/docs_validation/checklist_revisao_tecnica/checklist_revisao_tecnica.md"
 
+# Check if the checklist file exists
 if [ ! -f "$CHECKLIST_FILE" ]; then
-  echo "Checklist de Revisão Técnica não encontrado."
+  echo "Checklist file not found: $CHECKLIST_FILE"
   exit 1
 fi
 
-# Lógica para validar o conteúdo do checklist
-# Por exemplo, verificar se os critérios de aceitação estão presentes
-if ! grep -q "Critérios de Aceitação" "$CHECKLIST_FILE"; then
-  echo "Critérios de Aceitação não encontrados no checklist."
+# Validate the checklist content (example: check for specific keywords)
+if ! grep -q "Revisão Ortográfica" "$CHECKLIST_FILE"; then
+  echo "Checklist content is invalid or missing required keywords."
   exit 1
 fi
 
-echo "Checklist de Revisão Técnica validado com sucesso."
-exit 0
+echo "Checklist validation successful."

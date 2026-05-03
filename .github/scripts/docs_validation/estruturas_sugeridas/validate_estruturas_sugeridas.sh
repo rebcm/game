@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# Validate the technical accuracy of the estruturas sugeridas documentation
+# Define the estruturas sugeridas file path
+ESTRUTURAS_SUGERIDAS_FILE="./lib/docs/estruturas_sugeridas.md"
 
-# Check if the documentation file exists
-if [ ! -f ./docs/estruturas_sugeridas/technical_accuracy_checklist.md ]; then
-  echo "Documentation file not found."
+# Check if the estruturas sugeridas file exists
+if [ ! -f "$ESTRUTURAS_SUGERIDAS_FILE" ]; then
+  echo "Estruturas sugeridas file not found: $ESTRUTURAS_SUGERIDAS_FILE"
   exit 1
 fi
 
-# Check if the documentation content is not empty
-if [ ! -s ./docs/estruturas_sugeridas/technical_accuracy_checklist.md ]; then
-  echo "Documentation content is empty."
+# Validate the estruturas sugeridas content (example: check for specific keywords)
+if ! grep -q "Estruturas Sugeridas" "$ESTRUTURAS_SUGERIDAS_FILE"; then
+  echo "Estruturas sugeridas content is invalid or missing required keywords."
   exit 1
 fi
 
-echo "Estruturas sugeridas documentation validation successful."
+echo "Estruturas sugeridas validation successful."
