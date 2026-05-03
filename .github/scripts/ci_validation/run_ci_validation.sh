@@ -18,3 +18,4 @@
 ./run_audio_edge_cases_test.sh
 ./.github/scripts/ci_validation/run_leak_tracker_test.sh
 ./.github/scripts/ci_validation/run_permission_edge_cases_test.sh
+./run_external_interruptions_test.sh
