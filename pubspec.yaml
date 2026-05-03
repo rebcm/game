@@ -81,3 +81,5 @@ dependencies:
   test/integration_tests/ux_tests/audio_test/audio_test.dart:
 
   test/integration_tests/ux_tests/audio_test/widgets/audio_widget_test.dart:
+
+  test/integration_tests/ux_tests/responsividade_test/main.dart:
