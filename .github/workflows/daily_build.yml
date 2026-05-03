@@ -1,0 +1,26 @@
+name: Daily Build
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: dart analyze
+
+      - name: Build
+        run: flutter build apk --release
