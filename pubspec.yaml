@@ -7,58 +7,26 @@ dev_dependencies:
   build_runner: ^2.3.3
   json_serializable: ^6.5.4
   markdown: ^4.0.0
-
   test: ^1.16.0
   flutter_test:
     sdk: flutter
-
+  leak_tracker: ^9.0.0
   integration_test:
     path: test/responsividade
-
-  game/services/chunk_manager/chunk_lock_manager.dart:
-
-  game/docs/walkthrough.dart:
-
-  flutter_localizations:
-    sdk: flutter
-
-  game/docs/glossario/glossario.md:
-
   freezed: ^2.3.2
   json_annotation: ^4.6.0
   http: ^0.13.5
 
 dependencies:
   protobuf: ^2.1.0
-
-  game/docs/dicas_template/template.dart:
-
   flutter:
     sdk: flutter
-
-  game/docs/templates/template_widget.dart:
-
-  game/docs/fluxo_aprovacao_dicas.md:
-
-  game/services/dicas/dicas_service.dart:
-
-  game/services/seo/seo_service.dart:
-
-  test/seo/seo_service_test.dart:
-
-  test/internacionalizacao/text_overflow_test.dart:
-
   yaml: ^3.1.0
-
-  game/services/estrutura_sugerida/estrutura_sugerida_service.dart:
-  game/docs/biomas/biomas.dart:
 
 flutter:
   generate: true
-
   assets:
     - assets/locale/
-
   fonts:
     - family: Roboto
       fonts:
@@ -72,5 +40,3 @@ localizationsDelegates:
 supportedLocales:
   - de
   - fr
-
-  game/docs/dicas/conteudo_dicas.dart:
