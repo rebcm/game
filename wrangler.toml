@@ -1,2 +1,14 @@
-name = "construcao-criativa"
-pages_build_output_dir = "web"
+[env.dev]
+VAR_DEV_1 = "valor_dev_1"
+VAR_DEV_2 = "valor_dev_2"
+SECRET_DEV_1 = "segredo_dev_1"
+
+[env.staging]
+VAR_STAGING_1 = "valor_staging_1"
+VAR_STAGING_2 = "valor_staging_2"
+SECRET_STAGING_1 = "segredo_staging_1"
+
+[env.production]
+VAR_PROD_1 = "valor_prod_1"
+VAR_PROD_2 = "valor_prod_2"
+SECRET_PROD_1 = "segredo_prod_1"
