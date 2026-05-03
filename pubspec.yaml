@@ -27,6 +27,7 @@ flutter:
   assets:
     - assets/locale/
     - docs/biomas.md
+    - .github/scripts/docs_validation/dicas/content/dicas_construcao.md
   fonts:
     - family: Roboto
       fonts:

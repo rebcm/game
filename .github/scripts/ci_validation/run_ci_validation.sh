@@ -1,3 +1,5 @@
 #!/bin/bash
 
-bash .github/scripts/ci_validation/validate_clean_build.sh
+# Executar validações de CI
+
+./.github/scripts/docs_validation/fluxo_aprovacao_conteudo/validate_fluxo_aprovacao_conteudo.sh

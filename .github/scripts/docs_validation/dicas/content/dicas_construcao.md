@@ -1,26 +1,18 @@
 # Dicas de Construção
 
-## Introdução
+## Fluxo de Aprovação de Conteúdo
 
-Este documento fornece dicas e sugestões para ajudar os jogadores a criar construções incríveis no modo criativo do jogo.
+As dicas de construção são revisadas e aprovadas pela Rebeca antes de serem publicadas na interface ou portal.
 
-## Dicas Gerais
+### Responsáveis
 
-1. **Planeje antes de construir**: Antes de começar a construir, pense no que você deseja criar. Isso ajudará a evitar erros e a economizar tempo.
-2. **Use a grade para alinhar**: A grade pode ser útil para alinhar blocos e criar estruturas simétricas.
-3. **Experimente diferentes blocos**: O jogo oferece uma variedade de blocos. Experimente diferentes combinações para criar texturas e padrões interessantes.
+- Rebeca: Revisão e aprovação final
+- Contribuidores: Criação e sugestão de dicas
 
-## Estruturas Sugeridas
+### Processo
 
-1. **Castelos**: Use blocos de pedra e tijolos para criar castelos medievais.
-2. **Casas Modernas**: Use blocos de vidro e metal para criar casas modernas e futuristas.
-3. **Pontes**: Use blocos de madeira e pedra para criar pontes suspensas ou arqueadas.
+1. Contribuidores criam ou sugerem novas dicas de construção.
+2. As sugestões são enviadas para a Rebeca para revisão.
+3. Rebeca revisa e aprova ou rejeita as sugestões.
+4. Dicas aprovadas são publicadas na interface ou portal.
 
-## Dicas Avançadas
-
-1. **Use a altura para criar profundidade**: Varie a altura dos blocos para criar estruturas com profundidade e interesse visual.
-2. **Crie padrões com blocos**: Use blocos para criar padrões e texturas que adicionem detalhes às suas construções.
-
-## Conclusão
-
-Com essas dicas e sugestões, você estará pronto para criar construções incríveis no modo criativo do jogo. Lembre-se de experimentar e se divertir!
