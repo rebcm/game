@@ -64,3 +64,7 @@ dev_dependencies:
 
   rebuild_logger:
     path: ./lib/utils/performance_testing/rebuild_logger.dart
+  audio_session_test:
+    path: ./test/integration/audio_session_test/audio_session_test.dart
+  audio_session:
+    sdk: audio_session

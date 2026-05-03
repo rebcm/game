@@ -16,3 +16,4 @@ run_ci_validation
 ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
 # Executa a validação da documentação das dicas
 ./.github/scripts/docs_validation/dicas/validate_dicas_documentation.sh
+./.github/scripts/ci_validation/run_audio_session_test.sh
