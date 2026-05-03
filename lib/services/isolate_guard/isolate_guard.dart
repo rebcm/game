@@ -1,34 +1,27 @@
 import 'dart:isolate';
 
 class IsolateGuard {
-  static final Map<Capability, Isolate> _isolates = {};
+  static final Map<String, Isolate> _activeIsolates = {};
 
-  static Future<void> runIsolate(
-    Future Function() computation, {
-    required String debugName,
-  }) async {
-    final receivePort = ReceivePort();
-    final isolate = await Isolate.spawn(
-      _isolateWrapper,
-      [computation, receivePort.sendPort],
-      debugName: debugName,
-    );
-    _isolates[isolate.pauseCapability!] = isolate;
-    await receivePort.first;
-    receivePort.close();
+  static Future<void> spawnIsolate(String id, IsolateSpawnCallback callback, SendPort? sendPort) async {
+    if (_activeIsolates.containsKey(id)) {
+      await _activeIsolates[id]?.kill(priority: Isolate.immediate);
+    }
+    final isolate = await Isolate.spawn(callback, sendPort);
+    _activeIsolates[id] = isolate;
   }
 
-  static Future<void> _isolateWrapper(List<dynamic> args) async {
-    final computation = args[0];
-    final sendPort = args[1];
-    await computation();
-    sendPort.send(null);
+  static void killIsolate(String id) {
+    if (_activeIsolates.containsKey(id)) {
+      _activeIsolates[id]?.kill(priority: Isolate.immediate);
+      _activeIsolates.remove(id);
+    }
   }
 
   static void killAllIsolates() {
-    for (final isolate in _isolates.values) {
-      isolate.kill();
-    }
-    _isolates.clear();
+    _activeIsolates.forEach((id, isolate) {
+      isolate.kill(priority: Isolate.immediate);
+    });
+    _activeIsolates.clear();
   }
 }
