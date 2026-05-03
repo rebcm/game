@@ -56,3 +56,6 @@ flutter:
     path: ./benchmarks
 
   archive: ^3.4.9
+
+  flutter_test:
+    path: ./test
