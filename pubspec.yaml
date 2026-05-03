@@ -60,3 +60,5 @@ flutter:
     - lib/docs/guias_depuracao/
   assets:
     - lib/docs/peer_review/
+  assets:
+    - lib/docs/dicas/template_dica.md
