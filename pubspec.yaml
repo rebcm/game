@@ -66,3 +66,5 @@ flutter:
     - assets/audio/optimized/sfx/
 
   golden_toolkit: ^0.13.0
+
+  http: ^0.13.5
