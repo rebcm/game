@@ -1,12 +1,21 @@
 #!/bin/bash
 
-# Set environment variables
-export FLUTTER_VERSION=$(flutter --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+# Configura o ambiente para build de iOS
+echo "Configurando o ambiente para build de iOS..."
 
-# Validate Flutter version
-./.github/scripts/validate_flutter_version.sh
+# Verifica se as variáveis de ambiente necessárias estão configuradas
+if [ -z "$APPLE_CERTIFICATE" ] || [ -z "$APPLE_PROVISIONING_PROFILE" ]; then
+  echo "Variáveis de ambiente não configuradas corretamente."
+  exit 1
+fi
 
-# Build IPA
-flutter build ipa --release --export-options-plist=.github/scripts/ExportOptions.plist
+# Instala as dependências necessárias
+flutter pub get
 
-# Upload artifact
+# Limpa o projeto Flutter
+flutter clean
+
+# Compila o projeto Flutter para iOS
+flutter build ios --release --no-codesign
+
+echo "Build de iOS concluído com sucesso."
