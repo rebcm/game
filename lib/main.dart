@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/upload_service/upload_retry_logic.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:game/l10n/l10n.dart';
+import 'package:game/services/translation_service/translation_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await TranslationService.init();
+
   runApp(MyApp());
 }
 
@@ -10,33 +14,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: UploadExample(),
+      title: 'Rebeca\'s Creative Game',
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: MyHomePage(),
     );
   }
 }
 
-class UploadExample extends StatefulWidget {
-  @override
-  _UploadExampleState createState() => _UploadExampleState();
-}
-
-class _UploadExampleState extends State<UploadExample> {
-  final Dio _dio = Dio();
-  final UploadRetryLogic _uploadRetryLogic = UploadRetryLogic(Dio());
-
+class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Example'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await _uploadRetryLogic.uploadWithRetry('test_file.txt', '/upload');
-          },
-          child: Text('Upload File'),
-        ),
+        title: Text(TranslationService.helloWorld()),
       ),
     );
   }
