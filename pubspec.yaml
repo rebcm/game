@@ -20,3 +20,6 @@ dev_dependencies:
     sdk: flutter
 
   game/docs/glossario/glossario.md:
+
+  freezed: ^2.3.2
+  json_annotation: ^4.6.0
