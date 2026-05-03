@@ -77,3 +77,6 @@ flutter:
   assets:
     - assets/animacoes/rebeca/idle.json
 
+
+  assets:
+    - assets/audio/
