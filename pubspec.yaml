@@ -78,3 +78,5 @@ dev_dependencies:
 
   assets:
     - docs/criterios/texto_preciso.md
+
+  test/widget_test/utils/screen_config.dart:
