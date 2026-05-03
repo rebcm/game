@@ -75,3 +75,5 @@ dependencies:
     - docs/guia_estilo_pastas/guia_estilo_pastas.md
   assets:
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+
+  test/integration_tests/contract_tests/contract_test.dart:
