@@ -59,3 +59,6 @@ flutter:
 
   performance_tracking_test:
     path: ./benchmarks/performance_tracking
+
+  physics_engine_tests:
+    path: ./test/physics_engine_tests
