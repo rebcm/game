@@ -37,3 +37,6 @@ tests:
     - docs/peer_review.md
 
   - test/i18n_tests/layout_dicas_i18n_test.dart
+
+scripts:
+  validate_flame_audio_version: ./scripts/validate_dependencies/check_flame_audio_version.sh
