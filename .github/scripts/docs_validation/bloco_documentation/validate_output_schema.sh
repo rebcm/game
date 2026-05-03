@@ -1,14 +1,14 @@
 #!/bin/bash
 
-JSON_FILE=.github/scripts/docs_validation/output_schema/output_schema.json
-OUTPUT_FILE=.github/scripts/docs_validation/bloco_documentation/output.json
+schema_file="./.github/scripts/docs_validation/bloco_documentation/output_schema.json"
+output_file="./.github/scripts/docs_validation/bloco_documentation/block_reference.json"
 
-if ! jq -e . >/dev/null 2>&1 < "$OUTPUT_FILE"; then
-  echo "Invalid JSON in $OUTPUT_FILE"
+if ! jq -e . "$output_file" > /dev/null; then
+  echo "Invalid JSON in $output_file"
   exit 1
 fi
 
-if ! jsonschema -i "$OUTPUT_FILE" "$JSON_FILE"; then
-  echo "Output does not match the schema"
+if ! jsonschema -i "$output_file" "$schema_file"; then
+  echo "Validation failed against schema in $schema_file"
   exit 1
 fi
