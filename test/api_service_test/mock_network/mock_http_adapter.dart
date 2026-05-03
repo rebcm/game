@@ -2,18 +2,22 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:http/http.dart' as http;
 
 class MockHttpAdapter {
-  final DioAdapter _dioAdapter = DioAdapter(dio: http.Client());
+  final DioAdapter _dioAdapter = DioAdapter(dio: Dio());
 
-  void setTimeoutResponse() {
+  void setTimeoutError() {
     _dioAdapter.onGet(
       'https://example.com/api/data',
       (server) => server.reply(408, {'message': 'Timeout'}),
-      queryParameters: {},
-      headers: {},
+      queryParams: {'delay': 'true'},
     );
   }
 
-  http.Client getClient() {
-    return _dioAdapter.dio;
+  void setSuccessResponse() {
+    _dioAdapter.onGet(
+      'https://example.com/api/data',
+      (server) => server.reply(200, {'message': 'Success'}),
+    );
   }
+
+  DioAdapter get dioAdapter => _dioAdapter;
 }
