@@ -26,3 +26,5 @@ dev_dependencies:
 
 dependencies:
   protobuf: ^2.1.0
+
+  game/docs/dicas_template/template.md:
