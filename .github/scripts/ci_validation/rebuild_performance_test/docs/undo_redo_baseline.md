@@ -1,18 +1,20 @@
 # Baseline de Performance para Undo/Redo
 
-Este documento define a baseline de performance para operações de Undo/Redo no jogo.
+Este documento define a baseline de performance para a operação de Undo/Redo no jogo.
 
 ## Critérios de Aceitação
 
 - O número máximo de rebuilds permitidos durante uma operação de Undo/Redo é de 50.
-- O tempo máximo para realizar uma operação de Undo/Redo é de 100ms.
+- A latência média para a operação de Undo/Redo não deve exceder 100ms.
 
-## Métricas de Avaliação
+## Metodologia de Teste
 
-- Número de rebuilds durante a operação de Undo/Redo.
-- Tempo necessário para realizar a operação de Undo/Redo.
+1. Executar o teste de performance de rebuild utilizando o script `run_rebuild_performance_test.sh`.
+2. Medir o número de rebuilds e a latência durante a operação de Undo/Redo.
+3. Comparar os resultados com os critérios de aceitação definidos acima.
 
-## Testes de Performance
+## Resultados Esperados
 
-Os testes de performance serão realizados utilizando o framework de testes de integração do Flutter.
+- Número de rebuilds: <= 50
+- Latência média: <= 100ms
 

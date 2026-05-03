@@ -13,15 +13,19 @@ void main() {
       await driver.close();
     });
 
-    test('CPU Stress Test', () async {
-      final timeline = await driver.traceAction(() async {
-        await driver.tap(find.byValueKey('build_button'));
-        await Future.delayed(Duration(seconds: 10));
-      });
+    test('Undo/Redo Performance Test', () async {
+      final undoButton = find.byTooltip('Undo');
+      final redoButton = find.byTooltip('Redo');
 
-      final summary = TimelineSummary.summarize(timeline);
-      summary.writeSummaryToFile('cpu_stress_test', pretty: true);
-      summary.writeTimelineToFile('cpu_stress_test', pretty: true);
+      await driver.tap(undoButton);
+      await driver.tap(redoButton);
+
+      final rebuilds = await driver.getRenderObjectDiagnostics(find.byType('GameWidget'), timeout: Duration(seconds: 10));
+      final latency = await driver.measurePerformance(find.byType('GameWidget'));
+
+      print('Rebuilds: ${rebuilds.length}');
+      print('Latency: ${latency.average}');
     });
   });
 }
+

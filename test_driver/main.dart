@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/main.dart' as app;
+import 'package:game/main.dart' as app;
 
 void main() {
-  runApp(app.MyApp());
+  app.main();
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rebeca\'s World',
-      home: app.MyHomePage(),
-    );
-  }
-}
