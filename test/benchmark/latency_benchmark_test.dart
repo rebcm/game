@@ -1,30 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:game/your_isolate_file.dart'; // Update with actual isolate file
 import 'dart:isolate';
 
 void main() {
-  test('latency benchmark test', () async {
+  test('Benchmark latency between Isolate and UI thread', () async {
     final receivePort = ReceivePort();
-    final sendPort = receivePort.sendPort;
+    final isolate = await Isolate.spawn(yourIsolateFunction, receivePort.sendPort); // Update with actual isolate function
 
-    final isolate = await Isolate.spawn(isolateFunction, sendPort);
     final stopwatch = Stopwatch()..start();
+    final message = 'benchmark_message';
+    final response = await receivePort.first;
+    expect(response, message);
 
-    receivePort.listen((message) {
-      stopwatch.stop();
-      print('Latency: ${stopwatch.elapsedMicroseconds} microseconds');
-      expect(stopwatch.elapsedMicroseconds, isNotNull);
-      receivePort.close();
-      isolate.kill();
-    });
+    print('Latency: ${stopwatch.elapsed.inMilliseconds} ms');
 
-    sendPort.send('message');
-  });
-}
-
-void isolateFunction(SendPort sendPort) {
-  final receivePort = ReceivePort();
-  sendPort.send(null);
-  receivePort.listen((message) {
-    sendPort.send('response');
+    isolate.kill();
+    receivePort.close();
   });
 }
