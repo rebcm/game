@@ -10,12 +10,12 @@ class CompressionUtils {
     return GZipDecoder().decodeBytes(data)!;
   }
 
-  // Zstd implementation requires external package, so we'll stick with GZip for now
+  // For future Zstd implementation if needed
   // static Uint8List zstdCompress(Uint8List data) {
-  //   // Implement Zstd compression using a suitable package
+  //   // Zstd compression implementation
   // }
 
   // static Uint8List zstdDecompress(Uint8List data) {
-  //   // Implement Zstd decompression using a suitable package
+  //   // Zstd decompression implementation
   // }
 }
