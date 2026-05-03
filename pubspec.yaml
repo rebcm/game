@@ -11,3 +11,5 @@ dev_dependencies:
 
   tests:
     - test/dicas_test.dart
+  assets:
+    - docs/checklist_documentacao.md
