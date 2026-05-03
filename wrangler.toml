@@ -1,11 +1,2 @@
-name = "rebcm-game"
-type = "javascript"
-
-[env.production]
-vars = { ENVIRONMENT = "production" }
-
-[[env.production.secrets]]
-name = "DB_PASSWORD"
-
-[[env.production.secrets]]
-name = "API_KEY"
+name = "construcao-criativa"
+pages_build_output_dir = "web"
