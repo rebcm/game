@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # Validate API documentation criteria
-if ! grep -q "Endpoints obrigatórios:" ./lib/docs/swagger.yaml; then
-  echo "Endpoints obrigatórios not defined"
+if ! grep -q "Endpoints obrigatórios:" ./lib/docs/api_documentation.md; then
+  echo "API documentation is missing required endpoints section"
   exit 1
 fi
 
-if ! grep -q "Tipos de dados:" ./lib/docs/swagger.yaml; then
-  echo "Tipos de dados not defined"
+if ! grep -q "Validação de tipos de dados:" ./lib/docs/api_documentation.md; then
+  echo "API documentation is missing data type validation section"
   exit 1
 fi
 
-if ! grep -q "Exemplos de payloads:" ./lib/docs/swagger.yaml; then
-  echo "Exemplos de payloads not defined"
+if ! grep -q "Exemplos de payloads:" ./lib/docs/api_documentation.md; then
+  echo "API documentation is missing payload examples section"
   exit 1
 fi
