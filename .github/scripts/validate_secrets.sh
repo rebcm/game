@@ -10,5 +10,3 @@ validate_secret() {
 
 validate_secret 'API_KEY'
 validate_secret 'SECRET_KEY'
-
-echo "All required secrets are present"
