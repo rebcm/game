@@ -1,4 +1,4 @@
-name: Deploy Web via Cloudflare
+name: Deploy Web via Cloudflare Pages
 
 on:
   push:
@@ -21,13 +21,12 @@ jobs:
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web
+        run: flutter build web --release
 
-      - name: Deploy to Cloudflare
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_PAGES_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
-        run: |
-          npm install -g wrangler
-          wrangler pages deploy build/web --project-name=$CLOUDFLARE_PAGES_PROJECT_NAME --account-id=$CLOUDFLARE_ACCOUNT_ID --token=$CLOUDFLARE_API_TOKEN
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build/web

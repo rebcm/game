@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Validate Cloudflare Pages secrets
 if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
   echo "CLOUDFLARE_API_TOKEN is not set"
   exit 1
@@ -11,9 +10,7 @@ if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
   exit 1
 fi
 
-if [ -z "$DATABASE_URL" ]; then
-  echo "DATABASE_URL is not set"
+if [ -z "$CLOUDFLARE_PROJECT_NAME" ]; then
+  echo "CLOUDFLARE_PROJECT_NAME is not set"
   exit 1
 fi
-
-echo "Cloudflare Pages secrets are valid"
