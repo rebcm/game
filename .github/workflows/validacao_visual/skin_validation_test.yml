@@ -12,19 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validar dimensoes da skin
+      - name: Validacao da Skin
         run: |
+          echo "Validando dimensoes da skin..."
           if [ $(identify -format "%wx%h" assets/blocos/skin.png) != "64x64" ]; then
-            echo "Skin deve ter dimensoes 64x64"
+            echo "Dimensoes incorretas"
             exit 1
           fi
-
-      - name: Validar paleta de cores
-        run: |
-          # Implementar logica para validar paleta de cores
-          echo "Validacao da paleta de cores: OK"
-
-      - name: Verificar camada externa
-        run: |
-          # Implementar logica para verificar camada externa
-          echo "Verificacao da camada externa: OK"
+          echo "Validacao concluida com sucesso"
