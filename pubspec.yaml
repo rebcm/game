@@ -25,8 +25,8 @@ dev_dependencies:
 
 flutter:
   assets:
-    - peer_review.md
-    - docs/wrangler_secrets.md
+    - docs/dicas_construcao/conteudo_dicas.md
+    - docs/dicas_construcao/conteudo_dicas_formatado.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
     - docs/audio_compatibility/audio_compatibility_matrix.md
@@ -35,7 +35,6 @@ flutter:
     - .github/scripts/ci_validation/cloudflare_pages_permissions/docs/criterios_aceitacao_permissoes.md
     - docs/flutter_sdk_version.md
     - test/integration/documentacao/documentacao_test.dart
-    - docs/dicas_construcao/conteudo_dicas_formatado.md
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
 
   test/integration/flutter_doctor/flutter_doctor_test.dart:
@@ -43,8 +42,8 @@ flutter:
   test/integration/dicas_ui_test/dicas_ui_test.dart:
 
   assets:
-    - docs/audio_api_mapping/audio_api_comparison.md
-
+    - docs/dicas_construcao/conteudo_dicas.md
+    - docs/dicas_construcao/conteudo_dicas_formatado.md
 
   test/integration/latency_benchmark_test/latency_benchmark_test.dart:
 

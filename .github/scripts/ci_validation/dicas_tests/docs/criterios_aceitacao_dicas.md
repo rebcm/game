@@ -1,27 +1,16 @@
-# Critérios de Aceitação para UI de Dicas
+# Critérios de Aceitação para Dicas de Construção
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a implementação da UI de Dicas no jogo.
+Este documento define os critérios de aceitação para as dicas de construção no jogo.
 
-## Critérios de Aceitação
+## Critérios
 
-1. **Exibição de Dicas**: A UI de Dicas deve ser exibida quando o jogador realizar uma ação específica (definir gatilho de exibição).
-2. **Conteúdo das Dicas**: O conteúdo das dicas deve ser claro, conciso e relevante para a ação realizada pelo jogador.
-3. **Persistência das Dicas**: A UI de Dicas deve permanecer visível por um período determinado ou até que o jogador realize uma ação específica (definir critério de fechamento).
-4. **Gatilhos de Exibição**: A UI de Dicas deve ser exibida nos seguintes gatilhos:
-   - [Definir gatilhos específicos, por exemplo, ao iniciar o jogo, ao realizar uma ação específica, etc.]
-5. **Comportamento Esperado**: A UI de Dicas deve se comportar de acordo com os critérios definidos acima.
+1. **Conteúdo claro e conciso**: As dicas devem ser fáceis de entender e seguir.
+2. **Exemplos relevantes**: As dicas devem incluir exemplos relevantes e úteis.
+3. **Formatação correta**: As dicas devem estar formatadas corretamente, com títulos, subtítulos e parágrafos.
+4. **Precisão técnica**: As dicas devem ser tecnicamente precisas e não conter erros ou informações desatualizadas.
 
-## Métricas de Sucesso
+## Verificação
 
-1. **Taxa de Exibição**: A UI de Dicas deve ser exibida corretamente em 100% das vezes quando o gatilho de exibição for ativado.
-2. **Conteúdo Correto**: O conteúdo das dicas deve ser correto e relevante em 100% das vezes.
-3. **Tempo de Persistência**: A UI de Dicas deve permanecer visível por pelo menos [definir tempo mínimo] segundos.
-
-## Testes
-
-1. **Testes de UI**: Devem ser realizados testes de UI para garantir que a UI de Dicas seja exibida corretamente e contenha o conteúdo esperado.
-2. **Testes de Gatilhos**: Devem ser realizados testes para garantir que a UI de Dicas seja exibida nos gatilhos definidos.
-3. **Testes de Persistência**: Devem ser realizados testes para garantir que a UI de Dicas permaneça visível por pelo menos o tempo mínimo definido.
-
+As dicas de construção devem ser verificadas regularmente para garantir que atendam aos critérios de aceitação.
