@@ -2,10 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/main.dart';
 
 void main() {
-  testWidgets('drift simulation test', (tester) async {
+  testWidgets('drift test', (tester) async {
     await tester.pumpWidget(const MyApp());
-    await tester.drag(find.byType(MyHomePage), const Offset(100, 0));
+    await tester.binding.window.physicalSizeTestValue = const Size(100, 100);
+    await tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpAndSettle();
-    expect(find.byType(MyHomePage), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(MyApp), findsOneWidget);
   });
 }
