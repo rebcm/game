@@ -57,3 +57,6 @@ supportedLocales:
 
   assets:
     - docs/mapeamento_estruturas_sugeridas.md
+
+  integration_test:
+    path: test/integration_tests/audio_tests/external_interruptions_test
