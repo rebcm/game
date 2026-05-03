@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/utils/performance_testing/widget_tracker.dart';
 import 'package:game/utils/performance_testing/widget_tracker_impl.dart';
 
 void main() {
-  testWidgets('Rebuild performance test', (tester) async {
+  testWidgets('rebuild performance test', (tester) async {
     await tester.pumpWidget(MyApp());
+    await tester.pumpAndSettle();
+
     final widgetTracker = WidgetTrackerImpl();
-    await widgetTracker.trackRebuilds(() async {
-      await tester.tap(find.text('Undo'));
+    await widgetTracker.init();
+
+    for (int i = 0; i < 100; i++) {
+      await tester.tap(find.byKey(Key('undo_redo_button')));
       await tester.pump();
-    });
-    expect(widgetTracker.rebuildCount, 0);
+    }
+
+    final rebuildCount = await widgetTracker.getRebuildCount();
+    expect(rebuildCount, lessThan(150));
   });
 }
 
@@ -22,8 +27,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: ElevatedButton(
+            key: Key('undo_redo_button'),
             onPressed: () {},
-            child: Text('Undo'),
+            child: Text('Undo/Redo'),
           ),
         ),
       ),

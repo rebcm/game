@@ -138,3 +138,6 @@ dev_dependencies:
 
   rate_limiter_test:
     path: ./test/unit/rate_limiter_test.dart
+
+  rebuild_performance_baseline_test:
+    path: ./.github/scripts/ci_validation/run_rebuild_performance_test.sh
