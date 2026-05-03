@@ -110,3 +110,9 @@ flutter:
 
   player_state_transition_test:
     path: ./test/player_state_transition_test
+
+  release_guard_service:
+    path: ./lib/services/release_guard_service
+
+  release_guard_service_test:
+    path: ./test/release_guard_service_test
