@@ -43,3 +43,5 @@ scripts:
   validate:cloudflare_token: bash .github/scripts/ci_validation/cloudflare_token_validation/validate_cloudflare_token.sh \$CLOUDFLARE_TOKEN \$ZONE_ID
   test:audio_edge_cases: flutter drive --driver=test/audio/edge_cases/audio_edge_cases_test.dart --target=test/app.dart
   test:rendering_integration: flutter drive --driver=test/integration/rendering/rendering_test_driver.dart --target=test/app.dart
+
+  test:rebuild_monitoring: flutter drive --driver=test/integration/rebuild_monitoring/rebuild_monitoring_test_driver.dart --target=test/integration/rebuild_monitoring/rebuild_monitoring_test.dart
