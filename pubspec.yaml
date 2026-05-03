@@ -30,6 +30,7 @@ dependencies:
   cached_network_image: ^3.2.3
 
 dev_dependencies:
+  leak_tracker_flutter_testing: ^0.5.0
   integration_test:
     sdk: flutter
   archive: ^3.3.2

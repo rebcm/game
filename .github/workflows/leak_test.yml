@@ -9,15 +9,9 @@ jobs:
   leak-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
-
-      - name: Run leak test
-        run: |
-          flutter pub get
-          flutter test test/leak_test/leak_test.dart
+      - run: flutter pub get
+      - run: flutter test test/leak_test/leak_test.dart
