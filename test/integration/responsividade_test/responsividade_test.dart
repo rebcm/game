@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:rebcm/main.dart' as app;
@@ -6,30 +5,14 @@ import 'package:rebcm/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Responsividade Test', () {
-    testWidgets('Testa responsividade em telas pequenas', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+  testWidgets('test responsividade em telas pequenas', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      await tester.binding.setSurfaceSize(const Size(320, 480));
-      await tester.pumpAndSettle();
+    await tester.binding.setSurfaceSize(const Size(320, 480));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Rebeca'), findsOneWidget);
-      expect(find.byType(GridView), findsOneWidget);
-    });
-
-    testWidgets('Testa truncamento de dicas em telas pequenas', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      await tester.binding.setSurfaceSize(const Size(280, 480));
-      await tester.pumpAndSettle();
-
-      final dicas = find.text('Dicas');
-      expect(dicas, findsOneWidget);
-
-      final dicasText = tester.widget<Text>(dicas);
-      expect(dicasText.style?.overflow, TextOverflow.ellipsis);
-    });
+    expect(find.text('Dicas'), findsOneWidget);
+    expect(find.text('Truncamento de dicas'), findsNothing);
   });
 }

@@ -170,3 +170,5 @@ dev_dependencies:
     path: ./test/integration/audio_recovery_test/audio_recovery_test.dart
   documentacao_test:
     path: ./test/integration/documentacao_test/documentacao_test.dart
+  responsividade_test:
+    path: ./test/integration/responsividade_test/responsividade_test.dart
