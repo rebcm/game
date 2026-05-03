@@ -5,7 +5,10 @@ class EstadoJogo extends StatefulWidget {
   _EstadoJogoState createState() => _EstadoJogoState();
 }
 
-class _EstadoJogoState extends State<EstadoJogo> {
+class _EstadoJogoState extends State<EstadoJogo> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => false;
+
   @override
   void dispose() {
     super.dispose();
@@ -13,6 +16,7 @@ class _EstadoJogoState extends State<EstadoJogo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    super.build(context);
+    return Container();
   }
 }
