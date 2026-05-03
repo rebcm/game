@@ -1,22 +1,20 @@
-import 'dart:isolate';
-import 'package:game/services/chunk_manager/chunk_isolate_guard.dart';
+import 'package:game/services/chunk_manager/buffer_zone.dart';
+import 'package:game/services/chunk_manager/chunk.dart';
 
-class ChunkManager {
-  final ChunkIsolateGuard _isolateGuard = ChunkIsolateGuard();
+class ChunkManager with ChangeNotifier {
+  List<Chunk> _allChunks = [];
+  Chunk _playerChunk = Chunk(x: 0, z: 0);
+  BufferZone _bufferZone = BufferZone(radius: 2);
 
-  Future<void> generateChunk() async {
-    final receivePort = ReceivePort();
-    final isolate = await Isolate.spawn(_generateChunkIsolate, receivePort.sendPort);
-    _isolateGuard.addIsolate(isolate);
-    // Implement chunk generation logic here
+  List<Chunk> get chunksToPreload => _bufferZone.getChunksToPreload(_allChunks, _playerChunk);
+
+  void updatePlayerChunk(Chunk newChunk) {
+    _playerChunk = newChunk;
+    notifyListeners();
   }
 
-  static void _generateChunkIsolate(SendPort sendPort) {
-    // Implement isolate logic here
-    sendPort.send(null);
-  }
-
-  void dispose() {
-    _isolateGuard.killAll();
+  void updateAllChunks(List<Chunk> newChunks) {
+    _allChunks = newChunks;
+    notifyListeners();
   }
 }
