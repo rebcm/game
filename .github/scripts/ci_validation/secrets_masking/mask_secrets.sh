@@ -1,18 +1,11 @@
 #!/bin/bash
 
-# Function to mask secrets in logs
-mask_secrets() {
-  # List of secrets to mask
-  local secrets=("$@")
-  local log_file="${1:-/dev/stdin}"
-  shift
+# Load secrets from .env file
+set -a; source .env; set +a
 
-  # Use sed to replace each secret with a masked version
-  for secret in "${secrets[@]}"; do
-    log_file=$(sed "s|$secret|********|g" <<< "$log_file")
-  done
+# Mask sensitive values in GitHub Actions logs
+echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+echo "::add-mask::$CLOUDFLARE_ACCOUNT_ID"
+echo "::add-mask::$PAGES_API_TOKEN"
 
-  echo "$log_file"
-}
-
-# Example usage: mask_secrets "secret_value1" "secret_value2" < log_file.log
+# Add more secrets to mask as needed

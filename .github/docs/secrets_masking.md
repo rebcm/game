@@ -1,10 +1,14 @@
-# Secrets Masking Documentation
+# Secrets Masking
 
-## Purpose
-This documentation explains the implementation of secrets masking in the CI/CD pipeline to prevent sensitive information from being exposed in logs.
+To prevent sensitive information from being exposed in GitHub Actions logs, 
+we use the `echo ::add-mask::` command to mask secret values.
 
-## Implementation
-The `mask_secrets.sh` script is used to replace sensitive information with a masked version. The secrets are loaded from environment variables.
+## Configuration
+
+The `.github/scripts/ci_validation/secrets_masking/mask_secrets.sh` script 
+loads secrets from the `.env` file and masks them.
 
 ## Usage
-The `run_mask_secrets.sh` script demonstrates how to use `mask_secrets.sh` with the loaded secrets.
+
+This script should be executed at the beginning of the CI workflow to ensure 
+that all sensitive values are properly masked.

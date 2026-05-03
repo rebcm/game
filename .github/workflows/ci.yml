@@ -6,10 +6,16 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Run secrets masking test
-        run: .github/scripts/ci_validation/secrets_masking_test/run_secrets_masking_test.sh
+        uses: actions/checkout@v4
+
+      - name: Mask secrets
+        run: ./.github/scripts/ci_validation/secrets_masking/mask_secrets.sh
+
+      - name: Run dart analyze
+        run: dart analyze
+
+      # Add more steps as needed
