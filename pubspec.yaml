@@ -5,11 +5,17 @@ flutter:
     - docs/checklist_documentacao.md
 
 dev_dependencies:
+  openapi_generator: ^4.3.1
+  openapi_generator: ^4.3.1
   protobuf: ^2.1.0
   analyzer: ^5.13.0
   golden_toolkit: ^0.13.0
 
 tests:
+  - test/integration_tests/swagger_integration_test/swagger_integration_test.dart
+  - test/integration_tests/swagger_integration_test/swagger_client_test.dart
+  - test/integration_tests/swagger_integration_test/swagger_integration_test.dart
+  - test/integration_tests/swagger_integration_test/swagger_client_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
   - test/memory_tests/isolate_memory_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
