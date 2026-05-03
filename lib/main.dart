@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:game/widgets/locale_switcher.dart';
+import 'package:game/game_screen/game_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Locale locale;
-
-  MyApp({this.locale = const Locale('en', 'US')});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: locale,
-      home: LocaleSwitcher(),
+      title: 'Game',
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GameScreen()),
+            );
+          },
+          child: Text('Play'),
+        ),
+      ),
     );
   }
 }
