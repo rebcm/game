@@ -47,3 +47,5 @@ flutter:
     - docs/arquitetura/guia_estilo_pastas.md
 
   integration_test/latency_benchmark_test/latency_benchmark_test.dart:
+
+  integration_test/documentacao_test/documentacao_test.dart:
