@@ -32,3 +32,6 @@ dev_dependencies:
     path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
   peer_review_validation:
     path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
+
+  leak_tracker_test:
+    path: ./test/integration/leak_tracker_test/estado_jogo_leak_test.dart
