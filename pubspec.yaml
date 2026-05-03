@@ -115,3 +115,5 @@ dev_dependencies:
 
   seo_validation:
     path: ./.github/scripts/docs_validation/seo/validate_seo_documentation.sh
+  documentacao_test:
+    path: ./test/integration/documentacao_test/documentacao_test.dart
