@@ -1,55 +1,39 @@
-import 'package:flutter/material.dart';
+import 'package:rebcm/blocos/tipo_bloco.dart';
+import 'package:rebcm/constantes.dart';
+import 'package:rebcm/mundo/mundo.dart';
 
-class Rebeca with ChangeNotifier {
-  // Estado da Rebeca
-  double _x = 0, _y = 0, _z = 0;
-  double _velocidadeX = 0, _velocidadeZ = 0;
-  bool _pulando = false;
-  bool _voando = false;
+class Rebeca {
+  double x, y, z;
+  double vx = 0, vy = 0, vz = 0;
+  TipoBloco blocoSelecionado = TipoBloco.grama;
+  int slotAtual = 0;
 
-  // Getters
-  double get x => _x;
-  double get y => _y;
-  double get z => _z;
+  static const List<TipoBloco> hotbar = [
+    TipoBloco.grama, TipoBloco.terra, TipoBloco.pedra, TipoBloco.areia,
+    TipoBloco.madeira, TipoBloco.tijolo, TipoBloco.ouro, TipoBloco.diamante,
+  ];
 
-  // Método para atualizar a posição
-  void atualizarPosicao() {
-    _x += _velocidadeX;
-    _z += _velocidadeZ;
-    // Aplicar gravidade se não estiver voando
-    if (!_voando) {
-      // Simulação simples de gravidade
-    }
-    notifyListeners();
+  Rebeca({required this.x, required this.y, required this.z});
+
+  void mover(double dx, double dz, double dt, Mundo mundo) {
+    final vel = Constantes.velocidade;
+    final nx = x + dx * vel * dt;
+    final nz = z + dz * vel * dt;
+    if (!mundo.isSolido(nx.round(), y.round(), z.round())) x = nx;
+    if (!mundo.isSolido(x.round(), y.round(), nz.round())) z = nz;
+    x = x.clamp(0.0, Constantes.worldX - 1.0);
+    z = z.clamp(0.0, Constantes.worldZ - 1.0);
   }
 
-  // Método para mover
-  void mover(double dx, double dz) {
-    _velocidadeX = dx;
-    _velocidadeZ = dz;
-    notifyListeners();
+  void subirDescer(double dy, double dt) {
+    y = (y + dy * Constantes.velocidade * dt).clamp(5.0, Constantes.worldY - 1.0);
   }
 
-  // Método para pular
-  void pular() {
-    if (!_pulando && !_voando) {
-      _pulando = true;
-      // Lógica para pular
-      notifyListeners();
-    }
+  void selecionarSlot(int slot) {
+    slotAtual = slot.clamp(0, hotbar.length - 1);
+    blocoSelecionado = hotbar[slotAtual];
   }
 
-  // Método para voar (modo criativo)
-  void voar() {
-    _voando = !_voando;
-    notifyListeners();
-  }
-
-  // Animações
-  String getAnimacao() {
-    if (_voando) return 'voar';
-    if (_pulando) return 'pular';
-    if (_velocidadeX != 0 || _velocidadeZ != 0) return 'andar';
-    return 'idle';
-  }
+  double get telaX => (x - z) * Constantes.halfW;
+  double get telaY => (x + z) * Constantes.halfH - y * Constantes.sideH;
 }
