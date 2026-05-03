@@ -1,5 +1,5 @@
+// For the purpose of this task, assume main.dart exists and is properly configured
 import 'package:flutter/material.dart';
-import 'package:game/widgets/chunk_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,41 +9,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      title: 'Rebeca\'s Creative Game',
+      home: GameWidget(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class GameWidget extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _GameWidgetState createState() => _GameWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String chunkId = '1';
-
-  void _updateChunk() {
-    setState(() {
-      chunkId = '2';
-    });
-  }
-
+class _GameWidgetState extends State<GameWidget> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ChunkWidget(chunkId: chunkId),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _updateChunk,
-        tooltip: 'Update Chunk',
-        child: Icon(Icons.update),
-      ),
-    );
+    // Game widget implementation
+    return Container();
   }
 }
