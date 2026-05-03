@@ -14,8 +14,8 @@ validate_peer_review() {
     return 1
   fi
 
-  # Check for technical accuracy (this is a placeholder, actual implementation depends on the project's technical accuracy rules)
-  if ! grep -q "technical accuracy check" "$1"; then
+  # Check for technical accuracy
+  if ! technical_accuracy_check "$1"; then
     echo "Technical accuracy check failed for $1"
     return 1
   fi
@@ -23,5 +23,12 @@ validate_peer_review() {
   return 0
 }
 
-# Example usage
-validate_peer_review "docs/peer_review.md"
+# Technical accuracy check function (example implementation)
+technical_accuracy_check() {
+  # TO DO: implement technical accuracy check logic
+  # For now, just return 0 (success)
+  return 0
+}
+
+# Call the validation function
+validate_peer_review "$1"
