@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# Validate if Swagger files exist
-if [ ! -f docs/swagger/swagger.json ] || [ ! -f docs/swagger/swagger_ui.html ]; then
-  echo "Swagger files are missing"
+# This script validates the Swagger implementation in the backend repository
+
+# Check if the Swagger file exists
+if [ ! -f "../backend/swagger.yaml" ]; then
+  echo "Swagger file not found"
   exit 1
 fi
 
-# Validate Swagger content (example check, adjust according to actual needs)
-swagger_content=$(cat docs/swagger/swagger.json)
-if ! echo "$swagger_content" | grep -q '"swagger": "2.0"'; then
-  echo "Invalid Swagger content"
+# Validate the Swagger file
+swagger-cli validate ../backend/swagger.yaml
+if [ $? -ne 0 ]; then
+  echo "Swagger validation failed"
   exit 1
 fi
 
