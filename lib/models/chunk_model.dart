@@ -4,11 +4,18 @@ part 'chunk_model.g.dart';
 
 @JsonSerializable()
 class ChunkModel {
-  final String id;
-  final String data;
+  @JsonKey(name: 'x')
+  final int x;
 
-  ChunkModel({required this.id, required this.data});
+  @JsonKey(name: 'z')
+  final int z;
+
+  @JsonKey(name: 'data')
+  final List<int> data;
+
+  ChunkModel({required this.x, required this.z, required this.data});
 
   factory ChunkModel.fromJson(Map<String, dynamic> json) => _$ChunkModelFromJson(json);
+
   Map<String, dynamic> toJson() => _$ChunkModelToJson(this);
 }
