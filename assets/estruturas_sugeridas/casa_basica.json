@@ -1,0 +1,14 @@
+{
+  "nome": "Casa Básica",
+  "descricao": "Uma casa simples com 1 andar",
+  "estrutura": [
+    {
+      "bloco": "bloco_simples",
+      "posicao": [0, 0, 0]
+    },
+    {
+      "bloco": "bloco_simples",
+      "posicao": [1, 0, 0]
+    }
+  ]
+}

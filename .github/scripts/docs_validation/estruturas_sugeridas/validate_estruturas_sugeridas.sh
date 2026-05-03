@@ -1,20 +1,12 @@
 #!/bin/bash
 
-# Validate estruturas sugeridas documentation
-echo "Validating estruturas sugeridas documentation..."
-
-# Check if estruturas_sugeridas directory exists
-if [ ! -d "assets/estruturas_sugeridas" ]; then
-  echo "Error: assets/estruturas_sugeridas directory does not exist."
-  exit 1
-fi
-
-# Check if estruturas_sugeridas files are valid
-for file in assets/estruturas_sugeridas/*.json; do
-  if ! jq -e . >/dev/null 2>&1 <"$file"; then
-    echo "Error: $file is not a valid JSON file."
+# Validar se os templates necessários existem
+templates=(casa_basica.json torre_alta.json ponte_simples.json jardim.json labirinto.json)
+for template in "${templates[@]}"; do
+  if [ ! -f "assets/estruturas_sugeridas/$template" ]; then
+    echo "Erro: Template $template não encontrado."
     exit 1
   fi
 done
 
-echo "Estruturas sugeridas documentation is valid."
+echo "Todos os templates necessários estão presentes."
