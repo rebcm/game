@@ -30,3 +30,6 @@ flutter:
     - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
+
+  assets:
+    - docs/audio_api_comparativo/audio_api_comparativo.md
