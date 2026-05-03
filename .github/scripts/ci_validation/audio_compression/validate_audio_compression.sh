@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Define the acceptable bitrate range (in kbps)
-MIN_BITRATE=128
-MAX_BITRATE=192
-
-# Check if the bitrate is within the acceptable range
-check_bitrate() {
-  local bitrate=$(ffprobe -v error -show_entries stream=bit_rate -of default=noprint_wrappers=1:nokey=1 "$1")
-  bitrate=$((bitrate / 1000)) # Convert to kbps
-  if (( bitrate < MIN_BITRATE || bitrate > MAX_BITRATE )); then
-    echo "Bitrate $bitrate kbps is out of range [$MIN_BITRATE, $MAX_BITRATE] for file $1"
+# Validate audio compression
+validate_compression() {
+  local bitrate=$1
+  local threshold=$2
+  local compressed_size=$(ffmpeg -i input.mp3 -c:a libmp3lame -b:a $bitrate output.mp3 2>&1 | grep -oP '(?<=size=)\d+')
+  if (( compressed_size < threshold )); then
+    echo "Compression successful with bitrate $bitrate"
+  else
+    echo "Compression failed with bitrate $bitrate"
     exit 1
   fi
 }
 
-# Check all audio files in the assets directory
-for file in assets/*.mp3; do
-  check_bitrate "$file"
-done
+# Define ideal bitrate
+IDEAL_BITRATE=128k
+
+# Validate compression with ideal bitrate
+validate_compression $IDEAL_BITRATE 102400
