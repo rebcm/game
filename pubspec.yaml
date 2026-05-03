@@ -1,31 +1,9 @@
 flutter:
-    - docs/dicas.md
-    - docs/matriz_conteudo_dicas.md
   assets:
-    - assets/estruturas_sugeridas/
-    - docs/glossario.md
-    - docs/checklist_documentacao.md
+    - assets/swagger.yaml
 
 dev_dependencies:
-  change_notifier_auto_dispose: ^2.0.0
-  json_serializable: ^6.5.4
   openapi_generator: ^4.3.1
-  protobuf: ^2.1.0
-  analyzer: ^5.13.0
-  golden_toolkit: ^0.13.0
 
-tests:
-  - test/golden_tests/tela_dicas_golden_test.dart
-  - test/responsividade_test/tela_dicas_responsividade_test.dart 
-  - test/golden_tests/tela_dicas_golden_responsividade_test.dart
-
-  swagger_generator: ^1.0.0
-
-  - docs/blocos/
-  - test/responsividade_test/tela_dicas_responsividade_test.dart
-  - test/golden_tests/tela_dicas_golden_responsividade_test.dart
-
-  - test/rtl_tests/tela_dicas_rtl_test.dart
-  - test/golden_tests/tela_dicas_golden_rtl_test.dart
-
-  - test/profiling_tests/cena_3d_rebuild_profiling_test.dart
+dependencies:
+  swagger: ^1.0.0
