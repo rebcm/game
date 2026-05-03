@@ -56,3 +56,6 @@ dev_dependencies:
 dev_dependencies:
   clean_build_test:
     path: ./test/integration/clean_build_test
+
+  dicas_test:
+    path: ./test/integration/dicas_test/dicas_test.dart

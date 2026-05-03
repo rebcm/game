@@ -10,8 +10,8 @@ class DicasService {
 
   DicasService._();
 
-  void mostrarDica({required BuildContext context, required String mensagem}) {
-    // Implementar lógica para exibir dicas
+  void mostrarDica(BuildContext context, String mensagem) {
+    // Implementar lógica para exibir dica
     // Pode ser um modal, tooltip, etc.
     // Deve ser configurável
   }
