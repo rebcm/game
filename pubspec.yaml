@@ -25,6 +25,7 @@ dev_dependencies:
   protobuf: ^2.1.0
 
 flutter:
+  - test/integration/documentacao/documentacao_test.dart
   assets:
     - assets/audio/
     - docs/dicas_construcao/conteudo_dicas.md

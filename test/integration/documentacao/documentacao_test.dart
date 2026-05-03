@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'dart:io';
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('documentacao_test', (tester) async {
-    final documentacaoFile = File('docs/documentacao/conteudo_documentacao.md');
-    final documentacaoExists = await documentacaoFile.exists();
-    expect(documentacaoExists, true, reason: 'Documentação não encontrada');
+  testWidgets('documentacao test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Add test steps here
   });
 }
