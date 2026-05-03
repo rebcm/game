@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package game.models;
+
+message ChunkProtobuf {
+  int32 width = 1;
+  int32 height = 2;
+  int32 depth = 3;
+  repeated int32 blocks = 4;
+}
