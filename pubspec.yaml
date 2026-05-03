@@ -17,6 +17,7 @@ localizationsDelegates:
   - GlobalWidgetsLocalizations.delegate
 
 supportedLocales:
+  - test/permission_edge_cases/permission_edge_cases_test.dart
     - test/swagger_validation/swagger_validation_test.dart
     - test/swagger_validation/swagger_validation_test.dart
   - en
@@ -42,3 +43,4 @@ dev_dependencies:
   leak_tracker: ^9.0.0
   leak_tracker_flutter_testing: ^2.0.1
   - .github/scripts/docs_validation/checklist_revisao_tecnica/content/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+  - ios/Runner/Info.plist

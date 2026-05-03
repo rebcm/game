@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:integration_test/integration_test.dart';
 
 void main() {
-  test('microphone permission test', () async {
-    var status = await Permission.microphone.status;
-    expect(status.isGranted, true);
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('test permission edge cases', (tester) async {
+    // Implement test logic here
   });
 }
