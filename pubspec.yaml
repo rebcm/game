@@ -69,3 +69,5 @@ localizationsDelegates:
 supportedLocales:
   - de
   - fr
+
+  game/docs/dicas/conteudo_dicas.dart:
