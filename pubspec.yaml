@@ -100,3 +100,7 @@ dev_dependencies:
 
   rebuild_logging_test:
     path: ./test/performance/rebuild_logging_test.dart
+
+  peer_review_validation:
+    path: ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
+
