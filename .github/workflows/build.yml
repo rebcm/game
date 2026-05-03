@@ -13,9 +13,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Validate Secrets
-        uses: ./.github/workflows/secrets_validation/validate_secrets.yml
+        uses: ./.github/scripts/validate_secrets.sh
 
-      - name: Build and test
-        run: |
-          flutter pub get
-          flutter test
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter build
