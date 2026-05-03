@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:game/ui/screens/help/help_screen.dart';
+import 'package:game/widgets/construction_tips/construction_tips.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Voxel Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        body: ConstructionTips(),
       ),
-      home: const HelpScreen(),
     );
   }
 }
