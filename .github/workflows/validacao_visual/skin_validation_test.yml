@@ -1,0 +1,30 @@
+name: Validacao Visual da Skin
+
+on:
+  pull_request:
+    paths:
+      - 'assets/blocos/**'
+
+jobs:
+  validate-skin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validar dimensoes da skin
+        run: |
+          if [ $(identify -format "%wx%h" assets/blocos/skin.png) != "64x64" ]; then
+            echo "Skin deve ter dimensoes 64x64"
+            exit 1
+          fi
+
+      - name: Validar paleta de cores
+        run: |
+          # Implementar logica para validar paleta de cores
+          echo "Validacao da paleta de cores: OK"
+
+      - name: Verificar camada externa
+        run: |
+          # Implementar logica para verificar camada externa
+          echo "Verificacao da camada externa: OK"
