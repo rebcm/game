@@ -1,13 +1,23 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
-class OpenAPIClient {
-  final http.Client _httpClient;
+class OpenApiClient {
+  final Dio _dio;
 
-  OpenAPIClient({http.Client? httpClient}) : _httpClient = httpClient ?? http.Client();
+  OpenApiClient(this._dio);
 
-  Future<http.Response> apiEndpointGet() async {
-    // Implement actual API request logic here
-    final response = await _httpClient.get(Uri.parse('https://example.com/api/endpoint'));
-    return response;
+  Future<List<Block>> getBlocks() async {
+    final response = await _dio.get('/blocks');
+    return (response.data as List).map((e) => Block.fromJson(e)).toList();
+  }
+}
+
+class Block {
+  final int id;
+  final String name;
+
+  Block({required this.id, required this.name});
+
+  factory Block.fromJson(Map<String, dynamic> json) {
+    return Block(id: json['id'], name: json['name']);
   }
 }
