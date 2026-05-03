@@ -6,21 +6,14 @@ import 'package:rebcm/input/input_normalizer.dart';
 class Game extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => PlayerController(normalizer: InputNormalizer(deadzone: 0.2))),
-      ],
-      child: GameWidget(),
+    return ChangeNotifierProvider(
+      create: (_) => PlayerController(normalizer: InputNormalizer(deadzone: 0.2)),
+      child: Consumer<PlayerController>(
+        builder: (context, controller, child) {
+          // Use controller.inputX and controller.inputY to control the player
+          return Container(); // Replace with your game widget
+        },
+      ),
     );
-  }
-}
-
-class GameWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final playerController = context.watch<PlayerController>();
-
-    // Use playerController.inputX and playerController.inputY to control the player
-    return Container();
   }
 }

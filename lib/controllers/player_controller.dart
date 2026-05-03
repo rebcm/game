@@ -3,7 +3,6 @@ import 'package:rebcm/input/input_normalizer.dart';
 
 class PlayerController with ChangeNotifier {
   final InputNormalizer _normalizer;
-
   double _inputX = 0;
   double _inputY = 0;
 

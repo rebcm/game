@@ -8,8 +8,8 @@ class InputNormalizer {
   double normalize(double input) {
     if (input.abs() < deadzone) {
       return 0;
+    } else {
+      return (input - deadzone * input.sign) / (1 - deadzone);
     }
-
-    return (input - deadzone * input.sign) / (1 - deadzone);
   }
 }
