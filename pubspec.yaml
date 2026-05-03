@@ -52,3 +52,7 @@ dev_dependencies:
     path: ./test/integration/stress_test/timer_stress_test.dart
   stress_test_with_memory_check:
     path: ./test/integration/stress_test/timer_stress_test_with_memory_check.dart
+
+dev_dependencies:
+  clean_build_test:
+    path: ./test/integration/clean_build_test
