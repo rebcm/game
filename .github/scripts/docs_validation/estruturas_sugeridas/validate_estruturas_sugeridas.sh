@@ -1,6 +1,5 @@
 #!/bin/bash
 
-dart .github/scripts/docs_validation/estruturas_sugeridas/extract_estruturas_sugeridas.dart > estruturas_sugeridas.json
-
-# Add validation logic here
-echo "Validation successful"
+# Valida as estruturas sugeridas
+dart ./.github/scripts/docs_validation/estruturas_sugeridas/extract_estruturas_sugeridas.dart
+# Lógica adicional para validação

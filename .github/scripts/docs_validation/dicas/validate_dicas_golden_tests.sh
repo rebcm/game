@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Validate if golden tests for dicas are present
-
-if [ ! -f "test/golden_tests/dicas/resolucoes_test.dart" ]; then
-  echo "Golden tests for dicas are missing"
+# Compara as strings extraídas com os testes golden
+if diff -q ./.github/scripts/docs_validation/dicas/dicas_golden.txt ./.github/scripts/docs_validation/dicas/dicas_extracted.txt; then
+  echo "Dicas válidas"
+else
+  echo "Dicas inválidas"
   exit 1
 fi
-
-echo "Golden tests for dicas are present"
-exit 0

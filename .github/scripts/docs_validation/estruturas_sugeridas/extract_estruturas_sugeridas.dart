@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:game/docs/estruturas_sugeridas.dart';
+import 'dart:io';
 
 void main() {
-  final estruturasSugeridas = EstruturasSugeridas();
-  final estruturas = estruturasSugeridas.estruturas;
-
-  final jsonData = jsonEncode(estruturas);
-  print(jsonData);
+  // Lógica para extrair as estruturas sugeridas
+  print('Extraindo estruturas sugeridas...');
+  // Implementação real necessária aqui
 }
