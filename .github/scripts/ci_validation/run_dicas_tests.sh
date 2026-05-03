@@ -1,3 +1,4 @@
 #!/bin/bash
 
-flutter test test/integration/dicas/dicas_test.dart
+# Run the dicas tests
+.github/scripts/ci_validation/dicas_tests/dicas_tests.sh
