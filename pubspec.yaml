@@ -8,6 +8,8 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  ui_integration_test:
+    path: ./test/integration/ui_integration_test/ui_integracao_test.dart
   rebuild_performance_test:
     path: ./test/performance/rebuild_performance_test.dart
   widget_tracker_impl:
