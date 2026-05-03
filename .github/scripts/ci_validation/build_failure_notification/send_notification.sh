@@ -1,21 +1,18 @@
 #!/bin/bash
 
 # Load environment variables from .env file
-if [ -f .env ]; then
-  export $(cat .env | xargs)
-else
-  echo ".env file not found"
+set -a
+source .env
+set +a
+
+# Check if required variables are set
+if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+  echo "DISCORD_WEBHOOK_URL is not set in .env file"
   exit 1
 fi
 
-# Check if notification token is set
-if [ -z "$NOTIFICATION_TOKEN" ]; then
-  echo "NOTIFICATION_TOKEN is not set in .env"
-  exit 1
-fi
-
-# Send notification
+# Send notification to Discord
 curl -X POST \
-  https://api.example.com/notify \
+  $DISCORD_WEBHOOK_URL \
   -H 'Content-Type: application/json' \
-  -d '{"token": "'"$NOTIFICATION_TOKEN"'", "message": "Build failed"}'
+  -d '{"content": "Daily build at 20:00 BRT has failed."}'

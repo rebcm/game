@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Capture the exit status of the build command
-BUILD_STATUS=$?
+# Run flutter build command
+flutter build apk
 
-# Check if the build failed
-if [ $BUILD_STATUS -ne 0 ]; then
-  echo "Build failed with status $BUILD_STATUS"
-  # Trigger notification logic here, e.g., calling send_notification.sh
+# Check if build was successful
+if [ $? -ne 0 ]; then
+  # Trigger send_notification.sh if build fails
   .github/scripts/ci_validation/build_failure_notification/send_notification.sh
-else
-  echo "Build successful"
 fi
