@@ -5,31 +5,29 @@ import 'package:leak_tracker/leak_tracker.dart';
 void main() {
   testWidgets('FocusNode is disposed and not leaked', (tester) async {
     await LeakTracker.startTracking();
-    await tester.pumpWidget(MyApp());
+    final focusNode = FocusNode();
+    await tester.pumpWidget(MyWidget(focusNode: focusNode));
     await tester.pumpAndSettle();
-    await LeakTracker.stopTracking();
+    focusNode.dispose();
+    await tester.pumpAndSettle();
     final leaks = await LeakTracker.getLeaks();
     expect(leaks, isEmpty);
   });
 }
 
-class MyApp extends StatefulWidget {
+class MyWidget extends StatefulWidget {
+  final FocusNode focusNode;
+
+  const MyWidget({Key? key, required this.focusNode}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _MyAppState extends State<MyApp> {
-  late FocusNode _focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = FocusNode();
-  }
-
+class _MyWidgetState extends State<MyWidget> {
   @override
   void dispose() {
-    _focusNode.dispose();
+    widget.focusNode.dispose();
     super.dispose();
   }
 
@@ -37,9 +35,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Focus(
-          focusNode: _focusNode,
-          child: Container(),
+        body: TextField(
+          focusNode: widget.focusNode,
+          autofocus: true,
         ),
       ),
     );
