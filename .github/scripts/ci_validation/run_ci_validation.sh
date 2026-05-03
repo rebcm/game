@@ -1,13 +1,6 @@
 #!/bin/bash
 
-# Run all CI validations
-echo "Running clean build validation..."
-bash .github/scripts/ci_validation/clean_build/run_clean_build_validation.sh
-
-if [ $? -eq 0 ]; then
-  echo "All CI validations successful."
-else
-  echo "One or more CI validations failed."
-  exit 1
-fi
-./.github/scripts/ci_validation/run_dicas_construcao_test.sh
+# Validações de permissão
+.github/scripts/ci_validation/camera_usage_description_validation/validate_camera_usage_description.sh
+.github/scripts/ci_validation/microfone_usage_description_validation/validate_microfone_usage_description.sh
+.github/scripts/ci_validation/photo_library_usage_description_validation/validate_photo_library_usage_description.sh

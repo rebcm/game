@@ -1,31 +1,7 @@
-# Matriz de Critérios de Aceitação para Permissões
+# Critérios de Aceitação para Permissões
 
-## Visão Geral
-
-Este documento define os critérios de aceitação para as permissões necessárias no aplicativo.
-
-## Permissões Necessárias
-
-### iOS
-
-| Permissão | Descrição | Chave Info.plist | Texto de Justificativa |
-| --- | --- | --- | --- |
-| Microfone | Acesso ao microfone para gravação de áudio | NSMicrophoneUsageDescription | "O aplicativo precisa acessar o microfone para gravar áudio." |
-
-### Android
-
-| Permissão | Descrição | Permissão AndroidManifest.xml | Texto de Justificativa |
-| --- | --- | --- | --- |
-| Gravação de Áudio | Acesso para gravar áudio | RECORD_AUDIO | "O aplicativo precisa acessar o microfone para gravar áudio." |
-
-## Critérios de Aceitação
-
-1. O aplicativo deve solicitar a permissão de gravação de áudio quando necessário.
-2. O texto de justificativa para a permissão deve ser apresentado ao usuário.
-3. A chave `NSMicrophoneUsageDescription` deve estar presente no arquivo `Info.plist` para iOS.
-4. A permissão `RECORD_AUDIO` deve estar declarada no arquivo `AndroidManifest.xml` para Android.
-5. O texto de justificativa deve ser claro e conciso, explicando por que o aplicativo precisa da permissão.
-
-## Validação
-
-A validação das permissões será realizada por meio de testes de integração e verificação das configurações nos arquivos de configuração (`Info.plist` e `AndroidManifest.xml`).
+| Permissão | Descrição | Critério de Aceitação |
+|-----------|-----------|-----------------------|
+| NSCameraUsageDescription | Acesso à câmera para capturar momentos do jogo. | A mensagem deve explicar claramente que a câmera é usada para tirar fotos dos mundos voxel criativos. |
+| NSMicrophoneUsageDescription | Acesso ao microfone para gravar áudio. | A mensagem deve explicar que o microfone é usado para gravar áudio durante a criação. |
+| NSPhotoLibraryUsageDescription | Acesso à biblioteca de fotos para salvar criações. | A mensagem deve explicar que a biblioteca de fotos é usada para salvar as criações voxel. |
