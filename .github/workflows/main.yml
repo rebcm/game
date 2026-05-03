@@ -1,0 +1,25 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build the project
+        run: |
+          echo "Building the project..."
+      - name: Run unit tests
+        run: |
+          echo "Running unit tests..."
+      - name: Run integration tests
+        run: |
+          echo "Running integration tests..."
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production..."
