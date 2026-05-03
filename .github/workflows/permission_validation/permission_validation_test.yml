@@ -1,0 +1,26 @@
+name: Permissão Concedida vs Resultado do Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  validate-permission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Testar permissão concedida
+        run: |
+          echo "Testando permissão concedida..."
+          # Implementar lógica para testar permissão concedida
+
+      - name: Testar permissão negada
+        run: |
+          echo "Testando permissão negada..."
+          # Implementar lógica para testar permissão negada
+
+      - name: Gerar relatório de teste
+        run: |
+          echo "Gerando relatório de teste..."
+          # Implementar lógica para gerar relatório de teste
