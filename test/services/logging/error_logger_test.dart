@@ -2,25 +2,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:game/services/logging/error_logger.dart';
 
 void main() {
-  group('ErrorLogger', () {
-    test('logs error message', () {
-      final errorLogger = ErrorLogger();
-      expect(() => errorLogger.logError('Test error'), returnsNormally);
-    });
+  test('logError logs error message', () {
+    ErrorLogger.logError('Test error message');
+    // Add expectation or verification logic here
+  });
 
-    test('logs auth error message', () {
-      final errorLogger = ErrorLogger();
-      expect(() => errorLogger.logAuthError('Test auth error'), returnsNormally);
-    });
+  test('logAuthError logs auth error message', () {
+    ErrorLogger.logAuthError('Test auth error message');
+    // Add expectation or verification logic here
+  });
 
-    test('logs infrastructure error message', () {
-      final errorLogger = ErrorLogger();
-      expect(() => errorLogger.logInfrastructureError('Test infrastructure error'), returnsNormally);
-    });
+  test('logInfraError logs infra error message', () {
+    ErrorLogger.logInfraError('Test infra error message');
+    // Add expectation or verification logic here
+  });
 
-    test('logs payload error message', () {
-      final errorLogger = ErrorLogger();
-      expect(() => errorLogger.logPayloadError('Test payload error'), returnsNormally);
-    });
+  test('logPayloadError logs payload error message', () {
+    ErrorLogger.logPayloadError('Test payload error message');
+    // Add expectation or verification logic here
   });
 }
