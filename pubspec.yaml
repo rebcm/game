@@ -31,3 +31,7 @@ openapi_client:
 flutter:
   assets:
     - lib/docs/estruturas_sugeridas.md
+
+  assets:
+    - lib/docs/estruturas_sugeridas.md
+    - assets/translations/ # Assuming translations are stored here
