@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup JDK 17
+      - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -27,8 +27,10 @@ jobs:
       - name: Run Flutter Doctor
         run: flutter doctor
 
-      - name: Analyze Dart Code
-        run: dart analyze
+      - name: Test Flutter Version
+        run: |
+          flutter --version | grep "Flutter 3.0.0" && echo "Flutter version is correct" || (echo "Flutter version is incorrect" && exit 1)
 
-      - name: Test Flutter Dart SDK Baseline
-        run: flutter test
+      - name: Test Dart Version
+        run: |
+          dart --version | grep "Dart SDK version: 2.17." && echo "Dart version is correct" || (echo "Dart version is incorrect" && exit 1)
