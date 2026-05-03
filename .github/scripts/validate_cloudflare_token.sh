@@ -1,25 +1,22 @@
 #!/bin/bash
 
+CLOUDFLARE_API_URL="https://api.cloudflare.com/client/v4/user/tokens/verify"
 CLOUDFLARE_TOKEN=$1
-ZONE_ID=$2
-
-if [ -z "$CLOUDFLARE_TOKEN" ] || [ -z "$ZONE_ID" ]; then
-  echo "Erro: Token ou Zone ID do Cloudflare não fornecido."
-  exit 1
-fi
 
 RESPONSE=$(curl -s -X GET \
-  https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings \
-  -H 'Content-Type: application/json' \
-  -H "Authorization: Bearer $CLOUDFLARE_TOKEN")
+  "$CLOUDFLARE_API_URL" \
+  -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+  -H "Content-Type: application/json")
 
-DNS_PERMISSION=$(echo $RESPONSE | jq -r '.result[] | select(.id == "dns") | .modified_on')
-SETTINGS_PERMISSION=$(echo $RESPONSE | jq -r '.result[] | select(.id == "settings") | .modified_on')
+PERMISSIONS=$(echo $RESPONSE | jq -r '.result.permissions')
 
-if [ -n "$DNS_PERMISSION" ] && [ -n "$SETTINGS_PERMISSION" ]; then
-  echo "Token válido e possui as permissões necessárias."
+ZONE_DNS_PERMISSIONS=$(echo $PERMISSIONS | jq -r '."Zone.DNS"')
+ZONE_SETTINGS_PERMISSIONS=$(echo $PERMISSIONS | jq -r '."Zone.Settings"')
+
+if [ "$ZONE_DNS_PERMISSIONS" = "edit" ] && [ "$ZONE_SETTINGS_PERMISSIONS" = "edit" ]; then
+  echo "Token válido"
   exit 0
 else
-  echo "Erro: Token inválido ou sem as permissões Zone.DNS e Zone.Settings."
+  echo "Token inválido"
   exit 1
 fi
