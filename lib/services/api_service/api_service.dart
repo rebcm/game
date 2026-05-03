@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
 class ApiService {
@@ -5,12 +6,19 @@ class ApiService {
 
   ApiService(this._dio);
 
-  Future<Response> getArtefato() async {
+  Future<http.Response> get(String url) async {
     try {
-      final response = await _dio.get('https://example.com/api/artefato');
-      return response;
+      final response = await _dio.get(url);
+      return http.Response(
+        response.data.toString(),
+        response.statusCode ?? 500,
+      );
     } on DioException catch (e) {
-      throw Exception('Erro ao buscar artefato: ${e.message}');
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception('Timeout');
+      } else {
+        throw Exception('Error ${e.response?.statusCode}');
+      }
     }
   }
 }
