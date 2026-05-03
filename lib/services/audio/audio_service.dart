@@ -1,25 +1,27 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:rebcm/services/audio/audio_cache_manager.dart';
 
 class AudioService {
-  static final AudioService _instance = AudioService._();
-  factory AudioService() => _instance;
-  AudioService._();
+  late AudioPlayer _audioPlayer;
+  late AudioCacheManager _audioCacheManager;
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  Future<void> init() async {
+    _audioPlayer = AudioPlayer();
+    _audioCacheManager = AudioCacheManager(_audioPlayer);
+    await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse('')));
+  }
 
-  double _globalVolume = 1.0;
-
-  double get globalVolume => _globalVolume;
-
-  void setGlobalVolume(double volume) {
-    _globalVolume = volume;
-    _audioPlayer.setVolume(volume);
+  Future<void> preloadAudio(String assetPath) async {
+    await _audioCacheManager.preloadAudio(assetPath);
   }
 
   Future<void> playAudio(String assetPath) async {
-    await _audioPlayer.setAsset(assetPath);
-    _audioPlayer.setVolume(_globalVolume);
-    await _audioPlayer.play();
+    await _audioCacheManager.playCachedAudio(assetPath);
+  }
+
+  void dispose() {
+    _audioCacheManager.dispose();
+    _audioPlayer.dispose();
   }
 }

@@ -1,18 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:rebcm/services/audio/audio_cache_manager.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AudioCacheManager', () {
-    test('disposeAudio should stop and dispose audio player', () async {
-      final audioCacheManager = AudioCacheManager();
-      await audioCacheManager.disposeAudio();
-      // Add verification logic here
+    late AudioPlayer _audioPlayer;
+    late AudioCacheManager _audioCacheManager;
+
+    setUp(() {
+      _audioPlayer = AudioPlayer();
+      _audioCacheManager = AudioCacheManager(_audioPlayer);
     });
 
-    test('dispose should call disposeAudio', () {
-      final audioCacheManager = AudioCacheManager();
-      audioCacheManager.dispose();
-      // Add verification logic here
+    tearDown(() {
+      _audioCacheManager.dispose();
+      _audioPlayer.dispose();
+    });
+
+    test('preload and play audio', () async {
+      const assetPath = 'assets/audio/optimized/sfx/block_break.mp3';
+      await _audioCacheManager.preloadAudio(assetPath);
+      await _audioCacheManager.playCachedAudio(assetPath);
+      expect(_audioPlayer.playing, true);
     });
   });
 }
