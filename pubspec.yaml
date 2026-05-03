@@ -49,3 +49,5 @@ flutter:
   integration_test/latency_benchmark_test/latency_benchmark_test.dart:
 
   integration_test/documentacao_test/documentacao_test.dart:
+
+  integration_test/responsividade_test/responsividade_tela_pequena_test.dart:
