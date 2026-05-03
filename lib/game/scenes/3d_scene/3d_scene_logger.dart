@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ThreeDSceneLogger with DiagnosticableTreeMixin {
-  void logRebuild(String message) {
-    debugPrint('3D Scene Rebuild: $message');
+class ThreeDSceneLogger with Diagnosticable {
+  int _rebuildCount = 0;
+
+  void logRebuild() {
+    _rebuildCount++;
+    debugPrint('3D Scene Rebuild Count: $_rebuildCount');
   }
 
-  void logRenderFrame(String message) {
-    debugPrint('3D Scene Render Frame: $message');
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('Rebuild Count', _rebuildCount));
   }
 }
