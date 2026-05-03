@@ -27,3 +27,6 @@ dev_dependencies:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   performance_tester:
     path: ./lib/utils/performance_testing
+
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
