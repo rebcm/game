@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package game.protobuf;
+
+message ChunkData {
+  repeated int32 values = 1;
+}
