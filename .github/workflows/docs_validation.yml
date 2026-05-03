@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
 
 jobs:
   validate-docs:
@@ -14,6 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate Guia de Estilo Dicas
-        run: .github/scripts/docs_validation/validate_guia_estilo_dicas.sh
-
+      - name: Validate documentation
+        run: ./.github/scripts/docs_validation/checklist_validacao_documentacao/validate_checklist_documentacao.sh
