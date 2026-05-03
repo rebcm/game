@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:game/docs/estruturas_sugeridas.dart';
 
 void main() {
-  final estruturasSugeridas = EstruturasSugeridas.estruturas;
-  final output = estruturasSugeridas.map((estrutura) => estrutura.nome).join('\n');
-  File('lib/docs/estruturas_sugeridas.txt').writeAsStringSync(output);
+  final estruturasSugeridasFile = File('./docs/estruturas_sugeridas.md');
+  final estruturasSugeridasContent = estruturasSugeridasFile.readAsStringSync();
+
+  // Implemente a lógica para extrair e validar as estruturas sugeridas
+  print('Extraindo estruturas sugeridas...');
+  print(estruturasSugeridasContent);
 }

@@ -1,8 +1,16 @@
 #!/bin/bash
 
-# Verifica se o arquivo de dicas foi modificado
-if git diff --name-only HEAD~1 | grep -q "lib/docs/dicas/"; then
-  # Executa a validação das dicas
-  dart ./.github/scripts/docs_validation/dicas/extract_dicas_strings.dart
-  ./.github/scripts/docs_validation/dicas/validate_dicas_golden_tests.sh
+# Verifica se o arquivo de estruturas sugeridas existe
+if [ ! -f "./docs/estruturas_sugeridas.md" ]; then
+  echo "Arquivo estruturas_sugeridas.md não encontrado."
+  exit 1
 fi
+
+# Executa a validação ortográfica
+dart ./.github/scripts/docs_validation/estruturas_sugeridas/extract_estruturas_sugeridas.dart
+if [ $? -ne 0 ]; then
+  echo "Falha ao extrair estruturas sugeridas."
+  exit 1
+fi
+
+echo "Revisão ortográfica concluída com sucesso."

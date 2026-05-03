@@ -2,3 +2,6 @@
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+
+dev_dependencies:
+  markdown: ^4.0.0

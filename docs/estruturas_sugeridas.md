@@ -1,26 +1,14 @@
 # Estruturas Sugeridas
 
-Este documento lista as estruturas específicas do jogo que são sugeridas para os jogadores.
+Este documento contém sugestões de estruturas para o jogo.
 
-## Lista de Estruturas
+## Estruturas Básicas
 
-- Castelo
-- Casa
-- Ponte
-- Jardim
+- Casa Simples
+- Torre Alta
 
-## Templates
+## Estruturas Complexas
 
-Os templates para as estruturas sugeridas devem ser criados e documentados aqui.
+- Castelo Medieval
+- Cidade Moderna
 
-### Castelo
-Template para castelo.
-
-### Casa
-Template para casa.
-
-### Ponte
-Template para ponte.
-
-### Jardim
-Template para jardim.
