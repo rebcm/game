@@ -1,20 +1,14 @@
 # Peer Review Guidelines
 
-## Introduction
-This document outlines the guidelines for conducting a peer review of the content added to the project.
+## Purpose
+The purpose of this document is to provide guidelines for peer reviewing the game's documentation.
 
-## Technical Accuracy
-To ensure technical accuracy, the reviewer should check the content against the project's technical documentation and specifications.
+## Guidelines
+1. Check for spelling and grammar errors.
+2. Verify technical accuracy.
+3. Ensure consistency with the project's tone and style.
 
-## Spelling and Grammar
-The reviewer should also check the content for spelling and grammar errors.
-
-## Example
-Here is an example of a technically accurate and well-written content.
-
-### Code Example
-```dart
-void main() {
-  print('Hello, World!');
-}
-```
+## Checklist
+- [ ] Spelling and grammar errors corrected
+- [ ] Technical accuracy verified
+- [ ] Consistency with project tone and style ensured

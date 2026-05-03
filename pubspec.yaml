@@ -26,3 +26,7 @@ dev_dependencies:
     path: ./lib/utils/performance_testing
   microfone_usage_description_validation:
     path: .github/scripts/docs_validation/microfone_usage_description/validate_microfone_usage_description.sh
+  peer_review_validation:
+    path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
+  peer_review_validation:
+    path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
