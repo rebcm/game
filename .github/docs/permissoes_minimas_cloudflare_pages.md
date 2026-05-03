@@ -4,23 +4,24 @@ Este documento define a matriz de permissões mínimas necessárias para cada a�
 
 ## Introdução
 
-O pipeline Cloudflare Pages é responsável por automatizar o processo de deploy do jogo Construção Criativa da Rebeca. Para garantir a segurança e integridade do processo, é crucial definir as permissões mínimas necessárias para cada ação realizada pelo pipeline.
+O Princípio do Menor Privilégio é uma prática de segurança que recomenda conceder as menores permissões necessárias para realizar uma tarefa. Isso minimiza o risco de danos em caso de comprometimento de credenciais ou uso indevido.
 
 ## Matriz de Permissões
 
-| Ação | Permissão Mínima Necessária |
-| --- | --- |
-| Deploy | `pages:write` |
-| Build | `pages:read` |
-| Acesso aos Secrets | `secret:read` |
+| Ação | Permissão Necessária | Justificativa |
+| --- | --- | --- |
+| Deploy | `Cloudflare Pages: Editar` | Necessário para realizar o deploy do site. |
+| Build | `Cloudflare Pages: Editar` | Necessário para realizar a compilação do site. |
+| Acesso ao Repositório | `Leitura` | Necessário para acessar o código-fonte do projeto. |
 
-## Justificativa
+## Implementação
 
-- **Deploy**: A permissão `pages:write` é necessária para realizar o deploy do jogo no Cloudflare Pages.
-- **Build**: A permissão `pages:read` é necessária para acessar as configurações do projeto Cloudflare Pages durante o processo de build.
-- **Acesso aos Secrets**: A permissão `secret:read` é necessária para acessar os secrets configurados no repositório, que são utilizados durante o processo de build e deploy.
+Para implementar essas permissões, siga os passos abaixo:
+
+1. Acesse o painel de controle do Cloudflare.
+2. Navegue até a seção de configurações do seu site Pages.
+3. Ajuste as permissões de acordo com a matriz acima.
 
 ## Conclusão
 
-A implementação desta matriz de permissões mínimas garantirá que o pipeline Cloudflare Pages opere de acordo com o Princípio do Menor Privilégio, minimizando o risco de brechas de segurança.
-
+A implementação da matriz de permissões mínimas para o pipeline Cloudflare Pages é crucial para manter a segurança do projeto. Esta documentação serve como referência para futuras manutenções e auditorias.
