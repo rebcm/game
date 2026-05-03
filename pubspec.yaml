@@ -3,6 +3,7 @@ flutter:
     - docs/swagger_endpoints.md
     - docs/swagger_ui.html
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
+    - peer_review.md
 
 dev_dependencies:
   widget_tracker:
@@ -30,8 +31,5 @@ dev_dependencies:
     path: .github/scripts/docs_validation/microfone_usage_description/validate_microfone_usage_description.sh
   peer_review_validation:
     path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
-  peer_review_validation:
-    path: .github/scripts/docs_validation/peer_review/validate_peer_review.sh
-
   leak_tracker_test:
     path: ./test/integration/leak_tracker_test/estado_jogo_leak_test.dart
