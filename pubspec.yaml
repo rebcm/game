@@ -8,6 +8,12 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  memory_leak_detector:
+    path: ./lib/utils/performance_testing/memory_leak_detector.dart
+  memory_stress_test:
+    path: ./test/integration/stress_test/memory_stress_test.dart
+  timer_stress_test:
+    path: ./test/integration/stress_test/timer_stress_test.dart
   widget_tracker_impl:
     path: ./lib/utils/performance_testing/widget_tracker_impl.dart
   widget_tracker:
