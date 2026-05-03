@@ -39,3 +39,5 @@ flutter:
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
 
   test/integration/flutter_doctor/flutter_doctor_test.dart:
+
+  test/integration/dicas_ui_test/dicas_ui_test.dart:
