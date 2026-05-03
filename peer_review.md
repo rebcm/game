@@ -1,3 +1,15 @@
-# Peer Review
+# Guia de Peer Review
 
-Conteúdo do peer review para a task-1777666324-13-sub-6-disc-1777777797-3.
+## Introdução
+
+Este guia ajuda a realizar peer reviews eficazes no código do jogo.
+
+### Checklist
+
+- [ ] O código segue as diretrizes do projeto.
+- [ ] Testes unitários estão incluídos e passam.
+- [ ] Documentação atualizada.
+
+## Notas
+
+- Ser construtivo e respeitoso durante o review.

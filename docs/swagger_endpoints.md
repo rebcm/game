@@ -1,5 +1,16 @@
-# Endpoints Obrigatórios
+# Swagger Endpoints Documentation
 
-- GET /api/v1/blocos
-- POST /api/v1/blocos
-- GET /api/v1/bioma
+## Overview
+
+This document outlines the API endpoints for the game.
+
+### Endpoints
+
+| Method | Endpoint    | Description                |
+| ------ | ----------- | -------------------------- |
+| GET    | /api/info   | Retrieves game information |
+| POST   | /api/action | Submits a game action      |
+
+## Notes
+
+- Ensure to check the API version before making requests.
