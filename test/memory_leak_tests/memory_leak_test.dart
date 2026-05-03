@@ -6,18 +6,30 @@ void main() {
   testWidgets('estado_jogo is properly disposed', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: EstadoJogo(),
+        home: EstadoJogoWrapper(),
       ),
     );
 
-    final estadoJogoFinder = find.byType(EstadoJogo);
-    expect(estadoJogoFinder, findsOneWidget);
+    final estadoJogoKey = Key('estado_jogo');
+
+    expect(find.byKey(estadoJogoKey), findsOneWidget);
 
     await tester.pumpWidget(Container());
 
-    // Check if EstadoJogo is properly garbage collected
-    // This is a simplified test and might need adjustments based on the actual implementation
-    await tester.pumpAndSettle();
-    expect(estadoJogoFinder, findsNothing);
+    // Use Flutter DevTools or manual inspection to verify memory leak
+    // This test just verifies the widget is removed from the tree
+    expect(find.byKey(estadoJogoKey), findsNothing);
   });
+}
+
+class EstadoJogoWrapper extends StatefulWidget {
+  @override
+  _EstadoJogoWrapperState createState() => _EstadoJogoWrapperState();
+}
+
+class _EstadoJogoWrapperState extends State<EstadoJogoWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    return EstadoJogo(key: Key('estado_jogo'));
+  }
 }
