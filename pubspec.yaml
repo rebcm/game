@@ -61,3 +61,7 @@ tests:
 
 scripts:
   validate_flame_audio_version: ./scripts/validate_dependencies/check_flame_audio_version.sh
+
+tests:
+  - test/internationalization_tests/rtl_test.dart
+  - test/golden_tests/internationalization/rtl_golden_test.dart
