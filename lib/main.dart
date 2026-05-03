@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/utils/debug_logger.dart';
+import 'package:game/utils/debug_profiler.dart';
 import 'package:game/widgets/debug_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -7,14 +7,16 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DebugLogger()),
+        ChangeNotifierProvider(create: (_) => DebugProfiler()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -42,20 +44,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final debugLogger = context.watch<DebugLogger>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Voxel Game'),
+        title: const Text('Voxel Game'),
         actions: [
           IconButton(
-            icon: Icon(debugLogger.isEnabled ? Icons.visibility_off : Icons.visibility),
+            icon: const Icon(Icons.bug_report),
             onPressed: () {
-              debugLogger.toggle();
+              Provider.of<DebugProfiler>(context, listen: false).toggle();
             },
           ),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text('Voxel Game Content'),
       ),
     );
