@@ -15,3 +15,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+import 'package:game/ui/screens/dicas/dicas_screen.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Game',
+      home: DicasScreen(), // Or add a route for DicasScreen
+    );
+  }
+}
