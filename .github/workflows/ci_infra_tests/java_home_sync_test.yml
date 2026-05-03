@@ -1,0 +1,26 @@
+name: Java Home Sync Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Java Home
+        run: |
+          echo "Validating Java Home configuration..."
+          java_home_cli=$(java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home')
+          echo "Java Home (CLI): $java_home_cli"
+          java_home_ide=$(grep 'gradle.java.home' ~/.gradle/gradle.properties | cut -d'=' -f2-)
+          echo "Java Home (IDE): $java_home_ide"
+          if [ "$java_home_cli" != "$java_home_ide" ]; then
+            echo "Java Home mismatch detected!"
+            exit 1
+          fi
+          echo "Java Home is synchronized."
