@@ -11,13 +11,13 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver?.close();
+        await driver?.close();
       }
     });
 
     test('Smoke test', () async {
-      // Implement your smoke test logic here
       await driver?.waitUntilNoTransientCallbacks();
+      // Add your smoke test logic here
     });
   });
 }
