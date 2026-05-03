@@ -5,11 +5,17 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('documentacao teste', (tester) async {
+  testWidgets('Testes de integração da documentação', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Implementacao do teste baseado na documentacao
-    // Deve seguir os passos documentados e verificar o comportamento esperado
+    // Implementar os passos de teste manuais rigorosos com evidências obrigatórias
+    // conforme descrito na documentação.
+
+    // Exemplo de teste
+    await tester.tap(find.text('Criar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Bloco criado'), findsOneWidget);
   });
 }
+

@@ -35,3 +35,7 @@ flutter:
 
   uses-material-design: true
     - docs/flujo_integracion/flujo_integracion.md
+
+  flutter:
+    assets:
+      - docs/documentacao.md
