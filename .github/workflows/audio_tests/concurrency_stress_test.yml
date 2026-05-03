@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  concurrency_stress_test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

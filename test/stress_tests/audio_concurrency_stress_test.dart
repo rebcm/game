@@ -5,7 +5,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Audio Concurrency Stress Test', () {
-    test('should play multiple sounds simultaneously without errors', () async {
+    test('should play multiple sounds simultaneously without crashing', () async {
       final audioManager = AudioManager();
       await audioManager.initAudioService();
 
@@ -15,7 +15,7 @@ void main() {
 
       await Future.delayed(const Duration(seconds: 2));
 
-      expect(audioManager.getCurrentlyPlayingSounds().length, greaterThan(0));
+      expect(audioManager.isPlaying, true);
     });
 
     test('should handle missing audio files gracefully', () async {
@@ -26,7 +26,7 @@ void main() {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      expect(audioManager.getCurrentlyPlayingSounds().length, equals(0));
+      expect(audioManager.isPlaying, false);
     });
 
     test('should handle corrupted audio files gracefully', () async {
@@ -37,7 +37,7 @@ void main() {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      expect(audioManager.getCurrentlyPlayingSounds().length, equals(0));
+      expect(audioManager.isPlaying, false);
     });
   });
 }
