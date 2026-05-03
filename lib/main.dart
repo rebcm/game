@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rebcm/services/audio/audio_service.dart';
+import 'package:rebcm/services/audio/audio_cache_manager.dart';
+import 'package:rebcm/utils/audio_asset_paths.dart';
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<AudioService>(create: (_) => AudioService()),
-      ],
-      child: MyApp(),
-    ),
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final AudioCacheManager audioCacheManager = AudioCacheManager();
+  await audioCacheManager.preloadAudioAssets(AudioAssetPaths.allAssets);
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Voxel World',
+      title: 'Rebeca\'s Creative World',
       home: MyHomePage(),
     );
   }
@@ -26,15 +24,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final audioService = Provider.of<AudioService>(context);
-    // Example usage
-    return Scaffold(
-      body: Center(
-        child: Slider(
-          value: audioService.globalVolume,
-          onChanged: (value) => audioService.setGlobalVolume(value),
-        ),
-      ),
-    );
+    // Your existing widget tree here
+    return Container();
   }
 }
