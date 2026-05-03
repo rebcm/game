@@ -1,29 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/services/name_service.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:rebcm/data/repository/name_repository.dart';
+import 'package:rebcm/domain/usecase/validate_name_usecase.dart';
+
+class MockNameRepository extends Mock implements NameRepository {}
 
 void main() {
-  group('Name Service Duplicate Name Validation', () {
-    late NameService nameService;
+  late ValidateNameUsecase usecase;
+  late MockNameRepository repository;
 
-    setUp(() {
-      nameService = NameService();
-    });
+  setUp(() {
+    repository = MockNameRepository();
+    usecase = ValidateNameUsecase(repository);
+  });
 
-    test('should not accept duplicate names', () async {
-      await nameService.addName('Rebeca');
-      final result = await nameService.addName('Rebeca');
-      expect(result, false);
-    });
+  test('should return false when name is duplicated', () async {
+    when(() => repository.checkName('test_name')).thenAnswer((_) async => true);
+    final result = await usecase('test_name');
+    expect(result, false);
+  });
 
-    test('should accept different names', () async {
-      await nameService.addName('Rebeca');
-      final result = await nameService.addName('Rebeca Alves');
-      expect(result, true);
-    });
-
-    test('should return true for an empty list of names', () async {
-      final result = await nameService.addName('New Name');
-      expect(result, true);
-    });
+  test('should return true when name is not duplicated', () async {
+    when(() => repository.checkName('test_name')).thenAnswer((_) async => false);
+    final result = await usecase('test_name');
+    expect(result, true);
   });
 }
