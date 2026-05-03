@@ -46,3 +46,5 @@ scripts:
 
   test:rebuild_monitoring: flutter drive --driver=test/integration/rebuild_monitoring/rebuild_monitoring_test_driver.dart --target=test/integration/rebuild_monitoring/rebuild_monitoring_test.dart
 test:rendering_integration: flutter drive --driver=test/integration/rendering/rendering_test_driver.dart --target=test/app.dart
+
+  test:chunking_edge_cases: flutter drive --driver=test/integration/chunking/chunking_edge_cases_test_driver.dart --target=test/app.dart
