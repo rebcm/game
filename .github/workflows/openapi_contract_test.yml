@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run OpenAPI contract test
+      - name: Run OpenAPI contract tests
         run: |
-          dart pub get
-          dart test test/openapi_contract_test/openapi_contract_test.dart
+          flutter pub get
+          flutter test test/openapi_contract_tests

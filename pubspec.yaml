@@ -14,7 +14,9 @@ dependencies:
     path: ./lib/openapi/client
 
 dev_dependencies:
+  test: ^1.21.4
   flutter_test:
+  http_mock_adapter: ^1.0.0
     sdk: flutter
 
 flutter:
