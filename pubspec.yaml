@@ -106,3 +106,5 @@ flutter:
 
   ui_test_config:
     path: ./test/ui_test_config
+  secrets_validation_test:
+    path: ./test/secrets_validation_test
