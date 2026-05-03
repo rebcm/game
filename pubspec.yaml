@@ -24,3 +24,6 @@ flutter:
 
   integration_test:
     sdk: flutter
+
+  chunk_transition_stress_test:
+    path: test/integration_test/performance_test/chunk_transition_test.dart
