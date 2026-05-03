@@ -6,9 +6,8 @@ Este documento define os critérios de aceitação para a validação de secrets
 
 ## Critérios
 
-1. As chaves de assinatura (keystores/certs) devem ser injetadas via Secrets do repositório.
-2. As chaves de assinatura não devem ser hardcoded no pipeline.
-3. O script de validação de secrets deve verificar se as variáveis de ambiente necessárias estão setadas corretamente.
+1. O script de validação de secrets deve verificar se as variáveis de ambiente necessárias estão setadas corretamente.
+2. O script de validação de secrets deve falhar se alguma variável de ambiente necessária não estiver setada corretamente.
 
 ## Validação
 
