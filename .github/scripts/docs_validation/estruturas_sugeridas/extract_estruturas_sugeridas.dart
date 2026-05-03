@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:game/docs/estruturas_sugeridas.dart';
 
 void main() {
-  // Implemente a lógica para extrair as estruturas sugeridas do arquivo Markdown
-  print('Extraindo estruturas sugeridas...');
+  final estruturasSugeridas = EstruturasSugeridas();
+  final estruturas = estruturasSugeridas.estruturas;
+
+  final jsonData = jsonEncode(estruturas);
+  print(jsonData);
 }
