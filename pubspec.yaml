@@ -60,3 +60,6 @@ flutter:
 
   test:
     path: ./test/pub_get_test.dart
+
+  assets:
+    - assets/animacoes/
