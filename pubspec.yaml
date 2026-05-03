@@ -61,6 +61,8 @@ flutter:
     path: ./benchmarks/fps_stress_test
 
   integration_test_config:
+  cleaning_policy_test:
+    path: ./integration_test/cleaning_policy_test
     path: ./integration_test
 
   performance_tracking:
