@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Chunk API
+  description: API for chunk operations
+  version: 1.0.0
+paths:
+  /chunks/{chunkId}:
+    get:
+      summary: Get a chunk by ID
+      parameters:
+        - in: path
+          name: chunkId
+          schema:
+            type: integer
+          required: true
+          description: ID of the chunk to retrieve
+      responses:
+        '200':
+          description: Chunk retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chunk'
+        '404':
+          description: Chunk not found
+  /chunks:
+    post:
+      summary: Create a new chunk
+      requestBody:
+        description: Chunk data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chunk'
+        required: true
+      responses:
+        '201':
+          description: Chunk created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chunk'
+components:
+  schemas:
+    Chunk:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the chunk
+        data:
+          type: string
+          description: Chunk data

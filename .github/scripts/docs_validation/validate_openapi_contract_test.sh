@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# Implement OpenAPI contract test validation logic here
-echo "OpenAPI contract test validation not implemented"
+# Validate OpenAPI contract test
+dart test/contract_tests/chunk_api_contract_test.dart

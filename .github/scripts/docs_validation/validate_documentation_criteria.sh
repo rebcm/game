@@ -28,3 +28,6 @@ check_documentation() {
 for file in docs/**/*.md; do
   check_documentation "$file"
 done
+
+# Validate OpenAPI contract
+bash .github/scripts/docs_validation/validate_openapi_contract_test.sh
