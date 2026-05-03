@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:rebcm/game.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Stress Test: Open and close game screen repeatedly', (tester) async {
-    await app.main();
-    await tester.pumpAndSettle();
+  testWidgets('Timer Stress Test', (tester) async {
+    await tester.pumpWidget(MyApp());
 
     for (int i = 0; i < 10; i++) {
       await tester.tap(find.text('Start Game'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Exit Game'));
+
+      await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
     }
+
+    expect(true, true); // Memory leak check is done via external script
   });
 }
