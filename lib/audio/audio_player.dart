@@ -1,10 +1,20 @@
-import 'package:just_audio/just_audio.dart';
-
 class AudioPlayer {
-  final _player = AudioPlayer();
+  bool _isPlaying = false;
 
-  Future<void> play(String assetPath) async {
-    await _player.setAsset(assetPath);
-    _player.play();
+  bool get isPlaying => _isPlaying;
+
+  Future<void> play(String audioFile) async {
+    // Implement audio playback logic here
+    _isPlaying = true;
+  }
+
+  Future<void> pause() async {
+    // Implement audio pause logic here
+    _isPlaying = false;
+  }
+
+  Future<void> resume() async {
+    // Implement audio resume logic here
+    _isPlaying = true;
   }
 }
