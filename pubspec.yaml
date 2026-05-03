@@ -9,6 +9,9 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  audio_session_test:
+    path: ./test/integration/audio_session_test/audio_session_test.dart
+  audio_session: ^0.1.14
   ui_integration_test:
     path: ./test/integration/ui_integration_test/ui_integracao_test.dart
   rebuild_performance_test:
