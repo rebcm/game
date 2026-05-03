@@ -64,3 +64,5 @@ supportedLocales:
 
   assets:
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+
+  test/integration_tests/ux_tests/cena_3d_rebuild_test/cena_3d_rebuild_test.dart:
