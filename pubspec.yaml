@@ -23,3 +23,7 @@ flutter:
   assets:
     - assets/
     - key.jks
+
+  # Remove or comment the line below as we're handling key.jks securely via GitHub Secrets
+  # assets:
+  #   - key.jks
