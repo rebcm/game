@@ -6,11 +6,11 @@ void main() {
   testWidgets('DicasService mostra dica corretamente', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Builder(
-          builder: (context) {
+        home: Scaffold(
+          body: Builder(builder: (context) {
             DicasService().mostrarDica(context, 'Teste');
             return Container();
-          },
+          }),
         ),
       ),
     );

@@ -10,4 +10,8 @@ class DicaWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return child;
   }
+
+  void mostrarDica(String mensagem) {
+    DicasService().mostrarDica(context, mensagem);
+  }
 }
