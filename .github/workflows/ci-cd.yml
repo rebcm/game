@@ -1,9 +1,8 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 23 * * *'
 
 jobs:
   build-and-deploy:
@@ -17,18 +16,16 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Run Smoke Test
-        run: |
-          flutter pub get
-          flutter test integration_test/smoke_test.dart
+      - name: Get dependencies
+        run: flutter pub get
 
-      - name: Build and Deploy
-        run: |
-          # existing build and deploy commands
-          echo "Build and deploy steps"
+      - name: Analyze code
+        run: dart analyze
 
-      - name: Notify on Failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Run tests
+        run: flutter test
+
+      - name: Build and deploy
+        run: |
+          echo "Building and deploying..."
+          # Add your build and deploy commands here
