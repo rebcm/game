@@ -1,35 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:game/main.dart';
-import 'package:game/utils/locale.dart';
+import 'package:game/utils/locale_keys.dart';
+import 'package:intl/intl.dart';
 
 void main() {
-  final locale = GameLocale.supportedLocales.first;
-  final strings = <String>[];
+  final buffer = StringBuffer();
+  final locale = Locale('pt', 'BR');
+  final messages = LocaleKeys.instance.translationsFor(locale);
 
-  void extractStrings(BuildContext context) {
-    final dicas = Dicas.of(context);
-    strings.addAll([
-      dicas.dica1,
-      dicas.dica2,
-      // Add more dica properties as needed
-    ]);
-  }
+  messages.forEach((key, value) {
+    if (key.startsWith('dica_')) {
+      buffer.write('$key|$value\n');
+    }
+  });
 
-  runApp(
-    MaterialApp(
-      locale: locale,
-      home: Builder(
-        builder: (context) => Scaffold(
-          body: Center(
-            child: TextButton(
-              onPressed: () => extractStrings(context),
-              child: Text('Extract Dicas Strings'),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  strings.forEach((string) => print(string));
+  print(buffer.toString());
 }
