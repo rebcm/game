@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.5
+  flutter_i18n: ^0.32.0
 
 dev_dependencies:
   flutter_driver:
@@ -36,16 +37,9 @@ flutter:
     - docs/flutter_sdk_version.md
     - test/integration/documentacao/documentacao_test.dart
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
-
-  test/integration/flutter_doctor/flutter_doctor_test.dart:
-
-  test/integration/dicas_ui_test/dicas_ui_test.dart:
-
-  assets:
-    - docs/dicas_construcao/conteudo_dicas.md
-    - docs/dicas_construcao/conteudo_dicas_formatado.md
-
-  test/integration/latency_benchmark_test/latency_benchmark_test.dart:
-
-
-  test/integration/documentacao/documentacao_test.dart:
+    - docs/i18n/pt-BR/dicas_construcao/conteudo_dicas.md
+    - docs/i18n/en-US/dicas_construcao/conteudo_dicas.md
+    - docs/i18n/pt-BR/bloco_documentation.json
+    - docs/i18n/en-US/bloco_documentation.json
+    - docs/i18n/pt-BR/seo/palavras-chave.md
+    - docs/i18n/en-US/seo/palavras-chave.md
