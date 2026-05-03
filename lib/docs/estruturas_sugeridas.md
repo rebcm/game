@@ -1,13 +1,13 @@
 # Estruturas Sugeridas
 
-Este documento fornece orientações sobre as estruturas sugeridas para o jogo.
+Este documento apresenta estruturas sugeridas para o jogo.
 
-## Conteúdo
+## Estruturas
 
-- Descrição das estruturas sugeridas.
-- Exemplos de uso.
+1. **Castelo**: Uma estrutura complexa com torres e muralhas.
+2. **Casa**: Uma estrutura simples para habitação.
 
-## Revisão
+## Dicas
 
-- Verificar se as estruturas sugeridas estão de acordo com as regras do projeto.
-- Garantir que as descrições sejam claras e precisas.
+- Use blocos de pedra para construir estruturas duráveis.
+- Use blocos de madeira para construir estruturas mais leves.

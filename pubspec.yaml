@@ -16,3 +16,4 @@ openapi_client:
 flutter:
   assets:
     - assets/translations/
+    - lib/docs/

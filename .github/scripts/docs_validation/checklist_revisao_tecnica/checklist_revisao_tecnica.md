@@ -1,13 +1,13 @@
 # Checklist de Revisão Técnica
 
-## Revisão Ortográfica e Técnica do Conteúdo
-
-- [ ] Verificar ortografia e gramática no conteúdo adicionado.
-- [ ] Garantir que as estruturas sugeridas sejam tecnicamente precisas para o jogador.
-- [ ] Validar que o conteúdo está de acordo com as regras do projeto.
-
 ## Critérios de Aceitação
 
-- [ ] O conteúdo não contém erros ortográficos ou gramaticais.
-- [ ] As estruturas sugeridas são tecnicamente precisas.
-- [ ] O conteúdo segue as regras do projeto definidas em AGENTS.md.
+1. **Precisão Técnica**: O conteúdo deve ser tecnicamente preciso.
+2. **Clareza**: O conteúdo deve ser claro e fácil de entender.
+3. **Consistência**: O conteúdo deve ser consistente com o restante do jogo.
+
+## Itens a Verificar
+
+- [ ] Verificar a precisão técnica das estruturas sugeridas.
+- [ ] Verificar a clareza das instruções.
+- [ ] Verificar a consistência do conteúdo com o restante do jogo.
