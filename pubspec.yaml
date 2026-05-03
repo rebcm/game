@@ -66,3 +66,6 @@ flutter:
 
   assets:
     - assets/audio/optimized/sfx/block_break.mp3
+
+  test:
+    path: ./test/arquitetura_test.dart
