@@ -37,3 +37,6 @@ flutter:
   e2e_pipeline_test:
     path: test/integration_test/e2e_test/e2e_pipeline_test.dart
 
+
+  chunking_edge_cases_test:
+    path: test/integration_test/chunking_test/chunking_edge_cases_test.dart
