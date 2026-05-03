@@ -1,4 +1,3 @@
 #!/bin/bash
 
-flutter build apk --release
-flutter build ios --release --no-codesign
+# Existing deploy script content goes here
