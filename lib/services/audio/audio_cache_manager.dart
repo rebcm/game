@@ -3,9 +3,9 @@ import 'package:just_audio/just_audio.dart';
 
 class AudioCacheManager {
   final AudioPlayer _audioPlayer;
-  final Map<String, ByteData> _cache = {};
+  final Map<String, ByteData> _cache;
 
-  AudioCacheManager(this._audioPlayer);
+  AudioCacheManager(this._audioPlayer) : _cache = {};
 
   Future<void> loadAsset(String assetPath) async {
     if (!_cache.containsKey(assetPath)) {
@@ -30,7 +30,7 @@ class AudioCacheManager {
 class ByteDataSource extends StreamAudioSource {
   final List<int> bytes;
 
-  ByteDataSource(this.bytes) : super(tag: 'ByteDataSource');
+  ByteDataSource(this.bytes);
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {

@@ -4,13 +4,19 @@ import 'package:rebcm/services/audio/audio_cache_manager.dart';
 
 class CustomAudioService {
   final AudioPlayer _audioPlayer;
-  late AudioCacheManager _audioCacheManager;
+  late AudioCacheManager _cacheManager;
 
-  CustomAudioService(this._audioPlayer) {
-    _audioCacheManager = AudioCacheManager(_audioPlayer);
+  CustomAudioService() : _audioPlayer = AudioPlayer() {
+    _cacheManager = AudioCacheManager(_audioPlayer);
+  }
+
+  Future<void> preloadAudioAssets(List<String> assetPaths) async {
+    for (var path in assetPaths) {
+      await _cacheManager.loadAsset(path);
+    }
   }
 
   Future<void> playSound(String assetPath) async {
-    await _audioCacheManager.playCachedAsset(assetPath);
+    await _cacheManager.playCachedAsset(assetPath);
   }
 }

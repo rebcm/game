@@ -3,21 +3,20 @@ import 'package:just_audio/just_audio.dart';
 import 'package:rebcm/services/audio/audio_cache_manager.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('AudioCacheManager', () {
-    late AudioPlayer _audioPlayer;
-    late AudioCacheManager _audioCacheManager;
+    late AudioPlayer audioPlayer;
+    late AudioCacheManager cacheManager;
 
     setUp(() {
-      _audioPlayer = AudioPlayer();
-      _audioCacheManager = AudioCacheManager(_audioPlayer);
+      audioPlayer = AudioPlayer();
+      cacheManager = AudioCacheManager(audioPlayer);
     });
 
     test('loads and plays cached asset', () async {
-      await _audioCacheManager.loadAsset('assets/audio/optimized/sfx/test.mp3');
-      await _audioCacheManager.playCachedAsset('assets/audio/optimized/sfx/test.mp3');
-      expect(_audioPlayer.playing, true);
+      const assetPath = 'assets/audio/optimized/sfx/sound.mp3';
+      await cacheManager.loadAsset(assetPath);
+      await cacheManager.playCachedAsset(assetPath);
+      expect(audioPlayer.playing, true);
     });
   });
 }

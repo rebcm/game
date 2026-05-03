@@ -74,3 +74,5 @@ dependency_overrides:
 
   integration_test/onboarding_test/onboarding_test.dart:
     - assets/docs/checklists/validacao-onboarding-checklist.md
+
+  uses-material-design: true
