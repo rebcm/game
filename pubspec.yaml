@@ -28,6 +28,7 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.3
+  ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
   leak_tracker_flutter_testing: ^0.5.0
@@ -53,7 +54,3 @@ flutter:
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
     - assets/blocos/
-
-  leak_tracker: ^0.5.0
-
-  json_annotation: ^4.6.0
