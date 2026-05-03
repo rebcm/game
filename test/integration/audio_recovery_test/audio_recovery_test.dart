@@ -1,22 +1,34 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('Audio Recovery Test', () {
-    testWidgets('should recover audio after connection loss', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+    late FlutterDriver driver;
+
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
+
+    tearDownAll(() async {
+      await driver.close();
+    });
+
+    test('test audio buffer behavior and reconnection logic', () async {
+      final audioBufferStatus = await driver.getText(find.byValueKey('audioBufferStatus'));
+      expect(audioBufferStatus, 'Buffering...');
 
       // Simulate connection loss
-      // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.detached);
-      // await tester.pumpAndSettle();
+      await driver.tap(find.byValueKey('simulateConnectionLoss'));
+      await Future.delayed(Duration(seconds: 2));
 
-      // Verify audio buffer behavior and reconnection logic
-      // expect(find.text('Audio recovered'), findsOneWidget);
-      // await tester.pumpAndSettle();
+      final reconnectionStatus = await driver.getText(find.byValueKey('reconnectionStatus'));
+      expect(reconnectionStatus, 'Reconnecting...');
+
+      // Wait for reconnection
+      await Future.delayed(Duration(seconds: 5));
+
+      final audioBufferStatusAfterReconnection = await driver.getText(find.byValueKey('audioBufferStatus'));
+      expect(audioBufferStatusAfterReconnection, 'Buffering...');
     });
   });
 }
