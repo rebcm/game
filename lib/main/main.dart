@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/main/app.dart';
-import 'package:rebcm/providers/music_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/game/rebeca_game.dart';
+import 'package:rebcm/input/input_controller.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final musicProvider = MusicProvider();
-  await musicProvider.init();
-  runApp(MyApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => InputController()),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Rebeca Game',
+      home: RebecaGame(),
+    );
+  }
 }

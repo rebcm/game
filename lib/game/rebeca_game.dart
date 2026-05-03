@@ -1,28 +1,32 @@
 import 'package:flame/game.dart';
-import 'package:rebcm/lighting/sun_light.dart';
-import 'package:rebcm/lighting/soft_shadows.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rebcm/input/input_controller.dart';
 
-class RebecaGame extends FlameGame {
-  late SunLight _sunLight;
-  late SoftShadows _softShadows;
+class RebecaGame extends FlameGame with PanZoomListener {
+  late InputController _inputController;
 
   @override
   Future<void> onLoad() async {
-    _sunLight = SunLight();
-    _softShadows = SoftShadows();
+    _inputController = InputController();
+    super.onLoad();
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-    _sunLight.update(dt);
-    _softShadows.update(dt);
+  void onPanUpdate(DragUpdateDetails details) {
+    _inputController.updateInput(details.delta.dx, details.delta.dy);
+    super.onPanUpdate(details);
   }
 
   @override
   void render(Canvas canvas) {
+    // Use _inputController.normalizedX and _inputController.normalizedY for rendering
     super.render(canvas);
-    _sunLight.render(canvas);
-    _softShadows.render(canvas, _sunLight._direction);
+  }
+
+  @override
+  void update(double dt) {
+    // Use _inputController.normalizedX and _inputController.normalizedY for updating game state
+    super.update(dt);
   }
 }
