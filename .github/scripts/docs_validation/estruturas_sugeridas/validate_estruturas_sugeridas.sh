@@ -1,14 +1,20 @@
 #!/bin/bash
 
-# Lista de estruturas sugeridas que precisam de templates
-ESTRUTURAS_SUGERIDAS=("castelo" "cabana" "ponte" "labirinto")
+# Validate estruturas sugeridas documentation
+echo "Validating estruturas sugeridas documentation..."
 
-# Verifica se os templates existem
-for estrutura in "${ESTRUTURAS_SUGERIDAS[@]}"; do
-  if [ ! -f "assets/estruturas_sugeridas/$estrutura.json" ]; then
-    echo "Erro: Template para '$estrutura' não encontrado."
+# Check if estruturas_sugeridas directory exists
+if [ ! -d "assets/estruturas_sugeridas" ]; then
+  echo "Error: assets/estruturas_sugeridas directory does not exist."
+  exit 1
+fi
+
+# Check if estruturas_sugeridas files are valid
+for file in assets/estruturas_sugeridas/*.json; do
+  if ! jq -e . >/dev/null 2>&1 <"$file"; then
+    echo "Error: $file is not a valid JSON file."
     exit 1
   fi
 done
 
-echo "Todos os templates de estruturas sugeridas estão presentes."
+echo "Estruturas sugeridas documentation is valid."

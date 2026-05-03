@@ -1,0 +1,14 @@
+{
+  "nome": "Exemplo de Estrutura",
+  "descricao": "Descrição da estrutura exemplo",
+  "blocos": [
+    {
+      "tipo": "bloco1",
+      "quantidade": 5
+    },
+    {
+      "tipo": "bloco2",
+      "quantidade": 3
+    }
+  ]
+}
