@@ -3,10 +3,14 @@
 # Exit on error
 set -e
 
-# Flutter build command for web
-flutter config --enable-web
+# Flutter clean
+flutter clean
+
+# Flutter pub get
+flutter pub get
+
+# Build the app
 flutter build web
 
-# Deploy to GitHub Pages or other hosting services
-# This is a placeholder; adjust according to your actual deployment strategy
-echo "Deploying to hosting service..."
+# Deploy to GitHub Pages or other hosting platforms
+# This step may vary based on the hosting platform
