@@ -64,3 +64,5 @@ flutter:
 
   assets:
     - assets/animacoes/rebeca/idle.json
+
+  test/audio_edge_cases/audio_output_test.dart
