@@ -54,3 +54,6 @@ supportedLocales:
 
   integration_test:
     path: test/integration_tests/audio_tests
+
+  assets:
+    - docs/mapeamento_estruturas_sugeridas.md

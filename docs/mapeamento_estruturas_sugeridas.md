@@ -2,11 +2,22 @@
 
 Este documento lista as estruturas específicas do jogo que precisam de templates para garantir a cobertura de todos os cenários essenciais ao jogador.
 
-## Estruturas Identificadas
+## Estruturas Essenciais
 
-1. **Blocos Voxel**: Templates para diferentes tipos de blocos voxel.
-2. **Estruturas Pré-fabricadas**: Templates para estruturas comuns como casas, pontes, etc.
+1. **Blocos Básicos**: Templates para blocos fundamentais do jogo.
+2. **Estruturas Pré-concebidas**: Templates para estruturas que podem ser facilmente construídas pelo jogador.
+3. **Exemplos de Construção**: Templates que demonstram técnicas de construção avançadas.
 
 ## Implementação
 
-Para cada estrutura identificada, será criado um template correspondente.
+Para implementar esses templates, é necessário criar novos assets e integrá-los ao jogo.
+
+### Passos
+
+1. Criar os templates em formato de asset.
+2. Adicionar os assets ao jogo.
+3. Integrar os templates à lógica do jogo.
+
+## Validação
+
+A validação será feita através do script `./.github/scripts/docs_validation/mapeamento_estruturas_sugeridas/validate_mapeamento_estruturas_sugeridas.sh`.

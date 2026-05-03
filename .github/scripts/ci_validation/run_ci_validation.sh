@@ -12,3 +12,6 @@
 ./.github/scripts/ci_validation/run_audio_edge_cases_test.sh
 ./.github/scripts/ci_validation/run_audio_edge_cases_test.sh
 ./.github/scripts/ci_validation/run_audio_edge_cases_test.sh
+
+# Run mapeamento estruturas sugeridas validation
+./.github/scripts/docs_validation/mapeamento_estruturas_sugeridas/validate_mapeamento_estruturas_sugeridas.sh
