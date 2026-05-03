@@ -43,3 +43,5 @@ flutter:
     - docs/flutter_sdk_version.md
     - test/integration/documentacao/documentacao_test.dart
     - docs/dicas_construcao/conteudo_dicas_formatado.md
+
+  test/integration/documentacao/documentacao_test.dart:
