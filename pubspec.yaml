@@ -1,4 +1,8 @@
 flutter:
+    - docs/swagger_endpoints.md 
+    - docs/swagger_ui.html
+    - docs/swagger_endpoints.md 
+    - docs/swagger_ui.html
   assets:
     - assets/locale/
     - docs/biomas.md
@@ -13,6 +17,8 @@ localizationsDelegates:
   - GlobalWidgetsLocalizations.delegate
 
 supportedLocales:
+    - test/swagger_validation/swagger_validation_test.dart
+    - test/swagger_validation/swagger_validation_test.dart
   - en
   - de
   - fr
