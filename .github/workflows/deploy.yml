@@ -1,40 +1,33 @@
-name: Deploy to Cloudflare Pages
+name: Deploy Construcao Criativa
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 23 * * *'
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y npm
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.10'
-          channel: 'stable'
+          flutter-version: '3.24.0'
+          channel: stable
+          cache: true
 
-      - name: Install Wrangler
-        run: |
-          npm install -g wrangler
+      - name: Instalar dependencias
+        run: flutter pub get
 
       - name: Build Flutter Web
-        run: |
-          flutter config --enable-web
-          flutter pub get
-          flutter build web --release
+        run: flutter build web --release --web-renderer canvaskit --base-href /
 
-      - name: Deploy to Cloudflare Pages
-        run: |
-          wrangler pages deploy build/web --project-name=game --token=${CLOUDFLARE_API_TOKEN}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Deploy Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=construcao-criativa --commit-dirty=true
