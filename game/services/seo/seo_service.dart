@@ -1,20 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-class SeoService {
-  static const List<String> _palavrasChavePrincipais = [
-    'Flutter',
-    'Voxel',
-    'Modo Criativo',
-    'Desenvolvimento de Jogos',
-  ];
+class SeoService with ChangeNotifier {
+  List<String> _keywords = [];
 
-  static const List<String> _palavrasChaveSecundarias = [
-    'Jogo de Blocos',
-    'Criatividade',
-    'Construção',
-    'Desenvolvimento de Jogos com Flutter',
-  ];
+  List<String> get keywords => _keywords;
 
-  List<String> get palavrasChavePrincipais => _palavrasChavePrincipais;
-  List<String> get palavrasChaveSecundarias => _palavrasChaveSecundarias;
+  void updateKeywords(List<String> newKeywords) {
+    _keywords = newKeywords;
+    notifyListeners();
+  }
+
+  void addKeyword(String keyword) {
+    if (!_keywords.contains(keyword)) {
+      _keywords.add(keyword);
+      notifyListeners();
+    }
+  }
+
+  void removeKeyword(String keyword) {
+    if (_keywords.contains(keyword)) {
+      _keywords.remove(keyword);
+      notifyListeners();
+    }
+  }
 }
