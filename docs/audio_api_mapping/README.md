@@ -1,38 +1,39 @@
 # Mapeamento de APIs de Áudio por Plataforma
 
-Este documento visa mapear as diferenças de implementação de áudio entre Flutter Web (Web Audio API), Android (AudioTrack/MediaPlayer) e iOS (AVAudioPlayer) para as versões listadas na matriz.
+Este documento visa documentar as diferenças de implementação de áudio entre as plataformas suportadas pelo jogo.
 
-## Introdução
+## Plataformas Suportadas
 
-O jogo é desenvolvido em Flutter e precisa suportar diferentes plataformas, incluindo Web, Android e iOS. Cada plataforma tem sua própria API de áudio, o que pode levar a diferenças na implementação.
+* Flutter Web (Web Audio API)
+* Android (AudioTrack/MediaPlayer)
+* iOS (AVAudioPlayer)
 
-## Mapeamento de APIs
+## Implementação de Áudio por Plataforma
 
-### Flutter Web (Web Audio API)
+### Flutter Web
 
 * Utiliza a Web Audio API para reprodução de áudio.
 * Suporta formatos de áudio como MP3, WAV, etc.
 
-### Android (AudioTrack/MediaPlayer)
+### Android
 
-* Utiliza AudioTrack para reprodução de áudio em baixa latência.
-* Utiliza MediaPlayer para reprodução de áudio em geral.
+* Utiliza a classe `AudioTrack` para reprodução de áudio em baixa latência.
+* Utiliza a classe `MediaPlayer` para reprodução de áudio em geral.
 * Suporta formatos de áudio como MP3, WAV, etc.
 
-### iOS (AVAudioPlayer)
+### iOS
 
-* Utiliza AVAudioPlayer para reprodução de áudio.
+* Utiliza a classe `AVAudioPlayer` para reprodução de áudio.
 * Suporta formatos de áudio como MP3, WAV, etc.
 
 ## Diferenças de Implementação
 
-| Plataforma | API de Áudio | Formatos Suportados | Latência |
-| --- | --- | --- | --- |
-| Flutter Web | Web Audio API | MP3, WAV, etc. | Variável |
-| Android | AudioTrack/MediaPlayer | MP3, WAV, etc. | Baixa (AudioTrack) |
-| iOS | AVAudioPlayer | MP3, WAV, etc. | Variável |
+| Plataforma | API de Áudio | Formatos Suportados |
+| --- | --- | --- |
+| Flutter Web | Web Audio API | MP3, WAV, etc. |
+| Android | AudioTrack/MediaPlayer | MP3, WAV, etc. |
+| iOS | AVAudioPlayer | MP3, WAV, etc. |
 
 ## Conclusão
 
-O mapeamento das APIs de áudio por plataforma é fundamental para entender as diferenças de implementação e garantir que o jogo seja compatível com diferentes plataformas.
-
+As diferenças de implementação de áudio entre as plataformas suportadas são significativas. É importante considerar essas diferenças ao desenvolver o jogo para garantir uma experiência de áudio consistente em todas as plataformas.

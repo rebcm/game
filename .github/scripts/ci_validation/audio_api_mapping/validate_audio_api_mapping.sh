@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Valida se o mapeamento de APIs de áudio está atualizado
-
-# Verifica se o arquivo README.md existe
+# Verifica se o arquivo README.md existe no diretório docs/audio_api_mapping
 if [ ! -f ./docs/audio_api_mapping/README.md ]; then
-  echo "Erro: Arquivo README.md não encontrado"
+  echo "Erro: Arquivo README.md não encontrado no diretório docs/audio_api_mapping"
   exit 1
 fi
 
@@ -14,6 +12,4 @@ if ! grep -q "Mapeamento de APIs de Áudio por Plataforma" ./docs/audio_api_mapp
   exit 1
 fi
 
-echo "Mapeamento de APIs de áudio validado com sucesso"
-exit 0
-
+echo "Validação do mapeamento de APIs de áudio bem-sucedida"
