@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Rebeca Game', () {
+  group('IO Latency Metrics Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,18 +11,24 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        await driver!.close();
+        driver?.close();
       }
     });
 
-    test('measure loading time', () async {
-      final loadingTime = await driver!.measure(
-        () async {
-          await driver!.waitFor(find.text('Rebeca Game'));
-        },
-      );
-      print('Loading time: $loadingTime');
-      await File('test_driver/loading_time.txt').writeAsString(loadingTime.toString());
+    test('measure cold start latency', () async {
+      final timeline = await driver?.traceAction(() async {
+        await driver?.requestData('start');
+      });
+      final summary = TimelineSummary.summarize(timeline!);
+      summary.writeSummaryToFile('cold_start_latency', pretty: true);
+    });
+
+    test('measure cached start latency', () async {
+      final timeline = await driver?.traceAction(() async {
+        await driver?.requestData('start');
+      });
+      final summary = TimelineSummary.summarize(timeline!);
+      summary.writeSummaryToFile('cached_start_latency', pretty: true);
     });
   });
 }
