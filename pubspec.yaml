@@ -24,3 +24,5 @@ tests:
   - test/golden_tests/tela_dicas_golden_responsividade_test.dart
 
   swagger_generator: ^1.0.0
+
+  - docs/blocos/

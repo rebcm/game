@@ -13,3 +13,8 @@ linter:
     - sort_child_properties_last
     - unnecessary_lambdas
     - unnecessary_null_checks
+analyzer:
+  exclude:
+    - 'test/**'
+    - '**.g.dart'
+    - '**.freezed.dart'
