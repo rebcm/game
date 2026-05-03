@@ -1,0 +1,32 @@
+name: Build Notification
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run build
+        run: flutter build apk
+
+      - name: Validate build
+        run: ./.github/scripts/ci_validation/build_failure_notification/validate_build.sh
+
+      - name: Send notification if build fails
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: ./.github/scripts/ci_validation/build_failure_notification/send_notification.sh
