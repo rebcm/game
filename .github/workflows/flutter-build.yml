@@ -12,24 +12,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Decode secrets
+      - name: Decode Keystores
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
-          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-          echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
-          echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
+          KEY_JKS_BASE64: ${{ secrets.KEY_JKS_BASE64 }}
+          KEY_P12_BASE64: ${{ secrets.KEY_P12_BASE64 }}
+        run: .github/scripts/decode_keystores.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
 
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Build Flutter
-        run: |
-          flutter pub get
-          flutter build apk --release --keystore=keystore.jks --store-password=$KEYSTORE_PASSWORD --key-alias=$KEY_ALIAS --alias-password=$KEY_PASSWORD
+        run: flutter build apk --release
+
+      - name: Build IPA
+        run: flutter build ipa --release
