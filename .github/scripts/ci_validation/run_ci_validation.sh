@@ -9,3 +9,5 @@ run_ci_validation() {
 }
 
 run_ci_validation
+
+./.github/scripts/ci_validation/run_ui_integration_test.sh
