@@ -2,16 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
     <key>NSMicrophoneUsageDescription</key>
-    <string>O aplicativo precisa acessar o microfone para funcionar corretamente.</string>
-
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-
-    <!-- Outros campos do Info.plist -->
-
+    <string>O jogo Rebeca utiliza o microfone para permitir que você grave áudios personalizados diretamente no jogo, enriquecendo sua experiência criativa.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>O jogo Rebeca utiliza a câmera para permitir que você importe imagens e as utilize como inspiração ou referência para suas criações.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>O jogo Rebeca acessa sua biblioteca de fotos para permitir que você importe imagens e as utilize em suas criações.</string>
 </dict>
 </plist>

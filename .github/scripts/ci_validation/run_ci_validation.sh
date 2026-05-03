@@ -15,3 +15,6 @@
 
 ./.github/scripts/ci_validation/run_ux_dicas_tests.sh
 ./.github/scripts/ci_validation/documentacao_test/run_documentacao_test.sh
+./.github/scripts/ci_validation/microfone_usage_description_validation/validate_microfone_usage_description.sh
+./.github/scripts/ci_validation/camera_usage_description_validation/validate_camera_usage_description.sh
+./.github/scripts/ci_validation/photo_library_usage_description_validation/validate_photo_library_usage_description.sh
