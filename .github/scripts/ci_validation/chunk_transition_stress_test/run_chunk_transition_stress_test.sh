@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/integration_test/performance_test/chunk_transition_test.dart --target=test/integration_test/performance_test/chunk_transition_test.dart
+flutter drive --target=test_driver/app.dart --driver=test_driver/chunk_transition_stress_test.dart
