@@ -1,17 +1,39 @@
 openapi: 3.0.0
 info:
-  title: Game API
+  title: Rebeca's Game API
   version: 1.0.0
 paths:
-  /data:
+  /blocks:
     get:
+      summary: Get all blocks
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: string
+        '200':
+          description: List of blocks
+    post:
+      summary: Create a new block
+      responses:
+        '201':
+          description: Block created
+  /blocks/{id}:
+    put:
+      summary: Update a block
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Block updated
+    delete:
+      summary: Delete a block
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Block deleted

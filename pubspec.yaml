@@ -23,3 +23,5 @@ flutter:
 
   assets:
     - assets/tips/
+  assets:
+    - assets/swagger.yaml
