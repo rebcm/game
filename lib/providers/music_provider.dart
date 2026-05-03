@@ -9,8 +9,13 @@ class MusicProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> play() async {
-    await _musicPlayer.play();
+  Future<void> playSequential() async {
+    await _musicPlayer.playSequential();
+    notifyListeners();
+  }
+
+  Future<void> playShuffle() async {
+    await _musicPlayer.playShuffle();
     notifyListeners();
   }
 
@@ -24,19 +29,13 @@ class MusicProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> next() async {
-    await _musicPlayer.next();
-    notifyListeners();
+  Duration? getCurrentPosition() {
+    return _musicPlayer.getCurrentPosition();
   }
 
-  Future<void> previous() async {
-    await _musicPlayer.previous();
-    notifyListeners();
+  Duration? getDuration() {
+    return _musicPlayer.getDuration();
   }
-
-  Duration get currentPosition => _musicPlayer.currentPosition;
-
-  Duration get duration => _musicPlayer.duration;
 
   bool get playing => _musicPlayer.playing;
 }

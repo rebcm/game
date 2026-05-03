@@ -4,39 +4,65 @@ import 'package:audio_service/audio_service.dart';
 class MusicPlayer {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final List<String> _playlist = [
-    'assets/audio/optimized/music/music1.mp3',
-    'assets/audio/optimized/music/music2.mp3',
-    'assets/audio/optimized/music/music3.mp3',
-    'assets/audio/optimized/music/music4.mp3',
+    'assets/audio/optimized/music/placeholder_music1.mp3',
+    'assets/audio/optimized/music/placeholder_music2.mp3',
+    'assets/audio/optimized/music/placeholder_music3.mp3',
+    'assets/audio/optimized/music/placeholder_music.mp3',
   ];
 
-  List<AudioSource> get _audioSources => _playlist
-      .map((path) => AudioSource.uri(Uri.parse(path)))
-      .toList();
-
-  ConcatenatingAudioSource get _concatenatingAudioSource =>
-      ConcatenatingAudioSource(_audioSources);
-
   Future<void> init() async {
-    await _audioPlayer.setAudioSource(_concatenatingAudioSource);
-    _audioPlayer.setLoopMode(LoopMode.all);
-    _audioPlayer.setShuffleModeEnabled(true);
-    await _audioPlayer.shuffle();
+    await _audioPlayer.setLoopMode(LoopMode.one);
+    await _shufflePlaylist();
+    await _play();
   }
 
-  Future<void> play() async => await _audioPlayer.play();
+  Future<void> _shufflePlaylist() async {
+    final shuffled = [..._playlist]..shuffle();
+    await _audioPlayer.setAsset(shuffled.first);
+    await _audioPlayer.setLoopMode(LoopMode.one);
+    _audioPlayer.playing
+        ? await _audioPlayer.stop()
+        : await _audioPlayer.setAsset(shuffled.first);
+    await _audioPlayer.play();
+    for (var i = 1; i < shuffled.length; i++) {
+      await _audioPlayer.setAsset(shuffled[i]);
+      await _audioPlayer.play();
+      await Future.delayed(Duration(milliseconds: _audioPlayer.duration!.inMilliseconds));
+    }
+  }
 
-  Future<void> pause() async => await _audioPlayer.pause();
+  Future<void> _play() async {
+    await _audioPlayer.play();
+  }
 
-  Future<void> stop() async => await _audioPlayer.stop();
+  Future<void> playSequential() async {
+    await _audioPlayer.setLoopMode(LoopMode.all);
+    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
+      children: _playlist.map((path) => AudioSource.asset(path)).toList(),
+    );
+    await _audioPlayer.setAudioSource(playlist);
+    await _play();
+  }
 
-  Future<void> next() async => await _audioPlayer.seekToNext();
+  Future<void> playShuffle() async {
+    await _shufflePlaylist();
+  }
 
-  Future<void> previous() async => await _audioPlayer.seekToPrevious();
+  Future<void> pause() async {
+    await _audioPlayer.pause();
+  }
 
-  Duration get currentPosition => _audioPlayer.position;
+  Future<void> stop() async {
+    await _audioPlayer.stop();
+  }
 
-  Duration get duration => _audioPlayer.duration ?? Duration.zero;
+  Duration? getCurrentPosition() {
+    return _audioPlayer.position;
+  }
+
+  Duration? getDuration() {
+    return _audioPlayer.duration;
+  }
 
   bool get playing => _audioPlayer.playing;
 }

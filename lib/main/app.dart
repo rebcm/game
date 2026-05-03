@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rebcm/providers/audio_provider.dart';
+import 'package:rebcm/providers/music_provider.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AudioProvider()),
+        ChangeNotifierProvider(create: (_) => MusicProvider()),
       ],
       child: MaterialApp(
         title: 'Rebeca\'s World',
