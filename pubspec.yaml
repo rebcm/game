@@ -37,6 +37,7 @@ flutter:
 
 scripts:
   build_and_test: flutter test && flutter build apk --debug
+  swagger_validate: bash .github/scripts/ci_validation/swagger_validation/validate_swagger.sh
 
   scripts:
     test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart
