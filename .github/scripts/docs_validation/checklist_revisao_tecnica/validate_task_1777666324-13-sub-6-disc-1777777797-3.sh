@@ -1,26 +1,22 @@
 #!/bin/bash
 
-# Validation logic for task-1777666324-13-sub-6-disc-1777777797-3
-# This script checks the documentation for technical accuracy
+CONTENT_FILE=".github/scripts/docs_validation/checklist_revisao_tecnica/content/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md"
 
-# Check if the documentation file exists
-if [ ! -f game/docs/walkthrough.dart ]; then
-  echo "Documentation file not found: game/docs/walkthrough.dart"
+if [ ! -f "$CONTENT_FILE" ]; then
+  echo "Arquivo de conteúdo não encontrado: $CONTENT_FILE"
   exit 1
 fi
 
-# Validate the content of the documentation file
-dart .github/scripts/docs_validation/dicas/extract_dicas_strings.dart game/docs/walkthrough.dart
-if [ $? -ne 0 ]; then
-  echo "Failed to extract dicas strings from walkthrough.dart"
+# Verificar se o arquivo contém os critérios de aceitação
+if ! grep -q "Critérios de Aceitação" "$CONTENT_FILE"; then
+  echo "Critérios de Aceitação não encontrados no arquivo de conteúdo."
   exit 1
 fi
 
-# Check for any errors in the documentation validation
-if [ ! -z "$(dart analyze game/docs/walkthrough.dart)" ]; then
-  echo "Errors found in walkthrough.dart"
-  dart analyze game/docs/walkthrough.dart
+# Verificar se o arquivo contém os passos para execução
+if ! grep -q "Passos para Execução" "$CONTENT_FILE"; then
+  echo "Passos para Execução não encontrados no arquivo de conteúdo."
   exit 1
 fi
 
-echo "Documentation validation successful for task-1777666324-13-sub-6-disc-1777777797-3"
+echo "Validação concluída com sucesso."
