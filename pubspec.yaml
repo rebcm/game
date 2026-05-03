@@ -68,3 +68,7 @@ flutter:
 
   assets:
     - assets/audio/optimized/sfx/
+
+  flutter:
+    assets:
+      - assets/audio/optimized/sfx/
