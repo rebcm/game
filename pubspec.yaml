@@ -44,3 +44,5 @@ flutter:
 
   latency_benchmark_test:
     path: test/latency_benchmark/latency_benchmark_test.dart
+  assets:
+    - docs/dicas_construcao/conteudo_dicas.md
