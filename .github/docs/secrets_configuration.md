@@ -1,13 +1,14 @@
-# Secrets Configuration
+# Secrets Configuration Documentation
 
-This document outlines the necessary secrets for the project's CI/CD pipeline.
+This document explains how to configure secrets for the project.
 
-## Required Secrets
+## Keystore Secrets
 
-* `CLOUDFLARE_API_TOKEN`: The API token for Cloudflare.
-* `CLOUDFLARE_ACCOUNT_ID`: The account ID for Cloudflare.
+To inject keystore secrets, follow these steps:
 
-## Configuration
+1. Set `KEYSTORE_FILE` and `KEYSTORE_PASSWORD` as secrets in the repository settings.
+2. Ensure the `validate_secrets.sh` script is executed during the CI pipeline.
 
-To configure these secrets, run the `configure_secrets.sh` script in the `.github/workflows` directory.
+## Additional Information
 
+Refer to the `validate_secrets.sh` script for implementation details.
