@@ -1,18 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:game/isolate/isolate_communication.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('latency benchmark test', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  testWidgets('Latency benchmark test', (tester) async {
+    final isolateCommunication = IsolateCommunication();
+    await isolateCommunication.initIsolate();
 
-    // Implement latency benchmark test logic here
-    // Measure the time taken for data transfer between Isolate and UI thread
-    // Use tester.binding.microtaskCount to wait for microtasks to complete
-    // Use DateTime.now().millisecondsSinceEpoch to measure time
+    final stopwatch = Stopwatch()..start();
+    await isolateCommunication.sendMessage('test_message');
+    final latency = stopwatch.elapsedMilliseconds;
+
+    print('Latency: $latency ms');
+    expect(latency, lessThan(100)); // adjust the threshold as needed
   });
 }
