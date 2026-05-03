@@ -1,17 +1,31 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'package:rebcm/models/chunk_request.dart';
+import 'dart:convert';
 
 class ChunkService {
-  Future<bool> validateChunkFile(File chunkFile) async {
-    try {
-      if (!chunkFile.path.endsWith('.bin')) return false;
-      final bytes = await chunkFile.readAsBytes();
-      if (bytes.isEmpty) return false;
-      // Implement actual validation logic here
-      // For demonstration, assume the first byte must be 0x01
-      return bytes.first == 0x01;
-    } catch (e) {
-      return false;
+  final http.Client _httpClient;
+  final Map<String, int> _requestTimestamps = {};
+
+  ChunkService(this._httpClient);
+
+  Future<void> fetchChunk(ChunkRequest request) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final key = '${request.x},${request.z}';
+    final lastRequest = _requestTimestamps[key];
+
+    if (lastRequest != null && now - lastRequest < 500) {
+      return;
+    }
+
+    _requestTimestamps[key] = now;
+
+    final response = await _httpClient.get(Uri.parse('https://example.com/chunks/${request.x}/${request.z}'));
+
+    if (response.statusCode == 200) {
+      // Process the chunk data
+      print('Chunk fetched: ${request.x}, ${request.z}');
+    } else {
+      print('Failed to fetch chunk: ${response.statusCode}');
     }
   }
 }

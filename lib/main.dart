@@ -1,36 +1,29 @@
-// Assuming main.dart already exists, we just need to add a key to the build button
 import 'package:flutter/material.dart';
-// ... other imports
+import 'package:http/http.dart' as http;
+import 'package:rebcm/services/chunk_service.dart';
+
+void main() {
+  final chunkService = ChunkService(http.Client());
+
+  runApp(MyApp(chunkService));
+}
 
 class MyApp extends StatelessWidget {
+  final ChunkService _chunkService;
+
+  const MyApp(this._chunkService, {Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s World',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rebeca\'s World'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          key: Key('build_button'), // Add key here
-          onPressed: () {
-            // Button press logic
-          },
-          child: Text('Build'),
+      home: Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              _chunkService.fetchChunk(const ChunkRequest(x: 0, z: 0));
+            },
+            child: const Text('Fetch Chunk'),
+          ),
         ),
       ),
     );
