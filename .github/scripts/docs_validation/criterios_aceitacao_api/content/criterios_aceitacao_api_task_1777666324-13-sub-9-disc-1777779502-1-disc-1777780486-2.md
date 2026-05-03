@@ -1,26 +1,28 @@
-# Critérios de Aceitação da API
+# Critérios de Aceitação para API
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a API do projeto Rebeca.
+Este documento define os critérios de aceitação para a API do jogo Rebeca.
 
 ## Endpoints Obrigatórios
 
 A API deve expor os seguintes endpoints:
 
-1. **/docs**: Retornar a documentação da API em formato JSON.
-2. **/healthcheck**: Retornar o status de saúde da API.
+1. `/api/v1/blocos`: Retorna a lista de blocos disponíveis no jogo.
+2. `/api/v1/biomas`: Retorna informações sobre o bioma atual.
+3. `/api/v1/rebeca`: Retorna informações sobre o personagem Rebeca.
 
 ## Renderização do UI do Swagger
 
-A API deve renderizar corretamente o UI do Swagger.
+A documentação da API deve ser renderizada corretamente no Swagger UI.
 
 ## Critérios de Aceitação
 
-1. A API deve ter os endpoints obrigatórios implementados.
-2. A API deve renderizar corretamente o UI do Swagger.
-3. A documentação da API deve estar atualizada e precisa.
+1. A API deve retornar os dados corretos para os endpoints obrigatórios.
+2. O Swagger UI deve renderizar a documentação da API corretamente.
+3. A API deve ser implementada de acordo com as especificações definidas neste documento.
 
 ## Validação
 
-A validação dos critérios de aceitação será feita através de testes automatizados.
+A validação da API será realizada através de testes automatizados.
+

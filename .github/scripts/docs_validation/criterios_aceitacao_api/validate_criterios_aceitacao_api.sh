@@ -1,15 +1,22 @@
 #!/bin/bash
 
-# Validar a existência do arquivo de critérios de aceitação da API
-if [ ! -f .github/scripts/docs_validation/criterios_aceitacao_api/content/criterios_aceitacao_api_task_1777666324-13-sub-9-disc-1777779502-1-disc-1777780486-2.md ]; then
-  echo "Arquivo de critérios de aceitação da API não encontrado"
+# Valida a documentação da API
+echo "Validando critérios de aceitação da API..."
+
+# Verifica se os endpoints obrigatórios estão documentados
+if ! grep -q "/api/v1/blocos" .github/scripts/docs_validation/criterios_aceitacao_api/content/criterios_aceitacao_api_task_1777666324-13-sub-9-disc-1777779502-1-disc-1777780486-2.md; then
+  echo "Erro: Endpoint /api/v1/blocos não documentado"
   exit 1
 fi
 
-# Validar a renderização do UI do Swagger
-# Implementar lógica para validar a renderização do UI do Swagger
+if ! grep -q "/api/v1/biomas" .github/scripts/docs_validation/criterios_aceitacao_api/content/criterios_aceitacao_api_task_1777666324-13-sub-9-disc-1777779502-1-disc-1777780486-2.md; then
+  echo "Erro: Endpoint /api/v1/biomas não documentado"
+  exit 1
+fi
 
-# Validar a existência dos endpoints obrigatórios
-# Implementar lógica para validar a existência dos endpoints obrigatórios
+if ! grep -q "/api/v1/rebeca" .github/scripts/docs_validation/criterios_aceitacao_api/content/criterios_aceitacao_api_task_1777666324-13-sub-9-disc-1777779502-1-disc-1777780486-2.md; then
+  echo "Erro: Endpoint /api/v1/rebeca não documentado"
+  exit 1
+fi
 
-echo "Critérios de aceitação da API validados com sucesso"
+echo "Critérios de aceitação da API validados com sucesso!"
