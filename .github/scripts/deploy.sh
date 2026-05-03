@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Deploy script implementation
-# This script should contain the logic to deploy the application
-# using Wrangler or any other deployment tool.
+# This script should contain the logic for deploying the application
+# via GitHub Actions or other CI/CD tools.
 
-# For demonstration purposes, it simply echoes a success message.
-echo "Deployment successful"
+# For now, it just echoes a message.
+echo "Deploying..."
+
+# TO DO: implement the actual deployment logic here.
