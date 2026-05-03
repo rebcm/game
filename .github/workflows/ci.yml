@@ -6,15 +6,11 @@ on:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Mask secrets
-        run: .github/scripts/ci_validation/secrets_masking/mask_secrets.sh
-
-      - name: Build and test
-        run: |
-          # Build and test commands here
+      - name: Run upload edge cases test
+        run: .github/scripts/ci_validation/upload_edge_cases_test/run_upload_edge_cases_test.sh
