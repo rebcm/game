@@ -1,19 +1,20 @@
-# Configuração de Recuperação de Chaves
+# Key Recovery Configuration
 
-## Visão Geral
+This document outlines the configuration for recovering the keystore used in the project.
 
-Este documento descreve a configuração para recuperação de chaves do projeto.
+## Steps to Recover Keystore
 
-## Variáveis de Ambiente
+1. Store the Base64 encoded keystore in a GitHub Secret named `KEYSTORE_BASE64`.
+2. Use the `recover_key.sh` script to decode the secret and recover the keystore.
 
-- `KEYSTORE_BASE64`: Chave Base64 codificada do keystore.
+## Script Details
 
-## Fluxo de Recuperação
+The `recover_key.sh` script is responsible for decoding the Base64 encoded keystore and saving it to a file named `keystore.jks`.
 
-1. A chave codificada em Base64 é armazenada como um segredo no GitHub.
-2. Durante o processo de CI/CD, o script `recover_key.sh` é executado.
-3. O script decodifica a chave Base64 e salva-a como um arquivo `keystore.jks`.
+### Environment Variables
 
-## Referências
+- `KEYSTORE_BASE64`: The Base64 encoded keystore.
 
-- [Script de Recuperação de Chaves](../scripts/key_recovery/recover_key.sh)
+### Usage
+
+The script is designed to be used in a CI/CD pipeline. It can be triggered manually or automatically based on the pipeline configuration.
