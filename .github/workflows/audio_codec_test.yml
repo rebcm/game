@@ -1,3 +1,5 @@
+    name: Validate Secrets
+    
 name: Audio Codec Test
 
 on:
@@ -5,6 +7,14 @@ on:
     branches:
       - main
 
+      validate-secrets:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+          - name: Validate Secrets
+            run: .github/scripts/validate_secrets.sh
+        continue-on-error: false
 jobs:
     steps:
       - name: Checkout code

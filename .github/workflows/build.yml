@@ -1,3 +1,5 @@
+    name: Validate Secrets
+    
 name: Build e Deploy — Jogo da Rebeca
 
 on:
@@ -7,6 +9,14 @@ on:
     branches: [main]
   workflow_dispatch:
 
+      validate-secrets:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+          - name: Validate Secrets
+            run: .github/scripts/validate_secrets.sh
+        continue-on-error: false
 jobs:
     steps:
       - name: Checkout code
