@@ -2,39 +2,39 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para os testes de áudio do jogo Rebeca.
+Este documento define os critérios de aceitação para os testes de áudio do jogo Rebeca. Os testes de áudio são fundamentais para garantir que a experiência de áudio do jogo seja estável e agradável para o jogador.
 
 ## Critérios de Aceitação
 
-### 1. Inicialização do Áudio
+### 1. Reprodução de Áudio
 
-* O áudio deve iniciar em menos de 500ms após a inicialização do jogo.
-* O áudio deve estar pronto para reprodução em menos de 1s após a inicialização.
+* O áudio deve começar a tocar em menos de 500ms após o início da reprodução.
+* O áudio não deve apresentar distorção ou ruído audível.
 
-### 2. Reprodução de Áudio
-
-* O áudio deve ser reproduzido sem interrupções ou distorções.
-* O volume do áudio deve ser ajustável.
-
-### 3. Pausa e Retomada do Áudio
+### 2. Pausa e Retomada de Áudio
 
 * O áudio deve pausar em menos de 200ms ao receber o comando de pausa.
-* O áudio deve retomar a reprodução em menos de 200ms ao receber o comando de retomada.
+* O áudio deve retomar a reprodução em menos de 200ms após o comando de retomada.
 
-### 4. Desconexão de Fone/Ouvido
+### 3. Desconexão de Dispositivo de Áudio
 
-* O áudio deve pausar em menos de 200ms ao desconectar o fone/ouvido.
-* O áudio deve retomar a reprodução em menos de 200ms ao reconectar o fone/ouvido.
+* O áudio deve pausar em menos de 200ms ao desconectar o fone ou outro dispositivo de áudio.
 
-### 5. Interrupção por Outros Áudios
+### 4. Reconexão de Dispositivo de Áudio
 
-* O áudio do jogo deve pausar ao receber uma notificação de áudio de outro aplicativo.
-* O áudio do jogo deve retomar a reprodução ao término da notificação de áudio.
+* O áudio deve retomar a reprodução em menos de 200ms após reconectar o fone ou outro dispositivo de áudio.
+
+### 5. Interrupção de Áudio
+
+* O áudio deve ser interrompido corretamente ao receber um comando de interrupção (ex: ao iniciar uma nova cena).
 
 ## Métricas de Sucesso
 
-* Tempo de inicialização do áudio: < 500ms
-* Tempo de reprodução do áudio: sem interrupções ou distorções
-* Tempo de pausa e retomada do áudio: < 200ms
-* Tempo de pausa ao desconectar fone/ouvido: < 200ms
-* Tempo de retomada ao reconectar fone/ouvido: < 200ms
+Os critérios de aceitação serão considerados atendidos se:
+
+* 100% dos testes passarem sem erros.
+* As métricas de tempo (ex: tempo de pausa, tempo de retomada) estiverem dentro dos limites estabelecidos.
+
+## Revisão e Atualização
+
+Este documento será revisado e atualizado sempre que necessário, especialmente após mudanças significativas na implementação de áudio do jogo.

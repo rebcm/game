@@ -35,3 +35,6 @@ flutter:
 
   uses-material-design: true
   generate: true
+
+  flutter_driver:
+    sdk: flutter
