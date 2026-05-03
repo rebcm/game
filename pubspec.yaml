@@ -66,3 +66,5 @@ flutter:
     - docs/taxonomia/blocos_disponiveis.md
 
   golden_toolkit: ^0.13.0
+  assets:
+    - docs/taxonomia/blocos_disponiveis.md

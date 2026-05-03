@@ -1,20 +1,25 @@
 # Blocos Disponíveis
 
-Aqui está uma lista categorizada de todos os blocos disponíveis no jogo.
+A seguir, está uma lista categorizada de todos os blocos disponíveis no jogo, incluindo nomes e descrições em português.
 
 ## Blocos de Construção
 
-- **Bloco de Pedra**: Um bloco básico de pedra.
-- **Bloco de Madeira**: Um bloco feito de madeira.
-- **Bloco de Terra**: Um bloco de terra.
+| Nome | Descrição |
+| --- | --- |
+| Bloco de Pedra | Um bloco básico feito de pedra. |
+| Bloco de Madeira | Um bloco feito de madeira, útil para construção. |
+| Bloco de Terra | Um bloco de terra, pode ser usado para criar estruturas. |
 
 ## Blocos Decorativos
 
-- **Bloco de Flores**: Um bloco decorativo com flores.
-- **Bloco de Folhas**: Um bloco que imita folhas de árvores.
+| Nome | Descrição |
+| --- | --- |
+| Bloco de Flores | Um bloco decorativo com flores. |
+| Bloco de Árvore | Um bloco que representa uma árvore. |
 
-## Blocos Estruturais
+## Blocos Especiais
 
-- **Bloco de Fundação**: Um bloco forte para fundações.
-- **Bloco de Suporte**: Um bloco para suportar estruturas.
+| Nome | Descrição |
+| --- | --- |
+| Bloco de Luz | Um bloco que emite luz. |
 
