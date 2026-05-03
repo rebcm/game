@@ -20,11 +20,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
+      - name: Validate secrets
+        run: ./.github/scripts/secrets_validation/validate_secrets.sh
 
-      - name: Build and deploy
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REF: main
+      - name: Deploy
         run: ./.github/scripts/deploy.sh

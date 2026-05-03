@@ -1,14 +1,6 @@
 #!/bin/bash
 
-# Exit on error
-set -e
-
-# Deploy to production
-echo "Deploying to production..."
-
-# Your deploy logic here
-# For example:
-# flutter build web
-# firebase deploy --only hosting
-
-echo "Deployed successfully!"
+# Deploy script implementation
+# This should contain the actual deployment logic
+# For example, deploying to a store or a server
+echo "Deploying..."
