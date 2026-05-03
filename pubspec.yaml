@@ -40,3 +40,6 @@ scripts:
 
   scripts:
     test:audio_comparativo: flutter drive --driver=test/audio/audio_comparativo_test.dart --target=test/audio/audio_comparativo_test.dart
+
+  scripts:
+    test:flutter_doctor: bash .github/scripts/ci_validation/flutter_doctor/validate_flutter_doctor.sh
