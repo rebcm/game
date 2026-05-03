@@ -55,3 +55,5 @@ supportedLocales:
   assets:
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/instalacao/instalacao.md
+
+  test/integration_tests/ux_tests/responsividade_test/widgets/dicas_widget_test.dart:
