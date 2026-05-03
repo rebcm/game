@@ -8,3 +8,6 @@ flutter:
 
 dev_dependencies:
   analyzer: ^5.13.0
+
+  tests:
+    - test/dicas_test.dart
