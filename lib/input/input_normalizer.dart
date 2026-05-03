@@ -6,11 +6,10 @@ class InputNormalizer {
   InputNormalizer({required this.deadzone});
 
   double normalize(double input) {
-    if (input.abs() <= deadzone) {
+    if (input.abs() < deadzone) {
       return 0;
     }
 
-    double normalizedInput = (input.abs() - deadzone) / (1 - deadzone);
-    return input.sign * normalizedInput;
+    return (input - deadzone * input.sign) / (1 - deadzone);
   }
 }

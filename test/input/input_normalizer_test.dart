@@ -3,10 +3,14 @@ import 'package:rebcm/input/input_normalizer.dart';
 
 void main() {
   group('InputNormalizer', () {
-    test('normalizes input correctly', () {
+    test('should return 0 when input is within deadzone', () {
       final normalizer = InputNormalizer(deadzone: 0.2);
       expect(normalizer.normalize(0.1), 0);
-      expect(normalizer.normalize(0.3), closeTo(0.125, 0.01));
+    });
+
+    test('should normalize input outside deadzone', () {
+      final normalizer = InputNormalizer(deadzone: 0.2);
+      expect(normalizer.normalize(0.5), closeTo(0.375, 0.01));
     });
   });
 }

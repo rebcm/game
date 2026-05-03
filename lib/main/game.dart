@@ -8,11 +8,7 @@ class Game extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => PlayerController(
-            inputNormalizer: InputNormalizer(deadzone: 0.2),
-          ),
-        ),
+        ChangeNotifierProvider(create: (_) => PlayerController(normalizer: InputNormalizer(deadzone: 0.2))),
       ],
       child: GameWidget(),
     );
