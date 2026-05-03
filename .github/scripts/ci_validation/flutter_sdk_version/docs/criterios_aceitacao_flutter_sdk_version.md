@@ -2,20 +2,17 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a identificação e documentação das versões mínimas suportadas do Flutter SDK para o projeto game.
+Este documento define os critérios de aceitação para a versão do Flutter SDK utilizada no projeto.
 
 ## Critérios
 
-1. **Identificação das Versões Mínimas Suportadas:**
-   - Identificar as versões mínimas de Android (API Level) e iOS suportadas pela versão atual do Flutter SDK usada no projeto.
+1. **Versão Mínima do Flutter SDK**: A versão mínima do Flutter SDK deve ser identificada e documentada.
+2. **Versões Mínimas de Android e iOS**: As versões mínimas de Android (API Level) e iOS suportadas pela versão atual do Flutter SDK devem ser identificadas e documentadas.
 
-2. **Documentação:**
-   - Documentar as versões mínimas identificadas em um arquivo markdown dedicado.
+## Documentação
 
-3. **Validação:**
-   - Validar que a documentação está atualizada e reflete as versões mínimas suportadas.
+A documentação deve ser atualizada para refletir as versões mínimas suportadas.
 
-## Aceitação
+## Testes
 
-- A tarefa será considerada concluída quando as versões mínimas suportadas estiverem documentadas e validadas.
-
+Testes devem ser realizados para garantir que a aplicação funcione corretamente nas versões mínimas suportadas.
