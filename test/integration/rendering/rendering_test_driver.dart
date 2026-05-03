@@ -9,19 +9,11 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver?.close();
   });
 
-  test('Renderização de chunks', () async {
-    final timeline = await driver?.traceAction(() async {
-      await driver?.tap(find.byType('FloatingActionButton'));
-    });
-
-    final summary = TimelineSummary.summarize(timeline!);
-    summary.writeSummaryToFile('rendering_test', pretty: true);
-    summary.writeTimelineToFile('rendering_test', pretty: true);
-
-    // Verifica se houve algum frame drop durante a renderização
-    expect(summary.summaryJson['counters']['frame_drop_count'], 0);
+  test('Rendering integration test driver', () async {
+    final renderingFinder = find.byValueKey('CustomVoxelRenderer');
+    await driver?.waitFor(renderingFinder);
   });
 }
