@@ -1,14 +1,12 @@
 # Critérios de Aceitação para Flutter Doctor
 
-## Objetivo
-Verificar se o ambiente de desenvolvimento está configurado corretamente executando `flutter doctor` e documentando erros de dependências ausentes.
+## Introdução
+Este documento define os critérios de aceitação para a execução do Flutter Doctor no projeto.
 
-## Passos
-1. Executar o script `run_flutter_doctor.sh`.
-2. Verificar se o arquivo `flutter_doctor_results.md` foi gerado.
-3. Revisar o conteúdo de `flutter_doctor_results.md` para identificar dependências ausentes.
+## Critérios
+1. O Flutter Doctor deve ser executado sem erros.
+2. A saída do Flutter Doctor deve ser registrada em um arquivo de log.
+3. Se houver problemas, o log deve ser exibido e o processo deve falhar.
 
-## Critérios de Aceitação
-- O script `run_flutter_doctor.sh` executa sem erros.
-- O arquivo `flutter_doctor_results.md` é gerado com sucesso.
-- Os erros de dependências ausentes são documentados corretamente no arquivo `flutter_doctor_results.md`.
+## Referências
+- [Flutter Doctor Documentation](https://docs.flutter.dev/get-started/install)
