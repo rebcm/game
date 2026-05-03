@@ -4,7 +4,7 @@ import 'package:game/estado_jogo.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 void main() {
-  testWidgets('EstadoJogo dispõe corretamente os timers', (tester) async {
+  testWidgets('EstadoJogo dispose is called when Navigator.pop is used', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: EstadoJogo(),
@@ -13,10 +13,30 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final estadoJogo = tester.state<EstadoJogoState>(find.byType(EstadoJogo));
+    final navigator = Navigator.of(tester.element(find.byType(EstadoJogo)));
+    navigator.pop();
 
-    expect(LeakTrackingTestResult(
-      leaks: estadoJogo.timersLeaks,
-    ).isNotLeaky, isTrue);
+    await tester.pumpAndSettle();
+
+    expect(LeakChecker.checkLeaks(), isEmpty);
+  });
+
+  testWidgets('EstadoJogo dispose is called when Navigator.pushReplacement is used', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: EstadoJogo(),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    final navigator = Navigator.of(tester.element(find.byType(EstadoJogo)));
+    navigator.pushReplacement(
+      MaterialPageRoute(builder: (context) => Scaffold()),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(LeakChecker.checkLeaks(), isEmpty);
   });
 }
