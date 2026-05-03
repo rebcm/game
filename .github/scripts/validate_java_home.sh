@@ -1,16 +1,9 @@
 #!/bin/bash
 
-# Check if JAVA_HOME is set
-if [ -z "$JAVA_HOME" ]; then
-  echo "JAVA_HOME is not set"
+JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+GRADLE_JDK=$(grep 'Gradle JDK' .idea/misc.xml | sed 's/.*value="\(.*\)".*/\1/')
+
+if [ "$JAVA_HOME" != "$GRADLE_JDK" ]; then
+  echo "JAVA_HOME ($JAVA_HOME) and Gradle JDK ($GRADLE_JDK) do not match."
   exit 1
 fi
-
-# Validate Java version
-java_version=$($JAVA_HOME/bin/java -version 2>&1 | head -n 1 | cut -d '"' -f 2)
-if [[ $java_version != "17."* ]]; then
-  echo "Java version is not 17 or higher: $java_version"
-  exit 1
-fi
-
-echo "JAVA_HOME is set and valid: $JAVA_HOME"
