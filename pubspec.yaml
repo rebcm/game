@@ -40,3 +40,6 @@ localizationsDelegates:
 supportedLocales:
   - de
   - fr
+
+  integration_test:
+    path: test/integration_tests/ux_tests
