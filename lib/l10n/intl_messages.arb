@@ -1,6 +1,7 @@
 {
-  "long_text_key": "This is a very long text that should be tested for overflow",
-  "@long_text_key": {
-    "description": "A long text to test overflow"
+  "tip": "This is a tip",
+  "@tip": {
+    "description": "A tip message",
+    "type": "text"
   }
 }

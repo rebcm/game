@@ -1,0 +1,7 @@
+{
+  "tip": "Esta é uma dica muito mais longa para testar o layout",
+  "@tip": {
+    "description": "Uma mensagem de dica",
+    "type": "text"
+  }
+}
