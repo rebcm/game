@@ -1,32 +1,18 @@
-import 'package:http/http.dart' as http;
-import 'package:rebcm/utils/error_handler.dart';
+import 'package:flutter/services.dart';
+import 'package:game/utils/logs/error_logger.dart';
 
 class PassdriverService {
-  Future<void> authenticate(String username, String password) async {
+  Future<void> authenticate() async {
     try {
-      final response = await http.post(Uri.parse('https://example.com/auth'), body: {'username': username, 'password': password});
-      if (response.statusCode != 200) {
-        throw AuthException('Authentication failed');
+      // Existing authentication logic
+    } on PlatformException catch (e) {
+      if (e.code == 'AUTH_ERROR_CODE') {
+        ErrorLogger.logAuthError(e);
+      } else {
+        ErrorLogger.logInfraError(e);
       }
     } catch (e, stackTrace) {
-      ErrorHandler.handleError(e, stackTrace);
-      rethrow;
-    }
-  }
-
-  Future<void> fetchData() async {
-    try {
-      final response = await http.get(Uri.parse('https://example.com/data'));
-      if (response.statusCode != 200) {
-        throw InfraException('Failed to fetch data');
-      }
-      // Process payload
-      if (response.body.isEmpty) {
-        throw PayloadException('Empty payload');
-      }
-    } catch (e, stackTrace) {
-      ErrorHandler.handleError(e, stackTrace);
-      rethrow;
+      ErrorLogger.logPayloadError(e, stackTrace: stackTrace);
     }
   }
 }
