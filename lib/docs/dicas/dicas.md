@@ -1,8 +1,9 @@
 # Dicas
 
-## Construção Criativa
-- Use blocos para criar estruturas criativas
-- Experimente diferentes combinações de blocos
+Dicas para o jogador.
 
-## Precisão Técnica
-- Certifique-se de que as estruturas sejam tecnicamente precisas
+## Uso de Voxels
+
+- Use voxels para construir.
+- Consulte o glossário para termos técnicos.
+

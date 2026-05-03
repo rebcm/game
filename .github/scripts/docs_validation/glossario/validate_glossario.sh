@@ -1,12 +1,5 @@
 #!/bin/bash
 
-GLOSSARIO_FILE="lib/docs/glossario.md"
-
-if [ ! -f "$GLOSSARIO_FILE" ]; then
-  echo "Glossário não encontrado. Criando glossário vazio."
-  touch "$GLOSSARIO_FILE"
-fi
-
-TERMOS=$(grep -oP '(?<=^## ).*' "$GLOSSARIO_FILE")
-
-echo "Validação do glossário concluída."
+# Validation logic for glossário
+echo "Validating glossário..."
+# Implement validation logic here
