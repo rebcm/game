@@ -17,8 +17,8 @@ class ErrorLogger {
     logError('AUTH ERROR: $message', error, stackTrace);
   }
 
-  static void logInfraError(String message, [dynamic error, StackTrace? stackTrace]) {
-    logError('INFRA ERROR: $message', error, stackTrace);
+  static void logInfrastructureError(String message, [dynamic error, StackTrace? stackTrace]) {
+    logError('INFRASTRUCTURE ERROR: $message', error, stackTrace);
   }
 
   static void logPayloadError(String message, [dynamic error, StackTrace? stackTrace]) {

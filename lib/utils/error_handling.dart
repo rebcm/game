@@ -1,19 +1,15 @@
 import 'package:game/services/logging/error_logger.dart';
 
 class ErrorHandling {
-  final ErrorLogger _errorLogger;
-
-  ErrorHandling(this._errorLogger);
-
-  void handleError(dynamic error) {
+  static void handleError(dynamic error, StackTrace? stackTrace) {
     if (error is AuthException) {
-      _errorLogger.logAuthError('Authentication error', error);
+      ErrorLogger.logAuthError('Authentication error', error, stackTrace);
     } else if (error is InfrastructureException) {
-      _errorLogger.logInfrastructureError('Infrastructure error', error);
+      ErrorLogger.logInfrastructureError('Infrastructure error', error, stackTrace);
     } else if (error is PayloadException) {
-      _errorLogger.logPayloadError('Payload error', error);
+      ErrorLogger.logPayloadError('Payload error', error, stackTrace);
     } else {
-      _errorLogger.logError('Unknown error', error);
+      ErrorLogger.logError('Unknown error', error, stackTrace);
     }
   }
 }
