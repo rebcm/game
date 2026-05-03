@@ -1,3 +1,12 @@
-[vars]
-DB_CONNECTION_STRING = "${DB_CONNECTION_STRING}"
-API_KEY = "${API_KEY}"
+name = "rebcm-game"
+type = "javascript"
+
+[env.production]
+vars = {
+  DB_URL = ""
+}
+
+[env.staging]
+vars = {
+  DB_URL = ""
+}

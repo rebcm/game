@@ -1,11 +1,13 @@
 #!/bin/bash
 
-if [ -z "$DEPLOY_TOKEN" ]; then
-  echo "DEPLOY_TOKEN is not set"
-  exit 1
-fi
+# Validate if required secrets are set
+required_secrets=("DB_URL" "API_KEY" "API_SECRET")
 
-if [ -z "$CI_DEPLOY_USER" ]; then
-  echo "CI_DEPLOY_USER is not set"
-  exit 1
-fi
+for secret in "${required_secrets[@]}"; do
+  if ! wrangler secret get "$secret" &> /dev/null; then
+    echo "Error: Secret '$secret' is not set."
+    exit 1
+  fi
+done
+
+echo "All required secrets are set."
