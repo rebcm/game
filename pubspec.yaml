@@ -50,9 +50,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/audio/optimized/
-    - assets/audio/optimized/ambient/
-    - assets/audio/optimized/sfx/
-    - assets/audio/optimized/music/
     - assets/blocos/
     - assets/animacoes/
     - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
@@ -67,3 +64,7 @@ flutter:
   test/widget_test/edge_cases/drift_test.dart
 
   # No new dependencies are added as we're using existing 'archive' package for GZip
+  assets:
+    - assets/audio/optimized/ambient/
+    - assets/audio/optimized/sfx/
+    - assets/audio/optimized/music/
