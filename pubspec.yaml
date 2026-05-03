@@ -32,3 +32,6 @@ flutter:
   assets:
     - assets/audio/
   # existing config...
+
+  uses-material-design: true
+  generate: true
