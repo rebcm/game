@@ -1,0 +1,20 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/deploy/README.md
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy documentation
+        run: |
+          echo "Deploying documentation..."
+          # Adicione aqui os passos necessários para deploy da documentação
