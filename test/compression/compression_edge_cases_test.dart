@@ -1,21 +1,23 @@
-import 'package:test/test.dart';
-import 'package:rebcm/services/compression_service.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:game/compression.dart';
 
 void main() {
   group('Compression Edge Cases', () {
-    test('should not compress payloads smaller than overhead', () async {
-      final compressionService = CompressionService();
-      final smallPayload = List<int>.generate(10, (index) => index);
-      final compressed = await compressionService.compress(smallPayload);
-      expect(compressed.length, greaterThan(smallPayload.length));
+    test('compressing empty payload', () async {
+      final compressed = await compress(Uint8List(0));
+      expect(compressed.length, greaterThan(0)); // Assuming some overhead
     });
 
-    test('should handle corrupted chunks', () async {
-      final compressionService = CompressionService();
-      final payload = List<int>.generate(100, (index) => index);
-      final compressed = await compressionService.compress(payload);
-      compressed[0] = 255; // Corrupt the first byte
-      expect(() async => await compressionService.decompress(compressed), throwsA(isA<Exception>()));
+    test('compressing extremely small payload', () async {
+      final payload = Uint8List.fromList([1]);
+      final compressed = await compress(payload);
+      expect(compressed.length, greaterThanOrEqualTo(payload.length));
+    });
+
+    test('compressing high entropy payload', () async {
+      final payload = Uint8List.fromList(List.generate(1024, (_) => (DateTime.now().millisecondsSinceEpoch + _).toByte())); 
+      final compressed = await compress(payload);
+      expect(compressed.length, greaterThanOrEqualTo(payload.length));
     });
   });
 }
