@@ -55,3 +55,6 @@ flutter:
   integration_test/performance_test/serialization_performance_test.dart:
 
   integration_test/external_interruptions_test/external_interruptions_test.dart:
+  assets:
+    - .github/scripts/ci_validation/dicas_tests/docs/criterios_aceitacao_dicas.md
+    - docs/seo/palavras-chave-dicas.md
