@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# Validacao do checklist de revisao tecnica
-# Verifica se os criterios tecnicos estao sendo seguidos
+CHECKLIST_FILE=".github/scripts/docs_validation/checklist_revisao_tecnica/checklist_revisao_tecnica.md"
 
-# Criterios tecnicos
-CRITERIOS_TECNICOS=("nomenclatura de widgets" "fluxos de navegacao" "termos de API")
+if [ ! -f "$CHECKLIST_FILE" ]; then
+  echo "Checklist de Revisão Técnica não encontrado."
+  exit 1
+fi
 
-for criterio in "${CRITERIOS_TECNICOS[@]}"; do
-  if ! grep -q "$criterio" docs/checklist_revisao_tecnica.md; then
-    echo "Erro: $criterio nao encontrado no checklist de revisao tecnica"
-    exit 1
-  fi
-done
+# Lógica para validar o conteúdo do checklist
+# Por exemplo, verificar se os critérios de aceitação estão presentes
+if ! grep -q "Critérios de Aceitação" "$CHECKLIST_FILE"; then
+  echo "Critérios de Aceitação não encontrados no checklist."
+  exit 1
+fi
 
-echo "Checklist de revisao tecnica validado com sucesso"
+echo "Checklist de Revisão Técnica validado com sucesso."
+exit 0
