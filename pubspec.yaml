@@ -26,6 +26,7 @@ flutter:
   assets:
     - docs/swagger_endpoints.md
     - docs/swagger_ui.html
+    - docs/audio_api_comparativo/audio_api_comparativo.md
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
     - docs/wrangler_secrets.md

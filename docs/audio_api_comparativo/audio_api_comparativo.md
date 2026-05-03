@@ -1,16 +1,17 @@
-# Comparativo de APIs de Áudio
+# Comparativo de Comportamento de Áudio
 
-## Visão Geral
+Este documento apresenta uma matriz comparativa do comportamento esperado para Android e iOS nos cenários de modo silencioso e alternância de hardware.
 
-Este documento compara diferentes APIs de áudio que podem ser usadas no jogo.
+## Matriz de Resultados Esperados
 
-### Tabela Comparativa
+| Cenário | Ação | Resultado Esperado (Android) | Resultado Esperado (iOS) |
+| --- | --- | --- | --- |
+| Modo Silencioso | Reproduzir Áudio | Áudio não é reproduzido | Áudio não é reproduzido |
+| Alternância de Hardware | Trocar de Dispositivo de Saída | Áudio continua a ser reproduzido no novo dispositivo | Áudio continua a ser reproduzido no novo dispositivo |
+| Modo Silencioso com Alternância de Hardware | Reproduzir Áudio e Trocar de Dispositivo de Saída | Áudio não é reproduzido inicialmente e permanece sem reprodução após troca | Áudio não é reproduzido inicialmente e permanece sem reprodução após troca |
 
-| API   | Características             | Compatibilidade               |
-| ----- | --------------------------- | ----------------------------- |
-| API A | Suporte a formatos variados | Compatível com Flutter        |
-| API B | Alta performance            | Requer configuração adicional |
+## Considerações
 
-## Conclusões
+- A tabela acima resume o comportamento esperado para os cenários testados.
+- É importante garantir que o aplicativo se comporte conforme o esperado em ambos os sistemas operacionais.
 
-- A escolha da API depende das necessidades específicas do recurso de áudio no jogo.
