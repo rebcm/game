@@ -74,3 +74,4 @@ flutter:
 
   - test/integration/audio_integration_test/audio_integration_test.dart
   - test/integration/audio_integration_test/main.dart
+  - test/integration/audio_stress_test/audio_stress_test.dart
