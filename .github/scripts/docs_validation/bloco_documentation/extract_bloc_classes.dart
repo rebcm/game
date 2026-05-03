@@ -5,14 +5,14 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'dart:io';
 
-void main(List<String> args) {
+void main() {
   final currentDirectory = Directory.current.path;
   final collection = AnalysisContextCollection(includedPaths: ['$currentDirectory/lib']);
   final contexts = collection.contexts;
 
-  for (var context in contexts) {
+  for (final context in contexts) {
     final files = context.contextRoot.analyzedFiles();
-    for (var file in files) {
+    for (final file in files) {
       if (file.endsWith('.dart')) {
         final result = context.currentSession.getParsedUnit(file);
         if (result is ParsedUnitResult) {
