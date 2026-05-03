@@ -16,6 +16,7 @@ dependencies:
   audioplayers: ^5.2.0
   mockito: ^5.4.4
   http: ^0.13.6
+  http_mock_adapter: ^1.0.0
   ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
