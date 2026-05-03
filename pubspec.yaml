@@ -10,3 +10,5 @@ dev_dependencies:
 
   integration_test:
     sdk: flutter
+
+  patform_device_id: ^1.0.0
