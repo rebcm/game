@@ -88,3 +88,5 @@ dev_dependencies:
 
   ui_integration_test:
     path: ./test/integration/ui_integration_test/ui_integracao_test.dart
+  audio_integration_test:
+    path: ./test/integration/audio_integration_test/audio_integration_test.dart
