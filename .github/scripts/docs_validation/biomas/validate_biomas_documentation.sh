@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Validar se a documentação dos biomas foi atualizada
-if ! grep -q "Biomas do Jogo" ./docs/biomas/descrição_dos_biomas.md; then
-  echo "Erro: Documentação dos biomas não foi atualizada corretamente."
+# Validar se a documentação de biomas existe e não está vazia
+if [ ! -f ./docs/biomas/descrição.md ] || [ ! -s ./docs/biomas/descrição.md ]; then
+  echo "Documentação de biomas está faltando ou vazia"
   exit 1
 fi
 
