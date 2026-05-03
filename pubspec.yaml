@@ -60,3 +60,7 @@ flutter:
   flutter:
     assets:
       - test/integration_tests/audio_interruption_test/
+
+  flutter:
+    assets:
+      - docs/dicas_construcao/criterios_aceitacao_ui_dicas.md

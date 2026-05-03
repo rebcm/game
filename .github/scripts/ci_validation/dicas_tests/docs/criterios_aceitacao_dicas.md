@@ -1,18 +1,33 @@
-# Critérios de Aceitação para Dicas de Construção
+# Critérios de Aceitação para UI de Dicas
 
-## Conteúdo
+## Introdução
 
-1. **Relevância**: O conteúdo das dicas deve ser relevante para o jogo e ajudar os jogadores a criar estruturas interessantes.
-2. **Precisão**: As dicas devem ser precisas e não conter informações incorretas ou enganosas.
-3. **Clareza**: O conteúdo deve ser claro e fácil de entender.
+Este documento define os critérios de aceitação para a implementação da UI de Dicas no jogo.
 
-## Formatação
+## Requisitos Funcionais
 
-1. **Markdown**: O conteúdo deve ser formatado usando Markdown.
-2. **Títulos**: Os títulos devem ser usados para dividir o conteúdo em seções lógicas.
-3. **Listas**: Listas devem ser usadas para apresentar informações de forma clara e concisa.
+1. **Exibição de Dicas**: A UI de Dicas deve ser exibida quando o jogador iniciar o jogo pela primeira vez.
+2. **Conteúdo das Dicas**: As dicas devem conter informações relevantes sobre como jogar o jogo, incluindo:
+   - Como criar blocos
+   - Como navegar no mundo
+   - Como usar as ferramentas disponíveis
+3. **Gatilhos de Exibição**: As dicas devem ser exibidas nos seguintes momentos:
+   - Ao iniciar o jogo pela primeira vez
+   - Ao pressionar o botão de ajuda no menu principal
+4. **Persistência**: As dicas não devem ser exibidas novamente após o jogador ter fechado a UI de Dicas, a menos que seja explicitamente acionada novamente.
 
-## Validação
+## Requisitos Não Funcionais
 
-1. **Revisão**: O conteúdo deve ser revisado por um membro da equipe antes de ser aprovado.
-2. **Testes**: O conteúdo deve ser testado para garantir que atende aos critérios de aceitação.
+1. **Usabilidade**: A UI de Dicas deve ser fácil de entender e usar.
+2. **Design**: A UI de Dicas deve seguir o padrão de design do jogo.
+
+## Critérios de Aceitação
+
+1. A UI de Dicas é exibida corretamente ao iniciar o jogo pela primeira vez.
+2. O conteúdo das dicas é relevante e útil para o jogador.
+3. As dicas são exibidas corretamente ao pressionar o botão de ajuda no menu principal.
+4. As dicas não são exibidas novamente após serem fechadas, a menos que sejam acionadas novamente.
+
+## Testes
+
+Os critérios de aceitação devem ser testados através de testes de UI e testes de integração.
