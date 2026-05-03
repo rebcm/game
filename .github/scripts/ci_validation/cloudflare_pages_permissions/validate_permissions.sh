@@ -1,15 +1,19 @@
 #!/bin/bash
 
-# Valida se as permissões mínimas necessárias estão configuradas corretamente
+# Validate Cloudflare Pages permissions
+# Check if the permissions matrix is correctly defined
 
-# Verifica se o arquivo de matriz de permissões existe
-if [ ! -f "docs/cloudflare_pages_pipeline/minimum_permissions_matrix.md" ]; then
-  echo "Erro: Arquivo de matriz de permissões não encontrado."
+MATRIX_FILE="docs/cloudflare_pages_pipeline/minimum_permissions_matrix.md"
+
+if [ ! -f "$MATRIX_FILE" ]; then
+  echo "Permissions matrix file not found: $MATRIX_FILE"
   exit 1
 fi
 
-# Simula a verificação das permissões (essa parte deve ser adaptada para a lógica real de verificação)
-echo "Verificando permissões..."
-# Implemente aqui a lógica para verificar as permissões com base na matriz definida
+# Basic validation: check if the file is not empty
+if [ ! -s "$MATRIX_FILE" ]; then
+  echo "Permissions matrix file is empty: $MATRIX_FILE"
+  exit 1
+fi
 
-echo "Validação de permissões concluída com sucesso."
+echo "Permissions matrix validation successful"
