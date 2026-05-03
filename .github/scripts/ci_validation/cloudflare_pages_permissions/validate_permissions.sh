@@ -1,27 +1,25 @@
 #!/bin/bash
 
-# Script para validar as permissões mínimas do Cloudflare Pages
+# Mapeamento de permissões mínimas necessárias para o pipeline do Cloudflare Pages
+declare -A permissoes_minimas
+permissoes_minimas["acao1"]="permissao1 permissao2"
+permissoes_minimas["acao2"]="permissao3"
 
-# Lista de ações do pipeline e suas permissões mínimas necessárias
-declare -A acoes_permissoes
-acoes_permissoes=(
-    ["acao1"]="permissao1"
-    ["acao2"]="permissao2"
-    # Adicionar mais ações e permissões conforme necessário
-)
+# Verificar se as permissões configuradas estão de acordo com o mapeamento
+for acao in "${!permissoes_minimas[@]}"; do
+  permissoes_configuradas=$(get_permissoes_configuradas "$acao")
+  if [ "$permissoes_configuradas" != "${permissoes_minimas[$acao]}" ]; then
+    echo "Erro: Permissões configuradas para '$acao' não atendem ao Princípio do Menor Privilégio."
+    exit 1
+  fi
+done
 
-# Função para verificar se as permissões estão configuradas corretamente
-validar_permissoes() {
-    for acao in "${!acoes_permissoes[@]}"; do
-        permissao=${acoes_permissoes[$acao]}
-        # Implementar lógica para verificar se a permissão está correta
-        # Por exemplo, verificar contra as configurações atuais do Cloudflare Pages
-        echo "Validando permissão para $acao: $permissao"
-    done
-}
-
-# Executar a validação
-validar_permissoes
-
-# Sair com código 0 se todas as permissões forem válidas
+echo "Permissões mínimas validadas com sucesso."
 exit 0
+
+# Função para obter as permissões configuradas para uma ação específica
+get_permissoes_configuradas() {
+  # Implementar lógica para obter as permissões configuradas
+  # Exemplo:
+  echo "permissao1 permissao2"
+}

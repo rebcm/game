@@ -1,23 +1,21 @@
 # Critérios de Aceitação para Permissões Mínimas do Cloudflare Pages
 
-Este documento define os critérios para determinar as permissões mínimas necessárias para o pipeline do Cloudflare Pages.
-
 ## Introdução
 
-O princípio do menor privilégio determina que um usuário ou sistema deve ter apenas as permissões estritamente necessárias para realizar suas funções. Este documento visa aplicar esse princípio ao pipeline do Cloudflare Pages.
+Este documento define os critérios de aceitação para a implementação das permissões mínimas necessárias para o pipeline do Cloudflare Pages.
 
 ## Requisitos
 
-1. **Listagem de Ações do Pipeline**: Identificar todas as ações realizadas pelo pipeline do Cloudflare Pages durante a execução.
-2. **Mapeamento de Permissões**: Para cada ação identificada, determinar a permissão mínima necessária.
-3. **Verificação de Segurança**: Confirmar que as permissões atribuídas não introduzem vulnerabilidades de segurança.
+1. **Princípio do Menor Privilégio**: O pipeline deve operar com as permissões mínimas necessárias para realizar suas ações.
+2. **Mapeamento de Permissões**: Deve ser realizado um mapeamento detalhado das permissões necessárias para cada ação do pipeline.
+3. **Minimização de Riscos**: As permissões devem ser configuradas de forma a minimizar os riscos de segurança.
 
 ## Critérios de Aceitação
 
-1. **Completeness**: Todas as ações do pipeline devem ter suas permissões mínimas documentadas.
-2. **Minimalidade**: As permissões atribuídas devem ser as mínimas necessárias para cada ação.
-3. **Segurança**: As permissões definidas não devem permitir ações não intencionais ou maliciosas.
+1. O pipeline do Cloudflare Pages deve ser capaz de realizar todas as ações necessárias com as permissões configuradas.
+2. As permissões configuradas devem seguir o Princípio do Menor Privilégio.
+3. O mapeamento de permissões deve ser documentado e mantido atualizado.
 
-## Aprovação
+## Validação
 
-Este documento deve ser aprovado por um revisor designado antes de ser considerado válido.
+A validação das permissões mínimas será realizada através do script `validate_permissions.sh`.
