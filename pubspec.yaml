@@ -13,3 +13,5 @@ dev_dependencies:
     - test/dicas_test.dart
   assets:
     - docs/checklist_documentacao.md
+  tests:
+    - test/contract_tests/openapi_contract_test.dart
