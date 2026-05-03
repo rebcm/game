@@ -70,3 +70,5 @@ dev_dependencies:
 
   peer_review_test:
     path: ./test/integration/peer_review_test/peer_review_test.dart
+  guia_estilo_validation:
+    path: .github/scripts/docs_validation/guia-estilo/validate_guia_estilo.sh
