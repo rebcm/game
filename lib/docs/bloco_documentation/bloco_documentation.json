@@ -1,0 +1,12 @@
+{
+  "blocos": [
+    {
+      "id": "bloco1",
+      "descricao": "Descrição do Bloco 1"
+    },
+    {
+      "id": "bloco2",
+      "descricao": "Descrição do Bloco 2"
+    }
+  ]
+}

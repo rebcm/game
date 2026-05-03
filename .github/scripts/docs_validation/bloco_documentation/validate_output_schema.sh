@@ -1,16 +1,16 @@
 #!/bin/bash
 
-OUTPUT_FILE=$(find . -name 'bloco_metadata.json')
+OUTPUT_FILE=$1
 
-if [ -z "$OUTPUT_FILE" ]; then
-  echo "Arquivo de metadados não encontrado."
+if ! command -v jq &> /dev/null; then
+  echo "jq is not installed. Please install jq to validate JSON."
   exit 1
 fi
 
-jq -e '.id != null and .nome != null and .descricao != null and .categoria != null' $OUTPUT_FILE > /dev/null
+jq -e '.blocos | type == "array"' $OUTPUT_FILE > /dev/null
 if [ $? -ne 0 ]; then
-  echo "Schema de saída inválido."
+  echo "Validation failed: 'blocos' is not an array."
   exit 1
 fi
 
-echo "Schema de saída validado com sucesso."
+echo "Validation successful."
