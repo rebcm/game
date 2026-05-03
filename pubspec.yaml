@@ -7,6 +7,8 @@ flutter:
 dev_dependencies:
   rebuild_performance_test:
     path: ./test/performance/rebuild_performance_test.dart
+  rebuild_performance_test:
+    path: ./test/performance/rebuild_performance_test.dart
   flutter_test:
     sdk: flutter
   http: ^0.13.5
