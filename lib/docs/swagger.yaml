@@ -1,23 +1,74 @@
 openapi: 3.0.0
 info:
-  title: Voxel Game API
-  description: API for voxel game
+  title: API de Blocos
+  description: API para manipulação de blocos
   version: 1.0.0
+
 paths:
-  /docs:
+  /blocos:
     get:
-      summary: Get API documentation
+      summary: Listar blocos
       responses:
         '200':
-          description: API documentation
-  /api/v1/blocks:
-    get:
-      summary: Get all blocks
-      responses:
-        '200':
-          description: List of blocks
+          description: Lista de blocos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bloco'
+      tags:
+        - Blocos
+
     post:
-      summary: Create a new block
+      summary: Criar um novo bloco
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bloco'
       responses:
         '201':
-          description: Block created
+          description: Bloco criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bloco'
+      tags:
+        - Blocos
+
+  /blocos/{id}:
+    get:
+      summary: Obter um bloco por ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do bloco
+      responses:
+        '200':
+          description: Bloco encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bloco'
+        '404':
+          description: Bloco não encontrado
+      tags:
+        - Blocos
+
+components:
+  schemas:
+    Bloco:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+      required:
+        - id
+        - nome
