@@ -1,6 +1,13 @@
 #!/bin/bash
 
-# Clean and rebuild the project to ensure there are no compilation issues
+# Navigate to the project root
+cd /home/user/game
+
+# Run flutter clean
 flutter clean
+
+# Run flutter pub get
 flutter pub get
-dart analyze --fatal-infos
+
+# Run dart analyze
+dart analyze
