@@ -7,20 +7,23 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('dicas widget responsividade test', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(280, 600));
+    await tester.binding.setSurfaceSize(const Size(320, 480));
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    final dicasWidget = find.byType(DicasWidget);
-    expect(dicasWidget, findsOneWidget);
+    expect(find.text('Dicas'), findsOneWidget);
+    expect(find.text('Construção'), findsOneWidget);
 
-    final dicasText = find.text('Dicas');
-    expect(dicasText, findsOneWidget);
-
-    await tester.binding.setSurfaceSize(const Size(300, 600));
+    await tester.binding.setSurfaceSize(const Size(300, 480));
     await tester.pumpAndSettle();
 
-    expect(dicasWidget, findsOneWidget);
-    expect(dicasText, findsOneWidget);
+    expect(find.text('Dicas'), findsOneWidget);
+    expect(find.text('Construção'), findsOneWidget);
+
+    await tester.binding.setSurfaceSize(const Size(280, 480));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dicas'), findsOneWidget);
+    expect(find.text('Construção'), findsOneWidget);
   });
 }
