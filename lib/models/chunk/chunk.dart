@@ -7,5 +7,5 @@ class Chunk extends Equatable {
   Chunk({required this.x, required this.z});
 
   @override
-  List<Object> get props => [x, z];
+  List<Object?> get props => [x, z];
 }
