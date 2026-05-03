@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/main/rebcm_app.dart';
+import 'package:game/features/dicas/integracao/integracao_dicas.dart';
 
 void main() {
-  runApp(RebcmApp());
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: IntegracaoDicas(telaAtual: 'TelaInicial'),
+      ),
+    );
+  }
 }
