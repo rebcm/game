@@ -12,7 +12,6 @@ dependencies:
   swagger: ^1.0.0
 
 dev_dependencies:
-    sdk: flutter
   flutter_driver:
   flutter_test:
     sdk: flutter
@@ -36,47 +35,4 @@ flutter:
     - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
-
-  assets:
-    - test/integration_tests/documentacao_test/
-  uses-material-design: true
-    - docs/flujo_integracion/flujo_integracion.md
-    - docs/flujo_integracion/flujo_integracion.md
-
-  flutter:
-    assets:
-      - docs/documentacao.md
-
-  flutter:
-    assets:
-      - test/integration_tests/audio_interruption_test/
-
-  # No new dependencies needed
-
-  flutter:
-    assets:
-      - integration_test/dicas_ui_test.dart
-  flutter:
-    assets:
-      - docs/dicas_construcao/conteudo_dicas.md
-  flutter:
-    assets:
-      - test/integration_tests/audio_interruption_test/
-
-  flutter:
-    assets:
-      - docs/dicas_construcao/criterios_aceitacao_ui_dicas.md
-
-  flutter:
-    assets:
-      - integration_test/latency_benchmark_test.dart
-
-  flutter:
-    assets:
-      - test/integration_tests/audio_integration_test/
-  flutter:
-    assets:
-      - docs/dicas_construcao/criterios_aceitacao_ui_dicas.md
-  flutter:
-    assets:
-      - .github/scripts/ci_validation/dicas_tests/docs/criterios_aceitacao_dicas.md
+    - docs/audio_compatibility/audio_compatibility_matrix.md
