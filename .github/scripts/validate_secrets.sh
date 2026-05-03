@@ -1,11 +1,15 @@
 #!/bin/bash
 
-if [ -z "$API_KEY" ]; then
-  echo "API_KEY is not set"
-  exit 1
-fi
+validate_secret() {
+  local secret_name=$1
+  local secret_value=$2
 
-if [ -z "$SECRET_KEY" ]; then
-  echo "SECRET_KEY is not set"
-  exit 1
-fi
+  if [ -z "$secret_value" ]; then
+    echo "Erro: Variável de ambiente '$secret_name' não está definida."
+    echo "Por favor, configure '$secret_name' nas configurações do repositório."
+    return 1
+  fi
+}
+
+validate_secret 'CLOUDFLARE_TOKEN' "${CLOUDFLARE_TOKEN}"
+validate_secret 'CLOUDFLARE_ACCOUNT_ID' "${CLOUDFLARE_ACCOUNT_ID}"
