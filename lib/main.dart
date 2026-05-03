@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/performance/fps_counter.dart';
 import 'package:provider/provider.dart';
+import 'package:rebcm/audio_manager/music_player.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => FpsCounter()),
+        ChangeNotifierProvider(create: (_) => MusicPlayer()),
       ],
       child: MyApp(),
     ),
@@ -26,10 +26,35 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final fpsCounter = Provider.of<FpsCounter>(context);
+    final musicPlayer = Provider.of<MusicPlayer>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebeca\'s World'),
+      ),
       body: Center(
-        child: Text('FPS: ${fpsCounter.fps.toStringAsFixed(2)}'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                musicPlayer.play();
+              },
+              child: Text('Play'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                musicPlayer.pause();
+              },
+              child: Text('Pause'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                musicPlayer.toggleShuffle();
+              },
+              child: Text('Toggle Shuffle'),
+            ),
+          ],
+        ),
       ),
     );
   }
