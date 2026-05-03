@@ -1,11 +1,19 @@
 #!/bin/bash
 
-# Build the Flutter project
-flutter build web
+# Exit on error
+set -e
 
-# Deploy to Cloudflare Pages
-curl -X POST \
-  https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/your_project_name/deployments \
-  -H 'Authorization: Bearer '$CLOUDFLARE_API_TOKEN \
-  -H 'Content-Type: application/json' \
-  -d '{"branch": "main", "working_directory": "/"}'
+# Load environment variables from .env file
+if [ -f .env ]; then
+  export $(cat .env | xargs)
+fi
+
+# Validate required environment variables
+if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+  echo "Error: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID must be set"
+  exit 1
+fi
+
+# Build and deploy to Cloudflare Pages
+flutter build web
+# Add Cloudflare Pages deployment command here
