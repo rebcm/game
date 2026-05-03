@@ -1,3 +1,4 @@
 #!/bin/bash
 
-flutter drive --driver=test/integration/audio_recovery_test/audio_recovery_test.dart --target=lib/main.dart
+# Run audio recovery test using Flutter Driver
+flutter drive --target=test_driver/integration/audio_recovery_test.dart
