@@ -73,3 +73,5 @@ flutter:
 
 dev_dependencies:
   dio: ^5.4.0
+
+  dio: ^5.4.0

@@ -1,18 +1,56 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:game/services/api_service.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+import 'package:game/services/api_service/api_service.dart';
 
 void main() {
-  test('uploadData success', () async {
-    final dio = Dio();
-    final dioAdapter = DioAdapter(dio: dio);
-    dioAdapter.onPost('/upload', (server) => server.reply(200, 'OK'));
+  group('ApiService Tests', () {
+    late Dio dio;
+    late DioAdapter dioAdapter;
+    late ApiService apiService;
 
-    final apiService = ApiService();
-    final response = await apiService.uploadData();
+    setUp(() {
+      dio = Dio();
+      dioAdapter = DioAdapter(dio: dio);
+      apiService = ApiService(dio);
+    });
 
-    expect(response.statusCode, 200);
+    test('should return successful response', () async {
+      dioAdapter.onGet(
+        'https://example.com/api/artefato',
+        (server) => server.reply(200, {'data': 'artefato'}),
+      );
+
+      final response = await apiService.getArtefato();
+      expect(response.statusCode, 200);
+      expect(response.data, {'data': 'artefato'});
+    });
+
+    test('should throw exception on 401', () async {
+      dioAdapter.onGet(
+        'https://example.com/api/artefato',
+        (server) => server.reply(401, {}),
+      );
+
+      expect(() async => await apiService.getArtefato(), throwsException);
+    });
+
+    test('should throw exception on 403', () async {
+      dioAdapter.onGet(
+        'https://example.com/api/artefato',
+        (server) => server.reply(403, {}),
+      );
+
+      expect(() async => await apiService.getArtefato(), throwsException);
+    });
+
+    test('should throw exception on 507', () async {
+      dioAdapter.onGet(
+        'https://example.com/api/artefato',
+        (server) => server.reply(507, {}),
+      );
+
+      expect(() async => await apiService.getArtefato(), throwsException);
+    });
   });
 }

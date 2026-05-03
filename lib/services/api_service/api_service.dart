@@ -1,13 +1,16 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:dio/dio.dart';
 
 class ApiService {
-  Future<Map<String, dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse('https://api.example.com/endpoint'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load data');
+  final Dio _dio;
+
+  ApiService(this._dio);
+
+  Future<Response> getArtefato() async {
+    try {
+      final response = await _dio.get('https://example.com/api/artefato');
+      return response;
+    } on DioException catch (e) {
+      throw Exception('Erro ao buscar artefato: ${e.message}');
     }
   }
 }
