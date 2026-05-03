@@ -97,3 +97,7 @@ dependencies:
   test/integration_tests/memory_leak_tests/memory_leak_test.dart:
 
   test/integration_tests/ux_tests/text_overflow_test/text_overflow_test.dart:
+
+  test/integration_tests/ux_tests/ux_dicas_tests/ux_dicas_test.dart:
+    assets:
+      - docs/dicas_construcao.md
