@@ -72,3 +72,6 @@ dev_dependencies:
     path: ./test/integration/peer_review_test/peer_review_test.dart
   guia_estilo_validation:
     path: .github/scripts/docs_validation/guia-estilo/validate_guia_estilo.sh
+
+dependencies:
+  leak_tracker_flutter_testing: ^9.0.0
