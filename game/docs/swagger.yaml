@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: Game API
+  version: 1.0.0
+paths:
+  /api/v1/docs:
+    get:
+      summary: Get API documentation
+      responses:
+        '200':
+          description: API documentation
+  /api/v1/endpoints:
+    get:
+      summary: Get available endpoints
+      responses:
+        '200':
+          description: Available endpoints

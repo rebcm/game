@@ -1,13 +1,16 @@
 #!/bin/bash
 
 # Validate API endpoints documentation
-if ! grep -q "swagger_ui_endpoint" ./lib/main.dart; then
-  echo "Error: Swagger UI endpoint not found in main.dart"
+if ! grep -q "GET /api/v1/docs" ./game/docs/swagger.yaml; then
+  echo "Missing endpoint: GET /api/v1/docs"
   exit 1
 fi
 
-# Check if API endpoints are documented
-if ! grep -q "Swagger UI" ./docs/api_documentation.md; then
-  echo "Error: API endpoints documentation not found"
+if ! grep -q "GET /api/v1/endpoints" ./game/docs/swagger.yaml; then
+  echo "Missing endpoint: GET /api/v1/endpoints"
   exit 1
 fi
+
+# Additional validation logic can be added here
+
+exit 0
