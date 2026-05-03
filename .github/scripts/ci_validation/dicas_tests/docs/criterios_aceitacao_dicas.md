@@ -1,15 +1,21 @@
 # Critérios de Aceitação para Dicas de Construção
 
-Este documento detalha os critérios de aceitação para as dicas de construção implementadas no jogo.
+## Introdução
 
-## Funcionalidade
+Para garantir que as dicas de construção sejam úteis e precisas, é importante validar seu conteúdo. Aqui estão os critérios de aceitação para as dicas.
 
-1. **Exibição**: As dicas devem ser exibidas corretamente quando solicitadas.
-2. **Conteúdo**: O conteúdo das dicas deve ser preciso e relevante.
-3. **Navegação**: A navegação entre as dicas deve ser suave e responsiva.
+## Critérios
 
-## Critérios de Aceitação
+1. **Relevância**: As dicas devem ser relevantes para o modo criativo do jogo.
+2. **Precisão Técnica**: As dicas devem ser tecnicamente precisas e refletir as funcionalidades atuais do jogo.
+3. **Clareza**: As dicas devem ser claras e fáceis de entender.
+4. **Utilidade**: As dicas devem ser úteis para os jogadores, oferecendo informações valiosas para melhorar sua experiência de jogo.
 
-- [ ] As dicas são exibidas corretamente em diferentes contextos do jogo.
-- [ ] O conteúdo das dicas é preciso e útil.
-- [ ] A navegação entre as dicas é responsiva e não causa travamentos.
+## Validação
+
+1. **Revisão Manual**: As dicas devem ser revisadas manualmente por um membro da equipe para garantir que atendam aos critérios acima.
+2. **Testes Automatizados**: Devem ser implementados testes automatizados para verificar a precisão técnica e a clareza das dicas.
+
+## Conclusão
+
+Seguir esses critérios de aceitação garante que as dicas de construção sejam de alta qualidade e úteis para os jogadores.
