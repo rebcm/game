@@ -2,31 +2,26 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para o deploy do jogo "Construção Criativa da Rebeca" no Flutter Web, garantindo a integridade e a funcionalidade da aplicação após o processo de deploy.
+Este documento define os critérios de aceitação para o deploy do jogo "Construção Criativa da Rebeca". Os critérios aqui estabelecidos garantem que o deploy seja bem-sucedido e atenda aos requisitos de qualidade e funcionalidade.
 
-## Critérios de Aceitação
+## Critérios
 
-1. **Build do Flutter Web**:
-   - O build do Flutter Web deve ser bem-sucedido sem erros ou warnings críticos.
+1. **Build do Flutter Web bem-sucedido**: O build do Flutter Web deve ser concluído sem erros.
+2. **Conectividade com Cloudflare**: A aplicação deve se conectar com sucesso ao Cloudflare.
+3. **Rollback em caso de falha**: Em caso de falha no deploy, o sistema deve realizar o rollback para a versão anterior.
 
-2. **Conectividade com Cloudflare**:
-   - A aplicação deve estabelecer conexão com Cloudflare sem erros.
-   - A autenticação e autorização devem ser realizadas corretamente.
+## Testes de Integração
 
-3. **Teste de Rollback**:
-   - Em caso de falha no deploy, o sistema deve realizar o rollback para a versão anterior sem perda de dados ou funcionalidades críticas.
-
-## Métricas de Sucesso
-
-- Taxa de sucesso do build: 100%
-- Tempo de resposta da aplicação: < 500ms
-- Taxa de erro de conectividade com Cloudflare: 0%
+Os seguintes testes de integração devem ser realizados:
+- Validação de build do Flutter Web
+- Verificação de conectividade com Cloudflare
+- Teste de rollback em caso de falha no deploy
 
 ## Responsabilidades
 
-- A equipe de desenvolvimento é responsável por garantir que os critérios sejam atendidos.
-- A equipe de QA deve validar os critérios após cada deploy.
+- A equipe de desenvolvimento é responsável por garantir que os critérios de aceitação sejam atendidos.
+- A equipe de QA é responsável por validar os testes de integração.
 
-## Revisão
+## Histórico de Revisões
 
-Este documento deve ser revisado a cada 3 meses ou sempre que houver mudanças significativas no processo de deploy.
+- [Inserir data] - Criação do documento
