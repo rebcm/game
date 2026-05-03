@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run tests
-        run: flutter test test/services/audio_cache/audio_cache_service_test.dart
+        run: flutter test test/audio_cache/audio_cache_test.dart
