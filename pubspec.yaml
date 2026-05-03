@@ -48,3 +48,5 @@ flutter:
 
   test/integration/latency_benchmark_test/latency_benchmark_test.dart:
 
+
+  test/integration/documentacao/documentacao_test.dart:
