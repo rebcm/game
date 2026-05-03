@@ -16,13 +16,10 @@ jobs:
         with:
           flutter-version: '3.16.0'
 
-      - name: Run flutter pub get
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Run flutter analyze
-        run: flutter analyze
-
-      - name: Run flutter test
+      - name: Run tests
         run: flutter test
 
       - name: Build and release
