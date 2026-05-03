@@ -70,3 +70,6 @@ dependency_overrides:
 
   assets:
     - docs/artefatos/matrizes/matriz-criterios-retencao.md
+  assets:
+    - docs/artefatos/criterios/criterios-aceitacao-documentacao.md
+    - docs/guias/guia-documentacao.md
