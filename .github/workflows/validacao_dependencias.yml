@@ -1,0 +1,21 @@
+name: Validação de Dependências
+
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Executar script de validação de dependências
+        run: ./docs/dependencias/validacao_dependencias.sh
+
