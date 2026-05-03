@@ -9,6 +9,8 @@ flutter:
     - docs/seo/palavras-chave.md
 
 dev_dependencies:
+  timer_stress_test:
+    path: ./test/integration/stress_test/timer_stress_test/timer_stress_test.dart
   audio_session_test:
     path: ./test/integration/audio_session_test/audio_session_test.dart
   audio_session: ^0.1.14
