@@ -1,4 +1,4 @@
-name: Golden Tests Telas de Dicas
+name: Telas Dicas Golden Test
 
 on:
   push:
@@ -6,18 +6,16 @@ on:
       - main
 
 jobs:
-  golden-tests:
+  golden-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.0'
-
-      - name: Run Golden Tests
-        run: |
-          flutter pub get
-          flutter test test/golden_tests/telas_dicas_test.dart --update-goldens
+      - run: flutter pub get
+      - run: flutter test test/golden_tests/telas_dicas_golden_test.dart --update-goldens
+      - uses: actions/upload-artifact@v3
+        with:
+          name: goldens
+          path: test/golden_tests/goldens
