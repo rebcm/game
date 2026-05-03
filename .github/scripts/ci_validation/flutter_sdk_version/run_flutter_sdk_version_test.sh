@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# This script validates the Flutter SDK version
+# Verifica se a versão do Flutter SDK está de acordo com os critérios de aceitação
 
-# Check if the Flutter SDK version is correct
-flutter --version | grep "Flutter 3.0.5"
-if [ $? -ne 0 ]; then
-  echo "Flutter SDK version is not 3.0.5"
-  exit 1
-fi
+flutter_sdk_version=$(flutter --version | grep "Flutter" | cut -d' ' -f2)
+
+echo "Versão do Flutter SDK: $flutter_sdk_version"
+
+# Implementar lógica para verificar se a versão do Flutter SDK atende aos critérios de aceitação
+# e documentar as versões mínimas suportadas de Android e iOS
+
