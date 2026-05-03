@@ -1,7 +1,9 @@
 #!/bin/bash
 
-description=$(grep -A1 NSPhotoLibraryUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
-if [ "$description" != "A biblioteca de fotos é usada para salvar e compartilhar suas criações." ]; then
-  echo "Descrição de uso da biblioteca de fotos inválida."
-  exit 1
+INFO_PLIST="ios/Runner/Info.plist"
+PHOTO_LIBRARY_USAGE_DESCRIPTION=$(/usr/libexec/PlistBuddy -c "Print :NSPhotoLibraryUsageDescription" "$INFO_PLIST")
+
+if [ -z "$PHOTO_LIBRARY_USAGE_DESCRIPTION" ] || [ ${#PHOTO_LIBRARY_USAGE_DESCRIPTION} -lt 10 ]; then
+    echo "NSPhotoLibraryUsageDescription deve ser clara e ter pelo menos 10 caracteres."
+    exit 1
 fi

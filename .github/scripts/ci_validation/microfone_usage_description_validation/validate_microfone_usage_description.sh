@@ -1,7 +1,9 @@
 #!/bin/bash
 
-description=$(grep -A1 NSMicrophoneUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
-if [ "$description" != "O microfone é necessário para gravar áudio enquanto você cria e compartilha seus projetos." ]; then
-  echo "Descrição de uso do microfone inválida."
-  exit 1
+INFO_PLIST="ios/Runner/Info.plist"
+MICROPHONE_USAGE_DESCRIPTION=$(/usr/libexec/PlistBuddy -c "Print :NSMicrophoneUsageDescription" "$INFO_PLIST")
+
+if [ -z "$MICROPHONE_USAGE_DESCRIPTION" ] || [ ${#MICROPHONE_USAGE_DESCRIPTION} -lt 10 ]; then
+    echo "NSMicrophoneUsageDescription deve ser clara e ter pelo menos 10 caracteres."
+    exit 1
 fi

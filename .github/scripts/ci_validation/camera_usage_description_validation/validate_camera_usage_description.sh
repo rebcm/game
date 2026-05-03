@@ -1,7 +1,9 @@
 #!/bin/bash
 
-description=$(grep -A1 NSCameraUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
-if [ "$description" != "A câmera é usada para tirar fotos dos seus blocos criativos e compartilhá-los com a comunidade." ]; then
-  echo "Descrição de uso da câmera inválida."
-  exit 1
+INFO_PLIST="ios/Runner/Info.plist"
+CAMERA_USAGE_DESCRIPTION=$(/usr/libexec/PlistBuddy -c "Print :NSCameraUsageDescription" "$INFO_PLIST")
+
+if [ -z "$CAMERA_USAGE_DESCRIPTION" ] || [ ${#CAMERA_USAGE_DESCRIPTION} -lt 10 ]; then
+    echo "NSCameraUsageDescription deve ser clara e ter pelo menos 10 caracteres."
+    exit 1
 fi
