@@ -1,16 +1,12 @@
 #!/bin/bash
 
-bash .github/scripts/ci_validation/run_microfone_usage_description_validation.sh
+# Run all CI validations
+echo "Running clean build validation..."
+bash .github/scripts/ci_validation/clean_build/run_clean_build_validation.sh
 
-./.github/scripts/ci_validation/latency_benchmark_test/run_latency_benchmark_test.sh
-
-./.github/scripts/ci_validation/documentacao_test/run_documentacao_test.sh
-# Executar validação de permissões
-./.github/scripts/ci_validation/run_permission_validation.sh
-
-
-./.github/scripts/ci_validation/audio_integration_test/run_audio_integration_test.sh
-./.github/scripts/ci_validation/mapeamento_estruturas_test/run_mapeamento_estruturas_test.sh
-./.github/scripts/ci_validation/flujo_integracion_test/run_flujo_integracion_test.sh
-
-./.github/scripts/ci_validation/audio_interruption_test/run_audio_interruption_test.sh
+if [ $? -eq 0 ]; then
+  echo "All CI validations successful."
+else
+  echo "One or more CI validations failed."
+  exit 1
+fi
