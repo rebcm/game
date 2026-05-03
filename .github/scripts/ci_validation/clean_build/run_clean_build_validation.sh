@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Navigate to the project root
+cd /home/user/game
+
+# Execute flutter clean
 flutter clean
+
+# Execute flutter pub get
 flutter pub get
-dart analyze
+
+# Execute dart analyze
+dart analyze --fatal-infos
