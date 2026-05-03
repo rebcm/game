@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/tips/tip_service.dart';
-import 'package:game/services/tips/tip_strategy.dart';
+import 'package:game/ui/screens/help/help_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      title: 'Voxel Game',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const MyHomePage(),
+      routes: {
+        '/help': (context) => const HelpScreen(),
+      },
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tips Demo'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            TipService().showTip(context, 'This is a tip!');
-          },
-          child: Text('Show Tip'),
-        ),
+      appBar: AppBar(title: const Text('Voxel Game')),
+      body: const Center(child: Text('Conteúdo do jogo')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).pushNamed('/help'),
+        tooltip: 'Ajuda',
+        child: const Icon(Icons.help),
       ),
     );
   }
