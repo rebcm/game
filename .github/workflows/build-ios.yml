@@ -1,10 +1,7 @@
-name: Build iOS
+name: build-ios
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build-ios:
@@ -13,16 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
-      - name: Build IPA
-        run: ./.github/scripts/build_ios.sh
-
-      - name: Upload IPA
-        uses: actions/upload-artifact@v3
-        with:
-          name: Runner.ipa
-          path: build/ios/ipa/Runner.ipa
+      - name: Build and upload IPA
+        run: .github/scripts/build_ios.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
