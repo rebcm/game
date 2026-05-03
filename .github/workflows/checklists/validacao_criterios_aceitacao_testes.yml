@@ -1,0 +1,27 @@
+name: Validação Critérios de Aceitação Testes
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run dart analyze
+        run: dart analyze
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Verify coverage
+        run: |
+          coverage=$(dart pub global run coverage:report --file=coverage/lcov.info | grep "lines" | awk '{print $3}' | sed 's/%//g')
+          if (( $(echo "$coverage < 80" | bc -l) )); then
+            echo "Cobertura de código abaixo de 80%: $coverage%"
+            exit 1
+          fi
