@@ -20,9 +20,6 @@ dev_dependencies:
 flutter:
   generate: true
 
-  # Add walkthrough documentation validation to the build process
-  docs_validation:
-    walkthrough_validation: ./.github/scripts/docs_validation/walkthrough_validation/validate_walkthrough.sh
   docs_validation:
     walkthrough_validation: ./.github/scripts/docs_validation/walkthrough_validation/validate_walkthrough.sh
   docs_validation:

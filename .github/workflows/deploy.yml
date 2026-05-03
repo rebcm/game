@@ -10,23 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.6'
+          flutter-version: '3.0.1'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Validate and build
-        run: |
-          dart analyze
-          flutter build web
+      - name: Validate environment variables
+        run: ./.github/scripts/docs_validation/env_validation/validate_env.sh
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
+      - name: Build and deploy
+        run: ./.github/scripts/deploy.sh

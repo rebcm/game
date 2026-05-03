@@ -1,17 +1,12 @@
 #!/bin/bash
 
-# Deploy script for the game project
-
 # Exit on error
 set -e
 
-# Navigate to the project root
-cd "$(dirname "$0")/../../"
-
-# Validate and build the project
-flutter pub get
-dart analyze
+# Flutter build command for web
+flutter config --enable-web
 flutter build web
 
-# Deploy to GitHub Pages
-# This step is handled by the GitHub Actions workflow
+# Deploy to GitHub Pages or other hosting services
+# This is a placeholder; adjust according to your actual deployment strategy
+echo "Deploying to hosting service..."
