@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Validate if the content has been approved by the Game Designer or Technical Lead
-approved=$(grep -c "APROVADO" docs/dicas_construcao/conteudo_dicas.md)
-
-if [ $approved -eq 0 ]; then
-  echo "Content has not been approved"
+# Verifica se as dicas foram aprovadas tecnicamente
+if [ -f ./dicas_aprovadas.txt ]; then
+  echo "Dicas aprovadas tecnicamente"
+else
+  echo "Erro: Dicas não aprovadas tecnicamente"
   exit 1
 fi

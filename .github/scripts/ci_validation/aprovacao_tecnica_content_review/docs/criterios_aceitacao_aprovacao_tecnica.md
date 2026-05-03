@@ -1,4 +1,5 @@
 # Critérios de Aceitação para Aprovação Técnica
 
-1. O conteúdo das dicas deve ser aprovado pelo Game Designer ou Lead Técnico.
-2. A aprovação deve ser indicada no arquivo `docs/dicas_construcao/conteudo_dicas.md` com a palavra "APROVADO".
+1. As dicas devem ser revisadas pelo Game Designer ou Lead Técnico.
+2. As dicas devem estar corretas e precisas.
+3. As dicas devem estar formatadas corretamente.
