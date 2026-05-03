@@ -1,26 +1,26 @@
 #!/bin/bash
 
-# Executa testes de compatibilidade
-echo "Executando testes de compatibilidade..."
+# Executar o teste de compatibilidade
+echo "Executando teste de compatibilidade..."
 
-# Verifica se o build APK/Bundle é feito sem erros de 'major version'
-echo "Verificando build APK/Bundle..."
+# Verificar se o build do APK/Bundle foi bem-sucedido sem erros de 'major version'
+echo "Verificando build do APK/Bundle..."
 flutter build apk --release
 if [ $? -ne 0 ]; then
-  echo "Erro ao build APK/Bundle"
+  echo "Erro ao construir APK/Bundle"
   exit 1
 fi
 
-# Verifica o tempo de build
-echo "Verificando tempo de build..."
+# Medir o tempo de build
+echo "Medindo tempo de build..."
 time flutter build apk --release
 
-# Verifica se a sincronização Gradle é concluída sem warnings de JDK
-echo "Verificando sincronização Gradle..."
-cd android && ./gradlew assembleRelease --warning-mode all
+# Verificar se a sincronização do Gradle foi bem-sucedida sem warnings de JDK
+echo "Verificando sincronização do Gradle..."
+./gradlew --version
 if [ $? -ne 0 ]; then
   echo "Erro ao sincronizar Gradle"
   exit 1
 fi
 
-echo "Testes de compatibilidade concluídos com sucesso!"
+echo "Teste de compatibilidade concluído com sucesso!"

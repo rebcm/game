@@ -2,32 +2,27 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a compatibilidade do projeto game, focando em métricas claras para build APK/Bundle sem erros de 'major version', tempo de build estável e sincronização Gradle concluída sem warnings de JDK.
+Este documento define os critérios de aceitação para a compatibilidade do projeto "Construção Criativa da Rebeca". Os critérios aqui estabelecidos visam garantir que o aplicativo seja construído e executado sem erros ou warnings relacionados à compatibilidade.
 
 ## Critérios
 
-1. **Build APK/Bundle sem erros de 'major version'**:
-   - O processo de build deve ser concluído sem erros relacionados à versão major.
-   - A versão do JDK utilizada deve ser compatível com a versão do Gradle.
-
-2. **Tempo de build estável**:
-   - O tempo de build deve ser consistente e não apresentar variações significativas.
-   - O tempo de build deve ser monitorado e registrado para garantir a estabilidade.
-
-3. **Sincronização Gradle concluída sem warnings de JDK**:
-   - A sincronização do Gradle deve ser concluída sem warnings relacionados ao JDK.
-   - A configuração do JDK deve ser compatível com as exigências do projeto.
+1. **Build APK/Bundle sem erros de 'major version'**: O processo de build do APK ou Bundle deve ser concluído sem erros relacionados à versão major do Java ou Kotlin.
+2. **Tempo de build estável**: O tempo de build do projeto deve ser estável e não apresentar variações significativas entre builds consecutivas.
+3. **Sincronização Gradle concluída sem warnings de JDK**: A sincronização do Gradle deve ser concluída sem warnings relacionados à configuração do JDK.
 
 ## Métricas de Avaliação
 
-- **Build APK/Bundle**:
-  - Sucesso na compilação sem erros de 'major version'.
-  - Registro do tempo de build para análise de estabilidade.
+As métricas abaixo serão utilizadas para avaliar a compatibilidade do projeto:
 
-- **Sincronização Gradle**:
-  - Sucesso na sincronização sem warnings de JDK.
-  - Configuração do JDK compatível com o Gradle.
+- Sucesso na construção do APK/Bundle sem erros de 'major version'.
+- Medição do tempo de build em diferentes ambientes (desenvolvimento, CI/CD).
+- Sucesso na sincronização do Gradle sem warnings de JDK.
 
-## Conclusão
+## Responsabilidades
 
-Os critérios definidos neste documento são fundamentais para garantir a compatibilidade e a estabilidade do projeto game. A aderência a esses critérios é essencial para o sucesso do projeto.
+- A equipe de desenvolvimento é responsável por garantir que o código seja compatível e atenda aos critérios estabelecidos.
+- A equipe de CI/CD é responsável por monitorar e relatar problemas de compatibilidade durante o processo de build e deploy.
+
+## Revisão e Atualização
+
+Este documento será revisado e atualizado sempre que necessário, especialmente quando houver mudanças significativas no projeto ou na configuração do ambiente de desenvolvimento.
