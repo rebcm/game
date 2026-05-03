@@ -1,31 +1,23 @@
 openapi: 3.0.0
 info:
-  title: Game API
+  title: Voxel Game API
+  description: API for voxel game
   version: 1.0.0
 paths:
-  /blocks:
+  /docs:
+    get:
+      summary: Get API documentation
+      responses:
+        '200':
+          description: API documentation
+  /api/v1/blocks:
     get:
       summary: Get all blocks
       responses:
         '200':
-          description: A list of blocks
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Block'
-              example:
-                - id: 1
-                  name: Block 1
-                - id: 2
-                  name: Block 2
-components:
-  schemas:
-    Block:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
+          description: List of blocks
+    post:
+      summary: Create a new block
+      responses:
+        '201':
+          description: Block created
