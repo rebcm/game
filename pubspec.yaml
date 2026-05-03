@@ -43,3 +43,8 @@ flutter:
 
   # Contract test assets
   - test/integration/contract/contract_test.dart
+
+  # Flutter SDK version assets
+  - .github/scripts/ci_validation/flutter_sdk_version/docs/criterios_aceitacao_flutter_sdk_version.md
+  - docs/flutter_sdk_versoes_minimas.md
+
