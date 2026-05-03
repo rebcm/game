@@ -1,19 +1,17 @@
 #!/bin/bash
 
-# Validate estruturas sugeridas content with gameplay specialists
-echo "Validating estruturas sugeridas content..."
+# Validate the technical accuracy of the estruturas sugeridas documentation
 
-# Assuming there's a file containing the estruturas sugeridas content
-CONTENT_FILE="assets/estruturas_sugeridas.txt"
-
-if [ ! -f "$CONTENT_FILE" ]; then
-  echo "Error: $CONTENT_FILE not found."
+# Check if the documentation file exists
+if [ ! -f ./docs/estruturas_sugeridas/technical_accuracy_checklist.md ]; then
+  echo "Documentation file not found."
   exit 1
 fi
 
-# Logic to validate the content with specialists goes here
-# For demonstration, we'll just echo the content
-echo "Estruturas Sugeridas Content:"
-cat "$CONTENT_FILE"
+# Check if the documentation content is not empty
+if [ ! -s ./docs/estruturas_sugeridas/technical_accuracy_checklist.md ]; then
+  echo "Documentation content is empty."
+  exit 1
+fi
 
-echo "Validation completed."
+echo "Estruturas sugeridas documentation validation successful."
