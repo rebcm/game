@@ -28,23 +28,8 @@ flutter:
   integration_test:
     sdk: flutter
 
-  chunk_transition_stress_test:
-    path: test/integration_test/performance_test/chunk_transition_test.dart
-
-  ui_resolution_test:
-    path: test/integration_test/ui_test/resolution_test/resolution_test.dart
-
   e2e_pipeline_test:
     path: test/integration_test/e2e_test/e2e_pipeline_test.dart
-
-  chunking_edge_cases_test:
-    path: test/integration_test/chunking_test/chunking_edge_cases_test.dart
-
-  rebuild_monitoring_test:
-    path: test/integration_test/performance_test/rebuild_monitoring_test.dart
-
-  validation_test:
-    path: test/integration_test/validation_test/validation_test.dart
 
   chunking_edge_cases_test:
     path: test/integration_test/chunking_test/chunking_edge_cases_test.dart
