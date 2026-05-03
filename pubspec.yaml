@@ -51,3 +51,5 @@ flutter:
   integration_test/documentacao_test/documentacao_test.dart:
 
   integration_test/responsividade_test/responsividade_tela_pequena_test.dart:
+
+  integration_test/performance_test/serialization_performance_test.dart:
