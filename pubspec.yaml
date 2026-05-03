@@ -103,3 +103,6 @@ flutter:
 
   env_validation_test:
     path: ./test/env_validation_test
+
+  ui_test_config:
+    path: ./test/ui_test_config
