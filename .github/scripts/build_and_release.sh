@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source .github/scripts/ci_validation/secrets_validation/validate_secrets.sh
+source .github/scripts/secrets_validation/validate_cloudflare_api_token.sh
 
-# Restante do script de build e release
+# Rest of the build and release script
