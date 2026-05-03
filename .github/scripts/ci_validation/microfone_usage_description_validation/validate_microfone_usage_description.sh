@@ -3,7 +3,7 @@
 INFO_PLIST="ios/Runner/Info.plist"
 MICROPHONE_USAGE_DESCRIPTION=$(/usr/libexec/PlistBuddy -c "Print :NSMicrophoneUsageDescription" "$INFO_PLIST")
 
-if [ -z "$MICROPHONE_USAGE_DESCRIPTION" ] || [ ${#MICROPHONE_USAGE_DESCRIPTION} -lt 10 ]; then
-    echo "NSMicrophoneUsageDescription deve ser clara e ter pelo menos 10 caracteres."
+if [ -z "$MICROPHONE_USAGE_DESCRIPTION" ] || ! echo "$MICROPHONE_USAGE_DESCRIPTION" | grep -q "microfone é necessário para gravar áudios"; then
+    echo "NSMicrophoneUsageDescription não está configurada corretamente."
     exit 1
 fi
