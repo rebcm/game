@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter test test/integration_test/audio_test/edge_cases_test/audio_edge_cases_test.dart
+flutter drive --driver=test_driver/integration_test.dart --target=./.github/scripts/ci_validation/audio_edge_cases_test/audio_edge_cases_test.dart
