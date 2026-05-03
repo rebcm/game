@@ -11,24 +11,27 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver?.close();
+        await driver!.close();
       }
     });
 
-    test('measure cold start latency', () async {
-      final timeline = await driver?.traceAction(() async {
-        await driver?.requestData('start');
-      });
-      final summary = TimelineSummary.summarize(timeline!);
-      summary.writeSummaryToFile('cold_start_latency', pretty: true);
-    });
+    test('Cold Start vs Cached', () async {
+      await driver!.waitUntilFirstFrameRasterized();
 
-    test('measure cached start latency', () async {
-      final timeline = await driver?.traceAction(() async {
-        await driver?.requestData('start');
+      final coldStartTime = await driver!.measure(() async {
+        await driver!.tap(find.text('Restart'));
       });
-      final summary = TimelineSummary.summarize(timeline!);
-      summary.writeSummaryToFile('cached_start_latency', pretty: true);
+
+      final cachedTime = await driver!.measure(() async {
+        await driver!.tap(find.text('Restart'));
+      });
+
+      final report = 'Cold Start: $coldStartTime, Cached: $cachedTime';
+      print(report);
+
+      // Save to file for later analysis
+      final file = File('test_driver/latency_metrics.txt');
+      await file.writeAsString(report);
     });
   });
 }

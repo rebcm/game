@@ -1,20 +1,10 @@
-    name: Validate Secrets
-    
 name: IO Latency Metrics Test
 
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
 
-      validate-secrets:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-          - name: Validate Secrets
-            run: .github/scripts/validate_secrets.sh
-        continue-on-error: false
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,15 +19,9 @@ jobs:
 
       - name: Run Flutter Driver Test
         run: |
-          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile --trace-startup --cache
+          flutter drive --target=test_driver/app.dart --driver=test_driver/app_test.dart --profile
+          flutter pub run flutter_driver --profile --target=test_driver/app.dart --driver=test_driver/app_test.dart
 
       - name: Generate Latency Metrics Report
         run: |
-          # TO DO: implement report generation logic here
-          echo "Generating report..."
-
-      - name: Upload Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: latency-metrics-report
-          path: latency-metrics-report.txt
+          cat test_driver/latency_metrics.txt
