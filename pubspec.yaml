@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   swagger: ^1.0.0
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_driver:
@@ -21,7 +22,6 @@ dev_dependencies:
   test: ^1.21.4
   leak_tracker: ^9.0.0
   memory_info: ^0.2.0
-  http: ^0.13.5
   protobuf: ^2.1.0
 
 flutter:
@@ -37,14 +37,5 @@ flutter:
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
     - docs/audio_compatibility/audio_compatibility_matrix.md
-
-  assets:
-    - docs/audio_compatibility/audio_compatibility_matrix.md
-
-  # Contract test assets
-  - test/integration/contract/contract_test.dart
-
-  # Flutter SDK version assets
-  - .github/scripts/ci_validation/flutter_sdk_version/docs/criterios_aceitacao_flutter_sdk_version.md
-  - docs/flutter_sdk_versoes_minimas.md
+    - test/integration/contract/contract_test.dart
 
