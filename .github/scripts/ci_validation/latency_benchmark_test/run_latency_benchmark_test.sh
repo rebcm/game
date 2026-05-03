@@ -1,3 +1,4 @@
 #!/bin/bash
 
-flutter drive --target=test/latency_benchmark/latency_benchmark_test.dart --driver=test_driver/integration_test.dart
+# Run latency benchmark test for Flutter isolate communication
+flutter drive --target=test_driver/latency_benchmark_test.dart --driver=test_driver/latency_benchmark_test_driver.dart
