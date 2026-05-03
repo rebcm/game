@@ -1,0 +1,16 @@
+name: Docs Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate tone and style
+        run: bash .github/scripts/docs_validation/validate_tone_and_style.sh
