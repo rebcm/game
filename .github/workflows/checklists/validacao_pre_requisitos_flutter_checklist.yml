@@ -1,0 +1,38 @@
+name: Checklist de Pré-requisitos Flutter
+
+on:
+  workflow_dispatch:
+
+jobs:
+  validate_flutter_prerequisites:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Flutter SDK version
+        run: |
+          echo "Validating Flutter SDK version..."
+          flutter --version
+
+      - name: Validate Dart SDK version
+        run: |
+          echo "Validating Dart SDK version..."
+          dart --version
+
+      - name: List system dependencies
+        run: |
+          echo "Listing system dependencies..."
+          sudo apt update
+          sudo apt list --installed
+
+      - name: Validate dependencies
+        run: |
+          echo "Validating dependencies..."
+          dart pub deps
+
+      - name: Run dart analyze
+        run: |
+          echo "Running dart analyze..."
+          dart analyze
+
