@@ -74,3 +74,9 @@ flutter:
   flutter:
     assets:
       - test/integration_tests/audio_integration_test/
+  flutter:
+    assets:
+      - docs/dicas_construcao/criterios_aceitacao_ui_dicas.md
+  flutter:
+    assets:
+      - .github/scripts/ci_validation/dicas_tests/docs/criterios_aceitacao_dicas.md

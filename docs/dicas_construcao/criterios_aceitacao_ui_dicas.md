@@ -1,19 +1,16 @@
 # Critérios de Aceitação para UI de Dicas
 
-## Visão Geral
+Este documento descreve os critérios de aceitação para a interface de usuário (UI) das dicas de construção no jogo.
 
-Este documento detalha os critérios de aceitação para a UI de Dicas, garantindo que atenda aos requisitos funcionais e não funcionais.
+## Requisitos
 
-## Critérios
+1. **Visibilidade**: As dicas devem ser visíveis e legíveis em diferentes condições de iluminação do jogo.
+2. **Consistência**: A UI das dicas deve seguir o padrão de design existente no jogo.
+3. **Navegação**: Deve ser fácil navegar pelas dicas, com botões claros para avançar e retroceder.
+4. **Conteúdo**: O conteúdo das dicas deve ser relevante e útil para os jogadores.
 
-1. **Visibilidade Inicial**: A UI de Dicas deve ser visível ao iniciar o jogo pela primeira vez.
-2. **Conteúdo Relevante**: As dicas devem conter informações úteis sobre o jogo.
-3. **Gatilhos de Exibição**: A UI de Dicas deve ser exibida ao pressionar o botão de ajuda.
-4. **Fechamento**: A UI de Dicas deve ser fechada ao clicar no botão de fechar.
+## Critérios de Aceitação
 
-## Testes de Aceitação
-
-1. Verificar se a UI de Dicas é exibida ao iniciar o jogo.
-2. Verificar se o conteúdo das dicas é relevante.
-3. Verificar se a UI de Dicas é exibida ao pressionar o botão de ajuda.
-4. Verificar se a UI de Dicas é fechada corretamente.
+- [ ] As dicas são exibidas corretamente em diferentes dispositivos e orientações de tela.
+- [ ] A navegação pelas dicas é intuitiva e fácil de usar.
+- [ ] O conteúdo das dicas está correto e é útil para os jogadores.
