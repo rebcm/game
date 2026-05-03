@@ -20,7 +20,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run deploy script
+      - name: Validate CI/CD
+        run: ./.github/scripts/ci_validation/run_ci_validation.sh
+
+      - name: Deploy to production
         env:
           WRANGLER_TOKEN: ${{ secrets.WRANGLER_TOKEN }}
           WRANGLER_ACCOUNT_ID: ${{ secrets.WRANGLER_ACCOUNT_ID }}
