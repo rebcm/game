@@ -34,3 +34,5 @@ jobs:
 
       - name: Run accessibility tests
         run: flutter test test/accessibility/wcag_checklist_test.dart
+      - name: Validate Golden Files
+        run: .github/scripts/validate_golden_files.sh
