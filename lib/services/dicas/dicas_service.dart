@@ -11,10 +11,8 @@ class DicasService {
   DicasService._();
 
   void mostrarDica(BuildContext context, String mensagem) {
-    // Implementação da lógica de exibição de dicas
+    // Implementar lógica para exibir dicas
     // Pode ser um modal, tooltip, etc.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(mensagem)),
-    );
+    // Deve ser configurável
   }
 }

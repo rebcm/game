@@ -68,3 +68,6 @@ dev_dependencies:
     path: ./test/integration/audio_session_test/audio_session_test.dart
   audio_session:
     sdk: audio_session
+
+  dicas_service:
+    path: ./lib/services/dicas
