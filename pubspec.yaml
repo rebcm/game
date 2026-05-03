@@ -28,6 +28,7 @@ flutter:
   assets:
     - docs/swagger_endpoints.md
     - docs/swagger_ui.html
+    - docs/dicas_construcao/conteudo_dicas.md
     - docs/audio_api_comparativo/audio_api_comparativo.md
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
@@ -52,3 +53,6 @@ flutter:
   flutter:
     assets:
       - integration_test/dicas_ui_test.dart
+  flutter:
+    assets:
+      - docs/dicas_construcao/conteudo_dicas.md

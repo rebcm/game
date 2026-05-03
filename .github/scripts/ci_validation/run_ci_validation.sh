@@ -10,3 +10,4 @@ else
   echo "One or more CI validations failed."
   exit 1
 fi
+./.github/scripts/ci_validation/run_dicas_construcao_test.sh
