@@ -5,3 +5,6 @@ flutter:
     - test/responsividade/tela_pequena_test.dart
   assets:
     - docs/glossario.md
+
+dev_dependencies:
+  analyzer: ^5.13.0
