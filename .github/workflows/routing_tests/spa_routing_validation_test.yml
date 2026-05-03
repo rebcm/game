@@ -1,0 +1,46 @@
+name: SPA Routing Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-routing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Validate _redirects file
+        run: |
+          if [ ! -f static/_redirects ]; then
+            echo "_redirects file not found"
+            exit 1
+          fi
+          if ! grep -q "/\* /index.html 200" static/_redirects; then
+            echo "_redirects file does not contain correct redirect rule"
+            exit 1
+          fi
+
+      - name: Verify Cloudflare Pages routing
+        run: |
+          echo "Verifying Cloudflare Pages routing..."
+          # Add logic here to verify the routing if needed
+
+      - name: Run Flutter Web build
+        run: flutter build web --release
+
+      - name: Check for 404 on deep routes
+        run: |
+          echo "Checking for 404 on deep routes..."
+          # This step should be adapted to actually test the routes
+          # For example, using curl or a similar tool to check HTTP status codes
