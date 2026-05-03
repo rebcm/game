@@ -39,3 +39,6 @@ dev_dependencies:
     path: .github/scripts/docs_validation/swagger_endpoints/validate_swagger_endpoints.sh
   documentacao_test:
     path: ./test/integration/documentacao_test/documentacao_test.dart
+
+  flutter_sdk_versoes_validation:
+    path: .github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
