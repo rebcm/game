@@ -19,3 +19,5 @@ supportedLocales:
   - test/permission_edge_cases/permission_edge_cases_test.dart
 
   - test/rebuild_performance/rebuild_performance_test.dart
+
+  - test/audio_edge_cases/audio_edge_cases_test.dart

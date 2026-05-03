@@ -1,2 +1,3 @@
 #!/bin/bash
-flutter drive --driver=test/driver.dart --target=test/integration_tests/audio_tests/audio_edge_cases_test.dart
+
+flutter drive --driver=test_driver/integration_test.dart --target=test/audio_edge_cases/audio_edge_cases_test.dart
