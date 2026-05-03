@@ -97,3 +97,8 @@ flutter:
 
   memory_baseline_test:
     path: ./benchmarks/memory_baseline
+  key_mapping_service:
+    path: ./lib/services/key_mapping_service
+
+  key_mapping_persistence_test:
+    path: ./integration_test/key_mapping_persistence_test
