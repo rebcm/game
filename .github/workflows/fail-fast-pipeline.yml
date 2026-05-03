@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Fail Fast Pipeline
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  fail-fast:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,11 +17,5 @@ jobs:
         with:
           flutter-version: '3.16.0'
 
-      - name: Analyze code
-        run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Run integration tests
-        run: flutter drive --target=test/integration_test/e2e_test/e2e_pipeline_test.dart
+      - name: Run fail fast script
+        run: .github/scripts/ci_validation/fail_fast_pipeline.sh
