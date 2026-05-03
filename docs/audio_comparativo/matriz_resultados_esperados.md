@@ -1,19 +1,28 @@
 # Matriz de Resultados Esperados para Áudio
 
-A tabela a seguir apresenta o comportamento esperado do sistema de áudio do jogo em diferentes cenários e plataformas.
+Este documento define a matriz de resultados esperados para o comportamento do áudio no jogo em diferentes cenários e plataformas.
 
-| Cenário | Plataforma | Comportamento Esperado |
-| --- | --- | --- |
-| Modo Silencioso | Android | O áudio do jogo deve ser silenciado |
-| Modo Silencioso | iOS | O áudio do jogo deve ser silenciado |
-| Alternância de Hardware | Android | O áudio do jogo deve ser pausado e retomado corretamente |
-| Alternância de Hardware | iOS | O áudio do jogo deve ser pausado e retomado corretamente |
+## Cenários Testados
+
+1. Modo Silencioso
+2. Alternância de Hardware (fones de ouvido, alto-falantes)
+
+## Plataformas
+
+1. Android
+2. iOS
+
+## Matriz de Comportamento Esperado
+
+| Cenário          | Plataforma | Comportamento Esperado                                      |
+|------------------|------------|-------------------------------------------------------------|
+| Modo Silencioso  | Android    | O áudio deve ser silenciado                                 |
+| Modo Silencioso  | iOS        | O áudio deve ser silenciado                                 |
+| Alternância HW   | Android    | O áudio deve continuar sem interrupção                     |
+| Alternância HW   | iOS        | O áudio deve continuar sem interrupção                     |
 
 ## Critérios de Aceitação
 
-1. O áudio do jogo deve ser silenciado quando o dispositivo estiver no modo silencioso.
-2. O áudio do jogo deve ser pausado e retomado corretamente quando houver alternância de hardware.
+1. O áudio deve ser silenciado quando o dispositivo está no modo silencioso.
+2. A alternância de hardware não deve interromper a reprodução de áudio.
 
-## Referências
-
-- [Critérios de Aceitação para Áudio](../.github/scripts/ci_validation/audio_edge_cases_test/docs/criterios_aceitacao_audio.md)
