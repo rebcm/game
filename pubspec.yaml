@@ -43,3 +43,5 @@ flutter:
   integration_test/external_interruptions_test.dart:
 
   integration_test/stress_test/timer_stress_test.dart:
+  assets:
+    - docs/arquitetura/guia_estilo_pastas.md
