@@ -7,3 +7,5 @@ dev_dependencies:
 
   integration_test:
     path: test/responsividade
+
+  game/services/chunk_manager/chunk_lock_manager.dart:
