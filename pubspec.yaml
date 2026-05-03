@@ -42,3 +42,6 @@ flutter:
 
   performance_baseline:
     path: ./benchmarks/performance_baseline
+
+  performance_baseline_test:
+    path: ./benchmarks/performance_baseline
