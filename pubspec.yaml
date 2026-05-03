@@ -20,66 +20,11 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   test: ^1.21.4
+  pact: ^1.6.1
+  pact_http: ^1.1.1
   leak_tracker: ^9.0.0
   memory_info: ^0.2.0
   protobuf: ^2.1.0
 
 flutter:
-  - test/integration/documentacao/documentacao_test.dart
-  - test/integration/audio_integration_test/audio_integration_test.dart
-  assets:
-    - assets/audio/
-    - docs/dicas_construcao/conteudo_dicas.md
-    - assets/audio/
-    - docs/dicas_construcao/conteudo_dicas_formatado.md
-    - assets/audio/
-    - docs/bloco_documentation.json
-    - assets/audio/
-    - docs/seo/palavras-chave.md
-    - assets/audio/
-    - docs/audio_compatibility/audio_compatibility_matrix.md
-    - assets/audio/
-    - test/integration/contract/contract_test.dart
-    - assets/audio/
-    - docs/cloudflare_pages_pipeline/minimum_permissions_matrix.md
-    - assets/audio/
-    - .github/scripts/ci_validation/cloudflare_pages_permissions/docs/criterios_aceitacao_permissoes.md
-    - assets/audio/
-    - docs/flutter_sdk_version.md
-    - assets/audio/
-    - test/integration/documentacao/documentacao_test.dart
-  - test/integration/audio_integration_test/audio_integration_test.dart
-    - assets/audio/
-    - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
-    - assets/audio/
-    - docs/i18n/pt-BR/dicas_construcao/conteudo_dicas.md
-    - assets/audio/
-    - docs/i18n/en-US/dicas_construcao/conteudo_dicas.md
-    - assets/audio/
-    - docs/i18n/pt-BR/bloco_documentation.json
-    - assets/audio/
-    - docs/i18n/en-US/bloco_documentation.json
-    - assets/audio/
-    - docs/i18n/pt-BR/seo/palavras-chave.md
-    - assets/audio/
-    - docs/i18n/en-US/seo/palavras-chave.md
-    - assets/audio/
-    - docs/documentacao/conteudo_documentacao.md
-    - assets/audio/
-  - test/integration/audio_stress_test/audio_stress_test.dart
-    - assets/audio/
-  - test/integration/contract/contract_test.dart
-    - assets/audio/
-  - test/integration/audio_integration_test/audio_integration_test.dart
-    - assets/audio/
-  - test/integration/audio_recovery_test/audio_recovery_test.dart
-    - assets/audio/
-
-  - test/integration/audio_integration_test/audio_integration_test.dart
-  - test/integration/audio_integration_test/main.dart
-  - test/integration/audio_stress_test/audio_stress_test.dart
-
-  - test/integration/dicas_ui_test/dicas_ui_test.dart
-  - test/integration/documentacao/documentacao_test.dart
-  - test/integration/audio_integration_test/audio_integration_test.dart
-  - test/integration/audio_recovery_test/audio_recovery_test.dart
+  # existing config...
