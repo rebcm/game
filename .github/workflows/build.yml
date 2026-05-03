@@ -13,12 +13,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Validate secrets
-        run: .github/scripts/validate_secrets.sh
+        run: ./.github/scripts/validate_secrets.sh
         env:
           API_KEY: ${{ secrets.API_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
-      - name: Build and test
-        run: |
-          echo "Building and testing..."
-          # existing build and test commands here
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter build
