@@ -1,7 +1,10 @@
-name: Main Workflow
+name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -11,15 +14,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Build the project
-        run: |
-          echo "Building the project..."
-      - name: Run unit tests
-        run: |
-          echo "Running unit tests..."
-      - name: Run integration tests
-        run: |
-          echo "Running integration tests..."
-      - name: Deploy to production
-        run: |
-          echo "Deploying to production..."
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build and test
+        run: flutter test
+
+      - name: Deploy
+        run: flutter build
+

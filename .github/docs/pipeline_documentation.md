@@ -1,23 +1,36 @@
-# CI/CD Pipeline Documentation
+# Documentação do Pipeline CI/CD
 
-## Overview
+## Introdução
 
-This pipeline automates the build, test, and deployment of the game.
+Este documento detalha o pipeline de CI/CD utilizado no projeto `rebcm/game`. O pipeline é responsável por automatizar o processo de build, teste e deploy do jogo.
 
-## Secrets
+## Ferramenta de CI/CD
 
-The following secrets are required:
-- CLOUDFLARE_API_TOKEN
-- CLOUDFLARE_ACCOUNT_ID
+A ferramenta de CI/CD utilizada é o GitHub Actions.
 
-## Workflow
+## Etapas do Pipeline
 
-1. Checkout code
-2. Setup Flutter
-3. Install dependencies
-4. Analyze code
-5. Build and release
+1. **Build**: Compila o código Flutter do jogo.
+2. **Teste**: Executa os testes unitários e de integração do jogo.
+3. **Deploy**: Realiza o deploy do jogo para a plataforma de destino.
 
-## Troubleshooting
+## Gatilhos
 
-Check the workflow logs for errors.
+O pipeline é acionado nos seguintes eventos:
+
+* Push para a branch `main`
+* Criação de pull requests para a branch `main`
+
+## Horários
+
+O pipeline é executado em tempo real, sem horários agendados.
+
+## Configuração
+
+A configuração do pipeline está definida no arquivo `.github/workflows/main.yml`.
+
+## Detalhes Adicionais
+
+* O pipeline utiliza a imagem `flutter:latest` para compilar e testar o código.
+* O deploy é realizado utilizando a ação `flutter build` e `flutter deploy`.
+
