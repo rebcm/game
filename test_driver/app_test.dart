@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Cold Boot Test', () {
+  group('Smoke Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -11,13 +11,12 @@ void main() {
 
     tearDownAll(() async {
       if (driver != null) {
-        driver!.close();
+        driver?.close();
       }
     });
 
-    test('Cold boot test', () async {
-      // Implement your test logic here
-      await driver!.waitUntilNoTransientCallbacks();
+    test('Smoke test', () async {
+      await driver?.waitUntilFirstFrameRasterized();
     });
   });
 }
