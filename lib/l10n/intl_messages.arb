@@ -1,6 +1,6 @@
 {
-  "titulo": "Rebeca's Creative Construction",
-  "@titulo": {
-    "description": "Título da aplicação"
+  "long_text_key": "This is a very long text that should be tested for overflow",
+  "@long_text_key": {
+    "description": "A long text to test overflow"
   }
 }

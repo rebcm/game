@@ -9,3 +9,12 @@ dependencies:
   swagger: ^1.0.0
 
   docs/walkthrough.md
+
+flutter:
+  generate: true
+  localizationsDelegates:
+    - GlobalMaterialLocalizations.delegate
+    - GlobalWidgetsLocalizations.delegate
+  supportedLocales:
+    - de
+    - fr
