@@ -9,6 +9,12 @@ dev_dependencies:
   golden_toolkit: ^0.13.0
 
 tests:
+  - test/memory_tests/isolate_memory_test.dart
+  - test/memory_tests/memory_leak_profiling_test.dart
   - test/dicas_test.dart
   - test/contract_tests/openapi_contract_test.dart
   - test/golden_tests/tela_dicas_golden_test.dart
+
+  - test/memory_tests/memory_leak_profiling_test.dart
+
+  - test/memory_tests/isolate_memory_test.dart
