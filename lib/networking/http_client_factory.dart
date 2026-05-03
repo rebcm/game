@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:rebcm/networking/http_client.dart';
+import 'package:game/networking/http_client.dart';
 
 class HttpClientFactory {
   static CustomHttpClient createHttpClient() {
