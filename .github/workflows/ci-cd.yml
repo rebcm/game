@@ -6,17 +6,20 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup wrangler
-        run: npm install -g wrangler
-      - name: Set secrets
-        env:
-          DATABASE_URL: \${{ secrets.DATABASE_URL }}
-          API_KEY: \${{ secrets.API_KEY }}
-        run: ./scripts/set_secrets.sh
-      - name: Deploy
-        run: wrangler publish --env production
+
+      - name: Validate Secrets
+        uses: ./.github/workflows/secrets_validation
+
+      - name: Install dependencies
+        run: |
+          flutter pub get
+
+      - name: Build and test
+        run: |
+          flutter build
+          flutter test
