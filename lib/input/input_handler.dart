@@ -1,17 +1,27 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:game/player/player_state.dart';
 
-class InputHandler with ChangeNotifier {
-  double _velocity = 0;
+class InputHandler {
+  final PlayerState playerState;
 
-  double get velocity => _velocity;
+  InputHandler(this.playerState);
 
-  void updateVelocity(double newVelocity) {
-    _velocity = newVelocity;
-    notifyListeners();
+  void handleKeyEvent(RawKeyEvent event) {
+    if (event.isKeyPressed(LogicalKeyboardKey.keyW) ||
+        event.isKeyPressed(LogicalKeyboardKey.keyA) ||
+        event.isKeyPressed(LogicalKeyboardKey.keyS) ||
+        event.isKeyPressed(LogicalKeyboardKey.keyD)) {
+      playerState.updateState(CharacterState.walking);
+    } else {
+      playerState.updateState(CharacterState.idle);
+    }
   }
 
-  void resetVelocity() {
-    _velocity = 0;
-    notifyListeners();
+  void handleTouchEvent(TouchEvent event) {
+    if (event.type == TouchEventType.move) {
+      playerState.updateState(CharacterState.walking);
+    } else if (event.type == TouchEventType.end) {
+      playerState.updateState(CharacterState.idle);
+    }
   }
 }
