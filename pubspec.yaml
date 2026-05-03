@@ -27,3 +27,5 @@ tests:
   - test/memory_tests/isolate_memory_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
     - docs/peer_review.md
+
+  - test/i18n_tests/layout_dicas_i18n_test.dart
