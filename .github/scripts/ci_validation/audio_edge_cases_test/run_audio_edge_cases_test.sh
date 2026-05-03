@@ -1,5 +1,3 @@
 #!/bin/bash
 
-# Executar testes de edge cases para o sistema de áudio
-flutter test ./test/audio_edge_cases_test.dart --coverage
-
+flutter test ./.github/scripts/ci_validation/audio_edge_cases_test/audio_edge_cases_test.dart

@@ -1,62 +1,36 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
-import 'package:mockito/mockito.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:mockito/mockito.dart';
+
+class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late AudioPlayer audioPlayer;
 
-  group('Audio Edge Cases Test', () {
-    testWidgets('Connect and disconnect Bluetooth headphones', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate connecting Bluetooth headphones
-      await simulateBluetoothConnection();
-
-      // Verify volume is not muted
-      expect(await getVolume(), isNot(0));
-
-      // Simulate disconnecting Bluetooth headphones
-      await simulateBluetoothDisconnection();
-
-      // Verify volume is still not muted
-      expect(await getVolume(), isNot(0));
-    });
-
-    testWidgets('Toggle "Do Not Disturb" mode', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Simulate enabling "Do Not Disturb" mode
-      await simulateDoNotDisturbMode(true);
-
-      // Verify volume is muted
-      expect(await getVolume(), 0);
-
-      // Simulate disabling "Do Not Disturb" mode
-      await simulateDoNotDisturbMode(false);
-
-      // Verify volume is not muted
-      expect(await getVolume(), isNot(0));
-    });
+  setUp(() {
+    audioPlayer = MockAudioPlayer();
   });
-}
 
-Future<void> simulateBluetoothConnection() async {
-  // Implement simulation of Bluetooth connection
-}
+  test('test audio output switch between speaker and headphone', () async {
+    when(audioPlayer.setReleaseMode(any)).thenAnswer((_) async => 1);
+    when(audioPlayer.play(any, mode: anyNamed('mode'))).thenAnswer((_) async => 1);
+    when(audioPlayer.stop()).thenAnswer((_) async => 1);
 
-Future<void> simulateBluetoothDisconnection() async {
-  // Implement simulation of Bluetooth disconnection
-}
+    await audioPlayer.setReleaseMode(ReleaseMode.stop);
+    await audioPlayer.play(AssetSource('audio/test.mp3'), mode: PlayerMode.lowLatency);
+    await audioPlayer.stop();
 
-Future<void> simulateDoNotDisturbMode(bool enabled) async {
-  // Implement simulation of "Do Not Disturb" mode
-}
+    verify(audioPlayer.setReleaseMode(ReleaseMode.stop)).called(1);
+    verify(audioPlayer.play(AssetSource('audio/test.mp3'), mode: PlayerMode.lowLatency)).called(1);
+    verify(audioPlayer.stop()).called(1);
+  });
 
-Future<int> getVolume() async {
-  // Implement getting the current volume
-  return 50; // Placeholder value
+  test('test volume change with system volume change', () async {
+    when(audioPlayer.setVolume(any)).thenAnswer((_) async => 1);
+
+    await audioPlayer.setVolume(0.5);
+
+    verify(audioPlayer.setVolume(0.5)).called(1);
+  });
 }

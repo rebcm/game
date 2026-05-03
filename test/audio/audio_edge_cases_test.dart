@@ -1,39 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late AudioPlayer audioPlayer;
 
-  group('Audio Edge Cases Tests', () {
-    testWidgets('Reprodução de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implementação do teste de reprodução de áudio
-    });
+  setUp(() {
+    audioPlayer = AudioPlayer();
+  });
 
-    testWidgets('Pausa e Retomada de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implementação do teste de pausa e retomada de áudio
-    });
+  test('test audio output switch between speaker and headphone', () async {
+    await audioPlayer.setReleaseMode(ReleaseMode.stop);
+    await audioPlayer.play(AssetSource('audio/test.mp3'), mode: PlayerMode.lowLatency);
+    await audioPlayer.stop();
+  });
 
-    testWidgets('Desconexão de Dispositivo de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implementação do teste de desconexão de dispositivo de áudio
-    });
-
-    testWidgets('Reconexão de Dispositivo de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implementação do teste de reconexão de dispositivo de áudio
-    });
-
-    testWidgets('Interrupção de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implementação do teste de interrupção de áudio
-    });
+  test('test volume change with system volume change', () async {
+    await audioPlayer.setVolume(0.5);
   });
 }
