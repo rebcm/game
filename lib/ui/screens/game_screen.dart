@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/ui/widgets/error/error_handler_widget.dart';
+import 'package:rebcm/ui/widgets/joystick/joystick_widget.dart';
 
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ErrorHandlerWidget(
-      child: // Your game screen content here
-      Scaffold(
-        body: Center(
-          child: Text('Game Screen'),
-        ),
+    void onJoystickChange(double dx, double dy) {
+      // Implement game logic here to handle joystick input
+      print('Joystick input: $dx, $dy');
+    }
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Your game content here
+          JoystickWidget(onJoystickChange: onJoystickChange),
+        ],
       ),
     );
   }
