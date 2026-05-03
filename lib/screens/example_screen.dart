@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/utils/dispose.dart';
+import 'package:rebcm/utils/dispose_helper.dart';
 
 class ExampleScreen extends StatefulWidget {
   @override
@@ -7,23 +7,23 @@ class ExampleScreen extends StatefulWidget {
 }
 
 class _ExampleScreenState extends State<ExampleScreen> with TickerProviderStateMixin {
-  final List<TextEditingController> _textEditingControllers = [];
+  final List<TextEditingController> _textControllers = [];
   final List<AnimationController> _animationControllers = [];
   final List<StreamSubscription> _streamSubscriptions = [];
 
   @override
   void initState() {
     super.initState();
-    _textEditingControllers.add(TextEditingController());
+    _textControllers.add(TextEditingController());
     _animationControllers.add(AnimationController(vsync: this));
     // Initialize stream subscriptions
   }
 
   @override
   void dispose() {
-    DisposeUtils.disposeTextEditingControllers(_textEditingControllers);
-    DisposeUtils.disposeAnimationControllers(_animationControllers);
-    DisposeUtils.cancelStreamSubscriptions(_streamSubscriptions);
+    DisposeHelper.disposeControllers(_textControllers);
+    DisposeHelper.disposeAnimationControllers(_animationControllers);
+    DisposeHelper.cancelStreamSubscriptions(_streamSubscriptions);
     super.dispose();
   }
 
