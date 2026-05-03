@@ -1,3 +1,3 @@
 #!/bin/bash
 
-.github/scripts/docs_validation/microfone_usage_description/validate_microfone_usage_description.sh
+bash .github/scripts/ci_validation/microfone_usage_description_validation/validate_microfone_usage_description.sh

@@ -1,25 +1,30 @@
 # Matriz de Critérios de Aceitação para Permissões
 
 ## Visão Geral
-Este documento define os critérios de aceitação para as permissões necessárias no aplicativo, focando nas plataformas iOS e Android.
+
+Este documento define os critérios de aceitação para as permissões necessárias no aplicativo, focando especificamente nas permissões de microfone para iOS e Android.
 
 ## Critérios de Aceitação
 
-### iOS
-| Permissão | Descrição | Chave Info.plist | Texto de Justificativa |
-|-----------|-----------|------------------|------------------------|
-| Microfone | Acesso ao microfone para funcionalidades de áudio | NSMicrophoneUsageDescription | "Este aplicativo precisa acessar o microfone para gravar áudio." |
+### Permissão de Microfone
 
-### Android
-| Permissão | Descrição | Permissão AndroidManifest.xml | Texto de Justificativa |
-|-----------|-----------|-------------------------------|------------------------|
-| Gravação de Áudio | Acesso para gravar áudio | RECORD_AUDIO | "Este aplicativo precisa acessar o microfone para gravar áudio." |
+#### iOS (NSMicrophoneUsageDescription)
+- **Critério 1:** A chave `NSMicrophoneUsageDescription` deve estar presente no arquivo `Info.plist`.
+- **Critério 2:** O valor associado à chave `NSMicrophoneUsageDescription` deve ser uma string que justifique claramente o uso do microfone pelo aplicativo.
+- **Critério 3:** A justificativa fornecida deve ser clara e concisa, informando o usuário sobre como o aplicativo utiliza o microfone.
+
+#### Android (RECORD_AUDIO)
+- **Critério 1:** A permissão `RECORD_AUDIO` deve estar declarada no arquivo `AndroidManifest.xml`.
+- **Critério 2:** O aplicativo deve solicitar a permissão `RECORD_AUDIO` em tempo de execução quando necessário.
+- **Critério 3:** O texto de justificativa para a permissão deve ser claro e informativo, explicando ao usuário por que o aplicativo precisa acessar o microfone.
 
 ## Validação
-- [ ] Verificar se a chave `NSMicrophoneUsageDescription` está presente no `Info.plist` para iOS.
-- [ ] Validar se o texto de justificativa para o microfone está correto no `Info.plist`.
-- [ ] Confirmar se a permissão `RECORD_AUDIO` está declarada no `AndroidManifest.xml` para Android.
-- [ ] Verificar se o texto de justificativa para a gravação de áudio está correto durante a solicitação de permissão em tempo de execução no Android.
 
-## Automação
-Os testes de validação para essas permissões devem ser implementados nos scripts de CI para garantir que as configurações estejam corretas em cada build.
+- **Critério 4:** O aplicativo deve passar nos testes de validação de permissão de microfone, verificando se as condições acima são atendidas.
+- **Critério 5:** A CI/CD pipeline deve incluir etapas para verificar a presença e a correta configuração das permissões de microfone.
+
+## Referências
+
+- [Documentação do iOS sobre NSCameraUsageDescription](https://developer.apple.com/documentation/bundleresources/information_property_list/nsmicrophoneusagedescription)
+- [Documentação do Android sobre permissão RECORD_AUDIO](https://developer.android.com/reference/android/Manifest.permission#RECORD_AUDIO)
+
