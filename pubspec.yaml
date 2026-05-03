@@ -37,3 +37,7 @@ dependencies:
   game/docs/fluxo_aprovacao_dicas.md:
 
   game/services/dicas/dicas_service.dart:
+
+  game/services/seo/seo_service.dart:
+
+  test/seo/seo_service_test.dart:
