@@ -1,0 +1,15 @@
+name: Checklist Revisão Técnica
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate_checklist_revisao_tecnica:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Validate checklist de revisao tecnica
+        run: ./.github/scripts/docs_validation/checklist_revisao_tecnica/validate_checklist_revisao_tecnica.sh
