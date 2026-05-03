@@ -26,6 +26,7 @@ dev_dependencies:
 
 flutter:
   - test/integration/documentacao/documentacao_test.dart
+  - test/integration/audio_integration_test/audio_integration_test.dart
   assets:
     - assets/audio/
     - docs/dicas_construcao/conteudo_dicas.md
@@ -47,6 +48,7 @@ flutter:
     - docs/flutter_sdk_version.md
     - assets/audio/
     - test/integration/documentacao/documentacao_test.dart
+  - test/integration/audio_integration_test/audio_integration_test.dart
     - assets/audio/
     - docs/gradle_jdk_mapping/gradle_jdk_compatibility.md
     - assets/audio/
@@ -79,3 +81,4 @@ flutter:
 
   - test/integration/dicas_ui_test/dicas_ui_test.dart
   - test/integration/documentacao/documentacao_test.dart
+  - test/integration/audio_integration_test/audio_integration_test.dart
