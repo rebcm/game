@@ -1,19 +1,31 @@
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 
-Future<String> loadBlocoDocumentation() async {
-  return await rootBundle.loadString('lib/docs/bloco_documentation/bloco_documentation.json');
+class BlocoDocumentation {
+  final List<Bloco> blocos;
+
+  BlocoDocumentation({required this.blocos});
+
+  factory BlocoDocumentation.fromJson(Map<String, dynamic> json) {
+    return BlocoDocumentation(
+      blocos: (json['blocos'] as List)
+          .map((bloco) => Bloco.fromJson(bloco))
+          .toList(),
+    );
+  }
 }
 
-Future<void> saveBlocoDocumentation(String jsonData) async {
-  // Implement the logic to save the documentation
-  // For now, just print it
-  print(jsonData);
-}
+class Bloco {
+  final String id;
+  final String descricao;
+  final String categoria;
 
-void main() async {
-  final jsonData = await loadBlocoDocumentation();
-  final jsonMap = jsonDecode(jsonData);
-  // Process the jsonMap as needed
-  await saveBlocoDocumentation(jsonEncode(jsonMap));
+  Bloco({required this.id, required this.descricao, required this.categoria});
+
+  factory Bloco.fromJson(Map<String, dynamic> json) {
+    return Bloco(
+      id: json['id'],
+      descricao: json['descricao'],
+      categoria: json['categoria'],
+    );
+  }
 }

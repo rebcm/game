@@ -9,9 +9,10 @@
         "type": "object",
         "properties": {
           "id": {"type": "string"},
-          "descricao": {"type": "string"}
+          "descricao": {"type": "string"},
+          "categoria": {"type": "string"}
         },
-        "required": ["id", "descricao"]
+        "required": ["id", "descricao", "categoria"]
       }
     }
   },

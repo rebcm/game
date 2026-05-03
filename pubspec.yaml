@@ -53,3 +53,6 @@ flutter:
 
   assets:
     - lib/docs/estruturas_sugeridas.md
+
+  assets:
+    - lib/docs/bloco_documentation/
