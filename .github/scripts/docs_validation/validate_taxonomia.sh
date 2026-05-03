@@ -1,3 +1,6 @@
 #!/bin/bash
 
-bash ./docs/taxonomia/validate_taxonomia.sh
+# Script para chamar a validação da taxonomia de categorias
+
+# Executar a validação da taxonomia
+bash .github/scripts/docs_validation/taxonomia/validate_taxonomia_categorias.sh

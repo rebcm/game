@@ -12,5 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate documentation
-        run: ./.github/scripts/docs_validation/checklist_validacao_documentacao/validate_checklist_documentacao.sh
+      - name: Validate taxonomia
+        run: bash .github/scripts/docs_validation/validate_taxonomia.sh
