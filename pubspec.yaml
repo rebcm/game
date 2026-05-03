@@ -52,3 +52,9 @@ flutter:
 
   integration_test_config:
     path: ./integration_test
+
+  performance_tracking:
+    path: ./benchmarks/performance_tracking
+
+  performance_tracking_test:
+    path: ./benchmarks/performance_tracking
