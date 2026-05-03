@@ -1,21 +1,24 @@
 # Critérios de Aceitação para Permissões Mínimas do Cloudflare Pages
 
-## Introdução
+Este documento define os critérios para determinar as permissões mínimas necessárias para o pipeline do Cloudflare Pages.
 
-Este documento define os critérios de aceitação para a implementação das permissões mínimas necessárias para o pipeline do Cloudflare Pages.
+## Princípio do Menor Privilégio
 
-## Requisitos
+O princípio do menor privilégio determina que um sistema, usuário ou processo deve ter apenas as permissões estritamente necessárias para realizar suas funções.
 
-1. **Princípio do Menor Privilégio**: O pipeline deve operar com o menor conjunto de permissões necessárias para realizar suas ações.
-2. **Mapeamento de Permissões**: Deve ser realizado um mapeamento detalhado das permissões necessárias para cada ação do pipeline.
-3. **Minimização de Riscos**: As permissões devem ser configuradas de forma a minimizar os riscos de segurança.
+## Permissões Necessárias
+
+As permissões mínimas necessárias para o pipeline do Cloudflare Pages incluem:
+
+1. **Leitura e Escrita no Repositório**: Permissão para ler e escrever no repositório GitHub para obter o código-fonte e atualizar o status de deploy.
+2. **Execução de Builds e Deploys**: Permissão para executar builds e deploys no Cloudflare Pages.
 
 ## Critérios de Aceitação
 
-1. O pipeline do Cloudflare Pages deve ser capaz de executar todas as ações necessárias com as permissões mínimas configuradas.
-2. As permissões configuradas devem seguir o princípio do menor privilégio.
-3. O mapeamento de permissões deve ser documentado e mantido atualizado.
+1. O pipeline do Cloudflare Pages deve ser capaz de ler o código-fonte do repositório GitHub.
+2. O pipeline do Cloudflare Pages deve ser capaz de executar builds e deploys sem erros.
+3. O pipeline do Cloudflare Pages deve ter apenas as permissões necessárias para realizar suas funções, sem privilégios excessivos.
 
 ## Validação
 
-A validação das permissões mínimas será realizada através de testes e revisões de código.
+A validação das permissões mínimas será realizada por meio de testes automatizados e revisão manual.
