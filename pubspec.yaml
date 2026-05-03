@@ -68,3 +68,7 @@ flutter:
   flutter:
     assets:
       - integration_test/latency_benchmark_test.dart
+
+  flutter:
+    assets:
+      - test/integration_tests/audio_integration_test/
