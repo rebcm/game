@@ -51,3 +51,5 @@ supportedLocales:
   http: ^0.13.5
 
   test/integration_tests/ux_tests/responsividade_test/responsividade_test.dart:
+  assets:
+    - docs/instalacao/instalacao.md
