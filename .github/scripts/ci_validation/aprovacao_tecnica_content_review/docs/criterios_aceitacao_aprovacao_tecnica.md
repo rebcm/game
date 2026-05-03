@@ -2,14 +2,21 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a aprovação técnica das dicas implementadas no jogo.
+Este documento define os critérios de aceitação para a aprovação técnica do conteúdo no jogo.
 
 ## Critérios
 
-1. **Aprovação Técnica**: As dicas devem ser aprovadas tecnicamente pelo Game Designer ou Lead Técnico antes da implementação final no código.
-2. **Arquivo de Dicas**: O arquivo `dicas.json` deve conter a chave "aprovado" com valor `true`.
-3. **Validação**: A validação da aprovação técnica será realizada através do script `validate_aprovacao_tecnica.sh`.
+1. **Revisão do Game Designer**: O conteúdo deve ser revisado e aprovado pelo Game Designer antes da implementação.
+2. **Revisão do Lead Técnico**: O conteúdo implementado deve ser revisado e aprovado pelo Lead Técnico.
+3. **Precisão do Conteúdo**: O conteúdo implementado deve ser preciso e corresponder ao conteúdo aprovado.
 
-## Conclusão
+## Processo de Aprovação
 
-A aprovação técnica das dicas é fundamental para garantir a qualidade e precisão do conteúdo implementado no jogo.
+1. O Game Designer revisa e aprova o conteúdo.
+2. O conteúdo aprovado é implementado pelo desenvolvedor.
+3. O Lead Técnico revisa e aprova a implementação.
+
+## Ferramentas de Validação
+
+Será utilizado um script de validação para garantir que o conteúdo implementado corresponda ao conteúdo aprovado.
+
