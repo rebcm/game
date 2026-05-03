@@ -42,3 +42,9 @@ dev_dependencies:
 
   flutter_sdk_versoes_validation:
     path: .github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
+  secrets_validation:
+    path: .github/scripts/secrets_validation/validate_secrets.sh
+
+dev_dependencies:
+  secrets_validation:
+    path: .github/scripts/secrets_validation/validate_secrets.sh

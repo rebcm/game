@@ -1,16 +1,3 @@
-name = "rebcm-game"
-type = "javascript"
-
-[env.production]
-vars = {
-  DATABASE_URL = "",
-  API_KEY = "",
-  # Add other vars as needed
-}
-
-[env.development]
-vars = {
-  DATABASE_URL = "",
-  API_KEY = "",
-  # Add other vars as needed
-}
+[vars]
+DB_CONNECTION_STRING = "${DB_CONNECTION_STRING}"
+API_KEY = "${API_KEY}"
