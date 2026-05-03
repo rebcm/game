@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/input/input_normalizer.dart';
+import 'package:rebcm/utils/input_normalizer.dart';
 
 class PlayerController with ChangeNotifier {
-  final InputNormalizer _inputNormalizer;
-  double _inputX = 0;
-  double _inputY = 0;
+  InputNormalizer _inputNormalizer = InputNormalizer(0.1);
+  double _inputValue = 0.0;
 
-  PlayerController({required InputNormalizer inputNormalizer})
-      : _inputNormalizer = inputNormalizer;
-
-  void updateInput(double x, double y) {
-    _inputX = _inputNormalizer.normalize(x);
-    _inputY = _inputNormalizer.normalize(y);
+  void updateInput(double input) {
+    _inputValue = _inputNormalizer.normalize(input);
     notifyListeners();
   }
 
-  double get inputX => _inputX;
-  double get inputY => _inputY;
+  double get inputValue => _inputValue;
 }
