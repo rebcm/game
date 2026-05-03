@@ -1,13 +1,14 @@
-# Critérios de Aceitação para Gradle JDK Version
+# Critérios de Aceitação para Versão do Gradle vs JDK 17
 
-Este documento descreve os critérios de aceitação para a validação da versão do Gradle em relação à versão do JDK.
+## Introdução
+
+Este documento define os critérios de aceitação para a verificação da compatibilidade entre a versão do Gradle e o JDK 17 no projeto `rebcm/game`.
 
 ## Critérios
 
-1. A versão mínima do Gradle suportada deve ser identificada com base na documentação oficial do Gradle.
-2. A versão do JDK utilizada no projeto deve ser compatível com a versão do Gradle.
-3. A configuração do projeto deve ser atualizada para refletir a versão mínima suportada do Gradle.
+1. **Versão Mínima do Gradle**: A versão do Gradle utilizada no projeto deve ser igual ou superior à versão mínima necessária para suportar o JDK 17, conforme documentação oficial do Gradle.
+2. **Compatibilidade com JDK 17**: O projeto deve ser capaz de compilar e executar sem erros utilizando o JDK 17.
 
 ## Referências
 
-- [Documentação oficial do Gradle](https://docs.gradle.org/current/userguide/compatibility.html)
+- [Documentação Oficial do Gradle](https://docs.gradle.org/current/userguide/compatibility.html)

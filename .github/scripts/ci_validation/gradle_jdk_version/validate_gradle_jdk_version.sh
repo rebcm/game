@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Valida se a versão do Gradle é compatível com o JDK 17
+GRADLE_VERSION=\$(gradle --version | head -n 1 | cut -d ' ' -f 2)
 
-GRADLE_VERSION=$(gradle --version | grep "Gradle" | cut -d ' ' -f2)
-
-if [[ "$GRADLE_VERSION" < "7.3" ]]; then
-  echo "Erro: A versão do Gradle ($GRADLE_VERSION) não é compatível com o JDK 17. Versão mínima requerida: 7.3"
-  exit 1
+if [[ "\$(printf '%s\n' "7.3" "\$GRADLE_VERSION" | sort -V | head -n1)" != "7.3" ]]; then
+  echo "Gradle version \$GRADLE_VERSION is compatible with JDK 17"
 else
-  echo "Versão do Gradle ($GRADLE_VERSION) é compatível com o JDK 17."
+  echo "Gradle version \$GRADLE_VERSION is not compatible with JDK 17. Minimum required version is 7.3"
+  exit 1
 fi
