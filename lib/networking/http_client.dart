@@ -9,7 +9,7 @@ class CustomHttpClient {
     final defaultHeaders = {
       'Accept-Encoding': 'gzip',
     };
-    final mergedHeaders = {...?headers, ...defaultHeaders};
+    final mergedHeaders = {...defaultHeaders, ...?headers};
     return _client.get(url, headers: mergedHeaders);
   }
 
@@ -18,7 +18,7 @@ class CustomHttpClient {
       'Content-Encoding': 'gzip',
       'Accept-Encoding': 'gzip',
     };
-    final mergedHeaders = {...?headers, ...defaultHeaders};
+    final mergedHeaders = {...defaultHeaders, ...?headers};
     return _client.post(url, headers: mergedHeaders, body: body);
   }
 }
