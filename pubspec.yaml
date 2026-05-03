@@ -32,3 +32,6 @@ flutter:
     - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
+
+  uses-material-design: true
+    - docs/flujo_integracion/flujo_integracion.md
