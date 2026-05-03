@@ -32,3 +32,6 @@ flutter:
 dev_dependencies:
   test: ^1.21.4
   http: ^0.13.5
+
+  assets:
+    - assets/openapi/openapi.yaml

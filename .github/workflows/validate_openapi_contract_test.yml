@@ -1,0 +1,15 @@
+name: Validate OpenAPI Contract Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Validate OpenAPI contract test
+        run: ./.github/scripts/docs_validation/validate_openapi_contract_test.sh
