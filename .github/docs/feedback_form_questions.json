@@ -1,0 +1,25 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Qual é o seu nível de experiência com o jogo voxel moda criativo?",
+      "options": [
+        "Iniciante",
+        "Intermediário",
+        "Avançado"
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Quais foram os principais desafios que você enfrentou durante a implementação do jogo?"
+    },
+    {
+      "id": 3,
+      "text": "Quais recursos ou funcionalidades você acha que faltam na documentação atual?"
+    },
+    {
+      "id": 4,
+      "text": "Você tem alguma sugestão para melhorar a documentação ou a experiência do desenvolvedor?"
+    }
+  ]
+}
