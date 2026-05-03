@@ -1,14 +1,12 @@
 import 'package:http/http.dart' as http;
 
 class DeploymentService {
-  Future<void> deployToCloudflare(String apiToken, String accountId) async {
+  Future<void> deployToCloudflare() async {
     final response = await http.post(
-      Uri.parse('https://api.cloudflare.com/client/v4/accounts/$accountId/pages/projects/rebcm-game/publish'),
+      Uri.parse('https://api.cloudflare.com/client/v4/accounts/${const String.fromEnvironment('CLOUDFLARE_ACCOUNT_ID')}/pages/projects/rebcm-game/deployments'),
       headers: {
-        'Authorization': 'Bearer $apiToken',
-        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${const String.fromEnvironment('CLOUDFLARE_API_TOKEN')}',
       },
-      body: '{"branch":"main"}',
     );
 
     if (response.statusCode != 200) {

@@ -6,9 +6,6 @@ on:
       - main
 
 jobs:
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -31,8 +28,5 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          curl -X POST \
-          "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/rebcm-game/publish" \
-          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-          -H "Content-Type: application/json" \
-          --data '{"branch":"main"}'
+          npm install -g wrangler
+          wrangler pages deploy build/web --project-name=rebcm-game --token=$CLOUDFLARE_API_TOKEN --account-id=$CLOUDFLARE_ACCOUNT_ID
