@@ -1,0 +1,2 @@
+  - name: Validate auto_size_text version
+    run: ./.github/scripts/validate_auto_size_text_version.sh
