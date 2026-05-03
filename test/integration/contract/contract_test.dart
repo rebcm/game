@@ -9,9 +9,11 @@ void main() {
 
   group('Contract Tests', () {
     test('GET request test', () async {
-      final pact = PactHttpClient('http://example.com');
-      await pact.get('/api/endpoint')
-        .then((response) => expect(response.statusCode, 200));
+      final pact = PactHttpVerifier(
+        providerState: 'provider_state',
+        pactUri: 'path_to_pact_file.json',
+      );
+
       await pact.verify();
     });
   });

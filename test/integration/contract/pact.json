@@ -3,17 +3,27 @@
     "name": "game"
   },
   "provider": {
-    "name": "api"
+    "name": "game_provider"
   },
   "interactions": [
     {
+      "description": "a get request",
       "request": {
         "method": "GET",
         "path": "/api/endpoint"
       },
       "response": {
-        "status": 200
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {}
       }
     }
-  ]
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  }
 }
