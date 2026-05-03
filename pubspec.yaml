@@ -37,3 +37,7 @@ supportedLocales:
 
   - test/audio_edge_cases/external_interruptions_test.dart
   - test/audio_edge_cases/external_interruptions_test.dart
+
+dev_dependencies:
+  leak_tracker: ^9.0.0
+  leak_tracker_flutter_testing: ^2.0.1
