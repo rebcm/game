@@ -7,28 +7,18 @@ flutter:
 dev_dependencies:
   rebuild_performance_test:
     path: ./test/performance/rebuild_performance_test.dart
-  rebuild_performance_test:
-    path: ./test/performance/rebuild_performance_test.dart
   flutter_test:
     sdk: flutter
   http: ^0.13.5
   integration_test:
     sdk: flutter
-
-  patform_device_id: ^1.0.0
-    - .github/scripts/docs_validation/mapeamento_estruturas_sugeridas/mapeamento_estruturas_sugeridas.md
-
+  leak_tracker: ^9.0.0
   memory_info: ^0.2.0
-
   test:
     sdk: flutter
-
   memory_leak_detector:
     path: ./lib/utils/memory_leak_detector
   external_interruptions_test:
     path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
   performance_tester:
     path: ./lib/utils/performance_testing
-
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart

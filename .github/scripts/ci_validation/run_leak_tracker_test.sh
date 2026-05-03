@@ -1,2 +1,3 @@
 #!/bin/bash
-flutter test test/leak_tracker/leak_tracker_test.dart
+
+flutter test test/integration/leak_tracker_test/leak_tracker_test.dart
