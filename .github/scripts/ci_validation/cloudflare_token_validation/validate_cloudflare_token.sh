@@ -4,15 +4,15 @@ CLOUDFLARE_TOKEN=$1
 ZONE_ID=$2
 
 validate_token() {
-  RESPONSE=$(curl -s -X GET \
+  response=$(curl -s -X GET \
     https://api.cloudflare.com/client/v4/user/tokens/verify \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $CLOUDFLARE_TOKEN")
 
-  PERMISSIONS=$(echo $RESPONSE | jq -r '.result.permissions')
+  permissions=$(echo "$response" | jq -r '.result.permissions')
 
-  if echo $PERMISSIONS | grep -q '"Zone.DNS"'; then
-    if echo $PERMISSIONS | grep -q '"Zone.Settings"'; then
+  if echo "$permissions" | grep -q '"Zone.DNS"'; then
+    if echo "$permissions" | grep -q '"Zone.Settings"'; then
       echo "Token is valid"
       return 0
     else
@@ -25,9 +25,4 @@ validate_token() {
   fi
 }
 
-if validate_token; then
-  echo "Token validation successful"
-else
-  echo "Token validation failed"
-  exit 1
-fi
+validate_token
