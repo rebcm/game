@@ -1,4 +1,4 @@
-name: build-ios
+name: Build iOS
 
 on:
   workflow_dispatch:
@@ -10,7 +10,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build and upload IPA
-        run: .github/scripts/build_ios.sh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build IPA
+        run: ./.github/scripts/build_ios.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rebcm.ipa
+          path: build/ios/ipa/rebcm.ipa
