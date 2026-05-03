@@ -34,3 +34,6 @@ flutter:
     - assets/audio/
   uses-material-design: true
   generate: true
+
+scripts:
+  build_and_test: flutter test && flutter build apk --debug
