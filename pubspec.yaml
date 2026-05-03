@@ -35,7 +35,9 @@ flutter:
   assets:
     - assets/translations/
     - lib/docs/
+    - lib/docs/guias_construcao/
     - lib/docs/dicas/
+    - lib/docs/guias_construcao/
 
   uses-material-design: true
 
