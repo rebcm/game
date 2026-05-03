@@ -12,11 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-
       - name: Run audio edge cases test
         run: |
           flutter test test/audio_edge_cases/audio_output_test.dart
+          flutter test test/audio_edge_cases/audio_volume_test.dart
