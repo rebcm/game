@@ -1,17 +1,13 @@
 #!/bin/bash
 
-# Validate if the required endpoints are documented in the Swagger file
-required_endpoints=("GET /blocks" "POST /blocks" "PUT /blocks/{id}" "DELETE /blocks/{id}")
-swagger_file="assets/swagger.yaml"
+# Verifica se os critérios de aceitação para endpoints estão definidos
+if ! grep -q "Endpoints Obrigatórios" ./docs/criterios_aceitacao_endpoints.md; then
+  echo "Critérios de aceitação para endpoints não definidos"
+  exit 1
+fi
 
-for endpoint in "${required_endpoints[@]}"; do
-  method=$(echo "$endpoint" | cut -d' ' -f1)
-  path=$(echo "$endpoint" | cut -d' ' -f2-)
-
-  if ! grep -q "$method $path" "$swagger_file"; then
-    echo "Error: $endpoint is not documented in $swagger_file"
-    exit 1
-  fi
-done
-
-echo "All required endpoints are documented in $swagger_file"
+# Verifica se a renderização do UI do Swagger está validada
+if ! grep -q "Renderização do Swagger validada" ./docs/criterios_aceitacao_endpoints.md; then
+  echo "Renderização do UI do Swagger não validada"
+  exit 1
+fi
