@@ -62,3 +62,6 @@ flutter:
 
   benchmark:
     path: ./benchmarks
+
+  integration_test:
+    path: ./integration_test
