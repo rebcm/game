@@ -1,0 +1,19 @@
+{
+  "consumer": {
+    "name": "game"
+  },
+  "provider": {
+    "name": "api"
+  },
+  "interactions": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/endpoint"
+      },
+      "response": {
+        "status": 200
+      }
+    }
+  ]
+}
