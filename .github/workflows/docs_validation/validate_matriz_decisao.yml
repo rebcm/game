@@ -1,0 +1,20 @@
+name: Validate Matriz Decisão
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/matriz_decisao/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Matriz Decisão
+        run: |
+          echo "Validating Matriz Decisão..."
+          # Adicione aqui os comandos para validar a matriz de decisão
