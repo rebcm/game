@@ -3,7 +3,7 @@ import 'package:game/cache/lru_cache.dart';
 class ChunkManager {
   final LRUCache<String, Chunk> _chunkCache;
 
-  ChunkManager({required int capacity}) : _chunkCache = LRUCache(capacity: capacity);
+  ChunkManager(int capacity) : _chunkCache = LRUCache(capacity);
 
   Chunk? getChunk(String chunkKey) {
     return _chunkCache.get(chunkKey);

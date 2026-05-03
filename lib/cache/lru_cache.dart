@@ -1,39 +1,42 @@
-import 'package:flutter/foundation.dart';
+import 'package:quiver/collection.dart';
 
 class LRUCache<K, V> {
-  final int capacity;
-  final Map<K, V> _cache = {};
-  final List<K> _order = [];
+  final int _capacity;
+  final Map<K, V> _cache;
+  final LinkedHashMap<K, V> _lru;
 
-  LRUCache({required this.capacity});
+  LRUCache(this._capacity) 
+    : _cache = {}, 
+      _lru = LinkedHashMap<K, V>(
+        equals: (k1, k2) => k1 == k2,
+        hashCode: (k) => k.hashCode,
+      );
 
   V? get(K key) {
-    if (_cache.containsKey(key)) {
-      _order.remove(key);
-      _order.add(key);
-      return _cache[key];
+    if (_lru.containsKey(key)) {
+      final value = _lru[key];
+      _lru.remove(key);
+      _lru[key] = value!;
+      return value;
     }
     return null;
   }
 
   void put(K key, V value) {
-    if (_cache.containsKey(key)) {
-      _order.remove(key);
-    } else if (_cache.length >= capacity) {
-      final oldestKey = _order.removeAt(0);
-      _cache.remove(oldestKey);
+    if (_lru.containsKey(key)) {
+      _lru.remove(key);
+    } else if (_lru.length >= _capacity) {
+      final oldestKey = _lru.keys.first;
+      _lru.remove(oldestKey);
     }
-    _cache[key] = value;
-    _order.add(key);
+    _lru[key] = value;
   }
 
   void remove(K key) {
-    _cache.remove(key);
-    _order.remove(key);
+    _lru.remove(key);
   }
 
   void clear() {
-    _cache.clear();
-    _order.clear();
+    _lru.clear();
   }
 }
