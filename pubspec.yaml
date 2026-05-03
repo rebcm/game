@@ -39,3 +39,7 @@ flutter:
 
   technical_validation_test:
     path: test/integration_test/technical_validation_test/run_technical_validation_test.sh
+
+  cloudflare_pages_permissions_test:
+    path: test/integration_test/cloudflare_pages_permissions_test/cloudflare_pages_permissions_test.dart
+
