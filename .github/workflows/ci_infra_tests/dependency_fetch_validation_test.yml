@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  validate-dependency-fetch:
+  validate_dependency_fetch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

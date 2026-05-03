@@ -6,7 +6,6 @@ version: 1.0.0+15
 environment:
   sdk: ">=2.17.0 <3.0.0"
   flutter: ">=3.0.0"
-  uses-material-design: true
 
 dependencies:
   isolate: ^2.1.1
@@ -28,22 +27,15 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.3
-  uses-material-design: true
 
 dev_dependencies:
-  isolate: ^2.1.1
-  version: ^2.0.0
-  flutter_leak_detector: ^2.0.1
-  leak_tracker: ^9.0.0
-  leak_tracker_flutter_testing: ^2.0.1
-  test: ^1.21.4
+  flutter_test:
+    sdk: flutter
   flutter_driver:
     sdk: flutter
   integration_test:
     sdk: flutter
-  http: ^0.13.5
-  flutter_test:
-    sdk: flutter
+  test: ^1.21.4
   build_runner: ^2.1.8
   json_serializable: ^6.3.1
   mocktail: ^0.3.0
@@ -56,22 +48,3 @@ flutter:
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
     - assets/blocos/
-    - assets/docs/checklists/validacao-onboarding-checklist.md
-    - docs/guias/onboarding.md
-    - docs/artefatos/checklists/documentacao-validacao-criterios.md
-    - docs/glossario/README.md
-    - docs/guias/style_guide.md
-    - docs/guias/baseline_versoes_alvo.md
-    - docs/artefatos/checklists/checklist_validacao_baseline_versoes_alvo.md
-    - docs/localizacao/lista_idiomas.md
-
-dependency_overrides:
-  just_audio: ^0.9.34
-
-  assets:
-    - docs/artefatos/matrizes/matriz-criterios-retencao.md
-  assets:
-    - docs/artefatos/criterios/criterios-aceitacao-documentacao.md
-    - docs/guias/guia-documentacao.md
-
-  test/audio_stress_test/audio_stress_test.dart:
