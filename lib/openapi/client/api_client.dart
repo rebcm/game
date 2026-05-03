@@ -1,11 +1,11 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class ApiClient {
-  final http.Client _client;
+  final Dio _dio;
 
-  ApiClient(this._client);
+  ApiClient(this._dio);
 
-  Future<http.Response> get(Uri url) async {
-    return await _client.get(url);
+  Future<Response> getEndpoint() async {
+    return await _dio.get('https://example.com/api/endpoint');
   }
 }
