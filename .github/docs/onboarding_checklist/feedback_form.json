@@ -1,24 +1,31 @@
 {
-  "questions": [
-    {
-      "id": 1,
-      "question": "Você enfrentou algum problema ao seguir o guia de onboarding?",
-      "type": "open-ended"
-    },
-    {
-      "id": 2,
-      "question": "Qual foi o passo mais confuso ou difícil durante o onboarding?",
-      "type": "open-ended"
-    },
-    {
-      "id": 3,
-      "question": "Você encontrou algum erro ou bug durante o processo de onboarding?",
-      "type": "open-ended"
-    },
-    {
-      "id": 4,
-      "question": "O que você gostaria de ver melhorado no guia de onboarding?",
-      "type": "open-ended"
-    }
-  ]
+  "tempo_gasto": {
+    "tipo": "number",
+    "label": "Tempo gasto (minutos)",
+    "descricao": "Quanto tempo você gastou para completar o onboarding?"
+  },
+  "pontos_friccao": {
+    "tipo": "textarea",
+    "label": "Pontos de fricção",
+    "descricao": "Descreva os pontos que você achou mais difíceis ou confusos durante o onboarding."
+  },
+  "erros_comando": {
+    "tipo": "textarea",
+    "label": "Erros de comando",
+    "descricao": "Se você encontrou erros ao executar comandos, descreva-os aqui."
+  },
+  "versao_ambiente": {
+    "tipo": "text",
+    "label": "Versão do ambiente",
+    "descricao": "Qual é a versão do ambiente que você está usando?"
+  },
+  "confirmacao_versao": {
+    "tipo": "checkbox",
+    "label": "Confirmação de versão",
+    "descricao": "Você confirmou a versão do ambiente antes de iniciar o onboarding?",
+    "opcoes": [
+      {"label": "Sim", "value": true},
+      {"label": "Não", "value": false}
+    ]
+  }
 }

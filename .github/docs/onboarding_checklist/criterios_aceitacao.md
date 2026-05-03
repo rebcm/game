@@ -1,21 +1,17 @@
-# Critérios de Aceitação para o Checklist de Validação de Onboarding
+# Critérios de Aceitação para Onboarding
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a implementação do checklist de validação de onboarding no projeto Rebcm/game.
+Este documento define os critérios de aceitação para o onboarding do projeto Rebeca.
 
 ## Critérios
 
-1. O checklist deve ser implementado como um formulário JSON.
-2. O formulário deve conter as seguintes perguntas:
-   - Você enfrentou algum problema ao seguir o guia de onboarding? (campo aberto)
-   - Qual foi o passo mais confuso ou difícil durante o onboarding? (campo aberto)
-   - Você encontrou algum erro ou bug durante o processo de onboarding? (campo aberto)
-   - O que você gostaria de ver melhorado no guia de onboarding? (campo aberto)
-3. O arquivo JSON deve ser nomeado como `feedback_form.json`.
-4. O arquivo JSON deve ser armazenado no diretório `.github/docs/onboarding_checklist/`.
-5. O checklist deve ser facilmente acessível e compreensível para os desenvolvedores testadores.
+1. **Tempo gasto**: O formulário de feedback deve capturar o tempo gasto pelo testador.
+2. **Pontos de fricção**: O formulário deve permitir que o testador descreva os pontos de fricção encontrados.
+3. **Erros de comando**: O formulário deve capturar erros de comando encontrados pelo testador.
+4. **Versão do ambiente**: O formulário deve capturar a versão do ambiente usada pelo testador.
+5. **Confirmação de versão**: O formulário deve confirmar se o testador verificou a versão do ambiente.
 
-## Conclusão
+## Aprovação
 
-A implementação do checklist de validação de onboarding deve seguir os critérios acima para garantir que o guia de onboarding seja eficaz e fácil de seguir.
+O onboarding será considerado aprovado se todos os critérios acima forem atendidos.
