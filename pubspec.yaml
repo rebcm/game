@@ -44,3 +44,5 @@ flutter:
   - .github/scripts/ci_validation/cloudflare_pages_permissions/docs/criterios_aceitacao_permissoes.md
 
   - docs/flutter_sdk_version.md
+
+  - test/integration/documentacao/documentacao_test.dart
