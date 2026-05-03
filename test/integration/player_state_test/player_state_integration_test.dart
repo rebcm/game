@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
@@ -7,41 +6,29 @@ import 'package:audioplayers/audioplayers.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Player State Integration Test', () {
-    testWidgets('shuffle/loop music updates UI correctly', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+  testWidgets('validate player state integration with audio service', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      // Assume there's a button to toggle shuffle/loop
-      final shuffleButton = find.byKey(const Key('shuffle_button'));
-      await tester.tap(shuffleButton);
-      await tester.pumpAndSettle();
+    // Verify initial state
+    expect(find.text('Shuffle'), findsOneWidget);
+    expect(find.text('Loop'), findsOneWidget);
 
-      // Verify UI update
-      expect(find.text('Shuffle is on'), findsOneWidget);
+    // Test shuffle mode
+    await tester.tap(find.text('Shuffle'));
+    await tester.pumpAndSettle();
+    // Verify UI update after shuffle
+    expect(find.text('Shuffle Active'), findsOneWidget);
 
-      // Assume there's a service to check audio state
-      final audioPlayer = AudioPlayer();
-      final currentState = await audioPlayer.getCurrentState();
-      expect(currentState, isNotNull);
-    });
+    // Test loop mode
+    await tester.tap(find.text('Loop'));
+    await tester.pumpAndSettle();
+    // Verify UI update after loop
+    expect(find.text('Loop Active'), findsOneWidget);
 
-    testWidgets('loop music updates UI correctly', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Assume there's a button to toggle loop
-      final loopButton = find.byKey(const Key('loop_button'));
-      await tester.tap(loopButton);
-      await tester.pumpAndSettle();
-
-      // Verify UI update
-      expect(find.text('Loop is on'), findsOneWidget);
-
-      // Assume there's a service to check audio state
-      final audioPlayer = AudioPlayer();
-      final currentState = await audioPlayer.getCurrentState();
-      expect(currentState, isNotNull);
-    });
+    // Verify audio service sync
+    final AudioPlayer audioPlayer = AudioPlayer();
+    final currentMode = await audioPlayer.getCurrentMode();
+    expect(currentMode, 'loop'); // Assuming 'loop' is the expected mode after test
   });
 }
