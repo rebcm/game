@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class JogoState with ChangeNotifier {
+class JogoState with WidgetsBindingObserver {
   Timer? _timer;
 
   void initState() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      // Some periodic task
+      // Perform some action
     });
   }
 
