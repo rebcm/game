@@ -25,11 +25,9 @@ jobs:
 
       - name: Deploy to Cloudflare
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_PAGES_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
         run: |
-          curl -X POST \
-          https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/rebcm-game/deployments \
-          -H 'Content-Type: application/json' \
-          -H 'Authorization: Bearer ${CLOUDFLARE_API_TOKEN}' \
-          --data '{"branch":"main","working_directory":"/"}'
+          npm install -g wrangler
+          wrangler pages deploy build/web --project-name=$CLOUDFLARE_PAGES_PROJECT_NAME --account-id=$CLOUDFLARE_ACCOUNT_ID --token=$CLOUDFLARE_API_TOKEN
