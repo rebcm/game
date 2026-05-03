@@ -68,3 +68,8 @@ flutter:
 
   api_service_test:
     path: ./test/api_service_test
+
+  dio: ^5.4.0
+
+dev_dependencies:
+  dio: ^5.4.0

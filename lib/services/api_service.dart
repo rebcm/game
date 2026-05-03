@@ -1,8 +1,16 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class ApiService {
-  Future<http.Response> uploadData() async {
-    // Implement upload logic here
-    return http.Response('OK', 200);
+  final Dio _dio;
+
+  ApiService(this._dio);
+
+  Future<dynamic> fetchData(String url) async {
+    try {
+      final response = await _dio.get(url);
+      return response.data;
+    } on DioException catch (e) {
+      throw e;
+    }
   }
 }
