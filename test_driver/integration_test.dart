@@ -1,21 +1,6 @@
-import 'package:flutter_driver/driver_extension.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:integration_test/integration_test_driver.dart';
 
-void main() {
-  enableFlutterDriverExtension();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Game',
-      home: Scaffold(
-        body: Center(
-          child: Text('Game'),
-        ),
-      ),
-    );
-  }
+Future<void> main() async {
+  await integrationDriver();
 }

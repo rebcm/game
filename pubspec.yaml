@@ -64,3 +64,7 @@ flutter:
   flutter:
     assets:
       - docs/dicas_construcao/criterios_aceitacao_ui_dicas.md
+
+  flutter:
+    assets:
+      - integration_test/latency_benchmark_test.dart
