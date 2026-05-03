@@ -1,28 +1,13 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-class EstadoJogo extends StatefulWidget {
-  @override
-  EstadoJogoState createState() => EstadoJogoState();
-}
+class EstadoJogo with ChangeNotifier {
+  bool _mounted = true;
 
-class EstadoJogoState extends State<EstadoJogo> {
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {});
-  }
+  bool get mounted => _mounted;
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _mounted = false;
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

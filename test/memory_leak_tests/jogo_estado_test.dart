@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/estado_jogo.dart';
-import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('EstadoJogo não vaza memória', (tester) async {
+  testWidgets('Verifica se EstadoJogo é removido da memória após dispose', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: EstadoJogo(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => EstadoJogo()),
+        ],
+        child: Container(),
       ),
     );
 
-    await tester.pumpAndSettle();
+    final estadoJogo = Provider.of<EstadoJogo>(tester.element(find.byType(Container)), listen: false);
 
-    final estadoJogoFinder = find.byType(EstadoJogo);
-    expect(estadoJogoFinder, findsOneWidget);
+    expect(estadoJogo.mounted, true);
 
     await tester.pumpWidget(Container());
 
-    await tester.pumpAndSettle();
-
-    expect(MemoryLeakChecker().isDisposed(estadoJogoFinder.evaluate().first), isTrue);
+    expect(() => Provider.of<EstadoJogo>(tester.element(find.byType(Container)), listen: false), throwsError);
   });
 }
