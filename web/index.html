@@ -1,256 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Construção Criativa da Rebeca</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#1a1a2e;font-family:Arial,sans-serif;overflow:hidden;}
-#menu{position:fixed;inset:0;background:linear-gradient(135deg,#1565C0,#4CAF50);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;}
-#menu h1{color:#fff;font-size:3em;text-shadow:2px 2px 8px #000;margin-bottom:10px;}
-#menu h2{color:#FFD700;font-size:1.8em;text-shadow:2px 2px 4px #000;margin-bottom:40px;}
-#menu button{background:#4CAF50;color:#fff;border:none;padding:18px 60px;font-size:1.4em;border-radius:8px;cursor:pointer;font-weight:bold;box-shadow:0 4px 16px #0006;transition:transform .1s;}
-#menu button:hover{transform:scale(1.05);background:#45a049;}
-#menu p{color:#ffffff99;margin-top:20px;font-size:0.9em;}
-#game{display:none;position:fixed;inset:0;}
-#hud-top{position:fixed;top:0;left:0;right:0;background:#0009;color:#fff;padding:8px 16px;display:flex;align-items:center;gap:20px;z-index:10;}
-#hud-top span{font-size:1.1em;font-weight:bold;}
-#hud-top .title{color:#FFD700;}
-#hud-top button{background:#c0392b;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;margin-left:auto;}
-#hud-bot{position:fixed;bottom:0;left:0;right:0;background:#0009;padding:8px;display:flex;flex-direction:column;align-items:center;z-index:10;}
-#block-name{color:#ffffff99;font-size:0.85em;margin-bottom:4px;}
-#toolbar{display:flex;gap:6px;}
-.tb-btn{width:52px;height:52px;border:2px solid #fff6;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#fff;text-shadow:1px 1px 2px #000;transition:border-color .1s;}
-.tb-btn.selected{border-color:#FFD700;border-width:3px;}
-#hint{color:#ffffff44;font-size:10px;margin-top:4px;}
-#pause{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;flex-direction:column;gap:20px;}
-#pause.show{display:flex;}
-#pause h2{color:#fff;font-size:2em;}
-#pause button{background:#4CAF50;color:#fff;border:none;padding:12px 40px;font-size:1.2em;border-radius:6px;cursor:pointer;}
-#pause .quit{background:#c0392b;}
-canvas{display:block;}
-</style>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Construcao Criativa da Rebeca - jogo voxel modo criativo">
+  <meta name="theme-color" content="#4CAF50">
+  <title>Construcao Criativa da Rebeca</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <style>
+    body { margin: 0; background-color: #1a1a2e; overflow: hidden; }
+    #loading-spinner { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #0d47a1, #1b5e20); }
+    .spinner { width: 60px; height: 60px; border: 5px solid #4CAF50; border-top: 5px solid #FFD700; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .loading-text { color: white; margin-top: 20px; font-family: Arial, sans-serif; font-size: 18px; }
+  </style>
 </head>
 <body>
-<div id="menu">
-  <h1>🏗️ Construção Criativa</h1>
-  <h2>da Rebeca</h2>
-  <button onclick="startGame()">🎮 Jogar</button>
-  <p>por Rebeca Alves Moreira</p>
-</div>
-<div id="game">
-  <div id="hud-top">
-    <span>👧 Rebeca</span>
-    <span class="title">🏗️ Construção Criativa</span>
-    <button onclick="togglePause()">⏸ Pausar</button>
+  <div id="loading-spinner">
+    <div style="text-align: center">
+      <div class="spinner"></div>
+      <div class="loading-text">Carregando Construcao Criativa...</div>
+    </div>
   </div>
-  <canvas id="c"></canvas>
-  <div id="hud-bot">
-    <div id="block-name">Bloco: Grama</div>
-    <div id="toolbar"></div>
-    <div id="hint">Clique para colocar/remover • Arraste para mover câmera • ESC para pausar</div>
-  </div>
-</div>
-<div id="pause">
-  <h2>⏸ Pausado</h2>
-  <button onclick="togglePause()">▶ Continuar</button>
-  <button class="quit" onclick="location.reload()">🏠 Menu Principal</button>
-</div>
-<script>
-const BLOCKS=[
-  {name:'Grama',top:'#4CAF50',side:'#388E3C',front:'#43A047'},
-  {name:'Terra',top:'#8D6E63',side:'#6D4C41',front:'#795548'},
-  {name:'Areia',top:'#FFEB3B',side:'#F9A825',front:'#FDD835'},
-  {name:'Pedra',top:'#9E9E9E',side:'#616161',front:'#757575'},
-  {name:'Madeira',top:'#8D6E63',side:'#4E342E',front:'#6D4C41'},
-  {name:'Folha',top:'#2E7D32',side:'#1B5E20',front:'#27892E'},
-  {name:'Água',top:'#2196F3',side:'#1565C0',front:'#1976D2'},
-  {name:'Fogo',top:'#FF5722',side:'#BF360C',front:'#E64A19'},
-  {name:'Ouro',top:'#FFD700',side:'#F57F17',front:'#FFC107'},
-  {name:'Diamante',top:'#00BCD4',side:'#006064',front:'#00838F'},
-];
-const N=24,TW=52,TH=26,TD=18;
-let world=[],selBlock=0,camX=0,camY=0,dragging=false,dragSX=0,dragSY=0,dragCX=0,dragCY=0,paused=false;
-
-function initWorld(){
-  const saved=localStorage.getItem('rebeca_world');
-  if(saved){world=JSON.parse(saved);return;}
-  world=[];
-  for(let x=0;x<N;x++){world[x]=[];
-    for(let z=0;z<N;z++){
-      const r=Math.random();
-      world[x][z]=r<.45?0:r<.6?1:r<.72?2:r<.8?3:r<.87?4:r<.92?6:5;
-    }
-  }
-}
-
-function saveWorld(){localStorage.setItem('rebeca_world',JSON.stringify(world));}
-
-function isoPos(x,z,canvas){
-  return{
-    sx:canvas.width/2+camX+(x-z)*TW/2,
-    sy:canvas.height*.32+camY+(x+z)*TH/2
-  };
-}
-
-function screenToBlock(px,py,canvas){
-  const cx=canvas.width/2+camX,cy=canvas.height*.32+camY;
-  const dx=px-cx,dy=py-cy;
-  const x=(dx/(TW/2)+dy/(TH/2))/2;
-  const z=(dy/(TH/2)-dx/(TW/2))/2;
-  return{x:Math.round(x),z:Math.round(z)};
-}
-
-function drawBlock(ctx,x,z,bi,canvas){
-  const b=BLOCKS[bi];
-  const{sx,sy}=isoPos(x,z,canvas);
-  // top
-  ctx.beginPath();ctx.moveTo(sx,sy-TD);ctx.lineTo(sx+TW/2,sy-TD+TH/2);ctx.lineTo(sx,sy-TD+TH);ctx.lineTo(sx-TW/2,sy-TD+TH/2);ctx.closePath();
-  ctx.fillStyle=b.top;ctx.fill();ctx.strokeStyle='#0003';ctx.lineWidth=.5;ctx.stroke();
-  // right
-  ctx.beginPath();ctx.moveTo(sx+TW/2,sy-TD+TH/2);ctx.lineTo(sx+TW/2,sy+TH/2);ctx.lineTo(sx,sy+TH);ctx.lineTo(sx,sy-TD+TH);ctx.closePath();
-  ctx.fillStyle=b.front;ctx.fill();ctx.stroke();
-  // left
-  ctx.beginPath();ctx.moveTo(sx-TW/2,sy-TD+TH/2);ctx.lineTo(sx,sy-TD+TH);ctx.lineTo(sx,sy+TH);ctx.lineTo(sx-TW/2,sy+TH/2);ctx.closePath();
-  ctx.fillStyle=b.side;ctx.fill();ctx.stroke();
-}
-
-function drawRebeca(ctx,x,z,canvas){
-  const{sx,sy}=isoPos(x,z,canvas);
-  const cx=sx,cy=sy-TD;
-  // hair
-  ctx.fillStyle='#FFD700';ctx.fillRect(cx-7,cy-31,14,7);
-  // face
-  ctx.fillStyle='#FFDBA9';ctx.fillRect(cx-6,cy-24,12,12);
-  // eyes
-  ctx.fillStyle='#333';ctx.fillRect(cx-3,cy-20,2,2);ctx.fillRect(cx+1,cy-20,2,2);
-  // smile
-  ctx.fillStyle='#e96';ctx.fillRect(cx-2,cy-14,4,2);
-  // body
-  ctx.fillStyle='#9C27B0';ctx.fillRect(cx-5,cy-12,10,12);
-  // legs
-  ctx.fillStyle='#3F51B5';ctx.fillRect(cx-5,cy,4,8);ctx.fillRect(cx+1,cy,4,8);
-  // border
-  ctx.strokeStyle='#0005';ctx.lineWidth=1;
-  ctx.strokeRect(cx-7,cy-31,14,7);ctx.strokeRect(cx-6,cy-24,12,12);ctx.strokeRect(cx-5,cy-12,10,12);
-  // name
-  ctx.fillStyle='#fff';ctx.font='bold 11px Arial';ctx.textAlign='center';
-  ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.strokeText('Rebeca',cx,cy-34);
-  ctx.fillText('Rebeca',cx,cy-34);
-}
-
-function render(canvas){
-  const ctx=canvas.getContext('2d');
-  canvas.width=window.innerWidth;canvas.height=window.innerHeight-88;
-  // sky gradient
-  const g=ctx.createLinearGradient(0,0,0,canvas.height);
-  g.addColorStop(0,'#87CEEB');g.addColorStop(1,'#B0E0E6');
-  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
-  // blocks
-  for(let x=0;x<N;x++)for(let z=0;z<N;z++){
-    const b=world[x]?.[z];
-    if(b!=null&&b>=0)drawBlock(ctx,x,z,b,canvas);
-  }
-  // character
-  drawRebeca(ctx,N/2,N/2,canvas);
-}
-
-let canvas,animId;
-function startGame(){
-  document.getElementById('menu').style.display='none';
-  document.getElementById('game').style.display='block';
-  canvas=document.getElementById('c');
-  initWorld();
-  buildToolbar();
-  loop();
-}
-
-function loop(){
-  render(canvas);
-  animId=requestAnimationFrame(loop);
-}
-
-function buildToolbar(){
-  const tb=document.getElementById('toolbar');
-  tb.innerHTML='';
-  BLOCKS.forEach((b,i)=>{
-    const btn=document.createElement('div');
-    btn.className='tb-btn'+(i===selBlock?' selected':'');
-    btn.style.background=b.top;
-    btn.textContent=b.name.substring(0,3);
-    btn.onclick=()=>{selBlock=i;updateSel();};
-    tb.appendChild(btn);
-  });
-}
-
-function updateSel(){
-  document.querySelectorAll('.tb-btn').forEach((b,i)=>b.className='tb-btn'+(i===selBlock?' selected':''));
-  document.getElementById('block-name').textContent='Bloco: '+BLOCKS[selBlock].name;
-}
-
-function togglePause(){
-  paused=!paused;
-  document.getElementById('pause').className=paused?'show':'';
-  if(!paused)loop(); else cancelAnimationFrame(animId);
-}
-
-// Events
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&document.getElementById('game').style.display==='block')togglePause();
-});
-
-document.addEventListener('mousedown',e=>{
-  if(!canvas)return;
-  const rect=canvas.getBoundingClientRect();
-  dragging=true;dragSX=e.clientX;dragSY=e.clientY;dragCX=camX;dragCY=camY;
-});
-
-document.addEventListener('mousemove',e=>{
-  if(dragging&&canvas){
-    const dx=e.clientX-dragSX,dy=e.clientY-dragSY;
-    if(Math.abs(dx)>3||Math.abs(dy)>3){camX=dragCX+dx;camY=dragCY+dy;}
-  }
-});
-
-document.addEventListener('mouseup',e=>{
-  if(!canvas)return;
-  const dx=e.clientX-dragSX,dy=e.clientY-dragSY;
-  if(Math.abs(dx)<3&&Math.abs(dy)<3){
-    const rect=canvas.getBoundingClientRect();
-    const {x,z}=screenToBlock(e.clientX-rect.left,e.clientY-rect.top,canvas);
-    if(x>=0&&x<N&&z>=0&&z<N){
-      world[x][z]=world[x][z]===selBlock?-1:selBlock;
-      saveWorld();
-    }
-  }
-  dragging=false;
-});
-
-document.addEventListener('touchstart',e=>{
-  if(!canvas)return;
-  const t=e.touches[0];
-  dragging=true;dragSX=t.clientX;dragSY=t.clientY;dragCX=camX;dragCY=camY;
-  e.preventDefault();
-},{passive:false});
-
-document.addEventListener('touchmove',e=>{
-  if(dragging&&canvas){const t=e.touches[0];camX=dragCX+(t.clientX-dragSX);camY=dragCY+(t.clientY-dragSY);}e.preventDefault();
-},{passive:false});
-
-document.addEventListener('touchend',e=>{
-  if(!canvas)return;
-  const t=e.changedTouches[0];
-  const dx=t.clientX-dragSX,dy=t.clientY-dragSY;
-  if(Math.abs(dx)<5&&Math.abs(dy)<5){
-    const rect=canvas.getBoundingClientRect();
-    const{x,z}=screenToBlock(t.clientX-rect.left,t.clientY-rect.top,canvas);
-    if(x>=0&&x<N&&z>=0&&z<N){world[x][z]=world[x][z]===selBlock?-1:selBlock;saveWorld();}
-  }
-  dragging=false;
-});
-
-window.addEventListener('resize',()=>{ if(canvas)render(canvas); });
-</script>
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
