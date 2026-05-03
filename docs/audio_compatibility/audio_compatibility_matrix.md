@@ -1,12 +1,35 @@
-# Audio Compatibility Matrix
+# Matriz de Compatibilidade de Áudio
 
-## Introduction
-This document outlines the compatibility matrix for audio features in the game, specifically the alternation of audio output and silent mode.
+## Introdução
 
-## Compatibility Matrix
+Este documento descreve a matriz de compatibilidade de áudio para o jogo Rebeca, especificando os comportamentos esperados em diferentes sistemas operacionais (Android e iOS) para a alternância de saída de áudio e modo silencioso.
 
-| Feature | Android | iOS |
+## Matriz de Compatibilidade
+
+| Sistema Operacional | Alternância de Saída de Áudio | Modo Silencioso |
 | --- | --- | --- |
-| Audio Output | Supports speaker and headphone output | Supports speaker and headphone output |
-| Silent Mode | Supports silent mode, muting all audio output | Supports silent mode, muting all audio output |
-| Audio Output Switching | Supports switching between speaker and headphone output | Supports switching between speaker and headphone output |
+| Android | Suportado | Suportado |
+| iOS | Suportado | Suportado |
+
+## Comportamentos Esperados
+
+### Android
+
+* A alternância de saída de áudio deve funcionar corretamente, permitindo ao usuário escolher entre diferentes dispositivos de saída de áudio.
+* O modo silencioso deve silenciar todos os sons do jogo.
+
+### iOS
+
+* A alternância de saída de áudio deve funcionar corretamente, permitindo ao usuário escolher entre diferentes dispositivos de saída de áudio.
+* O modo silencioso deve silenciar todos os sons do jogo.
+
+## Testes
+
+Para garantir a compatibilidade de áudio, os seguintes testes devem ser realizados:
+
+* Testes de alternância de saída de áudio em dispositivos Android e iOS.
+* Testes de modo silencioso em dispositivos Android e iOS.
+
+## Conclusão
+
+A matriz de compatibilidade de áudio para o jogo Rebeca foi definida, especificando os comportamentos esperados em diferentes sistemas operacionais. Isso garantirá que o jogo seja compatível com diferentes dispositivos e sistemas operacionais.

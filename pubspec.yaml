@@ -37,3 +37,6 @@ flutter:
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
     - docs/audio_compatibility/audio_compatibility_matrix.md
+
+  assets:
+    - docs/audio_compatibility/audio_compatibility_matrix.md
