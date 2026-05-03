@@ -171,3 +171,6 @@ dependencies:
       - test/integration_tests/performance_tests/rebuild_performance_test.dart
 
   test/integration_tests/ux_tests/dicas_test/dicas_test.dart:
+
+  integration_test:
+    path: test/integration_tests/audio_tests/audio_test.dart
