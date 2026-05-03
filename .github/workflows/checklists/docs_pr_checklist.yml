@@ -1,0 +1,27 @@
+name: Docs PR Checklist
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  validate-docs-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate PR description
+        run: |
+          echo "Validating PR description..."
+          # Implement PR description validation logic here
+
+      - name: Validate categories
+        run: |
+          echo "Validating categories..."
+          # Implement categories validation logic here
+
+      - name: Validate PT-BR translation
+        run: |
+          echo "Validating PT-BR translation..."
+          # Implement PT-BR translation validation logic here
