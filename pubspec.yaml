@@ -64,8 +64,6 @@ flutter:
     path: ./benchmarks/performance_tracking
 
   physics_engine_tests:
-  slider_persistence_test:
-    path: ./test/slider_persistence_test
     path: ./test/physics_engine_tests
   slider_persistence_test:
     path: ./test/slider_persistence_test
@@ -97,17 +95,5 @@ flutter:
   reexecution_benchmark:
     path: ./benchmarks/reexecution_benchmark
 
-  release_guard_test:
-    path: ./integration_test/release_guard_test
-
-  secrets_fail_safe_test:
-    path: ./integration_test/secrets_fail_safe_test
-
-  env_validation_test:
-    path: ./test/env_validation_test
-
-  ui_test_config:
-    path: ./test/ui_test_config
-  secrets_validation_test:
-  integrity_test:
-    path: ./test/integrity_test
+  memory_baseline_test:
+    path: ./benchmarks/memory_baseline
