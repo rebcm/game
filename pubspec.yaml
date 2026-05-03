@@ -54,3 +54,8 @@ dev_dependencies:
 
   dicas_test:
     path: ./test/integration/dicas_test/dicas_test.dart
+
+  documentacao_test:
+    path: ./test/integration/documentacao_test/documentacao_test.dart
+  documentacao_test:
+    path: ./test/integration/documentacao_test/documentacao_test.dart
