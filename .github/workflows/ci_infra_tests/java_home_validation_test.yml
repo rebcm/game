@@ -1,0 +1,16 @@
+name: Java Home Validation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-java-home:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Java Home
+        run: .github/scripts/validate_java_home.sh
