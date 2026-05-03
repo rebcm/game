@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test_driver/integration_test.dart --target=integration_test/latency_benchmark_test.dart
+flutter drive --target=test/latency_benchmark/latency_benchmark_test.dart --driver=test_driver/integration_test.dart

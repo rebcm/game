@@ -41,3 +41,6 @@ flutter:
     - docs/dicas_construcao/conteudo_dicas.md
   assets:
     - docs/flutter_sdk_version/flutter_sdk_version_matrix.md
+
+  latency_benchmark_test:
+    path: test/latency_benchmark/latency_benchmark_test.dart
