@@ -36,3 +36,6 @@ flutter:
 
   memory_stress_test:
     path: test/integration_test/memory_stress_test/memory_stress_test.dart
+
+  technical_validation_test:
+    path: test/integration_test/technical_validation_test/run_technical_validation_test.sh
