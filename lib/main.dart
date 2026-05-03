@@ -1,28 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/input_service/input_service_web.dart' if (dart.library.io) 'package:game/services/input_service/input_service.dart';
+import 'package:game/widgets/input_field.dart';
 
 void main() {
-  if (kIsWeb) {
-    final inputService = InputServiceWeb();
-    inputService.init();
-  }
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rebeca\'s Creative Game',
-      home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // Your game content here
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Rebeca\'s Creative Game'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            InputField(label: 'Example Input'),
+          ],
+        ),
+      ),
+    );
   }
 }
