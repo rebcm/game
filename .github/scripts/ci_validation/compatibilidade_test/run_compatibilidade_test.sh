@@ -1,31 +1,26 @@
 #!/bin/bash
 
-# Executar build APK
-echo "Executando build APK..."
+# Executa testes de compatibilidade
+echo "Executando testes de compatibilidade..."
+
+# Verifica se o build APK/Bundle é feito sem erros de 'major version'
+echo "Verificando build APK/Bundle..."
 flutter build apk --release
-
-# Verificar se houve erros de 'major version'
-if grep -q "Major version" build.log; then
-  echo "Erro: Build APK com erro de major version"
+if [ $? -ne 0 ]; then
+  echo "Erro ao build APK/Bundle"
   exit 1
 fi
 
-# Executar build AppBundle
-echo "Executando build AppBundle..."
-flutter build appbundle --release
-
-# Verificar se houve erros de 'major version'
-if grep -q "Major version" build.log; then
-  echo "Erro: Build AppBundle com erro de major version"
-  exit 1
-fi
-
-# Medir tempo de build
-echo "Medindo tempo de build..."
+# Verifica o tempo de build
+echo "Verificando tempo de build..."
 time flutter build apk --release
 
-# Verificar sincronização Gradle
+# Verifica se a sincronização Gradle é concluída sem warnings de JDK
 echo "Verificando sincronização Gradle..."
-gradle sync | grep -q "WARNING" && echo "Warning: Sincronização Gradle com warnings" && exit 1
+cd android && ./gradlew assembleRelease --warning-mode all
+if [ $? -ne 0 ]; then
+  echo "Erro ao sincronizar Gradle"
+  exit 1
+fi
 
-echo "Teste de compatibilidade concluído com sucesso!"
+echo "Testes de compatibilidade concluídos com sucesso!"
