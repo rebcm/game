@@ -7,11 +7,14 @@ void main() {
     test('dispose cancela todos os Timers ativos', () {
       fakeAsync((async) {
         final estadoJogo = EstadoJogo();
+        // Inicializa timers
         estadoJogo.initState();
-        async.elapse(Duration(seconds: 1));
+        async.flushTimers();
         expect(estadoJogo.mounted, true);
+
         estadoJogo.dispose();
-        async.elapse(Duration(seconds: 1));
+        async.flushTimers();
+
         expect(estadoJogo.mounted, false);
       });
     });
