@@ -1,36 +1,41 @@
-name: Build and Deploy Game
+name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-          cache: true
+          flutter-version: '3.3.10'
 
-      - name: Get dependencies
-        working-directory: app
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze
-        working-directory: app
-        run: dart analyze --no-fatal-warnings
+      - name: Run smoke test
+        run: |
+          flutter drive --target=test/integration/smoke_test.dart --driver=test/integration/smoke_test_driver.dart
 
-      - name: Build web
-        working-directory: app
-        run: flutter build web --release --base-href /
+      - name: Check smoke test result
+        run: |
+          SMOKE_TEST_RESULT=$(cat smoke_test_result.json)
+          if [ "$SMOKE_TEST_RESULT" != "200" ]; then
+            echo "Smoke test failed with status $SMOKE_TEST_RESULT"
+            exit 1
+          fi
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy app/build/web --project-name=construcao-criativa --branch=main
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build/web
