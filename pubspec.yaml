@@ -2,12 +2,12 @@ flutter:
   assets:
     - docs/swagger_endpoints.md
     - docs/swagger_ui.html
+    - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   http: ^0.13.5
-
   integration_test:
     sdk: flutter
 
