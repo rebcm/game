@@ -1,13 +1,2 @@
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-
 dev_dependencies:
   markdown: ^4.0.0
-dev_dependencies:
-  leak_tracker: ^9.0.0
-  leak_tracker_flutter_testing: ^2.0.1
-
-dev_dependencies:
-  seo_checker: ^1.0.0

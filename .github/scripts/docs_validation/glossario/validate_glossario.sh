@@ -1,5 +1,11 @@
 #!/bin/bash
 
-# Validation logic for glossário
-echo "Validating glossário..."
-# Implement validation logic here
+if [ ! -f .github/docs/glossario.md ]; then
+  echo "Glossário não encontrado"
+  exit 1
+fi
+
+if [ ! -s .github/docs/glossario.md ]; then
+  echo "Glossário vazio"
+  exit 1
+fi
