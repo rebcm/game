@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rebcm/game.dart';
 
 void main() {
-  test('Testa se as dicas estão sendo extraídas corretamente', () {
+  test('Dicas strings extraction test', () {
     final dicas = Dicas();
-    final strings = dicas.getAllStrings();
+    final strings = dicas.getAllDicasStrings();
     expect(strings, isNotEmpty);
   });
 }
