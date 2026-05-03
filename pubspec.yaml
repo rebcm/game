@@ -67,3 +67,6 @@ flutter:
 
 dependency_overrides:
   just_audio: ^0.9.34
+
+  assets:
+    - docs/artefatos/matrizes/matriz-criterios-retencao.md
