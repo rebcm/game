@@ -1,19 +1,19 @@
-## Descrição
+# Pull Request Template
 
-Por favor, inclua um resumo da mudança e qual issue foi resolvida.
+## Description
 
-## Tipo de mudança
+Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context.
 
-- [ ] Correção de bug
-- [ ] Nova funcionalidade
-- [ ] Alteração de documentação
+## Checklist:
 
-## Checklist
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have run `dart analyze` and fixed any issues
+- [ ] I have run the tests and they pass
+- [ ] I have updated the `.github/docs` according to the changes made
 
-- [ ] Eu verifiquei se a descrição está clara e concisa.
-- [ ] Eu adicionei as categorias corretas para esta Pull Request.
-- [ ] Eu verifiquei se a tradução para PT-BR está correta.
+## Docs Sync
 
-### Documentação Adicional
-
-- [Descrição dos Biomas](../docs/biomas/descrição.md)
+- [ ] I have run `.github/scripts/docs_sync/sync_docs.sh` to update the documentation for environment variables and dependencies
