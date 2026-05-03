@@ -1,27 +1,17 @@
 #!/bin/bash
 
-# Script to validate the CI/CD pipeline against documented steps
+# Valida a execução do pipeline comparando com a documentação
 
-# Step 1: Log into CI/CD environment (assuming GitHub Actions)
-echo "Logging into CI/CD environment..."
-# No actual login command as we're simulating the process
+# Lê a documentação do pipeline
+PIPELINE_DOC=$(cat .github/docs/pipeline_documentation.md)
 
-# Step 2: Retrieve the documented pipeline steps from documentation
-echo "Retrieving documented pipeline steps..."
-documented_steps=$(cat .github/docs/pipeline_documentation.md | grep '^## Step' | cut -d' ' -f3-)
+# Lê as etapas do pipeline do arquivo de configuração
+PIPELINE_CONFIG=$(cat .github/workflows/main.yml)
 
-# Step 3: Get the actual pipeline steps from the CI/CD configuration
-echo "Getting actual pipeline steps..."
-actual_steps=$(cat .github/workflows/main.yml | grep '^  - name:' | cut -d':' -f2-)
-
-# Step 4: Compare the documented steps with the actual steps
-echo "Comparing documented and actual pipeline steps..."
-diff <(echo "$documented_steps") <(echo "$actual_steps")
-
-# Check if there are any differences
-if [ $? -eq 0 ]; then
-  echo "Pipeline validation successful: Documented and actual steps match."
-else
-  echo "Pipeline validation failed: Documented and actual steps do not match."
+# Compara as etapas documentadas com as etapas configuradas
+if ! diff -q <(echo "$PIPELINE_DOC" | grep -oP '(?<=## Etapas do Pipeline).*?(?=##)') <(echo "$PIPELINE_CONFIG" | grep -oP '(?<=jobs:).*?(?=EOF)') > /dev/null; then
+  echo "Diferença encontrada entre a documentação e a configuração do pipeline."
   exit 1
 fi
+
+echo "Pipeline validado com sucesso."
