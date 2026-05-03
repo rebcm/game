@@ -9,20 +9,22 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Start audio playback
-    // await tester.tap(find.byType(ElevatedButton)); // Example, adjust according to your UI
+    // Start playing audio
+    await tester.tap(find.byTooltip('Play Audio'));
+    await tester.pumpAndSettle();
 
-    // Simulate incoming call or alarm interruption
-    // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    // Simulate incoming call
+    // await tester.binding.handlePhoneCallInterruption();
     // await tester.pumpAndSettle();
 
-    // Verify audio behavior during interruption
-    // expect(find.text('Audio paused'), findsOneWidget); // Example, adjust according to your UI
+    // Verify audio paused
+    // expect(find.text('Audio Paused'), findsOneWidget);
 
-    // Resume app and verify audio resumes or remains paused as expected
-    // await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    // Simulate call end
+    // await tester.binding.handlePhoneCallInterruptionEnd();
     // await tester.pumpAndSettle();
 
-    // expect(find.text('Audio resumed'), findsOneWidget); // Example, adjust according to your UI
+    // Verify audio resumed
+    // expect(find.text('Audio Playing'), findsOneWidget);
   });
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/driver.dart --target=test/audio_interruption_test/audio_interruption_test.dart
+flutter drive --driver=test/audio_interruption_test/audio_interruption_test.dart --target=lib/main.dart
