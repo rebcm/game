@@ -40,3 +40,6 @@ flutter:
 
   assets:
     - docs/audio_compatibility/audio_compatibility_matrix.md
+
+  # Contract test assets
+  - test/integration/contract/contract_test.dart
