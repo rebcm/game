@@ -35,3 +35,5 @@ flutter:
   assets:
     - docs/audio_api_comparativo/audio_api_comparativo.md
   audio_session: ^0.1.11
+
+  integration_test/documentacao_test.dart:
