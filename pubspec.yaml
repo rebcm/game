@@ -49,3 +49,8 @@ supportedLocales:
   envied_annotation: ^0.2.1
 
   http: ^0.13.5
+  integration_test:
+    path: test/integration_tests/audio_tests
+
+  integration_test:
+    path: test/integration_tests/audio_tests
