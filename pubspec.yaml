@@ -4,6 +4,7 @@ flutter:
     - docs/swagger_ui.html
     - .github/scripts/docs_validation/audio_comparativo/edge_cases_matrix.md
     - peer_review.md
+    - docs/bloco_documentation.json
 
 dev_dependencies:
   widget_tracker_impl:
@@ -39,25 +40,13 @@ dev_dependencies:
     path: .github/scripts/docs_validation/swagger_endpoints/validate_swagger_endpoints.sh
   documentacao_test:
     path: ./test/integration/documentacao_test/documentacao_test.dart
-
   flutter_sdk_versoes_validation:
     path: .github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
-  secrets_validation:
-    path: .github/scripts/secrets_validation/validate_secrets.sh
-
-dev_dependencies:
   secrets_validation:
     path: .github/scripts/secrets_validation/validate_secrets.sh
   stress_test:
     path: ./test/integration/stress_test/timer_stress_test.dart
   stress_test_with_memory_check:
-    path: ./test/integration/stress_test/timer_stress_test_with_memory_check.dart
-
-dev_dependencies:
-  clean_build_test:
-    path: ./test/integration/clean_build_test
-
-  dicas_test:
-    path: ./test/integration/dicas_test/dicas_test.dart
-  responsividade_test:
-    path: ./test/integration/responsividade_test/responsividade_test.dart
+    path: ./test/integration/stress_test/time
+  bloco_documentation_validation:
+    path: .github/scripts/docs_validation/bloco_documentation/validate_output_schema.sh
