@@ -1,0 +1,9 @@
+generatorName: dart
+outputDirectory: ./lib/openapi/client
+pubName: openapi_client
+pubVersion: 1.0.0
+pubAuthor: Rebeca Alves Moreira
+pubAuthorEmail: rebeca.alves.moreira@example.com
+pubDescription: OpenAPI client generated from Swagger documentation
+pubHomepage: https://github.com/rebcm/game
+pubRepository: https://github.com/rebcm/game
