@@ -1,35 +1,50 @@
-# Audio API Comparison Across Platforms
+# Audio API Comparison
 
-This document outlines the differences in audio implementation between Flutter Web (using Web Audio API), Android (using AudioTrack/MediaPlayer), and iOS (using AVAudioPlayer).
+This document outlines the differences in audio implementation across various platforms for the Rebeca voxel game.
 
-## Flutter Web (Web Audio API)
+## Overview
 
-* Uses Web Audio API for audio processing and playback.
-* Supports advanced audio features like effects and spatialization.
-* Handles audio context management and node connections.
+The game uses Flutter, which supports multiple platforms including Web, Android, and iOS. Each platform has its native audio APIs.
 
-## Android (AudioTrack/MediaPlayer)
+## Platform-Specific Audio APIs
 
-* Utilizes AudioTrack for low-level audio buffer management or MediaPlayer for higher-level media playback control.
-* Offers various audio formats and streaming capabilities.
-* Manages audio focus and handling of audio interruptions.
+### Flutter Web (Web Audio API)
 
-## iOS (AVAudioPlayer)
+- **API Used:** Web Audio API
+- **Description:** The Web Audio API provides a powerful and versatile system for controlling audio on the Web.
+- **Key Features:**
+  - High-level JavaScript API for handling audio operations
+  - Supports audio sources, effects, and analysis
+  - Compatible with modern web browsers
 
-* Employs AVAudioPlayer for straightforward audio playback.
-* Supports various audio formats and provides basic playback controls.
-* Handles audio interruptions and integrates with other iOS audio services.
+### Android (AudioTrack/MediaPlayer)
 
-## Comparison Matrix
+- **API Used:** AudioTrack, MediaPlayer
+- **Description:** Android provides AudioTrack for low-level audio manipulation and MediaPlayer for higher-level media playback.
+- **Key Features:**
+  - AudioTrack: Allows for streaming audio data to the audio hardware for playback.
+  - MediaPlayer: Provides a higher-level API for playing back media files.
 
-| Feature          | Flutter Web (Web Audio API) | Android (AudioTrack/MediaPlayer) | iOS (AVAudioPlayer) |
-|------------------|-----------------------------|----------------------------------|----------------------|
-| Low-Level Control| High                        | High (AudioTrack)                | Low                  |
-| Audio Formats    | Multiple                    | Multiple                         | Multiple             |
-| Audio Effects    | Supported                   | Supported (varies)               | Supported            |
-| Audio Focus      | Not Applicable              | Supported                        | Supported            |
+### iOS (AVAudioPlayer)
 
-## Conclusion
+- **API Used:** AVAudioPlayer
+- **Description:** AVAudioPlayer is a class in the AVFoundation framework that provides a simple way to play audio.
+- **Key Features:**
+  - Supports playing audio from files or memory
+  - Allows for control over playback, such as volume and looping
 
-Each platform offers unique strengths and challenges for audio implementation. Understanding these differences is crucial for developing a consistent audio experience across Flutter Web, Android, and iOS.
+## Comparison
+
+| Feature          | Web Audio API        | Android (AudioTrack/MediaPlayer) | iOS (AVAudioPlayer) |
+|------------------|----------------------|----------------------------------|----------------------|
+| **Low-Level Control** | Yes                  | Yes (AudioTrack)                 | Limited              |
+| **High-Level Playback** | Yes                  | Yes (MediaPlayer)                | Yes                  |
+| **Audio Effects** | Yes                  | Yes (with additional processing) | Yes                  |
+| **Multi-Platform Support** | N/A              | N/A                              | N/A                  |
+
+## Implementation Considerations
+
+When implementing audio features in the game, consider the following:
+- Use Flutter packages that abstract away platform-specific details where possible.
+- For platform-specific optimizations or features, use platform channels to access native APIs.
 
