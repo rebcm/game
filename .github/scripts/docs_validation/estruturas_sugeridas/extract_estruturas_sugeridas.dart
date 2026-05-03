@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:game/docs/estruturas_sugeridas.dart';
+import 'dart:io';
 
 void main() {
-  final estruturasSugeridas = EstruturasSugeridas();
-  final extractedData = estruturasSugeridas.extractData();
-  print(extractedData);
-  // Write to file
-  // ignore: avoid_print
-  print('Writing to lib/docs/estruturas_sugeridas.txt');
+  // Implemente a lógica para extrair as estruturas sugeridas
+  print('Extraindo estruturas sugeridas...');
 }
