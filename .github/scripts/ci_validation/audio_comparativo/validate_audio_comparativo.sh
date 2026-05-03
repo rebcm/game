@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Validar a existência e conteúdo do arquivo audio_api_comparativo.md
-if [ ! -f docs/audio_api_comparativo/audio_api_comparativo.md ]; then
-  echo "Arquivo audio_api_comparativo.md não encontrado."
+# Verificar se a matriz de resultados esperados para áudio existe
+if [ ! -f "docs/audio_comparativo/matriz_resultados_esperados.md" ]; then
+  echo "Erro: Matriz de resultados esperados para áudio não encontrada."
   exit 1
 fi
 
-# Verificar se o arquivo contém a tabela comparativa
-if ! grep -q "| Cenário | Android | iOS |" docs/audio_api_comparativo/audio_api_comparativo.md; then
-  echo "Tabela comparativa não encontrada no arquivo audio_api_comparativo.md."
+# Verificar se a matriz de resultados esperados para áudio está correta
+if ! grep -q "Modo Silencioso" "docs/audio_comparativo/matriz_resultados_esperados.md"; then
+  echo "Erro: Matriz de resultados esperados para áudio está incorreta."
   exit 1
 fi
 
-echo "Validação do comparativo de áudio concluída com sucesso."
+echo "Validação da matriz de resultados esperados para áudio concluída com sucesso."
