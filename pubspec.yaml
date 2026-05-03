@@ -59,3 +59,5 @@ dev_dependencies:
     path: ./test/integration/documentacao_test/documentacao_test.dart
   documentacao_test:
     path: ./test/integration/documentacao_test/documentacao_test.dart
+  dicas_documentation_validator:
+    path: ./.github/scripts/docs_validation/dicas/validate_dicas_documentation.sh

@@ -14,3 +14,5 @@ run_ci_validation
 
 # Executa a validação do peer review
 ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
+# Executa a validação da documentação das dicas
+./.github/scripts/docs_validation/dicas/validate_dicas_documentation.sh
