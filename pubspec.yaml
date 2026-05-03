@@ -7,3 +7,5 @@ dev_dependencies:
 
 dependencies:
   swagger: ^1.0.0
+
+  docs/walkthrough.md
