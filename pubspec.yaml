@@ -43,3 +43,4 @@ flutter:
     - docs/i18n/en-US/bloco_documentation.json
     - docs/i18n/pt-BR/seo/palavras-chave.md
     - docs/i18n/en-US/seo/palavras-chave.md
+    - docs/documentacao/conteudo_documentacao.md

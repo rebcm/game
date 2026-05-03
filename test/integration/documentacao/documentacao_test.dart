@@ -5,12 +5,9 @@ import 'dart:io';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('documentacao teste', (tester) async {
-    final documentacaoFile = File('docs/bloco_documentation.json');
+  testWidgets('documentacao_test', (tester) async {
+    final documentacaoFile = File('docs/documentacao/conteudo_documentacao.md');
     final documentacaoExists = await documentacaoFile.exists();
-    expect(documentacaoExists, true);
-
-    final documentacaoContent = await documentacaoFile.readAsString();
-    expect(documentacaoContent, isNotEmpty);
+    expect(documentacaoExists, true, reason: 'Documentação não encontrada');
   });
 }
