@@ -18,3 +18,6 @@ dev_dependencies:
 
   test:
     sdk: flutter
+
+  memory_leak_detector:
+    path: ./lib/utils/memory_leak_detector
