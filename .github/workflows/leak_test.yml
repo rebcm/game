@@ -19,5 +19,4 @@ jobs:
 
       - name: Run leak test
         run: |
-          flutter pub get
-          flutter test test/leak_test/leak_test.dart
+          flutter test test/integration_test/leak_test/leak_test.dart
