@@ -81,3 +81,6 @@ flutter:
 
   ci_cd_flow_test:
     path: ./integration_test/ci_cd_flow_test
+
+  audio_stress_test:
+    path: ./benchmarks/audio_stress_test

@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class AudioService with ChangeNotifier {
-  bool _isConnected = true;
-  bool get isConnected => _isConnected;
+class AudioService {
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  void onConnectionLost() {
-    _isConnected = false;
-    notifyListeners();
+  Future<void> playAudio(String audioPath) async {
+    await _audioPlayer.play(AssetSource(audioPath));
   }
 
-  void onConnectionRecovered() {
-    _isConnected = true;
-    notifyListeners();
+  Future<void> stopAudio() async {
+    await _audioPlayer.stop();
+    await _audioPlayer.dispose();
   }
 }
