@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 
 class InputNormalizer {
   double _previousValue = 0.0;
-  double _threshold = 0.1; // Deadzone threshold
+  double _currentValue = 0.0;
 
-  InputNormalizer(this._threshold);
-
-  double normalize(double inputValue) {
-    if (inputValue.abs() < _threshold) {
-      _previousValue = 0.0;
-      return 0.0;
+  double normalize(double inputValue, double deadzone, double threshold) {
+    if (inputValue.abs() < deadzone) {
+      _currentValue = 0.0;
+    } else {
+      _currentValue = (inputValue.abs() - deadzone) / (1 - deadzone) * threshold * inputValue.sign;
     }
 
-    // Linear interpolation to smoothly transition from 0 to the threshold value
-    double targetValue = inputValue > 0 ? 1.0 : -1.0;
-    _previousValue = (_previousValue + (targetValue - _previousValue) * 0.1).clamp(-1.0, 1.0);
+    _currentValue = (_currentValue + _previousValue * 3) / 4;
+    _previousValue = _currentValue;
 
-    return _previousValue;
+    return _currentValue;
   }
 }
