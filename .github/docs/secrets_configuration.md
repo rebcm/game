@@ -1,13 +1,10 @@
 # Secrets Configuration
-This document outlines the secrets configuration for the Rebeca Flutter game project.
 
-## Environment Variables
-The following environment variables are used in the CI/CD pipeline:
-* `REBCA_FLUTTER_GITHUB_TOKEN`: GitHub token for authentication
-* `REBCA_FLUTTER_CLOUDFLARE_TOKEN`: Cloudflare token for authentication
+To build the project, you need to configure the following secrets:
 
-## Upload Configuration
-The following environment variables are used for upload:
-* `REBCA_FLUTTER_UPLOAD_URL`: URL for upload
-* `REBCA_FLUTTER_UPLOAD_USERNAME`: Username for upload
-* `REBCA_FLUTTER_UPLOAD_PASSWORD`: Password for upload
+* STORE_FILE: path to the keystore file (default: key.jks)
+* STORE_PASSWORD: password to the keystore
+* KEY_ALIAS: alias of the key
+* KEY_PASSWORD: password to the key
+
+These secrets should be set as environment variables.
