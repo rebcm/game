@@ -1,0 +1,54 @@
+name: Compatibilidade Build APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Verificar major version
+        run: |
+          major_version=$(grep 'version:' pubspec.yaml | awk '{print $2}' | cut -d '+' -f 1)
+          major_version=${major_version//./}
+          if [ $major_version -lt 1 ]; then
+            echo "Major version is less than 1"
+            exit 1
+          fi
+
+      - name: Verificar tempo de build
+        run: |
+          build_time=$(time flutter build apk --release 2>&1 | grep real | awk '{print $2}' | sed 's/m//g')
+          if (( $(echo "$build_time > 5" | bc -l) )); then
+            echo "Build time is more than 5 minutes"
+            exit 1
+          fi
+
+      - name: Verificar sincronização Gradle
+        run: |
+          gradle_sync_output=$(flutter build apk --release 2>&1)
+          if echo "$gradle_sync_output" | grep -q "WARNING"; then
+            echo "Gradle sync has warnings"
+            exit 1
+          fi
