@@ -1,15 +1,14 @@
-# Checklist de Aceitação da Arquitetura
+# Checklist de Aceitação para Arquitetura
 
-## Critérios
+## Critérios de Aceitação
 
-1. **Separação de Camadas**: As camadas Data, Domain e Presentation devem estar claramente separadas.
-   - [ ] A camada Data não importa Presentation.
-   - [ ] A camada Domain não importa Data ou Presentation.
+1. **Separação de Camadas**: As camadas de `data`, `domain`, e `presentation` devem estar claramente separadas.
+   - [ ] Nenhuma classe ou função da camada `data` deve ser acessada diretamente pela camada `presentation`.
+   - [ ] A camada `domain` não deve depender da camada `data`.
 
-2. **Análise de Código**: O código deve passar no `dart analyze` sem erros.
-   - [ ] `dart analyze lib` retorna zero erros.
+2. **Análise Estática**: O código deve passar na análise estática sem erros.
+   - [ ] Executar `dart analyze` deve retornar zero erros.
 
-## Ação
+## Verificação
 
-- Verificar a separação de camadas e corrigir imports incorretos.
-- Executar `dart analyze` e corrigir erros reportados.
+- [ ] A estrutura de pastas reflete a separação de camadas (`data`, `domain`, `presentation`).
