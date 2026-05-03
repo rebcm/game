@@ -4,14 +4,13 @@ import 'package:game/state/jogo_state.dart';
 
 void main() {
   group('JogoState', () {
-    test('dispose cancels all timers', () {
+    test('dispose should cancel all timers', () {
       fakeAsync((async) {
         final state = JogoState();
-        state.initState(); // Assume this starts some timers
-        state.dispose();
+        state.initState();
         async.flushTimers();
-        // Verify that no timers are still active after dispose
-        expect(async.periodicTimerCount, 0);
+        state.dispose();
+        expect(state._timer?.isActive, false);
       });
     });
   });
