@@ -5,6 +5,6 @@ class InvalidCoordinateException implements Exception {
 
   @override
   String toString() {
-    return 'InvalidCoordinateException: $message';
+    return message;
   }
 }
