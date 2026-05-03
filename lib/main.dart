@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:game/services/audio_service.dart';
+import 'package:game/utils/resolution_constants.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AudioService()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Voxel Game',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final audioService = Provider.of<AudioService>(context);
-    return Scaffold(
-      body: Center(
-        child: Text(audioService.isConnected ? 'Audio playing' : 'Audio paused'),
+      title: 'Game',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Game'),
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (ResolutionConstants.supportedResolutions.contains(constraints.maxWidth)) {
+              return Text('Dicas'); // Simplified for demonstration
+            } else {
+              return Text('Unsupported resolution');
+            }
+          },
+        ),
       ),
     );
   }
