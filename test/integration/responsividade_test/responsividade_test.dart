@@ -7,7 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Responsividade Test', () {
-    testWidgets('Verificar responsividade em telas pequenas', (tester) async {
+    testWidgets('Testa responsividade em telas pequenas', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -18,7 +18,7 @@ void main() {
       expect(find.byType(GridView), findsOneWidget);
     });
 
-    testWidgets('Verificar truncamento de dicas em telas pequenas', (tester) async {
+    testWidgets('Testa truncamento de dicas em telas pequenas', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -28,8 +28,8 @@ void main() {
       final dicas = find.text('Dicas');
       expect(dicas, findsOneWidget);
 
-      final dicaText = tester.widget<Text>(dicas).data;
-      expect(dicaText!.length, lessThanOrEqualTo(20));
+      final dicasText = tester.widget<Text>(dicas);
+      expect(dicasText.style?.overflow, TextOverflow.ellipsis);
     });
   });
 }

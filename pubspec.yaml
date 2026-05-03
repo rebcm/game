@@ -77,3 +77,5 @@ dev_dependencies:
 
 dependencies:
   leak_tracker_flutter_testing: ^9.0.0
+  responsividade_test:
+    path: ./test/integration/responsividade_test/responsividade_test.dart
