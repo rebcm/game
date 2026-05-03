@@ -75,3 +75,6 @@ flutter:
 
   api_validation_test:
     path: ./integration_test/api_validation_test
+
+  deploy_validation_test:
+    path: ./integration_test/deploy_validation_test
