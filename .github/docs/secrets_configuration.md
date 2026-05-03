@@ -1,13 +1,13 @@
-# Configuring Secrets for GitHub Actions
+# Secrets Configuration
 
-To configure secrets for GitHub Actions, follow these steps:
+This document outlines the necessary secrets for the project's CI/CD pipeline.
 
-1. Go to your repository settings on GitHub.
-2. Click on "Actions" in the left sidebar.
-3. Click on "Secrets" and then "Actions".
-4. Click on "New repository secret".
-5. Add the following secrets:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
+## Required Secrets
 
-These secrets are required for the CI/CD pipeline to authenticate with Cloudflare.
+* `CLOUDFLARE_API_TOKEN`: The API token for Cloudflare.
+* `CLOUDFLARE_ACCOUNT_ID`: The account ID for Cloudflare.
+
+## Configuration
+
+To configure these secrets, run the `configure_secrets.sh` script in the `.github/workflows` directory.
+
