@@ -23,3 +23,7 @@ dev_dependencies:
 
   freezed: ^2.3.2
   json_annotation: ^4.6.0
+
+dependencies:
+  protobuf: ^2.1.0
+
