@@ -2,11 +2,10 @@ name = "rebcm-game"
 type = "javascript"
 
 [env.production]
-vars = {
-  DB_URL = ""
-}
+vars = { ENVIRONMENT = "production" }
 
-[env.staging]
-vars = {
-  DB_URL = ""
-}
+[[env.production.secrets]]
+name = "DB_PASSWORD"
+
+[[env.production.secrets]]
+name = "API_KEY"

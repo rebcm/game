@@ -1,12 +1,12 @@
-# Wrangler Secrets Configuration
+# Wrangler Secrets Documentation
 
-This document outlines the secrets required for the project's Cloudflare Wrangler configuration.
+This document describes the secrets used in the project.
 
-## Required Secrets
+## Secrets
 
-- `WRANGLER_API_TOKEN`: API token for Cloudflare Wrangler.
-- `DATABASE_URL`: URL for the database connection.
+* `DB_PASSWORD`: Password for the database connection
+* `API_KEY`: API key for external services
 
 ## Setting Secrets
 
-To set these secrets, use the Wrangler CLI:
+To set a secret, use the following command:
