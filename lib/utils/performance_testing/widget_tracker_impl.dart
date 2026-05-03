@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:game/utils/performance_testing/widget_tracker.dart';
+import 'package:rebcm/utils/performance_testing/widget_tracker.dart';
 
-class WidgetTrackerImpl implements WidgetTracker {
-  @override
-  Future<void> init() async {}
+class RebuildTracker extends StatefulWidget {
+  final Widget child;
+  final WidgetTracker tracker;
 
-  @override
-  Future<void> startTracking() async {
-    // Implement actual tracking logic here
-  }
+  RebuildTracker({required this.child, required this.tracker});
 
   @override
-  Future<int> stopTracking() async {
-    // Return actual rebuild count
-    return 0;
+  _RebuildTrackerState createState() => _RebuildTrackerState();
+}
+
+class _RebuildTrackerState extends State<RebuildTracker> {
+  @override
+  Widget build(BuildContext context) {
+    widget.tracker.incrementRebuildCount();
+    return widget.child;
   }
 }
