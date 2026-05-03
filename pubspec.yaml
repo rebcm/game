@@ -93,3 +93,5 @@ dev_dependencies:
 
   permission_validation_test:
     path: ./test/integration/permission_tests/permission_test.dart
+  ui_integration_test:
+    path: ./test/integration/ui_integration_test/ui_integracao_test.dart

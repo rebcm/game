@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:rebcm/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -9,7 +9,7 @@ void main() {
     testWidgets('Initial screen test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      expect(find.text('Rebeca\'s Creative Block World'), findsOneWidget);
+      expect(find.text('Rebeca\'s Creative Block Game'), findsOneWidget);
     });
 
     testWidgets('Block placement test', (tester) async {
@@ -20,10 +20,10 @@ void main() {
       expect(find.byType(GridView), findsOneWidget);
     });
 
-    testWidgets('Settings menu test', (tester) async {
+    testWidgets('Menu navigation test', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.settings));
+      await tester.tap(find.byIcon(Icons.menu));
       await tester.pumpAndSettle();
       expect(find.text('Settings'), findsOneWidget);
     });
