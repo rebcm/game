@@ -34,3 +34,6 @@ supportedLocales:
     - docs/autoplay_politicas/autoplay_politicas.md
 
   - test/audio_compatibility/audio_compatibility_test.dart
+
+  - test/audio_edge_cases/external_interruptions_test.dart
+  - test/audio_edge_cases/external_interruptions_test.dart
