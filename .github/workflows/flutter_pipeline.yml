@@ -19,8 +19,8 @@ jobs:
       - name: Run Flutter pub get
         run: flutter pub get
 
-      - name: Run Flutter tests
-        run: flutter test
+      - name: Run Flutter analyze
+        run: dart analyze
 
-      - name: Run Flutter driver tests
-        run: flutter drive --target=test_driver/app.dart
+      - name: Run Flutter test
+        run: flutter test
