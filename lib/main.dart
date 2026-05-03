@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rebcm/controllers/player_controller.dart';
+import 'package:rebcm/blocos/blocos.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PlayerController()),
+        ChangeNotifierProvider(create: (_) => Blocos()),
       ],
       child: MyApp(),
     ),
@@ -17,6 +17,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Rebeca\'s Game',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       home: MyHomePage(),
     );
   }
@@ -25,17 +29,22 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final playerController = Provider.of<PlayerController>(context);
+    final blocos = context.watch<Blocos>().blocos;
 
     return Scaffold(
-      body: GestureDetector(
-        onPanUpdate: (details) {
-          playerController.updateInput(details.delta.dx / 100);
+      appBar: AppBar(
+        title: Text('Blocos Disponíveis'),
+      ),
+      body: ListView.builder(
+        itemCount: blocos.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(blocos[index].nome),
+            subtitle: Text(blocos[index].descricao),
+          );
         },
-        child: Center(
-          child: Text('Input Value: ${playerController.inputValue}'),
-        ),
       ),
     );
   }
 }
+
