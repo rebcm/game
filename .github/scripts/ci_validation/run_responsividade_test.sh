@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter drive --driver=test/integration/responsividade_test/responsividade_test.dart --target=lib/main.dart
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --device-id=iPhone-SE
