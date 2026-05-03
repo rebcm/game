@@ -1,29 +1,28 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class EstadoJogo extends StatefulWidget {
   @override
-  _EstadoJogoState createState() => _EstadoJogoState();
+  EstadoJogoState createState() => EstadoJogoState();
 }
 
-class _EstadoJogoState extends State<EstadoJogo> with AutomaticKeepAliveClientMixin {
+class EstadoJogoState extends State<EstadoJogo> {
+  Timer? _timer;
+
   @override
-  bool get wantKeepAlive => false;
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {});
+  }
 
   @override
   void dispose() {
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Estado Jogo'),
-      ),
-      body: Center(
-        child: Text('Conteúdo'),
-      ),
-    );
+    return Container();
   }
 }

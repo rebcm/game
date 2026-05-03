@@ -10,12 +10,11 @@ void main() {
       ),
     );
 
-    final estadoJogoState = tester.state(find.byType(EstadoJogo));
-
-    expect(estadoJogoState.mounted, true);
+    final estadoJogo = tester.state<EstadoJogoState>(find.byType(EstadoJogo));
+    expect(estadoJogo.mounted, isTrue);
 
     await tester.pumpWidget(Container());
 
-    expect(estadoJogoState.mounted, false);
+    expect(estadoJogo.mounted, isFalse);
   });
 }
