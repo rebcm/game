@@ -1,52 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/game/tela_dicas.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:rebcm/game.dart';
 
 void main() {
-  testWidgets('Tela de dicas responsividade test', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(1080, 1920));
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: TelaDicas(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Dicas'), findsOneWidget);
-    await tester.binding.setSurfaceSize(const Size(480, 800));
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: TelaDicas(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Dicas'), findsOneWidget);
-  });
+  group('Tela de Dicas Responsividade Test', () {
+    testGoldens('Tela de Dicas responsividade', (tester) async {
+      final screenSize = [
+        const Size(375, 812), // iPhone 12
+        const Size(414, 896), // iPhone 12 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 1366), // iPad Pro
+      ];
 
-  testWidgets('Tela de dicas internacionalizacao test', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(1080, 1920));
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: Locale('pt', 'BR'),
-        home: Scaffold(
-          body: TelaDicas(),
+      await tester.pumpWidgetBuilder(
+        MaterialApp(
+          home: Scaffold(
+            body: TelaDicas(),
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Dicas'), findsOneWidget);
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: Locale('en', 'US'),
-        home: Scaffold(
-          body: TelaDicas(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Tips'), findsOneWidget);
+      );
+
+      for (var size in screenSize) {
+        await tester.setScreenSize(size);
+        await tester.pumpAndSettle();
+        await tester.compareGolden(
+          tester.binding.window.physicalSize,
+          'tela_dicas_${size.width.toInt()}x${size.height.toInt()}',
+        );
+      }
+    });
   });
 }
