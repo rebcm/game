@@ -49,3 +49,23 @@ dependencies:
 
   game/services/estrutura_sugerida/estrutura_sugerida_service.dart:
   game/docs/biomas/biomas.dart:
+
+flutter:
+  generate: true
+
+  assets:
+    - assets/locale/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+
+localizationsDelegates:
+  - AppLocalizationsDelegate()
+  - GlobalMaterialLocalizations.delegate
+  - GlobalWidgetsLocalizations.delegate
+
+supportedLocales:
+  - de
+  - fr
