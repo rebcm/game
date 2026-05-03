@@ -1,19 +1,20 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FeedbackService {
-  Future<void> sendFeedback(Map<String, dynamic> feedback) async {
-    final url = 'https://example.com/feedback';
+  Future<bool> submitFeedback(String step, String issue, String suggestion) async {
     final response = await http.post(
-      Uri.parse(url),
+      Uri.parse('${dotenv.env['API_URL']}/feedback'),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(feedback),
+      body: jsonEncode({
+        'step': step,
+        'issue': issue,
+        'suggestion': suggestion,
+      }),
     );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to send feedback');
-    }
+    return response.statusCode == 201;
   }
 }

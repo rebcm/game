@@ -1,17 +1,16 @@
-# Formulário de Feedback Estruturado
+# Formulário de Feedback
 
-## Introdução
-Este formulário tem como objetivo capturar evidências exatas de onde o desenvolvedor sentiu fricção ou encontrou ambiguidades na documentação.
+## Visão Geral
 
-## Perguntas
+O formulário de feedback é uma funcionalidade que permite aos testadores reportar problemas ou sugerir melhorias durante a execução do jogo.
 
-1. Qual é o seu nível de experiência com o jogo voxel moda criativo?
- * Iniciante
- * Intermediário
- * Avançado
-2. Quais foram os principais desafios que você enfrentou durante a implementação do jogo?
- * (Campo de texto para resposta aberta)
-3. Quais recursos ou funcionalidades você acha que faltam na documentação atual?
- * (Campo de texto para resposta aberta)
-4. Você tem alguma sugestão para melhorar a documentação ou a experiência do desenvolvedor?
- * (Campo de texto para resposta aberta)
+## Campos do Formulário
+
+1. **Passo em que ocorreu o problema**: Campo obrigatório para que o testador informe em qual passo do jogo o problema ocorreu.
+2. **Descrição do problema**: Campo obrigatório para que o testador descreva o problema enfrentado.
+3. **Sugestão para melhoria**: Campo opcional para que o testador sugira melhorias.
+
+## Comportamento Esperado
+
+- Ao preencher todos os campos obrigatórios e clicar em "Enviar Feedback", o formulário deve ser submetido com sucesso.
+- Caso ocorra um erro durante a submissão, uma mensagem de erro deve ser exibida.
