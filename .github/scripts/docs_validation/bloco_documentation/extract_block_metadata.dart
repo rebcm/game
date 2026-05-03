@@ -1,14 +1,16 @@
 import 'dart:convert';
-import 'package:game/block_metadata.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
-  final blocks = BlockMetadata.getBlocks();
+  // Assuming there's a list of blocks defined somewhere in the code
+  List<Block> blocks = []; // Replace with actual data fetching logic
+
   final output = {
     'blocks': blocks.map((block) => {
       'id': block.id,
       'name': block.name,
-      'description': block.description
-    }).toList()
+      'description': block.description,
+    }).toList(),
   };
 
   print(jsonEncode(output));
