@@ -1,34 +1,56 @@
 # Mapeamento de APIs de Áudio por Plataforma
 
-Este documento descreve as diferenças de implementação de áudio entre Flutter Web (Web Audio API), Android (AudioTrack/MediaPlayer) e iOS (AVAudioPlayer) para as versões listadas na matriz.
+Este documento visa mapear as diferenças de implementação de áudio entre as plataformas suportadas pelo jogo.
 
-## Matriz de Suporte
+## Plataformas Suportadas
 
-| Plataforma | Versão Mínima | API de Áudio Utilizada |
-| --- | --- | --- |
-| Flutter Web | - | Web Audio API |
-| Android | - | AudioTrack/MediaPlayer |
-| iOS | - | AVAudioPlayer |
+* Flutter Web (Web Audio API)
+* Android (AudioTrack/MediaPlayer)
+* iOS (AVAudioPlayer)
 
-## Diferenças de Implementação
+## Implementação de Áudio por Plataforma
 
 ### Flutter Web
 
-* Utiliza a Web Audio API para reprodução de áudio.
-* Suporte a formatos de áudio: MP3, WAV, OGG.
+A implementação de áudio no Flutter Web utiliza a Web Audio API.
+
+* **Características:**
+ + Suporte a áudio em tempo real
+ + Controle de volume e pitch
+ + Suporte a efeitos de áudio
+* **Limitações:**
+ + Dependência da implementação do navegador
 
 ### Android
 
-* Utiliza AudioTrack e MediaPlayer para reprodução de áudio.
-* Suporte a formatos de áudio: MP3, WAV, OGG, AAC.
+A implementação de áudio no Android utiliza AudioTrack e MediaPlayer.
+
+* **Características:**
+ + Suporte a áudio em tempo real
+ + Controle de volume e pitch
+ + Suporte a efeitos de áudio
+* **Limitações:**
+ + Diferenças de implementação entre versões do Android
 
 ### iOS
 
-* Utiliza AVAudioPlayer para reprodução de áudio.
-* Suporte a formatos de áudio: MP3, WAV, AAC, ALAC.
+A implementação de áudio no iOS utiliza AVAudioPlayer.
 
-## Considerações de Implementação
+* **Características:**
+ + Suporte a áudio em tempo real
+ + Controle de volume e pitch
+ + Suporte a efeitos de áudio
+* **Limitações:**
+ + Dependência da versão do iOS
 
-* É necessário tratar as diferenças de suporte a formatos de áudio entre as plataformas.
-* A implementação deve ser feita de forma a garantir a compatibilidade entre as plataformas.
+## Comparação entre Plataformas
 
+| Característica | Flutter Web | Android | iOS |
+| --- | --- | --- | --- |
+| Suporte a áudio em tempo real | Sim | Sim | Sim |
+| Controle de volume e pitch | Sim | Sim | Sim |
+| Suporte a efeitos de áudio | Sim | Sim | Sim |
+
+## Conclusão
+
+As implementações de áudio nas diferentes plataformas apresentam características e limitações distintas. É fundamental considerar essas diferenças ao desenvolver o jogo para garantir uma experiência consistente em todas as plataformas.

@@ -1,9 +1,25 @@
 #!/bin/bash
 
-# Valida se o mapeamento de APIs de áudio foi documentado corretamente
-
+# Verifica se o documento de mapeamento de APIs de áudio existe
 if [ ! -f ./docs/audio_api_mapping/README.md ]; then
-  echo "Erro: O arquivo README.md não existe em ./docs/audio_api_mapping"
+  echo "Erro: Documento de mapeamento de APIs de áudio não encontrado."
   exit 1
 fi
 
+# Verifica se o documento de mapeamento de APIs de áudio está atualizado
+if ! grep -q "Flutter Web (Web Audio API)" ./docs/audio_api_mapping/README.md; then
+  echo "Erro: Documento de mapeamento de APIs de áudio desatualizado."
+  exit 1
+fi
+
+if ! grep -q "Android (AudioTrack/MediaPlayer)" ./docs/audio_api_mapping/README.md; then
+  echo "Erro: Documento de mapeamento de APIs de áudio desatualizado."
+  exit 1
+fi
+
+if ! grep -q "iOS (AVAudioPlayer)" ./docs/audio_api_mapping/README.md; then
+  echo "Erro: Documento de mapeamento de APIs de áudio desatualizado."
+  exit 1
+fi
+
+echo "Validação do documento de mapeamento de APIs de áudio concluída com sucesso."
