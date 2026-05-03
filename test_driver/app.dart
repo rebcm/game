@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_driver/driver_extension.dart';
-import 'package:game/main.dart' as app;
+import 'package:your_game_app/main.dart' as app;
 
 void main() {
-  enableFlutterDriverExtension();
-
-  runApp(app.MyApp());
+  // Run the app with the test driver
+  app.main();
 }
+

@@ -10,26 +10,31 @@ void main() {
     });
 
     tearDownAll(() async {
-      if (driver != null) {
-        await driver!.close();
-      }
+      await driver?.close();
     });
 
-    test('Memory leak detection', () async {
-      await driver!.requestData('gc'); // Request GC to clean up
-      await Future.delayed(Duration(seconds: 2)); // Wait for GC to complete
+    test('Measure memory usage before and after destroying estado_jogo.dart', () async {
+      // Navigate to the screen that initializes estado_jogo.dart
+      await driver?.tap(find.byValueKey('init_estado_jogo'));
 
-      final timeline = await driver!.traceAction(() async {
-        // Perform actions to test for memory leaks
-        await driver!.tap(find.byTooltip('Build'));
-        await Future.delayed(Duration(seconds: 1)); // Wait for the action to complete
-      });
+      // Wait for the estado_jogo.dart to be fully initialized
+      await Future.delayed(const Duration(seconds: 5));
 
-      final memoryUsage = await driver!.requestData('memoryUsage');
-      print('Memory usage: $memoryUsage');
+      // Measure memory usage before destroying estado_jogo.dart
+      final beforeMemoryUsage = await driver?.requestData('getMemoryUsage');
 
-      // Add assertions based on the memory usage
-      expect(memoryUsage, isNotNull);
+      // Destroy estado_jogo.dart
+      await driver?.tap(find.byValueKey('destroy_estado_jogo'));
+
+      // Wait for the estado_jogo.dart to be fully destroyed
+      await Future.delayed(const Duration(seconds: 5));
+
+      // Measure memory usage after destroying estado_jogo.dart
+      final afterMemoryUsage = await driver?.requestData('getMemoryUsage');
+
+      // Compare the memory usage before and after destroying estado_jogo.dart
+      print('Memory usage before destroying estado_jogo.dart: $beforeMemoryUsage');
+      print('Memory usage after destroying estado_jogo.dart: $afterMemoryUsage');
     });
   });
 }
