@@ -1,0 +1,17 @@
+name: BLoC Documentation Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run BLoC documentation test
+        run: |
+          flutter test test/bloco_documentation/bloco_documentation_test.dart
