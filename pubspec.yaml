@@ -75,3 +75,6 @@ dev_dependencies:
     path: ./lib/services/dicas
   peer_review_test:
     path: ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
+
+  docs_validation_test:
+    path: ./test/integration/docs_validation/docs_validation_test.dart
