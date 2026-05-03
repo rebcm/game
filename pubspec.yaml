@@ -61,3 +61,6 @@ flutter:
     - assets/fonts/Roboto-Regular.ttf
     - assets/animacoes/rebeca/idle.json
     - assets/audio/
+
+  assets:
+    - assets/animacoes/rebeca/idle.json
