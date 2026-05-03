@@ -1,0 +1,21 @@
+name: Contract Testing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  contract-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.6'
+
+      - name: Run contract tests
+        run: flutter test test/contract_testing
