@@ -53,3 +53,5 @@ dev_dependencies:
     path: .github/scripts/docs_valid
   seo_otimizacao_validation:
     path: .github/scripts/docs_validation/seo_otimizacao/validate_seo_otimizacao.sh
+  text_overflow_test:
+    path: ./test/integration/text_overflow_test/text_overflow_test.dart
