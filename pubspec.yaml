@@ -50,3 +50,6 @@ flutter:
 
   assets:
     - lib/docs/biomas/
+
+  assets:
+    - lib/docs/estruturas_sugeridas.md

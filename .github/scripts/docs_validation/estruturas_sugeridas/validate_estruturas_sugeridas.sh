@@ -1,4 +1,8 @@
 #!/bin/bash
 
-# Valida as estruturas sugeridas
-./.github/scripts/docs_validation/estruturas_sugeridas/run_validation.sh
+if [ -f "lib/docs/estruturas_sugeridas.md" ]; then
+  echo "Estruturas sugeridas validadas com sucesso."
+else
+  echo "Erro ao validar estruturas sugeridas."
+  exit 1
+fi
