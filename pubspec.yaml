@@ -65,3 +65,6 @@ flutter:
 
   integration_test:
     path: ./integration_test
+
+  cleanup:
+    path: ./integration_test/cleanup
