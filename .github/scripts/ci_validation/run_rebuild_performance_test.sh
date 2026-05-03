@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter test test/performance/rebuild_performance_test.dart
+.github/scripts/ci_validation/rebuild_performance_test/run_rebuild_performance_test.sh
