@@ -6,21 +6,15 @@ void main() {
 
   group('External Interruptions Test', () {
     testWidgets('test call interruption', (tester) async {
-      // Simulate a phone call interruption
-      // Verify game state is paused
-      // Resume game and verify state
+      // Implement test logic for call interruption
     });
 
     testWidgets('test alarm interruption', (tester) async {
-      // Simulate an alarm interruption
-      // Verify game state is paused
-      // Resume game and verify state
+      // Implement test logic for alarm interruption
     });
 
-    testWidgets('test notification interruption', (tester) async {
-      // Simulate a notification interruption
-      // Verify game state is paused
-      // Resume game and verify state
+    testWidgets('test push notification interruption', (tester) async {
+      // Implement test logic for push notification interruption
     });
   });
 }
