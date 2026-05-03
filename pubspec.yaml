@@ -26,9 +26,9 @@ dependencies:
   json_annotation: ^4.6.0
   shared_preferences: ^2.1.1
   flutter:
-  uses-material-design: true
     sdk: flutter
   cached_network_image: ^3.2.3
+  uses-material-design: true
 
 dev_dependencies:
   isolate: ^2.1.1
@@ -50,45 +50,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  wrangler: ^1.0.0
   assets:
-    - assets/docs/checklists/validacao-onboarding-checklist.md
-    - docs/guias/onboarding.md
     - assets/audio/optimized/
-    - assets/blocos/
     - assets/audio/optimized/ambient/
     - assets/audio/optimized/sfx/
     - assets/audio/optimized/music/
-    - assets/docs/checklists/documentacao-validacao-checklist.md
+    - assets/blocos/
+    - assets/docs/checklists/validacao-onboarding-checklist.md
+    - docs/guias/onboarding.md
     - docs/artefatos/checklists/documentacao-validacao-criterios.md
     - docs/glossario/README.md
     - docs/guias/style_guide.md
     - docs/localizacao/lista_idiomas.md
 
-  assets:
-    - assets/docs/checklists/documentacao-validacao-checklist.md
-
-dev_dependencies:
-  isolate: ^2.1.1
-  test: ^1.21.4
-
-  assets:
-    - assets/docs/checklists/validacao-onboarding-checklist.md
-    - docs/guias/onboarding.md
-    - docs/validacao/criterios-aceitacao-onboarding.md
-
 dependency_overrides:
   just_audio: ^0.9.34
-
-  integration_test/onboarding_test/onboarding_test.dart:
-    - assets/docs/checklists/validacao-onboarding-checklist.md
-    - docs/guias/onboarding.md
-
-  uses-material-design: true
-
-dependency_overrides:
-  json_serializable: ^6.3.1
-  build_runner: ^2.1.8
-
-  flutter_test:
-    sdk: flutter
