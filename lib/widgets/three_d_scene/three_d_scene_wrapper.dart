@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/game/widgets/three_d_scene/three_d_scene_logger.dart';
+import 'package:game/widgets/three_d_scene/three_d_scene.dart';
+import 'package:game/widgets/three_d_scene/three_d_scene_logger.dart';
 
 class ThreeDSceneWrapper extends StatefulWidget {
   @override
@@ -7,10 +8,11 @@ class ThreeDSceneWrapper extends StatefulWidget {
 }
 
 class _ThreeDSceneWrapperState extends State<ThreeDSceneWrapper> {
+  final ThreeDSceneLogger _logger = ThreeDSceneLogger();
+
   @override
   Widget build(BuildContext context) {
-    return ThreeDSceneLogger(
-      child: // Your existing 3D scene widget here,
-    );
+    _logger.logRebuild();
+    return ThreeDScene();
   }
 }
