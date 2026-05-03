@@ -6,17 +6,17 @@ on:
       - main
 
 jobs:
-  responsividade-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.5'
+          flutter-version: '3.0.0'
 
-      - name: Run responsividade tests
+      - name: Run responsividade test
         run: |
           flutter test test/responsividade/tela_pequena_test.dart
