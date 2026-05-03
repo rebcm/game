@@ -25,6 +25,7 @@ flutter:
   generate: true
   assets:
     - assets/locale/
+    - docs/biomas.md
   fonts:
     - family: Roboto
       fonts:

@@ -1,16 +1,8 @@
 #!/bin/bash
 
-# Validação da documentação de biomas
-
-# Verifica se o arquivo de descrição de biomas existe
-if [ ! -f ./game/docs/biomas/descrição_biomas.md ]; then
-  echo "Erro: Arquivo de descrição de biomas não encontrado."
-  exit 1
-fi
-
-# Verifica se o conteúdo do arquivo não está vazio
-if [ ! -s ./game/docs/biomas/descrição_biomas.md ]; then
-  echo "Erro: Arquivo de descrição de biomas está vazio."
+# Validar a documentação dos biomas
+if ! grep -q "Biomas do Jogo" ./.github/scripts/docs_validation/biomas/content/biomas.md; then
+  echo "Erro: Documentação de biomas não encontrada ou inválida."
   exit 1
 fi
 
