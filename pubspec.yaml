@@ -31,6 +31,7 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.2.3
   ffmpeg_kit_flutter: ^4.5.1
+  swagger_ui: ^1.0.0
 
 dev_dependencies:
   flutter_localizations:
@@ -63,22 +64,3 @@ flutter:
     - assets/audio/placeholder.ogg
     - assets/audio/optimized/sfx/corrupted_sound.mp3
     - assets/audio/optimized/sfx/
-
-  assets:
-    - docs/taxonomia/categorias.md
-  assets:
-    - docs/taxonomia/blocos_disponiveis.md
-
-  golden_toolkit: ^0.13.0
-  assets:
-    - docs/taxonomia/blocos_disponiveis.md
-
-dev_dependencies:
-  mocktail: ^0.3.0
-
-  assets:
-    - docs/criterios/texto_preciso.md
-
-  test/widget_test/utils/screen_config.dart:
-  assets:
-    - docs/criterios/criterios_aceitacao_ux_dicas.md
