@@ -68,3 +68,5 @@ flutter:
 
   integration_test/audio_integration_test/audio_integration_test.dart:
     - docs/audio_api_comparativo/audio_api_comparativo.md
+  integration_test/mapeamento_estruturas_test/mapeamento_estruturas_test.dart:
+    - docs/mapeamento_estruturas/estruturas_sugeridas.md
