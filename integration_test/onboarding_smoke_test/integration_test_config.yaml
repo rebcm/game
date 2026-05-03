@@ -1,0 +1,2 @@
+onboarding_smoke_test:
+  path: ./integration_test/onboarding_smoke_test
