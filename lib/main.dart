@@ -27,3 +27,24 @@ class _GameWidgetState extends State<GameWidget> {
     return Container();
   }
 }
+import 'package:flutter/material.dart';
+import 'package:game/animation/animation_controller.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: AnimationControllerWidget(),
+        floatingActionButton: FloatingActionButton(
+          key: WidgetKeys.actionButton,
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
