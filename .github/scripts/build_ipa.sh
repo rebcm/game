@@ -1,4 +1,5 @@
 #!/bin/bash
 
-flutter build ios --release --no-codesign
-xcrun -sdk iphoneos PackageApplication -v build/ios/Release-iphoneos/Runner.app -o build/ios/ipa/game.ipa
+set -e
+
+flutter build ipa --export-options-plist=.github/scripts/ExportOptions.plist
