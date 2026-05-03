@@ -1,16 +1,24 @@
 {
-  "perguntas": [
+  "questions": [
     {
       "id": 1,
-      "texto": "Qual foi o passo mais difícil ou confuso durante o onboarding?"
+      "question": "Você enfrentou algum problema ao seguir o guia de onboarding?",
+      "type": "open-ended"
     },
     {
       "id": 2,
-      "texto": "Houve algum erro ou problema que você não conseguiu resolver facilmente? Se sim, descreva."
+      "question": "Qual foi o passo mais confuso ou difícil durante o onboarding?",
+      "type": "open-ended"
     },
     {
       "id": 3,
-      "texto": "Sugestões para melhorar o guia de onboarding."
+      "question": "Você encontrou algum erro ou bug durante o processo de onboarding?",
+      "type": "open-ended"
+    },
+    {
+      "id": 4,
+      "question": "O que você gostaria de ver melhorado no guia de onboarding?",
+      "type": "open-ended"
     }
   ]
 }
