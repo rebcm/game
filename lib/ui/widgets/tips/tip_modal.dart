@@ -7,21 +7,15 @@ class TipModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Dica', style: Theme.of(context).textTheme.titleLarge),
-            Text(tip),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Entendi'),
-            ),
-          ],
+    return AlertDialog(
+      title: const Text('Dica'),
+      content: Text(tip),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Fechar'),
         ),
-      ),
+      ],
     );
   }
 }
