@@ -126,3 +126,6 @@ flutter:
 
   memory_stress_test:
     path: ./benchmarks/memory_stress_test
+
+  size_reduction_benchmark:
+    path: ./benchmarks/size_reduction_benchmark
