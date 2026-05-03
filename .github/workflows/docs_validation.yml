@@ -14,3 +14,10 @@ jobs:
 
       - name: Validate taxonomia
         run: bash .github/scripts/docs_validation/validate_taxonomia.sh
+  validate_glossario:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Validate Glossário
+        run: .github/scripts/docs_validation/validate_glossario.sh

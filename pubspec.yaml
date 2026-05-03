@@ -3,3 +3,5 @@ flutter:
     - assets/estruturas_sugeridas/
   tests:
     - test/responsividade/tela_pequena_test.dart
+  assets:
+    - docs/glossario.md
