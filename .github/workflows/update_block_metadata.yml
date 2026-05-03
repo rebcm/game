@@ -1,0 +1,24 @@
+name: Atualizar Metadados de Blocos
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Executar script de extração de metadados
+        run: ./.github/scripts/docs_validation/extract_block_metadata.sh
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/taxonomia/blocos_disponiveis.md
+          git commit -m "Atualizar metadados de blocos" || echo "Nenhuma mudança para commitar"
+
