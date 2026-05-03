@@ -1,17 +1,15 @@
-# Memory Leak Baseline Documentation
+# Baseline de Consumo de Memória
 
-This document describes the baseline memory usage of the application.
+Este documento descreve o baseline de consumo de memória do aplicativo antes e depois da destruição do estado_jogo.dart.
 
-## Baseline Value
+## Resultados
 
-The baseline value is stored in a separate file (`memory_leak_baseline.txt`) and represents the expected memory usage of the application.
+| Estado | Consumo de Memória (bytes) | Objetos |
+| --- | --- | --- |
+| Antes da destruição |  |  |
+| Depois da destruição |  |  |
 
-## How to Update the Baseline
+## Análise
 
-1. Run the application with the `leak_tracker` enabled.
-2. Record the memory usage before and after the destruction of the `estado_jogo.dart` state.
-3. Update the `memory_leak_baseline.txt` file with the new baseline value.
+A análise dos resultados indicou que o consumo de memória após a destruição do estado_jogo.dart foi de ...
 
-## Validation
-
-The `validate_memory_leak_baseline.sh` script is used to validate the baseline value.
