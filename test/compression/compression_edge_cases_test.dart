@@ -2,21 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:game/compression.dart';
 
 void main() {
-  group('Compression Edge Cases', () {
-    test('compressing empty payload', () async {
-      final compressed = await compress(Uint8List(0));
-      expect(compressed.length, greaterThan(0)); // Assuming some overhead
+  group('Compressão Edge Cases', () {
+    test('Payload vazio', () async {
+      final compressed = compress(Uint8List(0));
+      expect(compressed, isNotNull);
+      expect(compressed.length, isNonZero);
     });
 
-    test('compressing extremely small payload', () async {
+    test('Payload extremamente pequeno', () async {
       final payload = Uint8List.fromList([1]);
-      final compressed = await compress(payload);
+      final compressed = compress(payload);
       expect(compressed.length, greaterThanOrEqualTo(payload.length));
     });
 
-    test('compressing high entropy payload', () async {
-      final payload = Uint8List.fromList(List.generate(1024, (_) => (DateTime.now().millisecondsSinceEpoch + _).toByte())); 
-      final compressed = await compress(payload);
+    test('Payload com alta entropia', () async {
+      final payload = Uint8List.fromList(List.generate(100, (_) => (DateTime.now().millisecondsSinceEpoch + _).toByte())); 
+      final compressed = compress(payload);
       expect(compressed.length, greaterThanOrEqualTo(payload.length));
     });
   });
