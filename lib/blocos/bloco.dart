@@ -1,12 +1,6 @@
-import 'package:equatable/equatable.dart';
+abstract class Bloco {
+  final String name;
+  final String description;
 
-class Bloco with EquatableMixin {
-  final String nome;
-  final String descricao;
-  final String categoria;
-
-  Bloco({required this.nome, required this.descricao, required this.categoria});
-
-  @override
-  List<Object?> get props => [nome, descricao, categoria];
+  const Bloco({required this.name, required this.description});
 }

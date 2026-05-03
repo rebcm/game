@@ -1,33 +1,6 @@
-name: rebcm
-description: Explore e construa em um mundo voxel com Rebeca. Desbloqueie sua criatividade e construa estruturas incríveis em um ambiente de blocos voxel.
-
-version: 1.0.0+15
-
-environment:
-  sdk: ">=2.17.0 <3.0.0"
   flutter: ">=3.0.0"
 
 dependencies:
-  flame_audio: ^1.0.0
-  flutter_localizations:
-    sdk: flutter
-  archive: ^3.3.2
-  isolate: ^2.1.1
-  version: ^2.0.0
-  flutter_driver:
-    sdk: flutter
-  dotenv: ^4.0.0
-  http: ^0.13.5
-  just_audio: ^0.9.34
-  flutter_gl: ^1.0.0
-  flutter_hooks: ^0.18.5
-  equatable: ^2.0.3
-  audio_service: ^0.18.9
-  flame: ^1.2.1  
-  provider: ^6.0.3
-  intl: ^0.17.0
-  json_annotation: ^4.6.0
-  shared_preferences: ^2.1.1
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.3
@@ -35,27 +8,10 @@ dependencies:
   swagger_ui: ^1.0.0
 
 dev_dependencies:
-  flame_audio: ^1.0.0
-  flutter_localizations:
-    sdk: flutter
-  leak_tracker_flutter_testing: ^0.5.0
-  integration_test:
-    sdk: flutter
-  archive: ^3.3.2
-  flutter_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
-  test: ^1.21.4
-  build_runner: ^2.1.8
-  json_serializable: ^6.3.1
-  mocktail: ^0.3.0
-
 flutter:
   uses-material-design: true
   assets:
+    - assets/blocos/metadata.json
     - assets/blocos/
     - assets/animacoes/
     - assets/animacoes/rebeca/idle.png
