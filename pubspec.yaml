@@ -5,7 +5,7 @@ version: 1.0.0+15
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
-  flutter: "^3.0.0"
+  flutter: ">=3.0.0"
   uses-material-design: true
 
 dependencies:
@@ -61,6 +61,8 @@ flutter:
     - docs/artefatos/checklists/documentacao-validacao-criterios.md
     - docs/glossario/README.md
     - docs/guias/style_guide.md
+    - docs/guias/baseline_versoes_alvo.md
+    - docs/artefatos/checklists/checklist_validacao_baseline_versoes_alvo.md
     - docs/localizacao/lista_idiomas.md
 
 dependency_overrides:
