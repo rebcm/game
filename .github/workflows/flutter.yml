@@ -1,0 +1,26 @@
+name: Flutter CI
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.10'
+
+      - name: Run flutter pub get
+        run: flutter pub get
+
+      - name: Run flutter test
+        run: flutter test
+
+      - name: Validate cron schedule
+        run: .github/scripts/ci_validation/cron_validation/validate_cron.sh
