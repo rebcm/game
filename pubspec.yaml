@@ -80,3 +80,5 @@ dev_dependencies:
     - docs/criterios/texto_preciso.md
 
   test/widget_test/utils/screen_config.dart:
+  assets:
+    - docs/criterios/criterios_aceitacao_ux_dicas.md
