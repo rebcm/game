@@ -5,6 +5,7 @@ flutter:
     - docs/checklist_documentacao.md
 
 dev_dependencies:
+  json_serializable: ^6.5.4
   openapi_generator: ^4.3.1
   openapi_generator: ^4.3.1
   protobuf: ^2.1.0
@@ -12,31 +13,51 @@ dev_dependencies:
   golden_toolkit: ^0.13.0
 
 tests:
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/integration_tests/swagger_integration_test/swagger_integration_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/integration_tests/swagger_integration_test/swagger_client_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/integration_tests/swagger_integration_test/swagger_integration_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/integration_tests/swagger_integration_test/swagger_client_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/memory_tests/isolate_memory_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/memory_tests/memory_leak_profiling_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/dicas_test.dart
   - test/contract_tests/openapi_contract_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/golden_tests/tela_dicas_golden_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/responsividade_test/tela_dicas_responsividade_test.dart 
   - test/golden_tests/tela_dicas_golden_responsividade_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
 
   - test/memory_tests/memory_leak_profiling_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
 
   - test/memory_tests/isolate_memory_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
   - test/performance_tests/json_vs_protobuf_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
     - docs/peer_review.md
 
   - test/i18n_tests/layout_dicas_i18n_test.dart
+  - test/contract_tests/chunk_api_contract_test.dart
 
 scripts:
   validate_flame_audio_version: ./scripts/validate_dependencies/check_flame_audio_version.sh

@@ -1,0 +1,26 @@
+openapi: 3.0.0
+info:
+  title: Chunk API Contract
+  description: API contract for chunk data structure
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Chunk:
+      type: object
+      properties:
+        x:
+          type: integer
+          description: X-coordinate of the chunk
+        z:
+          type: integer
+          description: Z-coordinate of the chunk
+        data:
+          type: array
+          items:
+            type: integer
+          description: Voxel data for the chunk
+      required:
+        - x
+        - z
+        - data
