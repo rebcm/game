@@ -1,26 +1,13 @@
-import 'package:flame/game.dart';
-import 'package:flutter_gl/flutter_gl.dart';
-import 'package:rebcm/services/chunking/chunk_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:rebcm/game/widgets/block_widget.dart';
 
-class RebecaGame extends FlameGame {
-  late ChunkManager _chunkManager;
-
+class MyApp extends StatelessWidget {
   @override
-  Future<void> onLoad() async {
-    _chunkManager = ChunkManager();
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    _chunkManager.updateChunks(0, 0); // Update with player's position
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    _chunkManager.getChunks().forEach((chunk) {
-      // Render chunk
-    });
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: BlockWidget(),
+      ),
+    );
   }
 }
