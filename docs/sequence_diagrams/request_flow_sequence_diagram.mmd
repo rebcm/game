@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant App Flutter as "App Flutter"
+    participant Cloudflare Workers as "Cloudflare Workers"
+    participant R2 Storage as "R2 Storage"
+
+    Note over App Flutter,Cloudflare Workers: Início da Requisição
+    App Flutter->>Cloudflare Workers: Requisição HTTP (GET, POST, etc.)
+    Cloudflare Workers->>R2 Storage: Consulta ou Manipulação de Dados
+    R2 Storage->>Cloudflare Workers: Resposta da Consulta ou Manipulação
+    Cloudflare Workers->>App Flutter: Resposta Processada
+    Note over App Flutter,Cloudflare Workers: Fim da Requisição

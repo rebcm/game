@@ -66,3 +66,5 @@ flutter:
     - assets/animacoes/rebeca/idle.json
 
   test/audio_edge_cases/audio_output_test.dart
+  assets:
+    - docs/sequence_diagrams/images/request_flow_sequence_diagram.png
