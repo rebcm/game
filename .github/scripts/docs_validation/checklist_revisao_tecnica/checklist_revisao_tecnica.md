@@ -1,13 +1,18 @@
-# Checklist Revisão Técnica
+# Checklist de Revisão Técnica
 
-Este documento contém a checklist para a revisão técnica das estruturas sugeridas.
+## Introdução
+Este documento fornece uma checklist para a revisão técnica do conteúdo adicionado ao projeto.
 
-## Critérios de Aceitação
+## Itens de Verificação
+1. **Revisão Ortográfica**
+   - Verificar se o texto está livre de erros ortográficos.
 
-1. A estrutura sugerida deve ser tecnicamente precisa.
-2. A estrutura sugerida deve ser relevante para o jogo.
+2. **Precisão Técnica**
+   - Verificar se as estruturas sugeridas são tecnicamente precisas para o jogador.
 
-## Checklist
+3. **Consistência**
+   - Verificar se o conteúdo está consistente com o restante do projeto.
 
-- [ ] A estrutura sugerida está documentada corretamente.
-- [ ] A estrutura sugerida foi revisada por um membro da equipe.
+## Tarefa Específica: task-1777666324-13-sub-6-disc-1777777797-3
+Para a tarefa task-1777666324-13-sub-6-disc-1777777797-3, revisar:
+- Conteúdo em `docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md`

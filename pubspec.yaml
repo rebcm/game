@@ -24,11 +24,17 @@ dependencies:
 
 flutter:
   generate: true
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - assets/locale/
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/biomas.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - .github/scripts/docs_validation/dicas/content/dicas_construcao.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   fonts:
     - family: Roboto
       fonts:
@@ -52,57 +58,109 @@ supportedLocales:
   http: ^0.13.5
 
   test/integration_tests/ux_tests/responsividade_test/responsividade_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/instalacao/instalacao.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/responsividade_test/widgets/dicas_widget_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/dicas_golden_tests/dicas_golden_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/stress_test/stress_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/cena_3d_rebuild_test/cena_3d_rebuild_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 dependencies:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   http: ^0.13.5
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/performance_tests/rebuild_performance_test/rebuild_performance_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/guia_estilo_pastas/guia_estilo_pastas.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/contract_tests/contract_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/audio_test/audio_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/audio_test/widgets/audio_widget_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/responsividade_test/main.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/mapeamento_estruturas_sugeridas.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ci_tests/clean_build_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/dicas_tests/dicas_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/dicas_tests/dicas_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/audio_test/audio_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/memory_leak_tests/memory_leak_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/text_overflow_test/text_overflow_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/ux_dicas_tests/ux_dicas_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     assets:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
       - docs/dicas_construcao.md
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
 
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/unit_tests/services/isolate_guard/isolate_guard_test.dart:
+- docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
   test/integration_tests/ux_tests/isolate_leak_test/isolate_leak_test.dart:
 
   test/integration_tests/memory_leak_tests/memory_leak_test.dart:
