@@ -16,3 +16,5 @@ else
   echo "Clean build or static analysis failed."
   exit 1
 fi
+
+flutter test
