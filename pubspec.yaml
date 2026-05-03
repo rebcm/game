@@ -109,3 +109,6 @@ dev_dependencies:
     path: ./test/integration/audio_integration_test/audio_integration_test.dart
   autoplay_test:
     path: ./test/integration/autoplay_test/autoplay_test.dart
+
+  rebuild_logger:
+    path: ./lib/utils/performance_testing/rebuild_logger.dart
