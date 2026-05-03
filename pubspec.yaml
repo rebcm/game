@@ -12,6 +12,8 @@ dependencies:
   swagger: ^1.0.0
 
 dev_dependencies:
+    sdk: flutter
+  flutter_driver:
   flutter_test:
     sdk: flutter
   integration_test:
@@ -34,6 +36,7 @@ flutter:
     - docs/seo/palavras-chave.md
 
   uses-material-design: true
+    - docs/flujo_integracion/flujo_integracion.md
     - docs/flujo_integracion/flujo_integracion.md
 
   flutter:

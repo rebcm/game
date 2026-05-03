@@ -1,2 +1,7 @@
 #!/bin/bash
-flutter test test/ui/flujo_integracion/draw_flow_test.dart
+
+# Testar fluxo de integração da UI
+flutter test integration_test/flujo_integracion_test.dart
+
+# Validar documentação do fluxo
+diff -q docs/flujo_integracion/flujo_integracion.md docs/flujo_integracion/flujo_integracion_expected.md
