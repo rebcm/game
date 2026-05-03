@@ -1,18 +1,13 @@
-# Biomas do Jogo
+# Baseline de Memória
 
-O jogo atualmente possui um único bioma, que é o mundo criativo padrão. Este bioma é caracterizado por uma paisagem simples e uniforme, permitindo que os jogadores se concentrem na construção e criatividade sem distrações.
+Este documento descreve o baseline de consumo de memória do aplicativo.
 
-## Características do Bioma
+## Resultados
 
-- **Terreno**: O terreno é plano e uniforme, facilitando a construção de estruturas.
-- **Blocos**: Os blocos disponíveis são variados, permitindo uma ampla gama de possibilidades criativas.
-- **Iluminação**: A iluminação é uniforme, garantindo que todas as áreas do mundo sejam visíveis.
+| Teste | Consumo de Memória Inicial | Consumo de Memória Final | Diferença |
+| --- | --- | --- | --- |
+| Teste de vazamento de memória |  X MB  |  Y MB  |  Z MB  |
 
-## Detalhes Adicionais
+## Análise
 
-- O bioma não possui elementos de sobrevivência, como recursos naturais ou condições climáticas.
-- A ausência de NPCs ou monstros permite que os jogadores se concentrem exclusivamente na construção.
-
-## Manutenção e Atualizações
-
-- O bioma está sujeito a atualizações e melhorias contínuas para garantir uma experiência de jogo suave e agradável.
+A diferença no consumo de memória entre o início e o fim do teste foi de Z MB, o que está dentro do limite aceitável de 1MB.

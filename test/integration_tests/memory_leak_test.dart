@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:leak_tracker/leak_tracker.dart';
-import 'package:rebcm/main.dart' as app;
+import 'package:integration_test/integration_test.dart';
+import 'package:rebcm/game.dart';
 
 void main() {
-  testWidgets('Memory leak test', (tester) async {
-    await app.main();
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('Teste de vazamento de memória', (tester) async {
+    // Inicializa o aplicativo
+    await tester.pumpWidget(MyApp());
+
+    // Simula a navegação para a tela do jogo
+    await tester.tap(find.text('Iniciar Jogo'));
     await tester.pumpAndSettle();
 
-    // Inicia o rastreamento de vazamento de memória
-    await LeakTracker.start();
+    // Coleta o baseline de memória antes da destruição do estado do jogo
+    final initialMemoryUsage = MemoryInfo.currentHeapSize;
 
-    // Executa ações no aplicativo para testar o vazamento de memória
-    // ...
+    // Simula a destruição do estado do jogo
+    await tester.tap(find.text('Sair do Jogo'));
+    await tester.pumpAndSettle();
 
-    // Para o rastreamento e verifica se houve vazamento
-    final result = await LeakTracker.stop();
-    expect(result.leaks, isEmpty);
+    // Coleta o baseline de memória após a destruição do estado do jogo
+    final finalMemoryUsage = MemoryInfo.currentHeapSize;
+
+    // Verifica se houve vazamento de memória
+    expect(finalMemoryUsage - initialMemoryUsage, lessThan(1024 * 1024)); // 1MB
   });
 }
-

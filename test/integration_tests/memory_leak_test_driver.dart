@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Memory Leak Test', () {
+  group('Teste de vazamento de memória', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -10,12 +10,13 @@ void main() {
     });
 
     tearDownAll(() async {
-      await driver?.close();
+      if (driver != null) {
+        driver?.close();
+      }
     });
 
-    test('Memory leak test', () async {
-      await driver?.requestData('memory-leak-test');
+    test('Teste de vazamento de memória', () async {
+      await driver?.requestData('memory_leak_test');
     });
   });
 }
-
