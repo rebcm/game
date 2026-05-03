@@ -101,3 +101,6 @@ dependencies:
   test/integration_tests/ux_tests/ux_dicas_tests/ux_dicas_test.dart:
     assets:
       - docs/dicas_construcao.md
+
+  test/unit_tests/services/isolate_guard/isolate_guard_test.dart:
+  test/integration_tests/ux_tests/isolate_leak_test/isolate_leak_test.dart:
