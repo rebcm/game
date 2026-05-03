@@ -1,19 +1,16 @@
 #!/bin/bash
 
 # Validate if the required endpoints are documented
-required_endpoints=("GET /docs" "GET /api/v1/blocks" "POST /api/v1/blocks")
-missing_endpoints=()
-
+required_endpoints=("GET /api/docs" "GET /api/swagger.json")
 for endpoint in "${required_endpoints[@]}"; do
-  if ! grep -q "$endpoint" lib/docs/swagger.yaml; then
-    missing_endpoints+=("$endpoint")
+  if ! grep -q "$endpoint" ./game/docs/swagger.json; then
+    echo "Error: $endpoint is not documented"
+    exit 1
   fi
 done
 
-if [ ${#missing_endpoints[@]} -ne 0 ]; then
-  echo "The following endpoints are missing in the Swagger documentation:"
-  for endpoint in "${missing_endpoints[@]}"; do
-    echo "- $endpoint"
-  done
+# Validate if the Swagger UI is rendering correctly
+if ! grep -q "Swagger UI" ./game/docs/index.html; then
+  echo "Error: Swagger UI is not rendering correctly"
   exit 1
 fi

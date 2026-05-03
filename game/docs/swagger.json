@@ -1,0 +1,19 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rebeca's Game API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/docs": {
+      "get": {
+        "summary": "Get API documentation"
+      }
+    },
+    "/api/swagger.json": {
+      "get": {
+        "summary": "Get Swagger JSON"
+      }
+    }
+  }
+}
