@@ -1,9 +1,13 @@
 #!/bin/bash
 
-# Mask sensitive values to avoid exposure in GitHub Actions logs
-mask_sensitive_values() {
-  echo "::add-mask::$1"
-}
+# Load secrets from .env file
+set -a
+source .env
+set +a
 
-# Example usage:
-# mask_sensitive_value "your_sensitive_value_here"
+# Mask sensitive values in GitHub Actions logs
+echo "::add-mask::$SENSITIVE_VALUE_1"
+echo "::add-mask::$SENSITIVE_VALUE_2"
+# Add more sensitive values as needed
+
+# Continue with the rest of the CI script

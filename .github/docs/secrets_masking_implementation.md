@@ -2,14 +2,20 @@
 
 ## Overview
 
-This document outlines the implementation details for masking secrets in the CI pipeline.
+This document describes the implementation of secrets masking in the CI pipeline.
 
 ## Masking Secrets
 
-To mask sensitive values, the `mask_secrets.sh` script is used. This script defines a function `mask_sensitive_values` that takes a value as input and prints the `::add-mask::` command followed by the sensitive value.
+The `mask_secrets.sh` script is used to mask sensitive values in the GitHub Actions logs.
 
 ## Usage
 
-To mask a sensitive value, call the `mask_sensitive_values` function with the value as an argument.
+The script is executed in the CI pipeline to mask sensitive values.
 
-## Example
+## Configuration
+
+The sensitive values are loaded from the `.env` file.
+
+## Implementation Details
+
+The script uses the `echo ::add-mask::` command to mask sensitive values.

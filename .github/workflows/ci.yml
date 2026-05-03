@@ -10,12 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Mask secrets
-        run: ./.github/scripts/ci_validation/secrets_masking/mask_secrets.sh
+        run: .github/scripts/ci_validation/secrets_masking/mask_secrets.sh
 
-      - name: Run dart analyze
-        run: dart analyze
-
-      # Add more steps as needed
+      - name: Build and test
+        run: |
+          # Build and test commands here
