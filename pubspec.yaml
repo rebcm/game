@@ -25,6 +25,7 @@ dependencies:
 flutter:
   generate: true
   assets:
+    - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - assets/locale/
     - docs/biomas.md
     - .github/scripts/docs_validation/dicas/content/dicas_construcao.md
@@ -52,4 +53,5 @@ supportedLocales:
 
   test/integration_tests/ux_tests/responsividade_test/responsividade_test.dart:
   assets:
+    - docs/revisao_ortografica_task_1777666324-13-sub-6-disc-1777777797-3.md
     - docs/instalacao/instalacao.md
