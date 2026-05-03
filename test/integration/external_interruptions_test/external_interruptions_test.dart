@@ -1,45 +1,31 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:rebcm/game.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('External Interruptions Test', () {
-    testWidgets('pause and resume test', (tester) async {
-      await tester.pumpWidget(MyApp());
-      await tester.pumpAndSettle();
+  testWidgets('test audio interruption', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      await tester.pumpAndSettle();
+    // Start playing audio
+    await tester.tap(find.byIcon(Icons.play_arrow));
+    await tester.pumpAndSettle();
 
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      await tester.pumpAndSettle();
+    // Simulate incoming call
+    await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pumpAndSettle();
 
-      expect(find.text('Rebeca'), findsOneWidget);
-    });
+    // Verify audio paused
+    expect(find.text('Audio Paused'), findsOneWidget);
 
-    testWidgets('inactive and resumed test', (tester) async {
-      await tester.pumpWidget(MyApp());
-      await tester.pumpAndSettle();
+    // Simulate call ended
+    await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
 
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
-      await tester.pumpAndSettle();
-
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Rebeca'), findsOneWidget);
-    });
-
-    testWidgets('detached test', (tester) async {
-      await tester.pumpWidget(MyApp());
-      await tester.pumpAndSettle();
-
-      await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.detached);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Rebeca'), findsNothing);
-    });
+    // Verify audio resumed
+    expect(find.text('Audio Playing'), findsOneWidget);
   });
 }
