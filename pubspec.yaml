@@ -1,3 +1,26 @@
+name: game
+description: A voxel game built with Flutter.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  test: ^1.21.4
+  leak_tracker: ^9.0.0
+  memory_info: ^0.2.0
+  http: ^0.13.5
+  protobuf: ^2.1.0
+
 flutter:
   assets:
     - docs/swagger_endpoints.md
@@ -7,168 +30,3 @@ flutter:
     - docs/wrangler_secrets.md
     - docs/bloco_documentation.json
     - docs/seo/palavras-chave.md
-
-dev_dependencies:
-  rate_limiter_test:
-    path: ./test/unit/rate_limiter_test/rate_limiter_test.dart
-  chunk_serialization_test:
-    path: ./test/performance/chunk_serialization_test/chunk_serialization_test.dart
-  timer_stress_test:
-    path: ./test/integration/stress_test/timer_stress_test/timer_stress_test.dart
-  audio_session_test:
-    path: ./test/integration/audio_session_test/audio_session_test.dart
-  audio_session: ^0.1.14
-  ui_integration_test:
-    path: ./test/integration/ui_integration_test/ui_integracao_test.dart
-  rebuild_performance_test:
-    path: ./test/performance/rebuild_performance_test.dart
-  widget_tracker_impl:
-    path: ./lib/utils/performance_testing/widget_tracker_impl.dart
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-  memory_leak_detector:
-    path: ./lib/utils/performance_testing/memory_leak_detector.dart
-  memory_stress_test:
-    path: ./test/integration/stress_test/memory_stress_test.dart
-  timer_stress_test:
-    path: ./test/integration/stress_test/timer_stress_test.dart
-  widget_tracker_impl:
-    path: ./lib/utils/performance_testing/widget_tracker_impl.dart
-  widget_tracker:
-    path: ./lib/utils/performance_testing/widget_tracker.dart
-  renderizacao_performance_test:
-    path: ./test/performance/renderizacao_performance_test.dart
-  rebuild_performance_test:
-    path: ./test/performance/rebuild_performance_test.dart
-  flutter_test:
-    sdk: flutter
-  http: ^0.13.5
-  integration_test:
-    sdk: flutter
-  leak_tracker: ^9.0.0
-  memory_info: ^0.2.0
-  test:
-    sdk: flutter
-  protobuf: ^2.1.0
-  memory_leak_baseline_test:
-    path: ./.github/scripts/ci_validation/memory_leak_test/run_memory_leak_baseline_test.sh
-
-  bloco_documentation_generator:
-    path: ./.github/scripts/docs_validation/bloco_documentation/extract_block_reference_matrix.dart
-
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-  permission_test:
-    path: ./test/integration/permission_tests/permission_test.dart
-
-  clean_build_test:
-    path: ./test/integration/clean_build_test/clean_build_test.dart
-
-  dicas_test:
-    path: ./test/integration/dicas_test/dicas_test.dart
-
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-  dicas_documentation_validator:
-    path: ./.github/scripts/docs_validation/dicas/validate_dicas_documentation.sh
-
-  rebuild_logger:
-    path: ./lib/utils/performance_testing/rebuild_logger.dart
-  audio_session_test:
-    path: ./test/integration/audio_session_test/audio_session_test.dart
-  audio_session:
-    sdk: audio_session
-
-  dicas_service:
-    path: ./lib/services/dicas
-  peer_review_test:
-    path: ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
-
-  docs_validation_test:
-    path: ./test/integration/docs_validation/docs_validation_test.dart
-
-  flutter_sdk_versoes_generator:
-    path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
-
-  rebuild_logging_test:
-    path: ./test/performance/rebuild_logging_test.dart
-
-  ui_integration_test:
-    path: ./test/integration/ui_integration_test/ui_integracao_test.dart
-  audio_integration_test:
-    path: ./test/integration/audio_integration_test/audio_integration_test.dart
-
-  permission_validation_test:
-    path: ./test/integration/permission_tests/permission_test.dart
-  ui_integration_test:
-    path: ./test/integration/ui_integration_test/ui_integracao_test.dart
-  audio_integration_test:
-    path: ./test/integration/audio_integration_test/audio_integration_test.dart
-
-  rebuild_logging_test:
-    path: ./test/performance/rebuild_logging_test.dart
-
-  peer_review_validation:
-    path: ./.github/scripts/docs_validation/peer_review/validate_peer_review.sh
-
-
-  audio_integration_test:
-    path: ./test/integration/audio_integration_test/audio_integration_test.dart
-  autoplay_test:
-    path: ./test/integration/autoplay_test/autoplay_test.dart
-
-  rebuild_logger:
-    path: ./lib/utils/performance_testing/rebuild_logger.dart
-
-  seo_validation:
-    path: ./.github/scripts/docs_validation/seo/validate_seo_documentation.sh
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-  audio_edge_cases_test:
-    path: ./.github/scripts/docs_validation/audio_comparativo/validate_audio_edge_cases.sh
-
-  clean_build_test:
-    path: ./test/integration/clean/clean_build_test.dart
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-
-  bloco_documentation_validator:
-    path: ./.github/scripts/docs_validation/bloco_documentation/validate_bloco_documentation.sh
-  timer_stress_test:
-    path: ./test/integration/stress_test/timer_stress_test.dart
-
-  rate_limiter_test:
-    path: ./test/unit/rate_limiter_test.dart
-
-  rebuild_performance_baseline_test:
-    path: ./.github/scripts/ci_validation/run_rebuild_performance_test.sh
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-
-  flutter_sdk_versoes_generator:
-    path: ./.github/scripts/docs_validation/flutter_sdk_versoes/validate_flutter_sdk_versoes.sh
-  ux_dicas_test:
-    path: ./test/integration/ux_dicas_tests/ux_dicas_test.dart
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-  external_interruptions_test:
-    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart
-  timer_stress_test:
-    path: ./test/integration/stress_test/timer_stress_test/timer_stress_test.dart
-
-  ux_dicas_test:
-    path: ./test/integration/ux_dicas_tests/ux_dicas_test.dart
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-
-  audio_recovery_test:
-    path: ./test/integration/audio_recovery_test/audio_recovery_test.dart
-  documentacao_test:
-    path: ./test/integration/documentacao_test/documentacao_test.dart
-  responsividade_test:
-    path: ./test/integration/responsividade_test/responsividade_test.dart
