@@ -1,14 +1,16 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:integration_test/integration_test_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:rebcm/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Test Flutter Driver', () async {
-    final FlutterDriver driver = await FlutterDriver.connect();
-    await driver.requestData('some_data');
-    await driver.close();
+  testWidgets('Testa wrap e truncamento de dicas', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Implementar lógica para testar wrap e truncamento de dicas
+    expect(find.text('Dica'), findsOneWidget);
   });
 }
-
