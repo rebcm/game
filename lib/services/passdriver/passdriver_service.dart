@@ -1,28 +1,44 @@
-import 'package:flutter/services.dart';
-import 'package:game/services/logging/error_logger.dart';
+import 'package:http/http.dart' as http;
+import 'package:game/utils/logger/logger.dart';
 
 class PassdriverService {
-  Future<void> authenticate() async {
+  Future<http.Response> authenticate(String username, String password) async {
     try {
-      // Existing authentication logic
-    } on PlatformException catch (e, stackTrace) {
-      if (e.code == 'auth_error') {
-        ErrorLogger.logAuthError('Authentication failed', e, stackTrace);
+      final response = await http.post(
+        Uri.parse('https://example.com/authenticate'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: '{"username": "$username", "password": "$password"}',
+      );
+
+      if (response.statusCode == 200) {
+        Logger.logInfo('Authentication successful');
+        return response;
       } else {
-        ErrorLogger.logInfrastructureError('Platform exception during authentication', e, stackTrace);
+        Logger.logError('Authentication failed', response.statusCode);
+        throw Exception('Authentication failed');
       }
-    } catch (e, stackTrace) {
-      ErrorLogger.logInfrastructureError('Unexpected error during authentication', e, stackTrace);
+    } catch (e) {
+      Logger.logError('Error during authentication', e);
+      rethrow;
     }
   }
 
-  Future<void> processPayload() async {
+  Future<http.Response> makeRequest(String endpoint) async {
     try {
-      // Existing payload processing logic
-    } on FormatException catch (e, stackTrace) {
-      ErrorLogger.logPayloadError('Invalid payload format', e, stackTrace);
-    } catch (e, stackTrace) {
-      ErrorLogger.logInfrastructureError('Unexpected error during payload processing', e, stackTrace);
+      final response = await http.get(Uri.parse('https://example.com/$endpoint'));
+
+      if (response.statusCode == 200) {
+        Logger.logInfo('Request to $endpoint successful');
+        return response;
+      } else {
+        Logger.logError('Request to $endpoint failed', response.statusCode);
+        throw Exception('Request failed');
+      }
+    } catch (e) {
+      Logger.logError('Error during request to $endpoint', e);
+      rethrow;
     }
   }
 }
