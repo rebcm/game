@@ -2,27 +2,30 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a compatibilidade do projeto "Construção Criativa da Rebeca". Os critérios aqui estabelecidos visam garantir que o aplicativo seja construído e executado sem erros ou warnings relacionados à compatibilidade.
+Este documento define os critérios de aceitação para a compatibilidade do projeto "Construção Criativa da Rebeca". Os critérios aqui estabelecidos visam garantir que o aplicativo seja compatível com diferentes versões de JDK e Gradle, além de assegurar um tempo de build estável.
 
-## Critérios
+## Critérios de Aceitação
 
-1. **Build APK/Bundle sem erros de 'major version'**: O processo de build do APK ou Bundle deve ser concluído sem erros relacionados à versão major do Java ou Kotlin.
-2. **Tempo de build estável**: O tempo de build do projeto deve ser estável e não apresentar variações significativas entre builds consecutivas.
-3. **Sincronização Gradle concluída sem warnings de JDK**: A sincronização do Gradle deve ser concluída sem warnings relacionados à configuração do JDK.
+1. **Build APK/Bundle sem erros de 'major version'**:
+   - O processo de build do APK ou Bundle deve ser concluído sem erros relacionados à versão major do JDK.
+
+2. **Tempo de build estável**:
+   - O tempo de build deve ser estável e dentro dos limites aceitáveis definidos pela equipe de desenvolvimento.
+
+3. **Sincronização Gradle concluída sem warnings de JDK**:
+   - A sincronização do Gradle deve ser concluída sem warnings relacionados à compatibilidade do JDK.
 
 ## Métricas de Avaliação
 
-As métricas abaixo serão utilizadas para avaliar a compatibilidade do projeto:
-
-- Sucesso na construção do APK/Bundle sem erros de 'major version'.
-- Medição do tempo de build em diferentes ambientes (desenvolvimento, CI/CD).
-- Sucesso na sincronização do Gradle sem warnings de JDK.
+- **Build APK/Bundle**: Verificar logs de build para erros de 'major version'.
+- **Tempo de build**: Medir o tempo de build em diferentes ambientes e comparar com os limites estabelecidos.
+- **Sincronização Gradle**: Verificar logs de sincronização do Gradle para warnings de JDK.
 
 ## Responsabilidades
 
-- A equipe de desenvolvimento é responsável por garantir que o código seja compatível e atenda aos critérios estabelecidos.
-- A equipe de CI/CD é responsável por monitorar e relatar problemas de compatibilidade durante o processo de build e deploy.
+- A equipe de desenvolvimento é responsável por implementar e garantir que os critérios de aceitação sejam atendidos.
+- A equipe de QA é responsável por verificar e validar os critérios de aceitação.
 
-## Revisão e Atualização
+## Histórico de Revisões
 
-Este documento será revisado e atualizado sempre que necessário, especialmente quando houver mudanças significativas no projeto ou na configuração do ambiente de desenvolvimento.
+- [Inserir data] - Criação do documento.
