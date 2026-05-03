@@ -43,3 +43,6 @@ dev_dependencies:
 
   bloco_documentation_generator:
     path: ./.github/scripts/docs_validation/bloco_documentation/extract_block_reference_matrix.dart
+
+  external_interruptions_test:
+    path: ./test/integration/external_interruptions_test/external_interruptions_test.dart

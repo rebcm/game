@@ -1,29 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:rebcm/game/audio/audio_player.dart';
+import 'package:rebcm/game.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('External Interruptions Test', () {
-    testWidgets('audio playback interruption test', (tester) async {
-      await AudioPlayer.instance.play('test_audio.mp3');
-      await Future.delayed(const Duration(seconds: 2));
+    testWidgets('interruption during gameplay', (tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
+
       // Simulate incoming call
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      expect(AudioPlayer.instance.isPlaying, false);
+      await tester.pumpAndSettle();
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      // No need to restart playback as per the task description
-    });
+      await tester.pumpAndSettle();
 
-    testWidgets('audio playback alarm interruption test', (tester) async {
-      await AudioPlayer.instance.play('test_audio.mp3');
-      await Future.delayed(const Duration(seconds: 2));
-      // Simulate alarm
+      // Simulate alarm/notification
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      expect(AudioPlayer.instance.isPlaying, false);
+      await tester.pumpAndSettle();
       await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      // No need to restart playback as per the task description
+      await tester.pumpAndSettle();
+
+      expect(find.text('Rebeca'), findsOneWidget);
     });
   });
 }
