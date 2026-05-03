@@ -21,3 +21,5 @@ flutter:
   assets:
     - assets/translations/
     - lib/docs/
+
+  http: ^0.13.5
