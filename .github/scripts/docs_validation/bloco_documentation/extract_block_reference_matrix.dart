@@ -3,17 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:game/bloco/bloco.dart';
 
 void main() {
-  final List<Bloco> blocos = Bloco.values.toList();
-  final Map<String, dynamic> blocoMetadata = {};
+  final blocoList = Bloco.values.map((e) => e.toString()).toList();
+  final blocoMap = {};
 
-  for (var bloco in blocos) {
-    blocoMetadata[bloco.name] = {
-      'id': bloco.id,
-      'nome': bloco.nome,
-      'descricao': bloco.descricao,
+  for (var bloco in blocoList) {
+    final blocoName = bloco.split('.').last;
+    blocoMap[blocoName] = {
+      'nome': blocoName,
+      'descricao': 'Descricao do bloco $blocoName',
     };
   }
 
-  final jsonData = jsonEncode(blocoMetadata);
+  final jsonData = jsonEncode(blocoMap);
   print(jsonData);
+
+  // Save to file
+  final file = File('docs/bloco_documentation.json');
+  file.writeAsStringSync(jsonData);
 }
