@@ -48,3 +48,6 @@ flutter:
 
   fps_stress_test:
     path: ./benchmarks/fps_stress_test
+
+  integration_test_config:
+    path: ./integration_test

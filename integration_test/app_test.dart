@@ -5,12 +5,9 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Testes de integração da documentação', (tester) async {
+  testWidgets('basic integration test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-
-    // Implementação dos testes de integração da documentação
-    // Deve seguir os casos de teste documentados
+    expect(find.text('Rebeca\'s Creative Mode'), findsOneWidget);
   });
 }
-
