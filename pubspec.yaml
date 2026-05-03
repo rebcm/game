@@ -78,3 +78,6 @@ flutter:
 
   deploy_validation_test:
     path: ./integration_test/deploy_validation_test
+
+  ci_cd_flow_test:
+    path: ./integration_test/ci_cd_flow_test
