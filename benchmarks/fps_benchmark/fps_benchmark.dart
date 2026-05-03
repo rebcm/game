@@ -6,19 +6,23 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('FPS Benchmark for different block densities', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  group('FPS Benchmark', () {
+    testWidgets('Low density', (tester) async {
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement low density FPS test
+    });
 
-    // Implement FPS benchmarking logic here
-    // Measure FPS for different block densities
-  });
+    testWidgets('Medium density', (tester) async {
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement medium density FPS test
+    });
 
-  testWidgets('FPS Benchmark for different render distances', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-
-    // Implement FPS benchmarking logic here
-    // Measure FPS for different render distances
+    testWidgets('High density', (tester) async {
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement high density FPS test
+    });
   });
 }
