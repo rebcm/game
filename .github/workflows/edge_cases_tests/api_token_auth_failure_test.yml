@@ -1,0 +1,17 @@
+name: API Token Auth Failure Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run test
+        run: |
+          # Simulate API token auth failure
+          export API_TOKEN="invalid_token"
+          flutter test test/api_token_auth_failure_test.dart

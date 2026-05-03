@@ -1,0 +1,17 @@
+name: Build Version Conflict Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run test
+        run: |
+          # Simulate build version conflict
+          export BUILD_VERSION="1.0.0+1"
+          flutter test test/build_version_conflict_test.dart
