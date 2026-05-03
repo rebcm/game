@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
     <key>NSCameraUsageDescription</key>
-    <string>A câmera é usada para tirar fotos dos seus mundos voxel criativos.</string>
+    <string>A câmera é usada para tirar fotos dos seus blocos criativos e compartilhá-los com a comunidade.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>O microfone é usado para gravar áudio enquanto você cria.</string>
+    <string>O microfone é necessário para gravar áudio enquanto você cria e compartilha seus projetos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>A biblioteca de fotos é usada para salvar suas criações voxel.</string>
+    <string>A biblioteca de fotos é usada para salvar e compartilhar suas criações.</string>
 </dict>
 </plist>

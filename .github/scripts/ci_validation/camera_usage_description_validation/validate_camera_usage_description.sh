@@ -1,9 +1,7 @@
 #!/bin/bash
 
-INFO_PLIST="ios/Runner/Info.plist"
-CAMERA_USAGE_DESCRIPTION=$(plutil -extract NSCameraUsageDescription raw "$INFO_PLIST")
-
-if [ "$CAMERA_USAGE_DESCRIPTION" != "A câmera é usada para tirar fotos dos seus mundos voxel criativos." ]; then
-    echo "Erro: NSCameraUsageDescription não atende aos critérios de aceitação."
-    exit 1
+description=$(grep -A1 NSCameraUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
+if [ "$description" != "A câmera é usada para tirar fotos dos seus blocos criativos e compartilhá-los com a comunidade." ]; then
+  echo "Descrição de uso da câmera inválida."
+  exit 1
 fi

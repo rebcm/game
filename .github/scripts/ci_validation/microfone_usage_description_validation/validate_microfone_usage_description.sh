@@ -1,9 +1,7 @@
 #!/bin/bash
 
-INFO_PLIST="ios/Runner/Info.plist"
-MICROPHONE_USAGE_DESCRIPTION=$(plutil -extract NSMicrophoneUsageDescription raw "$INFO_PLIST")
-
-if [ "$MICROPHONE_USAGE_DESCRIPTION" != "O microfone é usado para gravar áudio enquanto você cria." ]; then
-    echo "Erro: NSMicrophoneUsageDescription não atende aos critérios de aceitação."
-    exit 1
+description=$(grep -A1 NSMicrophoneUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
+if [ "$description" != "O microfone é necessário para gravar áudio enquanto você cria e compartilha seus projetos." ]; then
+  echo "Descrição de uso do microfone inválida."
+  exit 1
 fi

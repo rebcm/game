@@ -1,9 +1,7 @@
 #!/bin/bash
 
-INFO_PLIST="ios/Runner/Info.plist"
-PHOTO_LIBRARY_USAGE_DESCRIPTION=$(plutil -extract NSPhotoLibraryUsageDescription raw "$INFO_PLIST")
-
-if [ "$PHOTO_LIBRARY_USAGE_DESCRIPTION" != "A biblioteca de fotos é usada para salvar suas criações voxel." ]; then
-    echo "Erro: NSPhotoLibraryUsageDescription não atende aos critérios de aceitação."
-    exit 1
+description=$(grep -A1 NSPhotoLibraryUsageDescription ios/Runner/Info.plist | tail -n1 | sed -E 's/.*>(.*)<.*/\1/')
+if [ "$description" != "A biblioteca de fotos é usada para salvar e compartilhar suas criações." ]; then
+  echo "Descrição de uso da biblioteca de fotos inválida."
+  exit 1
 fi
