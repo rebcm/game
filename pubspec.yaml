@@ -65,3 +65,5 @@ flutter:
   test/widget_test/edge_cases/resolution_test.dart
   test/widget_test/edge_cases/input_test.dart
   test/widget_test/edge_cases/drift_test.dart
+
+  # No new dependencies are added as we're using existing 'archive' package for GZip
