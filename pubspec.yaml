@@ -174,3 +174,6 @@ flutter:
 
   pagination_test:
     path: ./integration_test/pagination_test
+
+  memory_stress_test:
+    path: ./benchmarks/memory_stress_test
