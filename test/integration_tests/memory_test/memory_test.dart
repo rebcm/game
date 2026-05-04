@@ -12,21 +12,26 @@ void main() {
 
     // Trigger GC manually
     await tester.binding.convertFlutterSurfaceToImage();
-    await tester.binding.setSurfacePixelRatio(1.0);
+    await tester.binding.setSurfaceSize(Size.zero);
+    await tester.pumpAndSettle();
+    await tester.binding.convertFlutterSurfaceToImage();
+    await tester.binding.setSurfaceSize(tester.binding.window.physicalSize);
     await tester.pumpAndSettle();
 
     // Perform memory-intensive operations
     for (int i = 0; i < 10; i++) {
       await tester.tap(find.text('Build'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Destroy'));
+      await tester.pumpAndSettle();
     }
 
     // Trigger GC again
     await tester.binding.convertFlutterSurfaceToImage();
-    await tester.binding.setSurfacePixelRatio(1.0);
+    await tester.binding.setSurfaceSize(Size.zero);
     await tester.pumpAndSettle();
-
-    // Verify no memory leaks
-    expect(true, true);
+    await tester.binding.convertFlutterSurfaceToImage();
+    await tester.binding.setSurfaceSize(tester.binding.window.physicalSize);
+    await tester.pumpAndSettle();
   });
 }
