@@ -2,44 +2,33 @@
 
 ## Introdução
 
-Este documento define a estrutura do frame binário utilizado para comunicação no jogo Rebeca. A especificação inclui headers de compressão e checksums para garantir a integridade dos dados.
+Este documento define a estrutura do frame binário utilizado para a transferência de dados no jogo Rebeca.
 
 ## Estrutura do Frame Binário
 
 O frame binário é composto pelas seguintes seções:
 
-1. **Header**
-   - `magic_number` (4 bytes): Número mágico para identificar o início do frame.
-   - `payload_size` (4 bytes): Tamanho do payload em bytes.
-   - `compression_flag` (1 byte): Flag indicando se o payload está comprimido.
+1. **Header**: Informações de controle, incluindo compressão e checksum.
+2. **Payload**: Dados do jogo, como estado do mundo ou comandos do jogador.
 
-2. **Payload**
-   - Dados serializados do jogo, que podem incluir informações de estado, ações do jogador, etc.
+### Header
 
-3. **Checksum**
-   - `checksum` (4 bytes): Checksum CRC32 do payload para verificar integridade.
+- **Compressão (1 byte)**: Indica se o payload está comprimido (0x01) ou não (0x00).
+- **Checksum (4 bytes)**: Checksum CRC32 do payload.
 
-## Compressão
+### Payload
 
-- Quando `compression_flag` é 1, o payload está comprimido utilizando o algoritmo [nome do algoritmo, e.g., zlib].
-- Quando `compression_flag` é 0, o payload não está comprimido.
+- **Dados do Jogo**: Serialização dos dados do jogo em formato binário.
 
 ## Exemplo de Estrutura
 
 | Offset | Tamanho | Descrição            |
 |--------|---------|----------------------|
-| 0      | 4       | magic_number         |
-| 4      | 4       | payload_size         |
-| 8      | 1       | compression_flag     |
-| 9      | variável| payload              |
-| ?      | 4       | checksum             |
+| 0      | 1       | Flag de Compressão   |
+| 1      | 4       | Checksum CRC32       |
+| 5      | N       | Dados do Jogo        |
 
 ## Implementação
 
-A implementação deve seguir as seguintes diretrizes:
-- Utilizar a biblioteca `crypto` para cálculo de checksum CRC32.
-- Utilizar a biblioteca `archive` para compressão, se aplicável.
+A implementação deve seguir as especificações acima, garantindo que o frame binário seja corretamente montado e interpretado.
 
-## Testes
-
-Devem ser implementados testes para verificar a correta serialização e deserialização do frame binário, bem como a integridade dos dados através do checksum.
