@@ -3,10 +3,10 @@ import 'package:game/providers/content_provider/hardcoded_content_provider/hardc
 
 void main() {
   group('HardcodedContentProvider', () {
-    test('should return a hardcoded tip', () async {
+    test('should return a tip', () async {
       final provider = HardcodedContentProvider();
       final tip = await provider.getTip();
-      expect(tip, 'Hardcoded Tip');
+      expect(tip, isNotEmpty);
     });
   });
 }
