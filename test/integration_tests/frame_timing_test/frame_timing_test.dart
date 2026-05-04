@@ -9,21 +9,18 @@ void main() {
     await tester.pumpAndSettle();
 
     final List<double> frameTimes = [];
-    SchedulerBinding.instance.addTimingsCallback((timings) {
-      for (var timing in timings) {
-        frameTimes.add(timing.totalDuration.inMicroseconds.toDouble());
-      }
+    SchedulerBinding.instance.addPersistentFrameCallback((_) {
+      frameTimes.add(SchedulerBinding.instance.currentFrameTimeStamp.inMilliseconds.toDouble());
     });
 
-    await tester.pump(Duration(seconds: 5));
-
-    SchedulerBinding.instance.removeTimingsCallback((timings) {
-      for (var timing in timings) {
-        frameTimes.add(timing.totalDuration.inMicroseconds.toDouble());
-      }
-    });
+    await tester.pump(const Duration(seconds: 5));
 
     expect(frameTimes, isNotEmpty);
-    print('Frame times: $frameTimes');
+    expect(frameTimes.length, greaterThan(0));
+
+    final averageFrameTime = frameTimes.reduce((a, b) => a + b) / frameTimes.length;
+    print('Average frame time: $averageFrameTime ms');
+
+    expect(averageFrameTime, lessThan(33.33)); // 30 FPS
   });
 }
