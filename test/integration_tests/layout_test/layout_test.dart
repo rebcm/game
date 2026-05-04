@@ -10,17 +10,17 @@ void main() {
     await app.main();
     await tester.pumpAndSettle();
 
-    const resolutions = [
-      Size(320, 480),
-      Size(375, 667),
-      Size(414, 896),
+    final resolutions = [
+      const Size(320, 480),
+      const Size(375, 667),
+      const Size(414, 896),
     ];
 
     for (var resolution in resolutions) {
       await tester.binding.setSurfaceSize(resolution);
       await tester.pumpAndSettle();
 
-      // Add your layout validation logic here
+      // Add your layout test logic here
       expect(find.text('Rebeca'), findsOneWidget);
     }
   });
