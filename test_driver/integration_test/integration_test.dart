@@ -1,14 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:flutter_test/flutter_test.dart';
+import 'browser_tests/scroll_block_test.dart' as scroll_block_test;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('Counter increments smoke test', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-
-    // Add your test logic here
-  });
+  scroll_block_test.main();
 }
