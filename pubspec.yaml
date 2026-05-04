@@ -63,3 +63,6 @@ flutter:
   flutter_markdown: ^0.6.14
 
   test_driver/integration_test.dart:
+
+  ci_cd_validation_test:
+    path: test/ci_cd_validation/ci_cd_validation_test.dart
