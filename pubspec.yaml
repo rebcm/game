@@ -53,3 +53,5 @@ scripts:
   run_smoke_test: ./test/smoke_tests/run_smoke_test.sh
 
   run_smoke_test: ./test/integration_tests/smoke_test/retry_smoke_test.sh
+
+  run_overflow_test: flutter drive --driver=test/integration_tests/overflow_test/overflow_test_driver.dart --target=test/integration_tests/overflow_test/overflow_test.dart
