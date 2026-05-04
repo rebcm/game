@@ -57,4 +57,4 @@ scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
-  run_frame_timing_test: flutter drive --driver=test/integration_tests/frame_timing_test_driver/frame_timing_test_driver.dart --target=test/integration_tests/frame_timing_test/frame_timing_test.dart --profile
+  run_stress_test: flutter drive --driver=test/integration_tests/stress_test/stress_test_driver.dart --target=test/integration_tests/stress_test/stress_test.dart
