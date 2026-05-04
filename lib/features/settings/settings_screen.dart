@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:game/features/settings/widgets/audio_settings_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:game/features/settings/providers/audio_settings_provider.dart';
+import 'package:game/features/settings/widgets/audio_settings.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Configurações'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: AudioSettingsWidget(),
+    return ChangeNotifierProvider(
+      create: (_) => AudioSettingsProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Settings'),
+        ),
+        body: AudioSettings(),
       ),
     );
   }
