@@ -81,9 +81,5 @@ flutter:
     path: test_driver/onboarding_test/onboarding_test_driver.dart
   audio_edge_cases_test:
     path: test_driver/audio_edge_cases_test/audio_edge_cases_test.dart
-  dependency_flow_test:
-    path: test_driver/dependency_flow_test/dependency_flow_test.dart
-  dependency_flow_test_driver:
-    path: test_driver/dependency_flow_test/dependency_flow_test_driver.dart
-  global_shortcuts_exceptions_test:
-    path: test_driver/global_shortcuts_exceptions_test/global_shortcuts_exceptions_test.dart
+  golden_tests:
+    path: test_driver/golden_tests/golden_tests.dart
