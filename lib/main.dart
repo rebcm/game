@@ -1,39 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/permission_service.dart';
+import 'package:game/ui/logs/log_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await PermissionService().requestNotificationPermission();
-  runApp(const MyApp());
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Game',
+      title: 'Rebeca\'s Game',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Game'),
-      ),
-      body: const Center(
-        child: Text('Game'),
-      ),
+      home: LogScreen(),
     );
   }
 }
