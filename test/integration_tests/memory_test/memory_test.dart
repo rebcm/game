@@ -9,7 +9,19 @@ void main() {
   testWidgets('memory test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    // Trigger GC manually before measuring heap
-    await tester.binding.debugForceGC();
+
+    // Perform actions to test memory
+    await tester.tap(find.text('Build'));
+    await tester.pumpAndSettle();
+
+    // Trigger GC
+    await tester.binding.convertFlutterSurfaceToImage();
+    await tester.binding.setSurfaceSemantics(true);
+    await tester.binding.setSemantics(true);
+    await tester.binding.reportReadinessForFrame();
+    await tester.pumpAndSettle();
+
+    // Verify memory usage
+    expect(await tester.binding.getHeapSize(), lessThan(100000000));
   });
 }

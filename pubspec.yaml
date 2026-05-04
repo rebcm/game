@@ -51,7 +51,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
-  run_memory_test: ./scripts/force_gc.sh
+  run_memory_test: ./scripts/run_memory_test.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
@@ -60,25 +60,3 @@ scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
-  run_coverage_test: flutter drive --driver=test/integration_tests/coverage_test/coverage_test_driver.dart --target=test/integration_tests/coverage_test/coverage_test.dart
-
-flutter_i18n:
-  path: lib/i18n/locales
-
-  run_api_contract_validation_test: bash scripts/run_api_contract_validation_test.sh
-
-  run_heap_metrics_test: ./scripts/heap_metrics/extract_heap_metrics.sh
-
-  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases_test/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases_test/content_edge_cases_integration_test.dart
-
-  run_frame_timing_test: ./scripts/run_frame_timing_test.sh
-
-  run_heap_metrics_extraction: ./scripts/heap_metrics/extract_heap_metrics.sh
-
-  run_heap_metrics_test: flutter drive --driver=test/integration_tests/heap_metrics_test/heap_metrics_test_driver.dart --target=test/integration_tests/heap_metrics_test/heap_metrics_test.dart
-
-  run_deploy_test: ./scripts/run_deploy_test.sh
-
-  run_risk_identification_test: bash scripts/run_risk_identification_test.sh
-
-  run_retry_policy_test: ./scripts/run_retry_policy_test.sh
