@@ -62,3 +62,6 @@ scripts:
   preview_deploy_script: bash .github/scripts/preview_deploy.sh
 
   run_preview_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/preview_test/preview_test.dart
+
+  run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
+
