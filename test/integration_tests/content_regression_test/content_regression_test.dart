@@ -10,16 +10,13 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    final localizedStrings = [
-      'title',
-      'welcome_message',
-      // Add more localized strings as needed
-    ];
+    // Verify that the initial screen is rendered correctly
+    expect(find.text('Rebeca\'s Game'), findsOneWidget);
 
-    for (final key in localizedStrings) {
-      expect(find.text(key), findsOneWidget);
-    }
-
-    // Add more test logic as needed
+    // Test various UI elements and interactions
+    // This is a placeholder; actual tests should be based on the app's UI
+    await tester.tap(find.byIcon(Icons.play_arrow));
+    await tester.pumpAndSettle();
+    expect(find.text('Game Screen'), findsOneWidget);
   });
 }

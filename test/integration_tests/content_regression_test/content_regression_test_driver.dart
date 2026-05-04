@@ -9,17 +9,15 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (driver != null) {
-      driver?.close();
-    }
+    driver?.close();
   });
 
   test('Content Regression Test Driver', () async {
     final timeline = await driver?.traceAction(() async {
-      await driver?.tap(find.byValueKey('some_key'));
-      // Add more driver actions as needed
+      await driver?.tap(find.byType('FloatingActionButton'));
     });
-
-    // Analyze the timeline for performance or other metrics
+    final summary = TimelineSummary.summarize(timeline!);
+    summary.writeSummaryToFile('content_regression_test', pretty: true);
+    summary.writeTimelineToFile('content_regression_test', pretty: true);
   });
 }

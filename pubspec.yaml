@@ -157,3 +157,5 @@ scripts:
   run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
 
   run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+
+  run_content_regression_test: bash scripts/run_content_regression_test
