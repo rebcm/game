@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
+  http: ^0.13.5
   freezed_annotation: ^2.2.0
   json_annotation: ^4.6.0
   provider: ^6.0.3
@@ -26,6 +27,8 @@ dependencies:
   flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
+  flutter_driver:
+  http: ^0.13.5
   build_runner: ^2.3.3
   freezed: ^2.3.2
   json_serializable: ^6.5.4
@@ -67,3 +70,4 @@ scripts:
   run_retry_timeout_test: ./scripts/run_retry_timeout_test.sh
 
   run_content_regression_test: ./scripts/run_content_regression_test.sh
+  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart

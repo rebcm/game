@@ -3,16 +3,19 @@ import 'package:game/services/content_loader.dart';
 
 void main() {
   group('Content Loader Edge Cases', () {
-    test('Test API timeout', () async {
-      expect(() async => await ContentLoader.loadFromAPI(timeout: Duration(seconds: 1)), throwsException);
+    test('Test timeout during API call', () async {
+      // Simulate API timeout
+      expect(await ContentLoader.loadContent(timeout: Duration(seconds: 1)), throwsA(isA<TimeoutException>()));
     });
 
     test('Test missing local files', () async {
-      expect(() async => await ContentLoader.loadFromLocalFile('non_existent_file.json'), throwsException);
+      // Simulate missing local files
+      expect(await ContentLoader.loadLocalContent('non_existent_file.json'), throwsA(isA<FileSystemException>()));
     });
 
     test('Test invalid JSON parsing', () async {
-      expect(() async => await ContentLoader.parseJSON('invalid_json'), throwsException);
+      // Simulate invalid JSON
+      expect(() => ContentLoader.parseJson('invalid_json'), throwsA(isA<FormatException>()));
     });
   });
 }
