@@ -59,3 +59,5 @@ scripts:
   run_interruption_test: flutter drive --driver=test/integration_tests/interruption_test/interruption_test_driver.dart --target=test/integration_tests/interruption_test/interruption_test.dart
 
   run_system_interruption_test: flutter drive --driver=test/integration_tests/system_interruption_test/system_interruption_test_driver.dart --target=test/integration_tests/system_interruption_test/system_interruption_test.dart
+
+  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh lint_results.json
