@@ -47,3 +47,5 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
 
   run_contract_test: flutter drive --driver=test/contract_tests/contract_test_driver.dart --target=test/contract_tests/contract_test.dart
+
+  run_pseudo_localization_test: flutter drive --driver=test/integration_tests/pseudo_localization_test/pseudo_localization_test_driver.dart --target=test/integration_tests/pseudo_localization_test/pseudo_localization_test.dart
