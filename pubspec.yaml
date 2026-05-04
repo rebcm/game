@@ -47,3 +47,5 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
+
+  run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
