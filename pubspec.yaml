@@ -68,3 +68,5 @@ scripts:
 
   run_data_source_test: bash scripts/run_data_source_test.sh
   run_memory_test: bash scripts/run_memory_test
+
+  run_memory_snapshot_test: bash scripts/run_memory_snapshot_test.sh
