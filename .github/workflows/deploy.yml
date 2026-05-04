@@ -20,11 +20,11 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
-
       - name: Build web
         run: flutter build web
+
+      - name: Run tests
+        run: flutter test
 
       - name: Deploy
         run: echo "Deploying to production"
