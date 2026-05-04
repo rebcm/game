@@ -10,11 +10,11 @@ void main() {
 
   tearDownAll(() async {
     if (driver != null) {
-      driver!.close();
+      driver?.close();
     }
   });
 
   test('Interruption test', () async {
-    await driver!.requestData('test_interruption');
+    await driver?.requestData('interruption_test');
   });
 }

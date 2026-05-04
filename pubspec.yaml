@@ -14,9 +14,9 @@ dependencies:
   http: ^0.13.5
   audioplayers: ^1.0.1
   flutter:
+    sdk: flutter
   assets:
     - assets/rebeca_animation.riv
-    sdk: flutter
   permission_handler: ^10.3.0
   lottie: ^2.3.2
   rive: ^0.10.6
@@ -55,31 +55,5 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
-  run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
-  run_cloudflare_worker_integration_test: flutter drive --driver=test/integration_tests/cloudflare_worker_integration_test/cloudflare_worker_integration_test_driver.dart --target=test/integration_tests/cloudflare_worker_integration_test/cloudflare_worker_integration_test.dart
-  coverage: flutter test --coverage
-  codecov: bash -c "curl -s https://codecov.io/bash | bash -s -- -t \$CODECOV_TOKEN"
-
-  preview_deploy_script: bash .github/scripts/preview_deploy.sh
-
-  run_preview_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/preview_test/preview_test.dart
-
-  run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
-
-
-  run_precision_test: flutter drive --driver=test/integration_tests/precision_test/precision_test_driver.dart --target=test/integration_tests/precision_test/precision_test.dart
-
-  run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
-
-  run_interruption_test: bash scripts/run_interruption_test.sh
-
-  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
-scripts:
-  update_passdriver_flutter_tips_docs: bash scripts/docs/update_passdriver_flutter_tips_docs.sh
-
-  run_readme_validation_test: bash scripts/validation/validate_readme.sh
-
-scripts:
-  run_animation_integration_test: bash scripts/run_animation_integration_test.sh
-
-  run_precision_test: flutter drive --driver=test/integration_tests/precision_test/precision_test_driver.dart --target=test/integration_tests/precision_test/precision_test.dart
+  run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/benchmarks/rebeca_walk_benchmark.dart
+  run_interruption_test: flutter drive --driver=test/integration_tests/interruption_test/interruption_test_driver.dart --target=test/integration_tests/interruption_test/interruption_test.dart

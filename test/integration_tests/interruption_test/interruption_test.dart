@@ -9,7 +9,7 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Start audio playback
+    // Simulate audio playback
     await tester.tap(find.byKey(Key('audio_playback_button')));
     await tester.pumpAndSettle();
 
@@ -20,11 +20,11 @@ void main() {
     // Verify audio playback is paused
     expect(find.text('Audio paused'), findsOneWidget);
 
-    // Resume app
+    // Simulate resume
     await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pumpAndSettle();
 
-    // Verify audio playback resumes
+    // Verify audio playback is resumed
     expect(find.text('Audio playing'), findsOneWidget);
   });
 }
