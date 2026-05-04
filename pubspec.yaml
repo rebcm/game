@@ -87,3 +87,6 @@ scripts:
 
 scripts:
   update_gdd_template_docs: bash scripts/update_gdd_template_docs.sh
+
+scripts:
+  run_failure_mapping_tests: bash scripts/run_failure_mapping_tests.sh
