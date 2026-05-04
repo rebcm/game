@@ -1,0 +1,16 @@
+name: Passdriver Flutter Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          flutter test test_driver/passdriver_flutter/permission_validation_test.dart
