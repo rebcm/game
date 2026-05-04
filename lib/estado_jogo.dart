@@ -1,25 +1,25 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-class EstadoJogo extends StatefulWidget {
-  @override
-  _EstadoJogoState createState() => _EstadoJogoState();
-}
+class EstadoJogo extends State {
+  Timer? _timer;
+  bool _someFlagOrCallbackFired = false;
 
-class _EstadoJogoState extends State<EstadoJogo> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      // Simulate some work
+      _someFlagOrCallbackFired = true;
+    });
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(); // Implement your widget tree here
-  }
+  // Getter for testing purposes
+  bool get someFlagOrCallbackFired => _someFlagOrCallbackFired;
 }
