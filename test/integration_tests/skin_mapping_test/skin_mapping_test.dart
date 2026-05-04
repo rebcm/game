@@ -5,23 +5,29 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Skin Mapping Test', () {
-    testWidgets('should map slim skin correctly', (tester) async {
+  group('Skin Mapping Tests', () {
+    testWidgets('should correctly map classic skin with outer layer', (tester) async {
       await app.main();
       await tester.pumpAndSettle();
-      // Add logic to test slim skin mapping
+      // Implement test logic for classic skin with outer layer
     });
 
-    testWidgets('should map classic skin correctly', (tester) async {
+    testWidgets('should correctly map slim skin with outer layer', (tester) async {
       await app.main();
       await tester.pumpAndSettle();
-      // Add logic to test classic skin mapping
+      // Implement test logic for slim skin with outer layer
     });
 
-    testWidgets('should handle outer layer/overlay correctly', (tester) async {
+    testWidgets('should correctly map classic skin without outer layer', (tester) async {
       await app.main();
       await tester.pumpAndSettle();
-      // Add logic to test outer layer/overlay handling
+      // Implement test logic for classic skin without outer layer
+    });
+
+    testWidgets('should correctly map slim skin without outer layer', (tester) async {
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement test logic for slim skin without outer layer
     });
   });
 }

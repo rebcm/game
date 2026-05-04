@@ -70,3 +70,5 @@ scripts:
   run_code_coverage_test: bash scripts/run_code_coverage_test.sh
 
   run_memory_leak_test: bash scripts/run_memory_leak_test.sh
+
+  run_skin_mapping_test: ./scripts/run_skin_mapping_test.sh
