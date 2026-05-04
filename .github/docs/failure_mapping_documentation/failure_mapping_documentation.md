@@ -1,15 +1,23 @@
-# Documentação de Mapeamento de Falhas
+# Mapeamento de Falhas Anteriores
 
 Este documento lista todos os edge cases e testes de integração que falharam na etapa anterior.
 
-## Introdução
+## Edge Cases
 
-O objetivo deste documento é garantir que todos os casos de falha sejam identificados e documentados para reexecução direcionada.
+1. **Caso de Teste 1**: Descrição do caso de teste que falhou.
+   - **Motivo da Falha**: Descrição do motivo da falha.
+   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
 
-## Casos de Falha
+2. **Caso de Teste 2**: Descrição do caso de teste que falhou.
+   - **Motivo da Falha**: Descrição do motivo da falha.
+   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
 
-- Lista de edge cases e testes de integração que falharam
+## Testes de Integração
 
-## Conclusão
+1. **Teste de Integração 1**: Descrição do teste de integração que falhou.
+   - **Motivo da Falha**: Descrição do motivo da falha.
+   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
 
-Este documento será atualizado regularmente para refletir os resultados dos testes de mapeamento de falhas.
+2. **Teste de Integração 2**: Descrição do teste de integração que falhou.
+   - **Motivo da Falha**: Descrição do motivo da falha.
+   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.

@@ -70,3 +70,6 @@ scripts:
   update_api_docs: bash scripts/update_api_docs.sh
 scripts:
   update_api_docs: bash scripts/update_api_docs.sh
+
+scripts:
+  update_failure_mapping_docs: bash scripts/update_failure_mapping_docs.sh
