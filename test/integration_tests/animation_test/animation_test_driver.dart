@@ -10,11 +10,12 @@ void main() {
 
   tearDownAll(() async {
     if (driver != null) {
-      driver!.close();
+      driver?.close();
     }
   });
 
   test('Animação da Rebeca', () async {
-    // Implementação do teste utilizando Flutter Driver
+    // Implementar lógica para conduzir o teste
   });
 }
+

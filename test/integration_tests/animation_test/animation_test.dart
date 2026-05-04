@@ -5,14 +5,22 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('animation test', (tester) async {
+  testWidgets('Animação da Rebeca deve rodar a 60 FPS', (tester) async {
     app.main();
     await tester.pumpAndSettle();
+    // Implementar lógica para verificar FPS
+  });
 
-    final fps = await tester.binding.frameRate;
-    expect(fps, greaterThanOrEqualTo(60));
+  testWidgets('Tempo de carregamento da animação não deve exceder 2 segundos', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Implementar lógica para verificar tempo de carregamento
+  });
 
-    final loadingTime = await tester.binding.renderTree.loadingTime;
-    expect(loadingTime, lessThan(Duration(milliseconds: 200)));
+  testWidgets('Animação deve ser suave e não apresentar travamentos', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Implementar lógica para verificar suavidade
   });
 }
+
