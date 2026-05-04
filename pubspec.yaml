@@ -59,3 +59,7 @@ scripts:
 
 
   run_tips_trigger_test: flutter drive --driver=test/integration_tests/tips_trigger_test_driver/tips_trigger_test_driver.dart --target=test/integration_tests/tips_trigger_test/tips_trigger_test.dart
+
+  run_build_log_analysis: bash scripts/build_log_analysis/analyze_build_logs.sh build_logs.log
+
+  run_build_log_analysis: bash scripts/build_log_analysis/analyze_build_logs.sh build_logs.log
