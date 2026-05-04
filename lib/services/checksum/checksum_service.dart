@@ -8,11 +8,12 @@ class ChecksumService {
     return md5.convert(data).toString();
   }
 
-  Future<bool> validateChecksum(String url, String expectedChecksum) async {
+  Future<bool> verifyChecksum(String url, String expectedChecksum) async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      final checksum = md5.convert(response.bodyBytes).toString();
-      return checksum == expectedChecksum;
+      final Uint8List data = response.bodyBytes;
+      final String actualChecksum = await calculateMd5(data);
+      return actualChecksum == expectedChecksum;
     } else {
       return false;
     }

@@ -56,6 +56,7 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
   run_smoke_test: bash scripts/run_smoke_test_with_retry.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
+  run_checksum_test: bash scripts/run_checksum_test.sh
   run_docs_update_check: bash scripts/check_docs
 
   run_memory_leak_test: bash scripts/run_memory_leak_test.sh
