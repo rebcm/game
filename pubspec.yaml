@@ -107,3 +107,6 @@ flutter:
 
   ci_cd_validation:
     path: .github/docs/ci_cd_validation/criterios_aceitacao.md
+
+  permission_validation_test:
+    path: ./test/permission_validation_test
