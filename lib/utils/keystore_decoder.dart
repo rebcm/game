@@ -8,10 +8,4 @@ class KeystoreDecoder {
     final File outputFile = File(outputPath);
     await outputFile.writeAsBytes(keystoreBytes);
   }
-
-  static Future<void> decodeP12Certificate(String base64Certificate, String outputPath) async {
-    final Uint8List certificateBytes = base64Decode(base64Certificate);
-    final File outputFile = File(outputPath);
-    await outputFile.writeAsBytes(certificateBytes);
-  }
 }

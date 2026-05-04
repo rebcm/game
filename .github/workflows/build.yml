@@ -16,13 +16,13 @@ jobs:
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          echo $KEYSTORE_BASE64 | base64 --decode > keystore.jks
 
       - name: Decode P12 Certificate
         env:
           P12_CERTIFICATE_BASE64: ${{ secrets.P12_CERTIFICATE_BASE64 }}
         run: |
-          echo "$P12_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          echo $P12_CERTIFICATE_BASE64 | base64 --decode > certificate.p12
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -32,5 +32,5 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build
-        run: flutter build
+      - name: Build and test
+        run: flutter build apk --release
