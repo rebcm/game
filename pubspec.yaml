@@ -156,3 +156,7 @@ scripts:
 
   glossario_test:
     path: test/glossario_tecnico_test/voxel_test.dart
+
+scripts:
+  run_edge_cases_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test/edge_cases_test.dart
+

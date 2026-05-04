@@ -4,31 +4,24 @@ Este documento descreve os comportamentos esperados para casos extremos no jogo,
 
 ## Colisões em Altíssima Velocidade
 
-1. O jogo deve ser capaz de lidar com colisões em altíssima velocidade sem crashar ou apresentar comportamento instável.
-2. Objetos colidindo em altíssima velocidade não devem atravessar uns aos outros.
-3. A física das colisões deve ser simulada de forma realista, considerando a velocidade e a direção dos objetos envolvidos.
+1. O jogo deve ser capaz de lidar com colisões em altíssima velocidade sem crashar ou apresentar comportamento indefinido.
+2. Objetos colidindo em altíssima velocidade devem ter sua velocidade ajustada para evitar tunelamento.
+3. A detecção de colisão deve ser precisa, mesmo em altas velocidades.
 
 ## Sobreposição de Objetos (Clipping)
 
-1. O jogo deve evitar a sobreposição de objetos sempre que possível.
-2. Em casos onde a sobreposição ocorre devido a limitações da engine ou bugs, o jogo deve lidar com a situação de forma graciosa, sem crashar ou apresentar artefatos visuais graves.
-3. A detecção de colisões deve ser precisa o suficiente para evitar a sobreposição de objetos na maioria dos casos.
+1. O jogo deve evitar a sobreposição de objetos voxel.
+2. Em casos onde a sobreposição ocorre, o jogo deve corrigir ou mitigar visualmente o clipping.
+3. A lógica de detecção de colisão deve prevenir a sobreposição persistente.
 
 ## Comportamento do Veículo ao Capotar
 
-1. Quando o veículo capota, o jogo deve simular o comportamento de forma realista, considerando a física envolvida.
-2. O veículo deve responder de forma apropriada às ações do jogador após capotar, permitindo que o jogador o controle novamente de forma intuitiva.
-3. A câmera deve se comportar de forma estável e não apresentar trepidação excessiva durante e após o capotamento.
+1. O veículo deve responder de forma realista ao capotar, incluindo mudanças na física e na renderização.
+2. A detecção de capotagem deve ser precisa e baseada na orientação e velocidade do veículo.
+3. O jogo deve aplicar as consequências apropriadas ao capotar, como mudança na direção ou na velocidade.
 
 ## Testes e Validação
 
-1. Testes automatizados devem ser implementados para validar os critérios acima, garantindo que o jogo se comporte conforme o esperado em diferentes cenários.
-2. Testes manuais também devem ser realizados para garantir que os casos extremos sejam cobertos e que o jogo seja estável e divertido.
+1. Testes automatizados devem ser implementados para validar os critérios acima.
+2. Testes manuais devem ser realizados para garantir que os casos extremos sejam cobertos.
 
-## Simultaneous Input Edge Cases
-
-The application must handle simultaneous keyboard and touch inputs correctly.
-
-### Test Cases
-
-* Simultaneous keyboard and touch input
