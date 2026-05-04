@@ -1,48 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:game/audio_manager/audio_manager.dart';
+import 'package:game/input_manager/input_manager.dart';
+import 'package:game/control_schemes/default_control_scheme.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AudioManager()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  final inputManager = InputManager(DefaultControlScheme());
+  runApp(MyApp(inputManager));
 }
 
 class MyApp extends StatelessWidget {
+  final InputManager inputManager;
+
+  MyApp(this.inputManager);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rebeca Game',
-      home: MyHomePage(),
+      home: MyHomePage(inputManager),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  final InputManager inputManager;
+
+  MyHomePage(this.inputManager);
+
   @override
   Widget build(BuildContext context) {
-    final audioManager = Provider.of<AudioManager>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Rebeca Game'),
-      ),
-      body: Center(
-        child: Slider(
-          value: audioManager.volume,
-          onChanged: (value) => audioManager.setVolume(value),
-          min: 0.0,
-          max: 1.0,
+      body: RawKeyboardListener(
+        focusNode: FocusNode(),
+        onKey: (event) => inputManager.handleKeyEvent(event),
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Switch control scheme here
+            },
+            child: Text('Switch Control Scheme'),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => audioManager.playAudio('audio/rebeca_sound.mp3'),
-        tooltip: 'Play',
-        child: Icon(Icons.play_arrow),
       ),
     );
   }

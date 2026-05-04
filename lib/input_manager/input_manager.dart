@@ -1,8 +1,16 @@
 import 'package:flutter/services.dart';
-import 'input_command.dart';
+import 'package:game/control_schemes/control_scheme.dart';
 
-abstract class InputManager {
-  void handleKeyEvent(RawKeyEvent event);
-  bool isCommandPressed(InputCommand command);
-  void update();
+class InputManager {
+  ControlScheme _currentScheme;
+
+  InputManager(this._currentScheme);
+
+  void switchScheme(ControlScheme newScheme) {
+    _currentScheme = newScheme;
+  }
+
+  void handleKeyEvent(RawKeyEvent event) {
+    _currentScheme.handleKeyEvent(event);
+  }
 }
