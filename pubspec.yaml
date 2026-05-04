@@ -70,3 +70,5 @@ scripts:
   run_profiling_test: flutter drive --driver=test/profiling_tests/scene_rebuild_profiling_test_driver.dart --target=test/profiling_tests/scene_rebuild_profiling_test.dart --profile --trace-systrace
 
   run_deploy_edge_cases_test: ./scripts/run_deploy_edge_cases_test.sh
+
+  run_flutter_sdk_installation_test: ./scripts/run_flutter_sdk_installation_test.sh
