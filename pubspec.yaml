@@ -98,3 +98,6 @@ flutter:
   deploy_validation_test:
     path: ./integration_test/deploy_validation_test
 
+
+  cloudflare_pages_deploy:
+    path: ./lib/services/cloudflare_pages_deploy
