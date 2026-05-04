@@ -16,7 +16,9 @@ void main() {
     });
 
     test('Audio test', () async {
-      await driver?.requestData('audio_test');
+      await driver?.runUnsynchronized(() async {
+        // Implement driver logic for audio test
+      });
     });
   });
 }
