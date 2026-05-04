@@ -14,6 +14,7 @@ void main() {
     test('should handle device without microphone hardware', () async {
       // Mock device without microphone
       when(() => Permission.microphone.request()).thenAnswer((_) async => PermissionStatus.denied);
+      when(() => Permission.microphone.status).thenAnswer((_) async => PermissionStatus.denied);
       final result = await PermissionService.requestMicrophonePermission();
       expect(result, false);
     });
