@@ -68,3 +68,5 @@ scripts:
   run_setup_validation_test: ./scripts/run_setup_validation_test.sh
 
   run_profiling_test: flutter drive --driver=test/profiling_tests/scene_rebuild_profiling_test_driver.dart --target=test/profiling_tests/scene_rebuild_profiling_test.dart --profile --trace-systrace
+
+  run_deploy_edge_cases_test: ./scripts/run_deploy_edge_cases_test.sh
