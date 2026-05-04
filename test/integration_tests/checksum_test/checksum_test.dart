@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -7,21 +9,15 @@ import 'dart:convert';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Checksum test', (tester) async {
-    final appExecutable = File('build/app/outputs/flutter-apk/app-release.apk');
-    if (!await appExecutable.exists()) {
-      throw Exception('App executable not found');
-    }
+  testWidgets('Checksum test', (WidgetTester tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-    final bytes = await appExecutable.readAsBytes();
-    final checksum = sha256.convert(bytes);
+    final ByteData data = await rootBundle.load('assets/rebeca_animation.riv');
+    final checksum = sha256.convert(data.buffer.asUint8List());
 
-    final expectedChecksumFile = File('.github/docs/expected_checksum.txt');
-    if (!await expectedChecksumFile.exists()) {
-      throw Exception('Expected checksum file not found');
-    }
+    final expectedChecksum = File('./.github/docs/expected_checksum.txt').readAsStringSync().trim();
 
-    final expectedChecksum = await expectedChecksumFile.readAsString();
-    expect(checksum.toString(), expectedChecksum.trim());
+    expect(checksum.toString(), expectedChecksum);
   });
 }
