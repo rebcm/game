@@ -19,3 +19,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
