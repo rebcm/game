@@ -1,11 +1,12 @@
-/// Constants related to numerical precision.
+/// Constants used throughout the project for precision and epsilon values.
+///
+/// This file centralizes epsilon values to avoid magic numbers and ensure
+/// consistency across the codebase.
+
 class Epsilon {
-  /// Default epsilon value used for floating-point comparisons.
+  /// The default epsilon value used for floating-point comparisons.
   static const double defaultEpsilon = 0.0001;
 
-  /// Prevent instantiation of this utility class.
-  const Epsilon._();
-
-  /// Compares two double values for equality within the default epsilon.
-  static bool areEqual(double a, double b) => (a - b).abs() <= defaultEpsilon;
+  /// Epsilon value used specifically in collision detection algorithms.
+  static const double collisionDetection = defaultEpsilon;
 }

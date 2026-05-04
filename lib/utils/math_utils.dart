@@ -1,10 +1,12 @@
 import 'package:game/constants/epsilon.dart';
 
 /// Utility functions for mathematical operations.
-class MathUtils {
-  /// Checks if two double values are nearly equal.
-  static bool nearlyEqual(double a, double b) => Epsilon.areEqual(a, b);
+///
+/// This class provides helper methods for comparing floating-point numbers.
 
-  /// Prevent instantiation of this utility class.
-  const MathUtils._();
+class MathUtils {
+  /// Compares two floating-point numbers for equality within a certain epsilon.
+  static bool areAlmostEqual(double a, double b, {double epsilon = Epsilon.defaultEpsilon}) {
+    return (a - b).abs() <= epsilon;
+  }
 }

@@ -3,16 +3,16 @@ import 'package:game/utils/math_utils.dart';
 
 void main() {
   group('MathUtils', () {
-    test('nearlyEqual should return true for equal numbers', () {
-      expect(MathUtils.nearlyEqual(1.0, 1.0), isTrue);
+    test('areAlmostEqual returns true for numbers within epsilon', () {
+      expect(MathUtils.areAlmostEqual(0.0001, 0.0002), isTrue);
     });
 
-    test('nearlyEqual should return true for numbers within epsilon', () {
-      expect(MathUtils.nearlyEqual(1.0, 1.00001), isTrue);
+    test('areAlmostEqual returns false for numbers outside epsilon', () {
+      expect(MathUtils.areAlmostEqual(0.0001, 0.1), isFalse);
     });
 
-    test('nearlyEqual should return false for numbers outside epsilon', () {
-      expect(MathUtils.nearlyEqual(1.0, 1.1), isFalse);
+    test('areAlmostEqual uses custom epsilon when provided', () {
+      expect(MathUtils.areAlmostEqual(0.0001, 0.0002, epsilon: 0.00005), isFalse);
     });
   });
 }
