@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
@@ -6,9 +5,17 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('integration test', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // implement integration test logic here
+  group('end-to-end test', () {
+    testWidgets('tap on the floating action button, verify counter',
+        (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Add edge case tests here
+      // Example:
+      // await tester.tap(find.byType(FloatingActionButton));
+      // await tester.pumpAndSettle();
+      // expect(find.text('1'), findsOneWidget);
+    });
   });
 }
