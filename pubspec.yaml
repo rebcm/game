@@ -65,3 +65,6 @@ flutter:
 
   contract_test:
     path: test_driver/contract_test/contract_test.dart
+
+  api_test:
+    path: test_driver/api_test/api_test.dart
