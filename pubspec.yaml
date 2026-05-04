@@ -71,3 +71,6 @@ scripts:
 
   run_content_regression_test: ./scripts/run_content_regression_test.sh
   run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
+
+flutter_i18n:
+  path: lib/i18n/locales
