@@ -20,3 +20,5 @@ flutter:
     path: test_driver/audio_output_test/audio_output_test.dart
   volume_interaction_test:
     path: test_driver/volume_interaction_test/volume_interaction_test.dart
+  input_latency_test:
+    path: test_driver/input_latency_test/input_latency_test.dart
