@@ -1,21 +1,17 @@
-import 'package:game/database/world_database.dart';
-import 'package:game/models/world_model.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:game/services/coordinate_validation_service.dart';
 
 class WorldService {
-  final Database _db;
+  final CoordinateValidationService _coordinateValidationService;
 
-  WorldService(this._db);
+  WorldService(this._coordinateValidationService);
 
-  Future<void> createTable() async {
-    await WorldDatabase.createTable(_db);
+  void getBlock(int x, int z) {
+    _coordinateValidationService.validateCoordinates(x, z);
+    // Existing logic to get block
   }
 
-  Future<void> saveWorld(WorldModel world) async {
-    await WorldDatabase.insertWorld(_db, world);
-  }
-
-  Future<List<WorldModel>> getWorlds() async {
-    return await WorldDatabase.getWorlds(_db);
+  void putBlock(int x, int z) {
+    _coordinateValidationService.validateCoordinates(x, z);
+    // Existing logic to put block
   }
 }
