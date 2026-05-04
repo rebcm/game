@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -12,11 +12,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Cloudflare Wrangler
-        run: npm install -g wrangler
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
 
-      - name: Authenticate with Cloudflare
-        run: wrangler login --token ${CLOUDFLARE_API_TOKEN}
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Deploy to Cloudflare
-        run: wrangler pages deploy --project-name=rebcm-game
+      - name: Run smoke test
+        run: |
+          flutter drive --target=test_driver/integration_test/integration_test.dart --driver=test_driver/integration_test_driver.dart
+
+      - name: Check smoke test result
+        run: |
+          RESULT=$(curl -s -o /dev/null -w "%{http_code}" https://example.com/smoke-test-endpoint)
+          if [ "$RESULT" != "200" ]; then
+            echo "Smoke test failed with status $RESULT"
+            exit 1
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build/web
