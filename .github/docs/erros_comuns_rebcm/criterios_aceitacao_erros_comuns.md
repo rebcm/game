@@ -1,64 +1,32 @@
-# Mapeamento de Erros Comuns
+# Guia de Erros Comuns no Projeto Rebcm/Game
+
+Este documento visa catalogar os erros mais comuns encontrados nos logs do pipeline do projeto Rebcm/Game, fornecendo soluções práticas para cada caso.
 
 ## Introdução
 
-Este documento visa catalogar os 5 erros mais frequentes relatados em tickets de suporte para o jogo Construção Criativa da Rebeca, desenvolvido em Flutter. O objetivo é criar um guia de referência para a equipe de desenvolvimento e suporte, facilitando a identificação e resolução desses problemas.
+Durante o desenvolvimento e execução do projeto Rebcm/Game, diversos erros podem ocorrer devido a várias razões, incluindo problemas de configuração, falhas na comunicação entre serviços, e exceções não tratadas. Este guia tem como objetivo ajudar os desenvolvedores a identificar e resolver rapidamente esses problemas.
 
-## Critérios de Aceitação
+## Erros Comuns e Soluções
 
-1. **Coleta de Dados**: Os 5 erros mais frequentes devem ser coletados dos tickets de suporte existentes.
-2. **Documentação**: Cada erro deve ser documentado com detalhes sobre:
-   - Descrição do erro
-   - Passos para reprodução
-   - Solução ou workaround
-3. **Revisão e Aprovação**: O documento deve ser revisado e aprovado pela equipe de desenvolvimento.
+### 1. Erro de Configuração do Ambiente
 
-## Erros Comuns
+**Mensagem de Erro:** `Error: Could not find or load main class`
 
-### 1. Erro de Inicialização do Jogo
+**Solução:** Verifique se as variáveis de ambiente estão corretamente configuradas. Certifique-se de que o `PATH` inclui a localização do JDK necessário para o projeto.
 
-- **Descrição**: O jogo falha ao inicializar.
-- **Passos para Reprodução**: 
-  1. Inicie o jogo.
-  2. Observe se o jogo carrega corretamente.
-- **Solução**: Verificar se o ambiente de execução atende aos requisitos mínimos.
+### 2. Falha na Comunicação com o Serviço de Autenticação
 
-### 2. Problema de Renderização de Blocos
+**Mensagem de Erro:** `SocketException: Failed host lookup`
 
-- **Descrição**: Blocos voxel não são renderizados corretamente.
-- **Passos para Reprodução**:
-  1. Inicie um novo jogo.
-  2. Tente criar blocos.
-  3. Observe se os blocos são renderizados corretamente.
-- **Solução**: Verificar a configuração de renderização e atualizar drivers gráficos.
+**Solução:** Verifique a conexão de rede e certifique-se de que o serviço de autenticação está disponível e configurado corretamente.
 
-### 3. Erro de Áudio
+### 3. Exceção de Memória
 
-- **Descrição**: O jogo não reproduz áudio corretamente.
-- **Passos para Reprodução**:
-  1. Inicie o jogo.
-  2. Verifique se o áudio está habilitado.
-  3. Tente reproduzir sons dentro do jogo.
-- **Solução**: Verificar configurações de áudio e atualizar bibliotecas de áudio.
+**Mensagem de Erro:** `OutOfMemoryError`
 
-### 4. Problema de Controle de Personagem
-
-- **Descrição**: O personagem não responde aos controles.
-- **Passos para Reprodução**:
-  1. Inicie o jogo.
-  2. Tente mover o personagem.
-  3. Observe se o personagem responde aos comandos.
-- **Solução**: Verificar configurações de controle e atualizar drivers de entrada.
-
-### 5. Erro de Desempenho
-
-- **Descrição**: O jogo apresenta desempenho lento ou travamentos.
-- **Passos para Reprodução**:
-  1. Inicie o jogo.
-  2. Execute ações que normalmente causam travamentos.
-  3. Observe o desempenho do jogo.
-- **Solução**: Otimizar o código do jogo e verificar requisitos de hardware.
+**Solução:** Ajuste as configurações de memória da aplicação. Isso pode incluir aumentar o limite de memória heap ou otimizar o uso de memória pelo código.
 
 ## Conclusão
 
-Este documento serve como um guia para a equipe de desenvolvimento e suporte, ajudando a resolver os problemas mais comuns enfrentados pelos usuários do jogo Construção Criativa da Rebeca.
+Este guia deve ser utilizado como referência para diagnosticar e resolver erros comuns no projeto Rebcm/Game. É importante manter este documento atualizado com novos erros e soluções à medida que são identificados.
+
