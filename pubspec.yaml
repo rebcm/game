@@ -90,3 +90,5 @@ scripts:
 
 scripts:
   run_failure_mapping_tests: bash scripts/run_failure_mapping_tests.sh
+scripts:
+  update_distribution_docs: bash scripts/update_distribution_docs.sh

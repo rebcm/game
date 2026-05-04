@@ -1,26 +1,28 @@
-# Processo de Distribuição do Jogo
+# Documentação do Processo de Distribuição
 
 ## Introdução
 
-Este documento detalha o processo de distribuição do jogo Rebeca, incluindo a geração de binários e onde eles podem ser encontrados após o pipeline.
+Este documento detalha o processo de distribuição dos binários do jogo Rebeca após a execução do pipeline de CI/CD.
 
-## Geração de Binários
+## Geração dos Binários
 
-Os binários do jogo são gerados através do pipeline de CI/CD configurado no GitHub Actions. O processo envolve as seguintes etapas:
+Os binários são gerados durante a execução do pipeline de CI/CD configurado no arquivo `.github/workflows/main.yml`. O processo envolve as seguintes etapas:
 
-1. **Compilação do Código**: O código Flutter é compilado para as plataformas suportadas (Android, iOS, Web, etc.).
-2. **Criação de Pacotes**: Os binários compilados são então empacotados nos formatos adequados para distribuição (APK, IPA, etc.).
-3. **Assinatura dos Pacotes**: Os pacotes são assinados com as chaves de assinatura apropriadas para garantir a autenticidade e integridade.
+1. Compilação do código Flutter para as plataformas suportadas (Android, iOS, Web, etc.).
+2. Criação dos artefatos de distribuição (APKs, IPA, arquivos ZIP, etc.).
 
 ## Localização dos Binários
 
-Após a execução bem-sucedida do pipeline, os binários gerados podem ser encontrados nos artefatos do workflow do GitHub Actions. Para acessá-los, siga os passos abaixo:
+Após a geração, os binários são armazenados em um diretório específico dentro do repositório ou em uma página de releases do GitHub.
 
-1. **Navegue até a Página do Workflow**: Vá para a página do workflow que executou o pipeline de CI/CD.
-2. **Selecione a Execução**: Escolha a execução específica do workflow que você deseja verificar.
-3. **Baixe os Artefatos**: Na seção de artefatos, você encontrará os binários gerados. Clique neles para baixá-los.
+## Distribuição
 
-## Script de Atualização da Documentação
+Os binários gerados estão disponíveis para download na página de releases do repositório GitHub.
 
-Para manter a documentação atualizada, você pode usar o script `update_distribution_docs.sh` localizado em `.github/docs/ci_cd_pipeline_documentation/`. Este script pode ser adaptado para atualizar a documentação do processo de distribuição.
+## Atualização da Documentação
 
+Este documento deve ser atualizado sempre que houver mudanças no processo de distribuição ou na localização dos binários.
+
+## Scripts de Suporte
+
+O script `update_distribution_docs.sh` é utilizado para atualizar automaticamente esta documentação.
