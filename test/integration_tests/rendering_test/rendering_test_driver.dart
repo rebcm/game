@@ -1,19 +1,7 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter_driver/driver_extension.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
-  FlutterDriver? driver;
-
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
-
-  tearDownAll(() async {
-    driver?.close();
-  });
-
-  test('Renderização 3D', () async {
-    final texture = find.byType('Image');
-    await driver!.waitFor(texture);
-  });
+  enableFlutterDriverExtension();
+  app.main();
 }
