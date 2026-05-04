@@ -62,3 +62,5 @@ scripts:
   run_fisica_edge_cases_test: flutter drive --driver=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_driver.dart --target=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_test.dart
 
   run_env_validation_test: flutter drive --driver=test/integration_tests/env_validation_test/env_validation_driver.dart --target=test/integration_tests/env_validation_test/env_validation_test.dart
+
+  run_ui_dicas_golden_test: flutter test --update-goldens test/golden_tests/ui_dicas_test/ui_dicas_test.dart
