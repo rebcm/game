@@ -1,37 +1,40 @@
-import "package:game/config/env_config.dart";
 import 'package:flutter/material.dart';
-import 'package:game/chunk_manager/chunk_collision_manager.dart';
+import 'package:game/config/constants.dart';
 
 void main() {
-  EnvConfig.loadEnv();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GameWidget(),
+      title: 'Construção Criativa da Rebeca',
+      home: const MyHomePage(),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: child!,
+        );
+      },
     );
   }
 }
 
-class GameWidget extends StatefulWidget {
-  @override
-  _GameWidgetState createState() => _GameWidgetState();
-}
-
-class _GameWidgetState extends State<GameWidget> {
-  final ChunkCollisionManager _collisionManager = ChunkCollisionManager();
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Implement game widget build logic
-    return Container();
-  }
-
-  void _updateLoadedChunks(List<Chunk> chunks) {
-    _collisionManager.updateLoadedChunks(chunks);
-    _collisionManager.validateColliders();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Construção Criativa da Rebeca'),
+      ),
+      body: const Center(
+        child: Text('Construção Criativa da Rebeca'),
+      ),
+    );
   }
 }
