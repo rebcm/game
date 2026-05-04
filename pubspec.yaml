@@ -65,3 +65,5 @@ scripts:
 
 scripts:
   run_lint_parser: ./scripts/run_lint_parser.sh
+
+  run_error_handling_test: bash scripts/run_error_handling_test.sh

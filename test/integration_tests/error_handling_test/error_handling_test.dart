@@ -6,11 +6,11 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Error handling test', (tester) async {
+  testWidgets('Verify error handling during app startup', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    await tester.binding.watchPerformance(() async {
-      await tester.pumpAndSettle();
-    }, reportToFile: true, timeout: const Duration(seconds: 10));
+
+    final errorHandler = tester.binding.defaultErrorHandler;
+    expect(errorHandler.errors, isEmpty);
   });
 }
