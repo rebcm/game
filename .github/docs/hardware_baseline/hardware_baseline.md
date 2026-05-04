@@ -1,22 +1,29 @@
-# Hardware Baseline Definition
+# Hardware Baseline Documentation
 
-## Objective
-Define the hardware and OS versions to be used as a reference for collecting the baseline FPS in the Rebeca game.
+## Overview
+This document outlines the reference hardware used for benchmarking the game's performance.
 
-## Devices and OS Versions
-The following devices and OS versions will be used for baseline FPS collection:
+## Devices
+The following devices are used as the baseline for Android and iOS testing:
 
-| Device ID | Device Name | OS Version |
-|-----------|-------------|------------|
-| TBD       | TBD         | TBD        |
+### Android Devices
+- Google Pixel 6
+- Samsung Galaxy S21
 
-## Data Collection Script
-The `data_collection_script.sh` will be used to list available devices and collect FPS data.
+### iOS Devices
+- Apple iPhone 13
+- Apple iPad Pro (2021)
 
-## Usage
-1. Run `flutter devices` to list available devices.
-2. Execute the `data_collection_script.sh` to collect FPS data on the selected devices.
+## OS Versions
+- Android 11 and above
+- iOS 15 and above
 
-## Notes
-- The devices and OS versions listed above will serve as the standard for performance testing.
-- The FPS data collected will be used to establish a performance baseline for the game.
+## Data Collection
+To collect FPS data, run the following command:
+flutter drive --driver=test/integration_tests/performance_test/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart --profile --trace-systrace --target-platform android
+
+For iOS, adjust the target platform accordingly.
+
+## Script to List Devices
+Use the `list_devices.sh` script to list connected devices.
+

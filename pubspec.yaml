@@ -66,3 +66,6 @@ scripts:
 
   run_traceability_test: flutter drive --driver=test/integration_tests/traceability_test/traceability_test_driver.dart --target=test/integration_tests/traceability_test/traceability_test.dart
 
+
+  run_hardware_baseline_test_android: bash scripts/run_hardware_baseline_test_android.sh
+  run_hardware_baseline_test_ios: bash scripts/run_hardware_baseline_test_ios.sh
