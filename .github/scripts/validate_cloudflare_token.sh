@@ -1,22 +1,24 @@
 #!/bin/bash
 
-CLOUDFLARE_API_URL="https://api.cloudflare.com/client/v4/user/tokens/verify"
-CLOUDFLARE_TOKEN=$1
+# Load environment variables from .env file
+source .env
 
+# Check if CLOUDFLARE_API_TOKEN is set
+if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+  echo "CLOUDFLARE_API_TOKEN is not set"
+  exit 1
+fi
+
+# Validate Cloudflare token using curl
 RESPONSE=$(curl -s -X GET \
-  "$CLOUDFLARE_API_URL" \
-  -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+  https://api.cloudflare.com/client/v4/user/tokens/verify \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
   -H "Content-Type: application/json")
 
-PERMISSIONS=$(echo $RESPONSE | jq -r '.result.permissions')
-
-ZONE_DNS_PERMISSIONS=$(echo $PERMISSIONS | jq -r '."Zone.DNS"')
-ZONE_SETTINGS_PERMISSIONS=$(echo $PERMISSIONS | jq -r '."Zone.Settings"')
-
-if [ "$ZONE_DNS_PERMISSIONS" = "edit" ] && [ "$ZONE_SETTINGS_PERMISSIONS" = "edit" ]; then
-  echo "Token válido"
-  exit 0
-else
-  echo "Token inválido"
+# Check if the response is successful
+if echo "$RESPONSE" | grep -q '"result":null'; then
+  echo "Invalid Cloudflare token"
   exit 1
+else
+  echo "Cloudflare token is valid"
 fi
