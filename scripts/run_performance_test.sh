@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Executa testes de performance para diferentes cenários de uso
+flutter drive --driver=test/integration_tests/performance_test/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart --profile --trace-systrace --target-platform android

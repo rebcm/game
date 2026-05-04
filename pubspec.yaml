@@ -60,3 +60,6 @@ scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
+
+scripts:
+  run_performance_test: ./scripts/run_performance_test.sh
