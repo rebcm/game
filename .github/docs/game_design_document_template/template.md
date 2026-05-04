@@ -1,37 +1,39 @@
 # Game Design Document (GDD) Template
 
 ## Overview
-- **Feature/Functionality Name:** [Insert Name]
-- **Description:** [Briefly describe the feature or functionality]
+- **Feature/Mechanic Name:** [Insert Name]
+- **Description:** [Briefly describe the feature or mechanic]
 
-## Requirements
-- List specific requirements or user stories related to this feature
+## Functional Requirements
+1. **Primary Functionality:** [Describe the main purpose]
+2. **User Interactions:** [List expected user interactions]
+3. **System Responses:** [Describe how the system responds to user interactions]
 
-## Design Decisions
-- Document key design decisions and their rationale
+## Non-Functional Requirements
+1. **Performance:** [Specify performance expectations]
+2. **Security:** [Outline security considerations]
+3. **Usability:** [Describe usability goals]
 
-## Implementation Details
-- Outline how the feature will be implemented
-- Include relevant technical details or specifications
-
-## Acceptance Criteria
-- Define clear acceptance criteria for the feature
+## Technical Specifications
+1. **Components Involved:** [List components or modules affected]
+2. **Data Flow:** [Describe how data flows through the system]
+3. **APIs/Interfaces:** [Specify APIs or interfaces used]
 
 ## Testing Strategy
-- Describe the testing approach for this feature
+1. **Test Cases:** [List test cases or scenarios]
+2. **Testing Methods:** [Describe testing methods (unit, integration, UI)]
+3. **Acceptance Criteria:** [Define criteria for acceptance]
 
-## Related Assets
-- List any related assets (e.g., images, audio files)
+## Dependencies
+1. **Internal Dependencies:** [List internal dependencies]
+2. **External Dependencies:** [List external dependencies]
 
-## Localization
-- Discuss localization considerations if applicable
+## Risks and Mitigations
+1. **Potential Risks:** [Identify potential risks]
+2. **Mitigation Strategies:** [Describe mitigation plans]
 
-## Performance Considerations
-- Outline any performance considerations or optimizations
+## Open Questions
+- [List any open questions or areas needing further clarification]
 
-## Security Considerations
-- Discuss security implications if applicable
-
-## Changelog
-- Track changes made to the GDD
-{"pt-BR": "Tradução para pt-BR"}
+## Revision History
+- **[Date]** - **[Author]** - **[Changes Made]**
