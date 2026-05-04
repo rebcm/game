@@ -18,6 +18,7 @@ dependencies:
   permission_handler: ^10.3.0
   lottie: ^2.3.2
   rive: ^0.10.6
+  crypto: ^3.0.2
 
 dev_dependencies:
   build_runner: ^2.3.3
@@ -55,26 +56,4 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
   run_smoke_test: bash scripts/run_smoke_test_with_retry.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
-  run_docs_update_check: bash scripts/check_docs_update.sh
-  run_audio_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
-
-  run_texture_mapping_test: flutter drive --driver=test/integration_tests/texture_mapping_test/texture_mapping_test_driver.dart --target=test/integration_tests/texture_mapping_test/texture_mapping_test.dart
-
-  run_data_integrity_test: bash scripts/run_data_integrity_test.sh
-
-  deploy: bash scripts/deploy.sh
-
-scripts:
-  run_coverage_test: bash scripts/run_coverage_test.sh
-
-  run_onboarding_guide_update: bash scripts/update_onboarding_guide.sh
-
-  run_overflow_test: bash scripts/run_overflow_test.sh
-
-  run_update_passdriver_tips_docs: bash scripts/update_passdriver_tips_docs
-
-  run_update_passdriver_tips_docs: bash scripts/update_passdriver_tips_docs
-
-  run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
-
-  run_memory_leak_test: flutter drive --driver=test/integration_tests/memory_leak_test/memory_leak_test_driver.dart --target=test/integration_tests/memory_leak_test/memory_leak_test.dart
+  run_docs_update_check: bash scripts/check_docs
