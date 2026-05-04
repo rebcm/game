@@ -65,3 +65,5 @@ scripts:
   update_log_analysis_docs: ./scripts/update_log_analysis_docs.sh
 
   run_memory_test: bash scripts/run_memory_test.sh
+
+  run_data_source_test: bash scripts/run_data_source_test.sh
