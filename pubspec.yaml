@@ -51,13 +51,13 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   dio: ^5.4.0
+  golden_toolkit: ^0.15.0
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
     - assets/audio/
-
   integration_test:
     path: test_driver/integration_test/integration_test.dart
   additional_test_paths:
@@ -66,11 +66,6 @@ flutter:
     - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
     - test_driver/passdriver_flutter_version_check/version_check_test.dart
     - test_driver/passdriver_flutter_chunk_collision_test/chunk_collision_test.dart
-
-golden_toolkit: ^0.15.0
-
-  additional_test_paths:
+    - test_driver/passdriver_flutter_golden_tests/golden_test_runner.dart
     - test_driver/passdriver_flutter_permission_test/permission_test.dart
-
-  additional_test_paths:
     - test_driver/passdriver_flutter_collision_test/collision_test.dart
