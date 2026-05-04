@@ -17,8 +17,10 @@ dependencies:
   http: ^0.13.5
   audioplayers: ^1.0.1
   flutter:
+    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
     sdk: flutter
   assets:
+    - assets/documentacao/
     - assets/rebeca_animation.riv
     - assets/texture.png
   permission_handler: ^10.3.0
@@ -26,6 +28,7 @@ dependencies:
   rive: ^0.10.6
   crypto: ^3.0.2
   leak_canary_flutter: ^2.0.0
+    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
   flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
@@ -47,7 +50,9 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
   assets:
+    - assets/documentacao/
     - assets/rebeca_animation.riv
     - assets/audio/ 
     - assets/texture.png
@@ -102,3 +107,6 @@ flutter_i18n:
   run_animation_acceptance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
 
   run_stress_test_retention_closures_streams: flutter drive --driver=test/integration_tests/stress_test_retention_closures_streams/stress_test_retention_closures_streams_driver.dart --target=test/integration_tests/stress_test_retention_closures_streams/stress_test_retention_closures_streams.dart
+
+flutter_i18n:
+  path: lib/i18n/locales

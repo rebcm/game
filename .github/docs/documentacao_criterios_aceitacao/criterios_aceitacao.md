@@ -6,21 +6,16 @@ Este documento define os critérios de aceitação para a documentação do proj
 
 ## Critérios de Aceitação
 
-1. **Obrigatoriedade de Descrição**: Todas as funcionalidades e componentes do sistema devem ter uma descrição clara e concisa.
-2. **Padronização de Categorias**: A documentação deve ser organizada em categorias padronizadas, facilitando a navegação e busca.
-3. **Validação de Tradução**: A documentação deve ser traduzida para Português (PT-BR) e validada para garantir a precisão e clareza.
-4. **Atualização Contínua**: A documentação deve ser atualizada sempre que houver mudanças significativas no código ou funcionalidades.
-5. **Revisão Periódica**: A documentação deve ser revisada periodicamente para garantir que permaneça relevante e precisa.
+1. **Descrição Obrigatória**: Todas as funcionalidades e características devem ter uma descrição clara e concisa.
+2. **Padronização de Categorias**: A documentação deve seguir uma estrutura padrão para categorizar as informações (ex: introdução, uso, configuração, etc.).
+3. **Tradução para PT-BR**: Toda a documentação deve estar disponível em Português Brasileiro (PT-BR).
+4. **Revisão e Atualização**: A documentação deve ser revisada e atualizada regularmente para refletir as mudanças no projeto.
+5. **Acessibilidade**: A documentação deve ser facilmente acessível a todos os membros da equipe e stakeholders.
 
-## Implementação
+## Validação
 
-Para implementar esses critérios, os seguintes passos devem ser seguidos:
-
-1. **Revisão da Documentação Existente**: Revisar a documentação existente para identificar áreas que precisam de melhoria ou atualização.
-2. **Criação de Nova Documentação**: Criar nova documentação para funcionalidades e componentes que ainda não foram documentados.
-3. **Padronização**: Padronizar a documentação de acordo com as categorias definidas.
-4. **Tradução e Validação**: Traduzir a documentação para PT-BR e validar a tradução para garantir a precisão.
+A validação da documentação será realizada através de revisões periódicas e feedback dos membros da equipe.
 
 ## Conclusão
 
-A implementação desses critérios de aceitação para a documentação garantirá que o projeto Rebeca tenha uma documentação de alta qualidade, facilitando a compreensão e manutenção do sistema.
+Seguir estes critérios de aceitação garantirá que a documentação do projeto Rebeca seja de alta qualidade, compreensível e útil para todos os envolvidos.
