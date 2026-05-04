@@ -32,7 +32,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Handle form submission
-                    Navigator.of(context).pop(true);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Form submitted successfully')),
+                    );
                   }
                 },
                 child: const Text('Submit'),

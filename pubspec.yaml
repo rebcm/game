@@ -160,3 +160,6 @@ scripts:
 
   run_content_regression_test: bash scripts/run_content_regression_test
   run_setup_validation_test: bash scripts/run_setup_validation_test
+
+  feedback_form:
+    path: lib/features/feedback_form

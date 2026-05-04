@@ -33,12 +33,12 @@ class FeedbackFormFields extends StatelessWidget {
         TextFormField(
           controller: confusionPointsController,
           decoration: const InputDecoration(
-            labelText: 'Confusion Points',
+            labelText: 'Points of Confusion',
             border: OutlineInputBorder(),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter confusion points';
+              return 'Please enter points of confusion';
             }
             return null;
           },
