@@ -79,8 +79,5 @@ flutter:
     path: ./benchmarks/performance_tracking
   physics_engine_tests:
     path: ./test/offset_consistency_test
-  offset_consistency_test:
-  permission_validation_te
-
-  code_coverage:
-    path: ./test/code_coverage_test.dart
+  contract_validation_test:
+    path: ./integration_test/contract_validation_test
