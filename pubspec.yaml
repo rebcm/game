@@ -77,3 +77,6 @@ scripts:
   update_passdriver_flutter_tips_docs: bash scripts/docs/update_passdriver_flutter_tips_docs.sh
 
   run_readme_validation_test: bash scripts/validation/validate_readme.sh
+
+scripts:
+  run_animation_integration_test: bash scripts/run_animation_integration_test.sh

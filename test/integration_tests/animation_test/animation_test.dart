@@ -6,19 +6,23 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Animation Test', (tester) async {
+  testWidgets('Idle to other states animation test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    final idleStateWidget = find.byKey(Key('idle_state'));
-    final transitionButton = find.byKey(Key('transition_button'));
+    // Find the Rive animation widget
+    final riveAnimationFinder = find.byType(RiveAnimation);
+    expect(riveAnimationFinder, findsOneWidget);
 
-    expect(idleStateWidget, findsOneWidget);
-    await tester.tap(transitionButton);
+    // Check initial state is Idle
+    final riveAnimation = tester.widget<RiveAnimation>(riveAnimationFinder);
+    expect(riveAnimation.state, 'Idle');
+
+    // Simulate state change to other states and verify animation
+    // This part should be implemented based on the actual state change logic
+    // For example:
+    await tester.tap(find.text('Change State')); // Replace with actual widget or action
     await tester.pumpAndSettle();
-
-    final otherStateWidget = find.byKey(Key('other_state'));
-    expect(otherStateWidget, findsOneWidget);
-    expect(find.text('Other State'), findsOneWidget);
+    expect(riveAnimation.state, isNot('Idle'));
   });
 }
