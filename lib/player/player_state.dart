@@ -1,11 +1,20 @@
-enum CharacterState { idle, walking }
+enum PlayerState { idle, walking }
 
-class PlayerState {
-  CharacterState state;
+class PlayerStateManager with ChangeNotifier {
+  PlayerState _state = PlayerState.idle;
 
-  PlayerState({this.state = CharacterState.idle});
+  PlayerState get state => _state;
 
-  void updateState(CharacterState newState) {
-    state = newState;
+  void setState(PlayerState state) {
+    _state = state;
+    notifyListeners();
+  }
+
+  void updateState(bool isWalking) {
+    if (isWalking) {
+      setState(PlayerState.walking);
+    } else {
+      setState(PlayerState.idle);
+    }
   }
 }
