@@ -1,11 +1,11 @@
 name: README Validation
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
-      - 'README.md'
+      - README.md
 
 jobs:
   validate-readme:
@@ -14,17 +14,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate README headers
-        run: |
-          if ! grep -q '^# Rebeca Game' README.md; then
-            echo "README.md is missing the '# Rebeca Game' header"
-            exit 1
-          fi
-          if ! grep -q '^## Features' README.md; then
-            echo "README.md is missing the '## Features' header"
-            exit 1
-          fi
-          if ! grep -q '^## Installation' README.md; then
-            echo "README.md is missing the '## Installation' header"
-            exit 1
-          fi
+      - name: Validate README.md
+        run: ./.github/docs/readme_validation/validation_script.sh

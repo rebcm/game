@@ -59,3 +59,5 @@ scripts:
   run_suavidade_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/suavidade_test/suavidade_test.dart
 
   run_overflow_test: flutter drive --driver=test/integration_tests/overflow_test/overflow_test_driver.dart --target=test/integration_tests/overflow_test/overflow_test.dart
+
+  run_readme_validation: ./.github/docs/readme_validation/validation_script.sh
