@@ -10,12 +10,20 @@ void main() {
 
   tearDownAll(() async {
     if (driver != null) {
-      driver!.close();
+      driver?.close();
     }
   });
 
-  test('Edge Cases de Física', () async {
-    // Implementar lógica para conduzir os testes de edge cases de física
+  test('Colisões em altíssima velocidade', () async {
+    // Implementar teste para colisões em altíssima velocidade
+  });
+
+  test('Sobreposição de objetos (clipping)', () async {
+    // Implementar teste para sobreposição de objetos
+  });
+
+  test('Comportamento do veículo ao capotar', () async {
+    // Implementar teste para comportamento do veículo ao capotar
   });
 }
 

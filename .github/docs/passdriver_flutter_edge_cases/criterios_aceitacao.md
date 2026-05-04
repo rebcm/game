@@ -1,24 +1,28 @@
 # Critérios de Aceitação para Edge Cases de Física
 
-Este documento descreve os comportamentos esperados para casos extremos no jogo, incluindo colisões em altíssima velocidade, sobreposição de objetos (clipping) e comportamento do veículo ao capotar.
+## Introdução
 
-## Colisões em Altíssima Velocidade
+Este documento define os critérios de aceitação para os edge cases de física no jogo, incluindo colisões em altíssima velocidade, sobreposição de objetos (clipping) e comportamento do veículo ao capotar.
 
-1. O jogo deve ser capaz de lidar com colisões em altíssima velocidade sem crashar ou apresentar comportamentos inconsistentes.
-2. Objetos colidindo em altíssima velocidade devem ter sua física simulada corretamente, sem atravessar outros objetos ou causar instabilidade na simulação.
+## Critérios de Aceitação
 
-## Sobreposição de Objetos (Clipping)
+### Colisões em Altíssima Velocidade
 
-1. O jogo deve detectar e prevenir a sobreposição de objetos, garantindo que eles não se sobreponham uns aos outros.
-2. Em casos onde a sobreposição ocorre devido a limitações da engine ou bugs, o jogo deve se recuperar graciosamente, minimizando a visibilidade do problema.
+1. O jogo deve ser capaz de lidar com colisões em altíssima velocidade sem crashar ou congelar.
+2. A detecção de colisões deve ser precisa, mesmo em velocidades extremas.
+3. O comportamento do objeto após a colisão deve ser fisicamente plausível.
 
-## Comportamento do Veículo ao Capotar
+### Sobreposição de Objetos (Clipping)
 
-1. Quando o veículo capota, o jogo deve simular o comportamento físico correto, incluindo rotação e resposta às entradas do jogador.
-2. O veículo deve responder corretamente às ações do jogador mesmo após capotar, permitindo que o jogador o endireite ou continue dirigindo.
+1. O jogo deve evitar a sobreposição de objetos, garantindo que eles não se interseccionem indevidamente.
+2. Em casos onde a sobreposição é inevitável devido à alta velocidade ou outros fatores, o jogo deve lidar com a situação de forma graciosa, minimizando artefatos visuais.
 
-## Testes e Validação
+### Comportamento do Veículo ao Capotar
 
-1. Testes automatizados devem ser implementados para validar esses comportamentos, garantindo que mudanças futuras no código não introduzam regressões.
-2. Os critérios de aceitação devem ser verificados regularmente como parte do processo de CI/CD.
+1. O veículo deve responder de forma realista quando capota, incluindo mudanças na direção e velocidade.
+2. O jogo deve garantir que o veículo não atravesse outros objetos quando capota.
+
+## Testes
+
+Testes devem ser implementados para garantir que os critérios acima sejam atendidos. Isso inclui testes de unidade, integração e stress tests para simular condições extremas.
 
