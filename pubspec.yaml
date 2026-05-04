@@ -64,3 +64,5 @@ scripts:
 
 scripts:
   update_passdriver_flutter_guide: ./scripts/update_passdriver_flutter_guide.sh
+
+  run_device_sampling_test: flutter drive --driver=test/integration_tests/device_sampling_test/device_sampling_test_driver.dart --target=test/integration_tests/device_sampling_test/device_sampling_test.dart
