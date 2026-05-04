@@ -1,2 +1,3 @@
 #!/bin/bash
-flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/integration_test.dart
+
+flutter drive --driver=test/integration_tests/failure_test.dart --target=lib/main.dart

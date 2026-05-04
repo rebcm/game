@@ -4,21 +4,20 @@ Este documento lista todos os edge cases e testes de integração que falharam n
 
 ## Edge Cases
 
-1. **Caso de Teste 1**: Descrição do caso de teste que falhou.
-   - **Motivo da Falha**: Descrição do motivo da falha.
-   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
+1. **Caso 1:** Descrição do caso
+   - **Falha:** Descrição da falha
+   - **Solução:** Descrição da solução implementada
 
-2. **Caso de Teste 2**: Descrição do caso de teste que falhou.
-   - **Motivo da Falha**: Descrição do motivo da falha.
-   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
+2. **Caso 2:** Descrição do caso
+   - **Falha:** Descrição da falha
+   - **Solução:** Descrição da solução implementada
 
 ## Testes de Integração
 
-1. **Teste de Integração 1**: Descrição do teste de integração que falhou.
-   - **Motivo da Falha**: Descrição do motivo da falha.
-   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
+1. **Teste 1:** Descrição do teste
+   - **Falha:** Descrição da falha
+   - **Solução:** Descrição da solução implementada
 
-2. **Teste de Integração 2**: Descrição do teste de integração que falhou.
-   - **Motivo da Falha**: Descrição do motivo da falha.
-   - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
-{"pt-BR": "Tradução para pt-BR"}
+2. **Teste 2:** Descrição do teste
+   - **Falha:** Descrição da falha
+   - **Solução:** Descrição da solução implementada
