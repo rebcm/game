@@ -58,3 +58,5 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
   coverage: flutter test --coverage
   codecov: bash -c "curl -s https://codecov.io/bash | bash -s - -t \$CODECOV_TOKEN"
+
+  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
