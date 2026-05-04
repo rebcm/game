@@ -67,3 +67,12 @@ scripts:
 
 scripts:
   update_user_journey_docs: bash scripts/update_user_journey_docs.sh
+
+scripts:
+  run_failed_tests: bash scripts/run_failed_tests.sh
+
+scripts:
+  run_failed_tests: bash scripts/run_failed_tests.sh
+
+scripts:
+  run_failed_tests: bash scripts/run_failed_tests.sh
