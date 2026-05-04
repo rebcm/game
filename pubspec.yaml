@@ -62,3 +62,5 @@ scripts:
   run_integration_tests: bash scripts/run_integration_tests.sh
   run_audio_compatibility_tests: bash scripts/run_audio_compatibility_tests.sh
   run_failed_tests: bash scripts/run_failed_tests.sh
+scripts:
+  update_gdd_docs: bash scripts/update_gdd_template_docs.sh
