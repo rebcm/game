@@ -61,6 +61,8 @@ flutter:
   integration_test:
     path: test_driver/integration_test/integration_test.dart
   additional_test_paths:
+    - test_driver/passdriver_flutter_edge_cases/audio_output_test.dart
+    - test_driver/passdriver_flutter_edge_cases/audio_output_edge_cases_test.dart
     - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
     - test_driver/passdriver_flutter_version_check/version_check_test.dart
     - test_driver/passdriver_flutter_chunk_collision_test/chunk_collision_test.dart

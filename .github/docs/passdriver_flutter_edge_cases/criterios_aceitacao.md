@@ -1,25 +1,34 @@
-# Critérios de Aceitação para Edge Cases de Física
+# Critérios de Aceitação para Testes de Borda (Edge Cases) de Saída de Áudio
 
-Este documento descreve os comportamentos esperados para casos extremos no jogo, incluindo colisões em altíssima velocidade, sobreposição de objetos (clipping) e comportamento do veículo ao capotar.
+## Introdução
 
-## Colisões em Altíssima Velocidade
+Este documento define os critérios de aceitação para os testes de borda relacionados à saída de áudio e controle de volume no jogo Construção Criativa da Rebeca.
 
-1. O jogo deve ser capaz de lidar com colisões em altíssima velocidade sem crashar ou apresentar comportamento instável.
-2. Objetos envolvidos na colisão devem se comportar de acordo com as leis da física implementadas no jogo.
-3. A integridade dos objetos após a colisão deve ser mantida de acordo com as regras do jogo.
+## Critérios de Aceitação
 
-## Sobreposição de Objetos (Clipping)
+1. **Alternância de Saída de Áudio:**
+   - O jogo deve ser capaz de alternar entre fone de ouvido e alto-falante sem crashes ou comportamentos inesperados.
+   - A saída de áudio deve ser corretamente identificada e reportada.
 
-1. O jogo deve detectar e prevenir a sobreposição de objetos, garantindo que eles não se sobreponham uns aos outros.
-2. Em casos onde a sobreposição é inevitável devido à alta velocidade ou outros fatores, o jogo deve lidar com a situação de forma graciosa, seja resolvendo a sobreposição ou apresentando um comportamento definido para tal situação.
+2. **Controle de Volume:**
+   - O controle de volume do jogo deve estar integrado com o volume do sistema operacional.
+   - Alterações no volume do jogo devem refletir no volume do sistema e vice-versa.
 
-## Comportamento do Veículo ao Capotar
+3. **Casos de Borda:**
+   - O jogo deve lidar corretamente com a alternância de saída de áudio quando nenhum áudio está sendo reproduzido.
+   - O controle de volume não deve causar crashes ou comportamentos inesperados quando o áudio não está inicializado.
 
-1. Quando o veículo capotar, o jogo deve simular o comportamento físico realista, considerando fatores como velocidade, direção e superfície de impacto.
-2. O veículo deve responder de forma apropriada ao capotar, seja continuando a se mover de acordo com a física ou parando, dependendo das regras do jogo.
+## Testes
 
-## Testes e Validação
+Os testes devem cobrir os seguintes cenários:
+- Alternância entre fone de ouvido e alto-falante.
+- Controle de volume e sua integração com o volume do sistema.
+- Casos de borda, como alternar saída de áudio sem áudio reproduzindo e controlar volume sem áudio inicializado.
 
-1. Testes devem ser realizados para garantir que os critérios acima são atendidos em diferentes cenários e configurações do jogo.
-2. Os resultados dos testes devem ser documentados e utilizados para ajustar os parâmetros do jogo conforme necessário.
+## Ferramentas de Teste
 
+Os testes devem ser implementados utilizando o framework de testes de integração do Flutter (`integration_test`).
+
+## Relatórios de Teste
+
+Os resultados dos testes devem ser documentados e reportados, indicando sucesso ou falha nos critérios de aceitação definidos.
