@@ -74,3 +74,10 @@ scripts:
   run_api_tests: flutter test test/api_tests/api_test.dart
   run_integration_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/integration_test.dart
   run_load_tests: flutter test test/load_tests/load_test.dart
+
+  edge_cases_test:
+    path: test/integration_tests/edge_cases_test.dart
+
+scripts:
+  run_edge_cases_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test.dart
+
