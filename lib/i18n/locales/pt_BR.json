@@ -1,14 +1,5 @@
 {
   "guia_construcao_titulo": "Guia de Construção",
-  "guia_construcao_introducao": "Este guia fornece dicas e orientações para construir estruturas criativas dentro do jogo Rebeca.",
-  "guia_construcao_dicas_titulo": "Dicas de Construção",
-  "guia_construcao_dicas_planejamento": "Planeje sua estrutura antes de começar a construir.",
-  "guia_construcao_dicas_uso_blocos": "Utilize diferentes tipos de blocos para adicionar variedade.",
-  "guia_construcao_dicas_simetria_proporcao": "Mantenha a simetria e a proporção para uma construção esteticamente agradável.",
-  "guia_construcao_dicas_experimentacao": "Experimente diferentes designs e ideias.",
-  "guia_construcao_templates_titulo": "Templates de Construção",
-  "guia_construcao_templates_casa_simples": "Casa Simples",
-  "guia_construcao_templates_torre": "Torre",
-  "guia_construcao_recursos_adicionais": "Recursos Adicionais",
-  "guia_construcao_feedback": "Envie seu feedback através do formulário disponível no jogo."
+  "guia_construcao_dicas": "Dicas de Construção",
+  "guia_construcao_template": "Templates de Construção"
 }
