@@ -1,0 +1,30 @@
+name: README Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+
+jobs:
+  validate-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate README headers
+        run: |
+          if ! grep -q "^# Rebeca Creative Game$" README.md; then
+            echo "Missing main header"
+            exit 1
+          fi
+          if ! grep -q "^## Features$" README.md; then
+            echo "Missing features section header"
+            exit 1
+          fi
+          if ! grep -q "^## Installation$" README.md; then
+            echo "Missing installation section header"
+            exit 1
+          fi

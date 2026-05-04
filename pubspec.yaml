@@ -58,3 +58,5 @@ scripts:
   run_contract_test: flutter drive --driver=test/integration_tests/contract_test_driver/contract_test_driver.dart --target=test/contract_tests/contract_test.dart
 
   run_fisica_edge_cases_test: flutter drive --driver=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_driver.dart --target=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_test.dart
+
+  run_readme_validation_test: dart test/readme_validation_test/readme_validation_test.dart
