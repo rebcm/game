@@ -2,38 +2,26 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a tarefa de desenvolvimento da matriz de comparação técnica entre Rive, Lottie e animações procedurais no contexto do projeto Flutter de blocos voxel.
-
-## Critérios
-
-1. **Consumo de CPU/RAM**: Avaliar o consumo de recursos de CPU e RAM para cada tecnologia.
-2. **Tamanho do Arquivo**: Comparar o tamanho dos arquivos utilizados por cada tecnologia.
-3. **Facilidade de Alteração de Cores via Código**: Avaliar a facilidade de alterar cores utilizando código para cada tecnologia.
-4. **Performance de Interpolação**: Medir a performance de interpolação para cada tecnologia.
-
-## Métricas
-
-- Consumo de CPU/RAM: Média de uso durante a execução de animações.
-- Tamanho do Arquivo: Tamanho total dos arquivos necessários para cada tecnologia.
-- Facilidade de Alteração de Cores: Número de passos necessários para alterar cores.
-- Performance de Interpolação: Tempo médio para renderizar frames de animação.
-
-## Ferramentas
-
-- `flutter`: Para desenvolvimento e testes.
-- `dart`: Para scripting e análise de performance.
-
-## Resultados Esperados
-
-- Uma tabela comparativa detalhada entre Rive, Lottie e animações procedurais.
-- Gráficos ilustrando as diferenças de performance e consumo de recursos.
+Este documento define os critérios de aceitação para a tarefa de desenvolvimento da matriz de comparação técnica entre Rive, Lottie e animações procedurais no contexto do projeto Rebcm/game.
 
 ## Critérios de Aceitação
 
-1. A matriz de comparação deve incluir todas as métricas definidas.
-2. Os resultados devem ser apresentados de forma clara e concisa.
-3. O código utilizado para os testes deve estar disponível no repositório.
+1. **Consumo de CPU/RAM**: A comparação deve avaliar o consumo de recursos (CPU e RAM) das três tecnologias.
+2. **Tamanho do Arquivo**: A comparação deve incluir o tamanho dos arquivos associados a cada tecnologia.
+3. **Facilidade de Alteração de Cores via Código**: A comparação deve avaliar a facilidade de alterar cores utilizando código para cada tecnologia.
+4. **Performance de Interpolação**: A comparação deve avaliar a performance de interpolação das três tecnologias.
+
+## Métricas de Avaliação
+
+As métricas de avaliação devem ser quantitativas sempre que possível. Para aspectos subjetivos, como "facilidade de alteração de cores", deve ser utilizada uma escala de avaliação clara.
+
+## Resultados Esperados
+
+- Um documento markdown que resume as descobertas da comparação técnica.
+- Gráficos ou tabelas que ilustrem as diferenças entre as tecnologias avaliadas.
 
 ## Aprovação
 
-A tarefa será considerada aprovada após a revisão e aceitação da matriz de comparação técnica pelo responsável pelo projeto.
+A tarefa será considerada aprovada quando:
+- Todos os critérios de aceitação forem atendidos.
+- O documento de comparação técnica for revisado e aprovado pela equipe.

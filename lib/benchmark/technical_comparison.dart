@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TechnicalComparison extends StatefulWidget {
-  @override
-  _TechnicalComparisonState createState() => _TechnicalComparisonState();
-}
+class TechnicalComparison {
+  Future<void> runBenchmark() async {
+    // Implementação do benchmark para Rive, Lottie e procedural
+    // Deve incluir medições de CPU, RAM, tamanho de arquivo, facilidade de alteração de cores e performance de interpolação
+  }
 
-class _TechnicalComparisonState extends State<TechnicalComparison> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Comparação Técnica'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Implementação dos benchmarks aqui
-            Text('Benchmarks em desenvolvimento'),
-          ],
-        ),
-      ),
-    );
+  void _evaluateRive() {
+    // Avaliação específica para Rive
+  }
+
+  void _evaluateLottie() {
+    // Avaliação específica para Lottie
+  }
+
+  void _evaluateProcedural() {
+    // Avaliação específica para animações procedurais
   }
 }
