@@ -20,13 +20,17 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test --coverage
-
-      - name: Verify coverage threshold
+      - name: Run tests with coverage
         run: |
-          coverage=$(lcov --summary coverage/lcov.info | grep "lines" | awk '{print $3}' | sed 's/%//g')
-          if (( $(echo "$coverage < 80" | bc -l) )); then
-            echo "Coverage is below 80%"
+          flutter test --coverage
+
+      - name: Check coverage threshold
+        run: |
+          coverage_threshold=$(cat .github/docs/code_coverage_criteria/criterios_aceitacao.md | grep -oP '(?<=threshold: )\d+')
+          lcov --summary coverage/lcov.info
+          coverage_percentage=$(lcov --summary coverage/lcov.info | grep -oP '(?<=lines\.\.\.\s)\d+(?:\.\d+)?%')
+          echo "Coverage percentage: $coverage_percentage"
+          if (( $(echo "$coverage_percentage < $coverage_threshold" | bc -l) )); then
+            echo "Coverage percentage is less than the threshold ($coverage_threshold%)"
             exit 1
           fi

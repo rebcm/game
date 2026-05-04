@@ -63,3 +63,6 @@ scripts:
   run_data_integrity_test: bash scripts/run_data_integrity_test.sh
 
   deploy: bash scripts/deploy.sh
+
+scripts:
+  run_coverage_test: bash scripts/run_coverage_test.sh
