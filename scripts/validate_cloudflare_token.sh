@@ -15,3 +15,9 @@ curl -s -X GET \
   -H 'Authorization: Bearer '$CLOUDFLARE_API_TOKEN'' \
   -H 'Content-Type: application/json'
 
+if [ $? -eq 0 ]; then
+  echo "Cloudflare API token is valid"
+else
+  echo "Cloudflare API token is invalid"
+  exit 1
+fi
