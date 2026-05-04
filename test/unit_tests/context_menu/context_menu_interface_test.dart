@@ -27,13 +27,25 @@ class MockContextMenuInterface implements ContextMenuInterface {
     hideContextMenuCallCount++;
   }
 
-  void verifyShowContextMenuCalled(int count) {
-    expect(showContextMenuCallCount, count);
+  void verifyShowContextMenuCalled(int times) {
+    expect(showContextMenuCallCount, times);
   }
 
-  void verifyHideContextMenuCalled(int count) {
-    expect(hideContextMenuCallCount, count);
+  void verifyHideContextMenuCalled(int times) {
+    expect(hideContextMenuCallCount, times);
   }
 }
 
-void verify(dynamic mockInstance) {}
+class Verify {
+  final MockContextMenuInterface _mock;
+
+  Verify(this._mock);
+
+  void called(int times) {
+    expect(_mock.showContextMenuCallCount, times);
+  }
+}
+
+void verify(covariant MockContextMenuInterface mock) {
+  return Verify(mock);
+}
