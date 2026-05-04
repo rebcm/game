@@ -6,21 +6,24 @@ import 'dart:io';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Retry policy test', (tester) async {
+  testWidgets('retry policy test', (tester) async {
     final url = Uri.parse('https://example.com');
-    final response = await retryHttpRequest(() => http.get(url), retries: 3, delay: Duration(seconds: 1));
+    final response = await retryHttpRequest(() => http.get(url), retries: 3, initialDelay: Duration(seconds: 1));
     expect(response.statusCode, 200);
   });
 }
 
-Future<http.Response> retryHttpRequest(Future<http.Response> Function() request, {required int retries, required Duration delay}) async {
+Future<http.Response> retryHttpRequest(Future<http.Response> Function() request, {required int retries, required Duration initialDelay}) async {
   int attempt = 0;
+  Duration delay = initialDelay;
+
   while (attempt < retries) {
     try {
       return await request();
     } on SocketException catch (e) {
       if (attempt == retries - 1) rethrow;
       await Future.delayed(delay);
+      delay *= 2;
       attempt++;
     }
   }

@@ -80,3 +80,5 @@ flutter_i18n:
   run_deploy_test: ./scripts/run_deploy_test.sh
 
   run_risk_identification_test: bash scripts/run_risk_identification_test.sh
+
+  run_retry_policy_test: ./scripts/run_retry_policy_test.sh

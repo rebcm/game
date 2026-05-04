@@ -9,12 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (driver != null) {
-      driver?.close();
-    }
+    driver?.close();
   });
 
-  test('Retry policy test driver', () async {
+  test('retry policy test driver', () async {
     await driver?.requestData('retry-policy-test');
   });
 }
