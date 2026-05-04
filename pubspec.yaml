@@ -22,3 +22,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_i18n:
+  path: lib/i18n/locales
+dependencies:
+  flutter_i18n: ^0.32.0
