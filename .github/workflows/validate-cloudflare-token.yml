@@ -3,23 +3,19 @@ name: Validate Cloudflare Token
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 0 * * *
+    - cron: '0 0 * * *'
 
 jobs:
   validate-token:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Load .env file
+      - name: Load environment variables
         run: |
-          if [ -f .env ]; then
-            echo "CLOUDFLARE_API_TOKEN=$(grep CLOUDFLARE_API_TOKEN .env | cut -d '=' -f2)" >> $GITHUB_ENV
-          else
-            echo "No .env file found"
-            exit 1
-          fi
+          source .env
 
       - name: Validate Cloudflare Token
         run: ./scripts/validate_cloudflare_token.sh
+
