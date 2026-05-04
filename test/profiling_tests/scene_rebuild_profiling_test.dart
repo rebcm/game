@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/main.dart' as game;
+import 'package:game/main.dart' as app;
+import 'package:integration_test/integration_test.dart';
 
 void main() {
-  testWidgets('Profile scene rebuilds during Undo/Redo operations', (tester) async {
-    await tester.pumpWidget(game.MyApp());
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    // Initialize the scene and perform some operations
-    await tester.tap(find.text('Build Mode'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('Profile scene rebuilds during Undo/Redo', (tester) async {
+    await app.main();
     await tester.pumpAndSettle();
 
-    // Start profiling
-    final stopwatch = Stopwatch()..start();
-    await tester.tap(find.byIcon(Icons.undo));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.redo));
-    await tester.pumpAndSettle();
-    stopwatch.stop();
+    final undoButtonFinder = find.byTooltip('Undo');
+    final redoButtonFinder = find.byTooltip('Redo');
 
-    // Log or verify the rebuild count and time
-    print('Time taken for Undo/Redo: ${stopwatch.elapsedMilliseconds} ms');
-    // Add verification logic here
+    expect(undoButtonFinder, findsOneWidget);
+    expect(redoButtonFinder, findsOneWidget);
+
+    await tester.tap(undoButtonFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(redoButtonFinder);
+    await tester.pumpAndSettle();
   });
 }

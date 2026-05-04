@@ -66,3 +66,5 @@ scripts:
   run_player_state_test: flutter drive --d
   run_tip_validation_test: ./scripts/run_tip_validation_test.sh
   run_setup_validation_test: ./scripts/run_setup_validation_test.sh
+
+  run_profiling_test: flutter drive --driver=test/profiling_tests/scene_rebuild_profiling_test_driver.dart --target=test/profiling_tests/scene_rebuild_profiling_test.dart --profile --trace-systrace
