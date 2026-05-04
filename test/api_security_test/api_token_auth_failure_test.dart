@@ -1,30 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:game/api_client.dart';
 import 'package:dio/dio.dart';
-import 'package:game/api_service.dart';
-
-class MockDio extends Mock implements Dio {}
 
 void main() {
-  late ApiService apiService;
-  late MockDio mockDio;
-
-  setUp(() {
-    mockDio = MockDio();
-    apiService = ApiService(mockDio);
-  });
-
-  test('should throw error on API token authentication failure', () async {
-    when(mockDio.post(any, options: anyNamed('options'))).thenThrow(
-      DioException(
-        requestOptions: RequestOptions(path: '/auth'),
-        response: Response(
-          statusCode: 401,
-          requestOptions: RequestOptions(path: '/auth'),
-        ),
-      ),
-    );
-
-    expect(() async => await apiService.authenticate('invalid_token'), throwsA(isA<DioException>()));
+  test('API token authentication failure test', () async {
+    final dio = Dio();
+    final client = ApiClient(dio);
+    dio.options.headers['Authorization'] = 'Bearer invalid_token';
+    try {
+      await client.makeRequest();
+      fail('Should have thrown an exception');
+    } on DioException catch (e) {
+      expect(e.response?.statusCode, 401);
+    }
   });
 }

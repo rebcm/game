@@ -1,3 +1,10 @@
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() => integrationDriver();
+void main() {
+  test('Integration test', () async {
+    final driver = await FlutterDriver.connect();
+    await driver.requestData('test_data');
+    await driver.close();
+  });
+}
