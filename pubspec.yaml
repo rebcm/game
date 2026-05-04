@@ -63,3 +63,7 @@ flutter:
   test_driver:
     text_integration_test/text_integration_test.dart:
       path: test_driver/text_integration_test/text_integration_test.dart
+
+  golden:
+    - golden/dicas_ui.png
+    - golden/dicas_ui_800x600.png
