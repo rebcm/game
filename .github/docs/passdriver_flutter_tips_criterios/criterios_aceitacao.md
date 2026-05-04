@@ -2,27 +2,37 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a implementação das dicas obrigatórias no jogo Passdriver Flutter.
+Este documento define os critérios de aceitação para as dicas obrigatórias exibidas no Passdriver Flutter do jogo Construção Criativa da Rebeca.
 
 ## Critérios de Aceitação
 
 1. **Lista de Dicas Obrigatórias**: A lista de dicas obrigatórias deve ser definida e documentada.
-2. **Formato de Exibição**: As dicas devem ser exibidas no formato Markdown ou UI, conforme definido.
+2. **Formato de Exibição**: As dicas devem ser exibidas no formato Markdown ou UI definido pelo projeto.
 3. **Fluxo de Aprovação**: O conteúdo das dicas deve seguir um fluxo de aprovação definido antes de ser exibido.
 
-## Requisitos Funcionais
+## Lista de Dicas Obrigatórias
 
-* A lista de dicas obrigatórias deve ser armazenada em um arquivo JSON.
-* O formato de exibição das dicas deve ser configurável.
-* O fluxo de aprovação do conteúdo deve ser implementado.
+A lista de dicas obrigatórias deve incluir, mas não se limitar a:
+- Dicas de controles básicos
+- Dicas de navegação
+- Dicas de criação de blocos
 
-## Requisitos Não Funcionais
+## Formato de Exibição
 
-* A implementação das dicas não deve afetar a performance do jogo.
-* A implementação das dicas não deve introduzir novos bugs ou erros.
+As dicas devem ser exibidas em formato Markdown com suporte a:
+- Títulos
+- Parágrafos
+- Listas
+- Imagens (quando aplicável)
 
-## Testes
+## Fluxo de Aprovação
 
-* Testes unitários devem ser implementados para verificar a correta exibição das dicas.
-* Testes de integração devem ser implementados para verificar o fluxo de aprovação do conteúdo.
+O fluxo de aprovação do conteúdo das dicas deve incluir:
+1. Criação da dica por um membro da equipe de desenvolvimento.
+2. Revisão da dica por outro membro da equipe de desenvolvimento.
+3. Aprovação final pela liderança do projeto.
+
+## Implementação
+
+A implementação das dicas obrigatórias deve ser feita de acordo com as melhores práticas de codificação do projeto e deve ser revisada por outro membro da equipe antes de ser mesclada na branch principal.
 

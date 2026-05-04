@@ -1,11 +1,19 @@
-[
-  {
-    "id": 1,
-    "content": "Dica 1: Use o modo criativo para construir livremente."
-  },
-  {
-    "id": 2,
-    "content": "Dica 2: Utilize os blocos voxel para criar estruturas complexas."
-  }
-]
-
+{
+  "tips": [
+    {
+      "title": "Controles Básicos",
+      "content": "Use as setas para mover a câmera.",
+      "image": "assets/images/tips/controles_basicos.png"
+    },
+    {
+      "title": "Navegação",
+      "content": "Pressione 'E' para abrir o menu de blocos.",
+      "image": "assets/images/tips/navegacao.png"
+    },
+    {
+      "title": "Criação de Blocos",
+      "content": "Clique com o botão esquerdo do mouse para criar um bloco.",
+      "image": "assets/images/tips/criacao_blocos.png"
+    }
+  ]
+}
