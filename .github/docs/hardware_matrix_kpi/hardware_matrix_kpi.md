@@ -2,50 +2,34 @@
 
 ## Introdução
 
-Este documento define a matriz de hardware e os KPIs (Key Performance Indicators) para o jogo Rebeca.
+Este documento define a matriz de hardware e os KPIs (Key Performance Indicators) para o aplicativo Rebeca. A matriz de hardware categoriza dispositivos em Low, Mid e High, enquanto os KPIs estabelecem metas de performance para cada categoria.
 
 ## Matriz de Hardware
 
-A matriz de hardware é dividida em três categorias: Low, Mid e High.
-
-### Low
-- Processador: CPU dual-core
-- Memória RAM: 2GB
-- GPU: Adreno 505 ou equivalente
-
-### Mid
-- Processador: CPU quad-core
-- Memória RAM: 4GB
-- GPU: Adreno 640 ou equivalente
-
-### High
-- Processador: CPU hexa-core
-- Memória RAM: 6GB
-- GPU: Adreno 740 ou equivalente
+| Categoria | Processador | Memória RAM | GPU |
+| --- | --- | --- | --- |
+| Low | Qualcomm Snapdragon 660 | 4GB | Adreno 512 |
+| Mid | Qualcomm Snapdragon 888 | 8GB | Adreno 660 |
+| High | Apple A15 Bionic | 16GB | Apple A15 GPU |
 
 ## KPIs
 
-Os KPIs definidos para o jogo são baseados na taxa de frames por segundo (FPS).
+### Taxa de Quadros (FPS)
 
-### Cenários de Uso
+| Categoria | FPS Mínimo | FPS Recomendado |
+| --- | --- | --- |
+| Low | 30 | 60 |
+| Mid | 60 | 90 |
+| High | 90 | 120 |
 
-1. **Cenário de Construção**
-   - Low: 30 FPS
-   - Mid: 45 FPS
-   - High: 60 FPS
+### Tempo de Carregamento
 
-2. **Cenário de Exploração**
-   - Low: 40 FPS
-   - Mid: 55 FPS
-   - High: 60 FPS
+| Categoria | Tempo Máximo |
+| --- | --- |
+| Low | 5s |
+| Mid | 3s |
+| High | 2s |
 
-## Implementação
+## Conclusão
 
-Para garantir que o jogo atenda aos KPIs definidos, serão realizadas otimizações de performance, incluindo:
-- Otimização de rendering
-- Redução de chamadas de desenho
-- Uso eficiente de memória
-
-## Validação
-
-A validação dos KPIs será realizada através de testes de performance em dispositivos representativos de cada categoria da matriz de hardware.
+A matriz de hardware e os KPIs definidos neste documento servirão como referência para o desenvolvimento e otimização do aplicativo Rebeca.
