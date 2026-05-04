@@ -44,6 +44,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - .github/docs/passdriver_flutter_tips_criterios/tips.json
 
   benchmark:
     path: ./benchmarks
@@ -97,87 +98,3 @@ flutter:
   deploy_validation_test:
     path: ./integration_test/deploy_validation_test
 
-  ci_cd_flow_test:
-    path: ./integration_test/ci_cd_flow_test
-
-  audio_stress_test:
-    path: ./benchmarks/audio_stress_test
-
-  reexecution_test:
-    path: ./integration_test/reexecution_test
-
-  reexecution_benchmark:
-    path: ./benchmarks/reexecution_benchmark
-
-  memory_baseline_test:
-    path: ./benchmarks/memory_baseline
-  key_mapping_test:
-    path: ./test/key_mapping_test
-  input_stress_test:
-    path: ./test/input_stress_test
-
-  player_state_transition_test:
-    path: ./test/player_state_transition_test
-
-  release_guard_service:
-    path: ./lib/services/release_guard_service
-
-  release_guard_service_test:
-    path: ./test/release_guard_service_test
-
-  markdown_lint_test:
-    path: ./test/markdown_lint_test
-
-  memory_stress_test:
-    path: ./benchmarks/memory_stress_test
-
-  size_reduction_benchmark:
-    path: ./benchmarks/size_reduction_benchmark
-
-  cross_browser_tests:
-    path: ./test/cross_browser_tests
-
-  network_edge_cases_test:
-    path: ./integration_test/network_edge_cases
-
-  text_input_test:
-    path: ./test/widget_tests/text_input_test.dart
-
-  memory_baseline:
-    path: ./benchmarks/memory_baseline
-
-  performance_tracking:
-    path: ./benchmarks/performance_tracking
-
-  ui_test_config:
-    path: ./test/ui_test_config
-
-  ui_validation_test:
-    path: ./integration_test/ui_validation_test
-
-  deploy_validation_service:
-    path: ./lib/services/api_service
-
-  contract_testing:
-    path: ./integration_test/contract_testing
-
-  token_validation_test:
-    path: ./integration_test/token_validation_test
-
-  cross_browser_tests:
-    path: ./test/cross_browser_tests
-
-  fps_stress_test_driver:
-    path: ./test_driver/integration_test.dart
-
-  pagination_service:
-    path: ./lib/services/pagination_service
-
-  paginated_response:
-    path: ./lib/models/paginated_response
-
-  pagination_test:
-    path: ./integration_test/pagination_test
-
-  memory_stress_test:
-    path: ./benchmarks/memory_stress_test
