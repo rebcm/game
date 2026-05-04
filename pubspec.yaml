@@ -62,3 +62,5 @@ scripts:
   run_readme_validation_test: dart test/readme_validation_test/readme_validation_test.dart
 
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
+
+  run_ux_dicas_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/ux_dicas_test/ux_dicas_test.dart
