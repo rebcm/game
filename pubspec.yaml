@@ -30,3 +30,5 @@ flutter:
     path: test_driver/timer_cancellation_test/timer_cancellation_test.dart
   input_latency_test:
     path: test_driver/input_latency_test/input_latency_test.dart
+  edge_cases_test:
+    path: test_driver/passdriver_flutter_edge_cases/edge_cases_test.dart
