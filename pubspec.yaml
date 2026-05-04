@@ -62,3 +62,15 @@ scripts:
 
 scripts:
   run_package_tracking_tests: bash scripts/run_package_tracking_tests.sh
+
+  api_test:
+    path: test/api_tests/api_test.dart
+  integration_test:
+    path: test/integration_tests/integration_test.dart
+  load_test:
+    path: test/load_tests/load_test.dart
+
+scripts:
+  run_api_tests: flutter test test/api_tests/api_test.dart
+  run_integration_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/integration_test.dart
+  run_load_tests: flutter test test/load_tests/load_test.dart
