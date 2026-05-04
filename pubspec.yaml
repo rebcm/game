@@ -69,3 +69,5 @@ scripts:
   run_content_regression_test: bash scripts/run_content_regression_test.sh
 
   run_jdk_compatibility_test: bash scripts/run_jdk_compatibility_test.sh
+
+  run_uv_rendering_test: bash scripts/run_uv_rendering_test
