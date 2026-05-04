@@ -124,3 +124,5 @@ scripts:
     run_pr_description_validation_test: flutter test test/unit_tests/utils/pr_description_validator_test.dart
 
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
+
+  run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
