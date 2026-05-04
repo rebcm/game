@@ -82,3 +82,5 @@ scripts:
   run_jdk_compatibility_test: flutter drive --driver=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test_driver.dart --target=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test.dart
 
   run_content_regression_test: bash scripts/run_content_regression_test.sh
+  scripts:
+    run_gc_trigger_test: bash scripts/run_gc_trigger_test.sh
