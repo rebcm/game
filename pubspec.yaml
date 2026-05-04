@@ -55,18 +55,3 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
-  run_lint_error_test: flutter drive --driver=test/integration_tests/lint_error_test/lint_error_test_driver.dart --target=test/integration_tests/lint_error_test/lint_error_test.dart
-  run_interruption_test: flutter drive --driver=test/integration_tests/interruption_test/interruption_test_driver.dart --target=test/integration_tests/interruption_test/interruption_test.dart
-
-  run_logging_test: flutter drive --driver=test/integration_tests/logging_test/logging_test_driver.dart --target=test/integration_tests/logging_test/logging_test.dart
-
-scripts:
-  run_overflow_test: bash scripts/run_overflow_test.sh
-
-  run_error_handling_test: bash scripts/run_error_handling_test.sh
-
-  run_r2_sandbox_test: flutter drive --driver=test/integration_tests/r2_sandbox_test/r2_sandbox_test_driver.dart --target=test/integration_tests/r2_sandbox_test/r2_sandbox_test.dart
-
-  run_code_coverage_test: bash scripts/run_code_coverage_test.sh
-
-  run_logging_test: flutter drive --driver=test/integration_tests/logging_test/logging_test_driver.dart --target=test/integration_tests/logging_test/logging_collector_integration_test.dart
