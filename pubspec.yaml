@@ -58,3 +58,4 @@ flutter_i18n:
 
 scripts:
   lint_markdown: markdownlint .github/docs/
+  validate_translation: bash scripts/validate_translation.sh
