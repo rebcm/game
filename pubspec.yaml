@@ -79,11 +79,5 @@ flutter:
   offset_consistency_test:
   permission_validation_test:
     path: ./integration_test/permission_validation_test
-    path: ./test/physics_engine_tests
-  slider_persistence_test:
-    path: ./test/slider_persistence_test
-  audio_background_test:
-    path: ./test/audio_background_test
-
-  troubleshooting_guide:
-    path: ./.github/docs/passdriver_flutter_troubleshooting/criterios_aceitacao.md
+  emulator_validation_test:
+    path: ./integration_test/emulator_validation_test
