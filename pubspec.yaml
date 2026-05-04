@@ -165,3 +165,12 @@ flutter:
 
   fps_stress_test_driver:
     path: ./test_driver/integration_test.dart
+
+  pagination_service:
+    path: ./lib/services/pagination_service
+
+  paginated_response:
+    path: ./lib/models/paginated_response
+
+  pagination_test:
+    path: ./integration_test/pagination_test
