@@ -1,7 +1,6 @@
 name: Validate Cloudflare Token
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -11,12 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Load .env file
         run: |
           cp .env.example .env
 
       - name: Validate Cloudflare Token
-        run: |
-          ./scripts/validate_cloudflare_token.sh
+        run: ./scripts/validate_cloudflare_token.sh
