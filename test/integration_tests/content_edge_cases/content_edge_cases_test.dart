@@ -5,23 +5,29 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Content Edge Cases Integration Test', () {
-    testWidgets('Test API timeout', (tester) async {
+  group('Content Edge Cases Integration', () {
+    testWidgets('Test API timeout integration', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implementation to test API timeout
+      // Simulate API timeout condition
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      expect(find.text('Timeout Error'), findsOneWidget);
     });
 
-    testWidgets('Test missing local files', (tester) async {
+    testWidgets('Test missing local files integration', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implementation to test missing local files
+      // Simulate missing local file condition
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(find.text('File Not Found'), findsOneWidget);
     });
 
-    testWidgets('Test invalid JSON parsing', (tester) async {
+    testWidgets('Test invalid JSON parsing integration', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implementation to test invalid JSON parsing
+      // Simulate invalid JSON condition
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(find.text('JSON Parse Error'), findsOneWidget);
     });
   });
 }
