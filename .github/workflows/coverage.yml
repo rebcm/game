@@ -20,10 +20,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test --coverage
+      - name: Run tests with coverage
+        run: |
+          flutter test --coverage
 
-      - name: Generate coverage report
+      - name: Convert coverage to lcov.info
         run: |
           genhtml coverage/lcov.info -o coverage/html
 

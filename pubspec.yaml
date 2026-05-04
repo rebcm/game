@@ -31,3 +31,6 @@ dependencies:
 
 scripts:
   coverage:test --coverage
+
+scripts:
+  coverage: bash scripts/generate_coverage_report.sh
