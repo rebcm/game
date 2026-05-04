@@ -7,12 +7,12 @@ class ChunkService {
   ChunkService(this._dio);
 
   Future<Uint8List> fetchChunk(int x, int z) async {
-    final response = await _dio.get('/chunks/$x/$z');
+    final response = await _dio.get('/chunks/$x/$z', options: Options(responseType: ResponseType.bytes));
     return ChunkCompression.decompress(response.data);
   }
 
   Future<void> sendChunk(int x, int z, Uint8List data) async {
     final compressedData = ChunkCompression.compress(data);
-    await _dio.post('/chunks/$x/$z', data: compressedData);
+    await _dio.post('/chunks/$x/$z', data: compressedData, options: Options(contentType: 'application/octet-stream'));
   }
 }

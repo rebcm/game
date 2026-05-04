@@ -10,7 +10,7 @@ void main() {
     final dioAdapter = DioAdapter(dio: dio);
     dioAdapter.onGet('/chunks/0/0', (server) {
       final compressedData = ChunkCompression.compress(Uint8List.fromList([1, 2, 3]));
-      return server.reply(200, compressedData);
+      return server.reply(200, compressedData, headers: {'content-type': 'application/octet-stream'});
     });
     final chunkService = ChunkService(dio);
     final data = await chunkService.fetchChunk(0, 0);
@@ -21,7 +21,7 @@ void main() {
     final dio = Dio();
     final dioAdapter = DioAdapter(dio: dio);
     dioAdapter.onPost('/chunks/0/0', (server) {
-      return server.reply(200);
+      return server.reply(201, null);
     });
     final chunkService = ChunkService(dio);
     await chunkService.sendChunk(0, 0, Uint8List.fromList([1, 2, 3]));
