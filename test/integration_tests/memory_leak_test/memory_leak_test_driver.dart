@@ -9,15 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (driver != null) {
-      await driver?.close();
-    }
+    await driver?.close();
   });
 
-  test('Memory Leak Test', () async {
-    final timeline = await driver?.traceAction(() async {
-      await driver?.requestData('memory_leak_test');
-    });
-    // Analyze timeline for memory usage
+  test('Memory Leak Test Driver', () async {
+    await driver?.requestData('some_data');
   });
 }

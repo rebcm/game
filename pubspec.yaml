@@ -57,3 +57,5 @@ scripts:
   run_smoke_test: bash scripts/run_smoke_test_with_retry.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_docs_update_check: bash scripts/check_docs
+
+  run_memory_leak_test: bash scripts/run_memory_leak_test.sh

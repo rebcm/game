@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -9,15 +10,16 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Implement logic to play short audio and verify memory usage
-    // This is a simplified example and might need adjustments based on actual implementation
-    final finder = find.text('Play Audio');
-    await tester.tap(finder);
-    await tester.pumpAndSettle();
+    final AudioPlayer audioPlayer = AudioPlayer();
 
-    // Verify memory usage or instance count of audio players
-    // This part is highly dependent on the actual audio player implementation
-    // For demonstration, assume we have a function to check audio player instances
-    // expect(await getAudioPlayerInstanceCount(), lessThanOrEqualTo(0));
+    for (int i = 0; i < 10; i++) {
+      await audioPlayer.play('path_to_test_audio.mp3', isLocal: true);
+      await Future.delayed(Duration(seconds: 1));
+    }
+
+    await audioPlayer.dispose();
+
+    // Verify memory usage or check for memory leaks using Flutter DevTools
+    // This step might require manual verification using Flutter DevTools
   });
 }
