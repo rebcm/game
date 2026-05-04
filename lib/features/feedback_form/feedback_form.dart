@@ -1,69 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:game/features/feedback_form/widgets/feedback_form_fields.dart';
 
 class FeedbackForm extends StatefulWidget {
+  const FeedbackForm({Key? key}) : super(key: key);
+
   @override
-  _FeedbackFormState createState() => _FeedbackFormState();
+  State<FeedbackForm> createState() => _FeedbackFormState();
 }
 
 class _FeedbackFormState extends State<FeedbackForm> {
   final _formKey = GlobalKey<FormState>();
-  int _setupTime = 0;
-  String _confusionPoints = '';
-  String _missingSteps = '';
+  final TextEditingController _setupTimeController = TextEditingController();
+  final TextEditingController _confusionPointsController = TextEditingController();
+  final TextEditingController _missingStepsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Onboarding Feedback'),
+        title: const Text('Onboarding Feedback Form'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Setup Time (minutes)'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter setup time';
-                }
-                return null;
-              },
-              onSaved: (value) => _setupTime = int.parse(value!),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Points of Confusion'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter points of confusion';
-                }
-                return null;
-              },
-              onSaved: (value) => _confusionPoints = value!,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Missing Steps'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter missing steps';
-                }
-                return null;
-              },
-              onSaved: (value) => _missingSteps = value!,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  // TODO: Implement form submission logic
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Feedback submitted')),
-                  );
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              FeedbackFormFields(setupTimeController: _setupTimeController, confusionPointsController: _confusionPointsController, missingStepsController: _missingStepsController),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Handle form submission
+                    Navigator.of(context).pop(true);
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,13 +1,13 @@
 # Onboarding Feedback Form
 
-The onboarding feedback form is designed to collect information from testers about their experience with the onboarding process.
+The onboarding feedback form is designed to collect information from test developers about their experience with the onboarding process.
 
 ## Fields
 
-* Setup Time (minutes)
-* Points of Confusion
-* Missing Steps
+1. **Setup Time**: The time taken to set up the development environment.
+2. **Confusion Points**: Any points of confusion during the onboarding process.
+3. **Missing Steps**: Any steps that were missing from the documentation.
 
 ## Submission
 
-The form data will be submitted when the user clicks the "Submit" button.
+The form data is submitted and stored for further analysis.
