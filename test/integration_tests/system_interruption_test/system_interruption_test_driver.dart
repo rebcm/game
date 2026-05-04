@@ -15,6 +15,6 @@ void main() {
   });
 
   test('system interruption test', () async {
-    await driver?.waitUntilNoTransientCallbacks();
+    await driver?.requestData('some_data');
   });
 }

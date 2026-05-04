@@ -8,18 +8,22 @@ void main() {
   testWidgets('test audio interruption', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    // implement test logic here
+
+    // Start playing audio
+    // Verify audio is playing
+    // Simulate interruption (e.g., phone call)
+    // Verify audio is paused
+    // Resume audio
+    // Verify audio is playing again
   });
 
-  testWidgets('test phone call interruption', (tester) async {
+  testWidgets('test high priority notification during audio playback', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    // implement test logic here
-  });
 
-  testWidgets('test high priority notification interruption', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // implement test logic here
+    // Start playing audio
+    // Verify audio is playing
+    // Simulate high priority notification
+    // Verify audio is paused or continues playing based on expected behavior
   });
 }
