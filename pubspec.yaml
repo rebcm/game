@@ -18,6 +18,10 @@ dependencies:
   rive: ^0.10.6
 
 dev_dependencies:
+  freezed: ^2.3.2
+  build_runner: ^2.3.3
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.6.0
   flutter_test:
     sdk: flutter
   test: ^1.21.4
@@ -36,6 +40,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_build_runner: ./scripts/run_build_runner.sh
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
 
@@ -62,9 +67,14 @@ openapi:
   template_dir: config/openapi_templates
 
 scripts:
+  run_build_runner: ./scripts/run_build_runner.sh
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   generate_openapi_client: dart run openapi_generator_cli generate --config pubspec.yaml
 dev_dependencies:
+  freezed: ^2.3.2
+  build_runner: ^2.3.3
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.6.0
   openapi_generator_cli: ^1.0.0
 
   run_multitouch_edge_cases_test: flutter drive --driver=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test_driver.dart --target=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test.dart
