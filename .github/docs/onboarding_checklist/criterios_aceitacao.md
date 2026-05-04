@@ -1,20 +1,19 @@
-# Critérios de Aceitação para Onboarding Checklist
+# Critérios de Aceitação para o Checklist de Onboarding
 
 ## Introdução
+Este documento define os critérios de aceitação para o checklist de onboarding utilizado por desenvolvedores externos.
 
-Este documento descreve os critérios de aceitação para a checklist de onboarding do projeto `rebcm/game`.
+## Critérios
+1. O checklist deve conter seções para configuração inicial, execução do projeto e comandos/scripts.
+2. Cada seção deve ter pelo menos duas perguntas.
+3. As perguntas devem ser claras e concisas.
+4. O checklist deve ser fácil de entender e preencher.
 
-## Critérios de Aceitação
+## Validação
+O checklist será validado com base nos seguintes critérios:
+- Clareza das perguntas
+- Cobertura das principais etapas do onboarding
+- Facilidade de uso
 
-1. A checklist deve incluir a execução do `flutter doctor`.
-2. A checklist deve referenciar o documento de critérios de aceitação do `flutter doctor`.
-
-## Checklist
-* [ ] Executar o script `scripts/run_flutter_doctor.sh` para documentar erros de dependências ausentes
-
-* [ ] Executar `flutter doctor` e documentar erros de dependências ausentes
-* [ ] Verificar se o ambiente de desenvolvimento está configurado corretamente
-
-## Conclusão
-
-Este documento serve como um registro dos critérios de aceitação para a checklist de onboarding. Ele ajudará a garantir que os desenvolvedores sigam os passos necessários para configurar o ambiente de desenvolvimento corretamente.
+## Aprovação
+O checklist será considerado aprovado se atender a todos os critérios acima e for validado por pelo menos dois desenvolvedores experientes.

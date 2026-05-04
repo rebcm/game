@@ -1,31 +1,55 @@
 {
   "sections": [
     {
-      "title": "Configuração do Ambiente",
+      "title": "Setup e Configuração",
       "questions": [
         {
-          "question": "Você conseguiu configurar o ambiente de desenvolvimento corretamente?",
-          "type": "boolean"
+          "type": "multiple_choice",
+          "question": "Qual foi o maior desafio durante a configuração inicial do ambiente?",
+          "options": [
+            "Instalação do Flutter",
+            "Configuração do IDE",
+            "Clonar o repositório",
+            "Outro"
+          ]
         },
         {
-          "question": "Você enfrentou algum problema durante a configuração do Flutter/Dart?",
-          "type": "text"
+          "type": "text",
+          "question": "Descreva qualquer problema encontrado durante a configuração"
         }
       ]
     },
     {
-      "title": "Troubleshooting",
+      "title": "Execução do Projeto",
       "questions": [
         {
-          "question": "Você utilizou o guia de troubleshooting para resolver algum problema?",
-          "type": "boolean"
+          "type": "yes_no",
+          "question": "Conseguiu executar o projeto sem erros?"
         },
         {
-          "question": "Qual foi o problema e como você o resolveu?",
-          "type": "text"
+          "type": "text",
+          "question": "Descreva qualquer erro encontrado durante a execução"
+        }
+      ]
+    },
+    {
+      "title": "Comandos e Scripts",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "Qual comando/script foi mais difícil de entender?",
+          "options": [
+            "flutter run",
+            "dart analyze",
+            "run_code_generation",
+            "Outro"
+          ]
+        },
+        {
+          "type": "text",
+          "question": "Descreva qualquer dúvida relacionada aos comandos/scripts"
         }
       ]
     }
   ]
 }
-
