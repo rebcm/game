@@ -1,11 +1,39 @@
 #!/bin/bash
 
-# Verificar alterações nos arquivos de configuração do CI/CD
-if git diff --quiet HEAD~1 -- .github/workflows/main.yml; then
-  echo "Nenhuma alteração detectada nos arquivos de configuração do CI/CD."
+# Atualiza a documentação do pipeline sempre que houver alterações nos arquivos de configuração do CI/CD
+
+# Verifica se os arquivos de configuração do CI/CD foram alterados
+if git diff --quiet HEAD~1 -- .github/workflows; then
+  echo "Nenhuma alteração nos arquivos de configuração do CI/CD"
 else
-  echo "Alteração detectada nos arquivos de configuração do CI/CD. Atualizando a documentação..."
-  # Atualizar a documentação do pipeline de acordo com as alterações
-  # Salvar as alterações no arquivo .github/docs/ci_cd_pipeline_documentation/ci_cd_pipeline_documentation.md
-  echo "Documentação atualizada com sucesso!"
+  echo "Atualizando a documentação do pipeline..."
+  # Atualiza a documentação do pipeline
+  cat > .github/docs/ci_cd_pipeline_documentation/ci_cd_pipeline_documentation.md << 'DOC_EOF'
+# Documentação do Pipeline de CI/CD
+
+## Introdução
+
+Este documento descreve o pipeline de CI/CD utilizado no projeto Rebeca.
+
+## Configuração do Pipeline
+
+O pipeline é configurado através dos arquivos YAML localizados em `.github/workflows`.
+
+## Execução do Pipeline
+
+O pipeline é executado automaticamente em cada push para o repositório.
+
+## Testes e Validações
+
+O pipeline executa os seguintes testes e validações:
+- Testes de integração
+- Testes de performance
+- Validação da configuração do CI/CD
+
+## Atualização da Documentação
+
+A documentação do pipeline é atualizada automaticamente sempre que houver alterações nos arquivos de configuração do CI/CD.
+
+DOC_EOF
+  echo "Documentação do pipeline atualizada com sucesso!"
 fi

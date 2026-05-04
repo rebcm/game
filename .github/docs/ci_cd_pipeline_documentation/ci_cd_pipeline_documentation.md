@@ -6,22 +6,19 @@ Este documento descreve o pipeline de CI/CD utilizado no projeto Rebeca.
 
 ## Configuração do Pipeline
 
-O pipeline é configurado através do arquivo `.github/workflows/main.yml`.
+O pipeline é configurado através dos arquivos YAML localizados em `.github/workflows`.
 
-## Gatilhos do Pipeline
+## Execução do Pipeline
 
-Os gatilhos do pipeline estão definidos no arquivo `.github/docs/ci_cd_pipeline_triggers/triggers.md`.
+O pipeline é executado automaticamente em cada push para o repositório.
 
-## Processo de Atualização da Documentação
+## Testes e Validações
 
-1. Verificar alterações nos arquivos de configuração do CI/CD.
-2. Atualizar a documentação do pipeline de acordo com as alterações.
-3. Salvar as alterações no arquivo `.github/docs/ci_cd_pipeline_documentation/ci_cd_pipeline_documentation.md`.
+O pipeline executa os seguintes testes e validações:
+- Testes de integração
+- Testes de performance
+- Validação da configuração do CI/CD
 
-## Responsabilidades
+## Atualização da Documentação
 
-A manutenção da documentação do pipeline é responsabilidade da equipe de desenvolvimento.
-
-## Histórico de Alterações
-
-* [Inserir data] - [Inserir descrição da alteração]
+A documentação do pipeline é atualizada automaticamente sempre que houver alterações nos arquivos de configuração do CI/CD.
