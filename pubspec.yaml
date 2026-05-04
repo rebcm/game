@@ -65,3 +65,6 @@ scripts:
   run_audio_integration_test: bash scripts/run_audio_integration_test
 
   run_system_interruption_test: flutter drive --driver=test/integration_tests/system_interruption_test/system_interruption_test_driver.dart --target=test/integration_tests/system_interruption_test/system_interruption_test.dart
+
+scripts:
+  run_ci_cd_pipeline: bash scripts/run_ci_cd_pipeline.sh
