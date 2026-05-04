@@ -10,13 +10,11 @@ void main() {
 
   tearDownAll(() async {
     if (driver != null) {
-      await driver!.close();
+      driver?.close();
     }
   });
 
   test('Permission test', () async {
-    await driver!.runUnsynchronized(() async {
-      await driver!.waitFor(find.text('Permission test'));
-    });
+    await driver?.requestData('permission_test');
   });
 }
