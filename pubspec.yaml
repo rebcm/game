@@ -23,6 +23,7 @@ dependencies:
   rive: ^0.10.6
   crypto: ^3.0.2
   leak_canary_flutter: ^2.0.0
+  flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
   build_runner: ^2.3.3
@@ -58,8 +59,4 @@ scripts:
   run_build_runner: ./scripts/run_build_runner.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
-  run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
-  run_texture_bleeding_test: flutter drive --driver=test/integration_tests/texture_bleeding_test/texture_bleeding_test_driver.dart --target=test/integration_tests/texture_bleeding_test/texture_bleeding_test.dart
-
-scripts:
-  run_profiling_test: bash scripts/run_profiling_test.sh
+  run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/
