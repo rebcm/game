@@ -1,30 +1,26 @@
-# Matriz de Testes para Compatibilidade do Flutter SDK
+# Matriz de Ambientes para Teste de Setup
 
 ## Introdução
 
-Este documento define a matriz de testes necessária para garantir a compatibilidade do jogo "Construção Criativa da Rebeca" com diferentes versões do Flutter SDK e sistemas operacionais.
+Este documento define a matriz de ambientes para teste de setup do projeto `rebcm/game`, garantindo a compatibilidade entre diferentes sistemas operacionais e versões do Flutter SDK.
 
 ## Matriz de Testes
 
-A matriz de testes deve cobrir as seguintes configurações:
-
-| Sistema Operacional | Versão do Flutter SDK |
+| Sistema Operacional | Versão Flutter SDK |
 | --- | --- |
-| Windows | 3.16.0 |
-| Windows | 3.19.0 (latest) |
-| macOS | 3.16.0 |
-| macOS | 3.19.0 (latest) |
-| Linux | 3.16.0 |
-| Linux | 3.19.0 (latest) |
+| Windows 10 | 3.0.5 |
+| Windows 11 | 3.3.0 |
+| macOS Monterey | 3.0.5 |
+| macOS Ventura | 3.3.0 |
+| Ubuntu 20.04 | 3.0.5 |
+| Ubuntu 22.04 | 3.3.0 |
 
 ## Critérios de Aceitação
 
-1. O jogo deve compilar sem erros em todas as combinações de sistema operacional e versão do Flutter SDK definidas na matriz.
-2. Os testes de integração devem passar em todas as combinações de sistema operacional e versão do Flutter SDK definidas na matriz.
-3. O jogo deve executar sem crashes ou comportamentos inesperados em todas as combinações de sistema operacional e versão do Flutter SDK definidas na matriz.
+1. O projeto deve compilar sem erros em todas as combinações de SO e versão do Flutter SDK listadas.
+2. Os testes de unidade e integração devem passar em todas as combinações de SO e versão do Flutter SDK listadas.
+3. A aplicação deve iniciar corretamente e permitir a interação básica do usuário em todas as combinações de SO e versão do Flutter SDK listadas.
 
-## Implementação
+## Manutenção
 
-Para implementar a matriz de testes, devem ser criados ou modificados os seguintes arquivos:
-- `test_driver/passdriver_flutter_version_check/version_check_test.dart`: deve ser atualizado para incluir testes para as versões do Flutter SDK definidas na matriz.
-
+Esta matriz deve ser revisada e atualizada sempre que houver uma mudança significativa nas dependências do projeto ou quando novas versões do Flutter SDK ou sistemas operacionais forem lançadas.
