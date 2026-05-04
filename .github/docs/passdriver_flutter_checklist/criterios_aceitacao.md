@@ -1,26 +1,29 @@
-# Checklist de Documentação para Edge Cases do Flutter
+# Checklist de Validação de DoD
 
 ## Introdução
 
-Este documento visa expandir a checklist de documentação para incluir edge cases específicos relacionados ao Flutter e Dart, focando em validações de versões, resolução de conflitos de CocoaPods (iOS) e tratamento de erros de permissão em variáveis de ambiente.
+Este documento define o checklist operacional que deve ser seguido por todos os desenvolvedores antes de marcar uma tarefa de teste como 'Done' no projeto Construção Criativa da Rebeca.
 
-## Itens da Checklist
+## Critérios de Aceitação
 
-1. **Validação de Versões Específicas do Flutter/Dart**
-   - Verificar se a versão do Flutter está dentro do range especificado no `pubspec.yaml`.
-   - Verificar se a versão do Dart está dentro do range especificado no `pubspec.yaml`.
-   - Testar o build e execução em diferentes versões do Flutter e Dart para garantir compatibilidade.
+1. **Análise de Código sem Erros**: Executar `dart analyze` sem erros.
+2. **Testes Unitários e de Integração**: Todos os testes devem passar.
+3. **Cobertura de Código**: A cobertura de código deve atender aos critérios definidos em `code_coverage_criteria`.
+4. **Revisão de Código**: O código deve ser revisado e aprovado por outro desenvolvedor.
+5. **Documentação Atualizada**: A documentação deve ser atualizada para refletir as mudanças implementadas.
+6. **Conformidade com as Regras do Projeto**: A implementação deve seguir as regras definidas em `AGENTS.md`.
+7. **Testes Manuais**: Realizar testes manuais para garantir que a funcionalidade está correta.
 
-2. **Resolução de Conflitos de CocoaPods (iOS)**
-   - Verificar se o CocoaPods está instalado e configurado corretamente.
-   - Executar `pod install` e `pod update` para garantir que as dependências estejam atualizadas.
-   - Resolver conflitos de versões de dependências CocoaPods.
+## Checklist
 
-3. **Tratamento de Erros de Permissão em Variáveis de Ambiente**
-   - Verificar se as variáveis de ambiente necessárias estão configuradas corretamente.
-   - Testar o tratamento de erros para permissões insuficientes ou variáveis de ambiente não configuradas.
-   - Garantir que o aplicativo lide adequadamente com erros de permissão.
+- [ ] Análise de código sem erros realizada.
+- [ ] Testes unitários e de integração executados com sucesso.
+- [ ] Cobertura de código verificada.
+- [ ] Revisão de código realizada e aprovada.
+- [ ] Documentação atualizada.
+- [ ] Conformidade com as regras do projeto verificada.
+- [ ] Testes manuais realizados com sucesso.
 
 ## Conclusão
 
-A inclusão desses itens na checklist de documentação ajudará a garantir que o aplicativo seja robusto e capaz de lidar com diferentes cenários e configurações.
+Ao seguir este checklist, garantimos que as tarefas sejam concluídas de acordo com os padrões de qualidade e as regras do projeto Construção Criativa da Rebeca.

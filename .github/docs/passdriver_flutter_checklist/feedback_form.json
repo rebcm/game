@@ -1,19 +1,44 @@
 {
-  "questions": [
+  "sections": [
     {
-      "id": 1,
-      "text": "A matriz de conformidade de acessibilidade foi implementada corretamente?",
-      "type": "boolean"
-    },
-    {
-      "id": 2,
-      "text": "Todos os critérios da WCAG 2.1 AA foram atendidos?",
-      "type": "boolean"
-    },
-    {
-      "id": 3,
-      "text": "Foram realizados testes de acessibilidade?",
-      "type": "boolean"
+      "title": "Checklist de Validação de DoD",
+      "questions": [
+        {
+          "type": "checkbox",
+          "label": "Análise de código sem erros realizada.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Testes unitários e de integração executados com sucesso.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Cobertura de código verificada.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Revisão de código realizada e aprovada.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Documentação atualizada.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Conformidade com as regras do projeto verificada.",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Testes manuais realizados com sucesso.",
+          "required": true
+        }
+      ]
     }
   ]
 }
