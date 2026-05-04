@@ -25,3 +25,15 @@ class ApiService {
     return ApiService(dio);
   }
 }
+import 'package:dio/dio.dart';
+import 'error_handling/api_error_interceptor.dart';
+
+class ApiService {
+  final Dio _dio;
+
+  ApiService(this._dio) {
+    _dio.interceptors.add(ApiErrorInterceptor());
+  }
+
+  // Existing methods...
+}
