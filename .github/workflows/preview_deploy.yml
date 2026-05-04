@@ -20,17 +20,15 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build and deploy preview
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          flutter config --enable-web
-          flutter build web --release --base-href /preview/${GITHUB_HEAD_REF}/
-          mkdir -p preview/${GITHUB_HEAD_REF}
-          mv build/web/* preview/${GITHUB_HEAD_REF}/
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add preview/${GITHUB_HEAD_REF}
-          git commit -m "Deploy preview for ${GITHUB_HEAD_REF}"
-          git push origin preview/${GITHUB_HEAD_REF}
+      - name: Build web
+        run: flutter config --enable-web && flutter build web --release --base-href /game/${GITHUB_REF_NAME}/
+
+      - name: Deploy to preview
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          publish_branch: preview
+          keep_files: true
+          cname: ${{ secrets.CLOUDFLARE_PREVIEW_CNAME }}
+          commit_message: "Deploy preview for ${GITHUB_REF_NAME}"
