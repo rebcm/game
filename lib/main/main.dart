@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/permission_service.dart';
+import 'package:game/services/audio/audio_permission_service.dart';
+import 'package:game/utils/android_version_check/android_version_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await PermissionService().requestNotificationPermission();
-  runApp(const MyApp());
+  if (AndroidVersionCheck().isAndroid13OrHigher()) {
+    final audioPermissionService = AudioPermissionService();
+    final hasPermission = await audioPermissionService.requestAudioPermission();
+    if (!hasPermission) {
+      // Handle permission denied
+    }
+  }
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Creative Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: 'Rebeca Game',
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebeca Game'),
       ),
-      home: const MyHomePage(),
+      body: Center(
+        child: Text('Rebeca Game'),
+      ),
     );
   }
 }
