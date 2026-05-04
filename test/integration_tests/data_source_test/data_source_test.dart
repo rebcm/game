@@ -11,15 +11,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify initial data source
-    final initialSource = find.text('Default Source');
-    expect(initialSource, findsOneWidget);
+    final initialDataSource = find.text('Default Data Source');
+    expect(initialDataSource, findsOneWidget);
 
     // Switch data source
     await tester.tap(find.byIcon(Icons.swap_horiz));
     await tester.pumpAndSettle();
 
     // Verify switched data source
-    final switchedSource = find.text('Alternative Source');
-    expect(switchedSource, findsOneWidget);
+    final switchedDataSource = find.text('Alternative Data Source');
+    expect(switchedDataSource, findsOneWidget);
   });
 }
