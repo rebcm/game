@@ -12,7 +12,9 @@ void main() {
     driver?.close();
   });
 
-  test('tip validation test', () async {
-    await driver?.requestData('tip-validation');
+  test('Validate tips UX', () async {
+    final tipFinder = find.byValueKey('tip_text');
+    await driver?.waitFor(tipFinder);
+    expect(await driver?.getText(tipFinder), isNotEmpty);
   });
 }

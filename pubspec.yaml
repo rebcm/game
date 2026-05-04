@@ -54,6 +54,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
   run_memory_test: ./scripts/run_memory_test.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
@@ -62,19 +63,5 @@ scripts:
   run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart --profile --trace-systrace --target-platform android
   run_build_runner: ./scripts/run_build_runner.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
-  run_player_state_test: flutter drive --driver=test/integration_tests/player_state_test/player_state_test_driver.dart --target=test/integration_tests/player_state_test/player_state_test.dart
-  run_memory_test: flutter drive --driver=test/integration_tests/memory_test/memory_test_driver.dart --target=test/integration_tests/memory_test/memory_test.dart
-  run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart
-  validate_installation_docs: bash scripts/validate_installation_docs.sh
-
-  run_retry_timeout_test: ./scripts/run_retry_timeout_test.sh
-
-  run_content_regression_test: ./scripts/run_content_regression_test.sh
-  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
-
-flutter_i18n:
-  path: lib/i18n/locales
-
-  run_undo_redo_performance_test: ./scripts/run_undo_redo_performance_test.sh
-
-  run_logging_integration_test: flutter drive --driver=test/integration_tests/logging_integration_test/logging_integration_test_driver.dart --target=test/integration_tests/logging_integration_test/logging_integration_test.dart
+  run_player_state_test: flutter drive --d
+  run_tip_validation_test: ./scripts/run_tip_validation_test.sh
