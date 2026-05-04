@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Build Performance Test', () {
+  group('App Startup Performance Test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -15,12 +15,12 @@ void main() {
       }
     });
 
-    test('build time', () async {
+    test('app startup time', () async {
       final startTime = DateTime.now();
       await driver!.waitUntilFirstFrameRasterized();
       final endTime = DateTime.now();
-      final buildTime = endTime.difference(startTime).inMilliseconds;
-      expect(buildTime, lessThan(300000)); // 5 minutos
+      final startupTime = endTime.difference(startTime).inMilliseconds;
+      expect(startupTime, lessThan(2000)); // 2 segundos
     });
   });
 }
