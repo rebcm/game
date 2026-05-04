@@ -53,3 +53,5 @@ scripts:
   run_rebeca_rebuild_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_rebuild_benchmark/rebeca_rebuild_benchmark.dart
 
   run_readme_validation_test: dart test/readme_validation_test/readme_validation_test.dart
+
+  run_smoke_test: flutter drive --driver=test/smoke_tests/smoke_test_driver.dart --target=test/smoke_tests/smoke_test.dart
