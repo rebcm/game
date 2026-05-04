@@ -5,12 +5,13 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('onboarding smoke test', (tester) async {
+  testWidgets('Onboarding smoke test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Implement test steps for onboarding smoke test
-    // Verify that the app navigates through the onboarding process correctly
-    // Check for any errors or unexpected behavior
+    // Add test steps for onboarding process here
+    // For example:
+    // await tester.tap(find.text('Get Started'));
+    // await tester.pumpAndSettle();
   });
 }
