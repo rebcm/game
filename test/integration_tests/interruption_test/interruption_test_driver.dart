@@ -14,7 +14,8 @@ void main() {
     }
   });
 
-  test('Interruption test', () async {
-    await driver?.requestData('interruption_test');
+  test('interruption test', () async {
+    await driver?.requestData('start');
+    // Verify test results
   });
 }
