@@ -12,7 +12,10 @@ void main() {
     driver?.close();
   });
 
-  test('Overflow Test', () async {
-    await driver?.requestData('overflow_test');
+  test('Overflow test', () async {
+    final timeline = await driver?.traceAction(() async {
+      await driver?.tap(find.text('Test Button'));
+    });
+    expect(timeline?.events, isNotEmpty);
   });
 }
