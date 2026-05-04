@@ -65,3 +65,5 @@ flutter_i18n:
   path: lib/i18n/locales
 
   run_api_contract_validation_test: bash scripts/run_api_contract_validation_test.sh
+
+  run_heap_metrics_test: ./scripts/heap_metrics/extract_heap_metrics.sh
