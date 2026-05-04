@@ -28,6 +28,7 @@ dependencies:
   ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
+  test_coverage: ^1.0.0
   test: ^1.24.3
   dio_mock: ^1.0.0
   openapi: ^1.0.0
@@ -52,6 +53,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  integration_test_config:
+    enabled: true
   assets:
     - assets/
     - assets/audio/
@@ -59,6 +62,7 @@ flutter:
 - .github/docs/passdriver_flutter_tips_criterios/criterios_aceitacao.md
     - .github/docs/seo_validation_matrix/feedback_form.json
   integration_test_config:
+    enabled: true
     stress_test_config:
     path: ./integration_test/config/integration_test_config.yaml
     path: ./integration_test/config/integration_test_config.yaml
@@ -73,6 +77,7 @@ flutter:
   fps_stress_test:
     path: ./benchmarks/fps_stress_test
   integration_test_config:
+    enabled: true
     stress_test_config:
     path: ./integration_test/config/integration_test_config.yaml
     path: ./integration_test/config/integration_test_config.yaml

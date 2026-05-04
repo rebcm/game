@@ -1,2 +1,2 @@
 tests:
-  - test/integration/passdriver_flutter_api_routes/permission_validation_test.dart
+  - volume_concurrency_test/volume_concurrency_test.dart
