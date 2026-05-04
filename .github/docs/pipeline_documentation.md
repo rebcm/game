@@ -1,19 +1,26 @@
-# Documentação do Pipeline
+# Documentação do Pipeline de CI/CD
 
 ## Introdução
 
-Esta documentação fornece uma visão geral do pipeline de CI/CD do projeto Rebcm Game, incluindo suas etapas e configurações.
+Este documento descreve o pipeline de CI/CD do projeto `rebcm/game`, incluindo os passos executados durante a integração contínua e a entrega contínua.
 
-## Etapas do Pipeline
+## Estrutura do Pipeline
 
-1. **Build**: Compilação do projeto Flutter.
+O pipeline é composto pelos seguintes passos:
+
+1. **Build**: Compilação do código-fonte do projeto.
 2. **Testes**: Execução de testes unitários e de integração.
-3. **Deploy**: Deploy do aplicativo para as plataformas configuradas.
+3. **Análise de Código**: Análise estática do código para detecção de problemas.
+4. **Deploy**: Deploy do artefato gerado para o ambiente de produção.
 
-## Configuração
+## Configuração do Pipeline
 
-O pipeline é configurado através de arquivos YAML na pasta `.github/workflows`.
+A configuração do pipeline é feita através do arquivo `.github/workflows/ci_cd.yml`.
 
-## Guia de Troubleshooting
+## Execução do Pipeline
 
-Para problemas comuns e soluções, consulte o [Guia de Troubleshooting do Pipeline](./pipeline_troubleshooting/criterios_aceitacao.md).
+O pipeline é executado automaticamente a cada push no repositório. Além disso, pode ser executado manualmente através da interface do GitHub Actions.
+
+## Monitoramento do Pipeline
+
+O status do pipeline pode ser monitorado através da interface do GitHub Actions.

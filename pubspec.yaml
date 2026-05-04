@@ -104,3 +104,6 @@ flutter:
 
   player_animation_controller:
     path: lib/animations/player_animation_controller.dart
+
+  ci_cd_validation:
+    path: .github/docs/ci_cd_validation/criterios_aceitacao.md
