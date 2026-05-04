@@ -1,22 +1,22 @@
-name: Deploy to Cloudflare
-
+name: Deploy Construcao Criativa
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup wrangler
-        uses: cloudflare/wrangler-action@v3
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web --release --web-renderer canvaskit --base-href /
+      - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      - name: Deploy to Cloudflare
-        run: |
-          wrangler publish
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=construcao-criativa --commit-dirty=true
