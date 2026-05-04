@@ -3,8 +3,9 @@ import 'package:test/test.dart';
 
 void main() {
   test('Frame timing test driver', () async {
-    final driver = await FlutterDriver.connect();
+    final FlutterDriver driver = await FlutterDriver.connect();
     await driver.requestData('start');
+    await driver.waitUntilFirstFrameRasterized();
     await driver.close();
   });
 }

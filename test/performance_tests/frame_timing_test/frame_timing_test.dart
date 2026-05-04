@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/main.dart' as app;
 
@@ -7,13 +8,23 @@ void main() {
     await app.main();
     await tester.pumpAndSettle();
 
-    final timeline = await tester.binding.getTimeline();
-    final events = timeline.events.where((event) => event['name'] == 'Frame').toList();
+    final List<double> frameTimes = [];
 
-    for (var event in events) {
-      print('Frame timing: ${event['dur']}');
-    }
+    SchedulerBinding.instance.addTimingsCallback((timings) {
+      for (final FrameTiming timing in timings) {
+        frameTimes.add(timing.totalDuration.inMicroseconds.toDouble());
+      }
+    });
 
-    expect(events, isNotEmpty);
+    await tester.pump(const Duration(seconds: 5));
+
+    SchedulerBinding.instance.cancelTimingsCallback((timings) {
+      for (final FrameTiming timing in timings) {
+        frameTimes.add(timing.totalDuration.inMicroseconds.toDouble());
+      }
+    });
+
+    expect(frameTimes, isNotEmpty);
+    print('Frame times: $frameTimes');
   });
 }
