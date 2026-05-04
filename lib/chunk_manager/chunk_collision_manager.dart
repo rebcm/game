@@ -8,46 +8,29 @@ class ChunkCollisionManager {
     _loadedChunks.addAll(chunks);
   }
 
-  bool areAdjacentChunksLoaded(Chunk chunk) {
-    return _loadedChunks.containsAll([
-      chunk.getAdjacentChunk(Direction.north),
-      chunk.getAdjacentChunk(Direction.south),
-      chunk.getAdjacentChunk(Direction.east),
-      chunk.getAdjacentChunk(Direction.west),
-    ].where((c) => c != null));
-  }
-
-  void validateColliders() {
+  void validateAdjacentChunkColliders() {
     for (var chunk in _loadedChunks) {
-      if (areAdjacentChunksLoaded(chunk)) {
-        chunk.activateColliders();
-      } else {
-        chunk.deactivateColliders();
+      chunk.updateColliders();
+      for (var adjacentChunk in _getAdjacentChunks(chunk)) {
+        if (_loadedChunks.contains(adjacentChunk)) {
+          chunk.syncCollidersWith(adjacentChunk);
+        }
       }
     }
+  }
+
+  List<Chunk> _getAdjacentChunks(Chunk chunk) {
+    // Implement logic to get adjacent chunks
+    return [];
   }
 }
 
 class Chunk {
-  List<Chunk?> getAdjacentChunks() => [
-    getAdjacentChunk(Direction.north),
-    getAdjacentChunk(Direction.south),
-    getAdjacentChunk(Direction.east),
-    getAdjacentChunk(Direction.west),
-  ];
-
-  Chunk? getAdjacentChunk(Direction direction) {
-    // Implement logic to get adjacent chunk based on direction
-    return null; // Placeholder, implement actual logic
+  void updateColliders() {
+    // Implement logic to update colliders
   }
 
-  void activateColliders() {
-    // Implement logic to activate colliders
-  }
-
-  void deactivateColliders() {
-    // Implement logic to deactivate colliders
+  void syncCollidersWith(Chunk adjacentChunk) {
+    // Implement logic to sync colliders with adjacent chunk
   }
 }
-
-enum Direction { north, south, east, west }
