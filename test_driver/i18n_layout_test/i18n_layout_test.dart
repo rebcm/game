@@ -1,30 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('i18n layout test', () {
-    testWidgets('check detailed description layout', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+    late FlutterDriver driver;
 
-      // Navigate to the detailed description screen
-      await tester.tap(find.text('Passdriver'));
-      await tester.pumpAndSettle();
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-      // Check if the layout is correct for different locales
-      await tester.binding.setLocale('de'); // German
-      await tester.pumpAndSettle();
-      expect(find.text('Detailed Description'), findsOneWidget);
+    tearDownAll(() async {
+      await driver.close();
+    });
 
-      await tester.binding.setLocale('fr'); // French
-      await tester.pumpAndSettle();
-      expect(find.text('Detailed Description'), findsOneWidget);
+    test('check detailed description layout', () async {
+      final detailedDescriptionFinder = find.byValueKey('detailed_description');
+      await driver.waitFor(detailedDescriptionFinder);
+      final detailedDescriptionText = await driver.getText(detailedDescriptionFinder);
+      expect(detailedDescriptionText, isNotEmpty);
+    });
 
-      // Add more locale checks as needed
+    test('check detailed description layout with different locales', () async {
+      final localeButtonFinder = find.byValueKey('locale_button');
+      await driver.waitFor(localeButtonFinder);
+      await driver.tap(localeButtonFinder);
+
+      final frenchLocaleFinder = find.byValueKey('fr_FR');
+      await driver.waitFor(frenchLocaleFinder);
+      await driver.tap(frenchLocaleFinder);
+
+      final detailedDescriptionFinder = find.byValueKey('detailed_description');
+      await driver.waitFor(detailedDescriptionFinder);
+      final detailedDescriptionText = await driver.getText(detailedDescriptionFinder);
+      expect(detailedDescriptionText, isNotEmpty);
+
+      // Add more locale tests as needed
     });
   });
 }

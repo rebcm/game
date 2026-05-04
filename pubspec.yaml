@@ -85,3 +85,8 @@ flutter:
     path: test_driver/audio_edge_cases_test/audio_edge_cases_test.dart
   golden_tests:
     path: test_driver/golden_tests/golden_tests.dart
+
+  i18n_layout_test:
+    path: test_driver/i18n_layout_test/i18n_layout_test.dart
+  i18n_layout_test_driver:
+    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
