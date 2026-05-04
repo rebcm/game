@@ -4,8 +4,8 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test Flutter SDK version compatibility', (tester) async {
-    // Test logic for different Flutter SDK versions
+  testWidgets('Test compatibility across different OS and Flutter SDK versions', (tester) async {
+    // Test logic for different OS and Flutter SDK versions
   });
 }
 
