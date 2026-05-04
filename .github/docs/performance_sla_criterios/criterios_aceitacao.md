@@ -1,27 +1,19 @@
-# Critérios de Aceitação para SLAs de Performance de Build
+# Critérios de Aceitação para SLA de Performance
 
 ## Introdução
 
-Este documento define os critérios de aceitação para os SLAs (Service Level Agreements) de performance de build e inicialização do aplicativo.
+Este documento define os critérios de aceitação para os SLAs (Service Level Agreements) de performance do aplicativo.
 
 ## Critérios de Aceitação
 
-1. **Tempo de Build**: O tempo máximo aceitável para builds de CI/CD deve ser de 5 minutos.
-2. **Tempo de Inicialização**: O tempo máximo aceitável para inicialização do aplicativo deve ser de 2 segundos.
+1. **Tempo de Build**: O tempo de build do aplicativo não deve exceder 3 segundos.
+2. **Tempo de Inicialização**: O tempo de inicialização do aplicativo não deve exceder 5 segundos.
 
-## Métricas de Performance
+## Testes
 
-As métricas de performance serão coletadas utilizando as ferramentas de teste de integração do Flutter.
+Os testes de performance serão executados automaticamente como parte do pipeline de CI/CD.
 
-## Testes de Performance
+## Referências
 
-Os testes de performance serão implementados utilizando o framework de teste de integração do Flutter.
-
-## Configuração dos Testes
-
-Os testes de performance serão configurados para executar em diferentes ambientes (desenvolvimento, staging e produção).
-
-## Relatório de Performance
-
-Os resultados dos testes de performance serão reportados em um formato que permita fácil visualização e análise.
-
+- [Build Performance Test](../test/performance_tests/build_performance_test.dart)
+- [App Startup Performance Test](../test/performance_tests/app_startup_performance_test.dart)

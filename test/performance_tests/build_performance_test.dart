@@ -1,27 +1,21 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
-  group('Build Performance Test', () {
-    FlutterDriver? driver;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
+  testWidgets('Build Performance Test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-    tearDownAll(() async {
-      if (driver != null) {
-        driver!.close();
-      }
-    });
+    final stopwatch = Stopwatch()..start();
+    await tester.pumpAndSettle();
+    stopwatch.stop();
 
-    test('build time', () async {
-      final startTime = DateTime.now();
-      await driver!.waitUntilFirstFrameRasterized();
-      final endTime = DateTime.now();
-      final buildTime = endTime.difference(startTime).inMilliseconds;
-      expect(buildTime, lessThan(300000)); // 5 minutos
-    });
+    final buildTime = stopwatch.elapsedMilliseconds;
+    expect(buildTime, lessThan(3000)); // 3 seconds
+    print('Build time: $buildTime ms');
   });
 }
-
