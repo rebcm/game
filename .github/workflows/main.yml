@@ -15,7 +15,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
+          flutter-version: '3.3.10'
 
       - name: Build APK
         run: flutter build apk --release
@@ -24,6 +24,6 @@ jobs:
         run: flutter build ipa --release
 
       - name: Upload artifacts
-        run: .github/workflows/scripts/upload-artifact.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .github/workflows/scripts/upload-artifact.sh
