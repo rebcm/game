@@ -2,43 +2,22 @@
 
 ## Introdução
 
-Este documento define a matriz de compatibilidade de áudio para o jogo Rebeca, garantindo que o sistema de áudio funcione corretamente em diferentes plataformas e dispositivos.
-
-## Plataformas Suportadas
-
-O jogo Rebeca será testado nas seguintes plataformas:
-
-* Android
-* iOS
-* Navegadores Web (Chrome, Firefox, Safari)
-
-## Versões Específicas para Testes
-
-As seguintes versões específicas serão utilizadas para validação do sistema de áudio:
-
-* Android: 10, 11, 12
-* iOS: 14, 15, 16
-* Navegadores Web:
- + Chrome: 100, 101, 102
- + Firefox: 90, 91, 92
- + Safari: 14, 15, 16
+Este documento define os critérios de aceitação para a validação de diferentes saídas de áudio no jogo Rebeca.
 
 ## Critérios de Aceitação
 
-1. O sistema de áudio deve funcionar corretamente em todas as plataformas suportadas.
-2. Os arquivos de áudio devem ser reproduzidos sem erros ou distorções.
-3. O volume de áudio deve ser ajustável e persistir entre as sessões do jogo.
+| Saída de Áudio | Critério de Aceitação |
+| --- | --- |
+| Alto-falante interno | O áudio deve ser reproduzido corretamente sem distorção |
+| Fone de ouvido com fio | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
+| Bluetooth | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
+| Hands-free profile (HFP) | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
 
 ## Testes
 
-Os testes serão realizados utilizando o framework de testes do Flutter, com cenários de teste que cobrem as diferentes plataformas e versões específicas.
+Os testes devem ser realizados em diferentes dispositivos e plataformas para garantir a compatibilidade.
 
-## Resultados Esperados
+## Implementação
 
-Os resultados esperados incluem:
+A implementação deve ser feita utilizando a biblioteca `audioplayers` já existente no projeto.
 
-* Reprodução de áudio sem erros em todas as plataformas.
-* Ajuste de volume funcionando corretamente.
-* Persistência do volume entre as sessões do jogo.
-
-{"pt-BR": "Tradução para pt-BR"}
