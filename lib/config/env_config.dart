@@ -1,11 +1,12 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
 class EnvConfig {
-  static Future<void> loadEnv() async {
-    await dotenv.load();
-  }
+  static const String author = 'Rebeca Alves Moreira';
+  static const String environment = String.fromEnvironment('ENVIRONMENT');
+  static const bool isPreview = environment == 'preview';
 
-  static String? get(String key) {
-    return dotenv.env[key];
+  static void init() {
+    debugPrint('Environment: $environment');
+    debugPrint('Is Preview: $isPreview');
   }
 }
