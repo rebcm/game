@@ -1,34 +1,20 @@
+name: game
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.21.4
+  lcov: ^0.14.0
+
 flutter:
-  flutter_test_validation:
-  timer_cancellation_test:
-    path: test/unit_tests/timer_cancellation_test.dart
-    path: test_driver/flutter_test_validation/flutter_test_validation.dart
-  timer_cancellation_test:
-    path: test/unit_tests/timer_cancellation_test.dart
-  input_validation_test:
-    path: test_driver/input_validation_test/input_validation_test.dart
   uses-material-design: true
-  global_shortcuts_test:
-    path: test_driver/global_shortcuts_test/global_shortcuts_test.dart
-  contract_test:
-    path: test_driver/contract_test/contract_test.dart
-  volume_integration_test:
-    path: test_driver/volume_integration_test/volume_integration_test.dart
-  seo_validation_test:
-    path: test_driver/seo_validation_test/seo_validation_test.dart
-  lint_parser_test:
-    path: test_driver/lint_parser_test/lint_parser_test.dart
-  volume_formula_test:
-    path: test_driver/volume_formula_test/volume_formula_test.dart
-  audio_output_test:
-    path: test_driver/audio_output_test/audio_output_test.dart
-  volume_interaction_test:
-  timer_cancellation_test:
-    path: test_driver/timer_cancellation_test/timer_cancellation_test.dart
-    path: test_driver/volume_interaction_test/volume_interaction_test.dart
-  timer_cancellation_test:
-    path: test_driver/timer_cancellation_test/timer_cancellation_test.dart
-  input_latency_test:
-    path: test_driver/input_latency_test/input_latency_test.dart
-  edge_cases_test:
-    path: test_driver/passdriver_flutter_edge_cases/edge_cases_test.dart
