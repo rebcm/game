@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  test:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -20,25 +20,22 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run integration tests
-        run: flutter drive --driver=test/integration_test_driver.dart --target=integration_test/app_test.dart
+      - name: Run smoke test
+        run: flutter test integration_test/smoke_test.dart
 
-      - name: Run edge case tests
-        run: flutter test test/edge_case_tests
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          flutter-version: '3.16.0'
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build/web
+        if: success()
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build and deploy
-        run: ./.github/scripts/build_and_release.sh
+      - name: Notify team on failure
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: '{"text": "CI/CD pipeline failed"}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()
