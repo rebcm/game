@@ -4,36 +4,35 @@
 - **Feature/Mechanic Name:** [Insert Name]
 - **Description:** [Briefly describe the feature or mechanic]
 
-## Functional Requirements
-1. **Primary Functionality:** [Describe the main purpose]
-2. **User Interactions:** [List expected user interactions]
-3. **System Responses:** [Describe how the system responds to user interactions]
+## Gameplay Mechanics
+- **Purpose:** [Explain the purpose of the feature/mechanic in the game]
+- **Rules:** [List the rules governing how this feature/mechanic works]
+- **Interactions:** [Describe how this feature/mechanic interacts with other game elements]
 
-## Non-Functional Requirements
-1. **Performance:** [Specify performance expectations]
-2. **Security:** [Outline security considerations]
-3. **Usability:** [Describe usability goals]
+## Technical Requirements
+- **Dependencies:** [List any dependencies required for this feature/mechanic]
+- **Assets Needed:** [List any assets (images, audio, etc.) required]
+- **Technical Challenges:** [Discuss any anticipated technical challenges]
 
-## Technical Specifications
-1. **Components Involved:** [List components or modules affected]
-2. **Data Flow:** [Describe how data flows through the system]
-3. **APIs/Interfaces:** [Specify APIs or interfaces used]
+## User Experience
+- **User Interface:** [Describe the UI components related to this feature/mechanic]
+- **User Interaction:** [Explain how the user will interact with this feature/mechanic]
+- **Feedback:** [Describe the feedback mechanisms (visual, audio, etc.) for user actions]
 
-## Testing Strategy
-1. **Test Cases:** [List test cases or scenarios]
-2. **Testing Methods:** [Describe testing methods (unit, integration, UI)]
-3. **Acceptance Criteria:** [Define criteria for acceptance]
+## Testing Criteria
+- **Test Cases:** [List specific test cases to validate the feature/mechanic]
+- **Acceptance Criteria:** [Define the criteria for accepting this feature/mechanic as complete]
 
-## Dependencies
-1. **Internal Dependencies:** [List internal dependencies]
-2. **External Dependencies:** [List external dependencies]
+## Localization
+- **Text Elements:** [List any text elements that need to be localized]
+- **Audio Elements:** [List any audio elements that need to be localized]
 
-## Risks and Mitigations
-1. **Potential Risks:** [Identify potential risks]
-2. **Mitigation Strategies:** [Describe mitigation plans]
-
-## Open Questions
-- [List any open questions or areas needing further clarification]
+## Documentation
+- **Diagrams:** [Include any relevant diagrams or flowcharts]
+- **References:** [List any references or external documentation]
 
 ## Revision History
-- **[Date]** - **[Author]** - **[Changes Made]**
+- **Version:** [Insert version number]
+- **Date:** [Insert date]
+- **Changes:** [Describe changes made]
+
