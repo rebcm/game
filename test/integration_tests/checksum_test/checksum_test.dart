@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -10,11 +13,11 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-    final ByteData? data = await binding.takeScreenshot('screenshot');
-    final checksum = data!.buffer.asUint8List().toString();
+    final bytes = File('build/app/outputs/flutter-apk/app-release.apk').readAsBytesSync();
+    final checksum = sha256.convert(bytes);
 
-    final expectedChecksum = await rootBundle.loadString('.github/docs/expected_checksum.txt');
-    expect(checksum, expectedChecksum.trim());
+    final expectedChecksum = File('.github/docs/expected_checksum.txt').readAsStringSync().trim();
+
+    expect(checksum.toString(), expectedChecksum);
   });
 }
