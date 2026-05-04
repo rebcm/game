@@ -6,9 +6,9 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test pipeline with least privilege token', (tester) async {
+  testWidgets('smoke test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    // Add test logic here to validate the pipeline with least privilege token
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }

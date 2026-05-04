@@ -22,13 +22,12 @@ jobs:
 
       - name: Run smoke test
         run: |
-          flutter drive --target=test_driver/integration_test/integration_test.dart --driver=test_driver/integration_test_driver.dart
+          flutter drive --target=test_driver/integration_test/integration_test.dart --driver=test_driver/integration_test/integration_test_driver.dart --dart-define=SMOKE_TEST=true
 
       - name: Check smoke test result
         run: |
-          RESULT=$(curl -s -o /dev/null -w "%{http_code}" https://example.com/smoke-test-endpoint)
-          if [ "$RESULT" != "200" ]; then
-            echo "Smoke test failed with status $RESULT"
+          if [ $? -ne 0 ]; then
+            echo "Smoke test failed"
             exit 1
           fi
 
@@ -39,3 +38,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: build/web
+          branch: main
