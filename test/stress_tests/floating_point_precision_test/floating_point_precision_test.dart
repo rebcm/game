@@ -5,14 +5,18 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Floating point precision test', (tester) async {
+  testWidgets('Floating Point Precision Test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Perform actions that test floating point precision
-    // For example, create a voxel at a specific position and verify its position
-    // await tester.tap(find.byType(VoxelButton));
-    // await tester.pumpAndSettle();
-    // expect(find.byType(Voxel), findsOneWidget);
+    // Perform actions that stress floating point precision
+    for (int i = 0; i < 1000; i++) {
+      // Example action: Tap a button that performs a floating point operation
+      // await tester.tap(find.byKey(Key('button')));
+      // await tester.pumpAndSettle();
+    }
+
+    // Verify the results
+    // expect(find.text('Expected Result'), findsOneWidget);
   });
 }

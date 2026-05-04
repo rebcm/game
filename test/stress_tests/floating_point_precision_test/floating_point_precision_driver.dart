@@ -1,5 +1,20 @@
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() async {
-  await integrationDriver();
+void main() {
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    if (driver != null) {
+      driver?.close();
+    }
+  });
+
+  test('Floating Point Precision Test Driver', () async {
+    await driver?.requestData('some_data');
+  });
 }
