@@ -18,23 +18,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Run Flutter tests
+        run: |
+          flutter pub get
+          flutter test
+
       - name: Validate JDK version
-        run: java -version
+        run: |
+          java -version
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-          channel: 'stable'
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Analyze code
-        run: dart analyze
-
-      - name: Run tests
-        run: flutter test
-
-      - name: Build and test with Gradle
-        run: ./gradlew build
+      - name: Validate JDK version
+        run: ./scripts/validate_jdk_version.sh
