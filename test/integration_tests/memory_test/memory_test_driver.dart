@@ -2,17 +2,17 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver? driver;
+  late FlutterDriver driver;
 
   setUpAll(() async {
     driver = await FlutterDriver.connect();
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver.close();
   });
 
-  test('Memory test driver', () async {
-    await driver?.requestData('hello');
+  test('memory test driver', () async {
+    await driver.requestData(null, timeout: Duration(minutes: 1));
   });
 }
