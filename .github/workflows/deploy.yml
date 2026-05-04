@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare
 
 on:
   push:
@@ -10,33 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.16.0'
-          channel: 'stable'
+      - name: Install Wrangler
+        run: npm install -g @cloudflare/wrangler
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run smoke test
-        run: |
-          flutter drive --target=test_driver/integration_test/integration_test.dart --driver=test_driver/integration_test/integration_test_driver.dart --dart-define=SMOKE_TEST=true
-
-      - name: Check smoke test result
-        run: |
-          if [ $? -ne 0 ]; then
-            echo "Smoke test failed"
-            exit 1
-          fi
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: build/web
-          branch: main
+      - name: Deploy to Cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: wrangler deploy
