@@ -43,3 +43,5 @@ scripts:
 
   shortcuts_exceptions_test:
     path: test/shortcuts_exceptions_test
+scripts:
+  run_memory_profiling_test: bash scripts/run_memory_profiling_test.sh
