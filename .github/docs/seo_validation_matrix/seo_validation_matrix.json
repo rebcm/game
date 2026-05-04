@@ -1,0 +1,18 @@
+{
+  "palavrasChaveObrigatorias": [
+    "Construção Criativa",
+    "Rebeca",
+    "Jogo voxel",
+    "Modo criativo"
+  ],
+  "limitesCaracteres": {
+    "titulo": 60,
+    "descricao": 160,
+    "cabecalhos": 80
+  },
+  "tomDeVoz": [
+    "Amigável",
+    "Informativo",
+    "Coerente com a marca 'Rebeca'"
+  ]
+}
