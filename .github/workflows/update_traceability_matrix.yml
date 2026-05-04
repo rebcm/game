@@ -1,0 +1,24 @@
+name: Update Traceability Matrix
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-traceability-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update traceability matrix
+        run: |
+          bash .github/docs/ci_cd_pipeline_documentation/update_pipeline_docs.sh
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Update traceability matrix" || echo "No changes to commit"
