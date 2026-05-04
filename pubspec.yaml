@@ -65,3 +65,5 @@ scripts:
 
   run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
 
+
+  run_precision_test: flutter drive --driver=test/integration_tests/precision_test/precision_test_driver.dart --target=test/integration_tests/precision_test/precision_test.dart

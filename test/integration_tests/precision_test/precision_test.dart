@@ -9,9 +9,15 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
+    // Navigate to the game screen
+    await tester.tap(find.text('Start Game'));
+    await tester.pumpAndSettle();
+
     // Move to high coordinates
-    // Implement the logic to move the character to high coordinates
-    // Verify collision detection
-    // Implement the logic to verify collision detection
+    await tester.drag(find.byType(GameScreen), Offset(-10000, -10000));
+    await tester.pumpAndSettle();
+
+    // Test collision detection
+    expect(find.text('Collision Detected'), findsOneWidget);
   });
 }

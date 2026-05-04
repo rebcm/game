@@ -9,10 +9,15 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    if (driver != null) {
+      driver?.close();
+    }
   });
 
   test('precision test', () async {
-    await driver?.requestData('precision-test');
+    await driver?.runUnsynchronized(() async {
+      await driver?.tap(find.text('Start Game'));
+      await driver?.waitFor(find.text('Collision Detected'));
+    });
   });
 }
