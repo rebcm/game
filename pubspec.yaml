@@ -17,6 +17,7 @@ dependencies:
     sdk: flutter
   assets:
     - assets/rebeca_animation.riv
+    - assets/texture.png
   permission_handler: ^10.3.0
   lottie: ^2.3.2
   rive: ^0.10.6
@@ -42,6 +43,7 @@ flutter:
   assets:
     - assets/rebeca_animation.riv
     - assets/audio/ 
+    - assets/texture.png
   uses-material-design: true
 
 flutter_i18n:
@@ -57,4 +59,4 @@ scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
-  run_stress_test: flutter drive --driver=test/integration_tests/stress_test/stress_test_driver.dart --target=test/integration_tests/stress_test/stress_test.dart
+  run_texture_bleeding_test: flutter drive --driver=test/integration_tests/texture_bleeding_test/texture_bleeding_test_driver.dart --target=test/integration_tests/texture_bleeding_test/texture_bleeding_test.dart
