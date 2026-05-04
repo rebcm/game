@@ -2,29 +2,38 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a tarefa de desenvolvimento da matriz de comparação técnica entre Rive, Lottie e animações procedurais no contexto do projeto Flutter de blocos voxel modo criativo.
+Este documento define os critérios de aceitação para a tarefa de desenvolvimento da matriz de comparação técnica entre Rive, Lottie e animações procedurais no contexto do projeto Flutter de blocos voxel.
+
+## Critérios
+
+1. **Consumo de CPU/RAM**: Avaliar o consumo de recursos de CPU e RAM para cada tecnologia.
+2. **Tamanho do Arquivo**: Comparar o tamanho dos arquivos utilizados por cada tecnologia.
+3. **Facilidade de Alteração de Cores via Código**: Avaliar a facilidade de alterar cores utilizando código para cada tecnologia.
+4. **Performance de Interpolação**: Medir a performance de interpolação para cada tecnologia.
+
+## Métricas
+
+- Consumo de CPU/RAM: Média de uso durante a execução de animações.
+- Tamanho do Arquivo: Tamanho total dos arquivos necessários para cada tecnologia.
+- Facilidade de Alteração de Cores: Número de passos necessários para alterar cores.
+- Performance de Interpolação: Tempo médio para renderizar frames de animação.
+
+## Ferramentas
+
+- `flutter`: Para desenvolvimento e testes.
+- `dart`: Para scripting e análise de performance.
+
+## Resultados Esperados
+
+- Uma tabela comparativa detalhada entre Rive, Lottie e animações procedurais.
+- Gráficos ilustrando as diferenças de performance e consumo de recursos.
 
 ## Critérios de Aceitação
 
-1. **Consumo de CPU/RAM**: A comparação deve avaliar o consumo de CPU e RAM de cada tecnologia.
-2. **Tamanho do Arquivo**: A comparação deve incluir o tamanho dos arquivos associados a cada tecnologia.
-3. **Facilidade de Alteração de Cores via Código**: A comparação deve avaliar a facilidade de alterar cores via código para cada tecnologia.
-4. **Performance de Interpolação**: A comparação deve avaliar a performance de interpolação de cada tecnologia.
+1. A matriz de comparação deve incluir todas as métricas definidas.
+2. Os resultados devem ser apresentados de forma clara e concisa.
+3. O código utilizado para os testes deve estar disponível no repositório.
 
-## Requisitos
+## Aprovação
 
-- A matriz de comparação deve ser apresentada em um formato claro e legível.
-- Os resultados devem ser baseados em testes realizados no contexto do projeto Flutter.
-
-## Critérios de Aceitação para Implementação
-
-1. A implementação deve ser feita em Dart, utilizando o framework Flutter.
-2. A implementação deve respeitar as regras de contribuição do projeto.
-3. O código deve ser testado e aprovado antes de ser considerado completo.
-
-## Referências
-
-- [Documentação do Flutter](https://docs.flutter.dev/)
-- [Rive Documentation](https://rive.app/docs)
-- [Lottie Documentation](https://airbnb.io/lottie/)
-
+A tarefa será considerada aprovada após a revisão e aceitação da matriz de comparação técnica pelo responsável pelo projeto.
