@@ -1,21 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-class AudioService {
-  final AudioPlayer _audioPlayer;
+class AudioService with ChangeNotifier {
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  AudioService(this._audioPlayer);
-
-  Future<void> toggleShuffle() async {
+  void shuffle() {
     // Implement shuffle logic
-    await _audioPlayer.toggleShuffle();
+    notifyListeners();
   }
 
-  Future<void> toggleLoop() async {
+  void loop() {
     // Implement loop logic
-    await _audioPlayer.toggleLoop();
-  }
-
-  Future<PlayerState> getCurrentState() async {
-    return await _audioPlayer.getPlayerState();
+    notifyListeners();
   }
 }

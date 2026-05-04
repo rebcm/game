@@ -1,15 +1,12 @@
-enum PlayerState { idle, walking }
+import 'package:flutter/material.dart';
 
-class PlayerStateMachine {
-  PlayerState _state = PlayerState.idle;
+class PlayerState with ChangeNotifier {
+  String _currentMusic = '';
 
-  PlayerState get state => _state;
+  String get currentMusic => _currentMusic;
 
-  void transitionToWalking() {
-    _state = PlayerState.walking;
-  }
-
-  void transitionToIdle() {
-    _state = PlayerState.idle;
+  void updateCurrentMusic(String music) {
+    _currentMusic = music;
+    notifyListeners();
   }
 }

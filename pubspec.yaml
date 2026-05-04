@@ -59,6 +59,7 @@ scripts:
   run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart --profile --trace-systrace --target-platform android
   run_build_runner: ./scripts/run_build_runner.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
+  run_player_state_test: flutter drive --driver=test/integration_tests/player_state_test/player_state_test_driver.dart --target=test/integration_tests/player_state_test/player_state_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart
   validate_installation_docs: bash scripts/validate_installation_docs.sh
 
