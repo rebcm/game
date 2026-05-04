@@ -14,3 +14,5 @@ flutter:
     path: test_driver/seo_validation_test/seo_validation_test.dart
   lint_parser_test:
     path: test_driver/lint_parser_test/lint_parser_test.dart
+  volume_formula_test:
+    path: test_driver/volume_formula_test/volume_formula_test.dart
