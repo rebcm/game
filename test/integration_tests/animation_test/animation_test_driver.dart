@@ -10,12 +10,14 @@ void main() {
 
   tearDownAll(() async {
     if (driver != null) {
-      driver!.close();
+      driver?.close();
     }
   });
 
   test('Animação da Rebeca', () async {
-    // Implementar testes para os critérios de aceitação
+    await driver?.runUnsynchronized(() async {
+      // Implementação do teste de animação
+    });
   });
 }
 

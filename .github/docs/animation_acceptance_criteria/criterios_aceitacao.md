@@ -14,9 +14,9 @@ Este documento define os critérios de aceitação para as animações da Rebeca
 
 ## Testes
 
-Os testes para verificar esses critérios devem ser implementados usando o framework de teste do Flutter.
+Os testes de aceitação para as animações devem ser realizados utilizando o framework de testes do Flutter.
 
-## Métricas
+## Implementação
 
-As métricas para avaliar os critérios devem ser coletadas durante os testes e documentadas.
+A implementação dos critérios de aceitação deve ser feita no código de animação da Rebeca.
 
