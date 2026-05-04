@@ -61,3 +61,5 @@ scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart
   validate_installation_docs: bash scripts/validate_installation_docs.sh
+
+  run_retry_timeout_test: ./scripts/run_retry_timeout_test.sh
