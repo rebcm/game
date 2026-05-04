@@ -84,3 +84,6 @@ flutter:
     path: ./test/slider_persistence_test
   audio_background_test:
     path: ./test/audio_background_test
+
+  troubleshooting_guide:
+    path: ./.github/docs/passdriver_flutter_troubleshooting/criterios_aceitacao.md

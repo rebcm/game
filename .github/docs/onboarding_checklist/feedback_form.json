@@ -1,31 +1,31 @@
 {
-  "tempo_gasto": {
-    "tipo": "number",
-    "label": "Tempo gasto (minutos)",
-    "descricao": "Quanto tempo você gastou para completar o onboarding?"
-  },
-  "pontos_friccao": {
-    "tipo": "textarea",
-    "label": "Pontos de fricção",
-    "descricao": "Descreva os pontos que você achou mais difíceis ou confusos durante o onboarding."
-  },
-  "erros_comando": {
-    "tipo": "textarea",
-    "label": "Erros de comando",
-    "descricao": "Se você encontrou erros ao executar comandos, descreva-os aqui."
-  },
-  "versao_ambiente": {
-    "tipo": "text",
-    "label": "Versão do ambiente",
-    "descricao": "Qual é a versão do ambiente que você está usando?"
-  },
-  "confirmacao_versao": {
-    "tipo": "checkbox",
-    "label": "Confirmação de versão",
-    "descricao": "Você confirmou a versão do ambiente antes de iniciar o onboarding?",
-    "opcoes": [
-      {"label": "Sim", "value": true},
-      {"label": "Não", "value": false}
-    ]
-  }
+  "sections": [
+    {
+      "title": "Configuração do Ambiente",
+      "questions": [
+        {
+          "question": "Você conseguiu configurar o ambiente de desenvolvimento corretamente?",
+          "type": "boolean"
+        },
+        {
+          "question": "Você enfrentou algum problema durante a configuração do Flutter/Dart?",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "title": "Troubleshooting",
+      "questions": [
+        {
+          "question": "Você utilizou o guia de troubleshooting para resolver algum problema?",
+          "type": "boolean"
+        },
+        {
+          "question": "Qual foi o problema e como você o resolveu?",
+          "type": "text"
+        }
+      ]
+    }
+  ]
 }
+
