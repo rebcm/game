@@ -79,3 +79,5 @@ scripts:
 
 scripts:
   run_audio_compatibility_tests: bash scripts/run_audio_compatibility_tests.sh
+scripts:
+  update_distribution_docs: bash scripts/update_distribution_docs.sh

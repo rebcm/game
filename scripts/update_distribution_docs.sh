@@ -1,15 +1,8 @@
 #!/bin/bash
 
 # Atualiza a documentação do processo de distribuição
-# com as informações mais recentes do pipeline.
+# Deve ser executado a partir do diretório raiz do projeto
 
-# Verifica se o arquivo de documentação existe
-if [ ! -f .github/docs/distribution_process_documentation/distribution_process.md ]; then
-  echo "Arquivo de documentação não encontrado."
-  exit 1
-fi
-
-# Atualiza o arquivo de documentação
-# com as informações mais recentes do pipeline
-echo "Atualizando documentação..."
+# Atualiza o arquivo distribution_process.md
+cp .github/docs/distribution_process_documentation/distribution_process.md .github/docs/distribution_process_documentation/distribution_process_latest.md
 
