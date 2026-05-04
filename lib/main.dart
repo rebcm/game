@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/widgets/volume_control.dart';
+import 'package:game/services/logging/package_logger.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,37 +9,44 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: VolumeControl(),
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              onPressed: () async {
-                await HardwareVolumeControl.volumeUp();
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final PackageLogger _logger = PackageLogger();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Package Logger Demo'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                _logger.logPackage(1, 'received');
               },
-              child: Text('Volume Up'),
+              child: Text('Log Package'),
             ),
-            SizedBox(height: 10),
-            FloatingActionButton(
-              onPressed: () async {
-                await HardwareVolumeControl.volumeDown();
+            ElevatedButton(
+              onPressed: () {
+                print(_logger.validateSequence());
               },
-              child: Text('Volume Down'),
+              child: Text('Validate Sequence'),
             ),
           ],
         ),
       ),
     );
-  }
-}
-
-class HardwareVolumeControl {
-  static Future<void> volumeUp() async {
-  }
-
-  static Future<void> volumeDown() async {
   }
 }
