@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'package:integration_test/integration_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -11,10 +11,12 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify that the initial screen is rendered correctly
-    expect(find.text('Rebeca\'s Game'), findsOneWidget);
+    expect(find.text('Rebeca'), findsOneWidget);
 
-    // Add more test steps as needed to verify content integrity
-    // For example, checking specific UI elements, text, or assets
-    expect(find.byType(GridView), findsOneWidget);
+    // Test various UI elements and their content
+    expect(find.text('Build Mode'), findsOneWidget);
+    expect(find.text('Creative Mode'), findsOneWidget);
+
+    // Add more test cases as needed to cover different content aspects
   });
 }
