@@ -62,3 +62,6 @@ scripts:
 
   flutter_driver:
     sdk: flutter
+
+  scripts:
+    validate_gdd: bash scripts/validate_gdd.sh
