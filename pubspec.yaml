@@ -60,3 +60,5 @@ scripts:
   run_memory_leak_test: bash scripts/run_memory_leak_test.sh
 
   run_data_integrity_test: bash scripts/run_data_integrity_test.sh
+
+  run_memory_test: bash scripts/run_memory_test.sh
