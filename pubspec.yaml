@@ -68,3 +68,5 @@ dev_dependencies:
   openapi_generator_cli: ^1.0.0
 
   run_multitouch_edge_cases_test: flutter drive --driver=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test_driver.dart --target=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test.dart
+
+  run_ci_cd_pipeline: bash ./scripts/run_ci_cd_pipeline.sh
