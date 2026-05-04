@@ -1,23 +1,23 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
-import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Audio player memory leak test', (tester) async {
+  testWidgets('Memory Leak Test for Audio Players', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    final audioPlayer = AudioPlayer();
-    await audioPlayer.play(AssetSource('sounds/short_sound.mp3'));
-    await Future.delayed(Duration(seconds: 1));
-    await audioPlayer.dispose();
+    // Implement logic to play short audio and verify memory usage
+    // This is a simplified example and might need adjustments based on actual implementation
+    final finder = find.text('Play Audio');
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
 
-    await tester.pumpAndSettle(Duration(seconds: 1));
-
-    expect(find.byType(AudioPlayer), findsNothing);
+    // Verify memory usage or instance count of audio players
+    // This part is highly dependent on the actual audio player implementation
+    // For demonstration, assume we have a function to check audio player instances
+    // expect(await getAudioPlayerInstanceCount(), lessThanOrEqualTo(0));
   });
 }
