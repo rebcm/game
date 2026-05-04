@@ -13,6 +13,6 @@ void main() {
   });
 
   test('GC test driver', () async {
-    await driver?.requestData('gc');
+    await driver?.requestData('gc_test');
   });
 }
