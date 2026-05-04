@@ -14,7 +14,7 @@ void main() {
     expect(find.text('Rebeca\'s Game'), findsOneWidget);
 
     // Add more test steps as needed to verify content integrity
-    // For example, checking specific UI elements or text translations
+    // For example, checking specific UI elements, text, or assets
     expect(find.byType(GridView), findsOneWidget);
   });
 }

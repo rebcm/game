@@ -12,7 +12,10 @@ void main() {
     driver?.close();
   });
 
-  test('content regression test driver', () async {
-    await driver?.waitUntilNoTransientCallbacks();
+  test('Content Regression Test', () async {
+    await driver?.runUnsynchronized(() async {
+      await driver?.waitFor(find.text('Rebeca\'s Game'));
+      // Add more test steps as needed
+    });
   });
 }
