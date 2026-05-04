@@ -81,3 +81,6 @@ dev_dependencies:
 
   run_ci_cd_pipeline: bash ./scripts/run_ci_cd_pipeline.sh
   run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
+
+scripts:
+  run_coverage_test: ./scripts/run_coverage_test.sh

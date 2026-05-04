@@ -20,20 +20,13 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests with coverage
-        run: |
-          flutter test --coverage
+      - name: Run tests
+        run: flutter test --coverage
 
       - name: Verify coverage threshold
         run: |
-          coverage_threshold=$(cat coverage/lcov.info | grep -o '^SF:.*' | wc -l)
-          min_threshold=50
-          if [ $coverage_threshold -lt $min_threshold ]; then
-            echo "Coverage threshold not met. Expected at least $min_threshold, got $coverage_threshold"
+          coverage=$(lcov --summary coverage/lcov.info | grep "lines" | awk '{print $3}' | sed 's/%//g')
+          if (( $(echo "$coverage < 80" | bc -l) )); then
+            echo "Coverage is below 80%"
             exit 1
           fi
-
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          file: coverage/lcov.info
