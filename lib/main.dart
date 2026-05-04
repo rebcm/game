@@ -1,33 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:game/widgets/volume_control.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Creative Building',
-      home: const MyHomePage(),
+      home: Scaffold(
+        body: Center(
+          child: VolumeControl(),
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () async {
+                await HardwareVolumeControl.volumeUp();
+              },
+              child: Text('Volume Up'),
+            ),
+            SizedBox(height: 10),
+            FloatingActionButton(
+              onPressed: () async {
+                await HardwareVolumeControl.volumeDown();
+              },
+              child: Text('Volume Down'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class HardwareVolumeControl {
+  static Future<void> volumeUp() async {
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rebeca\'s Creative Building'),
-      ),
-      body: const Center(
-        child: Text('Rebeca\'s Creative Building'),
-      ),
-    );
+  static Future<void> volumeDown() async {
   }
 }
