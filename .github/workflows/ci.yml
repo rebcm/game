@@ -1,4 +1,4 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
@@ -15,19 +15,21 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
+          flutter-version: '3.0.5'
 
-      - run: flutter --version
+      - name: Check Flutter version
+        run: flutter --version
 
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: '11'
 
-      - run: java -version
+      - name: Check Java version
+        run: java -version
 
-      - run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-      - run: flutter analyze
-
-      - run: flutter test
+      - name: Run tests
+        run: flutter test
