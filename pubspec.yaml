@@ -85,3 +85,8 @@ flutter:
     path: test_driver/chunk_concurrency_stress_test/chunk_concurrency_stress_test.dart
   chunk_concurrency_stress_test_driver:
     path: test_driver/chunk_concurrency_stress_test/chunk_concurrency_stress_test_driver.dart
+
+  secrets_integration_test:
+    path: test_driver/secrets_integration_test/secrets_integration_test.dart
+  secrets_integration_test_driver:
+    path: test_driver/secrets_integration_test/secrets_integration_test_driver.dart
