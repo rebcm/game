@@ -2,24 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class EstadoJogo extends State {
-  Timer? _timer;
-  bool _someFlagOrCallbackFired = false;
+  List<Timer> _timers = [];
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      // Simulate some work
-      _someFlagOrCallbackFired = true;
-    });
+    // Exemplo de inicialização de um timer
+    _timers.add(Timer.periodic(Duration(seconds: 1), (timer) {}));
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    for (var timer in _timers) {
+      timer.cancel();
+    }
+    _timers.clear();
     super.dispose();
   }
 
-  // Getter for testing purposes
-  bool get someFlagOrCallbackFired => _someFlagOrCallbackFired;
+  bool get hasActiveTimers => _timers.any((timer) => timer.isActive);
 }
