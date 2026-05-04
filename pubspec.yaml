@@ -1,74 +1,19 @@
 name: game
-description: A new Flutter project.
-
+description: Construcao Criativa da Rebeca
 version: 1.0.0+1
-
 environment:
-  sdk: ">=2.17.0 <3.0.0"
-
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.16.0"
 dependencies:
-  dio: ^4.0.6
-  http: ^0.13.5
-  dotenv: ^4.0.0
-  freezed_annotation: ^2.2.0
-  json_annotation: ^4.6.0
-  provider: ^6.0.3
-  archive: ^3.3.0
-  audioplayers: ^1.0.1
   flutter:
     sdk: flutter
-  assets:
-    - assets/documentacao/
-    - assets/rebeca_animation.riv
-    - assets/texture.png
-  permission_handler: ^10.3.0
-  lottie: ^2.3.2
-  rive: ^0.10.6
-  crypto: ^3.0.2
-  leak_canary_flutter: ^2.0.0
-  flutter_inappwebview: ^5.7.2+3
-
+  flame: ^1.18.0
+  shared_preferences: ^2.2.2
 dev_dependencies:
-  dio: ^4.0.6
-  http: ^0.13.5
-  dotenv: ^4.0.0
-  flutter_driver:
-    sdk: flutter
-  build_runner: ^2.3.3
-  freezed: ^2.3.2
-  json_serializable: ^6.5.4
   flutter_test:
     sdk: flutter
-  test: ^1.21.4
-  lcov: ^0.14.0
-  genhtml: ^0.1.0
-  golden_toolkit: ^0.13.0
-  integration_test:
-    sdk: flutter
-  markdownlint: ^0.0.1
-
+  flutter_lints: ^3.0.0
 flutter:
-  assets:
-    - assets/documentacao/
-    - assets/rebeca_animation.riv
-    - assets/audio/ 
-    - assets/texture.png
   uses-material-design: true
-
-flutter_i18n:
-  path: lib/i18n/locales
-
-scripts:
-  validate_translation: bash scripts/validate_translation.sh
-  lint_markdown: markdownlint .github/docs/
-  run_integration_tests: bash scripts/run_integration_tests.sh
-  run_audio_compatibility_tests: bash scripts/run_audio_compatibility_tests.sh
-  run_failed_tests: bash scripts/run_failed_tests.sh
-scripts:
-  update_gdd_docs: bash scripts/update_gdd_template_docs.sh
-
-  gdd_template: .github/docs/game_design_document_template/template.md
-
-scripts:
-  update_gdd_docs: bash scripts/update_gdd_template_docs.sh
-  gdd_template: .github/docs/game_design_document_template/template.md
+  assets:
+    - assets/
