@@ -15,4 +15,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Validate README.md
-        run: ./.github/docs/readme_validation/validation_script.sh
+        run: .github/docs/readme_validation/validation_script.sh
