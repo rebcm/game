@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
+  permission_handler: ^11.0.0
   json_annotation: ^4.8.1
   intl: ^0.18.1
   flutter_localizations:
@@ -25,6 +26,7 @@ dependencies:
   ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
+  permission_handler: ^11.0.0
   json_serializable: ^6.7.1
   json_annotation: ^4.8.1
   intl: ^0.18.1
@@ -83,6 +85,8 @@ flutter:
   physics_engine_tests:
     path: ./test/offset_consistency_test
   offset_consistency_test:
+  permission_validation_test:
+    path: ./integration_test/permission_validation_test
     path: ./test/physics_engine_tests
   slider_persistence_test:
     path: ./test/slider_persistence_test
