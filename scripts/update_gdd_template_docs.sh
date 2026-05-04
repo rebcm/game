@@ -1,4 +1,5 @@
 #!/bin/bash
 
 # Update GDD template documentation
-cp .github/docs/game_design_document_template/template.md .github/docs/documentacao_template/template.md
+echo "Updating GDD template documentation..."
+cp .github/docs/game_design_document_template/template.md assets/documentacao/gdd_template.md

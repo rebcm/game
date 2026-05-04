@@ -68,3 +68,7 @@ scripts:
   update_gdd_docs: bash scripts/update_gdd_template_docs.sh
 
   gdd_template: .github/docs/game_design_document_template/template.md
+
+scripts:
+  update_gdd_docs: bash scripts/update_gdd_template_docs.sh
+  gdd_template: .github/docs/game_design_document_template/template.md
