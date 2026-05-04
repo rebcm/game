@@ -1,4 +1,4 @@
-name: Flutter CI/CD
+name: Main Workflow
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-upload:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,18 +17,13 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --release
 
-      - name: Run tests
-        run: flutter test --coverage
+      - name: Build IPA
+        run: flutter build ipa --release
 
-      - name: Generate coverage report
-        run: |
-          genhtml coverage/lcov.info -o coverage/html
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage/html
+      - name: Upload artifacts
+        run: .github/workflows/scripts/upload-artifact.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
