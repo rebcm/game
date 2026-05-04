@@ -1,1 +1,3 @@
-testServerUrl: https://example.com/api
+onboarding_test:
+  enabled: true
+  test_timeout: 300
