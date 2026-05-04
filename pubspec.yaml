@@ -66,3 +66,5 @@ scripts:
   run_ux_dicas_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/ux_dicas_test/ux_dicas_test.dart
 
   run_versao_flutter_test: flutter drive --driver=test/compatibilidade_testes/versao_flutter_test/versao_flutter_driver.dart --target=test/compatibilidade_testes/versao_flutter_test/versao_flutter_test.dart
+
+  run_passdriver_flutter_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_flutter_validation_test/passdriver_flutter_validation_test.dart
