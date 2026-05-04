@@ -74,7 +74,11 @@ flutter:
     path: ./benchmarks/performance_tracking
 
   physics_engine_tests:
+    path: ./test/offset_consistency_test
+  offset_consistency_test:
     path: ./test/physics_engine_tests
+    path: ./test/offset_consistency_test
+  offset_consistency_test:
   slider_persistence_test:
     path: ./test/slider_persistence_test
 
