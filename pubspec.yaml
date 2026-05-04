@@ -101,3 +101,6 @@ flutter:
 
   audio_compression_service_test:
     path: ./test/unit_tests/services/audio_compression_service_test
+
+  player_animation_controller:
+    path: lib/animations/player_animation_controller.dart
