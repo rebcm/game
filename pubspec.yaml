@@ -84,3 +84,5 @@ scripts:
   run_content_regression_test: bash scripts/run_content_regression_test.sh
   scripts:
     run_gc_trigger_test: bash scripts/run_gc_trigger_test.sh
+
+  run_undo_redo_performance_test: flutter drive --driver=test/integration_tests/performance_test/undo_redo_performance_test/undo_redo_performance_test_driver.dart --target=test/integration_tests/performance_test/undo_redo_performance_test/undo_redo_performance_test.dart
