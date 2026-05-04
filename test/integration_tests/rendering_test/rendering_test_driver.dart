@@ -1,6 +1,19 @@
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() async {
-  await integrationDriver();
+void main() {
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    driver?.close();
+  });
+
+  test('Renderização 3D', () async {
+    final texture = find.byType('Image');
+    await driver!.waitFor(texture);
+  });
 }

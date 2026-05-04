@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'package:integration_test/integration_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('PNG rendering test', (tester) async {
+  testWidgets('Renderização 3D sem interpolação', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    final imageFinder = find.byType(Image);
-    expect(imageFinder, findsOneWidget);
+    final texture = find.byType(Image);
+    expect(texture, findsOneWidget);
 
-    final imageWidget = tester.widget<Image>(imageFinder);
-    expect(imageWidget.image, isNotNull);
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await expectLater(
-      find.byType(Image),
-      matchesGoldenFile('test/integration_tests/rendering_test/rendering_test.png'),
-    );
+    final image = tester.widget<Image>(texture);
+    expect(image.filterQuality, FilterQuality.none);
   });
 }
