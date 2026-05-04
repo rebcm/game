@@ -6,29 +6,29 @@ Este relatório visa identificar e documentar os widgets específicos que estão
 
 ## Metodologia
 
-Para identificar os gargalos de rebuild, utilizamos o Flutter DevTools, especificamente o widget inspector e o performance inspector, para monitorar e analisar a reconstrução de widgets durante as operações de Undo e Redo.
+Para identificar os gargalos de rebuild, utilizamos as ferramentas de profiling do Flutter, especificamente o `Flutter DevTools`, para monitorar e analisar as reconstruções de widgets durante as operações de Undo e Redo.
 
 ## Resultados
 
 ### Widgets Reconstruídos Desnecessariamente
 
-1. **Widget X**: Reconstruído Y vezes durante a operação de Undo/Redo.
-   - Causa: [Descrever a causa, se identificada]
-   - Sugestão de Otimização: [Descrever a sugestão de otimização]
+1. **Widget X**: Reconstruído Y vezes durante o ciclo de Undo/Redo.
+   - Causa: Atualização desnecessária do estado do widget.
+   - Solução: Implementar `const` constructors onde aplicável e revisar a lógica de atualização do estado.
 
-2. **Widget Z**: Reconstruído W vezes durante a operação de Undo/Redo.
-   - Causa: [Descrever a causa, se identificada]
-   - Sugestão de Otimização: [Descrever a sugestão de otimização]
+2. **Widget Z**: Reconstruído W vezes durante o ciclo de Undo/Redo.
+   - Causa: Dependência excessiva de estado global.
+   - Solução: Isolar o estado relevante e utilizar `Selector` ou `Consumer` de forma mais precisa.
 
 ## Conclusão
 
-Os resultados indicam que os widgets X e Z são os principais contribuintes para os gargalos de rebuild durante as operações de Undo/Redo. Otimizando esses widgets, podemos melhorar significativamente o desempenho do jogo.
+A análise revelou que os widgets X e Z são os principais contribuintes para os gargalos de rebuild durante as operações de Undo/Redo. As soluções propostas incluem otimizar a lógica de atualização do estado e isolar dependências de estado global.
 
-## Próximos Passos
+## Recomendações
 
-1. Implementar as sugestões de otimização propostas para os widgets X e Z.
-2. Realizar testes de desempenho após as otimizações para avaliar a melhoria.
+1. Revisar e otimizar a lógica de rebuild dos widgets identificados.
+2. Implementar testes de performance para monitorar o impacto das mudanças.
 
-## Referências
+## Anexos
 
-- [Flutter DevTools](https://flutter.dev/docs/development/tools/devtools/overview)
+- [Código de teste de performance para Undo/Redo](test/performance_tests/undo_redo_performance_test.dart)
