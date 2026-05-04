@@ -93,3 +93,9 @@ flutter:
 
   audio_edge_cases_test:
     path: ./test/integration_tests/audio_tests
+
+  audio_compression_service:
+    path: ./lib/services/audio_compression_service
+
+  audio_compression_service_test:
+    path: ./test/unit_tests/services/audio_compression_service_test
