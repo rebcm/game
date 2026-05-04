@@ -53,6 +53,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_test_and_analyze: flutter test && flutter analyze
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
   run_memory_test: flutter drive --driver=test/integration_tests/memory_test/memory_test_driver.dart --target=test/integration_tests/memory_test/memory_test.dart
@@ -75,6 +76,7 @@ scripts:
     - .github/docs/acceptance_criteria_template/template.md
 
 scripts:
+  run_test_and_analyze: flutter test && flutter analyze
   run_memory_test_with_gc_protocol: bash scripts/run_memory_test_with_gc_protocol.sh
 
   run_jdk_compatibility_test: flutter drive --driver=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test_driver.dart --target=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test.dart
