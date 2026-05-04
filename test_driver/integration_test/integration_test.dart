@@ -1,17 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'api_tests/authentication_test.dart' as auth_test;
+import 'upload_tests/upload_timeout_test.dart' as upload_test;
+import 'build_tests/version_conflict_test.dart' as build_test;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  group('end-to-end test', () {
-    testWidgets('tap on the floating action button, verify counter',
-        (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Add your test logic here
-    });
+  group('Integration tests', () {
+    auth_test.main();
+    upload_test.main();
+    build_test.main();
   });
 }
