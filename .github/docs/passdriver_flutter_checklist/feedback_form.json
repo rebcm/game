@@ -1,0 +1,24 @@
+{
+  "questions": [
+    {
+      "id": "flutter_version_check",
+      "text": "A versão do Flutter foi validada?",
+      "type": "boolean"
+    },
+    {
+      "id": "dart_version_check",
+      "text": "A versão do Dart foi validada?",
+      "type": "boolean"
+    },
+    {
+      "id": "cocoapods_conflict_resolution",
+      "text": "Conflitos de CocoaPods foram resolvidos?",
+      "type": "boolean"
+    },
+    {
+      "id": "environment_variable_permission",
+      "text": "Erros de permissão em variáveis de ambiente foram tratados?",
+      "type": "boolean"
+    }
+  ]
+}
