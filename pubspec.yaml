@@ -67,3 +67,5 @@ scripts:
 
 scripts:
   run_ci_version_check: bash scripts/run_ci_version_check.sh
+
+  run_readme_validation: bash scripts/run_readme_validation.sh

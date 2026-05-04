@@ -1,19 +1,19 @@
 #!/bin/bash
 
-README_FILE="README.md"
+required_headers=("PROJECT RULES" "Missão" "Regras Invioláveis" "Comandos Essenciais")
+readme_file="README.md"
 
-REQUIRED_HEADERS=(
-  "# Projeto"
-  "## Missão"
-  "## Regras Invioláveis"
-  "## Comandos Essenciais"
-)
+if [ ! -f "$readme_file" ]; then
+  echo "README.md not found"
+  exit 1
+fi
 
-for HEADER in "${REQUIRED_HEADERS[@]}"; do
-  if ! grep -q "$HEADER" "$README_FILE"; then
-    echo "Erro: Cabeçalho '$HEADER' não encontrado no README.md"
+for header in "${required_headers[@]}"; do
+  if ! grep -q "^# .*${header}" "$readme_file"; then
+    echo "Missing header: $header"
     exit 1
   fi
 done
 
-echo "README.md validado com sucesso"
+echo "README.md validation successful"
+exit 0
