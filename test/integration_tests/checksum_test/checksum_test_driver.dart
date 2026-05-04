@@ -2,21 +2,17 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Checksum Test', () {
-    FlutterDriver? driver;
+  FlutterDriver? driver;
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
 
-    tearDownAll(() async {
-      if (driver != null) {
-        await driver?.close();
-      }
-    });
+  tearDownAll(() async {
+    driver?.close();
+  });
 
-    test('Checksum validation', () async {
-      await driver?.requestData('checksum');
-    });
+  test('Checksum test driver', () async {
+    await driver?.requestData('checksum_test');
   });
 }

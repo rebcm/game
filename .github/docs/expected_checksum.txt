@@ -1,1 +1,1 @@
-expected_checksum_value
+EXPECTED_CHECKSUM_VALUE

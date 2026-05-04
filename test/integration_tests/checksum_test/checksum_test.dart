@@ -10,21 +10,12 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
+    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+    final ByteData? data = await binding.convertFlutterSurfaceToImage();
+    final Uint8List bytes = data!.buffer.asUint8List();
+
     // Calculate checksum
-    final checksum = await calculateChecksum();
-
-    // Compare with expected checksum
-    final expectedChecksum = await getExpectedChecksum();
-    expect(checksum, expectedChecksum);
+    final checksum = bytes.map((e) => e.toRadixString(16)).join();
+    expect(checksum, 'EXPECTED_CHECKSUM_VALUE');
   });
-}
-
-Future<String> calculateChecksum() async {
-  // Implement checksum calculation logic here
-  return 'checksum';
-}
-
-Future<String> getExpectedChecksum() async {
-  // Implement logic to get expected checksum from file or other source
-  return 'expected_checksum';
 }
