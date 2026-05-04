@@ -1,23 +1,19 @@
+import 'package:game/models/player_state/player_state.dart';
+import 'package:game/services/input_service/input_service.dart';
 import 'package:flutter/material.dart';
-import 'package:game/models/player_state_machine/player_state_machine.dart';
 
 class PlayerController with ChangeNotifier {
-  PlayerStateMachine _state = const PlayerStateMachine.idle();
+  final PlayerStateMachine _playerStateMachine;
+  final InputService _inputService;
 
-  PlayerStateMachine get state => _state;
+  PlayerController(this._playerStateMachine, this._inputService);
 
-  void startWalking() {
-    _state = const PlayerStateMachine.walking();
-    notifyListeners();
-  }
-
-  void stopWalking() {
-    _state = const PlayerStateMachine.stopping();
-    notifyListeners();
-  }
-
-  void stop() {
-    _state = const PlayerStateMachine.idle();
+  void handleKeyEvent(RawKeyEvent event) {
+    if (_inputService.isMovementKeyPressed(event)) {
+      _playerStateMachine.transitionToWalking();
+    } else {
+      _playerStateMachine.transitionToIdle();
+    }
     notifyListeners();
   }
 }
