@@ -1,6 +1,10 @@
 flutter:
   flutter_test_validation:
+  timer_cancellation_test:
+    path: test/unit_tests/timer_cancellation_test.dart
     path: test_driver/flutter_test_validation/flutter_test_validation.dart
+  timer_cancellation_test:
+    path: test/unit_tests/timer_cancellation_test.dart
   input_validation_test:
     path: test_driver/input_validation_test/input_validation_test.dart
   uses-material-design: true
@@ -19,6 +23,10 @@ flutter:
   audio_output_test:
     path: test_driver/audio_output_test/audio_output_test.dart
   volume_interaction_test:
+  timer_cancellation_test:
+    path: test_driver/timer_cancellation_test/timer_cancellation_test.dart
     path: test_driver/volume_interaction_test/volume_interaction_test.dart
+  timer_cancellation_test:
+    path: test_driver/timer_cancellation_test/timer_cancellation_test.dart
   input_latency_test:
     path: test_driver/input_latency_test/input_latency_test.dart
