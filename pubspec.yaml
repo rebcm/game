@@ -69,8 +69,8 @@ flutter:
     path: ./integration_test/onboarding_smoke_test
   cleaning_policy_test:
     path: ./integration_test/cleaning_policy_test
-    path: ./integration_test
-
+  deploy_validation_test:
+    path: ./integration_test/deploy_validation_test
   performance_tracking:
     path: ./benchmarks/performance_tracking
 
@@ -81,8 +81,6 @@ flutter:
     path: ./test/offset_consistency_test
   offset_consistency_test:
     path: ./test/physics_engine_tests
-    path: ./test/offset_consistency_test
-  offset_consistency_test:
   slider_persistence_test:
     path: ./test/slider_persistence_test
 
@@ -90,17 +88,4 @@ flutter:
     path: ./lib/services/api_service
 
   api_service_test:
-    path: .	est/api_service_test
-
-  integration_test:
-    path: .integration_test
-
-  api_validation_test:
-    path: ./integration_test/api_validation_test
-
-  deploy_validation_test:
-    path: ./integration_test/deploy_validation_test
-
-
-  cloudflare_pages_deploy:
-    path: ./lib/services/cloudflare_pages_deploy
+    path: ./test/unit_tests/services/api_service_test

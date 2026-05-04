@@ -5,7 +5,7 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Deploy Validation Test', () {
+  group('Deployment Validation Tests', () {
     testWidgets('Flutter Web build validation', (tester) async {
       app.main();
       await tester.pumpAndSettle();
