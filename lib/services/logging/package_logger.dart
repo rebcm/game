@@ -4,20 +4,19 @@ class PackageLogger {
   static final Logger _logger = Logger(
     printer: PrettyPrinter(
       methodIndentation: 2,
-      errorMethodCount: 8,
-      lineLength: 120,
+      errorMethodIndentation: 2,
+      lineLength: 100,
       colors: true,
       printEmojis: true,
       printTime: true,
     ),
   );
 
-  static void logPackageSequence(List<int> packageIds) {
-    _logger.d('Package sequence: $packageIds');
+  static void logInfo(String message) {
+    _logger.i(message);
   }
 
-  static void logMissingPackages(List<int> expectedIds, List<int> actualIds) {
-    final missingIds = expectedIds.where((id) => !actualIds.contains(id)).toList();
-    _logger.e('Missing packages: $missingIds');
+  static void logError(String message, dynamic error) {
+    _logger.e(message, error);
   }
 }

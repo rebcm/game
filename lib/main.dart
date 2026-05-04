@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/tracking/package_tracker.dart';
+import 'package:game/services/sequencing/sequence_tracker.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,22 +20,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final PackageTracker _packageTracker = PackageTracker();
+  final SequenceTracker _sequenceTracker = SequenceTracker();
 
-  void _handleInput(int packageId) {
-    _packageTracker.addPackageId(packageId);
+  void _trackId(int id) {
+    _sequenceTracker.trackId(id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Package Tracking Demo'),
+        title: Text('Sequence Tracker Demo'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => _handleInput(1),
-          child: Text('Send Package'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () => _trackId(1),
+              child: Text('Track ID 1'),
+            ),
+            ElevatedButton(
+              onPressed: () => _trackId(2),
+              child: Text('Track ID 2'),
+            ),
+          ],
         ),
       ),
     );
