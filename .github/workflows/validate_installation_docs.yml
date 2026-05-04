@@ -1,0 +1,17 @@
+name: Validate Installation Docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate installation docs
+        run: |
+          bash scripts/validate_installation_docs.sh
