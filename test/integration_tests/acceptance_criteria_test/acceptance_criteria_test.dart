@@ -1,19 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:game/main.dart' as app;
 import 'package:integration_test/integration_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Teste de integração bem-sucedido', (tester) async {
-    // Implementação do teste
-  });
+  testWidgets('Verify acceptance criteria for task-1777666324-13-sub-4-disc-1777777728-2-disc-1777908606-4', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-  testWidgets('Funcionalidade implementada corretamente', (tester) async {
-    // Implementação do teste
-  });
-
-  testWidgets('Código sem erros de análise', (tester) async {
-    // Implementação do teste
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
-

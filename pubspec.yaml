@@ -62,6 +62,8 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_test_and_analyze: flutter test && flutter analyze
@@ -74,6 +76,8 @@ scripts:
   run_gc_forcing_test: flutter drive --driver=test/integration_tests/gc_forcing_test/gc_forcing_test_driver.dart --target=test/integration_tests/gc_forcing_test/gc_forcing_test.dart
 
 scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_animation_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
 
@@ -114,6 +118,8 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_pr_description_validation_test: flutter drive --driver=test/integration_tests/pr_description_validation_test/pr_description_validation_test_driver.dart --target=test/integration_tests/pr_description_validation_test/pr_description_validation_test.dart
 
@@ -121,6 +127,8 @@ scripts:
     - assets/documentacao/versionamento_documentacao.md
 
   scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
     run_pr_description_validation_test: flutter test test/unit_tests/utils/pr_description_validator_test.dart
 
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
@@ -128,6 +136,8 @@ scripts:
   run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
 
 scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
   run_stress_test_retencao: bash scripts/run_stress_test_retencao_closures_streams
 
   run_setup_validation_test: bash scripts/run_setup_validation_test
@@ -136,6 +146,8 @@ scripts:
   run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
 
 scripts:
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
   run_markdown_lint_test: bash scripts/run_markdown_lint_test.sh
 
   run_setup_validation_test: flutter drive --driver=test/integration_tests/setup_validation_test/setup_validation_test_driver.dart --target=test/integration_tests/setup_validation_test/setup_validation_test.dart
@@ -143,3 +155,5 @@ scripts:
   run_content_regression_test: bash scripts/run_content_regression_test
 
   run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
+
+  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
