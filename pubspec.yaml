@@ -62,3 +62,6 @@ scripts:
   run_rendering_test: flutter drive --driver=test/integration_tests/rendering_test/rendering_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
   run_animation_performance_test: flutter drive --driver=test/integr
   run_gc_test: flutter drive --driver=test/integration_tests/gc_test/gc_test_driver.dart --target=test/integration_tests/gc_test/gc_test.dart
+
+  assets:
+    - assets/tips/
