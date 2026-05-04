@@ -55,44 +55,5 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
   run_smoke_test: bash scripts/run_smoke_test_with_retry.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
-run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
-  run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
-  run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
-  run_audio_regression_test: flutter drive --driver=test/integration_tests/audio_regression_test/audio_regression_test_driver.dart --target=test/integration_tests/audio_regression_test/audio_regression_test.dart
-  run_memory_leak_test: flutter drive --driver=test/integration_tests/memory_leak_test/memory_leak_test_driver.dart --target=test/integration_tests/memory_leak_test/memory_leak_test.dart
-  run_audio_edge_cases_test: flutter drive --driver=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test_driver.dart --target=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test.dart
-
-  run_unit_test_validation: flutter drive --driver=test/integration_tests/unit_test_validation/unit_test_validation_driver.dart --target=test/integration_tests/unit_test_validation/unit_test_validation_test.dart
-
-  run_base_href_validation_test: flutter drive --driver=test/integration_tests/base_href_validation_test/base_href_validation_test_driver.dart --target=test/integration_tests/base_href_validation_test/base_href_validation_test.dart --base-href=/game/
-
-openapi:
-  generator: openapi-generator-cli
-  output_dir: lib
-  api_spec: https://raw.githubusercontent.com/rebcm/passdriver/main/docs/openapi.yaml
-  api_package: services/openapi
-  model_package: models/openapi
-  template_dir: config/openapi_templates
-
-scripts:
-  run_build_runner: ./scripts/run_build_runner.sh
-  run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
-  generate_openapi_client: dart run openapi_generator_cli generate --config pubspec.yaml
-dev_dependencies:
-  build_runner: ^2.3.3
-  freezed_annotation: ^2.2.0
-  json_annotation: ^4.6.0
-  freezed: ^2.3.2
-  build_runner: ^2.3.3
-  freezed_annotation: ^2.2.0
-  json_annotation: ^4.6.0
-  openapi_generator_cli: ^1.0.0
-
-  run_multitouch_edge_cases_test: flutter drive --driver=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test_driver.dart --target=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test.dart
-
-  run_ci_cd_pipeline: bash ./scripts/run_ci_cd_pipeline.sh
-  run_smoke_test: bash scripts/run_smoke_test_with_retry.sh
-  run_checksum_test: bash scripts/run_checksum_test.sh
-
-scripts:
-  run_coverage_test: ./scripts/run_coverage_test.sh
+  run_docs_update_check: bash scripts/check_docs_update.sh
+  run_audio_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
