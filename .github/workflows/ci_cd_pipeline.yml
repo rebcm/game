@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,22 +20,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run smoke test
-        run: flutter test integration_test/smoke_test.dart
+      - name: Run tests
+        run: flutter test
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: build/web
-        if: success()
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
 
-      - name: Notify team on failure
-        uses: slackapi/slack-github-action@v1.24.0
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
         with:
-          payload: '{"text": "CI/CD pipeline failed"}'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+          name: test-results
+          path: test-results.xml
