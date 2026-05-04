@@ -15,3 +15,9 @@ void main() {
     expect(hasPermission, true);
   });
 }
+import 'package:game/volume_test/volume_test.dart' as volume_test;
+
+void main() {
+  volume_test.main();
+  // Other integration tests...
+}
