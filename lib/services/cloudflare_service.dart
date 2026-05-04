@@ -16,9 +16,10 @@ class CloudflareService {
         ),
       );
 
-      return response.data['result'] != null;
+      return response.data['result']['status'] == 'active';
     } catch (e) {
       return false;
     }
   }
 }
+
