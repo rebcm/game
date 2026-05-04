@@ -1,53 +1,29 @@
-# Mapeamento de Endpoints de Autenticação
+# Endpoint Mapping Documentation
 
-Este documento detalha os endpoints de autenticação utilizados no projeto, incluindo login, logout e refresh token. São especificados os payloads de credenciais e as estruturas de JWT/Tokens retornadas.
+## Overview
 
-## Endpoint: Login
+This document provides a detailed mapping of API endpoints used in the Passdriver Flutter application.
 
-* **URL:** `/auth/login`
-* **Método:** `POST`
-* **Payload:**
-  * `username`: Nome de usuário
-  * `password`: Senha do usuário
-* **Resposta:**
-  * `token`: JWT de autenticação
-  * `refreshToken`: Token de refresh
+## Endpoints
 
-## Endpoint: Logout
+| Endpoint | HTTP Method | Description |
+| --- | --- | --- |
+| /api/auth/login | POST | Authenticates user credentials |
+| /api/auth/logout | POST | Terminates user session |
+| /api/user/profile | GET | Retrieves user profile information |
 
-* **URL:** `/auth/logout`
-* **Método:** `POST`
-* **Payload:**
-  * `refreshToken`: Token de refresh
-* **Resposta:**
-  * `success`: Indicador de sucesso na operação
+## Implementation Details
 
-## Endpoint: Refresh Token
+The API routes are defined in the `route_matrix_definition.md` file.
 
-* **URL:** `/auth/refresh-token`
-* **Método:** `POST`
-* **Payload:**
-  * `refreshToken`: Token de refresh
-* **Resposta:**
-  * `token`: Novo JWT de autenticação
-  * `refreshToken`: Novo token de refresh (opcional)
+### Authentication Flow
 
-## Estrutura do JWT
+1. The client sends a POST request to `/api/auth/login` with credentials.
+2. Upon successful authentication, the server returns an authentication token.
+3. The client includes this token in subsequent requests to authenticated endpoints.
 
-O JWT retornado nos endpoints de login e refresh token segue o padrão de estrutura abaixo:
+## Security Considerations
 
-* **Header:**
-  * `alg`: Algoritmo de assinatura (ex: HS256)
-  * `typ`: Tipo do token (JWT)
-* **Payload:**
-  * `sub`: ID do usuário
-  * `exp`: Tempo de expiração
-  * `iat`: Tempo de emissão
-  * `username`: Nome de usuário
-* **Signature:** Assinatura do token
+- All sensitive data is transmitted over HTTPS.
+- Authentication tokens are stored securely on the client side.
 
-## Considerações de Segurança
-
-* Todos os endpoints de autenticação devem ser acessados via HTTPS.
-* O token de refresh deve ser armazenado de forma segura no cliente.
-* O JWT deve ser validado no servidor antes de conceder acesso a recursos protegidos.

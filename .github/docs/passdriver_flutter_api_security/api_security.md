@@ -1,55 +1,24 @@
-# Segurança da API do Passdriver Flutter
+# API Security Documentation
 
-## Visão Geral
+## Overview
 
-Este documento descreve as práticas de segurança implementadas na integração da API do Passdriver com o módulo Flutter no projeto Construção Criativa da Rebeca.
+This document outlines the security measures implemented to protect the Passdriver Flutter application's API interactions.
 
-## Práticas de Segurança
+## Authentication Mechanism
 
-1. **Autenticação**:
-   - Utiliza token JWT para autenticação.
-   - Implementa refresh token para manter sessão ativa.
+The application uses a token-based authentication system.
 
-2. **Criptografia**:
-   - Todas as comunicações são feitas via HTTPS (TLS).
-   - Dados sensíveis são criptografados no armazenamento local.
+### Token Handling
 
-3. **Validação de Entrada**:
-   - Todas as requisições HTTP validam parâmetros de entrada.
-   - Implementa tratamento adequado para erros de validação.
+- Tokens are issued upon successful login.
+- Tokens are validated on each request to protected endpoints.
+- Tokens are refreshed periodically to maintain session validity.
 
-4. **Controle de Acesso**:
-   - Endpoints protegidos por permissões específicas.
-   - Matriz de permissões documentada.
+## Error Handling
 
-## Implementação
+API errors are handled according to the guidelines in `api_error_handling.md`.
 
-### Autenticação
+## Examples
 
-```dart
-import 'package:dio/dio.dart';
+Refer to `examples/autenticacao.dart` for authentication implementation details.
 
-class ApiInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Adiciona token JWT no header de autorização
-    options.headers['Authorization'] = 'Bearer $token';
-    super.onRequest(options, handler);
-  }
-}
-```
-
-## Monitoramento e Logging
-
-1. **Erros de API**:
-   - Logados com informações relevantes (endpoint, status code, mensagem).
-   - Implementa retry strategy para erros transitórios.
-
-2. **Auditoria**:
-   - Ações críticas do usuário são logadas.
-   - Logs armazenados de forma segura.
-
-## Referências
-
-- [Mapeamento de Endpoints](../passdriver_flutter_api_routes/endpoint_mapping.md)
-- [Critérios de Aceitação para Segurança da API](../passdriver_flutter_api_security/criterios_aceitacao.md)
