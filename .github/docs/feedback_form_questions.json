@@ -1,25 +1,44 @@
 {
-  "questions": [
+  "onboarding_checklist": [
     {
-      "id": 1,
-      "text": "Qual é o seu nível de experiência com o jogo voxel moda criativo?",
-      "options": [
-        "Iniciante",
-        "Intermediário",
-        "Avançado"
-      ]
+      "question": "Você conseguiu instalar o Flutter na versão especificada no pubspec.yaml?",
+      "type": "boolean"
     },
     {
-      "id": 2,
-      "text": "Quais foram os principais desafios que você enfrentou durante a implementação do jogo?"
+      "question": "Você conseguiu configurar o Dart SDK corretamente?",
+      "type": "boolean"
     },
     {
-      "id": 3,
-      "text": "Quais recursos ou funcionalidades você acha que faltam na documentação atual?"
+      "question": "Você conseguiu instalar as dependências do projeto via 'flutter pub get'?",
+      "type": "boolean"
     },
     {
-      "id": 4,
-      "text": "Você tem alguma sugestão para melhorar a documentação ou a experiência do desenvolvedor?"
+      "question": "Você conseguiu configurar as variáveis de ambiente corretamente?",
+      "type": "boolean"
+    },
+    {
+      "question": "Você conseguiu compilar o projeto sem erros?",
+      "type": "boolean"
+    },
+    {
+      "question": "Você conseguiu executar os testes unitários e de integração sem falhas?",
+      "type": "boolean"
+    },
+    {
+      "question": "Você conseguiu executar o aplicativo no emulador ou dispositivo físico?",
+      "type": "boolean"
+    },
+    {
+      "question": "Houve alguma dúvida durante o processo de onboarding? Qual?",
+      "type": "text"
+    },
+    {
+      "question": "Encontrou algum erro ou problema durante a configuração ou execução do projeto? Qual?",
+      "type": "text"
+    },
+    {
+      "question": "Comentários adicionais ou sugestões de melhoria no processo de onboarding",
+      "type": "text"
     }
   ]
 }
