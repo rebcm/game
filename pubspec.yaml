@@ -66,3 +66,5 @@ scripts:
   run_memory_snapshot_test: bash scripts/run_memory_snapshot_test.sh
 
   run_readme_validation_test: bash scripts/run_readme_validation_test
+
+  run_api_contract_validation_test: flutter drive --driver=test/integration_tests/api_contract_validation_test/api_contract_validation_test_driver.dart --target=test/integration_tests/api_contract_validation_test/api_contract_validation_test.dart
