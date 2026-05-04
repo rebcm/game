@@ -5,18 +5,25 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('test interruption during audio playback', (tester) async {
+  testWidgets('interruption test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
-    // Simulate audio playback
-    // Verify that audio playback is interrupted by external events
-  });
 
-  testWidgets('test resume after interruption', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // Simulate audio playback
+    // Start audio playback
+    // await tester.tap(find.byType(ElevatedButton)); // Example button to start audio
+
     // Simulate interruption
-    // Verify that audio playback resumes correctly
+    await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pumpAndSettle();
+
+    // Verify audio state after interruption
+    // expect(find.text('Audio paused'), findsOneWidget);
+
+    // Resume app
+    await tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    // Verify audio state after resuming
+    // expect(find.text('Audio resumed'), findsOneWidget);
   });
 }

@@ -65,3 +65,5 @@ scripts:
   run_data_source_test: bash scripts/run_data_source_test.sh
 
   run_retention_test: bash scripts/run_retention_test.sh
+
+  run_interruption_test: ./scripts/run_interruption_test.sh
