@@ -47,3 +47,5 @@ scripts:
   run_texture_mapping_test: flutter drive --driver=test/integration_tests/texture_mapping_test/texture_mapping_test_driver.dart --target=test/integration_tests/texture_mapping_test/texture_mapping_test.dart
   run_environment_provisioning_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/environment_provisioning_performance_test/environment_provisioning_performance_test.dart
   run_build_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/build_validation_test/build_validation_test.dart
+
+  run_binary_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/binary_validation_test/binary_validation_test.dart
