@@ -69,3 +69,6 @@ flutter:
     - test_driver/passdriver_flutter_golden_tests/golden_test_runner.dart
     - test_driver/passdriver_flutter_permission_test/permission_test.dart
     - test_driver/passdriver_flutter_collision_test/collision_test.dart
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_matrix_testing/matrix_testing_test.dart
