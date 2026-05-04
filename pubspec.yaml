@@ -61,36 +61,8 @@ flutter:
   integration_test:
     path: test_driver/integration_test/integration_test.dart
   additional_test_paths:
-  additional_test_paths:
     - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
     - test_driver/passdriver_flutter_version_check/version_check_test.dart
+    - test_driver/passdriver_flutter_chunk_collision_test/chunk_collision_test.dart
 
 golden_toolkit: ^0.15.0
-
-  additional_test_paths:
-  additional_test_paths:
-    - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
-    - test_driver/passdriver_flutter_load_test/load_test.dart
-
-  additional_test_paths:
-  additional_test_paths:
-    - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
-    - test_driver/passdriver_flutter_permission_test/permission_test.dart
-
-  additional_test_paths:
-  additional_test_paths:
-    - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
-    - test_driver/passdriver_flutter_qos_test/qos_test.dart
-
-  additional_test_paths:
-  additional_test_paths:
-    - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
-    - test_driver/passdriver_flutter_retention_test/retention_test.dart
-
-  additional_test_paths:
-  additional_test_paths:
-    - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
-    - test_driver/passdriver_flutter_edge_cases/edge_cases_test.dart
-
-  additional_test_paths:
-    - test_driver/passdriver_flutter_input_latency_test/input_latency_test.dart
