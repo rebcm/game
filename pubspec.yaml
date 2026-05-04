@@ -36,6 +36,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
 
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
@@ -45,7 +46,6 @@ scripts:
   run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
   run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_audio_regression_test: flutter drive --driver=test/integration_tests/audio_regression_test/audio_regression_test_driver.dart --target=test/integration_tests/audio_regression_test/audio_regression_test.dart
-  run_runtime_error_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/runtime_error_test/runtime_error_test.dart
   run_memory_leak_test: flutter drive --driver=test/integration_tests/memory_leak_test/memory_leak_test_driver.dart --target=test/integration_tests/memory_leak_test/memory_leak_test.dart
   run_audio_edge_cases_test: flutter drive --driver=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test_driver.dart --target=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test.dart
 
@@ -62,6 +62,7 @@ openapi:
   template_dir: config/openapi_templates
 
 scripts:
+  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   generate_openapi_client: dart run openapi_generator_cli generate --config pubspec.yaml
 dev_dependencies:
   openapi_generator_cli: ^1.0.0
