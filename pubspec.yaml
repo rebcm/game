@@ -63,3 +63,6 @@ scripts:
 
 scripts:
   run_performance_test: ./scripts/run_performance_test.sh
+
+  run_traceability_test: flutter drive --driver=test/integration_tests/traceability_test/traceability_test_driver.dart --target=test/integration_tests/traceability_test/traceability_test.dart
+
