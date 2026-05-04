@@ -1,6 +1,6 @@
 # Guia de Erros Comuns no Projeto Rebcm/Game
 
-Este documento visa catalogar os erros mais comuns encontrados nos logs do pipeline do projeto Rebcm/Game, fornecendo soluções práticas para cada caso.
+Este documento visa catalogar os erros mais comuns encontrados nos logs do pipeline do projeto Rebcm/Game, juntamente com suas soluções recomendadas.
 
 ## Introdução
 
@@ -12,21 +12,29 @@ Durante o desenvolvimento e execução do projeto Rebcm/Game, diversos erros pod
 
 **Mensagem de Erro:** `Error: Could not find or load main class`
 
-**Solução:** Verifique se as variáveis de ambiente estão corretamente configuradas. Certifique-se de que o `PATH` inclui a localização do JDK necessário para o projeto.
+**Solução:** Verifique se as variáveis de ambiente estão corretamente configuradas. Certifique-se de que o arquivo `.env` está presente e corretamente preenchido com base no `.env.example`.
 
-### 2. Falha na Comunicação com o Serviço de Autenticação
+### 2. Falha na Inicialização do Flutter
 
-**Mensagem de Erro:** `SocketException: Failed host lookup`
+**Mensagem de Erro:** `Flutter failed to initialize`
 
-**Solução:** Verifique a conexão de rede e certifique-se de que o serviço de autenticação está disponível e configurado corretamente.
+**Solução:** Execute `flutter clean` e `flutter pub get` para limpar e reinstalar as dependências do projeto.
 
-### 3. Exceção de Memória
+### 3. Exceção de Permissão Negada
 
-**Mensagem de Erro:** `OutOfMemoryError`
+**Mensagem de Erro:** `Permission denied`
 
-**Solução:** Ajuste as configurações de memória da aplicação. Isso pode incluir aumentar o limite de memória heap ou otimizar o uso de memória pelo código.
+**Solução:** Verifique as permissões necessárias no arquivo `pubspec.yaml` e certifique-se de que o `permission_handler` está corretamente configurado e utilizado no código.
 
-## Conclusão
+## Adicionando Novos Erros
 
-Este guia deve ser utilizado como referência para diagnosticar e resolver erros comuns no projeto Rebcm/Game. É importante manter este documento atualizado com novos erros e soluções à medida que são identificados.
+Para adicionar um novo erro comum e sua solução, por favor, siga os passos abaixo:
+
+1. Identifique a mensagem de erro específica.
+2. Desenvolva e verifique a solução para o erro.
+3. Adicione uma nova seção neste documento seguindo o formato existente.
+
+## Contribuição
+
+Contribuições para este guia são bem-vindas. Para contribuir, por favor, siga as diretrizes de contribuição do projeto.
 
