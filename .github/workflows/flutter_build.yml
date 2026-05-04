@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Decrypt secrets
+      - name: Decode keystores
         env:
-          SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
-        run: .github/scripts/secrets_management/decrypt_secrets.sh
+          KEYSTORE_JKS_BASE64: ${{ secrets.KEYSTORE_JKS_BASE64 }}
+          KEYSTORE_P12_BASE64: ${{ secrets.KEYSTORE_P12_BASE64 }}
+        run: .github/workflows/scripts/decode_keystores.sh
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
