@@ -36,7 +36,6 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
-  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
 
@@ -45,7 +44,6 @@ scripts:
 
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
   run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
-  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   run_audio_regression_test: flutter drive --driver=test/integration_tests/audio_regression_test/audio_regression_test_driver.dart --target=test/integration_tests/audio_regression_test/audio_regression_test.dart
   run_memory_leak_test: flutter drive --driver=test/integration_tests/memory_leak_test/memory_leak_test_driver.dart --target=test/integration_tests/memory_leak_test/memory_leak_test.dart
@@ -64,7 +62,6 @@ openapi:
   template_dir: config/openapi_templates
 
 scripts:
-  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   generate_openapi_client: dart run openapi_generator_cli generate --config pubspec.yaml
 dev_dependencies:
@@ -73,3 +70,4 @@ dev_dependencies:
   run_multitouch_edge_cases_test: flutter drive --driver=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test_driver.dart --target=test/integration_tests/multitouch_edge_cases_test/multitouch_edge_cases_test.dart
 
   run_ci_cd_pipeline: bash ./scripts/run_ci_cd_pipeline.sh
+  run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
