@@ -64,3 +64,5 @@ scripts:
   run_profiling_test: ./scripts/run_profiling_test.sh
 
   run_logging_integration_test: flutter drive --driver=test/integration_tests/logging_integration_test/logging_integration_test_driver.dart --target=test/integration_tests/logging_integration_test/logging_integration_test.dart
+
+  run_tip_validation_test: ./scripts/run_tip_validation_test.sh
