@@ -55,20 +55,7 @@ scripts:
   run_build_runner: ./scripts/run_build_runner.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
-  run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
+  run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_uv_map_test: bash scripts/run_uv_map_test.sh
-  scripts:
-    deploy_preview: bash scripts/deploy_preview.sh
-
-scripts:
-  update_log_analysis_docs: ./scripts/update_log_analysis_docs.sh
-
-  run_memory_test: bash scripts/run_memory_test.sh
-
-  run_data_source_test: bash scripts/run_data_source_test.sh
-  run_memory_test: bash scripts/run_memory_test
-
-  run_memory_snapshot_test: bash scripts/run_memory_snapshot_test.sh
-
-  run_memory_test: bash scripts/run_memory_test.sh
+  run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart

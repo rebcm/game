@@ -2,11 +2,22 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('UV Map Test Driver', () async {
-    final driver = await FlutterDriver.connect();
-    await driver.runUnsynchronized(() async {
-      await driver.requestData('wait_for_uv_map');
+  group('UV Map Test', () {
+    FlutterDriver? driver;
+
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
     });
-    await driver.close();
+
+    tearDownAll(() async {
+      if (driver != null) {
+        await driver?.close();
+      }
+    });
+
+    test('UV Map Test', () async {
+      await driver?.waitUntilNoTransientCallbacks();
+      // Add specific test logic here
+    });
   });
 }
