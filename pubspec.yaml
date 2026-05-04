@@ -159,3 +159,6 @@ flutter:
 
   token_validation_test:
     path: ./integration_test/token_validation_test
+
+  cross_browser_tests:
+    path: ./test/cross_browser_tests
