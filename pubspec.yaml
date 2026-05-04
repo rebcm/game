@@ -56,6 +56,7 @@ scripts:
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
+  run_cloudflare_worker_integration_test: flutter drive --driver=test/integration_tests/cloudflare_worker_integration_test/cloudflare_worker_integration_test_driver.dart --target=test/integration_tests/cloudflare_worker_integration_test/cloudflare_worker_integration_test.dart
   coverage: flutter test --coverage
   codecov: bash -c "curl -s https://codecov.io/bash | bash -s -- -t \$CODECOV_TOKEN"
 
