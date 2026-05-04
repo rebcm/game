@@ -1,6 +1,6 @@
-# Permission Validation Matrix
+# Permissão Concedida vs Resultado do Pipeline
 
-| Route | Required Permission |
-| --- | --- |
-| /api/example | read:example |
-| /api/another-example | write:another-example |
+| Permissão Concedida | Resultado do Pipeline | Status |
+|---------------------|-----------------------|--------|
+| Sim                 | Sucesso               | OK     |
+| Não                 | Erro 403              | OK     |

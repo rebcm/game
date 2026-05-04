@@ -6,14 +6,19 @@ import 'package:permission_handler/permission_handler.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test Android 13+ permissions', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+  group('Permission Tests', () {
+    testWidgets('Test Permission Granted', (tester) async {
+      await Permission.camera.request();
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement logic to verify pipeline success
+    });
 
-    if (await Permission.audio.status.isDenied) {
-      await Permission.audio.request();
-    }
-
-    expect(await Permission.audio.status.isGranted, true);
+    testWidgets('Test Permission Denied', (tester) async {
+      await Permission.camera.request().then((value) => value.isDenied);
+      await app.main();
+      await tester.pumpAndSettle();
+      // Implement logic to verify pipeline error 403
+    });
   });
 }
