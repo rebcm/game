@@ -90,3 +90,6 @@ flutter:
 
   api_service_test:
     path: ./test/unit_tests/services/api_service_test
+
+  audio_edge_cases_test:
+    path: ./test/integration_tests/audio_tests

@@ -5,21 +5,33 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('test audio loss of connection', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // Simulate loss of connection and verify audio behavior
-  });
+  group('Audio Edge Cases', () {
+    testWidgets('Test audio playback when connection is lost', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simulate connection loss and verify audio behavior
+      // Implementation depends on the specific audio handling in the app
+    });
 
-  testWidgets('test audio switching between headphones and speaker', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // Simulate switching between headphones and speaker and verify audio behavior
-  });
+    testWidgets('Test audio playback in silent mode', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simulate silent mode and verify audio behavior
+      // Implementation depends on the specific audio handling in the app
+    });
 
-  testWidgets('test audio behavior in silent mode', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
-    // Simulate silent mode and verify audio behavior
+    testWidgets('Test audio interruption by phone calls', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simulate phone call interruption and verify audio behavior
+      // Implementation depends on the specific audio handling in the app
+    });
+
+    testWidgets('Test audio playback with hardware permission denied', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Simulate hardware permission denial and verify audio behavior
+      // Implementation depends on the specific audio handling in the app
+    });
   });
 }
