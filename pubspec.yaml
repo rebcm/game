@@ -62,6 +62,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_test_and_analyze: flutter test && flutter analyze
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
@@ -73,6 +74,7 @@ scripts:
   run_gc_forcing_test: flutter drive --driver=test/integration_tests/gc_forcing_test/gc_forcing_test_driver.dart --target=test/integration_tests/gc_forcing_test/gc_forcing_test.dart
 
 scripts:
+  run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_animation_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
 
   run_content_regression_test: bash scripts/run_content_regression_test.sh
@@ -112,6 +114,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_failure_mapping_test: bash scripts/run_failure_mapping_test
   run_pr_description_validation_test: flutter drive --driver=test/integration_tests/pr_description_validation_test/pr_description_validation_test_driver.dart --target=test/integration_tests/pr_description_validation_test/pr_description_validation_test.dart
 
   assets:
@@ -119,3 +122,5 @@ scripts:
 
   scripts:
     run_pr_description_validation_test: flutter test test/unit_tests/utils/pr_description_validator_test.dart
+
+  run_failure_mapping_test: bash scripts/run_failure_mapping_test
