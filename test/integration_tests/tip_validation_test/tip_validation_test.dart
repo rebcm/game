@@ -6,30 +6,29 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Validate tips are displayed during gameplay', (tester) async {
-    app.main();
+  testWidgets('Validate tip visibility and content', (tester) async {
+    await app.main();
     await tester.pumpAndSettle();
 
-    final tipFinder = find.text('Dica: Construa usando diferentes blocos');
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final tipFinder = find.text('Dica: Construa sua estrutura aqui!');
     expect(tipFinder, findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.build));
+    final closeTipButton = find.byIcon(Icons.close);
+    await tester.tap(closeTipButton);
     await tester.pumpAndSettle();
 
     expect(tipFinder, findsNothing);
   });
 
-  testWidgets('Validate tips change after certain interval', (tester) async {
-    app.main();
+  testWidgets('Validate tip navigation', (tester) async {
+    await app.main();
     await tester.pumpAndSettle();
 
-    final initialTip = find.text('Dica: Construa usando diferentes blocos');
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    expect(initialTip, findsOneWidget);
+    final nextTipButton = find.text('Próxima Dica');
+    await tester.tap(nextTipButton);
+    await tester.pumpAndSettle();
 
-    await tester.pumpAndSettle(const Duration(seconds: 10));
-    final changedTip = find.text('Dica: Experimente mudar a cor dos blocos');
-    expect(changedTip, findsOneWidget);
+    final tipContent = find.text('Dica: Use diferentes blocos para criar!');
+    expect(tipContent, findsOneWidget);
   });
 }

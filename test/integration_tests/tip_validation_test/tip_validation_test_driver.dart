@@ -2,19 +2,27 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver? driver;
+  group('Tip Validation Test', () {
+    FlutterDriver? driver;
 
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-  tearDownAll(() async {
-    driver?.close();
-  });
+    tearDownAll(() async {
+      if (driver != null) {
+        await driver?.close();
+      }
+    });
 
-  test('Validate tips UX', () async {
-    final tipFinder = find.byValueKey('tip_text');
-    await driver?.waitFor(tipFinder);
-    expect(await driver?.getText(tipFinder), isNotEmpty);
+    test('Validate tip interaction', () async {
+      final tipFinder = find.byText('Dica: Construa sua estrutura aqui!');
+      await driver?.waitFor(tipFinder);
+
+      final closeTipButton = find.byIcon(Icons.close);
+      await driver?.tap(closeTipButton);
+
+      await driver?.waitForAbsent(tipFinder);
+    });
   });
 }
