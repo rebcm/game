@@ -1,15 +1,12 @@
-/// Exemplo de uso de voxel no jogo
-class Voxel {
-  int x, y, z;
-
-  Voxel(this.x, this.y, this.z);
-
-  void render() {
-    // Lógica para renderizar o voxel
+/// Exemplo de utilização de voxels no jogo.
+///
+/// Este exemplo demonstra como criar um voxel e manipulá-lo.
+class ExemploVoxel {
+  void criarVoxel() {
+    // Implementação da criação de um voxel.
   }
-}
 
-void main() {
-  Voxel voxel = Voxel(1, 2, 3);
-  voxel.render();
+  void manipularVoxel() {
+    // Implementação da manipulação de um voxel.
+  }
 }
