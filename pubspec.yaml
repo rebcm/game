@@ -12,3 +12,5 @@ flutter:
     path: test_driver/volume_integration_test/volume_integration_test.dart
   seo_validation_test:
     path: test_driver/seo_validation_test/seo_validation_test.dart
+  lint_parser_test:
+    path: test_driver/lint_parser_test/lint_parser_test.dart
