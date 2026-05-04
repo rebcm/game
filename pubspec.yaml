@@ -67,3 +67,4 @@ scripts:
   run_memory_test: bash scripts/run_memory_test.sh
 
   run_data_source_test: bash scripts/run_data_source_test.sh
+  run_memory_test: bash scripts/run_memory_test
