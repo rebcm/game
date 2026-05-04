@@ -114,3 +114,6 @@ scripts:
     path: test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart
   run_traceability_tests: flutter drive --driver=test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart --target=test/integration_tests/traceability_matrix/traceability_test.dart
   run_traceability_tests: bash scripts/run_traceability_tests.sh
+
+scripts:
+  run_environment_matrix_tests: bash scripts/run_environment_matrix_tests.sh
