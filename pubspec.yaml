@@ -134,3 +134,6 @@ scripts:
   run_setup_validation_test: bash scripts/run_setup_validation_test
 
   run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
+
+scripts:
+  run_markdown_lint_test: bash scripts/run_markdown_lint_test.sh
