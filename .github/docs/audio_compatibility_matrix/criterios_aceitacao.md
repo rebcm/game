@@ -1,23 +1,29 @@
-# Matriz de Compatibilidade de Áudio
+# Critérios de Aceitação para Matriz de Áudio
 
-## Introdução
+## Versões de OS
 
-Este documento define os critérios de aceitação para a validação de diferentes saídas de áudio no jogo Rebeca.
+* Android 10+
+* iOS 13+
 
-## Critérios de Aceitação
+## Navegadores
 
-| Saída de Áudio | Critério de Aceitação |
-| --- | --- |
-| Alto-falante interno | O áudio deve ser reproduzido corretamente sem distorção |
-| Fone de ouvido com fio | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
-| Bluetooth | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
-| Hands-free profile (HFP) | O áudio deve ser reproduzido corretamente sem distorção quando conectado |
+* Google Chrome (última versão)
+* Mozilla Firefox (última versão)
+* Safari (última versão)
 
-## Testes
+## Modelos de Hardware Prioritários
 
-Os testes devem ser realizados em diferentes dispositivos e plataformas para garantir a compatibilidade.
+* Samsung Galaxy S21
+* Apple iPhone 13
+* Google Pixel 6
 
-## Implementação
+## Critérios de Teste
 
-A implementação deve ser feita utilizando a biblioteca `audioplayers` já existente no projeto.
+1. Reprodução de áudio sem interrupções
+2. Suporte a formatos de áudio utilizados no jogo
+3. Volume e controle de áudio funcionais
 
+## Resultados Esperados
+
+* O áudio é reproduzido corretamente em todos os ambientes testados
+* Não há erros ou falhas na reprodução de áudio
