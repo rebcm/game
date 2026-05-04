@@ -15,7 +15,8 @@ void main() {
   });
 
   test('Animação da Rebeca', () async {
-    // Implementar lógica para conduzir o teste
+    await driver?.runUnsynchronized(() async {
+      // Implementação do teste utilizando Flutter Driver
+    });
   });
 }
-
