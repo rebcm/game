@@ -2,22 +2,16 @@
 
 ## Introdução
 
-Este documento apresenta os resultados do benchmark técnico comparando as tecnologias Rive, Lottie e Procedural para a animação da caminhada da personagem Rebeca.
+Este documento visa comparar as tecnologias Rive, Lottie e Procedural para a implementação da animação de caminhada da personagem Rebeca.
 
 ## Metodologia
 
-- Foram criados três protótipos utilizando Rive, Lottie e animação procedural.
-- Os protótipos foram testados em dispositivos móveis e desktop.
-- Foram coletadas métricas de consumo de memória, FPS e facilidade de ajuste de frames.
+Será desenvolvido um protótipo com as três tecnologias e medido o consumo de memória, FPS e facilidade de ajuste de frames.
 
 ## Resultados
 
-| Tecnologia | Consumo de Memória | FPS | Facilidade de Ajuste |
-| --- | --- | --- | --- |
-| Rive | TBD | TBD | TBD |
-| Lottie | TBD | TBD | TBD |
-| Procedural | TBD | TBD | TBD |
+Os resultados serão documentados aqui após a execução dos testes.
 
 ## Conclusão
 
-TBD
+A tecnologia escolhida será documentada aqui com base nos resultados.
