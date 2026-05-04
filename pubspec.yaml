@@ -1,4 +1,6 @@
 flutter:
+  flutter_test_validation:
+    path: test_driver/flutter_test_validation/flutter_test_validation.dart
   input_validation_test:
     path: test_driver/input_validation_test/input_validation_test.dart
   uses-material-design: true
