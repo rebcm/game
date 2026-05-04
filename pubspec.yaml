@@ -60,3 +60,5 @@ scripts:
   codecov: bash -c "curl -s https://codecov.io/bash | bash -s - -t \$CODECOV_TOKEN"
 
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
+
+  run_audio_integration_test: bash scripts/run_audio_integration_test
