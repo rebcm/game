@@ -67,3 +67,6 @@ flutter:
     path: test/ci_cd_validation/ci_cd_validation_test.dart
   test_driver/integration_test.dart:
     path: test_driver/integration_test.dart
+
+  test_driver/volume_integration_test.dart:
+    path: test_driver/volume_integration_test.dart
