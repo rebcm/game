@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/secrets_validator.dart';
+import 'package:game/rendering_prototype/renderers/basic_model_renderer.dart';
 
-void main() async {
-  await SecretsValidator.validateSecrets();
+void main() {
   runApp(MyApp());
 }
 
@@ -11,7 +10,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rebeca\'s Creative Game',
-      home: // Your home widget here,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: BasicModelRenderer(),
     );
   }
 }
