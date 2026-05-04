@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Install wrangler if not already installed
-if ! command -v wrangler &> /dev/null; then
-  npm install -g wrangler
-fi
+# Authenticate with Cloudflare using the API token
+wrangler config --api-token ${CLOUDFLARE_API_TOKEN}
 
 # Deploy to Cloudflare
-wrangler pages deploy build/web --project-name=rebcm-game
+wrangler publish

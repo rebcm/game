@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Cloudflare
 
 on:
   push:
@@ -12,10 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run deploy strategy decision script
-        run: |
-          ./.github/workflows/scripts/deploy_strategy_decision.sh
+      - name: Setup wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-      - name: Deploy with Wrangler CLI
+      - name: Deploy to Cloudflare
         run: |
-          wrangler deploy
+          wrangler publish
