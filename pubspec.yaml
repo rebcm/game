@@ -60,5 +60,7 @@ flutter:
 
   integration_test:
     path: test_driver/integration_test/integration_test.dart
+  additional_test_paths:
+    - test_driver/passdriver_flutter_version_check/version_check_test.dart
 
-  golden_toolkit: ^0.15.0
+golden_toolkit: ^0.15.0
