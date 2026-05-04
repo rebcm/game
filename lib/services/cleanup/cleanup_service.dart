@@ -1,10 +1,20 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class CleanupService {
-  Future<void> cleanup() async {
-    final response = await http.delete(Uri.parse('https://example.com/api/cleanup'));
-    if (response.statusCode != 200) {
-      throw Exception('Failed to cleanup');
+  final Dio _dio;
+
+  CleanupService(this._dio);
+
+  Future<void> configureCleanupPolicy() async {
+    try {
+      final response = await _dio.post('/cleanup/configure');
+      if (response.statusCode == 200) {
+        print('Cleanup policy configured successfully');
+      } else {
+        print('Failed to configure cleanup policy: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Error configuring cleanup policy: $e');
     }
   }
 }
