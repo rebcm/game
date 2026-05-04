@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:game/test/ui_test_config/device_matrix.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  group('UI Validation Test', () {
+  group('Text Overflow Test', () {
     for (var device in DeviceMatrix.devices) {
-      testWidgets('Validate UI on ${device.name}', (tester) async {
+      testWidgets('Test text overflow on ${device.name}', (tester) async {
         await tester.binding.setSurfaceSize(device.screenSize);
         await tester.pumpWidget(
           MaterialApp(

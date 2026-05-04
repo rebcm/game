@@ -144,3 +144,9 @@ flutter:
 
   performance_tracking:
     path: ./benchmarks/performance_tracking
+
+  ui_test_config:
+    path: ./test/ui_test_config
+
+  ui_validation_test:
+    path: ./integration_test/ui_validation_test
