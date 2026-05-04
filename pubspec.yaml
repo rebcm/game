@@ -132,3 +132,5 @@ scripts:
 
   run_setup_validation_test: bash scripts/run_setup_validation_test
   run_setup_validation_test: bash scripts/run_setup_validation_test
+
+  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
