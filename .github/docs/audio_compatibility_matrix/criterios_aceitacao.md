@@ -1,29 +1,16 @@
-# Critérios de Aceitação para Matriz de Áudio
+# Matriz de Compatibilidade de Áudio
 
-## Versões de OS
+## Introdução
 
-* Android 10+
-* iOS 13+
+Este documento descreve os critérios de aceitação para a compatibilidade de áudio no jogo.
 
-## Navegadores
+## Critérios de Aceitação
 
-* Google Chrome (última versão)
-* Mozilla Firefox (última versão)
-* Safari (última versão)
+1. O jogo deve ser capaz de reproduzir áudio através do alto-falante interno.
+2. O jogo deve ser capaz de reproduzir áudio através de fone de ouvido com fio.
+3. O jogo deve ser capaz de reproduzir áudio via Bluetooth.
+4. O jogo deve ser capaz de reproduzir áudio via Hands-free profile (HFP).
 
-## Modelos de Hardware Prioritários
+## Testes
 
-* Samsung Galaxy S21
-* Apple iPhone 13
-* Google Pixel 6
-
-## Critérios de Teste
-
-1. Reprodução de áudio sem interrupções
-2. Suporte a formatos de áudio utilizados no jogo
-3. Volume e controle de áudio funcionais
-
-## Resultados Esperados
-
-* O áudio é reproduzido corretamente em todos os ambientes testados
-* Não há erros ou falhas na reprodução de áudio
+Os testes de compatibilidade de áudio serão realizados utilizando o script `run_audio_compatibility_tests.sh`.

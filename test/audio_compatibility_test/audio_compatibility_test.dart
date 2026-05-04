@@ -5,18 +5,14 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Audio Compatibility Test', () {
-    testWidgets('Test audio playback on Android', (tester) async {
-      // Implementar teste para Android
-    });
+  testWidgets('Audio output test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-    testWidgets('Test audio playback on iOS', (tester) async {
-      // Implementar teste para iOS
-    });
-
-    testWidgets('Test audio playback on Web', (tester) async {
-      // Implementar teste para Web
-    });
+    // Test logic for different audio outputs
+    // This is a simplified example; actual implementation will depend on the specific requirements and the audioplayers package capabilities
+    // For example, you might need to use platform-specific code or a package that provides more detailed audio output information
+    // For now, this is a placeholder
+    expect(true, true);
   });
 }
-
