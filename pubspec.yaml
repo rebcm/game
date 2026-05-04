@@ -52,30 +52,8 @@ scripts:
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
   run_checksum_test: bash scripts/run_checksum_test.sh
-
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
-
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
-  coverage: flutter test --coverage
-  codecov: bash -c "curl -s https://codecov.io/bash | bash -s - -t \$CODECOV_TOKEN"
+  run_ux_dicas_test: flutter drive --driver=test/integration_tests/ux_dicas_test/ux_dicas_test_driver.dart --target=test/integration_tests/ux_dicas_test/ux_dicas_test.dart
 
-  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
-
-  run_audio_integration_test: bash scripts/run_audio_integration_test
-
-  run_system_interruption_test: flutter drive --driver=test/integration_tests/system_interruption_test/system_interruption_test_driver.dart --target=test/integration_tests/system_interruption_test/system_interruption_test.dart
-
-scripts:
-  run_ci_cd_pipeline: bash scripts/run_ci_cd_pipeline.sh
-
-  run_audio_documentation_test: flutter test test/docs/audio/audio_documentation_test.dart
-
-  run_audio_documentation_test: bash scripts/run_audio_documentation_test.sh
-
-  run_readme_validation_test: bash scripts/validate_readme.sh
-
-  run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
-
-
-  run_upload_artifact_test: flutter test test/lib/actions/upload_artifact_test.dart
