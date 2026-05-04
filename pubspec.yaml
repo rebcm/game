@@ -74,3 +74,5 @@ scripts:
 
 scripts:
   run_texture_mapping_tests: bash scripts/run_texture_mapping_tests.sh
+scripts:
+  update_distribution_docs: bash scripts/update_distribution_docs.sh
