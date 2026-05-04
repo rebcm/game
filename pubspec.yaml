@@ -46,6 +46,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_build_runner: ./scripts/run_build_runner.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
