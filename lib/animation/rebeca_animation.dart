@@ -1,15 +1,16 @@
-class RebecaAnimation {
-  bool _isAnimating = false;
+import 'package:rive/rive.dart';
 
-  bool get isAnimating => _isAnimating;
+class RebecaAnimation extends StatefulWidget {
+  @override
+  _RebecaAnimationState createState() => _RebecaAnimationState();
+}
 
-  void animate() {
-    _isAnimating = true;
-    // animation logic here
-  }
-
-  void stop() {
-    _isAnimating = false;
-    // stop animation logic here
+class _RebecaAnimationState extends State<RebecaAnimation> {
+  @override
+  Widget build(BuildContext context) {
+    return RiveAnimation.asset(
+      'assets/rebeca_animation.riv',
+      fit: BoxFit.cover,
+    );
   }
 }
