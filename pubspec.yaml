@@ -75,3 +75,5 @@ scripts:
   run_schema_test: flutter test test/schema_test/schema_test.dart
 
   run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
+
+  run_performance_test: flutter drive --driver=test/integration_tests/performance_test/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart
