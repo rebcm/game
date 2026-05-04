@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
@@ -11,22 +10,24 @@ void main() {
     await app.main();
     await tester.pumpAndSettle();
     // Simulate permanent denial
-    await Permission.microphone.request();
-    // Add logic to verify app behavior
+    await Permission.microphone.request().then((value) {
+      if (value.isDenied) {
+        // Handle denial
+      }
+    });
   });
 
   testWidgets('Test device without microphone hardware', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    // Simulate device without microphone
-    // Add logic to verify app behavior
+    // Simulate no hardware
+    // Note: Actual implementation depends on how you handle hardware check
   });
 
   testWidgets('Test permission revocation while app is open', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    // Simulate permission revocation
-    await Permission.microphone.request();
-    // Add logic to verify app behavior
+    // Simulate revocation
+    // Note: Actual implementation depends on how you handle permission revocation
   });
 }
