@@ -1,17 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/audio_manager.dart';
+import 'package:game/audio_manager/audio_manager.dart';
 
 void main() {
-  group('AudioManager', () {
-    test('Deve pausar a música quando a conexão for perdida', () async {
-      // Arrange
-      final audioManager = AudioManager();
+  test('AudioManager initializes with default volume', () {
+    final audioManager = AudioManager();
+    expect(audioManager.volume, 1.0);
+  });
 
-      // Act
-      await audioManager.pauseMusic();
-
-      // Assert
-      expect(audioManager.isMusicPlaying(), false);
-    });
+  test('AudioManager sets volume correctly', () {
+    final audioManager = AudioManager();
+    audioManager.setVolume(0.5);
+    expect(audioManager.volume, 0.5);
   });
 }
