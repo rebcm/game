@@ -1,9 +1,9 @@
-import 'package:game/domain/content_provider/content_provider_contract.dart';
+import 'package:game/domain/content_provider/content_provider.dart';
 
-class LocalContentProvider implements ContentProviderContract {
+class LocalContentProvider implements ContentProvider {
   @override
   Future<String> getTip() async {
     // Implement local storage logic here
-    return 'This is a local tip';
+    return 'Local tip';
   }
 }
