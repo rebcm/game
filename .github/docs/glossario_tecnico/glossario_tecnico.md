@@ -1,23 +1,19 @@
-# Glossário Técnico do Projeto Rebeca
+# Glossário Técnico
 
-Este glossário visa padronizar a terminologia utilizada na documentação e no desenvolvimento do projeto Rebeca, garantindo consistência e clareza na comunicação entre os membros da equipe.
+Este documento define termos técnicos utilizados no projeto passdriver flutter.
 
-## Termos Técnicos
+## Termos
 
-1. **Voxel**: Unidade cúbica que representa um elemento tridimensional em um espaço discreto.
-2. **Bioma**: Região com características ecológicas distintas dentro do jogo.
-3. **Chunk**: Divisão espacial do mundo do jogo para otimização de renderização.
-4. **API**: Application Programming Interface - interface de programação de aplicações.
-5. **Flutter**: Framework de desenvolvimento de aplicativos multiplataforma utilizado no projeto.
+### Voxel
+Um voxel é uma unidade de medida tridimensional utilizada para representar gráficos 3D.
 
-## Termos de Desenvolvimento
+### Chunk
+Um chunk é uma subdivisão do mundo do jogo em blocos menores para otimizar a renderização.
 
-1. **Widget**: Componente básico de interface do usuário no Flutter.
-2. **Dart**: Linguagem de programação utilizada para desenvolver aplicações Flutter.
-3. **Pubspec**: Arquivo de configuração de dependências e metadados do projeto Flutter.
+### API
+API (Application Programming Interface) é uma interface de programação de aplicações que permite a comunicação entre diferentes sistemas.
 
-## Boas Práticas
+## Exemplos
 
-- Utilize os termos conforme definidos neste glossário para manter a consistência da documentação.
-- Novas terminologias devem ser propostas e discutidas pela equipe antes de serem adicionadas ao glossário.
+Para exemplos de implementação, consulte a pasta [exemplos](./exemplos/).
 

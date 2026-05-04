@@ -1,21 +1,16 @@
-/// Exemplo de utilização do conceito de voxel no código.
-///
-/// Este exemplo demonstra como um voxel pode ser representado e manipulado.
+// Exemplo de utilização de voxels no jogo
 class Voxel {
-  int x, y, z; // Coordenadas do voxel no espaço tridimensional.
+  int x, y, z;
 
-  /// Construtor para inicializar as coordenadas do voxel.
   Voxel(this.x, this.y, this.z);
 
-  /// Método para renderizar o voxel.
   void render() {
-    // Implementação da lógica de renderização.
+    // Lógica para renderizar o voxel
   }
 }
 
 void main() {
-  // Criação de um voxel na posição (1, 2, 3).
-  Voxel meuVoxel = Voxel(1, 2, 3);
-  meuVoxel.render(); // Renderiza o voxel.
+  Voxel voxel = Voxel(0, 0, 0);
+  voxel.render();
 }
 
