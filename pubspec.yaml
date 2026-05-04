@@ -49,3 +49,5 @@ scripts:
   run_contract_tests: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver_contract_test.dart --target=test/contract_tests/contract_test.dart
 
   run_smoke_test: ./test/smoke_tests/run_smoke_test.sh
+
+  run_smoke_test: ./test/integration_tests/smoke_test/retry_smoke_test.sh
