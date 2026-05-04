@@ -67,3 +67,6 @@ scripts:
   run_retention_test: bash scripts/run_retention_test.sh
 
   run_interruption_test: ./scripts/run_interruption_test.sh
+
+scripts:
+  validate_cloudflare_api: bash scripts/validate_cloudflare_api.sh
