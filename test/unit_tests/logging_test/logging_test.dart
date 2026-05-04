@@ -3,7 +3,7 @@ import 'package:game/logging/logging.dart';
 
 void main() {
   group('Logging Test', () {
-    test('should log info message correctly', () async {
+    test('should log info message', () async {
       // Arrange
       final logger = Logger();
 
@@ -11,10 +11,11 @@ void main() {
       logger.info('Test info message');
 
       // Assert
-      // Add assertion logic here if needed
+      // Verify that the log message is correctly recorded
+      // This might involve checking a log file or a logging service
     });
 
-    test('should log error message correctly', () async {
+    test('should log error message', () async {
       // Arrange
       final logger = Logger();
 
@@ -22,7 +23,8 @@ void main() {
       logger.error('Test error message');
 
       // Assert
-      // Add assertion logic here if needed
+      // Verify that the error message is correctly recorded
+      // This might involve checking a log file or a logging service
     });
   });
 }

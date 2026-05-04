@@ -61,3 +61,5 @@ scripts:
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_rendering_test: flutter drive --driver=test/integration_tests/rendering_test/rendering_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
   run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_performance_test/animation_performance_test.dart
+
+  run_logging_test: flutter drive --driver=test/integration_tests/logging_test/logging_test_driver.dart --target=test/integration_tests/logging_test/logging_test.dart

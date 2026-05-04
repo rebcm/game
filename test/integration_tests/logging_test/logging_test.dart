@@ -1,34 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/logging/logging.dart';
 import 'package:game/main.dart' as app;
+import 'package:integration_test/integration_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Logging Integration Test', () {
-    testWidgets('should log info message', (tester) async {
-      // Arrange
-      await app.main();
+  testWidgets('logging integration test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-      // Act
-      final logger = Logger();
-      logger.info('Info message');
+    // Simulate an action that triggers logging
+    await tester.tap(find.text('Trigger Log'));
 
-      // Assert
-      // Add assertion here
-    });
-
-    testWidgets('should log error message', (tester) async {
-      // Arrange
-      await app.main();
-
-      // Act
-      final logger = Logger();
-      logger.error('Error message');
-
-      // Assert
-      // Add assertion here
-    });
+    // Verify that the log is correctly collected
+    // This might involve checking a log file or a logging service
   });
 }
