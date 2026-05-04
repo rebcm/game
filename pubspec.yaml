@@ -8,3 +8,5 @@ flutter:
     path: test_driver/contract_test/contract_test.dart
   volume_integration_test:
     path: test_driver/volume_integration_test/volume_integration_test.dart
+  seo_validation_test:
+    path: test_driver/seo_validation_test/seo_validation_test.dart

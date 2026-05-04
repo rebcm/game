@@ -2,41 +2,36 @@
 
 ## Introdução
 
-Este documento define a matriz de validação de SEO e tom de voz para a documentação do projeto "Construção Criativa da Rebeca". O objetivo é garantir que a documentação seja otimizada para motores de busca e siga um tom de voz coerente.
+Este documento define a matriz de validação de SEO e tom de voz para a documentação do projeto Rebeca.
 
-## Palavras-Chave Obrigatórias
+## Palavras-chave Obrigatórias
 
-As seguintes palavras-chave devem ser incluídas na documentação:
-
-* Construção Criativa
-* Rebeca
-* Jogo voxel
-* Modo criativo
+As seguintes palavras-chave são obrigatórias na documentação:
+- Rebeca
+- Voxel
+- Criativo
+- Blocos
 
 ## Limites de Caracteres por Campo
 
-Os seguintes limites de caracteres devem ser respeitados:
-
-* Título: 60 caracteres
-* Descrição: 160 caracteres
-* Cabeçalhos: 80 caracteres
+| Campo | Limite de Caracteres |
+| --- | --- |
+| Título | 60 |
+| Descrição | 160 |
 
 ## Guia de Tom de Voz
 
 O tom de voz da documentação deve ser:
-
-* Amigável
-* Informativo
-* Coerente com a marca "Rebeca"
+- Amigável
+- Claro
+- Conciso
 
 ## Checklist de Validação
 
-A seguinte checklist deve ser usada para validar a documentação:
-
-* [ ] As palavras-chave obrigatórias estão incluídas?
-* [ ] Os limites de caracteres por campo estão respeitados?
-* [ ] O tom de voz é coerente com a marca "Rebeca"?
+1. Verificar se as palavras-chave obrigatórias estão presentes na documentação.
+2. Verificar se os limites de caracteres por campo estão sendo respeitados.
+3. Verificar se o tom de voz está de acordo com o guia.
 
 ## Conclusão
 
-A matriz de validação de SEO e tom de voz é uma ferramenta importante para garantir que a documentação do projeto "Construção Criativa da Rebeca" seja de alta qualidade e coerente com a marca.
+A matriz de validação de SEO e tom de voz é fundamental para garantir que a documentação do projeto Rebeca seja eficaz e atraente.
