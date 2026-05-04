@@ -85,3 +85,5 @@ flutter:
     path: test_driver/dependency_flow_test/dependency_flow_test.dart
   dependency_flow_test_driver:
     path: test_driver/dependency_flow_test/dependency_flow_test_driver.dart
+  global_shortcuts_exceptions_test:
+    path: test_driver/global_shortcuts_exceptions_test/global_shortcuts_exceptions_test.dart
