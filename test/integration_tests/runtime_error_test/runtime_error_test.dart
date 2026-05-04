@@ -10,7 +10,13 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    final jsErrors = await tester.binding.takeJsErrors();
-    expect(jsErrors, isEmpty);
+    final jsErrorFinder = find.byWidgetPredicate((widget) {
+      if (widget is ErrorWidget) {
+        return true;
+      }
+      return false;
+    });
+
+    expect(jsErrorFinder, findsNothing);
   });
 }
