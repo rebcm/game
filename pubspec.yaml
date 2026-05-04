@@ -52,3 +52,16 @@ scripts:
   run_unit_test_validation: flutter drive --driver=test/integration_tests/unit_test_validation/unit_test_validation_driver.dart --target=test/integration_tests/unit_test_validation/unit_test_validation_test.dart
 
   run_base_href_validation_test: flutter drive --driver=test/integration_tests/base_href_validation_test/base_href_validation_test_driver.dart --target=test/integration_tests/base_href_validation_test/base_href_validation_test.dart --base-href=/game/
+
+openapi:
+  generator: openapi-generator-cli
+  output_dir: lib
+  api_spec: https://raw.githubusercontent.com/rebcm/passdriver/main/docs/openapi.yaml
+  api_package: services/openapi
+  model_package: models/openapi
+  template_dir: config/openapi_templates
+
+scripts:
+  generate_openapi_client: dart run openapi_generator_cli generate --config pubspec.yaml
+dev_dependencies:
+  openapi_generator_cli: ^1.0.0

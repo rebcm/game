@@ -1,3 +1,2 @@
 #!/bin/bash
-
-openapi-generator generate -i https://example.com/swagger.json -g dart -o ./lib/openapi/client -c ./lib/openapi/swagger_config.yaml
+dart run tool/openapi_generator_cli.dart generate --config pubspec.yaml
