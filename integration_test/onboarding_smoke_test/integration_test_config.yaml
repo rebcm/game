@@ -1,2 +1,3 @@
-onboarding_smoke_test:
-  path: ./integration_test/onboarding_smoke_test
+test:
+  suite: onboarding_smoke_test
+  driver: onboarding_smoke_test_driver.dart

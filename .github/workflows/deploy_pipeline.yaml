@@ -20,8 +20,27 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Validate build
-        run: flutter build web
+      - name: Run smoke test
+        run: |
+          flutter config --enable-web
+          flutter test integration_test/onboarding_smoke_test/onboarding_smoke_test.dart
 
-      - name: Deploy
-        run: echo "Deploying to production"
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: build/web
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "Deploy failed: ${{ github.event.repository.name }} ${{ github.sha }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
