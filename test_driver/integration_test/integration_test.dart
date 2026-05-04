@@ -1,18 +1,29 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
-import 'package:game/services/permission_service.dart';
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:test/test.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  group('Renderização', () {
+    late FlutterDriver driver;
 
-  testWidgets('integration test', (tester) async {
-    app.main();
-    await tester.pumpAndSettle();
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-    final permissionService = PermissionService();
-    final hasPermission = await permissionService.requestAudioPermission();
-    expect(hasPermission, true);
+    tearDownAll(() async {
+      await driver.close();
+    });
+
+    test('Verificar configurações de renderização', () async {
+      final renderConfigApplied = await driver.waitFor(find.byValueKey('renderConfigApplied'));
+      expect(renderConfigApplied, isNotNull);
+    });
+
+    test('Coletar performance após renderização', () async {
+      final performanceData = await driver.traceAction(() async {
+        await driver.tap(find.byValueKey('startPerformanceCollection'));
+      });
+      expect(performanceData, isNotEmpty);
+    });
   });
 }
 import 'package:game/volume_test/volume_test.dart' as volume_test;
