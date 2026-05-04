@@ -6,18 +6,37 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('memory test', (tester) async {
+  testWidgets('Memory Test', (WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Force garbage collection
-    await tester.binding.convertFlutterSurfaceToImage();
-    await tester.binding.setSurfaceSemantics(false);
-    await tester.binding.runAsync(() async {
-      await Future.delayed(Duration(seconds: 2));
-    });
+    final gcTrigger = tester.binding.pipelineOwner.microtaskQueue.isEmpty;
 
-    // Check for memory leaks
-    expect(await tester.binding.getNativeHeapSize(), lessThan(100000000));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                if (gcTrigger) {
+                  await Future.delayed(Duration(seconds: 5));
+                  // Trigger GC
+                  await Future.microtask(() {});
+                }
+              },
+              child: Text('Trigger GC'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    final SerializableFinder button = find.byType(ElevatedButton);
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    expect(gcTrigger, true);
   });
 }

@@ -57,7 +57,6 @@ scripts:
   run_test_and_analyze: flutter test && flutter analyze
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
-  run_memory_test: flutter drive --driver=test/integration_tests/memory_test/memory_test_driver.dart --target=test/integration_tests/memory_test/memory_test.dart
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
@@ -79,7 +78,6 @@ scripts:
 scripts:
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_test_and_analyze: flutter test && flutter analyze
-  run_memory_test_with_gc_protocol: bash scripts/run_memory_test_with_gc_protocol.sh
 
   run_jdk_compatibility_test: flutter drive --driver=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test_driver.dart --target=test/integration_tests/jdk_compatibility_test/jdk_compatibility_test.dart
 
@@ -99,3 +97,4 @@ scripts:
   run_uv_mapping_test: flutter drive --driver=test/integration_tests/uv_mapping_test/uv_mapping_test_driver.dart --target=test/integration_tests/uv_mapping_test/uv_mapping_test.dart
 
   run_permission_test: flutter drive --driver=test/integration_tests/permission_test/permission_test_driver.dart --target=test/integration_tests/permission_test/permission_test.dart
+  run_memory_test_with_gc_protocol: flutter drive --driver=test/integration_tests/memory_test/memory_test_driver.dart --target=test/integration_tests/memory_test/memory_test.dart
