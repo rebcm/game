@@ -103,3 +103,7 @@ scripts:
 
 scripts:
   run_performance_tests: bash scripts/run_performance_tests.sh
+  technical_comparison_test:
+    path: test/technical_comparison_tests/technical_comparison_test.dart
+scripts:
+  run_technical_comparison_tests: bash scripts/run_technical_comparison_tests.sh
