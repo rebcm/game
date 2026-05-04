@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CLOUDFLARE_API_TOKEN=$(grep CLOUDFLARE_API_TOKEN .env | cut -d '=' -f2)
+CLOUDFLARE_API_TOKEN=$(grep CLOUDFLARE_API_TOKEN .env | cut -d '=' -f2-)
 
 if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
   echo "CLOUDFLARE_API_TOKEN not found in .env file"
@@ -12,11 +12,9 @@ RESPONSE=$(curl -s -X GET \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
 
-STATUS=$(echo $RESPONSE | jq -r '.result')
-
-if [ "$STATUS" == "true" ]; then
-  echo "Cloudflare token is valid"
-else
-  echo "Cloudflare token is invalid"
+if echo "$RESPONSE" | grep -q '"result":null'; then
+  echo "Invalid CLOUDFLARE_API_TOKEN"
   exit 1
+else
+  echo "CLOUDFLARE_API_TOKEN is valid"
 fi
