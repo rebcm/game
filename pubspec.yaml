@@ -61,3 +61,5 @@ scripts:
 
 scripts:
   run_overflow_test: bash scripts/run_overflow_test.sh
+
+  run_error_handling_test: bash scripts/run_error_handling_test.sh
