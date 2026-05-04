@@ -92,3 +92,7 @@ scripts:
     path: test/golden_tests/dicas_ui_test.dart
 scripts:
   run_golden_tests: bash scripts/run_golden_tests.sh
+
+  onboarding_test:
+    path: test/onboarding_tests/onboarding_test.dart
+  run_onboarding_tests: bash scripts/run_onboarding_tests.sh
