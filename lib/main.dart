@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/notification/notification_service.dart';
-import 'package:game/utils/error_handling/error_handler.dart';
+import 'package:game/services/permission_service.dart';
 
-void main() {
-  final notificationService = NotificationService('YOUR_WEBHOOK_URL');
-  final errorHandler = ErrorHandler(notificationService);
-
-  FlutterError.onError = (details) {
-    errorHandler.handleError(details.exception, details.stack);
-  };
-
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PermissionService().requestNotificationPermission();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Game',
-      home: Scaffold(
-        body: Center(
-          child: Text('Rebeca\'s Game'),
-        ),
+      title: 'Game',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Game'),
+      ),
+      body: const Center(
+        child: Text('Game'),
       ),
     );
   }
