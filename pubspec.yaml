@@ -59,17 +59,3 @@ flutter_i18n:
 scripts:
   lint_markdown: markdownlint .github/docs/
   validate_translation: bash scripts/validate_translation.sh
-
-  flutter_driver:
-    sdk: flutter
-
-  scripts:
-    validate_gdd: bash scripts/validate_gdd.sh
-
-scripts:
-  update_api_docs: bash scripts/update_api_docs.sh
-scripts:
-  update_api_docs: bash scripts/update_api_docs.sh
-
-scripts:
-  update_failure_mapping_docs: bash scripts/update_failure_mapping_docs.sh

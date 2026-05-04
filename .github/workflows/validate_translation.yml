@@ -1,0 +1,16 @@
+name: Validate Translation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate_translation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate translation
+        run: bash scripts/validate_translation.sh
