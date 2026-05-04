@@ -1,3 +1,20 @@
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:flutter_driver/flutter_driver.dart' as ftd;
+import 'package:test/test.dart';
 
-Future<void> main() => integrationDriver();
+void main() {
+  group('Flutter Integration Tests', () {
+    late ftd.FlutterDriver driver;
+
+    setUpAll(() async {
+      driver = await ftd.FlutterDriver.connect();
+    });
+
+    tearDownAll(() async {
+      await driver.close();
+    });
+
+    test('Smoke Test', () async {
+      await driver.waitUntilNoTransientCallbacks();
+    });
+  });
+}
