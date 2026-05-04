@@ -1,4 +1,4 @@
 #!/bin/bash
 
-lcov --list coverage/lcov.info
-genhtml coverage/lcov.info -o coverage/html
+lcov --capture --directory . --output-file coverage.info
+genhtml coverage.info --output-directory coverage_report
