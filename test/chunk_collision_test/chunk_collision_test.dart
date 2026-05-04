@@ -1,40 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/chunk_manager.dart';
-import 'package:game/player.dart';
-import 'package:mockito/mockito.dart';
-
-class MockChunkManager extends Mock implements ChunkManager {}
+import 'package:game/collider.dart';
 
 void main() {
   group('Chunk Collision Test', () {
-    late Player player;
-    late ChunkManager chunkManager;
-
-    setUp(() {
-      player = Player();
-      chunkManager = MockChunkManager();
+    test('Adjacent chunks colliders are loaded and active', () {
+      final chunkManager = ChunkManager();
+      chunkManager.loadChunk(0, 0);
+      chunkManager.loadChunk(1, 0);
+      expect(chunkManager.getChunk(0, 0).colliders, isNotEmpty);
+      expect(chunkManager.getChunk(1, 0).colliders, isNotEmpty);
+      expect(chunkManager.getChunk(0, 0).colliders.first.isActive, isTrue);
+      expect(chunkManager.getChunk(1, 0).colliders.first.isActive, isTrue);
     });
 
-    test('should detect collision when player is on the boundary of two chunks', () {
-      // Arrange
-      when(chunkManager.isCollision(any, any)).thenReturn(true);
-
-      // Act
-      bool result = chunkManager.isCollision(player.position, player.size);
-
-      // Assert
-      expect(result, true);
-    });
-
-    test('should not detect collision when player is not on the boundary of two chunks', () {
-      // Arrange
-      when(chunkManager.isCollision(any, any)).thenReturn(false);
-
-      // Act
-      bool result = chunkManager.isCollision(player.position, player.size);
-
-      // Assert
-      expect(result, false);
+    test('Colliders are synchronized between adjacent chunks', () {
+      final chunkManager = ChunkManager();
+      chunkManager.loadChunk(0, 0);
+      chunkManager.loadChunk(1, 0);
+      final collidersChunk0 = chunkManager.getChunk(0, 0).colliders;
+      final collidersChunk1 = chunkManager.getChunk(1, 0).colliders;
+      expect(collidersChunk0.last.position.x, collidersChunk1.first.position.x - 1);
     });
   });
 }

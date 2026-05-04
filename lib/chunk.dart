@@ -1,16 +1,22 @@
+import 'package:game/collider.dart';
+
 class Chunk {
-  final int x;
-  final int y;
-  final int z;
-  final Map<String, int> _blocks = {};
+  final int _x;
+  final int _z;
+  final List<Collider> _colliders = [];
 
-  Chunk(this.x, this.y, this.z);
+  Chunk(this._x, this._z);
 
-  void setBlock(int x, int y, int z, int blockType) {
-    _blocks['$x,$y,$z'] = blockType;
+  List<Collider> get colliders => _colliders;
+
+  void loadColliders() {
+    // Logic to load colliders for the chunk
+    _colliders.add(Collider(_x * 16, _z * 16));
   }
 
-  int getBlock(int x, int y, int z) {
-    return _blocks['$x,$y,$z'] ?? 0;
+  void updateColliders() {
+    _colliders.forEach((collider) {
+      collider.isActive = true;
+    });
   }
 }
