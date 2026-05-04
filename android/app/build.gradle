@@ -1,26 +1,21 @@
-android {
-    compileSdkVersion 33
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
 
+android {
+    namespace "com.rebcm.game"
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.rebcm.game"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
     }
+}
 
-    signingConfigs {
-        release {
-            storeFile file(System.getenv("KEYSTORE_FILE"))
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias System.getenv("KEY_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD")
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-    }
+flutter {
+    source '../..'
 }

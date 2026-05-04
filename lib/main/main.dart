@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/secrets_service.dart';
+import 'package:game/services/permission_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SecretsService.init();
-  runApp(MyApp());
+  await PermissionService().requestNotificationPermission();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rebeca\'s Game',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rebeca\'s Game'),
+      title: 'Rebeca\'s Creative Game',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Center(
-        child: Text('Hello, World!'),
-      ),
+      home: const MyHomePage(),
     );
   }
 }
