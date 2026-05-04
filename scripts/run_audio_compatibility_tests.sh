@@ -1,3 +1,4 @@
 #!/bin/bash
 
-flutter drive --target=test/audio_compatibility_test/audio_compatibility_test.dart --driver=test_driver/integration_test.dart
+# Executa testes de compatibilidade de áudio
+flutter drive --target=test_driver/audio_compatibility_test.dart --driver=test_driver/audio_compatibility_test_driver.dart

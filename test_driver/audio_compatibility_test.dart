@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Testes de compatibilidade de áudio', () {
+  group('Audio Compatibility Tests', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -15,20 +15,10 @@ void main() {
       }
     });
 
-    test('Testar saída de áudio no alto-falante interno', () async {
-      // Implementar teste para alto-falante interno
-    });
-
-    test('Testar saída de áudio com fone de ouvido com fio', () async {
-      // Implementar teste para fone de ouvido com fio
-    });
-
-    test('Testar saída de áudio com Bluetooth', () async {
-      // Implementar teste para Bluetooth
-    });
-
-    test('Testar saída de áudio com Hands-free profile (HFP)', () async {
-      // Implementar teste para HFP
+    test('Reprodução de Áudio', () async {
+      await driver!.waitFor(find.text('Reproduzir Áudio'));
+      await driver!.tap(find.text('Reproduzir Áudio'));
+      // Adicionar lógica para verificar se o áudio foi reproduzido corretamente
     });
   });
 }
