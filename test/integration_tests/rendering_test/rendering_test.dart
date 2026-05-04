@@ -13,11 +13,11 @@ void main() {
     final imageFinder = find.byType(Image);
     expect(imageFinder, findsOneWidget);
 
-    final imageWidget = imageFinder.evaluate().first.widget as Image;
+    final imageWidget = tester.widget<Image>(imageFinder);
     expect(imageWidget.image, isNotNull);
 
     await expectLater(
-      imageWidget.image,
+      find.byType(Image),
       matchesGoldenFile('test/integration_tests/rendering_test/rendering_test.png'),
     );
   });

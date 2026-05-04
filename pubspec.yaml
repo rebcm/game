@@ -47,3 +47,5 @@ scripts:
 
   run_coverage_test: flutter test --coverage
   check_coverage_threshold: bash -c "coverage_threshold=\$(cat coverage/lcov.info | grep -o '^SF:.*' | wc -l); min_threshold=5; if [ \$coverage_threshold -lt \$min_threshold ]; then echo 'Coverage threshold not met'; exit 1; fi"
+
+  run_rendering_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
