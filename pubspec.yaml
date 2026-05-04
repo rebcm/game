@@ -82,3 +82,8 @@ flutter:
     path: test_driver/onboarding_test/onboarding_test_driver.dart
   settings_test:
     path: test_driver/settings_test/settings_test.dart
+
+  setup_cache_test:
+    path: test_driver/setup_cache/setup_cache_test.dart
+  setup_cache_test_driver:
+    path: test_driver/setup_cache/setup_cache_test_driver.dart
