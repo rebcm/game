@@ -63,3 +63,5 @@ scripts:
   run_overflow_test: bash scripts/run_overflow_test.sh
 
   run_error_handling_test: bash scripts/run_error_handling_test.sh
+
+  run_r2_sandbox_test: flutter drive --driver=test/integration_tests/r2_sandbox_test/r2_sandbox_test_driver.dart --target=test/integration_tests/r2_sandbox_test/r2_sandbox_test.dart
