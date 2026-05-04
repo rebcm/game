@@ -71,3 +71,6 @@ golden_toolkit: ^0.15.0
 
   additional_test_paths:
     - test_driver/passdriver_flutter_permission_test/permission_test.dart
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_collision_test/collision_test.dart
