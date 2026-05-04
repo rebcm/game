@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Atualiza o documento de dicas do Passdriver Flutter
+echo "Atualizando documentação de dicas do Passdriver Flutter..."
