@@ -1,4 +1,5 @@
 #!/bin/bash
 
-lcov --capture --directory . --output-file coverage.info
-genhtml coverage.info --output-directory coverage_report
+flutter test --coverage
+lcov --remove coverage/lcov.info 'lib/i18n/*' 'test/*' -o coverage/lcov.info
+genhtml coverage/lcov.info -o coverage/html
