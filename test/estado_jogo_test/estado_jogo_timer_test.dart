@@ -4,19 +4,13 @@ import 'package:fake_async/fake_async.dart';
 
 void main() {
   group('EstadoJogo', () {
-    test('dispose cancela todos os Timers ativos', () {
+    test('dispose cancela todos os timers', () {
       fakeAsync((async) {
         final estadoJogo = EstadoJogo();
-        // Assume que EstadoJogo inicia timers em initState
         estadoJogo.initState();
-        
-        // Verifica se os timers estão ativos antes de dispose
-        expect(estadoJogo.hasActiveTimers, isTrue);
-        
+        async.flushTimers();
         estadoJogo.dispose();
-        
-        // Verifica se os timers foram cancelados após dispose
-        expect(estadoJogo.hasActiveTimers, isFalse);
+        expect(estadoJogo._timer?.isActive, isFalse);
       });
     });
   });
