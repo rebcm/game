@@ -12,11 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
-
       - name: Run checksum test
-        run: |
-          flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
+        run: bash scripts/run_checksum_test.sh
