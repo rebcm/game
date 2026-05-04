@@ -1,0 +1,1 @@
+# Store the expected checksum here after the first successful build
