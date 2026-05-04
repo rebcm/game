@@ -1,32 +1,11 @@
-# CI/CD Pipeline Documentation
+# Documentação da Pipeline de CI/CD
 
-## Overview
+## Etapas da Pipeline
 
-This document describes the CI/CD pipeline for the Rebeca game project.
+1. Construção do projeto Flutter.
+2. Execução de testes unitários e de integração.
+3. Validação da documentação de instalação via `scripts/validate_installation_docs.sh`.
 
-## Pipeline Steps
+## Guia de Implementação
 
-1. Checkout code
-2. Setup Flutter
-3. Verify Flutter version
-4. Setup JDK
-5. Verify Java version
-6. Install dependencies
-7. Analyze code
-8. Run tests
-
-## Triggers
-
-The pipeline is triggered on push events to the main branch.
-
-## Code Coverage Test
-
-The code coverage test is executed using the `run_code_coverage_test.sh` script.
-
-### Configuration
-
-The code coverage test is configured to run automatically after the execution of the unit tests and widget tests.
-
-### Report Generation
-
-The code coverage report is generated using the `lcov` tool.
+1. Adicionar o script `validate_installation_docs.sh` à pipeline de CI/CD.
