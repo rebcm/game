@@ -16,3 +16,7 @@ flutter:
     path: test_driver/lint_parser_test/lint_parser_test.dart
   volume_formula_test:
     path: test_driver/volume_formula_test/volume_formula_test.dart
+  audio_output_test:
+    path: test_driver/audio_output_test/audio_output_test.dart
+  volume_interaction_test:
+    path: test_driver/volume_interaction_test/volume_interaction_test.dart

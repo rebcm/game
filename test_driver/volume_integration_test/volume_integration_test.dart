@@ -1,24 +1,10 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 void main() {
-  group('Volume Integration Tests', () {
-    late FlutterDriver driver;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
-
-    tearDownAll(() async {
-      await driver.close();
-    });
-
-    test('should display correct volume on restart', () async {
-      // Implement test logic here
-    });
-
-    test('should handle volume changes on restart', () async {
-      // Implement test logic here
-    });
+  testWidgets('Test integration with system volume', (tester) async {
+    // Implement test logic for integration with system volume
   });
 }
