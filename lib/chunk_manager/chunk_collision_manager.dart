@@ -3,34 +3,34 @@ import 'package:flutter/material.dart';
 class ChunkCollisionManager {
   final List<Chunk> _loadedChunks = [];
 
-  void updateLoadedChunks(List<Chunk> chunks) {
-    _loadedChunks.clear();
-    _loadedChunks.addAll(chunks);
+  void loadChunk(Chunk chunk) {
+    _loadedChunks.add(chunk);
+    _syncColliders();
   }
 
-  void validateAdjacentChunkColliders() {
+  void unloadChunk(Chunk chunk) {
+    _loadedChunks.remove(chunk);
+    _syncColliders();
+  }
+
+  void _syncColliders() {
     for (var chunk in _loadedChunks) {
-      chunk.updateColliders();
-      for (var adjacentChunk in _getAdjacentChunks(chunk)) {
-        if (_loadedChunks.contains(adjacentChunk)) {
-          chunk.syncCollidersWith(adjacentChunk);
-        }
-      }
+      chunk.updateColliders(_getAdjacentChunks(chunk));
     }
   }
 
   List<Chunk> _getAdjacentChunks(Chunk chunk) {
-    // Implement logic to get adjacent chunks
-    return [];
+    return _loadedChunks.where((c) => c.isAdjacentTo(chunk)).toList();
   }
 }
 
 class Chunk {
-  void updateColliders() {
-    // Implement logic to update colliders
+  bool isAdjacentTo(Chunk other) {
+    // Implement logic to check if this chunk is adjacent to another
+    return false; // Placeholder return, implement actual logic
   }
 
-  void syncCollidersWith(Chunk adjacentChunk) {
-    // Implement logic to sync colliders with adjacent chunk
+  void updateColliders(List<Chunk> adjacentChunks) {
+    // Implement logic to update colliders based on adjacent chunks
   }
 }

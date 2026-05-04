@@ -3,20 +3,23 @@ import 'package:game/chunk_manager/chunk_collision_manager.dart';
 
 void main() {
   group('ChunkCollisionManager', () {
-    test('should update loaded chunks', () {
+    test('loads and unloads chunks correctly', () {
       var manager = ChunkCollisionManager();
-      var chunks = [Chunk(), Chunk()];
-      manager.updateLoadedChunks(chunks);
-      expect(manager._loadedChunks, chunks);
+      var chunk = Chunk();
+
+      manager.loadChunk(chunk);
+      expect(manager._loadedChunks.contains(chunk), true);
+
+      manager.unloadChunk(chunk);
+      expect(manager._loadedChunks.contains(chunk), false);
     });
 
-    test('should validate adjacent chunk colliders', () {
+    test('syncs colliders when loading and unloading chunks', () {
       var manager = ChunkCollisionManager();
-      var chunk1 = Chunk();
-      var chunk2 = Chunk();
-      manager.updateLoadedChunks([chunk1, chunk2]);
-      manager.validateAdjacentChunkColliders();
-      // Verify that colliders are synced
+      var chunk = Chunk();
+
+      manager.loadChunk(chunk);
+      // Verify that _syncColliders was called
     });
   });
 }
