@@ -45,10 +45,5 @@ scripts:
   run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
   run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_environment_provisioning_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/environment_provisioning_performance_test/environment_provisioning_performance_test.dart
-
-  run_coverage_test: flutter test --coverage
-  check_coverage_threshold: bash -c "coverage_threshold=\$(cat coverage/lcov.info | grep -o '^SF:.*' | wc -l); min_threshold=5; if [ \$coverage_threshold -lt \$min_threshold ]; then echo 'Coverage threshold not met'; exit 1; fi"
-
-  run_rendering_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
-
-  run_contract_test: flutter test test/contract_tests/contract_test.dart
+  run_audio_edge_cases_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_test/audio_edge_cases_test.dart
+  run_coverage
