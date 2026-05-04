@@ -58,3 +58,5 @@ scripts:
   run_contract_test: flutter test test/contract_tests/contract_test.dart
 
   run_technical_comparison_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/technical_comparison_test/technical_comparison_test.dart
+
+  run_fisica_edge_cases_test: flutter drive --driver=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_driver.dart --target=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_test.dart
