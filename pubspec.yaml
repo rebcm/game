@@ -150,3 +150,6 @@ flutter:
 
   ui_validation_test:
     path: ./integration_test/ui_validation_test
+
+  deploy_validation_service:
+    path: ./lib/services/api_service

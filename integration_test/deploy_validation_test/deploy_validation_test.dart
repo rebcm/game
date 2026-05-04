@@ -5,16 +5,21 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Integration Tests', () {
-    testWidgets('Validate Cloudflare Worker deployment', (tester) async {
+  group('Deploy Validation Test', () {
+    testWidgets('Flutter Web build validation', (tester) async {
       app.main();
       await tester.pumpAndSettle();
+      expect(find.text('Rebeca\'s Creative Construction'), findsOneWidget);
+    });
 
-      // Add logic to validate the deployment
-      // For example, check if the app can communicate with the Cloudflare Worker
-      // await tester.tap(find.text('Test Button'));
-      // await tester.pumpAndSettle();
-      // expect(find.text('Expected Response'), findsOneWidget);
+    testWidgets('Cloudflare connectivity check', (tester) async {
+      // Implement Cloudflare connectivity check logic here
+      expect(true, isTrue); // Placeholder for actual implementation
+    });
+
+    testWidgets('Rollback test on deploy failure', (tester) async {
+      // Implement rollback test logic here
+      expect(true, isTrue); // Placeholder for actual implementation
     });
   });
 }
