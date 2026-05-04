@@ -50,3 +50,5 @@ scripts:
   run_stress_tests: bash scripts/run_stress_tests.sh
 scripts:
   run_floating_point_stress_tests: bash scripts/run_floating_point_stress_tests.sh
+scripts:
+  run_ci_cd_pipeline: bash scripts/run_ci_cd_pipeline.sh

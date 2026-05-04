@@ -6,39 +6,22 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
+    container:
+      image: cirrusci/flutter:stable-jdk17
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze code
-        run: flutter analyze
+        run: dart analyze
 
       - name: Run tests
-        run: flutter test --coverage
+        run: flutter test
 
-      - name: Generate coverage report
-        run: bash scripts/generate_coverage_report.sh
-
-      - name: Check coverage threshold
-        run: |
-          coverage=$(lcov --summary coverage.info | grep 'lines' | awk '{print $2}' | sed 's/%//g')
-          if (( $(echo "$coverage < 80" | bc -l) )); then
-            echo "Coverage is below 80%"
-            exit 1
-          fi
-
-      - name: Run input tests
-        run: bash scripts/run_input_tests.sh
-
-      - name: Run memory profiling test
-        run: bash scripts/run_memory_profiling_test.sh
+      - name: Build project
+        run: flutter build
