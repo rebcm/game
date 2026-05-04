@@ -12,3 +12,11 @@ To inject keystore secrets, follow these steps:
 ## Additional Information
 
 Refer to the `validate_secrets.sh` script for implementation details.
+### Android Signing Configuration
+
+The following secrets are required for Android signing configuration:
+
+* KEYSTORE_FILE
+* KEYSTORE_PASSWORD
+* KEY_ALIAS
+* KEY_PASSWORD

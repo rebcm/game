@@ -1,10 +1,18 @@
 android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.rebcm.game"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
     signingConfigs {
         release {
-            storeFile file('keystore.jks')
-            storePassword System.getenv('KEYSTORE_PASSWORD')
-            keyAlias 'your-key-alias'
-            keyPassword System.getenv('KEYSTORE_PASSWORD')
+            storeFile file(System.getenv("KEYSTORE_FILE"))
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
         }
     }
     buildTypes {
