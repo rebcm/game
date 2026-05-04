@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter test test/stress_tests/chunk_concurrency_test.dart
+bash scripts/run_floating_point_stress_tests.sh
