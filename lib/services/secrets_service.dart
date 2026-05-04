@@ -1,15 +1,12 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SecretsService {
-  static String? get keystorePath => dotenv.env['KEYSTORE_PATH'];
-  static String? get certificatePath => dotenv.env['CERTIFICATE_PATH'];
+  static String? get keystore => dotenv.env['KEYSTORE'];
+  static String? get keystorePassword => dotenv.env['KEYSTORE_PASSWORD'];
+  static String? get keyAlias => dotenv.env['KEY_ALIAS'];
+  static String? get keyPassword => dotenv.env['KEY_PASSWORD'];
 
-  static bool validateKeystores() {
-    if (keystorePath == null || certificatePath == null) {
-      return false;
-    }
-
-    // Implementar lógica de validação adicional aqui, se necessário
-    return true;
+  static Future<void> init() async {
+    await dotenv.load();
   }
 }
