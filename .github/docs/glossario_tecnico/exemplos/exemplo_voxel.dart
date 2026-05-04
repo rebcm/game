@@ -1,18 +1,15 @@
-/// Exemplo de utilização de voxel
+// Exemplo de utilização de voxel no projeto
 class Voxel {
-  int x, y, z; // Posição do voxel
-  int tipo;    // Tipo de bloco representado pelo voxel
+  int x, y, z;
 
-  Voxel(this.x, this.y, this.z, this.tipo);
+  Voxel(this.x, this.y, this.z);
 
-  /// Renderiza o voxel na posição especificada
-  void renderizar() {
-    // Implementação da lógica de renderização
+  void render() {
+    // Implementação de renderização do voxel
   }
 }
 
 void main() {
-  Voxel meuVoxel = Voxel(0, 0, 0, 1); // Cria um voxel na origem do tipo 1
-  meuVoxel.renderizar();               // Renderiza o voxel
+  Voxel voxel = Voxel(0, 0, 0);
+  voxel.render();
 }
-
