@@ -1,1 +1,1 @@
-# Expected checksum value will be generated and updated here after the first successful run
+# Initial checksum value, update this after the first successful run

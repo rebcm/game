@@ -46,12 +46,11 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_checksum_test: bash scripts/run_checksum_test.sh
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_build_runner: ./scripts/run_build_runner.sh
-  run_checksum_test: bash scripts/run_checksum_test.sh
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
-  run_checksum_test: bash scripts/run_checksum_test.sh
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
@@ -59,11 +58,13 @@ scripts:
   run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
 
 scripts:
+  run_checksum_test: bash scripts/run_checksum_test.sh
   run_lint_error_test: bash scripts/run_lint_error_test.sh
 
   run_frame_timing_test: flutter drive --driver=test/performance_tests/frame_timing_test/frame_timing_test_driver.dart --target=test/performance_tests/frame_timing_test/frame_timing_test.dart
 
 scripts:
+  run_checksum_test: bash scripts/run_checksum_test.sh
   run_lint_parser: ./scripts/run_lint_parser.sh
 
   run_error_handling_test: bash scripts/run_error_handling_test.sh
