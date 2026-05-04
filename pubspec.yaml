@@ -43,6 +43,7 @@ flutter_i18n:
 
 scripts:
   run_build_runner: ./scripts/run_build_runner.sh
+  run_checksum_test: bash scripts/run_checksum_test.sh
   run_checksum_test: flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
 
