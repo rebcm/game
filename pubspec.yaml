@@ -57,10 +57,13 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  validate_translation: bash scripts/validate_translation.sh
   lint_markdown: markdownlint .github/docs/
   validate_translation: bash scripts/validate_translation.sh
 
 scripts:
+  validate_translation: bash scripts/validate_translation.sh
   run_integration_tests: bash scripts/run_integration_tests.sh
 scripts:
+  validate_translation: bash scripts/validate_translation.sh
   run_integration_tests: bash scripts/run_integration_tests.sh

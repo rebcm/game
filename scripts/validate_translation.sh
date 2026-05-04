@@ -4,15 +4,15 @@
 DOCS_DIR=".github/docs"
 
 # Idioma alvo para validação
-TARGET_LANG="pt-BR"
+TARGET_LOCALE="pt-BR"
 
 # Função para verificar se um arquivo Markdown contém tradução para o idioma alvo
 validate_translation() {
-  local file="$1"
-  if grep -q "^\s*{\s*\"${TARGET_LANG}\"[^}]*}" "$file"; then
-    echo "[INFO] $file contém tradução para $TARGET_LANG"
+  local file_path=$1
+  if grep -q "^\[pt-BR\]" "$file_path"; then
+    echo "Arquivo $file_path contém tradução para $TARGET_LOCALE"
   else
-    echo "[ERRO] $file NÃO contém tradução para $TARGET_LANG"
+    echo "ERRO: Arquivo $file_path NÃO contém tradução para $TARGET_LOCALE"
     exit 1
   fi
 }
@@ -22,4 +22,4 @@ for file in $(find "$DOCS_DIR" -type f -name "*.md"); do
   validate_translation "$file"
 done
 
-echo "[INFO] Validação de tradução concluída com sucesso"
+echo "Validação de tradução concluída com sucesso"
