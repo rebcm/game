@@ -60,3 +60,6 @@ scripts:
   run_uv_map_test: bash scripts/run_uv_map_test.sh
   scripts:
     deploy_preview: bash scripts/deploy_preview.sh
+
+scripts:
+  update_log_analysis_docs: ./scripts/update_log_analysis_docs.sh
