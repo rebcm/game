@@ -24,13 +24,17 @@ jobs:
         run: |
           flutter test --coverage
 
-      - name: Check coverage threshold
+      - name: Verify coverage threshold
         run: |
-          coverage_threshold=$(cat .github/docs/code_coverage_criteria/criterios_aceitacao.md | grep -oP '(?<=threshold: )\d+')
-          lcov --summary coverage/lcov.info
-          coverage_percentage=$(lcov --summary coverage/lcov.info | grep -oP '(?<=lines\.\.\.\s)\d+(?:\.\d+)?%')
-          echo "Coverage percentage: $coverage_percentage"
-          if (( $(echo "$coverage_percentage < $coverage_threshold" | bc -l) )); then
-            echo "Coverage percentage is less than the threshold ($coverage_threshold%)"
+          coverage_threshold=$(cat coverage/lcov.info | grep -o '^SF:.*' | wc -l)
+          min_threshold=80
+          if [ $coverage_threshold -lt $min_threshold ]; then
+            echo "Coverage threshold not met. Expected $min_threshold%, got $coverage_threshold%"
             exit 1
           fi
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v3
+        with:
+          flags: unittests
+          name: codecov-umbrella
