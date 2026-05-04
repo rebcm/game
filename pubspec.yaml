@@ -59,3 +59,5 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_uv_map_test: bash scripts/run_uv_map_test.sh
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
+
+  run_memory_snapshot_test: bash scripts/run_memory_snapshot_test.sh

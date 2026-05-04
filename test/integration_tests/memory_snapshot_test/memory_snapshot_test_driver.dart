@@ -13,6 +13,6 @@ void main() {
   });
 
   test('memory snapshot test', () async {
-    await driver?.requestData('memory-snapshot-test');
+    await driver?.requestData('memory_snapshot_test');
   });
 }
