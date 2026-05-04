@@ -9,10 +9,12 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver?.close();
   });
 
-  test('Memory leak test', () async {
-    await driver?.requestData('memory_leak_test');
+  test('Memory leak test driver', () async {
+    await driver?.runUnsynchronized(() async {
+      await driver?.requestData('some_data');
+    });
   });
 }
