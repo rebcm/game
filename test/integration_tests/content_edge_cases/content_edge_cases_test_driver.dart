@@ -14,9 +14,9 @@ void main() {
     }
   });
 
-  test('Content Edge Cases Test', () async {
+  test('Content edge cases test', () async {
     await driver?.runUnsynchronized(() async {
-      await driver?.waitFor(find.text('Content Loaded'));
+      await driver?.waitFor(find.text('Game Content'));
     });
   });
 }

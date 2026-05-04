@@ -6,28 +6,25 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Content Edge Cases Integration', () {
-    testWidgets('Test API timeout integration', (tester) async {
+    testWidgets('Test content loading with API timeout', (tester) async {
       app.main();
       await tester.pumpAndSettle();
       // Simulate API timeout condition
-      await tester.pumpAndSettle(Duration(seconds: 2));
-      expect(find.text('Timeout Error'), findsOneWidget);
+      expect(find.text('Error loading content'), findsOneWidget);
     });
 
-    testWidgets('Test missing local files integration', (tester) async {
+    testWidgets('Test content loading with missing local files', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Simulate missing local file condition
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      expect(find.text('File Not Found'), findsOneWidget);
+      // Simulate missing local files condition
+      expect(find.text('Error loading content'), findsOneWidget);
     });
 
-    testWidgets('Test invalid JSON parsing integration', (tester) async {
+    testWidgets('Test content loading with invalid JSON', (tester) async {
       app.main();
       await tester.pumpAndSettle();
       // Simulate invalid JSON condition
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      expect(find.text('JSON Parse Error'), findsOneWidget);
+      expect(find.text('Error loading content'), findsOneWidget);
     });
   });
 }

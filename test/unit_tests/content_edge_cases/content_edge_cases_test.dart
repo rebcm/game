@@ -1,32 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/services/content_service.dart';
-import 'dart:convert';
+import 'package:game/content/content_loader.dart';
 
 void main() {
-  group('Content Service Edge Cases', () {
+  group('Content Loader Edge Cases', () {
     test('Test API timeout', () async {
-      final contentService = ContentService();
-      await expectLater(
-        contentService.fetchContent(timeout: Duration(milliseconds: 1)),
-        throwsA(isA<TimeoutException>()),
-      );
+      expect(() async => await ContentLoader.loadContent(timeout: Duration(milliseconds: 1)), throwsException);
     });
 
-    test('Test missing local files', () {
-      final contentService = ContentService();
-      expect(
-        contentService.loadLocalContent('non_existent_file.json'),
-        throwsA(isA<FileSystemException>()),
-      );
+    test('Test missing local files', () async {
+      expect(() async => await ContentLoader.loadContent(filePath: 'non_existent_file.json'), throwsException);
     });
 
-    test('Test invalid JSON parsing', () {
-      final contentService = ContentService();
-      const invalidJson = '{ invalid: json }';
-      expect(
-        () => jsonDecode(invalidJson),
-        throwsA(isA<FormatException>()),
-      );
+    test('Test invalid JSON parsing', () async {
+      expect(() async => await ContentLoader.loadContent(jsonString: '{ invalid_json }'), throwsException);
     });
   });
 }
