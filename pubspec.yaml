@@ -81,3 +81,5 @@ scripts:
 
 scripts:
   run_animation_integration_test: bash scripts/run_animation_integration_test.sh
+
+  run_precision_test: flutter drive --driver=test/integration_tests/precision_test/precision_test_driver.dart --target=test/integration_tests/precision_test/precision_test.dart

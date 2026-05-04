@@ -16,8 +16,8 @@ void main() {
 
   test('precision test', () async {
     await driver?.runUnsynchronized(() async {
-      await driver?.tap(find.text('Start Game'));
-      await driver?.waitFor(find.text('Collision Detected'));
+      await driver?.tap(find.text('Start'));
+      await driver?.waitFor(find.text('Collision detected'));
     });
   });
 }

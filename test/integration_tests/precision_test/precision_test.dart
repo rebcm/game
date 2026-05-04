@@ -10,14 +10,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // Navigate to the game screen
-    await tester.tap(find.text('Start Game'));
+    await tester.tap(find.text('Start'));
     await tester.pumpAndSettle();
 
     // Move to high coordinates
     await tester.drag(find.byType(GameScreen), Offset(-10000, -10000));
     await tester.pumpAndSettle();
 
-    // Test collision detection
-    expect(find.text('Collision Detected'), findsOneWidget);
+    // Check for collision
+    expect(find.text('Collision detected'), findsOneWidget);
   });
 }
