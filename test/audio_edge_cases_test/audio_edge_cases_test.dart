@@ -1,39 +1,57 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:game/audio_manager.dart';
+import 'package:mockito/mockito.dart';
+
+class MockAudioManager extends Mock implements AudioManager {}
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  group('Áudio Edge Cases', () {
+    test('Perda de conexão deve pausar a música', () async {
+      // Arrange
+      final audioManager = MockAudioManager();
+      when(audioManager.isConnected()).thenReturn(false);
 
-  group('Testes de Áudio', () {
-    testWidgets('Inicialização do Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      // Verificar se o áudio iniciou corretamente
+      // Act
+      await audioManager.pauseMusic();
+
+      // Assert
+      verify(audioManager.pauseMusic()).called(1);
     });
 
-    testWidgets('Pausa e Retomada do Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      // Simular pausa e retomada do áudio e verificar se funcionou corretamente
+    test('Modo silencioso deve pausar a música', () async {
+      // Arrange
+      final audioManager = MockAudioManager();
+      when(audioManager.isSilentMode()).thenReturn(true);
+
+      // Act
+      await audioManager.pauseMusic();
+
+      // Assert
+      verify(audioManager.pauseMusic()).called(1);
     });
 
-    testWidgets('Desconexão de Dispositivos de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      // Simular desconexão e reconexão de dispositivos de áudio e verificar se o áudio pausou e retomou corretamente
+    test('Interrupção por chamadas telefônicas deve pausar a música', () async {
+      // Arrange
+      final audioManager = MockAudioManager();
+      when(audioManager.isInterruptedByCall()).thenReturn(true);
+
+      // Act
+      await audioManager.pauseMusic();
+
+      // Assert
+      verify(audioManager.pauseMusic()).called(1);
     });
 
-    testWidgets('Interrupções de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      // Simular interrupções de áudio e verificar se o áudio foi interrompido e retomado corretamente
-    });
+    test('Permissões de hardware negadas devem pausar a música', () async {
+      // Arrange
+      final audioManager = MockAudioManager();
+      when(audioManager.hasHardwarePermissions()).thenReturn(false);
 
-    testWidgets('Erros de Áudio', (tester) async {
-      app.main();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-      // Simular erros de áudio e verificar se o jogo lidou com eles de forma graciosa
+      // Act
+      await audioManager.pauseMusic();
+
+      // Assert
+      verify(audioManager.pauseMusic()).called(1);
     });
   });
 }

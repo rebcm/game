@@ -2,22 +2,20 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para os testes de áudio no jogo Construção Criativa da Rebeca.
+Este documento define os critérios de aceitação para os testes de áudio do jogo.
 
-## Cenários de Teste
+## Critérios
 
-1. **Perda de Conexão**: O jogo deve pausar ou silenciar o áudio quando a conexão é perdida.
-2. **Modo Silencioso**: O jogo deve respeitar o modo silencioso do dispositivo, silenciando o áudio.
-3. **Interrupção por Chamadas Telefônicas**: O jogo deve pausar o áudio durante chamadas telefônicas.
-4. **Permissões de Hardware**: O jogo deve lidar corretamente com a negação de permissões de hardware necessárias para o funcionamento do áudio.
+1. **Perda de conexão**: A música deve pausar quando a conexão for perdida.
+2. **Modo silencioso**: A música deve pausar quando o dispositivo estiver no modo silencioso.
+3. **Interrupção por chamadas telefônicas**: A música deve pausar quando o dispositivo for interrompido por uma chamada telefônica.
+4. **Permissões de hardware negadas**: A música deve pausar quando as permissões de hardware forem negadas.
 
-## Critérios de Aceitação
+## Testes
 
-- O áudio é pausado ou silenciado corretamente em caso de perda de conexão.
-- O áudio é silenciado quando o dispositivo está no modo silencioso.
-- O áudio é pausado durante chamadas telefônicas e retomado após a chamada.
-- O jogo lida corretamente com a negação de permissões de hardware, exibindo mensagens apropriadas ao usuário se necessário.
+Os testes devem ser implementados utilizando o framework de testes do Flutter.
 
 ## Referências
 
-- [Documentação de Testes de Áudio](link_para_documentacao)
+* [Documentação do Flutter](https://flutter.dev/docs)
+* [Documentação do Mockito](https://pub.dev/packages/mockito)
