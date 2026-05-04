@@ -17,6 +17,6 @@ jobs:
         with:
           flutter-version: '3.0.5'
 
-      - name: Run Checksum Test
+      - name: Run checksum test
         run: |
           flutter drive --driver=test/integration_tests/checksum_test/checksum_test_driver.dart --target=test/integration_tests/checksum_test/checksum_test.dart
