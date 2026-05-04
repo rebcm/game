@@ -120,3 +120,6 @@ scripts:
 
 scripts:
   run_environment_matrix_tests: bash scripts/run_environment_matrix_tests.sh
+
+scripts:
+  update_guia_construcao_template: bash scripts/update_guia_construcao_template.sh
