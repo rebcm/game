@@ -138,3 +138,9 @@ flutter:
 
   text_input_test:
     path: ./test/widget_tests/text_input_test.dart
+
+  memory_baseline:
+    path: ./benchmarks/memory_baseline
+
+  performance_tracking:
+    path: ./benchmarks/performance_tracking
