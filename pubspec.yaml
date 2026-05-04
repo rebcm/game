@@ -1,10 +1,3 @@
-name: game
-description: Construção Criativa da Rebeca - jogo voxel modo criativo
-
-version: 1.0.0+2
-
-environment:
-  sdk: ">=3.0.0 <4.0.0"
   flutter: "3.16.0"
 
 dependencies:
@@ -61,29 +54,5 @@ flutter:
   input_validation_test:
     path: test_driver/input_validation_test/input_validation_test.dart
   uses-material-design: true
-  assets:
-    - assets/
-    - assets/audio/
-  integration_test:
-    path: test_driver/integration_test/integration_test.dart
-  volume_test:
-    path: test_driver/volume_test/volume_test.dart
-  contract_test:
-    path: test_driver/contract_test/contract_test.dart
-  api_test:
-    path: test_driver/api_test/api_test.dart
-  audio_output_test:
-    path: test_driver/audio_output_test/audio_output_test.dart
-  technical_comparison_test:
-    path: test_driver/technical_comparison_test/technical_comparison_test.dart
-  onboarding_test:
-    path: test_driver/onboarding_test/onboarding_test.dart
-  onboarding_test_driver:
-    path: test_driver/onboarding_test/onboarding_test_driver.dart
-  settings_test:
-    path: test_driver/settings_test/settings_test.dart
-
-  setup_cache_test:
-    path: test_driver/setup_cache/setup_cache_test.dart
-  setup_cache_test_driver:
-    path: test_driver/setup_cache/setup_cache_test_driver.dart
+  global_shortcuts_test:
+    path: test_driver/global_shortcuts_test/global_shortcuts_test.dart
