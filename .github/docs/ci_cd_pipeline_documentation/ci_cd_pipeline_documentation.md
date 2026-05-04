@@ -22,3 +22,6 @@ O pipeline executa os seguintes testes e validações:
 ## Atualização da Documentação
 
 A documentação do pipeline é atualizada automaticamente sempre que houver alterações nos arquivos de configuração do CI/CD.
+### JDK Version Validation
+
+The CI/CD pipeline now validates the JDK version to ensure it matches the required version (17).

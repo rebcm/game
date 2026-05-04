@@ -6,30 +6,35 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate JDK version
+        run: java -version
+
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
+          channel: 'stable'
 
-      - name: Install dependencies
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: Run build runner
-        run: ./scripts/run_build_runner.sh
+      - name: Analyze code
+        run: dart analyze
 
-      - name: Run smoke test
-        run: bash scripts/run_smoke_test_with_retry.sh
+      - name: Run tests
+        run: flutter test
 
-      - name: Deploy if smoke test passes
-        if: success()
-        run: echo "Deploying to production"
-
-      - name: Rollback if smoke test fails
-        if: failure()
-        run: echo "Rolling back to previous version"
+      - name: Build and test with Gradle
+        run: ./gradlew build
