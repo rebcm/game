@@ -87,3 +87,8 @@ scripts:
     path: test/integration_tests/inputs/edge_cases_input_test.dart
 scripts:
   run_edge_cases_input_tests: bash scripts/run_edge_cases_input_tests.sh
+
+  golden_test:
+    path: test/golden_tests/dicas_ui_test.dart
+scripts:
+  run_golden_tests: bash scripts/run_golden_tests.sh
