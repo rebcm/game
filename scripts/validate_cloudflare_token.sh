@@ -12,11 +12,11 @@ RESPONSE=$(curl -s -X GET \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
 
-VERIFY_RESULT=$(echo $RESPONSE | jq -r '.result')
+STATUS=$(echo $RESPONSE | jq -r '.result')
 
-if [ "$VERIFY_RESULT" != "true" ]; then
-  echo "Invalid or expired CLOUDFLARE_API_TOKEN"
+if [ "$STATUS" == "true" ]; then
+  echo "Cloudflare token is valid"
+else
+  echo "Cloudflare token is invalid"
   exit 1
 fi
-
-echo "CLOUDFLARE_API_TOKEN is valid"
