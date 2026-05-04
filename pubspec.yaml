@@ -91,3 +91,6 @@ golden_toolkit: ^0.15.0
   additional_test_paths:
     - test_driver/passdriver_flutter_audio_background_test/audio_background_test.dart
     - test_driver/passdriver_flutter_edge_cases/edge_cases_test.dart
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_input_latency_test/input_latency_test.dart
