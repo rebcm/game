@@ -1,9 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 import 'package:game/logging/logging.dart';
 
 void main() {
-  group('Logging Test', () {
-    test('should log info message', () {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('Logging Integration Test', () {
+    testWidgets('should log info message', (tester) async {
       // Arrange
       final logger = Logger();
 
@@ -15,7 +18,7 @@ void main() {
       // This might involve checking a log file or a mock logger
     });
 
-    test('should log error message', () {
+    testWidgets('should log error message', (tester) async {
       // Arrange
       final logger = Logger();
 
