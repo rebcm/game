@@ -6,17 +6,20 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('content regression test', (tester) async {
+  testWidgets('Content Regression Test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Verify that the initial screen is rendered correctly
-    expect(find.text('Rebeca'), findsOneWidget);
+    final localizedStrings = [
+      'title',
+      'welcome_message',
+      // Add more localized strings as needed
+    ];
 
-    // Test various UI elements and their content
-    expect(find.text('Build Mode'), findsOneWidget);
-    expect(find.text('Creative Mode'), findsOneWidget);
+    for (final key in localizedStrings) {
+      expect(find.text(key), findsOneWidget);
+    }
 
-    // Add more test cases as needed to cover different content aspects
+    // Add more test logic as needed
   });
 }

@@ -139,3 +139,5 @@ scripts:
   run_markdown_lint_test: bash scripts/run_markdown_lint_test.sh
 
   run_setup_validation_test: flutter drive --driver=test/integration_tests/setup_validation_test/setup_validation_test_driver.dart --target=test/integration_tests/setup_validation_test/setup_validation_test.dart
+
+  run_content_regression_test: bash scripts/run_content_regression_test
