@@ -15,7 +15,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.8'
+          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
@@ -26,5 +26,5 @@ jobs:
       - name: Build web
         run: flutter build web
 
-      - name: Deploy to production
-        run: echo "Deploying to production..."
+      - name: Deploy
+        run: echo "Deploying to production"
