@@ -126,3 +126,6 @@ scripts:
   run_failure_mapping_test: bash scripts/run_failure_mapping_test
 
   run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
+
+scripts:
+  run_stress_test_retencao: bash scripts/run_stress_test_retencao_closures_streams
