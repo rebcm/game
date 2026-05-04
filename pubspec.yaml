@@ -153,3 +153,6 @@ flutter:
 
   deploy_validation_service:
     path: ./lib/services/api_service
+
+  contract_testing:
+    path: ./integration_test/contract_testing
