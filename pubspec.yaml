@@ -156,3 +156,6 @@ flutter:
 
   contract_testing:
     path: ./integration_test/contract_testing
+
+  token_validation_test:
+    path: ./integration_test/token_validation_test
