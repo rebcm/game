@@ -2,20 +2,21 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver? driver;
+  group('API Contract Validation Test Driver', () {
+    FlutterDriver? driver;
 
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-  tearDownAll(() async {
-    if (driver != null) {
-      driver!.close();
-    }
-  });
+    tearDownAll(() async {
+      if (driver != null) {
+        driver!.close();
+      }
+    });
 
-  test('API contract validation test', () async {
-    // This test is not actually driving the Flutter app, but rather running a test
-    // You might need to adjust this based on your actual testing needs
+    test('Run API contract validation test', () async {
+      await driver!.requestData('api_contract_validation_test');
+    });
   });
 }

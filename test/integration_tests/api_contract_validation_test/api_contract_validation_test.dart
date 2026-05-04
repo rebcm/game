@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  group('API Contract Validation', () {
+  group('API Contract Validation Test', () {
     test('Validate API response against schema', () async {
       final response = await http.get(Uri.parse('https://example.com/api/endpoint'));
       expect(response.statusCode, 200);
