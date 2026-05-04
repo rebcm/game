@@ -56,3 +56,6 @@ flutter:
   assets:
     - assets/
     - assets/audio/
+
+  integration_test:
+    sdk: flutter
