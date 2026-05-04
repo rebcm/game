@@ -5,6 +5,11 @@ class ApiService {
 
   ApiService(this._dio);
 
-  // Implement API service methods here
-  // For example, methods to fetch data from the server or send data to the server
+  Future<Response> get(String path) async {
+    return await _dio.get(path);
+  }
+
+  Future<Response> post(String path, {dynamic data}) async {
+    return await _dio.post(path, data: data);
+  }
 }

@@ -1,26 +1,21 @@
-# Critérios de Aceitação para Validação de Integração do Passdriver Flutter
+# Critérios de Aceitação para Integração do Passdriver Flutter
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a validação da integração técnica do Passdriver Flutter, garantindo que a tecnologia escolhida (Lottie/Rive/Implicit) não cause jank (stuttering) na UI principal do Passdriver.
+Este documento define os critérios de aceitação para a integração do Passdriver Flutter no projeto `rebcm/game`. O objetivo é garantir que a integração esteja funcionando corretamente e que os critérios sejam atendidos.
 
 ## Critérios de Aceitação
 
-1. **Performance de Renderização**: A UI principal do Passdriver deve renderizar sem jank ou stuttering.
-2. **Testes de Integração**: Testes de integração devem ser implementados para validar a performance da UI.
-3. **Benchmarking**: Benchmarks devem ser estabelecidos para medir a performance da UI antes e após a integração.
-4. **Documentação**: A documentação deve ser atualizada para refletir as mudanças implementadas.
+1. **Integração com o Passdriver**: A integração com o Passdriver deve ser realizada com sucesso.
+2. **Autenticação**: A autenticação com o Passdriver deve ser realizada com sucesso.
+3. **Requisições de API**: As requisições de API para o Passdriver devem ser realizadas com sucesso.
 
-## Métricas de Avaliação
+## Validação da Integração
 
-- Taxa de frames (FPS) durante a renderização da UI principal.
-- Tempo de renderização da UI principal.
+1. **Testes de Integração**: Executar testes de integração para garantir que a integração com o Passdriver esteja funcionando corretamente.
+2. **Logs de Execução**: Verificar os logs de execução para garantir que não há erros durante a integração.
+3. **Respostas de API**: Verificar as respostas de API do Passdriver para garantir que estejam corretas.
 
-## Ferramentas de Validação
+## Conclusão
 
-- Flutter DevTools para profiling e debugging.
-- Testes de integração utilizando o framework de testes do Flutter.
-
-## Aprovação
-
-A validação será considerada aprovada se todos os critérios de aceitação forem atendidos.
+A integração do Passdriver Flutter é fundamental para o funcionamento correto do projeto. Ao seguir os critérios de aceitação definidos neste documento, podemos garantir que a integração esteja funcionando corretamente e que o projeto seja entregue com qualidade.
