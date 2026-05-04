@@ -1,16 +1,17 @@
-// Exemplo de utilização de voxels no jogo
+/// Exemplo de uso do termo Voxel
 class Voxel {
-  int x, y, z;
+  int x, y, z; // Coordenadas do voxel
+  int tipo;    // Tipo do voxel (e.g., terra, água, etc.)
 
-  Voxel(this.x, this.y, this.z);
+  Voxel(this.x, this.y, this.z, this.tipo);
 
+  /// Método para renderizar o voxel
   void render() {
-    // Lógica para renderizar o voxel
+    // Implementação da renderização do voxel
   }
 }
 
 void main() {
-  Voxel voxel = Voxel(0, 0, 0);
-  voxel.render();
+  Voxel meuVoxel = Voxel(0, 0, 0, 1); // Cria um voxel na origem do tipo 1
+  meuVoxel.render(); // Renderiza o voxel
 }
-

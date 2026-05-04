@@ -1,19 +1,18 @@
 # Glossário Técnico
 
-Este documento define termos técnicos utilizados no projeto passdriver flutter.
+Este documento define termos técnicos utilizados no projeto Construção Criativa da Rebeca.
 
 ## Termos
 
 ### Voxel
-Um voxel é uma unidade de medida tridimensional utilizada para representar gráficos 3D.
+Um voxel é a unidade básica de representação 3D no jogo, equivalente a um pixel em 2D.
 
 ### Chunk
-Um chunk é uma subdivisão do mundo do jogo em blocos menores para otimizar a renderização.
+Um chunk é uma subdivisão do mundo do jogo em seções menores para otimizar a renderização.
 
 ### API
-API (Application Programming Interface) é uma interface de programação de aplicações que permite a comunicação entre diferentes sistemas.
+API (Application Programming Interface) é uma interface de programação de aplicações que permite a comunicação entre diferentes componentes do sistema.
 
 ## Exemplos
 
-Para exemplos de implementação, consulte a pasta [exemplos](./exemplos/).
-
+Para ilustrar o uso dos termos técnicos, consulte os exemplos na pasta `exemplos`.
