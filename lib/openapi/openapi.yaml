@@ -1,12 +1,27 @@
 openapi: 3.0.0
 info:
-  title: Game API
-  description: API for the game
+  title: Passdriver API
+  description: API for Passdriver
   version: 1.0.0
 paths:
-  /api/test:
+  /users:
     get:
-      summary: Test API
+      summary: Get users
       responses:
         '200':
-          description: OK
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
