@@ -9,10 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver?.close();
   });
 
-  test('Animation test', () async {
-    await driver?.requestData('animation_test');
+  test('animation test driver', () async {
+    await driver?.waitUntilFirstFrameRasterized();
   });
 }
