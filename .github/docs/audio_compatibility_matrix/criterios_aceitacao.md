@@ -2,36 +2,41 @@
 
 ## Introdução
 
-Este documento define a matriz de compatibilidade de áudio para o jogo Rebeca, garantindo que o sistema de áudio funcione corretamente em diferentes plataformas e versões.
+Este documento define a matriz de compatibilidade de áudio para o jogo Rebeca, garantindo que o sistema de áudio funcione corretamente em diferentes plataformas e dispositivos.
 
 ## Plataformas Suportadas
 
-- Android
-- iOS
-- Navegadores Web
+O jogo Rebeca será testado nas seguintes plataformas:
+
+* Android
+* iOS
+* Navegadores Web (Chrome, Firefox, Safari)
 
 ## Versões Específicas para Testes
 
-### Android
-- Versão mínima: 8.0 (API level 26)
-- Versão máxima: 13.0 (API level 33)
+As seguintes versões específicas serão utilizadas para validação do sistema de áudio:
 
-### iOS
-- Versão mínima: 14.0
-- Versão máxima: 17.0
-
-### Navegadores Web
-- Google Chrome: Versão mínima 100, Versão máxima 115
-- Mozilla Firefox: Versão mínima 90, Versão máxima 110
-- Safari: Versão mínima 15, Versão máxima 17
+* Android: 10, 11, 12
+* iOS: 14, 15, 16
+* Navegadores Web:
+ + Chrome: 100, 101, 102
+ + Firefox: 90, 91, 92
+ + Safari: 14, 15, 16
 
 ## Critérios de Aceitação
 
-1. O sistema de áudio deve funcionar corretamente em todas as versões suportadas das plataformas.
-2. A reprodução de áudio deve ser estável e sem interrupções.
-3. O volume e a qualidade do áudio devem ser consistentes em todas as plataformas.
+1. O sistema de áudio deve funcionar corretamente em todas as plataformas suportadas.
+2. O áudio deve ser reproduzido sem distorções ou interrupções.
+3. O volume do áudio deve ser ajustável.
 
 ## Testes
 
-Os testes de compatibilidade de áudio devem ser realizados utilizando as versões específicas definidas acima. Os resultados dos testes devem ser documentados e reportados.
+Os testes serão realizados utilizando o framework de testes do Flutter, com cenários de teste que abrangem as diferentes plataformas e versões específicas.
+
+## Resultados Esperados
+
+Os resultados esperados incluem:
+
+* Reprodução de áudio sem erros em todas as plataformas suportadas.
+* Ajuste de volume funcionando corretamente.
 
