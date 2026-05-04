@@ -129,3 +129,6 @@ flutter:
 
   size_reduction_benchmark:
     path: ./benchmarks/size_reduction_benchmark
+
+  cross_browser_tests:
+    path: ./test/cross_browser_tests
