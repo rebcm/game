@@ -34,3 +34,8 @@ Este documento descreve o fluxo de atualização da documentação do projeto Re
 
 Manter a documentação atualizada é crucial para o sucesso do projeto. Este fluxo deve ser seguido rigorosamente para garantir a consistência e a qualidade da documentação.
 {"pt-BR": "Tradução para pt-BR"}
+## Game Design Document (GDD) Template Update Flow
+
+1. Modify the GDD template in `.github/docs/game_design_document_template/template.md`
+2. Run `bash scripts/update_gdd_template_docs.sh` to update the documentation template
+3. Verify the changes are correctly reflected in `.github/docs/documentacao_template/template.md`
