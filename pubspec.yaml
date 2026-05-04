@@ -71,3 +71,6 @@ scripts:
   provider: ^6.0.3
 scripts:
   run_failure_mapping_tests: bash scripts/run_failure_mapping_tests.sh
+
+scripts:
+  run_texture_mapping_tests: bash scripts/run_texture_mapping_tests.sh
