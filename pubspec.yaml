@@ -40,6 +40,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/rebeca_animation.riv
+    - assets/audio/ # assuming you need to add audio assets
   uses-material-design: true
 
 flutter_i18n:
@@ -55,32 +56,6 @@ scripts:
   run_lint_test: flutter drive --driver=test/integration_tests/lint_test/lint_test_driver.dart --target=test/integration_tests/lint_test/lint_test.dart
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
-  run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
-
-  run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
-
-scripts:
-  run_checksum_test: bash scripts/run_checksum_test.sh
-  run_lint_error_test: bash scripts/run_lint_error_test.sh
-
-  run_frame_timing_test: flutter drive --driver=test/performance_tests/frame_timing_test/frame_timing_test_driver.dart --target=test/performance_tests/frame_timing_test/frame_timing_test.dart
-
-scripts:
-  run_checksum_test: bash scripts/run_checksum_test.sh
-  run_lint_parser: ./scripts/run_lint_parser.sh
-
-  run_error_handling_test: bash scripts/run_error_handling_test.sh
-
-  run_console_error_test: ./scripts/run_console_error_test.sh
-
-  run_passdriver_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_integration_test/passdriver_integration_test.dart
-
-  run_scene_rebuild_profiling_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/scene_rebuild_profiling_test/scene_rebuild_profiling_test.dart
-
-  run_frame_timing_test: bash scripts/run_frame_timing_test.sh
-
-  run_data_integrity_test: bash scripts/run_data_integrity_test.sh
-
   run_audio_integration_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
 
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
