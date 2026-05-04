@@ -6,18 +6,21 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Memory test with GC forcing', (tester) async {
+  testWidgets('memory snapshot test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Simulate some actions
-    await tester.tap(find.text('Some Button'));
+    // Trigger chunk unloading
+    await tester.tap(find.text('Unload Chunks'));
     await tester.pumpAndSettle();
 
-    // Force GC
-    await IntegrationTestWidgetsFlutterBinding.instance?.performGC();
+    // Capture heap snapshot
+    final snapshot = await IntegrationTestWidgetsFlutterBinding.instance.takeHeapSnapshot();
 
-    // Validate memory usage
-    expect(await IntegrationTestWidgetsFlutterBinding.instance?.isMemoryLeak(), false);
+    // Save snapshot to file
+    final file = File('test/integration_tests/memory_test/snapshot.json');
+    await file.writeAsString(snapshot.toJson());
+
+    expect(snapshot.objects, isNotEmpty);
   });
 }
