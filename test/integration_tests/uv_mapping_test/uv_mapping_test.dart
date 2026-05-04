@@ -11,7 +11,7 @@ void main() {
 
     // Implement test logic to verify UV mapping for both models
     // This may involve checking pixel alignment or texture rendering
-    // For demonstration purposes, a simple test is shown
+    // For demonstration purposes, a simple check is shown
     expect(find.text('Rebeca'), findsOneWidget);
   });
 }
