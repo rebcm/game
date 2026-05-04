@@ -12,7 +12,7 @@ void main() {
     await driver?.close();
   });
 
-  test('Memory Leak Test Driver', () async {
-    await driver?.requestData('some_data');
+  test('Memory Leak Test', () async {
+    await driver?.requestData('memory_leak_test');
   });
 }

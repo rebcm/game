@@ -14,12 +14,13 @@ void main() {
 
     for (int i = 0; i < 10; i++) {
       await audioPlayer.play('path_to_test_audio.mp3', isLocal: true);
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     await audioPlayer.dispose();
 
-    // Verify memory usage or check for memory leaks using Flutter DevTools
-    // This step might require manual verification using Flutter DevTools
+    // Verify memory usage or check for memory leaks using a profiling tool
+    // For simplicity, we're just checking if the player is disposed
+    expect(audioPlayer.state, AudioPlayerState.DISPOSED);
   });
 }
