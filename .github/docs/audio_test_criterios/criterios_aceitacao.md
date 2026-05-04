@@ -6,20 +6,17 @@ Este documento define os critérios de aceitação para os testes de áudio do j
 
 ## Critérios
 
-1. O jogo deve continuar funcionando corretamente após uma interrupção por chamada telefônica.
-2. O jogo deve ser capaz de tocar áudio em modo silencioso.
-3. O jogo deve lidar corretamente com permissões de hardware para áudio.
-4. O jogo deve lidar corretamente com perda de conexão durante a reprodução de áudio.
+1. O jogo deve ser capaz de alternar a saída de áudio entre fone de ouvido e alto-falante sem interrupções.
+2. O volume do jogo deve ser integrado com o volume do sistema operacional.
+3. A mudança no volume do sistema operacional deve refletir no volume do jogo.
 
 ## Testes
 
-Os testes devem ser realizados utilizando o framework de testes Flutter e devem cobrir os seguintes cenários:
+Os testes devem cobrir os seguintes cenários:
+- Alternância de saída de áudio entre fone de ouvido e alto-falante.
+- Integração do volume do jogo com o volume do sistema operacional.
 
-- Interrupção por chamada telefônica
-- Modo silencioso
-- Permissões de hardware
-- Perda de conexão
+## Ferramentas
 
-## Resultados Esperados
+Os testes devem ser realizados utilizando o framework de testes Flutter e a biblioteca audioplayers.
 
-Os resultados esperados para cada teste estão definidos no código de teste.

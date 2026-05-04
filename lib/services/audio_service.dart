@@ -1,15 +1,32 @@
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioService {
-  final AudioPlayer _audioPlayer;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  AudioService(this._audioPlayer);
+  Future<void> playAudio(String assetPath) async {
+    await _audioPlayer.play(AssetSource(assetPath));
+  }
+
+  Future<void> stopAudio() async {
+    await _audioPlayer.stop();
+  }
+
+  Future<void> setOutput(Device device) async {
+    // Implement logic to set output device
+  }
+
+  Future<Device> getOutput() async {
+    // Implement logic to get current output device
+    return Device.Speaker; // Placeholder
+  }
 
   Future<void> setVolume(double volume) async {
     await _audioPlayer.setVolume(volume);
   }
 
-  Future<void> play(AudioPlayerSource source) async {
-    await _audioPlayer.play(source, mode: PlayerMode.lowLatency);
+  Future<double> getVolume() async {
+    return await _audioPlayer.getVolume();
   }
 }
+
+enum Device { Speaker, Headphones }
