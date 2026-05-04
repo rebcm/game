@@ -4,7 +4,7 @@ import 'package:game/context_menu/context_menu.dart';
 
 void main() {
   group('ContextMenu', () {
-    testWidgets('showContextMenu and hideContextMenu work correctly', (tester) async {
+    testWidgets('showContextMenu shows a menu', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Builder(
           builder: (context) {
@@ -15,11 +15,27 @@ void main() {
         ),
       ));
       await tester.pump();
-      expect(find.byType(PopupMenu), findsOneWidget);
-      final contextMenu = ContextMenu(tester.element(find.byType(Builder)));
+      expect(find.text('Menu Item 1'), findsOneWidget);
+      expect(find.text('Menu Item 2'), findsOneWidget);
+    });
+
+    testWidgets('hideContextMenu hides the menu', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(
+          builder: (context) {
+            final contextMenu = ContextMenu(context);
+            contextMenu.showContextMenu(Offset(100, 100));
+            return Container();
+          },
+        ),
+      ));
+      await tester.pump();
+      final context = tester.element(find.byType(MaterialApp));
+      final contextMenu = ContextMenu(context);
       contextMenu.hideContextMenu();
       await tester.pump();
-      expect(find.byType(PopupMenu), findsNothing);
+      expect(find.text('Menu Item 1'), findsNothing);
+      expect(find.text('Menu Item 2'), findsNothing);
     });
   });
 }

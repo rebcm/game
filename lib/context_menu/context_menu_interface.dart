@@ -1,4 +1,4 @@
 abstract class ContextMenuInterface {
-  void showContextMenu(Offset offset);
+  void showContextMenu(Offset position);
   void hideContextMenu();
 }
