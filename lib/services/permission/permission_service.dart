@@ -1,13 +1,42 @@
 import 'package:permission_handler/permission_handler.dart';
 
-class PermissionService {
-  Future<bool> requestPermission(Permission permission) async {
-    final status = await permission.request();
-    return status.isGranted;
-  }
+abstract class PermissionService {
+  Future<PermissionStatus> requestPermission();
+}
 
-  Future<bool> checkPermission(Permission permission) async {
-    final status = await permission.status;
-    return status.isGranted;
+class PermissionServiceImpl implements PermissionService {
+  @override
+  Future<PermissionStatus> requestPermission() async {
+    return await Permission.microphone.request();
+  }
+}
+
+class PermissionWidget extends StatefulWidget {
+  final PermissionService permissionService;
+
+  const PermissionWidget({Key? key, required this.permissionService}) : super(key: key);
+
+  @override
+  State<PermissionWidget> createState() => _PermissionWidgetState();
+}
+
+class _PermissionWidgetState extends State<PermissionWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: widget.permissionService.requestPermission(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data == PermissionStatus.permanentlyDenied) {
+            return const Text('Permissão negada permanentemente');
+          } else if (snapshot.data == PermissionStatus.restricted) {
+            return const Text('Dispositivo não possui hardware de microfone');
+          } else if (snapshot.data == PermissionStatus.denied) {
+            return const Text('Permissão revogada');
+          }
+        }
+        return const CircularProgressIndicator();
+      },
+    );
   }
 }
