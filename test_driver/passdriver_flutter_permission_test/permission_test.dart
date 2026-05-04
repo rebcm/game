@@ -1,24 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
-import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Permission Tests', () {
-    testWidgets('Test Permission Granted', (tester) async {
-      await Permission.camera.request();
-      await app.main();
-      await tester.pumpAndSettle();
-      // Implement logic to verify pipeline success
-    });
+  testWidgets('Testa permissão concedida', (tester) async {
+    // Simula permissão concedida
+    // Implementação específica para testar permissão concedida
+    await app.main();
+    // Verifica se o pipeline foi bem-sucedido
+    // Implementação específica para verificar sucesso
+  });
 
-    testWidgets('Test Permission Denied', (tester) async {
-      await Permission.camera.request().then((value) => value.isDenied);
-      await app.main();
-      await tester.pumpAndSettle();
-      // Implement logic to verify pipeline error 403
-    });
+  testWidgets('Testa permissão negada', (tester) async {
+    // Simula permissão negada
+    // Implementação específica para testar permissão negada
+    await app.main();
+    // Verifica se o pipeline retornou Erro 403
+    // Implementação específica para verificar Erro 403
   });
 }

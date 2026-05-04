@@ -66,3 +66,6 @@ flutter:
     - test_driver/passdriver_flutter_chunk_collision_test/chunk_collision_test.dart
 
 golden_toolkit: ^0.15.0
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_permission_test/permission_test.dart
