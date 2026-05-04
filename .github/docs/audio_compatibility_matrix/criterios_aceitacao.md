@@ -26,17 +26,18 @@ As seguintes versões específicas serão utilizadas para validação do sistema
 ## Critérios de Aceitação
 
 1. O sistema de áudio deve funcionar corretamente em todas as plataformas suportadas.
-2. O áudio deve ser reproduzido sem distorções ou interrupções.
-3. O volume do áudio deve ser ajustável.
+2. Os arquivos de áudio devem ser reproduzidos sem erros ou distorções.
+3. O volume de áudio deve ser ajustável e persistir entre as sessões do jogo.
 
 ## Testes
 
-Os testes serão realizados utilizando o framework de testes do Flutter, com cenários de teste que abrangem as diferentes plataformas e versões específicas.
+Os testes serão realizados utilizando o framework de testes do Flutter, com cenários de teste que cobrem as diferentes plataformas e versões específicas.
 
 ## Resultados Esperados
 
 Os resultados esperados incluem:
 
-* Reprodução de áudio sem erros em todas as plataformas suportadas.
+* Reprodução de áudio sem erros em todas as plataformas.
 * Ajuste de volume funcionando corretamente.
+* Persistência do volume entre as sessões do jogo.
 
