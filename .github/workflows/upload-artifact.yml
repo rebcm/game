@@ -1,0 +1,43 @@
+name: Upload Artifact
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+jobs:
+  upload-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: app-release.apk
+
+      - name: Download IPA artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Runner.app
+
+      - name: Upload APK to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload IPA to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./Runner.app/Runner.ipa
+          asset_name: Runner.ipa
+          asset_content_type: application/octet-stream

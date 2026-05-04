@@ -77,3 +77,5 @@ scripts:
 
   run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
 
+
+  run_upload_artifact_test: flutter test test/lib/actions/upload_artifact_test.dart
