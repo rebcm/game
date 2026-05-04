@@ -60,13 +60,5 @@ flutter:
   integration_test:
     sdk: flutter
 
-  flutter_markdown: ^0.6.14
-
-
-  ci_cd_validation_test:
-    path: test/ci_cd_validation/ci_cd_validation_test.dart
-  test_driver/integration_test.dart:
-    path: test_driver/integration_test.dart
-
-  test_driver/volume_integration_test.dart:
-    path: test_driver/volume_integration_test.dart
+  test_driver/text_integration_test.dart:
+    path: test_driver/text_integration_test/text_integration_test.dart
