@@ -15,19 +15,21 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.6'
+          flutter-version: '3.3.10'
 
-      - name: Run tests
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests with coverage
         run: |
-          flutter pub get
           flutter test --coverage
 
       - name: Generate coverage report
         run: |
-          genhtml coverage/lcov.info -o coverage/html
+          genhtml coverage/lcov.info -o coverage/report
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
-          path: coverage/html
+          path: coverage/report
