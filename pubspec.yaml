@@ -85,3 +85,5 @@ scripts:
   run_content_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/content_integration_test/content_integration_test.dart
 
   run_gameplay_integration_test: flutter drive --driver=test/integration_tests/gameplay_integration_test/gameplay_integration_driver.dart --target=test/integration_tests/gameplay_integration_test/gameplay_integration_test.dart
+
+  run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
