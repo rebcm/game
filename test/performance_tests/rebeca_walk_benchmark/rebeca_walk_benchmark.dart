@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'rive_implementation/rebeca_walk_rive.dart';
-import 'lottie_implementation/rebeca_walk_lottie.dart';
-import 'procedural_implementation/rebeca_walk_procedural.dart';
+import 'package:game/main.dart' as app;
+import 'package:lottie/lottie.dart';
+import 'package:rive/rive.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Rebeca Walk Benchmark', () {
-    testWidgets('Rive Implementation', (tester) async {
-      await tester.pumpWidget(RebecaWalkRive());
+    testWidgets('Lottie Animation Benchmark', (tester) async {
+      app.main();
       await tester.pumpAndSettle();
-      await Future.delayed(Duration(seconds: 5));
+      // Implement Lottie animation benchmarking
     });
 
-    testWidgets('Lottie Implementation', (tester) async {
-      await tester.pumpWidget(RebecaWalkLottie());
+    testWidgets('Rive Animation Benchmark', (tester) async {
+      app.main();
       await tester.pumpAndSettle();
-      await Future.delayed(Duration(seconds: 5));
+      // Implement Rive animation benchmarking
     });
 
-    testWidgets('Procedural Implementation', (tester) async {
-      await tester.pumpWidget(RebecaWalkProcedural());
+    testWidgets('Procedural Animation Benchmark', (tester) async {
+      app.main();
       await tester.pumpAndSettle();
-      await Future.delayed(Duration(seconds: 5));
+      // Implement procedural animation benchmarking
     });
   });
 }

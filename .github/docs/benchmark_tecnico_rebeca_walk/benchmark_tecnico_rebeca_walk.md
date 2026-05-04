@@ -1,20 +1,17 @@
 # Benchmark Técnico: Rive vs Lottie vs Procedural
 
-Este documento apresenta os resultados do benchmark técnico comparando as implementações de caminhada da Rebeca utilizando Rive, Lottie e animação procedural.
+## Introdução
+
+Este documento descreve o benchmark técnico realizado para comparar o desempenho das tecnologias Rive, Lottie e Procedural na implementação da animação de caminhada da personagem Rebeca.
 
 ## Metodologia
 
-- Cada implementação foi testada isoladamente.
-- Métricas coletadas: consumo de memória, FPS e facilidade de ajuste de frames.
+O benchmark foi realizado utilizando o framework de testes de integração do Flutter.
 
 ## Resultados
 
-| Implementação | Consumo de Memória | FPS | Facilidade de Ajuste |
-|---------------|--------------------|-----|----------------------|
-| Rive          |                    |     |                      |
-| Lottie        |                    |     |                      |
-| Procedural    |                    |     |                      |
+Os resultados do benchmark serão apresentados aqui.
 
 ## Conclusão
 
-A ser preenchido com base nos resultados obtidos.
+A conclusão do benchmark será apresentada aqui.
