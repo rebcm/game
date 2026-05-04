@@ -1,35 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
+import 'package:game/rebeca_walk_benchmark/rebeca_walk_benchmark_screen.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  group('Rebeca Walk Benchmark', () {
-    testWidgets('Rive Animation Benchmark', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Implement Rive animation test
-      // Measure memory and FPS
-    });
-
-    testWidgets('Lottie Animation Benchmark', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Implement Lottie animation test
-      // Measure memory and FPS
-    });
-
-    testWidgets('Procedural Animation Benchmark', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Implement Procedural animation test
-      // Measure memory and FPS
-    });
+  testWidgets('Rebeca Walk Benchmark', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: RebecaWalkBenchmarkScreen()));
+    await tester.pumpAndSettle();
+    // Add benchmarking logic here
   });
 }
-
