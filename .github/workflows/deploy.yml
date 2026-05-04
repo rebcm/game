@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare
+name: Deploy
 
 on:
   push:
@@ -12,11 +12,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup wrangler
-        uses: cloudflare/wrangler-action@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          flutter-version: '3.3.8'
 
-      - name: Deploy to Cloudflare
-        run: |
-          wrangler publish
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build web
+        run: flutter build web
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Deploy
+        run: echo "Deploying to production"
