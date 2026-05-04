@@ -7,7 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Data Integrity Test', () {
-    testWidgets('Original payload equals decompressed payload', (tester) async {
+    testWidgets('Original payload is identical to decompressed payload', (tester) async {
       final originalPayload = Uint8List.fromList(utf8.encode('test_payload'));
       final compressedPayload = gzip.encode(originalPayload);
       final decompressedPayload = gzip.decode(compressedPayload);

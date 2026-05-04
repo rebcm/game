@@ -78,3 +78,5 @@ scripts:
   run_scene_rebuild_profiling_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/scene_rebuild_profiling_test/scene_rebuild_profiling_test.dart
 
   run_frame_timing_test: bash scripts/run_frame_timing_test.sh
+
+  run_data_integrity_test: bash scripts/run_data_integrity_test.sh
