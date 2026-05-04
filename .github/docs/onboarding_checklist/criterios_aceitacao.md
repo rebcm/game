@@ -1,17 +1,20 @@
-# Critérios de Aceitação para Onboarding
+# Critérios de Aceitação para Onboarding Checklist
 
 ## Introdução
 
-Este documento define os critérios de aceitação para o onboarding do projeto Rebeca.
+Este documento descreve os critérios de aceitação para a checklist de onboarding do projeto `rebcm/game`.
 
-## Critérios
+## Critérios de Aceitação
 
-1. **Tempo gasto**: O formulário de feedback deve capturar o tempo gasto pelo testador.
-2. **Pontos de fricção**: O formulário deve permitir que o testador descreva os pontos de fricção encontrados.
-3. **Erros de comando**: O formulário deve capturar erros de comando encontrados pelo testador.
-4. **Versão do ambiente**: O formulário deve capturar a versão do ambiente usada pelo testador.
-5. **Confirmação de versão**: O formulário deve confirmar se o testador verificou a versão do ambiente.
+1. A checklist deve incluir a execução do `flutter doctor`.
+2. A checklist deve referenciar o documento de critérios de aceitação do `flutter doctor`.
 
-## Aprovação
+## Checklist
+* [ ] Executar o script `scripts/run_flutter_doctor.sh` para documentar erros de dependências ausentes
 
-O onboarding será considerado aprovado se todos os critérios acima forem atendidos.
+* [ ] Executar `flutter doctor` e documentar erros de dependências ausentes
+* [ ] Verificar se o ambiente de desenvolvimento está configurado corretamente
+
+## Conclusão
+
+Este documento serve como um registro dos critérios de aceitação para a checklist de onboarding. Ele ajudará a garantir que os desenvolvedores sigam os passos necessários para configurar o ambiente de desenvolvimento corretamente.
