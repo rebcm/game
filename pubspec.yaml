@@ -45,6 +45,5 @@ scripts:
   run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
   run_smoke_test: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
   run_audio_regression_test: flutter drive --driver=test/integration_tests/audio_regression_test/audio_regression_test_driver.dart --target=test/integration_tests/audio_regression_test/audio_regression_test.dart
-  run_runtime_error_test: flutter drive --driver=test/integration_tests/runtime_error_test/runtime_error_test_driver.dart --target=test/integration_tests/runtime_error_test/runtime_error_test.dart
-  run_environment_provisioning_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/environment_provisioning_performance_test/environment_provisioning_performance_test.dart
-  run_png_render_test: flutter drive --driver=test/integration_tests/png_render_test/png_render_test_driver.dart --target=test/integration_tests/png_render_test/png_render_test.dart
+  run_runtime_error_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/runtime_error_test/runtime_error_test.dart
+  run_audio_edge_cases_test: flutter drive --driver=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test_driver.dart --target=test/integration_tests/audio_edge_cases_test/audio_edge_cases_test.dart
