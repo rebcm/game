@@ -1,18 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Suavidade na transição de blocos', (tester) async {
-    // Implementar teste para transição de blocos
-  });
+  testWidgets('teste de suavidade', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-  testWidgets('Suavidade na movimentação da câmera', (tester) async {
-    // Implementar teste para movimentação da câmera
-  });
-
-  testWidgets('Suavidade em efeitos visuais', (tester) async {
-    // Implementar teste para efeitos visuais
+    // Verificar FPS
+    // Verificar transição de blocos
+    // Verificar movimentação da Rebeca
   });
 }

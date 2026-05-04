@@ -2,30 +2,29 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a suavidade na transição de elementos visuais no jogo Rebeca. A suavidade é crucial para proporcionar uma experiência de usuário agradável e imersiva.
+Este documento define os critérios de aceitação para a suavidade no jogo Rebeca. A suavidade se refere à transição suave entre os diferentes estados do jogo, como a movimentação da Rebeca e a renderização dos blocos voxel.
 
-## Métricas Técnicas
+## Critérios Técnicos
 
-1. **Taxa de Quadros (FPS):** A taxa de quadros deve ser mantida em pelo menos 60 FPS durante as transições.
-2. **Tempo de Transição:** O tempo de transição entre estados visuais deve ser inferior a 0.5 segundos.
-3. **Interpolação:** As transições devem utilizar interpolação para evitar movimentos bruscos.
+1. **FPS**: O jogo deve manter uma taxa de frames por segundo (FPS) mínima de 60 em dispositivos suportados.
+2. **Transição de Blocos**: A transição entre blocos voxel deve ser suave, sem travamentos ou delays perceptíveis.
+3. **Movimentação da Rebeca**: A movimentação da Rebeca deve ser fluida, sem saltos ou interrupções.
 
-## Checklists Visuais
+## Critérios Visuais
 
-1. **Transição de Blocos:** A transição de blocos voxel deve ser suave e sem interrupções.
-2. **Movimentação da Câmera:** A movimentação da câmera deve ser suave e responsiva.
-3. **Efeitos Visuais:** Efeitos visuais, como explosões ou animações, devem ser suaves e não causar travamentos.
+1. **Renderização**: A renderização dos blocos voxel deve ser suave e sem artefatos visuais.
+2. **Iluminação**: A iluminação deve ser suave e não deve causar efeitos visuais indesejados.
 
 ## Testes
 
-1. **Testes de Performance:** Executar testes de performance regularmente para garantir que a taxa de quadros seja mantida.
-2. **Testes Visuais:** Realizar testes visuais para verificar a suavidade das transições e da movimentação.
+1. **Testes de Performance**: Executar testes de performance regularmente para garantir que o jogo atende aos critérios técnicos.
+2. **Testes Visuais**: Realizar testes visuais para garantir que o jogo atende aos critérios visuais.
 
 ## Ferramentas
 
-1. **Flutter DevTools:** Utilizar o Flutter DevTools para monitorar a performance e identificar possíveis problemas.
-2. **Testes de Integração:** Utilizar testes de integração para automatizar a verificação da suavidade.
+1. **Flutter DevTools**: Utilizar o Flutter DevTools para monitorar o desempenho do jogo e identificar áreas de melhoria.
+2. **Testes de Unidade e Integração**: Utilizar testes de unidade e integração para garantir que os componentes do jogo funcionem corretamente.
 
 ## Conclusão
 
-A suavidade é um aspecto crítico da experiência do usuário no jogo Rebeca. Ao seguir estes critérios de aceitação, podemos garantir que o jogo seja agradável e imersivo para os jogadores.
+Os critérios de aceitação definidos neste documento devem ser utilizados para garantir que o jogo Rebeca ofereça uma experiência suave e agradável aos jogadores.
