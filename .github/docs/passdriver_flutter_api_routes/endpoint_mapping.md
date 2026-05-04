@@ -1,56 +1,53 @@
-# Mapeamento de Endpoints da API do Passdriver Flutter
+# Mapeamento de Endpoints de Autenticação
 
-## Visão Geral
+Este documento detalha os endpoints de autenticação utilizados no projeto, incluindo login, logout e refresh token. São especificados os payloads de credenciais e as estruturas de JWT/Tokens retornadas.
 
-Este documento fornece um mapeamento detalhado dos endpoints da API utilizados pelo módulo Passdriver Flutter no projeto Construção Criativa da Rebeca.
+## Endpoint: Login
 
-## Endpoints da API
+* **URL:** `/auth/login`
+* **Método:** `POST`
+* **Payload:**
+  * `username`: Nome de usuário
+  * `password`: Senha do usuário
+* **Resposta:**
+  * `token`: JWT de autenticação
+  * `refreshToken`: Token de refresh
 
-### Autenticação
+## Endpoint: Logout
 
-| Endpoint | Método | Descrição |
-| --- | --- | --- |
-| `/auth/login` | POST | Realiza login do usuário |
-| `/auth/logout` | POST | Realiza logout do usuário |
-| `/auth/refresh-token` | POST | Atualiza token de autenticação |
+* **URL:** `/auth/logout`
+* **Método:** `POST`
+* **Payload:**
+  * `refreshToken`: Token de refresh
+* **Resposta:**
+  * `success`: Indicador de sucesso na operação
 
-### Usuário
+## Endpoint: Refresh Token
 
-| Endpoint | Método | Descrição |
-| --- | --- | --- |
-| `/user/profile` | GET | Obtém perfil do usuário logado |
-| `/user/profile` | PUT | Atualiza perfil do usuário logado |
+* **URL:** `/auth/refresh-token`
+* **Método:** `POST`
+* **Payload:**
+  * `refreshToken`: Token de refresh
+* **Resposta:**
+  * `token`: Novo JWT de autenticação
+  * `refreshToken`: Novo token de refresh (opcional)
 
-### Jogo
+## Estrutura do JWT
 
-| Endpoint | --- | --- |
-| `/game/state` | GET | Obtém estado atual do jogo |
-| `/game/actions` | POST | Envia ações do jogador para o servidor |
+O JWT retornado nos endpoints de login e refresh token segue o padrão de estrutura abaixo:
+
+* **Header:**
+  * `alg`: Algoritmo de assinatura (ex: HS256)
+  * `typ`: Tipo do token (JWT)
+* **Payload:**
+  * `sub`: ID do usuário
+  * `exp`: Tempo de expiração
+  * `iat`: Tempo de emissão
+  * `username`: Nome de usuário
+* **Signature:** Assinatura do token
 
 ## Considerações de Segurança
 
-- Todos os endpoints requerem autenticação via token JWT.
-- Implementar retry com backoff exponencial para requests falhos.
-- Utilizar Dio para gerenciamento de requests HTTP.
-
-## Matriz de Permissões
-
-| Endpoint | Permissão Requerida |
-| --- | --- |
-| `/auth/login` | Nenhuma |
-| `/auth/logout` | Autenticado |
-| `/user/profile` | Autenticado |
-| `/game/state` | Autenticado |
-| `/game/actions` | Autenticado |
-
-## Casos de Uso
-
-1. Ao iniciar o jogo, o cliente deve autenticar o usuário utilizando `/auth/login`.
-2. Após autenticação bem-sucedida, o token JWT deve ser armazenado de forma segura.
-3. O estado do jogo deve ser sincronizado periodicamente utilizando `/game/state`.
-4. Ações do jogador devem ser enviadas ao servidor via `/game/actions`.
-
-## Referências
-
-- [Documentação da API do Passdriver](../passdriver_flutter_api_security/api_security.md)
-- [Critérios de Aceitação para Passdriver Flutter](../passdriver_flutter_criterios/criterios_aceitacao.md)
+* Todos os endpoints de autenticação devem ser acessados via HTTPS.
+* O token de refresh deve ser armazenado de forma segura no cliente.
+* O JWT deve ser validado no servidor antes de conceder acesso a recursos protegidos.
