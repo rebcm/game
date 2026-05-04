@@ -1,3 +1,2 @@
-# Configuration for onboarding smoke test
-test_name: onboarding_smoke_test
-test_description: Smoke test for onboarding flow
+tests:
+  - onboarding_smoke_test.dart
