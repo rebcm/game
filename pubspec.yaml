@@ -61,3 +61,5 @@ scripts:
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
 
   run_memory_snapshot_test: bash scripts/run_memory_snapshot_test.sh
+
+  run_readme_validation_test: bash scripts/run_readme_validation_test
