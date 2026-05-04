@@ -105,3 +105,6 @@ flutter:
 
   integration_test:
     path: ./integration_test
+
+  integration_test:
+    path: ./integration_test

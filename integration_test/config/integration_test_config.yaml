@@ -1,3 +1,2 @@
-onboarding_test:
+onboarding_flow_test:
   enabled: true
-  test_timeout: 300
