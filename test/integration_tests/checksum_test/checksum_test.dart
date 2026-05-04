@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Checksum test', (tester) async {
+  testWidgets('Checksum test', (WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-    final ByteData? data = await binding.convertFlutterSurfaceToImage();
-    final Uint8List bytes = data!.buffer.asUint8List();
+    final bytes = File('build/app/outputs/flutter-apk/app-release.apk').readAsBytesSync();
+    final checksum = sha256.convert(bytes);
 
-    // Calculate checksum
-    final checksum = bytes.map((e) => e.toRadixString(16)).join();
-    expect(checksum, 'EXPECTED_CHECKSUM_VALUE');
+    final expectedChecksum = File('.github/docs/expected_checksum.txt').readAsStringSync().trim();
+
+    expect(checksum.toString(), expectedChecksum);
   });
 }
