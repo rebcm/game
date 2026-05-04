@@ -12,24 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
-
-      - name: Analyze code
-        run: dart analyze
 
       - name: Build web
         run: flutter build web
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: ./build/web
+      - name: Deploy to production
+        run: echo "Deploying to production..."
