@@ -9,7 +9,7 @@ if [ -f "$APK_PATH" ]; then
     https://api.github.com/repos/rebcm/game/actions/artifacts \
     -H 'Authorization: Bearer ${GITHUB_TOKEN}' \
     -H 'Content-Type: application/json' \
-    -d '{"name": "app-release.apk", "path": "${APK_PATH}"}'
+    -d '{"name":"app-release.apk","path":"'$APK_PATH'"}'
 fi
 
 if [ -f "$IPA_PATH" ]; then
@@ -18,5 +18,5 @@ if [ -f "$IPA_PATH" ]; then
     https://api.github.com/repos/rebcm/game/actions/artifacts \
     -H 'Authorization: Bearer ${GITHUB_TOKEN}' \
     -H 'Content-Type: application/json' \
-    -d '{"name": "game.ipa", "path": "${IPA_PATH}"}'
+    -d '{"name":"game.ipa","path":"'$IPA_PATH'"}'
 fi
