@@ -9,9 +9,12 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Verify texture mapping logic here
-    // This is a placeholder, actual implementation depends on the game's rendering logic
+    // Add logic to verify texture mapping
+    // For example, checking if the texture is correctly applied to the 3D model
+    // This might involve checking the pixel colors at specific points on the model
+    // or verifying that the texture coordinates are correctly set.
+
+    // Example verification step (this is a placeholder and should be replaced)
     expect(find.text('Rebeca'), findsOneWidget);
   });
 }
-
