@@ -75,3 +75,5 @@ scripts:
   validate_cloudflare_api: bash scripts/validate_cloudflare_api.sh
 
   run_build_artifacts_test: flutter drive --driver=test/integration_tests/build_artifacts_test/build_artifacts_test_driver.dart --target=test/integration_tests/build_artifacts_test/build_artifacts_test.dart
+
+  run_retry_policy_test: bash scripts/run_retry_policy_test.sh
