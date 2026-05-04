@@ -57,3 +57,5 @@ scripts:
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark.dart
   run_ux_dicas_test: flutter drive --driver=test/integration_tests/ux_dicas_test/ux_dicas_test_driver.dart --target=test/integration_tests/ux_dicas_test/ux_dicas_test.dart
 
+
+  run_tips_trigger_test: flutter drive --driver=test/integration_tests/tips_trigger_test_driver/tips_trigger_test_driver.dart --target=test/integration_tests/tips_trigger_test/tips_trigger_test.dart
