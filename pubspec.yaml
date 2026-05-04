@@ -72,3 +72,5 @@ scripts:
   run_audio_documentation_test: flutter test test/docs/audio/audio_documentation_test.dart
 
   run_audio_documentation_test: bash scripts/run_audio_documentation_test.sh
+
+  run_readme_validation_test: bash scripts/validate_readme.sh
