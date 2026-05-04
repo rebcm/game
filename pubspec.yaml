@@ -64,3 +64,6 @@ scripts:
   run_memory_leak_test: bash scripts/run_memory_leak_test.sh
 
   run_cumulative_precision_test: bash scripts/run_cumulative_precision_test.sh
+
+scripts:
+  run_ci_version_check: bash scripts/run_ci_version_check.sh
