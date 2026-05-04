@@ -13,11 +13,8 @@ void main() {
   });
 
   test('Content Regression Test Driver', () async {
-    final timeline = await driver?.traceAction(() async {
-      await driver?.tap(find.byType('FloatingActionButton'));
+    await driver?.runUnsynchronized(() async {
+      await driver?.waitFor(find.text('Rebeca\'s Game'));
     });
-    final summary = TimelineSummary.summarize(timeline!);
-    summary.writeSummaryToFile('content_regression_test', pretty: true);
-    summary.writeTimelineToFile('content_regression_test', pretty: true);
   });
 }
