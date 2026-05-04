@@ -10,13 +10,13 @@ Este documento lista as dicas e instruções necessárias para a construção do
 
 ## Instruções de Implementação
 
-1. **Implementação de Novos Recursos**: Antes de iniciar a implementação de novos recursos, revise as issues relacionadas no repositório.
-2. **Padrões de Código**: Siga os padrões de código estabelecidos no projeto, incluindo a formatação e a estrutura de arquivos.
-3. **Documentação**: Mantenha a documentação atualizada, incluindo a descrição de novas funcionalidades e mudanças significativas.
+1. **Implementação de Novos Recursos**: Antes de iniciar a implementação de novos recursos, consulte a equipe técnica para alinhamento.
+2. **Padrões de Código**: Siga os padrões de código estabelecidos no projeto para manter a consistência.
+3. **Documentação**: Mantenha a documentação atualizada conforme novos recursos são implementados.
 
 ## Boas Práticas
 
-1. **Revisão de Código**: Solicite revisões de código para garantir a qualidade e a conformidade com os padrões do projeto.
+1. **Revisão de Código**: Solicite revisão de código para todas as alterações significativas.
 2. **Testes Automatizados**: Utilize testes automatizados para validar a funcionalidade do código.
-3. **Manutenção de Dependências**: Mantenha as dependências do projeto atualizadas para evitar vulnerabilidades de segurança.
+3. **Monitoramento de Desempenho**: Monitore o desempenho da aplicação regularmente.
 

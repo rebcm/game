@@ -73,3 +73,5 @@ scripts:
   run_interruption_test: bash scripts/run_interruption_test.sh
 
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
+scripts:
+  update_passdriver_flutter_tips_docs: bash scripts/docs/update_passdriver_flutter_tips_docs.sh
