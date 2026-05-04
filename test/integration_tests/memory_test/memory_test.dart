@@ -1,39 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-import 'package:game/main.dart' as app;
-import 'dart:isolate';
-import 'package:flutter/foundation.dart';
+import 'helpers/gc_forcer.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('memory test', (tester) async {
-    app.main();
+  testWidgets('Memory test with GC forcing', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
     await tester.pumpAndSettle();
 
-    // Add your test steps here
+    GCForcer.forceGC();
 
-    // Force GC before measuring memory
-    final completer = Completer();
-    final receivePort = ReceivePort();
-    receivePort.listen((_) {
-      completer.complete();
-    });
-    Isolate.spawn(forceGCIsolate, receivePort.sendPort);
-    await completer.future;
-
-    // Continue with your test
+    // Perform memory measurements or leak detection here
   });
-}
-
-void forceGCIsolate(SendPort sendPort) async {
-  final receivePort = ReceivePort();
-  receivePort.listen((_) {
-    sendPort.send(null);
-  });
-  Isolate.spawn(forceGCIsolateMain, receivePort.sendPort);
-}
-
-void forceGCIsolateMain(SendPort sendPort) {
-  sendPort.send(null);
 }

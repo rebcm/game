@@ -28,6 +28,7 @@ dependencies:
 
 dev_dependencies:
   flutter_driver:
+    sdk: flutter
   http: ^0.13.5
   build_runner: ^2.3.3
   freezed: ^2.3.2
@@ -37,8 +38,6 @@ dev_dependencies:
   test: ^1.21.4
   lcov: ^0.14.0
   genhtml: ^0.1.0
-  flutter_driver:
-    sdk: flutter
   golden_toolkit: ^0.13.0
   integration_test:
     sdk: flutter
@@ -56,13 +55,9 @@ flutter_i18n:
 scripts:
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
-  run_memory_test: ./scripts/run_memory_test.sh
+  run_memory_test: flutter drive --driver=test/integration_tests/memory_test/memory_test_driver.dart --target=test/integration_tests/memory_test/memory_test.dart
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_rendering_test: flutter drive --driver=test/integration_tests/rendering_test/rendering_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
-  run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-  run_performance_test: flutter drive --driver=test/integration_tests/performance_test_driver/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart
-
-  run_uv_mapping_test: bash scripts/run_uv_mapping_test.sh
-
+  run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_performance_test/animation_performance_test.dart
