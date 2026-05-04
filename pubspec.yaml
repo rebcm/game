@@ -81,3 +81,5 @@ scripts:
 scripts:
   run_edge_cases_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test.dart
 
+scripts:
+  run_error_pattern_tests: bash scripts/run_error_pattern_tests.sh
