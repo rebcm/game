@@ -1,35 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:game/context_menu/context_menu_interface.dart';
 
-class ContextMenu implements ContextMenuInterface {
-  final BuildContext _context;
-
-  ContextMenu(this._context);
+class ContextMenu with ContextMenuInterface {
+  OverlayEntry? _overlayEntry;
 
   @override
   void showContextMenu(Offset offset) {
-    final RenderBox renderBox = _context.findRenderObject() as RenderBox;
-    final Offset localOffset = renderBox.globalToLocal(offset);
-    final PopupMenuThemeData popupMenuThemeData = PopupMenuTheme.of(_context);
-    showMenu(
-      context: _context,
-      position: RelativeRect.fromLTRB(
-        localOffset.dx,
-        localOffset.dy,
-        localOffset.dx,
-        localOffset.dy,
+    hideContextMenu();
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy,
+        child: Material(
+          child: Container(
+            width: 200,
+            height: 200,
+            color: Colors.white,
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text('Option 1'),
+                  onTap: () {
+                    // Handle option 1 tap
+                  },
+                ),
+                ListTile(
+                  title: Text('Option 2'),
+                  onTap: () {
+                    // Handle option 2 tap
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      items: [
-        PopupMenuItem(child: Text('Menu Item 1')),
-        PopupMenuItem(child: Text('Menu Item 2')),
-      ],
-      elevation: popupMenuThemeData.elevation,
-      shape: popupMenuThemeData.shape,
     );
+    Overlay.of(navigatorKey.currentContext!)?.insert(_overlayEntry!);
   }
 
   @override
   void hideContextMenu() {
-    Navigator.of(_context).pop();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 }
+
+final navigatorKey = GlobalKey<NavigatorState>();
