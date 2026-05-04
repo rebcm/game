@@ -1,57 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/audio_manager.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:mockito/mockito.dart';
+import 'package:game/audio_manager.dart';
 
-class MockAudioManager extends Mock implements AudioManager {}
+class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 void main() {
-  group('Áudio Edge Cases', () {
-    test('Perda de conexão deve pausar a música', () async {
-      // Arrange
-      final audioManager = MockAudioManager();
-      when(audioManager.isConnected()).thenReturn(false);
+  group('Audio Edge Cases Test', () {
+    late AudioManager audioManager;
+    late MockAudioPlayer mockAudioPlayer;
 
-      // Act
-      await audioManager.pauseMusic();
-
-      // Assert
-      verify(audioManager.pauseMusic()).called(1);
+    setUp(() {
+      mockAudioPlayer = MockAudioPlayer();
+      audioManager = AudioManager(mockAudioPlayer);
     });
 
-    test('Modo silencioso deve pausar a música', () async {
-      // Arrange
-      final audioManager = MockAudioManager();
-      when(audioManager.isSilentMode()).thenReturn(true);
-
-      // Act
-      await audioManager.pauseMusic();
-
-      // Assert
-      verify(audioManager.pauseMusic()).called(1);
+    test('test audio interruption by phone call', () async {
+      when(mockAudioPlayer.play(AssetSource('sounds/background.mp3'))).thenAnswer((_) async => '1');
+      await audioManager.playBackgroundMusic();
+      verify(mockAudioPlayer.play(AssetSource('sounds/background.mp3'))).called(1);
+      when(mockAudioPlayer.pause()).thenAnswer((_) async => '1');
+      await audioManager.pauseBackgroundMusic();
+      verify(mockAudioPlayer.pause()).called(1);
     });
 
-    test('Interrupção por chamadas telefônicas deve pausar a música', () async {
-      // Arrange
-      final audioManager = MockAudioManager();
-      when(audioManager.isInterruptedByCall()).thenReturn(true);
-
-      // Act
-      await audioManager.pauseMusic();
-
-      // Assert
-      verify(audioManager.pauseMusic()).called(1);
+    test('test audio in silent mode', () async {
+      when(mockAudioPlayer.setVolume(0)).thenAnswer((_) async => '1');
+      await audioManager.setSilentMode(true);
+      verify(mockAudioPlayer.setVolume(0)).called(1);
     });
 
-    test('Permissões de hardware negadas devem pausar a música', () async {
-      // Arrange
-      final audioManager = MockAudioManager();
-      when(audioManager.hasHardwarePermissions()).thenReturn(false);
+    test('test loss of connection', () async {
+      when(mockAudioPlayer.play(AssetSource('sounds/background.mp3'))).thenThrow(Exception('Connection lost'));
+      expect(() async => await audioManager.playBackgroundMusic(), throwsException);
+    });
 
-      // Act
-      await audioManager.pauseMusic();
-
-      // Assert
-      verify(audioManager.pauseMusic()).called(1);
+    test('test hardware permission denied', () async {
+      when(mockAudioPlayer.play(AssetSource('sounds/background.mp3'))).thenThrow(Exception('Permission denied'));
+      expect(() async => await audioManager.playBackgroundMusic(), throwsException);
     });
   });
 }
