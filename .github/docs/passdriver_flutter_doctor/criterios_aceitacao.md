@@ -1,32 +1,22 @@
 # Critérios de Aceitação para Flutter Doctor
 
-Este documento descreve os critérios de aceitação para a execução do `flutter doctor` no projeto `rebcm/game`.
-
 ## Introdução
 
-O `flutter doctor` é uma ferramenta de diagnóstico que verifica o ambiente de desenvolvimento Flutter e identifica problemas potenciais. Este documento visa documentar os erros de dependências ausentes e mapear gaps no guia de onboarding.
+Este documento define os critérios de aceitação para a execução do `flutter doctor` no projeto Construção Criativa da Rebeca. O objetivo é garantir que o ambiente de desenvolvimento esteja configurado corretamente e que todas as dependências necessárias estejam instaladas.
 
 ## Critérios de Aceitação
 
-1. O `flutter doctor` deve ser executado com sucesso no ambiente de desenvolvimento.
-2. Todos os erros de dependências ausentes devem ser documentados neste arquivo.
-3. Os gaps identificados no guia de onboarding devem ser mapeados e documentados.
+1. **Execução sem Erros**: O comando `flutter doctor` deve ser executado sem erros.
+2. **Dependências Instaladas**: Todas as dependências necessárias para o projeto devem estar instaladas e configuradas corretamente.
+3. **Documentação de Erros**: Caso existam erros ou avisos durante a execução do `flutter doctor`, estes devem ser documentados neste arquivo, incluindo a descrição do problema e as etapas para resolução.
 
-## Execução do Flutter Doctor
+## Guia de Onboarding
 
-Para executar o `flutter doctor`, siga os passos abaixo:
+Para garantir que novos desenvolvedores possam configurar seu ambiente corretamente, este documento servirá como um guia de onboarding, destacando os principais pontos de atenção durante a configuração.
 
-1. Abra um terminal no diretório raiz do projeto.
-2. Execute o comando `flutter doctor`.
+## Formato de Documentação
 
-## Documentação dos Erros
+- **Descrição do Erro**: Descrição detalhada do erro encontrado.
+- **Passos para Resolução**: Etapas necessárias para resolver o erro.
+- **Status**: Indicação se o erro foi resolvido ou não.
 
-Os erros de dependências ausentes devem ser documentados abaixo:
-
-### Erros Encontrados
-
-* [Insira os erros encontrados aqui]
-
-## Conclusão
-
-Este documento serve como um registro dos erros de dependências ausentes e gaps no guia de onboarding identificados pela execução do `flutter doctor`. Ele ajudará a melhorar a experiência de onboarding e a garantir que o ambiente de desenvolvimento esteja configurado corretamente.
