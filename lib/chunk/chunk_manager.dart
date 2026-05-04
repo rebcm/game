@@ -1,17 +1,42 @@
-import 'package:game/utils/cache/lru_cache.dart';
+import 'package:flutter/material.dart';
 
-class ChunkManager {
-  final LRUCache<String, Chunk> _chunkCache;
+class ChunkManager with ChangeNotifier {
+  List<Chunk> _chunks = [];
+  List<Chunk> get chunks => _chunks;
 
-  ChunkManager(int maxChunks) : _chunkCache = LRUCache<String, Chunk>(maxChunks);
+  void loadChunk(Chunk chunk) {
+    if (!_chunks.contains(chunk)) {
+      _chunks.add(chunk);
+      notifyListeners();
+    }
+  }
 
-  Chunk? getChunk(String chunkKey) => _chunkCache.get(chunkKey);
+  void unloadChunk(Chunk chunk) {
+    if (_chunks.contains(chunk)) {
+      _chunks.remove(chunk);
+      notifyListeners();
+    }
+  }
 
-  void cacheChunk(String chunkKey, Chunk chunk) => _chunkCache.set(chunkKey, chunk);
-
-  void unloadChunk(String chunkKey) => _chunkCache.evict(chunkKey);
-
-  void clearCache() => _chunkCache.clear();
+  void updateChunkColliders() {
+    for (var chunk in _chunks) {
+      chunk.updateColliders();
+    }
+  }
 }
 
-class Chunk {}
+class Chunk {
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
+  void load() {
+    _isLoaded = true;
+  }
+
+  void unload() {
+    _isLoaded = false;
+  }
+
+  void updateColliders() {
+  }
+}
