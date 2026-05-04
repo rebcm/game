@@ -47,3 +47,5 @@ scripts:
   run_environment_provisioning_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/environment_provisioning_performance_test/environment_provisioning_performance_test.dart
 
   run_rendering_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
+
+  run_tip_moments_test: flutter drive --driver=test/integration_tests/tip_moments_test_driver/integration_test_driver.dart --target=test/integration_tests/tip_moments_test/tip_moments_test.dart
