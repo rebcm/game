@@ -70,3 +70,6 @@ flutter:
     path: test_driver/api_test/api_test.dart
   audio_output_test:
     path: test_driver/audio_output_test/audio_output_test.dart
+
+  technical_comparison_test:
+    path: test_driver/technical_comparison_test/technical_comparison_test.dart
