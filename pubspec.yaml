@@ -78,3 +78,5 @@ flutter_i18n:
   run_heap_metrics_test: flutter drive --driver=test/integration_tests/heap_metrics_test/heap_metrics_test_driver.dart --target=test/integration_tests/heap_metrics_test/heap_metrics_test.dart
 
   run_deploy_test: ./scripts/run_deploy_test.sh
+
+  run_risk_identification_test: bash scripts/run_risk_identification_test.sh
