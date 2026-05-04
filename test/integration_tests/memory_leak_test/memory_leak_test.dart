@@ -1,26 +1,47 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
-import 'package:audioplayers/audioplayers.dart';
+import 'package:integration_test/integration_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Memory Leak Test for Audio Players', (tester) async {
+  testWidgets('Memory leak test for chunk unloading', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    final AudioPlayer audioPlayer = AudioPlayer();
+    // Navigate to the appropriate screen if needed
+    // await tester.tap(find.text('Start'));
+    // await tester.pumpAndSettle();
 
-    for (int i = 0; i < 10; i++) {
-      await audioPlayer.play('path_to_test_audio.mp3', isLocal: true);
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    // Perform actions to load and unload chunks
+    // For example:
+    // await tester.drag(find.byType(ListView), Offset(0, -500));
+    // await tester.pumpAndSettle();
 
-    await audioPlayer.dispose();
+    // Verify memory usage
+    final memoryUsageBefore = MemoryInfo(
+      // Implement logic to get memory usage
+    );
+    print('Memory usage before unloading chunks: $memoryUsageBefore');
 
-    // Verify memory usage or check for memory leaks using a profiling tool
-    // For simplicity, we're just checking if the player is disposed
-    expect(audioPlayer.state, AudioPlayerState.DISPOSED);
+    // Unload chunks
+    // Implement logic to unload chunks
+
+    await tester.pumpAndSettle(Duration(seconds: 5)); // Wait for GC
+
+    final memoryUsageAfter = MemoryInfo(
+      // Implement logic to get memory usage
+    );
+    print('Memory usage after unloading chunks: $memoryUsageAfter');
+
+    // Compare memory usage before and after
+    expect(memoryUsageAfter.usedMemory, lessThan(memoryUsageBefore.usedMemory));
   });
+}
+
+class MemoryInfo {
+  final int usedMemory;
+
+  MemoryInfo(this.usedMemory);
 }
