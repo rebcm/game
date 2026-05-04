@@ -1,25 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 import 'package:dio/dio.dart';
-import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
-  late Dio dio;
-  late DioAdapter dioAdapter;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    dio = Dio();
-    dioAdapter = DioAdapter(dio: dio);
-  });
+  group('Contract Tests', () {
+    late Dio dio;
 
-  test('Testa se a documentação de endpoints reflete a realidade do backend', () async {
-    // Configura o adapter para mockar a resposta do backend
-    dioAdapter.onGet(
-      '/endpoint',
-      (server) => server.reply(200, {'message': 'Sucesso'}),
-    );
+    setUp(() {
+      dio = Dio();
+    });
 
-    final response = await dio.get('/endpoint');
-    expect(response.statusCode, 200);
-    expect(response.data, {'message': 'Sucesso'});
+    testWidgets('Validate API Endpoints', (tester) async {
+      await app.main();
+      await tester.pumpAndSettle();
+
+      final response = await dio.get('/api/endpoint');
+      expect(response.statusCode, 200);
+    });
   });
 }

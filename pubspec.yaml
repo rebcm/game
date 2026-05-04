@@ -62,3 +62,6 @@ flutter:
     - assets/audio/
   integration_test:
     path: test_driver/integration_test/integration_test.dart
+
+  contract_test:
+    path: test_driver/contract_test/contract_test.dart
