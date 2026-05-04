@@ -6,7 +6,7 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('test global shortcuts', (tester) async {
+  testWidgets('global shortcuts test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
