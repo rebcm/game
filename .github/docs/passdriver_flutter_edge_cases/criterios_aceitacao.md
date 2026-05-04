@@ -25,3 +25,10 @@ Este documento descreve os comportamentos esperados para casos extremos no jogo,
 1. Testes automatizados devem ser implementados para validar os critérios acima, garantindo que o jogo se comporte conforme o esperado em diferentes cenários.
 2. Testes manuais também devem ser realizados para garantir que os casos extremos sejam cobertos e que o jogo seja estável e divertido.
 
+## Simultaneous Input Edge Cases
+
+The application must handle simultaneous keyboard and touch inputs correctly.
+
+### Test Cases
+
+* Simultaneous keyboard and touch input

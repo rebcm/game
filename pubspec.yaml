@@ -83,3 +83,7 @@ scripts:
 
 scripts:
   run_error_pattern_tests: bash scripts/run_error_pattern_tests.sh
+  edge_cases_input_test:
+    path: test/integration_tests/inputs/edge_cases_input_test.dart
+scripts:
+  run_edge_cases_input_tests: bash scripts/run_edge_cases_input_tests.sh
