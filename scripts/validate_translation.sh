@@ -1,25 +1,38 @@
 #!/bin/bash
 
-# Diretório dos arquivos de documentação
-DOCS_DIR=".github/docs"
+# Define the directory containing the translation files
+TRANSLATION_DIR="lib/i18n/locales"
 
-# Idioma alvo para validação
-TARGET_LOCALE="pt-BR"
+# Define the expected locale
+EXPECTED_LOCALE="pt-BR"
 
-# Função para verificar se um arquivo Markdown contém tradução para o idioma alvo
-validate_translation() {
-  local file_path=$1
-  if grep -q "^\[pt-BR\]" "$file_path"; then
-    echo "Arquivo $file_path contém tradução para $TARGET_LOCALE"
-  else
-    echo "ERRO: Arquivo $file_path NÃO contém tradução para $TARGET_LOCALE"
-    exit 1
+# Check if the translation directory exists
+if [ ! -d "$TRANSLATION_DIR" ]; then
+  echo "Translation directory not found: $TRANSLATION_DIR"
+  exit 1
+fi
+
+# Check if the expected locale file exists
+if [ ! -f "$TRANSLATION_DIR/$EXPECTED_LOCALE.json" ]; then
+  echo "Expected locale file not found: $TRANSLATION_DIR/$EXPECTED_LOCALE.json"
+  exit 1
+fi
+
+# Iterate through all markdown files in the .github/docs directory
+find .github/docs -type f -name "*.md" | while read -r file; do
+  # Check if the file contains any translation keys
+  if grep -q "{" "$file"; then
+    # Extract translation keys
+    KEYS=$(grep -oP '(?<=\{).*?(?=\})' "$file")
+    
+    # Check if the extracted keys exist in the expected locale file
+    for key in $KEYS; do
+      if ! grep -q "\"$key\"" "$TRANSLATION_DIR/$EXPECTED_LOCALE.json"; then
+        echo "Missing translation key '$key' in $EXPECTED_LOCALE.json for file: $file"
+        exit 1
+      fi
+    done
   fi
-}
-
-# Percorre todos os arquivos Markdown no diretório de documentação
-for file in $(find "$DOCS_DIR" -type f -name "*.md"); do
-  validate_translation "$file"
 done
 
-echo "Validação de tradução concluída com sucesso"
+echo "Translation validation successful."
