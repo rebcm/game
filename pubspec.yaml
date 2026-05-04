@@ -183,3 +183,6 @@ scripts:
   run_content_regression_test: bash scripts/run_content_regression_test
 
   run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
+
+scripts:
+  update_distribution_docs: bash scripts/update_distribution_docs

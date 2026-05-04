@@ -1,3 +1,13 @@
+#!/bin/bash
+
+# Atualiza a documentação do processo de distribuição
+# Deve ser executado após qualquer alteração no pipeline de CI/CD
+
+# Atualiza o arquivo de documentação
+cp .github/docs/distribution_process_documentation/distribution_process.md .github/docs/distribution_process_documentation/distribution_process_$(date +%Y%m%d%H%M%S).md
+
+# Gera a documentação atualizada
+cat > .github/docs/distribution_process_documentation/distribution_process.md << 'DOC'
 # Processo de Distribuição do Jogo
 
 ## Introdução
@@ -37,3 +47,5 @@ Os binários gerados são distribuídos para os canais configurados no pipeline 
 ## Conclusão
 
 Este documento fornece uma visão geral do processo de distribuição do jogo Rebeca, incluindo a geração de binários e sua localização após o pipeline de CI/CD.
+DOC
+
