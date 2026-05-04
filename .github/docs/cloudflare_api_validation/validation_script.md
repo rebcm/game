@@ -1,15 +1,3 @@
-# Cloudflare API Token Validation Script
+# Cloudflare API Validation Script
 
-## Overview
-
-This script validates the Cloudflare API token stored in the `.env` file.
-
-## Usage
-
-1. Ensure you have a `.env` file with `CLOUDFLARE_API_TOKEN` set.
-2. Run the script: `./scripts/validate_cloudflare_token.sh`
-
-## Expected Output
-
-The script outputs the result of the token verification in JSON format.
-
+To validate the Cloudflare API configuration, you can use the following script:
