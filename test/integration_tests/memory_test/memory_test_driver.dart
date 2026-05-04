@@ -9,10 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver?.close();
   });
 
-  test('measure memory', () async {
-    await driver?.requestData('measure-memory');
+  test('memory test driver', () async {
+    await driver?.requestData('gc');
   });
 }
