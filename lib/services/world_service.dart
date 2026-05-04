@@ -1,17 +1,18 @@
-import 'package:game/services/coordinate_validation_service.dart';
+import '../models/coordinate.dart';
+import '../services/coordinate_validator.dart';
 
 class WorldService {
-  final CoordinateValidationService _coordinateValidationService;
+  final CoordinateValidator _coordinateValidator;
 
-  WorldService(this._coordinateValidationService);
+  WorldService(this._coordinateValidator);
 
-  void getBlock(int x, int z) {
-    _coordinateValidationService.validateCoordinates(x, z);
+  void getBlock(Coordinate coordinate) {
+    _coordinateValidator.validate(coordinate);
     // Existing logic to get block
   }
 
-  void putBlock(int x, int z) {
-    _coordinateValidationService.validateCoordinates(x, z);
+  void putBlock(Coordinate coordinate) {
+    _coordinateValidator.validate(coordinate);
     // Existing logic to put block
   }
 }
