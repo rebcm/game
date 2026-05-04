@@ -1,30 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:integration_test/integration_test.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class PermissionBinding extends StatefulWidget {
+class PermissionBinding extends IntegrationTestWidgetsFlutterBinding {
   @override
-  _PermissionBindingState createState() => _PermissionBindingState();
-}
-
-class _PermissionBindingState extends State<PermissionBinding> {
-  @override
-  void initState() {
-    super.initState();
-    _requestPermission();
-  }
-
-  Future<void> _requestPermission() async {
+  Future<void> runTest(Future<void> test()) async {
     await Permission.audio.request();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Permission Test'),
-        ),
-      ),
-    );
+    await super.runTest(test);
   }
 }
