@@ -2,26 +2,28 @@
 
 ## Introdução
 
-Este documento define a estratégia de fallback de conteúdo para o jogo Rebeca, garantindo que o usuário nunca veja uma tela vazia.
+Este documento define a estratégia de fallback de conteúdo para o jogo Rebeca, garantindo que o usuário nunca veja uma tela vazia em caso de falha na carga de conteúdo.
 
 ## Hierarquia de Fallback
 
-A hierarquia de fallback é a seguinte:
+A hierarquia de fallback será implementada da seguinte forma:
 
-1. **API**: O jogo tentará carregar o conteúdo da API primeiro.
-2. **Local**: Se a API não estiver disponível, o jogo tentará carregar o conteúdo local.
-3. **Hardcoded**: Se o conteúdo local não estiver disponível, o jogo utilizará o conteúdo hardcoded.
+1. **API**: O jogo tentará carregar o conteúdo da API configurada.
+2. **Local**: Caso a API esteja indisponível, o jogo tentará carregar o conteúdo armazenado localmente.
+3. **Hardcoded**: Se o conteúdo local não estiver disponível, o jogo utilizará conteúdo hardcoded como último recurso.
 
 ## Implementação
 
-A implementação da estratégia de fallback será feita da seguinte forma:
+A implementação da estratégia de fallback será realizada da seguinte forma:
 
-*   Criar uma classe de serviço que será responsável por carregar o conteúdo.
-*   A classe de serviço tentará carregar o conteúdo da API primeiro.
-*   Se a API não estiver disponível, a classe de serviço tentará carregar o conteúdo local.
-*   Se o conteúdo local não estiver disponível, a classe de serviço utilizará o conteúdo hardcoded.
+- Verificar a disponibilidade da API e carregar o conteúdo da mesma, se disponível.
+- Caso a API esteja indisponível, verificar a existência de conteúdo local e carregá-lo.
+- Se não houver conteúdo local, utilizar o conteúdo hardcoded.
 
 ## Testes
 
-Serão criados testes unitários e de integração para garantir que a estratégia de fallback esteja funcionando corretamente.
+Serão implementados testes para garantir que a estratégia de fallback esteja funcionando corretamente.
 
+## Conclusão
+
+A implementação da estratégia de fallback de conteúdo garantirá uma melhor experiência para o usuário, evitando que ele veja telas vazias em caso de falha na carga de conteúdo.
