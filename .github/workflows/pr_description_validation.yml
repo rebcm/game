@@ -1,0 +1,21 @@
+name: PR Description Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  validate-pr-description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate PR description
+        run: |
+          if [ -z "$PR_DESCRIPTION" ]; then
+            echo "PR description is empty"
+            exit 1
+          fi
+        env:
+          PR_DESCRIPTION: ${{ github.event.pull_request.body }}
