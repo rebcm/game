@@ -2,19 +2,25 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver? driver;
+  group('Logging Integration Test', () {
+    FlutterDriver? driver;
 
-  setUpAll(() async {
-    driver = await FlutterDriver.connect();
-  });
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
 
-  tearDownAll(() async {
-    driver?.close();
-  });
+    tearDownAll(() async {
+      if (driver != null) {
+        await driver?.close();
+      }
+    });
 
-  test('logging integration test', () async {
-    // Use driver to interact with the app and test logging
-    await driver?.tap(find.text('Trigger Log'));
-    // Verify logging output
+    test('should log message', () async {
+      // Navigate to the screen that triggers logging
+      await driver?.tap(find.byTooltip('Trigger Log'));
+
+      // Verify that the log message is correctly written
+      // This might involve checking a log file or a logging service
+    });
   });
 }

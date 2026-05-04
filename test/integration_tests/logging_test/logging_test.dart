@@ -13,7 +13,7 @@ void main() {
     // Simulate an action that triggers logging
     await tester.tap(find.text('Trigger Log'));
 
-    // Verify that the log is correctly collected
+    // Verify that the log message is correctly written
     // This might involve checking a log file or a logging service
   });
 }

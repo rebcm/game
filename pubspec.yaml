@@ -61,6 +61,7 @@ scripts:
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_resolution_test: flutter drive --driver=test/integration_tests/resolution_test/resolution_test_driver.dart --target=test/integration_tests/resolution_test/resolution_test.dart
   run_rendering_test: flutter drive --driver=test/integration_tests/rendering_test/rendering_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
+  run_logging_test: flutter drive --driver=test/integration_tests/logging_test/logging_test_driver.dart --target=test/integration_tests/logging_test/logging_test.dart
   run_animation_performance_test: flutter drive --driver=test/integr
   run_gc_test: flutter drive --driver=test/integration_tests/gc_test/gc_test_driver.dart --target=test/integration_tests/gc_test/gc_test.dart
 

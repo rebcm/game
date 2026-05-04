@@ -8,10 +8,10 @@ void main() {
       final logger = Logger();
 
       // Act
-      logger.info('Test info message');
+      logger.info('Info message');
 
       // Assert
-      // Verify that the log message is correctly recorded
+      // Verify that the log message is correctly written
       // This might involve checking a log file or a logging service
     });
 
@@ -20,10 +20,10 @@ void main() {
       final logger = Logger();
 
       // Act
-      logger.error('Test error message');
+      logger.error('Error message');
 
       // Assert
-      // Verify that the error message is correctly recorded
+      // Verify that the error message is correctly written
       // This might involve checking a log file or a logging service
     });
   });
