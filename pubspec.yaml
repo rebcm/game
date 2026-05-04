@@ -70,3 +70,5 @@ scripts:
   run_passdriver_flutter_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_flutter_validation_test/passdriver_flutter_validation_test.dart
 
   update_pipeline_docs: bash .github/docs/ci_cd_pipeline_documentation/update_pipeline_docs.sh
+
+  run_chunk_concurrency_test: flutter drive --driver=test/stress_tests/chunk_concurrency_test/chunk_concurrency_driver.dart --target=test/stress_tests/chunk_concurrency_test/chunk_concurrency_test.dart
