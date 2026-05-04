@@ -42,48 +42,4 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
-  run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart
-  run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
-
-
-  run_suavidade_test: flutter drive --driver=test/integration_tests/suavidade_test/suavidade_driver.dart --target=test/integration_tests/suavidade_test/suavidade_test.dart
-  run_global_shortcuts_test: flutter drive --driver=test/integration_tests/global_shortcuts_test/global_shortcuts_driver.dart --target=test/integration_tests/global_shortcuts_test/global_shortcuts_test.dart
-  run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
-  run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
-  run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart
-  run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
-
-  run_onboarding_test: flutter drive --driver=test/integration_tests/onboarding_test/onboarding_driver.dart --target=test/integration_tests/onboarding_test/onboarding_test.dart
-
-  run_audio_settings_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_settings_test/audio_settings_test.dart
-
-  run_env_validation_test: flutter drive --driver=test/integration_tests/env_validation_test/env_validation_driver.dart --target=test/integration_tests/env_validation_test/env_validation_test.dart
-
-  run_contract_test: flutter drive --driver=test/integration_tests/contract_test_driver/contract_test_driver.dart --target=test/contract_tests/contract_test.dart
-
-  run_fisica_edge_cases_test: flutter drive --driver=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_driver.dart --target=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_test.dart
-
-  run_readme_validation_test: dart test/readme_validation_test/readme_validation_test.dart
-
-  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
-
-  run_ux_dicas_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/ux_dicas_test/ux_dicas_test.dart
-
-  run_versao_flutter_test: flutter drive --driver=test/compatibilidade_testes/versao_flutter_test/versao_flutter_driver.dart --target=test/compatibilidade_testes/versao_flutter_test/versao_flutter_test.dart
-
-  run_passdriver_flutter_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_flutter_validation_test/passdriver_flutter_validation_test.dart
-
-  update_pipeline_docs: bash .github/docs/ci_cd_pipeline_documentation/update_pipeline_docs.sh
-
-  run_chunk_concurrency_test: flutter drive --driver=test/stress_tests/chunk_concurrency_test/chunk_concurrency_driver.dart --target=test/stress_tests/chunk_concurrency_test/chunk_concurrency_test.dart
-  run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
-
-  run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
-
-  run_backend_contract_test: flutter test test/contract_tests/backend_contract_test.dart
-
-  run_content_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/content_integration_test/content_integration_test.dart
-
-  run_gameplay_integration_test: flutter drive --driver=test/integration_tests/gameplay_integration_test/gameplay_integration_driver.dart --target=test/integration_tests/gameplay_integration_test/gameplay_integration_test.dart
-
-  run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
+  run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
