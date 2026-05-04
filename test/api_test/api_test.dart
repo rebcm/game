@@ -1,28 +1,44 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:http/http.dart' as http;
-import 'package:rebcm/api/api.dart';
+import 'package:dio/dio.dart';
+import 'package:game/api/api.dart';
+import 'package:mockito/mockito.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 
-class MockHttpClient extends Mock implements http.Client {}
+class MockDio extends Mock implements Dio {}
 
 void main() {
-  group('API Tests', () {
-    late http.Client client;
-    late Api api;
+  late Dio dio;
+  late Api api;
 
-    setUp(() {
-      client = MockHttpClient();
-      api = Api(client);
+  setUp(() {
+    dio = MockDio();
+    api = Api(dio);
+  });
+
+  group('API Tests', () {
+    test('should return data on successful request', () async {
+      final dioAdapter = DioAdapter(dio: dio);
+      dio.httpClientAdapter = dioAdapter;
+
+      dioAdapter.onGet(
+        'https://example.com/api/data',
+        (server) => server.reply(200, {'data': 'success'}),
+      );
+
+      final response = await api.fetchData();
+      expect(response, {'data': 'success'});
     });
 
-    test('Testa chamada à API', () async {
-      when(() => client.get(Uri.parse('https://example.com/api/endpoint')))
-          .thenAnswer((_) async => http.Response('{"key": "value"}', 200));
+    test('should throw error on failed request', () async {
+      final dioAdapter = DioAdapter(dio: dio);
+      dio.httpClientAdapter = dioAdapter;
 
-      final response = await api.chamadaApi();
+      dioAdapter.onGet(
+        'https://example.com/api/data',
+        (server) => server.reply(404, {'error': 'not found'}),
+      );
 
-      expect(response, '{"key": "value"}');
-      verify(() => client.get(Uri.parse('https://example.com/api/endpoint'))).called(1);
+      expect(() async => await api.fetchData(), throwsA(isA<DioException>()));
     });
   });
 }
