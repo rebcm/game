@@ -74,3 +74,5 @@ scripts:
 
 flutter_i18n:
   path: lib/i18n/locales
+
+  run_undo_redo_performance_test: ./scripts/run_undo_redo_performance_test.sh
