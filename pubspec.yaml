@@ -47,11 +47,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  integration_test_config:
-    path: ./integration_test/config/integration_test_config.yaml
   assets:
     - assets/
+    - assets/audio/
     - .github/docs/passdriver_flutter_tips_criterios/tips.json
+  integration_test_config:
+    path: ./integration_test/config/integration_test_config.yaml
   benchmark:
     path: ./benchmarks
   fps_benchmark:
@@ -77,10 +78,4 @@ flutter:
   physics_engine_tests:
     path: ./test/offset_consistency_test
   offset_consistency_test:
-  permission_validation_test:
-    path: ./integration_test/permission_validation_test
-  emulator_validation_test:
-    path: ./integration_test/emulator_validation_test
-
-  input_performance_benchmark:
-    path: ./benchmarks/input_performance
+  permission_validation_te
