@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 
-class EstadoJogo extends State {
-  Timer? _timer;
+class EstadoJogo {
+  List<Timer> _timers = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {});
+  void iniciarTimers() {
+    _timers.add(Timer.periodic(Duration(seconds: 1), (timer) {}));
   }
 
-  @override
+  bool temTimersAtivos() {
+    return _timers.any((timer) => timer.isActive);
+  }
+
   void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+    for (var timer in _timers) {
+      timer.cancel();
+    }
+    _timers.clear();
   }
 }
