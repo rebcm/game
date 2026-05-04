@@ -68,3 +68,5 @@ scripts:
   run_coverage_test: bash scripts/run_coverage_test.sh
 
   run_onboarding_guide_update: bash scripts/update_onboarding_guide.sh
+
+  run_overflow_test: bash scripts/run_overflow_test.sh

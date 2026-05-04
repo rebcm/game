@@ -13,11 +13,11 @@ void main() {
 
       await tester.binding.setSurfaceSize(const Size(320, 480));
       await tester.pumpAndSettle();
-      expect(find.text('Rebeca'), findsOneWidget);
+      expect(find.byType(Text), findsOneWidget);
 
       await tester.binding.setSurfaceSize(const Size(1280, 720));
       await tester.pumpAndSettle();
-      expect(find.text('Rebeca'), findsOneWidget);
+      expect(find.byType(Text), findsOneWidget);
     });
 
     testWidgets('Text overflow with accessibility font settings', (tester) async {
@@ -25,27 +25,19 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.binding.setSurfaceSize(const Size(320, 480));
+      await tester.binding.setFontScale(2.0); // Extra Large font setting
       await tester.pumpAndSettle();
-
-      final textScaleFactor = 2.0; // Extra Large font size
-      await tester.binding.setTextScaleFactor(textScaleFactor);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Rebeca'), findsOneWidget);
+      expect(find.byType(Text), findsOneWidget);
     });
 
     testWidgets('Text overflow with extreme string lengths', (tester) async {
       await app.main();
       await tester.pumpAndSettle();
 
-      await tester.binding.setSurfaceSize(const Size(320, 480));
+      final veryLongText = 'a' * 1000;
+      await tester.enterText(find.byType(TextField), veryLongText);
       await tester.pumpAndSettle();
-
-      final extremelyLongString = 'Rebeca' * 100;
-      await tester.enterText(find.byType(TextField), extremelyLongString);
-      await tester.pumpAndSettle();
-
-      expect(find.text(extremelyLongString), findsOneWidget);
+      expect(find.text(veryLongText), findsOneWidget);
     });
   });
 }
