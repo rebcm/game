@@ -63,3 +63,5 @@ scripts:
   validate_installation_docs: bash scripts/validate_installation_docs.sh
 
   run_retry_timeout_test: ./scripts/run_retry_timeout_test.sh
+
+  run_content_regression_test: ./scripts/run_content_regression_test.sh
