@@ -74,4 +74,8 @@ flutter:
     path: test_driver/audio_output_test/audio_output_test.dart
 
   technical_comparison_test:
+  permission_validation_test:
+    path: test_driver/permission_validation_test/permission_validation_test_driver.dart
     path: test_driver/technical_comparison_test/technical_comparison_test.dart
+  permission_validation_test:
+    path: test_driver/permission_validation_test/permission_validation_test_driver.dart
