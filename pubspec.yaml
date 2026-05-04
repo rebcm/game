@@ -53,6 +53,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_test_and_analyze: flutter test && flutter analyze
   run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
@@ -76,6 +77,7 @@ scripts:
     - .github/docs/acceptance_criteria_template/template.md
 
 scripts:
+  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
   run_test_and_analyze: flutter test && flutter analyze
   run_memory_test_with_gc_protocol: bash scripts/run_memory_test_with_gc_protocol.sh
 
@@ -83,6 +85,7 @@ scripts:
 
   run_content_regression_test: bash scripts/run_content_regression_test.sh
   scripts:
+  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
     run_gc_trigger_test: bash scripts/run_gc_trigger_test.sh
 
   run_undo_redo_performance_test: flutter drive --driver=test/integration_tests/performance_test/undo_redo_performance_test/undo_redo_performance_test_driver.dart --target=test/integration_tests/performance_test/undo_redo_performance_test/undo_redo_performance_test.dart

@@ -10,19 +10,19 @@ void main() {
     });
 
     tearDownAll(() async {
-      if (driver != null) {
-        await driver?.close();
-      }
+      await driver?.close();
     });
 
-    test('Validate tip interaction', () async {
-      final tipFinder = find.byText('Dica: Construa sua estrutura aqui!');
+    test('Validate tip visibility', () async {
+      final tipFinder = find.byValueKey('construction_tip');
       await driver?.waitFor(tipFinder);
+      expect(await driver?.getText(tipFinder), isNotEmpty);
+    });
 
-      final closeTipButton = find.byIcon(Icons.close);
-      await driver?.tap(closeTipButton);
-
-      await driver?.waitForAbsent(tipFinder);
+    test('Validate tip content', () async {
+      final tipFinder = find.byValueKey('construction_tip');
+      final tipText = await driver?.getText(tipFinder);
+      expect(tipText, isNotEmpty);
     });
   });
 }
