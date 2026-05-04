@@ -1,43 +1,30 @@
-# Mapeamento de Exceções de Atalhos Globais
+# Critérios de Aceitação para Validação de Teclas Globais
 
 ## Introdução
 
-Este documento visa documentar e testar a lista de teclas que NÃO devem ser interceptadas pelo jogo para evitar quebrar funcionalidades nativas do browser.
-
-## Lista de Teclas de Exceção
-
-As seguintes teclas ou combinações de teclas devem ser ignoradas pelo jogo para garantir a funcionalidade padrão do browser:
-
-- `Ctrl + N` (Nova janela/aba)
-- `Ctrl + T` (Nova aba)
-- `Ctrl + Shift + T` (Reabrir aba fechada)
-- `Ctrl + W` ou `Ctrl + F4` (Fechar aba)
-- `Alt + F4` (Fechar janela)
-- `F5` ou `Ctrl + R` (Atualizar página)
-- `Ctrl + S` (Salvar página)
-- `Ctrl + P` (Imprimir página)
-- `Ctrl + Shift + I` ou `F12` (Abrir DevTools)
-- `Ctrl + U` (Ver código-fonte da página)
+Este documento define os critérios de aceitação para a validação de teclas globais no jogo Construção Criativa da Rebeca. O objetivo é garantir que as teclas globais não interceptem funcionalidades nativas do navegador.
 
 ## Critérios de Aceitação
 
-1. O jogo deve ignorar as teclas listadas acima, permitindo que o browser execute suas funcionalidades padrão.
-2. O jogo deve continuar funcionando normalmente para todas as outras teclas não listadas acima.
-3. A lista de teclas de exceção deve ser testada em diferentes browsers e plataformas (Windows, macOS, Linux).
+1. **Lista de Teclas Globais**: Deve ser documentada a lista de teclas que são consideradas globais e não devem ser interceptadas pelo jogo.
+2. **Testes de Validação**: Devem ser implementados testes para validar que as teclas globais não são interceptadas pelo jogo.
+3. **Funcionalidades Nativas**: As funcionalidades nativas do navegador, como Ctrl+T, Ctrl+N, Ctrl+Shift+I, devem funcionar corretamente enquanto o jogo está em execução.
 
-## Testes
+## Lista de Teclas Globais
 
-Os testes devem ser realizados para garantir que o jogo não intercepta as teclas de exceção e que o browser execute as ações esperadas. Os testes devem cobrir diferentes cenários, incluindo:
+A lista de teclas globais inclui, mas não se limita a:
 
-- Abertura de novas abas/janelas
-- Fechamento de abas/janelas
-- Atualização da página
-- Salvamento da página
-- Impressão da página
-- Abertura das DevTools
-- Visualização do código-fonte da página
+- Ctrl+T (Nova aba)
+- Ctrl+N (Nova janela)
+- Ctrl+Shift+I (Ferramentas de desenvolvedor)
+- F5 (Atualizar página)
+- F12 (Ferramentas de desenvolvedor)
 
 ## Implementação
 
-A implementação deve envolver a modificação do código de tratamento de teclas do jogo para ignorar as teclas de exceção. Isso pode ser feito adicionando uma lista de teclas ignoradas e verificando essa lista antes de processar qualquer tecla pressionada.
+A implementação deve ser feita de forma a não interceptar as teclas globais listadas acima. Isso pode ser alcançado através da verificação da tecla pressionada e permitindo que o evento seja propagado para o navegador se for uma tecla global.
+
+## Testes
+
+Os testes devem ser implementados para garantir que as teclas globais não são interceptadas. Isso pode ser feito utilizando testes de integração que simulam a pressão das teclas globais e verificam se as funcionalidades nativas do navegador são executadas corretamente.
 
