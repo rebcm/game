@@ -1,30 +1,15 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game/input_manager.dart';
-import 'package:mockito/mockito.dart';
-
-class MockInputManager extends Mock implements InputManager {}
+import 'package:game/input_manager/input_manager.dart';
+import 'package:game/control_schemes/control_scheme.dart';
 
 void main() {
-  group('InputManager', () {
-    late InputManager inputManager;
+  test('InputManager switches control scheme correctly', () {
+    final initialScheme = DefaultControlScheme();
+    final newScheme = AlternativeControlScheme();
+    final inputManager = InputManager(initialScheme);
 
-    setUp(() {
-      inputManager = InputManager();
-    });
+    inputManager.switchScheme(newScheme);
 
-    test('should handle different keys mapped to the same action', () async {
-      const LogicalKeyboardKey key1 = LogicalKeyboardKey.keyA;
-      const LogicalKeyboardKey key2 = LogicalKeyboardKey.keyB;
-      const String action = 'test_action';
-
-      inputManager.mapKeyToAction(key1, action);
-      inputManager.mapKeyToAction(key2, action);
-
-      await inputManager.handleKeyEvent(RawKeyDownEvent(data: RawKeyEventDataAndroid(keyCode: key1.keyId)));
-      await inputManager.handleKeyEvent(RawKeyDownEvent(data: RawKeyEventDataAndroid(keyCode: key2.keyId)));
-
-      verify(inputManager.performAction(action)).called(2);
-    });
+    expect(inputManager.currentScheme, newScheme);
   });
 }
