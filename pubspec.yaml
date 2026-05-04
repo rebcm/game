@@ -40,3 +40,6 @@ scripts:
   update_erros_comuns_docs: bash scripts/update_erros_comuns_docs.sh
 scripts:
   run_input_tests: bash scripts/run_input_tests.sh
+
+  shortcuts_exceptions_test:
+    path: test/shortcuts_exceptions_test

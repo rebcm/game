@@ -2,32 +2,32 @@
 
 ## Introdução
 
-Este documento visa documentar e testar a lista de teclas que NÃO devem ser interceptadas pelo jogo para evitar quebrar funcionalidades nativas do navegador.
+Este documento visa mapear as teclas que não devem ser interceptadas pelo jogo para evitar quebrar funcionalidades nativas do navegador.
 
-## Critérios de Aceitação
+## Lista de Exceções
 
-1. **Lista de Teclas de Exceção**: Deve ser mantida uma lista de teclas que são consideradas exceções e não devem ser interceptadas pelo jogo.
-2. **Funcionalidades Nativas**: As teclas de exceção devem permitir o funcionamento correto das funcionalidades nativas do navegador, como copiar (Ctrl+C), colar (Ctrl+V), desfazer (Ctrl+Z), etc.
-3. **Testes Automatizados**: Devem ser implementados testes automatizados para verificar se as teclas de exceção estão funcionando corretamente.
+A seguir, está a lista de teclas que devem ser ignoradas pelo jogo:
 
-## Lista de Teclas de Exceção
-
-| Tecla | Descrição | Funcionalidade Nativa |
-| --- | --- | --- |
-| Ctrl+C | Copiar | Sim |
-| Ctrl+V | Colar | Sim |
-| Ctrl+Z | Desfazer | Sim |
-| Ctrl+A | Selecionar Tudo | Sim |
-| F5 | Atualizar Página | Sim |
-
-## Implementação
-
-A implementação deve ser feita de forma a não interceptar as teclas de exceção listadas acima. Isso pode ser alcançado através da adição de uma lógica de verificação antes de processar os eventos de teclado.
+*   `F5` - Atualizar página
+*   `Ctrl + R` - Atualizar página (no Windows/Linux)
+*   `Cmd + R` - Atualizar página (no Mac)
+*   `Ctrl + Shift + I` - Abrir DevTools (no Windows/Linux)
+*   `Cmd + Opt + I` - Abrir DevTools (no Mac)
+*   `F12` - Abrir DevTools
+*   `Ctrl + S` - Salvar página (no Windows/Linux)
+*   `Cmd + S` - Salvar página (no Mac)
+*   `Ctrl + P` - Imprimir página (no Windows/Linux)
+*   `Cmd + P` - Imprimir página (no Mac)
 
 ## Testes
 
-Os testes automatizados devem ser implementados utilizando o framework de testes existente no projeto. Os testes devem cobrir os seguintes cenários:
+Para garantir que essas teclas não sejam interceptadas, devem ser realizados testes com as seguintes ações:
 
-* Verificar se as teclas de exceção não são interceptadas pelo jogo.
-* Verificar se as funcionalidades nativas do navegador funcionam corretamente quando as teclas de exceção são pressionadas.
+1.  Abrir o jogo em diferentes navegadores.
+2.  Pressionar cada uma das teclas listadas acima e verificar se a funcionalidade nativa do navegador é executada corretamente.
+
+## Critérios de Aceitação
+
+*   Todas as teclas listadas acima devem ser ignoradas pelo jogo.
+*   As funcionalidades nativas do navegador devem funcionar corretamente quando essas teclas forem pressionadas.
 
