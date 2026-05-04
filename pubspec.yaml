@@ -61,18 +61,4 @@ scripts:
   lint_markdown: markdownlint .github/docs/
   run_integration_tests: bash scripts/run_integration_tests.sh
   run_audio_compatibility_tests: bash scripts/run_audio_compatibility_tests.sh
-
-scripts:
-  update_user_journey_docs: bash scripts/update_user_journey_docs.sh
-
-scripts:
-  update_user_journey_docs: bash scripts/update_user_journey_docs.sh
-
-scripts:
-  run_failed_tests: bash scripts/run_failed_tests.sh
-
-scripts:
-  run_failed_tests: bash scripts/run_failed_tests.sh
-
-scripts:
   run_failed_tests: bash scripts/run_failed_tests.sh
