@@ -113,3 +113,6 @@ flutter_i18n:
 
 scripts:
   run_pr_description_validation_test: flutter drive --driver=test/integration_tests/pr_description_validation_test/pr_description_validation_test_driver.dart --target=test/integration_tests/pr_description_validation_test/pr_description_validation_test.dart
+
+  assets:
+    - assets/documentacao/versionamento_documentacao.md
