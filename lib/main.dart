@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/routes.dart';
+import 'package:game/swagger/swagger_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: AppRoutes.getRoutes(),
+      home: SwaggerScreen(),
     );
   }
 }
