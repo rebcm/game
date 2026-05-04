@@ -45,6 +45,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  integration_test_config:
+    path: ./integration_test/config/integration_test_config.yaml
     - .env
   assets:
     - assets/

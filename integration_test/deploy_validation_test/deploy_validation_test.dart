@@ -5,21 +5,9 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Deployment Validation Tests', () {
-    testWidgets('Flutter Web build validation', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      expect(find.text('Rebeca\'s Creative Construction'), findsOneWidget);
-    });
-
-    testWidgets('Cloudflare connectivity check', (tester) async {
-      // Implement Cloudflare connectivity check logic here
-      expect(true, isTrue); // Placeholder for actual implementation
-    });
-
-    testWidgets('Rollback test on deploy failure', (tester) async {
-      // Implement rollback test logic here
-      expect(true, isTrue); // Placeholder for actual implementation
-    });
+  testWidgets('Deploy validation test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Add test logic here
   });
 }

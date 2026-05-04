@@ -1,0 +1,6 @@
+test_suite:
+  - deploy_validation_test
+  - cleaning_policy_test
+  - onboarding_smoke_test
+
+cloudflare_worker_url: ${CLOUDFLARE_WORKER_URL}
