@@ -1,0 +1,22 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk-version: '>=3.0.0 <4.0.0'
+
+      - name: Validate Documentation
+        run: |
+          dart scripts/validate_documentation.dart
