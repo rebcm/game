@@ -57,3 +57,5 @@ scripts:
 
   run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/benchmarks/rebeca_walk_benchmark.dart
   run_interruption_test: flutter drive --driver=test/integration_tests/interruption_test/interruption_test_driver.dart --target=test/integration_tests/interruption_test/interruption_test.dart
+
+  run_system_interruption_test: flutter drive --driver=test/integration_tests/system_interruption_test/system_interruption_test_driver.dart --target=test/integration_tests/system_interruption_test/system_interruption_test.dart
