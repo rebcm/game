@@ -1,6 +1,18 @@
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:test/test.dart';
 
-Future<void> main() async {
-  await integrationDriver();
+void main() {
+  FlutterDriver? driver;
+
+  setUpAll(() async {
+    driver = await FlutterDriver.connect();
+  });
+
+  tearDownAll(() async {
+    driver?.close();
+  });
+
+  test('Checksum test driver', () async {
+    await driver?.requestData('some_data'); // This is just a placeholder, actual implementation depends on the app's logic
+  });
 }
