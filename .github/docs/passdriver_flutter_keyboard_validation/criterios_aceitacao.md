@@ -1,25 +1,43 @@
-# Critérios de Aceitação para Validação de Acessibilidade de Teclado
+# Mapeamento de Exceções de Atalhos Globais
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a validação de acessibilidade de teclado no jogo "Construção Criativa da Rebeca". A acessibilidade de teclado é crucial para garantir que o jogo seja usável por jogadores que dependem de navegação via teclado.
+Este documento visa documentar e testar a lista de teclas que NÃO devem ser interceptadas pelo jogo para evitar quebrar funcionalidades nativas do browser.
+
+## Lista de Teclas de Exceção
+
+As seguintes teclas ou combinações de teclas devem ser ignoradas pelo jogo para garantir a funcionalidade padrão do browser:
+
+- `Ctrl + N` (Nova janela/aba)
+- `Ctrl + T` (Nova aba)
+- `Ctrl + Shift + T` (Reabrir aba fechada)
+- `Ctrl + W` ou `Ctrl + F4` (Fechar aba)
+- `Alt + F4` (Fechar janela)
+- `F5` ou `Ctrl + R` (Atualizar página)
+- `Ctrl + S` (Salvar página)
+- `Ctrl + P` (Imprimir página)
+- `Ctrl + Shift + I` ou `F12` (Abrir DevTools)
+- `Ctrl + U` (Ver código-fonte da página)
 
 ## Critérios de Aceitação
 
-1. **Navegação via Tab**: O jogo deve permitir navegação entre elementos interativos utilizando a tecla Tab.
-2. **Ativação via Enter**: Elementos interativos devem ser ativados utilizando a tecla Enter.
-3. **Foco Visível**: O foco do teclado deve ser visível e claramente indicado na interface do usuário.
-4. **Ordem de Navegação**: A ordem de navegação via Tab deve ser lógica e seguir a ordem natural da interface do usuário.
+1. O jogo deve ignorar as teclas listadas acima, permitindo que o browser execute suas funcionalidades padrão.
+2. O jogo deve continuar funcionando normalmente para todas as outras teclas não listadas acima.
+3. A lista de teclas de exceção deve ser testada em diferentes browsers e plataformas (Windows, macOS, Linux).
 
 ## Testes
 
-Para garantir que os critérios de aceitação sejam atendidos, os seguintes testes devem ser realizados:
+Os testes devem ser realizados para garantir que o jogo não intercepta as teclas de exceção e que o browser execute as ações esperadas. Os testes devem cobrir diferentes cenários, incluindo:
 
-1. Verificar se a navegação via Tab funciona corretamente entre todos os elementos interativos.
-2. Verificar se a ativação via Enter funciona corretamente para todos os elementos interativos.
-3. Verificar se o foco do teclado é visível e claramente indicado.
-4. Verificar se a ordem de navegação via Tab é lógica e segue a ordem natural da interface do usuário.
+- Abertura de novas abas/janelas
+- Fechamento de abas/janelas
+- Atualização da página
+- Salvamento da página
+- Impressão da página
+- Abertura das DevTools
+- Visualização do código-fonte da página
 
-## Conclusão
+## Implementação
 
-A validação de acessibilidade de teclado é fundamental para garantir que o jogo seja acessível a todos os jogadores. Estes critérios de aceitação devem ser utilizados para garantir que o jogo atenda às normas de acessibilidade WCAG.
+A implementação deve envolver a modificação do código de tratamento de teclas do jogo para ignorar as teclas de exceção. Isso pode ser feito adicionando uma lista de teclas ignoradas e verificando essa lista antes de processar qualquer tecla pressionada.
+
