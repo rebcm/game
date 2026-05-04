@@ -68,3 +68,7 @@ scripts:
 
 scripts:
   run_ci_cd_pipeline: bash scripts/run_ci_cd_pipeline.sh
+
+  run_audio_documentation_test: flutter test test/docs/audio/audio_documentation_test.dart
+
+  run_audio_documentation_test: bash scripts/run_audio_documentation_test.sh
