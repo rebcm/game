@@ -116,3 +116,6 @@ scripts:
 
   assets:
     - assets/documentacao/versionamento_documentacao.md
+
+  scripts:
+    run_pr_description_validation_test: flutter test test/unit_tests/utils/pr_description_validator_test.dart
