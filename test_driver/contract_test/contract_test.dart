@@ -1,23 +1,16 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
-  group('Contract Tests', () {
-    late FlutterDriver driver;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    setUpAll(() async {
-      driver = await FlutterDriver.connect();
-    });
-
-    tearDownAll(() async {
-      await driver.close();
-    });
-
-    test('validate API endpoints against OpenAPI specification', () async {
-      // Implement logic to validate API endpoints against OpenAPI specification
-      // using tools like dio and openapi packages
-      // For now, this is a placeholder test
-      expect(true, true);
-    });
+  testWidgets('Contract Test', (WidgetTester tester) async {
+    final response = await http.get(Uri.parse('https://example.com/api/endpoint'));
+    expect(response.statusCode, 200);
+    final jsonData = jsonDecode(response.body);
+    expect(jsonData, isNotNull);
   });
 }
