@@ -8,14 +8,20 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Checksum test', (tester) async {
-    final expectedChecksum = await File('.github/docs/expected_checksum.txt').readAsString();
-    final app = await tester.pumpWidget(MyApp()); // Assuming MyApp is the main app widget
+    final appExecutable = File('build/app/outputs/flutter-apk/app-release.apk');
+    if (!await appExecutable.exists()) {
+      throw Exception('App executable not found');
+    }
 
-    await tester.pumpAndSettle();
+    final bytes = await appExecutable.readAsBytes();
+    final checksum = sha256.convert(bytes);
 
-    final bytes = await File(Directory.current.path + '/build/app/outputs/flutter-apk/app-release.apk').readAsBytes();
-    final checksum = sha256.convert(bytes).toString();
+    final expectedChecksumFile = File('.github/docs/expected_checksum.txt');
+    if (!await expectedChecksumFile.exists()) {
+      throw Exception('Expected checksum file not found');
+    }
 
-    expect(checksum, expectedChecksum.trim());
+    final expectedChecksum = await expectedChecksumFile.readAsString();
+    expect(checksum.toString(), expectedChecksum.trim());
   });
 }

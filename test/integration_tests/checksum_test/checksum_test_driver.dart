@@ -9,10 +9,12 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    if (driver != null) {
+      driver?.close();
+    }
   });
 
   test('Checksum test driver', () async {
-    await driver?.requestData('some_data'); // This is just a placeholder, actual implementation depends on the app's logic
+    await driver?.requestData('some_data');
   });
 }
