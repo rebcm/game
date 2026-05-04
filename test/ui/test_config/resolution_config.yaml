@@ -1,0 +1,7 @@
+resolutions:
+  - size: 320x480
+    device: Small Phone
+  - size: 360x640
+    device: Medium Phone
+  - size: 412x732
+    device: Large Phone

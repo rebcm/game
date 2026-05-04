@@ -91,3 +91,6 @@ flutter:
 
   input_concurrency_test:
     path: ./integration_test/input_concurrency_test
+
+  ui_test_config:
+    path: ./test/ui/test_config/resolution_config.yaml
