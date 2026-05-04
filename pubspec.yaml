@@ -71,3 +71,5 @@ scripts:
   run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
 
   run_interruption_test: bash scripts/run_interruption_test.sh
+
+  run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
