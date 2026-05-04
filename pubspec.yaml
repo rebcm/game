@@ -63,3 +63,5 @@ scripts:
   run_guia_construcao_test: flutter drive --driver=test/integration_tests/guia_construcao_test/guia_construcao_test_driver.dart --target=test/integration_tests/guia_construcao_test/guia_construcao_test.dart
 
   run_data_source_test: bash scripts/run_data_source_test.sh
+
+  run_retention_test: bash scripts/run_retention_test.sh
