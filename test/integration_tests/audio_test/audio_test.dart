@@ -6,22 +6,28 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Audio Test', () {
-    testWidgets('Audio Interruption Test', (tester) async {
+    testWidgets('Test audio playback on Android', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implement audio interruption test logic here
+      // Implement test logic for Android audio playback
     });
 
-    testWidgets('Volume Zero Test', (tester) async {
+    testWidgets('Test audio playback on iOS', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implement volume zero test logic here
+      // Implement test logic for iOS audio playback
     });
 
-    testWidgets('Audio Asset Loading Failure Test', (tester) async {
+    testWidgets('Test audio behavior on connection loss', (tester) async {
       app.main();
       await tester.pumpAndSettle();
-      // Implement audio asset loading failure test logic here
+      // Implement test logic for audio behavior on connection loss
+    });
+
+    testWidgets('Test audio behavior in silent mode', (tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+      // Implement test logic for audio behavior in silent mode
     });
   });
 }

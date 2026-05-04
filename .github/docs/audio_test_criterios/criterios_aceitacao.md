@@ -2,18 +2,17 @@
 
 ## Introdução
 
-Este documento define os critérios de aceitação para os testes de áudio do jogo Rebeca.
+Este documento define os critérios de aceitação para os testes de áudio no aplicativo.
 
-## Critérios
+## Critérios de Aceitação
 
-1. O jogo deve continuar funcionando corretamente após uma interrupção de áudio do sistema.
-2. O volume do jogo deve ser ajustado para zero sem causar erros ou crashes.
-3. O jogo deve lidar com falhas de carregamento de assets de som sem crashes ou erros.
+| Cenário | Critério de Aceitação | Pass/Fail |
+| --- | --- | --- |
+| Reprodução de áudio no Android | O áudio é reproduzido corretamente |  |
+| Reprodução de áudio no iOS | O áudio é reproduzido corretamente |  |
+| Comportamento do áudio em perda de conexão | O áudio pausa ou se comporta conforme esperado |  |
+| Comportamento do áudio em modo silencioso | O áudio é silenciado ou se comporta conforme esperado |  |
 
-## Testes
+## Implementação
 
-Os testes devem ser implementados usando o framework de teste de integração do Flutter.
-
-## Validação
-
-Os testes devem ser executados automaticamente no pipeline de CI/CD.
+Os testes devem ser implementados utilizando o framework de teste de integração do Flutter.
