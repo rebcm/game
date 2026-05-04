@@ -1,0 +1,16 @@
+{
+  "questions": [
+    {
+      "question": "Setup Time",
+      "type": "text"
+    },
+    {
+      "question": "Confusion Points",
+      "type": "text"
+    },
+    {
+      "question": "Missing Steps",
+      "type": "text"
+    }
+  ]
+}
