@@ -63,3 +63,5 @@ scripts:
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh lint_results.json
 scripts:
   run_ci_checks: bash scripts/run_ci_checks.sh
+
+  run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart

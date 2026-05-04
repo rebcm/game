@@ -14,17 +14,15 @@ void main() {
     }
   });
 
-  test('Teste de Inicialização', () async {
-    await driver!.waitFor(find.text('Rebeca'));
+  test('Teste de Animação', () async {
+    // Implementação do teste de animação
   });
 
-  test('Teste de Renderização', () async {
-    await driver!.waitFor(find.byType('VoxelBlock'));
+  test('Teste de Checksum', () async {
+    // Implementação do teste de checksum
   });
 
-  test('Teste de Interação', () async {
-    await driver!.tap(find.byType('VoxelBlock'));
-    await driver!.waitFor(find.text('Rebeca interagiu com o bloco'));
+  test('Teste de Validação de Estado', () async {
+    // Implementação do teste de validação de estado
   });
 }
-

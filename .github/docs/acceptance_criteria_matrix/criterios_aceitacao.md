@@ -8,15 +8,14 @@ Este documento define os critérios de aceitação para os testes de integraçã
 
 | Teste | Critério de Aceitação |
 | --- | --- |
-| Teste de Inicialização | A aplicação inicializa sem erros |
-| Teste de Renderização | Os blocos voxel são renderizados corretamente |
-| Teste de Interação | A Rebeca interage corretamente com os blocos voxel |
+| Teste de Animação | A animação da Rebeca deve ser executada corretamente |
+| Teste de Checksum | O checksum dos arquivos deve ser verificado corretamente |
+| Teste de Validação de Estado | O estado do jogo deve ser validado corretamente |
 
 ## Implementação
 
 Os critérios de aceitação serão implementados nos testes de integração utilizando o framework de teste do Flutter.
 
-## Validação
+## Verificação
 
-Os critérios de aceitação serão validados através da execução dos testes de integração.
-
+Os critérios de aceitação serão verificados executando os testes de integração com o comando `flutter drive`.
