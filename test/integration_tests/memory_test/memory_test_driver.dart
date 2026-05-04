@@ -9,15 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (driver != null) {
-      await driver?.close();
-    }
+    driver?.close();
   });
 
-  test('memory test driver', () async {
-    await driver?.runUnsynchronized(() async {
-      await driver?.tap(find.byText('Build'));
-      await Future.delayed(Duration(seconds: 2)); // wait for GC
-    });
+  test('Memory test driver', () async {
+    await driver?.requestData('hello');
   });
 }

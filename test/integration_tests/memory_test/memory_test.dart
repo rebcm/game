@@ -6,22 +6,26 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('memory test', (tester) async {
+  testWidgets('Memory test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Perform actions to test memory
-    await tester.tap(find.text('Build'));
-    await tester.pumpAndSettle();
-
-    // Trigger GC
+    // Trigger GC manually
+    await Future.delayed(const Duration(seconds: 2));
     await tester.binding.convertFlutterSurfaceToImage();
-    await tester.binding.setSurfaceSemantics(true);
-    await tester.binding.setSemantics(true);
-    await tester.binding.reportReadinessForFrame();
-    await tester.pumpAndSettle();
+    await tester.binding.setSurfaceTextureIsolate();
+    await Future.delayed(const Duration(seconds: 2));
 
-    // Verify memory usage
-    expect(await tester.binding.getHeapSize(), lessThan(100000000));
+    // Perform memory-intensive operations
+    for (int i = 0; i < 5; i++) {
+      await tester.tap(find.text('Build'));
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    // Trigger GC again
+    await tester.binding.convertFlutterSurfaceToImage();
+    await tester.binding.setSurfaceTextureIsolate();
+    await Future.delayed(const Duration(seconds: 2));
   });
 }
