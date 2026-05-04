@@ -1,18 +1,23 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
-Future<void> autenticarUsuario(String username, String password) async {
-  final response = await http.post(
-    Uri.parse('https://api.example.com/autenticar'),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: '{"username": "$username", "password": "$password"}',
-  );
+class AutenticacaoService {
+  final Dio _dio;
 
-  if (response.statusCode == 200) {
-    final token = response.body;
-    // Armazenar o token de forma segura
-  } else {
-    // Tratar erro de autenticação
+  AutenticacaoService(this._dio);
+
+  Future<void> login(String username, String password) async {
+    try {
+      final response = await _dio.post(
+        '/auth/login',
+        data: {'username': username, 'password': password},
+      );
+
+      if (response.statusCode == 200) {
+        final token = response.data['token'];
+        // Armazena token de forma segura
+      }
+    } on DioException catch (e) {
+      // Trata erros de autenticação
+    }
   }
 }

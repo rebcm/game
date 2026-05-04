@@ -1,40 +1,55 @@
-# Segurança da API
+# Segurança da API do Passdriver Flutter
 
-## Introdução
+## Visão Geral
 
-Este documento descreve as medidas de segurança implementadas na API do jogo "Construção Criativa da Rebeca". A segurança da API é fundamental para proteger os dados dos usuários e garantir a integridade do sistema.
+Este documento descreve as práticas de segurança implementadas na integração da API do Passdriver com o módulo Flutter no projeto Construção Criativa da Rebeca.
 
-## Autenticação
+## Práticas de Segurança
 
-A autenticação é realizada utilizando tokens de autenticação. Os tokens são gerados e validados pelo servidor de autenticação.
+1. **Autenticação**:
+   - Utiliza token JWT para autenticação.
+   - Implementa refresh token para manter sessão ativa.
 
-### Implementação
+2. **Criptografia**:
+   - Todas as comunicações são feitas via HTTPS (TLS).
+   - Dados sensíveis são criptografados no armazenamento local.
 
-A autenticação é implementada utilizando a biblioteca `http` para realizar requisições HTTP com headers de autenticação.
+3. **Validação de Entrada**:
+   - Todas as requisições HTTP validam parâmetros de entrada.
+   - Implementa tratamento adequado para erros de validação.
 
-## Autorização
+4. **Controle de Acesso**:
+   - Endpoints protegidos por permissões específicas.
+   - Matriz de permissões documentada.
 
-A autorização é realizada com base nos papéis dos usuários. Os usuários podem ter diferentes papéis, como "jogador" ou "administrador".
+## Implementação
 
-### Implementação
+### Autenticação
 
-A autorização é implementada utilizando uma matriz de controle de acesso (ACL) que define as permissões para cada papel.
+```dart
+import 'package:dio/dio.dart';
 
-## Criptografia
+class ApiInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    // Adiciona token JWT no header de autorização
+    options.headers['Authorization'] = 'Bearer $token';
+    super.onRequest(options, handler);
+  }
+}
+```
 
-A criptografia é utilizada para proteger os dados em trânsito e em repouso.
+## Monitoramento e Logging
 
-### Implementação
+1. **Erros de API**:
+   - Logados com informações relevantes (endpoint, status code, mensagem).
+   - Implementa retry strategy para erros transitórios.
 
-A criptografia é implementada utilizando o protocolo TLS (Transport Layer Security) para proteger os dados em trânsito.
-
-## Boas Práticas
-
-* Todas as requisições à API devem ser realizadas utilizando HTTPS.
-* Os tokens de autenticação devem ser armazenados de forma segura no lado do cliente.
-* As credenciais de acesso devem ser rotacionadas regularmente.
+2. **Auditoria**:
+   - Ações críticas do usuário são logadas.
+   - Logs armazenados de forma segura.
 
 ## Referências
 
-* [Documentação da API](endpoint_mapping.md)
-* [Especificação da Matriz de Controle de Acesso](route_matrix_definition.md)
+- [Mapeamento de Endpoints](../passdriver_flutter_api_routes/endpoint_mapping.md)
+- [Critérios de Aceitação para Segurança da API](../passdriver_flutter_api_security/criterios_aceitacao.md)

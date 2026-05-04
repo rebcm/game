@@ -1,21 +1,38 @@
-import 'package:test/test.dart';
-import 'package:http_mock/http_mock.dart';
-import 'package:rebcm/services/autenticacao_service.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:game/services/autenticacao_service.dart';
+import 'package:dio/dio.dart';
+import 'package:mockito/mockito.dart';
+
+class MockDio extends Mock implements Dio {}
 
 void main() {
+  late AutenticacaoService service;
+  late MockDio dio;
+
+  setUp(() {
+    dio = MockDio();
+    service = AutenticacaoService(dio);
+  });
+
   group('AutenticacaoService', () {
-    test('validarIdentidadeUsuario retorna true para usuário válido', () async {
-      final httpMock = HttpMock();
-      httpMock.onGet('https://construcao-criativa.workers.dev/api/usuarios/usuario-valido').returnWith(200, '');
-      final service = AutenticacaoService();
-      expect(await service.validarIdentidadeUsuario('usuario-valido'), isTrue);
+    test('login bem-sucedido', () async {
+      when(dio.post('/auth/login', data: anyNamed('data')))
+          .thenAnswer((_) async => Response(
+                data: {'token': 'token-test'},
+                statusCode: 200,
+                requestOptions: RequestOptions(path: '/auth/login'),
+              ));
+
+      final token = await service.login('user', 'pass');
+      expect(token, 'token-test');
     });
 
-    test('obterLimiteMundos retorna limite correto', () async {
-      final httpMock = HttpMock();
-      httpMock.onGet('https://construcao-criativa.workers.dev/api/usuarios/usuario-valido/limite-mundos').returnWith(200, '5');
-      final service = AutenticacaoService();
-      expect(await service.obterLimiteMundos('usuario-valido'), 5);
+    test('login falha', () async {
+      when(dio.post('/auth/login', data: anyNamed('data')))
+          .thenThrow(DioException(requestOptions: RequestOptions(path: '/auth/login'), error: 'Erro'));
+
+      final token = await service.login('user', 'pass');
+      expect(token, isNull);
     });
   });
 }

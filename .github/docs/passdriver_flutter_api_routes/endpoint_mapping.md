@@ -1,32 +1,56 @@
-# Mapeamento de Endpoints e Contratos de API do Passdriver Flutter
+# Mapeamento de Endpoints da API do Passdriver Flutter
 
-## Introdução
+## Visão Geral
 
-Este documento visa listar todos os endpoints da API do passdriver Flutter, definindo payloads de entrada, respostas esperadas (sucesso e erro) e códigos HTTP correspondentes.
+Este documento fornece um mapeamento detalhado dos endpoints da API utilizados pelo módulo Passdriver Flutter no projeto Construção Criativa da Rebeca.
 
-## Endpoints
+## Endpoints da API
 
-### 1. Endpoint de Exemplo
+### Autenticação
 
-**URL:** `/api/exemplo`
-**Método:** `GET`
+| Endpoint | Método | Descrição |
+| --- | --- | --- |
+| `/auth/login` | POST | Realiza login do usuário |
+| `/auth/logout` | POST | Realiza logout do usuário |
+| `/auth/refresh-token` | POST | Atualiza token de autenticação |
 
-#### Payload de Entrada
+### Usuário
 
-Nenhum
+| Endpoint | Método | Descrição |
+| --- | --- | --- |
+| `/user/profile` | GET | Obtém perfil do usuário logado |
+| `/user/profile` | PUT | Atualiza perfil do usuário logado |
 
-#### Resposta Esperada (Sucesso)
+### Jogo
 
-* Código HTTP: `200 OK`
-* Corpo da Resposta: `{"mensagem": "Sucesso"}`
-* Tipo de Conteúdo: `application/json`
+| Endpoint | --- | --- |
+| `/game/state` | GET | Obtém estado atual do jogo |
+| `/game/actions` | POST | Envia ações do jogador para o servidor |
 
-#### Resposta Esperada (Erro)
+## Considerações de Segurança
 
-* Código HTTP: `500 Internal Server Error`
-* Corpo da Resposta: `{"mensagem": "Erro interno"}`
-* Tipo de Conteúdo: `application/json`
+- Todos os endpoints requerem autenticação via token JWT.
+- Implementar retry com backoff exponencial para requests falhos.
+- Utilizar Dio para gerenciamento de requests HTTP.
 
-## Considerações Finais
+## Matriz de Permissões
 
-Este documento deve ser atualizado sempre que houver mudanças nos endpoints da API do passdriver Flutter.
+| Endpoint | Permissão Requerida |
+| --- | --- |
+| `/auth/login` | Nenhuma |
+| `/auth/logout` | Autenticado |
+| `/user/profile` | Autenticado |
+| `/game/state` | Autenticado |
+| `/game/actions` | Autenticado |
+
+## Casos de Uso
+
+1. Ao iniciar o jogo, o cliente deve autenticar o usuário utilizando `/auth/login`.
+2. Após autenticação bem-sucedida, o token JWT deve ser armazenado de forma segura.
+3. O estado do jogo deve ser sincronizado periodicamente utilizando `/game/state`.
+4. Ações do jogador devem ser enviadas ao servidor via `/game/actions`.
+
+## Referências
+
+- [Documentação da API do Passdriver](../passdriver_flutter_api_security/api_security.md)
+- [Critérios de Aceitação para Passdriver Flutter](../passdriver_flutter_criterios/criterios_aceitacao.md)
