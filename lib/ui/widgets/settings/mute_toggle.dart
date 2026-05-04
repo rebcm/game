@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 class MuteToggle extends StatefulWidget {
-  const MuteToggle({super.key});
-
   @override
-  State<MuteToggle> createState() => _MuteToggleState();
+  _MuteToggleState createState() => _MuteToggleState();
 }
 
 class _MuteToggleState extends State<MuteToggle> {
@@ -15,11 +12,10 @@ class _MuteToggleState extends State<MuteToggle> {
   Widget build(BuildContext context) {
     return Switch(
       value: _isMuted,
-      onChanged: (bool value) async {
+      onChanged: (bool value) {
         setState(() {
           _isMuted = value;
         });
-        await AudioPlayer.global.setVolume(_isMuted ? 0.0 : 1.0);
       },
     );
   }
