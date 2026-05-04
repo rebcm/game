@@ -60,5 +60,6 @@ flutter:
   integration_test:
     sdk: flutter
 
-  test_driver/text_integration_test.dart:
-    path: test_driver/text_integration_test/text_integration_test.dart
+  test_driver:
+    text_integration_test/text_integration_test.dart:
+      path: test_driver/text_integration_test/text_integration_test.dart
