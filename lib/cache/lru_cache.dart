@@ -2,41 +2,26 @@ import 'package:quiver/collection.dart';
 
 class LRUCache<K, V> {
   final int _capacity;
-  final Map<K, V> _cache;
-  final LinkedHashMap<K, V> _lru;
+  final Map<K, V> _cache = {};
+  late final LruMap<K, V> _lruMap;
 
-  LRUCache(this._capacity) 
-    : _cache = {}, 
-      _lru = LinkedHashMap<K, V>(
-        equals: (k1, k2) => k1 == k2,
-        hashCode: (k) => k.hashCode,
-      );
+  LRUCache(this._capacity) {
+    _lruMap = LruMap<K, V>(maximumSize: _capacity);
+  }
 
   V? get(K key) {
-    if (_lru.containsKey(key)) {
-      final value = _lru[key];
-      _lru.remove(key);
-      _lru[key] = value!;
-      return value;
-    }
-    return null;
+    return _lruMap[key];
   }
 
   void put(K key, V value) {
-    if (_lru.containsKey(key)) {
-      _lru.remove(key);
-    } else if (_lru.length >= _capacity) {
-      final oldestKey = _lru.keys.first;
-      _lru.remove(oldestKey);
-    }
-    _lru[key] = value;
+    _lruMap[key] = value;
   }
 
   void remove(K key) {
-    _lru.remove(key);
+    _lruMap.remove(key);
   }
 
   void clear() {
-    _lru.clear();
+    _lruMap.clear();
   }
 }
