@@ -12,9 +12,7 @@ void main() {
     final fps = await tester.binding.frameRate;
     expect(fps, greaterThanOrEqualTo(60));
 
-    final assetLoadTime = await tester.binding.getDiagnosticInfo().firstWhere((element) => element['name'] == 'assetLoadTime');
-    expect(assetLoadTime['value'], lessThan(200));
-
-    await tester.pumpAndSettle();
+    final loadingTime = await tester.binding.renderTree.loadingTime;
+    expect(loadingTime, lessThan(Duration(milliseconds: 200)));
   });
 }
