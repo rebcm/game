@@ -29,6 +29,7 @@ dependencies:
   process_run: ^0.14.0+1
   flutter_driver:
     sdk: flutter
+  fake_async: ^1.3.1
 
 dev_dependencies:
   test_coverage: ^1.0.0
@@ -80,15 +81,3 @@ flutter:
     path: test_driver/onboarding_test/onboarding_test_driver.dart
   audio_edge_cases_test:
     path: test_driver/audio_edge_cases_test/audio_edge_cases_test.dart
-  audio_edge_cases_test_driver:
-    path: test_driver/audio_edge_cases_test/audio_edge_cases_test_driver.dart
-  permission_validation_test:
-    path: test_driver/permission_validation_test/permission_validation_test.dart
-  i18n_layout_test:
-    path: test_driver/i18n_layout_test/i18n_layout_test.dart
-  i18n_layout_test_driver:
-    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
-  i18n_layout_test:
-    path: test_driver/i18n_layout_test/i18n_layout_test.dart
-  i18n_layout_test_driver:
-    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
