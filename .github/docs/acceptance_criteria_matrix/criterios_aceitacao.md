@@ -1,15 +1,15 @@
-# Critérios de Aceitação para Animações
+# Critérios de Aceitação
 
 ## Introdução
 
-Este documento define os critérios de aceitação para as animações no jogo.
+Este documento define os critérios de aceitação para o projeto Rebeca.
 
 ## Critérios
 
-1. **Taxa de Quadros**: A taxa de quadros deve ser de pelo menos 60fps.
-2. **Tempo de Carregamento do Asset**: O tempo de carregamento do asset deve ser menor que 200ms.
-3. **Compatibilidade com Versões do Flutter**: A animação deve ser compatível com as versões específicas do Flutter definidas no projeto.
+*   O jogo deve permanecer simples, estável e divertido.
+*   Não adicionar complexidade desnecessária.
+*   Os critérios de aceitação devem ser aplicados em todas as etapas do desenvolvimento.
 
-## Testes
+## Verificação
 
-Os testes de aceitação para as animações serão realizados utilizando o framework de teste de integração do Flutter.
+Os critérios de aceitação serão verificados através de testes de integração.

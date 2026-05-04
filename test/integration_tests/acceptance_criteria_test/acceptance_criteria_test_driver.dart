@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Acceptance Criteria Test', () {
+  group('acceptance criteria test', () {
     FlutterDriver? driver;
 
     setUpAll(() async {
@@ -15,10 +15,10 @@ void main() {
       }
     });
 
-    test('Verify acceptance criteria', () async {
-      await driver?.runUnsynchronized(() async {
-        await driver?.waitFor(find.text('Rebeca'));
-      });
+    test('verify acceptance criteria', () async {
+      // Implement acceptance criteria verification logic here
+      final rebecaText = await driver?.getText(find.byText('Rebeca'));
+      expect(rebecaText, 'Rebeca');
     });
   });
 }
