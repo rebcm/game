@@ -57,3 +57,8 @@ scripts:
   coverage: bash scripts/generate_coverage_report.sh
 scripts:
   run_input_validation_tests: bash scripts/run_input_validation_tests.sh
+scripts:
+  run_package_tracking_tests: bash scripts/run_package_tracking_tests.sh
+
+scripts:
+  run_package_tracking_tests: bash scripts/run_package_tracking_tests.sh
