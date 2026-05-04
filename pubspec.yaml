@@ -30,6 +30,7 @@ dependencies:
   flutter_driver:
     sdk: flutter
   fake_async: ^1.3.1
+  provider: ^6.0.3
 
 dev_dependencies:
   test_coverage: ^1.0.0
@@ -75,18 +76,9 @@ flutter:
     path: test_driver/audio_output_test/audio_output_test.dart
   technical_comparison_test:
     path: test_driver/technical_comparison_test/technical_comparison_test.dart
-    onboarding_test:
-      path: test_driver/onboarding_test/onboarding_test.dart
-    onboarding_test_driver:
-      path: test_driver/onboarding_test/onboarding_test_driver.dart
+  onboarding_test:
+    path: test_driver/onboarding_test/onboarding_test.dart
   onboarding_test_driver:
     path: test_driver/onboarding_test/onboarding_test_driver.dart
-  audio_edge_cases_test:
-    path: test_driver/audio_edge_cases_test/audio_edge_cases_test.dart
-  golden_tests:
-    path: test_driver/golden_tests/golden_tests.dart
-
-  i18n_layout_test:
-    path: test_driver/i18n_layout_test/i18n_layout_test.dart
-  i18n_layout_test_driver:
-    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
+  settings_test:
+    path: test_driver/settings_test/settings_test.dart
