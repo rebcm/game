@@ -1,28 +1,30 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rebcm/services/chunking_service.dart';
+import 'package:game/chunking/chunk.dart';
+import 'package:game/chunking/chunk_manager.dart';
 
 void main() {
   group('Chunking Stress Test', () {
-    test('should handle chunk files above the allowed limit', () async {
-      final chunkingService = ChunkingService();
-      final largeChunk = List.generate(1000000, (index) => index.toString());
-      await expectLater(
-        () => chunkingService.processChunk(largeChunk),
-        throwsA(isA<Exception>()),
-      );
+    test('Zero-sized chunk test', () async {
+      final chunk = Chunk.empty();
+      expect(() => ChunkManager.processChunk(chunk), throwsA(isA<ArgumentError>()));
     });
 
-    test('should handle multiple large chunk files', () async {
-      final chunkingService = ChunkingService();
-      final largeChunks = List.generate(
+    test('Exceeding maximum allowed chunk size test', () async {
+      final largeChunk = Chunk(
+        data: List<int>.filled(ChunkManager.MAX_CHUNK_SIZE + 1, 0),
+      );
+      expect(() => ChunkManager.processChunk(largeChunk), throwsA(isA<RangeError>()));
+    });
+
+    test('Multiple large chunks test', () async {
+      final largeChunks = List<Chunk>.generate(
         10,
-        (index) => List.generate(1000000, (i) => '$index$i'),
+        (index) => Chunk(
+          data: List<int>.filled(ChunkManager.MAX_CHUNK_SIZE, 0),
+        ),
       );
       for (var chunk in largeChunks) {
-        await expectLater(
-          () => chunkingService.processChunk(chunk),
-          throwsA(isA<Exception>()),
-        );
+        expect(() => ChunkManager.processChunk(chunk), returnsNormally);
       }
     });
   });
