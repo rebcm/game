@@ -11,7 +11,7 @@ void main() {
 
     // Validate KV Namespaces and D1 Databases for Staging and Production environments
     // This is a placeholder, actual implementation depends on the specific requirements
-    // and how the environment configurations are handled in the app.
+    // and how the environments are configured in the app.
     expect(true, true); // Replace with actual validation logic
   });
 }

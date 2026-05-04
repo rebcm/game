@@ -50,3 +50,5 @@ scripts:
   run_onboarding_test: flutter drive --driver=test/integration_tests/onboarding_test/onboarding_driver.dart --target=test/integration_tests/onboarding_test/onboarding_test.dart
 
   run_audio_settings_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_settings_test/audio_settings_test.dart
+
+  run_env_validation_test: flutter drive --driver=test/integration_tests/env_validation_test/env_validation_driver.dart --target=test/integration_tests/env_validation_test/env_validation_test.dart
