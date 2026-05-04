@@ -61,3 +61,6 @@ scripts:
   run_lint_parser: bash scripts/lint_parser/parse_lint_logs.sh
 
   run_skin_mapping_test: flutter drive --driver=test/integration_tests/skin_mapping_test/skin_mapping_test_driver.dart --target=test/integration_tests/skin_mapping_test/skin_mapping_test.dart
+
+scripts:
+  update_passdriver_flutter_guide: ./scripts/update_passdriver_flutter_guide.sh
