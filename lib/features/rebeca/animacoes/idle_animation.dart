@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 
 class IdleAnimation extends StatefulWidget {
@@ -6,12 +7,22 @@ class IdleAnimation extends StatefulWidget {
 }
 
 class _IdleAnimationState extends State<IdleAnimation> with TickerProviderStateMixin {
-  late AnimationController _animationController;
+  late AnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _animationController = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat();

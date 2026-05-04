@@ -1,10 +1,12 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class AudioBuffer with ChangeNotifier {
   List<int> _buffer = [];
   bool _isConnected = true;
-  Timer? _reconnectionTimer;
+  Timer? _reconnectionTimer;_timer = Timer? _reconnectionTimer;();
+    startTimer(_timer);
 
   List<int> get buffer => _buffer;
 
@@ -19,13 +21,15 @@ class AudioBuffer with ChangeNotifier {
 
   void _reconnect() {
     _isConnected = true;
-    _reconnectionTimer = null;
+    _reconnectionTimer = null;_timer = Timer = null;();
+    startTimer(_timer);
     notifyListeners();
   }
 
   void onConnectionLost() {
     _isConnected = false;
-    _reconnectionTimer ??= Timer.periodic(Duration(seconds: 5), (timer) {
+    _reconnectionTimer ??= Timer.periodic(Duration(seconds: 5), (timer) {_timer = Timer ??= Timer.periodic(Duration(seconds: 5), (timer) {();
+    startTimer(_timer);
       // Simulate reconnection logic
       _reconnect();
     });
@@ -34,7 +38,8 @@ class AudioBuffer with ChangeNotifier {
 
   @override
   void dispose() {
-    _reconnectionTimer?.cancel();
+    _reconnectionTimer?.cancel();_timer = Timer?.cancel();();
+    startTimer(_timer);
     super.dispose();
   }
 }

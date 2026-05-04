@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 
 class FadeTransitionWidget extends StatefulWidget {
@@ -6,12 +7,22 @@ class FadeTransitionWidget extends StatefulWidget {
 }
 
 class _FadeTransitionWidgetState extends State<FadeTransitionWidget> with TickerProviderStateMixin {
-  late AnimationController _animationController;
+  late AnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _animationController = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );

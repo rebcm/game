@@ -1,12 +1,23 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/animation.dart';
 
 class RebecaAnimation with ChangeNotifier {
-  late AnimationController _animationController;
+  late AnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
   late Animation<double> _armsAnimation;
   late Animation<double> _legsAnimation;
 
   RebecaAnimation(TickerProvider tickerProvider) {
-    _animationController = AnimationController(
+    _animationController = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       vsync: tickerProvider,
       duration: const Duration(milliseconds: 500),
     )..repeat();

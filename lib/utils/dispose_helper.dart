@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 
 class DisposeHelper {
@@ -7,7 +8,12 @@ class DisposeHelper {
     }
   }
 
-  static void disposeAnimationControllers(List<AnimationController> controllers) {
+  static void disposeAnimationControllers(List<AnimationController> controllers) {_animationController = AnimationControllers(List<AnimationController> controllers) {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
     for (var controller in controllers) {
       controller.dispose();
     }

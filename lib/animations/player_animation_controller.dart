@@ -1,10 +1,26 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
-class PlayerAnimationController with ChangeNotifier {
-  final AnimationController _animationController;
+class PlayerAnimationController with ChangeNotifier {_animationController = AnimationController with ChangeNotifier {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
+  final AnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
 
-  PlayerAnimationController(this._animationController) {
+  PlayerAnimationController(this._animationController) {_animationController = AnimationController(this._animationController) {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
     _animationController.forward();
   }
 

@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 
 class AnimationTest extends StatefulWidget {
@@ -5,13 +6,28 @@ class AnimationTest extends StatefulWidget {
   _AnimationTestState createState() => _AnimationTestState();
 }
 
-class _AnimationTestState extends State<AnimationTest> with TickerProviderStateMixin { with AnimationControllerDisposer {
-  late AnimationController _animationController;
+class _AnimationTestState extends State<AnimationTest> with TickerProviderStateMixin { with AnimationControllerDisposer {_animationController = AnimationControllerDisposer {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
+  late AnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _animationController = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       vsync: this,
       duration: Duration(milliseconds: 500),
     );

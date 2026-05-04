@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:passdriver/features/rebeca_animation/rebeca_animation_controller.dart';
 
@@ -8,13 +9,28 @@ class RebecaIdleAnimation extends StatefulWidget {
   State<RebecaIdleAnimation> createState() => _RebecaIdleAnimationState();
 }
 
-class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {
-  late RebecaAnimationController _animationController;
+class _RebecaIdleAnimationState extends State<RebecaIdleAnimation> with TickerProviderStateMixin { with AnimationControllerDisposer {_animationController = AnimationControllerDisposer {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
+  late RebecaAnimationController _animationController;_animationController = AnimationController _animationController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
 
   @override
   void initState() {
     super.initState();
-    _animationController = RebecaaddAnimationController(AnimationController(context));
+    _animationController = RebecaaddAnimationController(AnimationController(context));_animationController = AnimationController(AnimationController(context));();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
   }
 
   @override

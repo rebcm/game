@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import Intl.message('package:flutter/material.dart');
 import Intl.message('package:provider/provider.dart');
 import Intl.message('../jogo/estado_jogo.dart');
@@ -11,8 +12,18 @@ class TelaInicio extends StatefulWidget {
   State<TelaInicio> createState() => _TelaInicioState();
 }
 
-class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin { with AnimationControllerDisposer {
-  late AnimationController _pulseCtrl;
+class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin { with AnimationControllerDisposer {_animationController = AnimationControllerDisposer {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
+  late AnimationController _pulseCtrl;_animationController = AnimationController _pulseCtrl;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
   late Animation<double> _pulseAnim;
   final _ctrlNome = TextEditingController();
   bool _mostrarNovoMundo = false;
@@ -20,7 +31,12 @@ class _TelaInicioState extends State<TelaInicio> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _pulseCtrl = AnimationController(
+    _pulseCtrl = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);

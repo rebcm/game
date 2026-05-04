@@ -1,3 +1,4 @@
+import 'package:game/utils/dispose_helpers.dart';
 import 'package:flutter/material.dart';
 
 class Skybox extends StatefulWidget {
@@ -5,14 +6,29 @@ class Skybox extends StatefulWidget {
   _SkyboxState createState() => _SkyboxState();
 }
 
-class _SkyboxState extends State<Skybox> with TickerProviderStateMixin { with AnimationControllerDisposer {
-  late AnimationController _dayNightController;
+class _SkyboxState extends State<Skybox> with TickerProviderStateMixin { with AnimationControllerDisposer {_animationController = AnimationControllerDisposer {();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
+  late AnimationController _dayNightController;_animationController = AnimationController _dayNightController;();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
   late Animation<double> _dayNightAnimation;
 
   @override
   void initState() {
     super.initState();
-    _dayNightController = AnimationController(
+    _dayNightController = AnimationController(_animationController = AnimationController(();
+    @override
+    void dispose() {
+      _animationController.dispose();
+      super.dispose();
+    }
       vsync: this,
       duration: Duration(seconds: 30),
     )..repeat();
