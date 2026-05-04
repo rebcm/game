@@ -77,3 +77,5 @@ scripts:
 
   run_chunk_concurrency_test: flutter drive --driver=test/stress_tests/chunk_concurrency_test/chunk_concurrency_driver.dart --target=test/stress_tests/chunk_concurrency_test/chunk_concurrency_test.dart
   run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
+
+  run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
