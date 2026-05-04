@@ -45,21 +45,5 @@ scripts:
   run_load_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/load_test/load_test.dart
   run_environment_provisioning_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/environment_provisioning_performance_test/environment_provisioning_performance_test.dart
 
-  run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk_benchmark/rebeca_walk_benchmark.dart
-
-  run_contract_test: flutter drive --driver=test/contract_tests/contract_test_driver.dart --target=test/contract_tests/contract_test.dart
-
-  run_pseudo_localization_test: flutter drive --driver=test/integration_tests/pseudo_localiza
-  run_environment_provisioning_test: flutter drive --driver=test/integration_tests/environment_provisioning_test_driver.dart --target=test/integration_tests/environment_provisioning_test/environment_provisioning_test.dart
-  run_passdriver_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/passdriver_integration_test/passdriver_integration_test.dart
-  run_global_shortcuts_test: flutter drive --driver=test/integration_tests/global_shortcuts_test/global_shortcuts_driver.dart --target=test/integration_tests/global_shortcuts_test/global_shortcuts_test.dart
-
-  run_undo_redo_rebuild_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/undo_redo_rebuild_benchmark/undo_redo_rebuild_benchmark.dart
-
-  run_undo_redo_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/undo_redo_performance_test.dart
-
-  run_suavidade_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/suavidade_test/suavidade_test.dart
-
-  run_overflow_test: flutter drive --driver=test/integration_tests/overflow_test/overflow_test_driver.dart --target=test/integration_tests/overflow_test/overflow_test.dart
-
-  run_readme_validation: ./.github/docs/readme_validation/validation_script.sh
+  run_rebeca_walk_benchmark: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/rebeca_walk
+  run_contract_tests: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver_contract_test.dart --target=test/contract_tests/contract_test.dart
