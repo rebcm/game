@@ -67,3 +67,5 @@ scripts:
 scripts:
   validate_translation: bash scripts/validate_translation.sh
   run_integration_tests: bash scripts/run_integration_tests.sh
+
+  provider: ^6.0.3
