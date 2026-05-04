@@ -12,9 +12,9 @@ void main() {
     driver?.close();
   });
 
-  test('UV Mapping Validation Test', () async {
+  test('UV mapping validation test driver', () async {
     await driver?.runUnsynchronized(() async {
-      // Test logic to validate UV mapping using Flutter Driver
+      await driver?.requestData('uv_mapping_validation_test');
     });
   });
 }

@@ -141,3 +141,5 @@ scripts:
   run_setup_validation_test: flutter drive --driver=test/integration_tests/setup_validation_test/setup_validation_test_driver.dart --target=test/integration_tests/setup_validation_test/setup_validation_test.dart
 
   run_content_regression_test: bash scripts/run_content_regression_test
+
+  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test

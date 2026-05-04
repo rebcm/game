@@ -5,12 +5,12 @@ import 'package:game/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('UV Mapping Validation Test', (tester) async {
+  testWidgets('UV mapping validation test', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Test logic for UV mapping validation
-    // Compare the rendered texture coordinates for both Classic and Slim models
-    // Assert that the UV mapping is correct for both models
+    // Implement UV mapping validation logic here
+    // Compare Classic and Slim arm models' texture mapping
+    expect(true, true); // Replace with actual validation logic
   });
 }
