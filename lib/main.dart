@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:game/guia_construcao.dart';
+import 'package:game/services/permissions/permission_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final permissionService = PermissionService();
+  await permissionService.requestPermission(Permission.storage);
   runApp(MyApp());
 }
 
@@ -13,7 +17,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: GuiaConstrucao(),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebeca Game'),
+      ),
+      body: Center(
+        child: Text('Rebeca Game'),
+      ),
     );
   }
 }
