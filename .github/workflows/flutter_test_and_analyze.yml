@@ -17,8 +17,8 @@ jobs:
         with:
           flutter-version: '3.3.10'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run tests and analyze
-        run: flutter test && flutter analyze
+      - name: Run flutter test and analyze
+        run: |
+          flutter pub get
+          flutter test
+          flutter analyze
