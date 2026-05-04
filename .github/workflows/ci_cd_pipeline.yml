@@ -15,18 +15,21 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.10'
+          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run smoke test
-        run: flutter drive --driver=test/integration_tests/smoke_test/smoke_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
+      - name: Run build runner
+        run: ./scripts/run_build_runner.sh
 
-      - name: Deploy to production
+      - name: Run smoke test
+        run: bash scripts/run_smoke_test_with_retry.sh
+
+      - name: Deploy if smoke test passes
         if: success()
         run: echo "Deploying to production"
 
-      - name: Rollback to previous version
+      - name: Rollback if smoke test fails
         if: failure()
         run: echo "Rolling back to previous version"
