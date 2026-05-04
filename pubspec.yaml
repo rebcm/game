@@ -73,3 +73,5 @@ scripts:
   run_uv_rendering_test: bash scripts/run_uv_rendering_test
 
   run_schema_test: flutter test test/schema_test/schema_test.dart
+
+  run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
