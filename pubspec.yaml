@@ -84,3 +84,6 @@ flutter:
 
   assets:
     - .github/docs/passdriver_flutter_checklist/feedback_form.json
+
+  ci_cd_validation_test:
+    path: ./integration_test/ci_cd_validation
