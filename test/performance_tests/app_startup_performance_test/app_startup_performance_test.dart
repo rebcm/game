@@ -8,10 +8,10 @@ void main() {
 
   testWidgets('App Startup Performance Test', (tester) async {
     final stopwatch = Stopwatch()..start();
-    app.main();
+    await app.main();
     await tester.pumpAndSettle();
     stopwatch.stop();
-    final elapsedTime = stopwatch.elapsed.inMilliseconds;
-    expect(elapsedTime, lessThan(5000)); // 5 seconds
+    print('Startup time: ${stopwatch.elapsed.inMilliseconds} ms');
+    expect(stopwatch.elapsed.inMilliseconds, lessThan(5000));
   });
 }

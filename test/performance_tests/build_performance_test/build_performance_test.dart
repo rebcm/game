@@ -7,12 +7,12 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Build Performance Test', (tester) async {
-    app.main();
+    await app.main();
     await tester.pumpAndSettle();
     final stopwatch = Stopwatch()..start();
     await tester.pumpAndSettle();
     stopwatch.stop();
-    final elapsedTime = stopwatch.elapsed.inMilliseconds;
-    expect(elapsedTime, lessThan(3000)); // 3 seconds
+    print('Build time: ${stopwatch.elapsed.inMilliseconds} ms');
+    expect(stopwatch.elapsed.inMilliseconds, lessThan(3000));
   });
 }
