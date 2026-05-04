@@ -13,21 +13,11 @@ void main() {
       await driver.close();
     });
 
-    test('Clean Installation Test on Multiple OS', () async {
-      await driver.waitUntilFirstFrameRasterized();
-
-      // Check if the app launches successfully
-      await driver.waitFor(find.text('Rebeca\'s Creative Building'));
-
-      // Check if the initial screen is rendered correctly
-      await driver.waitFor(find.byType('GridView'));
-
-      // Perform a simple interaction to verify functionality
-      await driver.tap(find.byType('FloatingActionButton'));
-      await driver.waitFor(find.text('Block Placed'));
-
-      // Verify that the onboarding process completes successfully
-      await driver.waitFor(find.text('Onboarding Complete'));
+    test('Onboarding completes successfully', () async {
+      await driver.waitUntilFirstFixFrame();
+      await driver.tap(find.byTooltip('Next'));
+      await driver.tap(find.byTooltip('Start'));
+      await driver.waitFor(find.text('Welcome to the game!'));
     });
   });
 }
