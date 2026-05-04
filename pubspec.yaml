@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
+  dio_mock: ^1.0.0
   openapi: ^1.0.0
   permission_handler: ^11.0.0
   json_annotation: ^4.8.1
@@ -27,6 +28,7 @@ dependencies:
   ffmpeg_kit_flutter: ^4.5.1
 
 dev_dependencies:
+  dio_mock: ^1.0.0
   openapi: ^1.0.0
   permission_handler: ^11.0.0
   json_serializable: ^6.7.1
