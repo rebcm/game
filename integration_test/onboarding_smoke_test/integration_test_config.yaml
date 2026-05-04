@@ -1,3 +1,3 @@
-test:
-  suite: onboarding_smoke_test
-  driver: onboarding_smoke_test_driver.dart
+# Configuration for onboarding smoke test
+test_name: onboarding_smoke_test
+test_description: Smoke test for onboarding flow
