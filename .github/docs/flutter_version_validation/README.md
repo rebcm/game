@@ -5,3 +5,4 @@ This directory contains a script to validate the compatibility of the Flutter ve
 ## Usage
 
 To run the validation script, execute the following command:
+{"pt-BR": "Tradução para pt-BR"}

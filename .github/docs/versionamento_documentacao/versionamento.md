@@ -32,3 +32,4 @@ Com o avanço das versões do aplicativo, é crucial manter a documentação atu
 ## Conclusão
 
 A implementação desta estratégia de versionamento garantirá que a documentação permaneça organizada e facilmente acessível para qualquer versão do aplicativo, facilitando a manutenção e o entendimento do projeto ao longo do tempo.
+{"pt-BR": "Tradução para pt-BR"}

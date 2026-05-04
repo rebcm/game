@@ -25,3 +25,4 @@
 ## Implementação
 
 A implementação da tabela de mundos deve seguir as especificações acima, garantindo a integridade dos dados e a eficiência nas consultas.
+{"pt-BR": "Tradução para pt-BR"}

@@ -17,3 +17,4 @@ A classe `PlayerController` utiliza a `InputService` para determinar se o jogado
 ## Testes
 
 Foram implementados testes unitários para as classes `PlayerStateMachine`, `InputService` e `PlayerController` para garantir a correta implementação dos triggers de movimentação.
+{"pt-BR": "Tradução para pt-BR"}

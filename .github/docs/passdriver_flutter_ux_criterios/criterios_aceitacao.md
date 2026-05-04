@@ -35,3 +35,4 @@ As seguintes métricas serão coletadas para avaliar o sucesso da UX das dicas:
 
 A implementação dos critérios de aceitação será realizada através de testes de integração utilizando o framework de testes do Flutter.
 
+{"pt-BR": "Tradução para pt-BR"}

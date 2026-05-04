@@ -35,3 +35,4 @@ O tom de voz da documentação deve ser:
 ## Conclusão
 
 A matriz de validação de SEO e tom de voz é fundamental para garantir que a documentação do projeto Rebeca seja eficaz e atraente.
+{"pt-BR": "Tradução para pt-BR"}

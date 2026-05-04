@@ -27,3 +27,4 @@ Este checklist tem como objetivo ajudar os desenvolvedores externos a identifica
 ## Comentários Adicionais
 
 - [ ] Espaço para comentários adicionais ou sugestões de melhoria no processo de onboarding
+{"pt-BR": "Tradução para pt-BR"}

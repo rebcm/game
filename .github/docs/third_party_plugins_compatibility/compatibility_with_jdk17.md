@@ -25,3 +25,4 @@ Os plugins que utilizam código nativo Android listados no `pubspec.yaml` são c
 1. Manter os plugins atualizados para garantir a compatibilidade contínua com novas versões do JDK e AGP.
 2. Monitorar as documentações dos plugins para futuras atualizações que possam afetar a compatibilidade.
 
+{"pt-BR": "Tradução para pt-BR"}

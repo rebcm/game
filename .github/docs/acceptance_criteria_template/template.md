@@ -22,3 +22,4 @@ Este documento define os critérios de aceitação padrão para novas features i
 - [ ] A feature foi implementada conforme os critérios específicos.
 - [ ] A feature foi integrada ao CI/CD.
 - [ ] A feature está documentada.
+{"pt-BR": "Tradução para pt-BR"}

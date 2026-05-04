@@ -20,3 +20,4 @@ Os testes de aceitação para as animações devem ser realizados utilizando o f
 
 A implementação dos critérios de aceitação deve ser feita no código de animação da Rebeca.
 
+{"pt-BR": "Tradução para pt-BR"}

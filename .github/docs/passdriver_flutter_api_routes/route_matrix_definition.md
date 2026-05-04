@@ -13,3 +13,4 @@ The following routes are tested:
 * GET /data
 * GET /invalid-data
 
+{"pt-BR": "Tradução para pt-BR"}

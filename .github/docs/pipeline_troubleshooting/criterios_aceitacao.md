@@ -32,3 +32,4 @@ Este guia visa fornecer soluções para problemas comuns encontrados durante a e
 - O guia deve conter soluções para pelo menos três problemas comuns do pipeline.
 - As soluções devem ser testadas e validadas antes de serem documentadas.
 - O guia deve ser facilmente acessível a todos os membros da equipe.
+{"pt-BR": "Tradução para pt-BR"}

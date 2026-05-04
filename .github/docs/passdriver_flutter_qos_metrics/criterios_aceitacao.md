@@ -24,3 +24,4 @@ Testes de desempenho devem ser implementados para garantir que as métricas de Q
 
 A implementação das métricas de QoS deve ser feita de acordo com as melhores práticas de desenvolvimento de software e deve seguir os padrões de codificação existentes no projeto.
 
+{"pt-BR": "Tradução para pt-BR"}

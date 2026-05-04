@@ -8,3 +8,4 @@
 
 ## Compatibilidade com Flutter
 - A animação deve ser compatível com as versões estáveis mais recentes do Flutter.
+{"pt-BR": "Tradução para pt-BR"}

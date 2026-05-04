@@ -18,3 +18,4 @@ Este documento visa estabelecer uma matriz de rastreabilidade entre os itens de 
 
 A matriz de rastreabilidade apresentada acima garante que todos os itens de documentação estejam vinculados a steps específicos do pipeline CI/CD, assegurando a paridade entre a documentação e a implementação.
 
+{"pt-BR": "Tradução para pt-BR"}

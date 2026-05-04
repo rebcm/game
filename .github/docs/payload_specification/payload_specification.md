@@ -32,3 +32,4 @@ O frame binário é composto pelas seguintes seções:
 
 A implementação deve seguir as especificações acima, garantindo que o frame binário seja corretamente montado e interpretado.
 
+{"pt-BR": "Tradução para pt-BR"}

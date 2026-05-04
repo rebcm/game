@@ -21,3 +21,4 @@ Este documento define os critérios de aceitação para a validação do pipelin
 ## Conclusão
 
 A validação do pipeline de CI/CD é fundamental para garantir a qualidade e estabilidade do projeto. Ao seguir os critérios de aceitação definidos neste documento, podemos garantir que o pipeline esteja funcionando corretamente e que o projeto seja entregue com qualidade.
+{"pt-BR": "Tradução para pt-BR"}

@@ -10,3 +10,4 @@ Este documento define os critérios de aceitação para os testes de responsivid
 
 ## Conclusão
 Os testes de responsividade são fundamentais para garantir que o aplicativo seja acessível e usável em diferentes dispositivos.
+{"pt-BR": "Tradução para pt-BR"}

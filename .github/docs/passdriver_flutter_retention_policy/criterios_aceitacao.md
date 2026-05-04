@@ -21,3 +21,4 @@ Este documento define os critérios de aceitação para a configuração da pol�
 - Devem ser incluídos testes automatizados para validar a configuração da política de retenção.
 - Os testes devem cobrir cenários de sucesso e falha na aplicação da política de retenção.
 
+{"pt-BR": "Tradução para pt-BR"}

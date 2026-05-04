@@ -46,3 +46,4 @@ Para implementar as animações com Rive, será necessário:
 ## Conclusão
 
 A escolha do Rive como stack de animação para o personagem Rebeca deve proporcionar uma boa experiência de jogo, mantendo a simplicidade e estabilidade do projeto.
+{"pt-BR": "Tradução para pt-BR"}

@@ -21,3 +21,4 @@ Este documento lista todos os edge cases e testes de integração que falharam n
 2. **Teste de Integração 2**: Descrição do teste de integração que falhou.
    - **Motivo da Falha**: Descrição do motivo da falha.
    - **Solução Implementada**: Descrição da solução implementada para corrigir a falha.
+{"pt-BR": "Tradução para pt-BR"}

@@ -34,3 +34,4 @@
 
 ## Changelog
 - Track changes made to the GDD
+{"pt-BR": "Tradução para pt-BR"}

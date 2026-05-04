@@ -19,3 +19,4 @@ A validação do fluxo de CI/CD será realizada por meio da execução manual do
 
 O fluxo de CI/CD será considerado válido se todos os critérios de aceitação forem atendidos.
 
+{"pt-BR": "Tradução para pt-BR"}

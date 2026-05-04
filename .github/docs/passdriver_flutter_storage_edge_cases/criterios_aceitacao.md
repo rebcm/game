@@ -28,3 +28,4 @@ O objetivo deste documento é garantir que o sistema de armazenamento do jogo se
 ## Conclusão
 
 Ao atender a estes critérios de aceitação, o projeto `rebcm/game` garantirá um sistema de armazenamento robusto e capaz de lidar com diferentes edge cases, proporcionando uma experiência estável e confiável para os usuários.
+{"pt-BR": "Tradução para pt-BR"}

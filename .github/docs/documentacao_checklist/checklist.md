@@ -28,3 +28,4 @@
 
 ## Maintenance
 - [ ] Changelog
+{"pt-BR": "Tradução para pt-BR"}

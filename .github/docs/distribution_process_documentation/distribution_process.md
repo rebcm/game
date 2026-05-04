@@ -26,3 +26,4 @@ O pipeline de CI/CD é configurado para executar automaticamente em eventos espe
 ## Conclusão
 
 O processo de distribuição do jogo Rebeca é automatizado pelo pipeline de CI/CD, garantindo a geração consistente e confiável de binários para distribuição. Os binários gerados estão disponíveis tanto como artefatos nos runs do GitHub Actions quanto nas releases do repositório.
+{"pt-BR": "Tradução para pt-BR"}

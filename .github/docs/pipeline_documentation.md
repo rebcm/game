@@ -24,3 +24,4 @@ O pipeline é executado automaticamente a cada push no repositório. Além disso
 ## Monitoramento do Pipeline
 
 O status do pipeline pode ser monitorado através da interface do GitHub Actions.
+{"pt-BR": "Tradução para pt-BR"}

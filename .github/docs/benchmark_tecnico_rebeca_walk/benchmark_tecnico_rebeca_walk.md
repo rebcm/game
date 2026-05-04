@@ -15,3 +15,4 @@ Os resultados do benchmark serão apresentados aqui.
 ## Conclusão
 
 A conclusão do benchmark será apresentada aqui.
+{"pt-BR": "Tradução para pt-BR"}

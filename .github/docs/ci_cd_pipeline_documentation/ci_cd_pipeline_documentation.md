@@ -11,3 +11,4 @@ To enable this feature, set the `NOTIFICATION_URL` variable in your `.env` file.
 ## Script
 
 The notification is sent using the `send_notification.sh` script located in the `scripts` directory.
+{"pt-BR": "Tradução para pt-BR"}

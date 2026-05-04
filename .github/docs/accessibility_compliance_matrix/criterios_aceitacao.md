@@ -44,3 +44,4 @@ Para garantir a conformidade, as seguintes ações serão implementadas:
 ## Conclusão
 
 A implementação da matriz de conformidade de acessibilidade assegurará que o jogo "Construção Criativa da Rebeca" seja acessível a todos os usuários, incluindo aqueles com deficiências.
+{"pt-BR": "Tradução para pt-BR"}

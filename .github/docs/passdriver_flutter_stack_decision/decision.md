@@ -49,3 +49,4 @@ Os benchmarks realizados demonstraram que a stack escolhida atende aos requisito
 
 Os principais riscos de integração identificados foram relacionados à compatibilidade de certas bibliotecas com as versões mais recentes do Flutter e à necessidade de implementações customizadas. Esses riscos foram mitigados pela escolha de bibliotecas bem mantidas e pela implementação de testes rigorosos.
 
+{"pt-BR": "Tradução para pt-BR"}

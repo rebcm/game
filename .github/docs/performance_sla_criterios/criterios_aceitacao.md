@@ -17,3 +17,4 @@ Os testes de performance são executados automaticamente como parte do pipeline 
 
 - [build_performance_test.dart](../test/performance_tests/build_performance_test/build_performance_test.dart)
 - [app_startup_performance_test.dart](../test/performance_tests/app_startup_performance_test/app_startup_performance_test.dart)
+{"pt-BR": "Tradução para pt-BR"}

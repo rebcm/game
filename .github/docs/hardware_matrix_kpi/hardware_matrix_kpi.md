@@ -33,3 +33,4 @@ Este documento define a matriz de hardware e os KPIs (Key Performance Indicators
 ## Conclusão
 
 A matriz de hardware e os KPIs definidos neste documento servirão como referência para o desenvolvimento e otimização do aplicativo Rebeca.
+{"pt-BR": "Tradução para pt-BR"}

@@ -14,3 +14,4 @@ Este documento define os critérios de aceitação para os testes de áudio edge
 ## Testes
 
 Os testes devem ser implementados utilizando o framework de teste de integração do Flutter.
+{"pt-BR": "Tradução para pt-BR"}

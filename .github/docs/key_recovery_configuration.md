@@ -18,3 +18,4 @@ The `recover_key.sh` script is responsible for decoding the Base64 encoded keyst
 ### Usage
 
 The script is designed to be used in a CI/CD pipeline. It can be triggered manually or automatically based on the pipeline configuration.
+{"pt-BR": "Tradução para pt-BR"}

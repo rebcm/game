@@ -24,3 +24,4 @@ Este documento define os critérios de aceitação para a funcionalidade de áud
 | iOS | Perda de conexão | Áudio pausado |  |
 | iOS | Modo silencioso | Áudio silenciado |  |
 
+{"pt-BR": "Tradução para pt-BR"}

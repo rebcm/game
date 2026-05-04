@@ -46,3 +46,4 @@ A implementação seguirá as melhores práticas do projeto, utilizando os padr�
 ## Conclusão
 
 A utilização de componentes nativos de UI para a renderização de dicas oferece a melhor abordagem para atender aos requisitos do jogo, garantindo uma boa performance e uma interface de usuário agradável.
+{"pt-BR": "Tradução para pt-BR"}

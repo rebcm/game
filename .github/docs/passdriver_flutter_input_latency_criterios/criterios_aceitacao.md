@@ -25,3 +25,4 @@ Os testes devem ser realizados utilizando o framework de testes do Flutter e dev
 ## Implementação
 
 A implementação deve ser feita de acordo com as melhores práticas do Flutter e deve ser revisada por um membro da equipe antes de ser mergeada.
+{"pt-BR": "Tradução para pt-BR"}

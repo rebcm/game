@@ -24,3 +24,4 @@ Este documento define a matriz de ambientes para teste de setup do projeto `rebc
 ## Manutenção
 
 Esta matriz deve ser revisada e atualizada sempre que houver uma mudança significativa nas dependências do projeto ou quando novas versões do Flutter SDK ou sistemas operacionais forem lançadas.
+{"pt-BR": "Tradução para pt-BR"}

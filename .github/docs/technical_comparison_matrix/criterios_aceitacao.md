@@ -28,3 +28,4 @@ A escolha da melhor abordagem depende das necessidades específicas do projeto. 
 
 Para validar esses critérios, serão realizados testes de desempenho e análise de código.
 
+{"pt-BR": "Tradução para pt-BR"}

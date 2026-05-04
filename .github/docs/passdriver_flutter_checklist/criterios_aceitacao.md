@@ -27,3 +27,4 @@ Este documento define o checklist operacional que deve ser seguido por todos os 
 ## Conclusão
 
 Ao seguir este checklist, garantimos que as tarefas sejam concluídas de acordo com os padrões de qualidade e as regras do projeto Construção Criativa da Rebeca.
+{"pt-BR": "Tradução para pt-BR"}

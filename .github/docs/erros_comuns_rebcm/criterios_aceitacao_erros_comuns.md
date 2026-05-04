@@ -38,3 +38,4 @@ Para adicionar um novo erro comum e sua solução, por favor, siga os passos aba
 
 Contribuições para este guia são bem-vindas. Para contribuir, por favor, siga as diretrizes de contribuição do projeto.
 
+{"pt-BR": "Tradução para pt-BR"}

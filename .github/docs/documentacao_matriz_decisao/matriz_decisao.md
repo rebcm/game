@@ -31,3 +31,4 @@ Os critérios de avaliação utilizados são:
 
 Com base na matriz de decisão, a opção mais adequada para o projeto Rebeca é o uso de Markdown para documentação. Isso se deve ao seu baixo custo, alta manutenção e boa UX, apesar de ter uma escalabilidade média.
 
+{"pt-BR": "Tradução para pt-BR"}

@@ -11,3 +11,4 @@ Este documento define os critérios de aceitação para o teste de permissões d
 ## Métricas de Sucesso
 - O teste de permissão passa sem falhas.
 - A permissão de áudio/mídia é concedida corretamente.
+{"pt-BR": "Tradução para pt-BR"}

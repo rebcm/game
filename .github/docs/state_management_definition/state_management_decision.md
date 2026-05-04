@@ -25,3 +25,4 @@ A biblioteca **Provider** já está sendo utilizada no projeto, conforme indicad
 
 Continuaremos a utilizar a biblioteca **Provider** para gerenciamento de estado no projeto `rebcm/game`. Isso garante consistência e evita a introdução de complexidade desnecessária.
 
+{"pt-BR": "Tradução para pt-BR"}

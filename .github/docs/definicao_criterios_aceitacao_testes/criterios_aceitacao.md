@@ -23,3 +23,4 @@ Para garantir que esses critérios sejam atendidos, as seguintes ações devem s
 
 A verificação dos critérios de aceitação será realizada através da análise dos relatórios de cobertura de código e dos resultados dos testes automatizados.
 
+{"pt-BR": "Tradução para pt-BR"}

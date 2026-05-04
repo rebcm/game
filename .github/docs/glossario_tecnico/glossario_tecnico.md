@@ -19,3 +19,4 @@ Application Programming Interface, conjunto de regras e protocolos para interaç
 ## Exemplos
 
 Para ilustrar os conceitos, consulte os exemplos na pasta `exemplos`.
+{"pt-BR": "Tradução para pt-BR"}

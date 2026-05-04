@@ -17,3 +17,4 @@ O checklist será validado com base nos seguintes critérios:
 
 ## Aprovação
 O checklist será considerado aprovado se atender a todos os critérios acima e for validado por pelo menos dois desenvolvedores experientes.
+{"pt-BR": "Tradução para pt-BR"}

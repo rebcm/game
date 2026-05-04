@@ -19,3 +19,4 @@ Este documento visa listar todas as chaves de API, tokens de autenticação e se
 1. Adicionar os segredos identificados na seção `[vars]` do `wrangler.toml`
 2. Utilizar a CLI do Wrangler para configurar os segredos: `wrangler secret put <nome_do_secredo>`
 
+{"pt-BR": "Tradução para pt-BR"}

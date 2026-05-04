@@ -51,3 +51,4 @@ Os diagramas de fluxo relevantes para o entendimento do funcionamento do jogo es
 ## Conclusão
 
 Este wiki técnico serve como um guia abrangente para entender a estrutura, o funcionamento e os critérios de aceitação do projeto Rebeca. Ele deve ser consultado por desenvolvedores e colaboradores para garantir a consistência e a qualidade do projeto.
+{"pt-BR": "Tradução para pt-BR"}

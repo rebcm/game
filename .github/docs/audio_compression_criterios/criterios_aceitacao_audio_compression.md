@@ -15,3 +15,4 @@ Este documento define os critérios de aceitação para a compressão de áudio 
 
 - Verificar se todos os arquivos de áudio no diretório `assets/audio` estão no formato AAC.
 - Verificar se o bitrate dos arquivos de áudio está configurado para 128k.
+{"pt-BR": "Tradução para pt-BR"}

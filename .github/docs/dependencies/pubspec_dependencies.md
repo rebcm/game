@@ -34,3 +34,4 @@ As seguintes dependências são utilizadas apenas durante o desenvolvimento:
 ## Conclusão
 
 Este documento lista as dependências do projeto `game`, categorizadas por funcionalidade. É importante manter as versões das dependências atualizadas e compatíveis com o projeto.
+{"pt-BR": "Tradução para pt-BR"}

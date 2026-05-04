@@ -27,3 +27,4 @@ Este guia fornece instruções para verificar as dependências necessárias para
 ## Solução de Problemas
 
 - Se encontrar problemas com as dependências, consulte a documentação oficial do Flutter para obter ajuda.
+{"pt-BR": "Tradução para pt-BR"}

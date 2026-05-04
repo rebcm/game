@@ -22,3 +22,4 @@ Por favor, preencha este formulário para nos fornecer feedback sobre o seu proc
 ## Comentários Adicionais
 
 Descreva qualquer outra dificuldade ou sugestão que você tenha:
+{"pt-BR": "Tradução para pt-BR"}

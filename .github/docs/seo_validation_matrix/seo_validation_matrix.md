@@ -47,3 +47,4 @@ A seguinte checklist deve ser usada para validar a documentação:
 
 "Desenvolva sua criatividade com o jogo voxel modo criativo da Rebeca. Construa mundos incríveis e explore suas possibilidades."
 
+{"pt-BR": "Tradução para pt-BR"}

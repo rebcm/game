@@ -32,3 +32,4 @@ Para implementar esses critérios e KPIs, será necessário:
 ## Conclusão
 
 Os critérios e KPIs definidos neste documento servirão como base para avaliar a eficácia das dicas no jogo e garantir uma boa experiência do usuário.
+{"pt-BR": "Tradução para pt-BR"}

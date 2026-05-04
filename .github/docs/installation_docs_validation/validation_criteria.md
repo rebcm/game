@@ -10,3 +10,4 @@
 
 1. Criar um script que compare as dependências do `pubspec.yaml` com a documentação de instalação.
 2. Integrar esse script na pipeline de CI/CD para execução automática.
+{"pt-BR": "Tradução para pt-BR"}

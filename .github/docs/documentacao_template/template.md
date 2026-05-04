@@ -27,3 +27,4 @@ Lista dos critérios de aceitação.
 ## Referências
 
 Lista de referências utilizadas.
+{"pt-BR": "Tradução para pt-BR"}

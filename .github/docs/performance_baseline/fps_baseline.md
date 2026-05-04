@@ -11,3 +11,4 @@ This document outlines the FPS baseline for the game.
 ## Benchmarking
 
 To run the FPS benchmark, execute the following command:
+{"pt-BR": "Tradução para pt-BR"}

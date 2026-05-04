@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para o projeto Rebeca.
 ## Verificação
 
 Os critérios de aceitação serão verificados através de testes de integração.
+{"pt-BR": "Tradução para pt-BR"}

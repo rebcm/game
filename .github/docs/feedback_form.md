@@ -15,3 +15,4 @@ The form is accessible through the application.
 ## Code
 
 The form is implemented in `lib/features/feedback_form/feedback_form.dart`.
+{"pt-BR": "Tradução para pt-BR"}

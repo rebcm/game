@@ -33,3 +33,4 @@ Este documento descreve o fluxo de atualização da documentação do projeto Re
 ## Conclusão
 
 Manter a documentação atualizada é crucial para o sucesso do projeto. Este fluxo deve ser seguido rigorosamente para garantir a consistência e a qualidade da documentação.
+{"pt-BR": "Tradução para pt-BR"}

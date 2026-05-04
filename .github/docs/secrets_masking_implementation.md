@@ -19,3 +19,4 @@ The sensitive values are loaded from the `.env` file.
 ## Implementation Details
 
 The script uses the `echo ::add-mask::` command to mask sensitive values.
+{"pt-BR": "Tradução para pt-BR"}

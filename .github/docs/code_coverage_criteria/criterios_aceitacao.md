@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para a cobertura de código n
 ## Implementação
 
 A cobertura de código será implementada utilizando a ferramenta `lcov` e o script `run_code_coverage_test.sh`.
+{"pt-BR": "Tradução para pt-BR"}

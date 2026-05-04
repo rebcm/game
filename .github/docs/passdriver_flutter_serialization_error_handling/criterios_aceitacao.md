@@ -34,3 +34,4 @@ Os critérios de aceitação para a implementação da estratégia de tratamento
 * O cliente Flutter se recupera de erros de serialização corretamente.
 * O usuário é notificado sobre a ocorrência de erros de serialização.
 
+{"pt-BR": "Tradução para pt-BR"}

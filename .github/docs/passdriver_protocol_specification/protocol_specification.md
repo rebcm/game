@@ -40,3 +40,4 @@ O frame binário é composto pelas seguintes seções:
 
 A implementação do protocolo deve seguir as especificações acima, garantindo que tanto o cliente quanto o servidor possam se comunicar de forma eficaz e segura.
 
+{"pt-BR": "Tradução para pt-BR"}

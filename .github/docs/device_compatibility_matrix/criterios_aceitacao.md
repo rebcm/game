@@ -27,3 +27,4 @@
 1. Executar o jogo em dispositivos com Android 5.0 e iOS 12.0.
 2. Verificar o layout do jogo em diferentes resoluções de tela (480x800, 1080x1920, 1440x2560).
 3. Verificar se os assets do jogo são carregados corretamente em diferentes resoluções de tela.
+{"pt-BR": "Tradução para pt-BR"}

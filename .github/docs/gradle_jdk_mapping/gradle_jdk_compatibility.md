@@ -15,3 +15,4 @@ Consulte a [documentação oficial do Gradle](https://docs.gradle.org/current/us
 ## Recomendação
 
 Para utilizar o JDK 17 no projeto, é recomendado utilizar o Gradle 7.3 ou superior.
+{"pt-BR": "Tradução para pt-BR"}

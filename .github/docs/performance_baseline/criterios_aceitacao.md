@@ -41,3 +41,4 @@ Os critérios de aceitação serão considerados atendidos se:
 ## Revisão e Atualização
 
 Este documento será revisado e atualizado sempre que necessário, especialmente em caso de mudanças significativas no código ou nos requisitos do jogo.
+{"pt-BR": "Tradução para pt-BR"}

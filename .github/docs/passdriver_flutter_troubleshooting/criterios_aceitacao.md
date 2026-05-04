@@ -30,3 +30,4 @@ O documento deve ser escrito em Markdown e seguir o padrão de documentação ex
 - As instruções devem ser fáceis de seguir.
 - O documento deve ser validado por pelo menos um membro da equipe além do autor.
 
+{"pt-BR": "Tradução para pt-BR"}

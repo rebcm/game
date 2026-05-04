@@ -23,3 +23,4 @@ Este documento visa criar uma matriz comparativa entre o design planejado, a doc
 
 A matriz comparativa demonstra que o jogo está em conformidade com o design e a documentação existente. Não foram identificados controles esquecidos ou implementados incorretamente.
 
+{"pt-BR": "Tradução para pt-BR"}

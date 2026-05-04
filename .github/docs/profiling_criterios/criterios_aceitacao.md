@@ -15,3 +15,4 @@ Este documento define os critérios de aceitação para a tarefa de profiling de
 ## Aceitação
 
 A tarefa será considerada aceita quando todos os critérios acima forem atendidos.
+{"pt-BR": "Tradução para pt-BR"}

@@ -22,3 +22,4 @@ Caso os critérios de aceitação não sejam atendidos, as seguintes ações cor
 ## Responsabilidades
 
 A equipe de desenvolvimento é responsável por garantir que os critérios de aceitação sejam atendidos.
+{"pt-BR": "Tradução para pt-BR"}

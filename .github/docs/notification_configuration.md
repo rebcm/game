@@ -24,3 +24,4 @@ To configure notifications for CI build failures, follow these steps:
 Example `.env` configuration:
 NOTIFICATION_CHANNEL=Slack
 SLACK_WEBHOOK_URL=https://example.com/slack-webhook
+{"pt-BR": "Tradução para pt-BR"}

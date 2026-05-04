@@ -41,3 +41,4 @@ Os resultados esperados incluem:
 * Ajuste de volume funcionando corretamente.
 * Persistência do volume entre as sessões do jogo.
 
+{"pt-BR": "Tradução para pt-BR"}

@@ -14,3 +14,4 @@ Este documento descreve o processo de rotação dos secrets do Cloudflare utiliz
 
 - Certifique-se de que os novos valores sejam válidos e tenham as permissões necessárias.
 - Após a rotação, verifique se o workflow de CI/CD continua funcionando corretamente.
+{"pt-BR": "Tradução para pt-BR"}

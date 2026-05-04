@@ -22,3 +22,4 @@ Os seguintes testes devem ser implementados para validar os critérios de aceita
 ## Conclusão
 
 Os critérios de aceitação definidos neste documento devem ser utilizados como referência para o desenvolvimento e teste do schema. A implementação correta desses critérios garantirá a qualidade e integridade dos dados armazenados.
+{"pt-BR": "Tradução para pt-BR"}

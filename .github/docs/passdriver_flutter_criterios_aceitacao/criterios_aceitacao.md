@@ -25,3 +25,4 @@ Este documento define os critérios de aceitação para a implementação do Pas
 ## Conclusão
 
 A implementação do Passdriver Flutter será considerada concluída quando todos os critérios de aceitação definidos neste documento forem atendidos. A equipe de desenvolvimento deve trabalhar em estreita colaboração para garantir que a solução seja entregue dentro dos padrões de qualidade estabelecidos.
+{"pt-BR": "Tradução para pt-BR"}

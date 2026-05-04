@@ -25,3 +25,4 @@ Este guia visa validar a configuração do token da API Cloudflare para o projet
 ## Referências
 
 - [Documentação da Cloudflare](https://developers.cloudflare.com/api/)
+{"pt-BR": "Tradução para pt-BR"}

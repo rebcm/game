@@ -28,3 +28,4 @@ A implementação deve ser feita de forma a não interceptar as teclas globais l
 
 Os testes devem ser implementados para garantir que as teclas globais não são interceptadas. Isso pode ser feito utilizando testes de integração que simulam a pressão das teclas globais e verificam se as funcionalidades nativas do navegador são executadas corretamente.
 
+{"pt-BR": "Tradução para pt-BR"}

@@ -25,3 +25,4 @@ Este guia fornece instruções passo a passo para configurar o ambiente de desen
 - Erros de dependência: Verifique a versão do Flutter e execute `flutter pub get` novamente
 - Problemas de configuração: Verifique o arquivo `.env` e as variáveis de ambiente
 
+{"pt-BR": "Tradução para pt-BR"}

@@ -37,3 +37,4 @@ Para implementar esses KPIs, o aplicativo deve ser otimizado para atender às es
 ## Testes
 
 Testes de performance devem ser realizados regularmente em dispositivos representativos de cada categoria para garantir que os KPIs sejam atendidos. Os resultados desses testes devem ser documentados e utilizados para guiar futuras otimizações.
+{"pt-BR": "Tradução para pt-BR"}

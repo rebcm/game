@@ -23,3 +23,4 @@ Este documento define os critérios de aceitação para os testes de carga no pr
 * O jogo não deve travar ou apresentar erros graves durante os testes.
 * O frame rate deve permanecer acima de 30 FPS em todas as configurações testadas.
 * A memória utilizada pelo jogo não deve exceder o limite estabelecido.
+{"pt-BR": "Tradução para pt-BR"}

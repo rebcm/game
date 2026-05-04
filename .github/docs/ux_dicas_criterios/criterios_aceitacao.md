@@ -30,3 +30,4 @@ Este documento define os critérios de aceitação para a UX de dicas no jogo Re
 * Flutter Driver
 * Integration Test
 
+{"pt-BR": "Tradução para pt-BR"}

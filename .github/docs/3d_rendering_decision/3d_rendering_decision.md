@@ -11,3 +11,4 @@ garantindo que os pixels da skin sejam renderizados de forma nítida.
 ### Testes
 
 Foi adicionado um teste de integração para verificar a renderização 3D.
+{"pt-BR": "Tradução para pt-BR"}

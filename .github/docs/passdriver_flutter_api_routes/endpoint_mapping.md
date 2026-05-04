@@ -27,3 +27,4 @@ The API routes are defined in the `route_matrix_definition.md` file.
 - All sensitive data is transmitted over HTTPS.
 - Authentication tokens are stored securely on the client side.
 
+{"pt-BR": "Tradução para pt-BR"}

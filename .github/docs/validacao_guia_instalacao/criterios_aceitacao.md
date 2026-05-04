@@ -16,3 +16,4 @@
 
 - O aplicativo é executado sem erros.
 - O teste de onboarding valida a instalação corretamente.
+{"pt-BR": "Tradução para pt-BR"}

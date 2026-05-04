@@ -18,3 +18,4 @@ A validação da documentação será realizada através de revisões periódica
 ## Conclusão
 
 A documentação de qualidade é fundamental para o sucesso do projeto Rebeca. Estes critérios de aceitação garantem que a documentação seja clara, consistente e útil para os usuários e desenvolvedores.
+{"pt-BR": "Tradução para pt-BR"}

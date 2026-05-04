@@ -26,3 +26,4 @@ A análise será considerada aceita se:
 
 - Um relatório detalhado sobre a compatibilidade da engine de física escolhida.
 - Código de exemplo ou implementação demonstrando a integração da engine de física no projeto.
+{"pt-BR": "Tradução para pt-BR"}

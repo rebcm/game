@@ -4,3 +4,4 @@
 2. O ambiente deve ser provisionado sem Flutter, Dart, Android SDK ou Xcode pré-instalados.
 3. O teste deve verificar a instalação correta das dependências necessárias.
 4. O teste deve validar a execução do aplicativo em ambiente limpo.
+{"pt-BR": "Tradução para pt-BR"}

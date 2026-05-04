@@ -24,3 +24,4 @@ A implementação do Provider seguirá as melhores práticas estabelecidas pela 
 
 A utilização do Provider como gerenciador de estado contribuirá para a manutenção da simplicidade e estabilidade do projeto Rebeca.
 
+{"pt-BR": "Tradução para pt-BR"}

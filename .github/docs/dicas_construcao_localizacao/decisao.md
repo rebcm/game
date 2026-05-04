@@ -29,3 +29,4 @@ As dicas de construção serão implementadas via arquivos Markdown no repositó
 
 - Criar os arquivos Markdown com as dicas de construção.
 - Implementar a funcionalidade no jogo para ler e exibir as dicas.
+{"pt-BR": "Tradução para pt-BR"}

@@ -34,3 +34,4 @@ Este checklist visa auxiliar desenvolvedores externos a identificar possíveis d
 ## Feedback
 
 - [ ] Preencher formulário de feedback com informações sobre o processo de onboarding
+{"pt-BR": "Tradução para pt-BR"}

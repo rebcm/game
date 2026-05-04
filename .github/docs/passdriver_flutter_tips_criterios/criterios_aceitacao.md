@@ -36,3 +36,4 @@ O fluxo de aprovação do conteúdo das dicas deve incluir:
 
 A implementação das dicas obrigatórias deve ser feita de acordo com as melhores práticas de codificação do projeto e deve ser revisada por outro membro da equipe antes de ser mesclada na branch principal.
 
+{"pt-BR": "Tradução para pt-BR"}

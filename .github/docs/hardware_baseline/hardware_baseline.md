@@ -27,3 +27,4 @@ For iOS, adjust the target platform accordingly.
 ## Script to List Devices
 Use the `list_devices.sh` script to list connected devices.
 
+{"pt-BR": "Tradução para pt-BR"}

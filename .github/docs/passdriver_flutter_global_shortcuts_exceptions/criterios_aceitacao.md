@@ -31,3 +31,4 @@ Para garantir que essas teclas não sejam interceptadas, devem ser realizados te
 *   Todas as teclas listadas acima devem ser ignoradas pelo jogo.
 *   As funcionalidades nativas do navegador devem funcionar corretamente quando essas teclas forem pressionadas.
 
+{"pt-BR": "Tradução para pt-BR"}

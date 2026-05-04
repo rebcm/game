@@ -20,3 +20,4 @@ The following secrets are required for Android signing configuration:
 * KEYSTORE_PASSWORD
 * KEY_ALIAS
 * KEY_PASSWORD
+{"pt-BR": "Tradução para pt-BR"}

@@ -25,3 +25,4 @@ Para implementar essas permissões, siga os passos abaixo:
 ## Conclusão
 
 A implementação da matriz de permissões mínimas para o pipeline Cloudflare Pages é crucial para manter a segurança do projeto. Esta documentação serve como referência para futuras manutenções e auditorias.
+{"pt-BR": "Tradução para pt-BR"}

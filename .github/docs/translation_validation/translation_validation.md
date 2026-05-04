@@ -14,3 +14,4 @@ Garantir que todas as traduções para PT-BR estejam corretas e consistentes em 
 ## Script de Validação
 
 O script de validação de tradução está localizado em `scripts/validate_translation.sh`.
+{"pt-BR": "Tradução para pt-BR"}

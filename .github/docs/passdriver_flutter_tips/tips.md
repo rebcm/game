@@ -20,3 +20,4 @@ Este documento lista as dicas e instruções necessárias para a construção do
 2. **Testes Automatizados**: Utilize testes automatizados para validar a funcionalidade do código.
 3. **Monitoramento de Desempenho**: Monitore o desempenho da aplicação regularmente.
 
+{"pt-BR": "Tradução para pt-BR"}

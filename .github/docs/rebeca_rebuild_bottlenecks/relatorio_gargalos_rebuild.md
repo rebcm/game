@@ -34,3 +34,4 @@ A análise revelou que os widgets X e Z são os principais contribuintes para os
 
 - Implementar as otimizações sugeridas.
 - Realizar testes de desempenho para validar as melhorias.
+{"pt-BR": "Tradução para pt-BR"}

@@ -24,3 +24,4 @@ Este documento define os critérios de aceitação para a tarefa de verificar a 
 ## Conclusão
 
 A verificação da compatibilidade da versão do Flutter com o Java 17 é crucial para evitar erros de compilação. Esta tarefa garante que o projeto permaneça estável e funcional.
+{"pt-BR": "Tradução para pt-BR"}

@@ -13,3 +13,4 @@ This document outlines the data requirements for the Passdriver feature.
 
 The R2 mock is implemented in `test/mocks/r2_mock/r2_mock.dart`.
 The R2 service is implemented in `lib/services/r2_service/r2_service.dart`.
+{"pt-BR": "Tradução para pt-BR"}

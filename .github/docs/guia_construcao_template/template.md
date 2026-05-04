@@ -57,3 +57,4 @@ void criarEstrutura() {
 - [ ] Use o grid para alinhar
 - [ ] Adicione detalhes finais
 
+{"pt-BR": "Tradução para pt-BR"}

@@ -33,3 +33,4 @@ Este guia visa ajudar a resolver problemas comuns que ocorrem durante a execuç�
 - Limpe regularmente o cache de dependências no ambiente de CI.
 - Verifique a compatibilidade das versões das dependências com a versão do SDK do Flutter.
 
+{"pt-BR": "Tradução para pt-BR"}

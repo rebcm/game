@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para a implementação da mat
 ## Conclusão
 
 A implementação da matriz de rastreabilidade de integração deve seguir os critérios definidos neste documento.
+{"pt-BR": "Tradução para pt-BR"}

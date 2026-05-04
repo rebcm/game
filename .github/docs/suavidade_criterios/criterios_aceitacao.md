@@ -28,3 +28,4 @@ Este documento define os critérios de aceitação para a suavidade no jogo Rebe
 ## Conclusão
 
 Os critérios de aceitação definidos neste documento devem ser utilizados para garantir que o jogo Rebeca ofereça uma experiência suave e agradável aos jogadores.
+{"pt-BR": "Tradução para pt-BR"}

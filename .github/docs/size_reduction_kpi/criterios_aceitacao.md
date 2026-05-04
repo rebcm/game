@@ -23,3 +23,4 @@ A meta estabelecida para a redução do tamanho do binário é de 15% em relaç�
 ## Aprovação
 
 A tarefa será considerada aprovada quando todos os critérios de aceitação forem atendidos.
+{"pt-BR": "Tradução para pt-BR"}

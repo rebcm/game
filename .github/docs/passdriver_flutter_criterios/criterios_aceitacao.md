@@ -22,3 +22,4 @@ Este documento define os critérios de aceitação para o uso do Passdriver no F
 
 Testes devem ser implementados para validar os critérios acima.
 
+{"pt-BR": "Tradução para pt-BR"}

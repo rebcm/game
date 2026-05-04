@@ -16,3 +16,4 @@ Este documento apresenta a matriz de rastreabilidade entre os itens de documenta
 ## Conclusão
 
 A matriz de rastreabilidade apresentada acima demonstra a relação entre os itens de documentação e os passos do pipeline CI/CD, garantindo que todos os critérios de aceitação sejam atendidos.
+{"pt-BR": "Tradução para pt-BR"}

@@ -27,3 +27,4 @@ A matriz de testes deve incluir as seguintes configurações:
 
 A implementação da matriz de testes deve ser feita utilizando o framework de testes de integração do Flutter.
 
+{"pt-BR": "Tradução para pt-BR"}

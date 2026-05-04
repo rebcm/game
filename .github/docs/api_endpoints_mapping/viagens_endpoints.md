@@ -35,3 +35,4 @@ Este documento visa listar os endpoints relacionados à criação, listagem e at
 ## Conclusão
 
 Este documento fornece uma visão geral dos endpoints necessários para a gestão de viagens, facilitando a integração com a API.
+{"pt-BR": "Tradução para pt-BR"}

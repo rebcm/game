@@ -20,3 +20,4 @@ Para garantir que novos desenvolvedores possam configurar seu ambiente corretame
 - **Passos para Resolução**: Etapas necessárias para resolver o erro.
 - **Status**: Indicação se o erro foi resolvido ou não.
 
+{"pt-BR": "Tradução para pt-BR"}

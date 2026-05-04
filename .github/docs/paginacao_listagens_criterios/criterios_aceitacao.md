@@ -22,3 +22,4 @@ Este documento define os critérios de aceitação para a implementação da pag
 
 1. Testes unitários para a lógica de paginação no aplicativo Flutter.
 2. Testes de integração para os endpoints de listagem com paginação.
+{"pt-BR": "Tradução para pt-BR"}

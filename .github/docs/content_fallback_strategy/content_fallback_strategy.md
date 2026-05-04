@@ -27,3 +27,4 @@ Serão implementados testes para garantir que a estratégia de fallback esteja f
 ## Conclusão
 
 A implementação da estratégia de fallback de conteúdo garantirá uma melhor experiência para o usuário, evitando que ele veja telas vazias em caso de falha na carga de conteúdo.
+{"pt-BR": "Tradução para pt-BR"}

@@ -23,3 +23,4 @@ O checklist de documentação deve ser seguido rigorosamente. Ele está disponí
 ## Conclusão
 
 O fluxo de revisão de documentação é crucial para garantir a qualidade e a consistência da documentação do projeto Rebeca. Todos os contribuidores devem seguir este processo rigorosamente.
+{"pt-BR": "Tradução para pt-BR"}

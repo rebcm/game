@@ -20,3 +20,4 @@ Este documento define os critérios de aceitação para os testes de movimentaç
 ## Métricas de Sucesso
 - Todos os testes devem passar sem falhas.
 - O jogador deve se comportar conforme esperado em todos os cenários de teste.
+{"pt-BR": "Tradução para pt-BR"}

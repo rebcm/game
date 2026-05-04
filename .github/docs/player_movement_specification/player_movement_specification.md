@@ -26,3 +26,4 @@ A classe `PlayerMovement` é responsável por lidar com os inputs e atualizar o 
 ### Testes
 
 Testes unitários foram implementados para garantir a corretude da implementação.
+{"pt-BR": "Tradução para pt-BR"}

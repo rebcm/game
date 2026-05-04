@@ -29,3 +29,4 @@ Descrição dos testes realizados no módulo.
 ## Histórico de Alterações
 
 Lista de alterações realizadas no módulo.
+{"pt-BR": "Tradução para pt-BR"}

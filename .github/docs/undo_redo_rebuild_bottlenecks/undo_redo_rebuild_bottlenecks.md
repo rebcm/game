@@ -32,3 +32,4 @@ A análise revelou que os widgets X e Z são os principais contribuintes para os
 ## Anexos
 
 - [Código de teste de performance para Undo/Redo](test/performance_tests/undo_redo_performance_test.dart)
+{"pt-BR": "Tradução para pt-BR"}

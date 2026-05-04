@@ -22,3 +22,4 @@ API errors are handled according to the guidelines in `api_error_handling.md`.
 
 Refer to `examples/autenticacao.dart` for authentication implementation details.
 
+{"pt-BR": "Tradução para pt-BR"}

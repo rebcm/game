@@ -35,3 +35,4 @@ A implementação da fórmula deve ser feita de forma a garantir que os valores 
 
 Devem ser realizados testes para garantir que a fórmula seja aplicada corretamente em diferentes cenários, incluindo variações nos valores de `VolumeGlobal` e `VolumeMusicaLocal`.
 
+{"pt-BR": "Tradução para pt-BR"}

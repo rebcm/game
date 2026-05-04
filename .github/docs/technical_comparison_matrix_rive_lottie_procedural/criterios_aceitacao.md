@@ -35,3 +35,4 @@ Este documento visa comparar tecnicamente as bibliotecas Rive, Lottie e a aborda
 ## Considerações Finais
 
 A escolha da tecnologia de animação deve ser baseada nos resultados desta comparação, visando manter o jogo simples, estável e divertido.
+{"pt-BR": "Tradução para pt-BR"}

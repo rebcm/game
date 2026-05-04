@@ -14,3 +14,4 @@ Este documento define os critérios de aceitação para a validação de inputs 
 Os testes devem ser implementados utilizando o framework de testes do Flutter.
 
 ## Exemplo de Teste
+{"pt-BR": "Tradução para pt-BR"}

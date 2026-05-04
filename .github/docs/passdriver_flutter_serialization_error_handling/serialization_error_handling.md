@@ -22,3 +22,4 @@ A implementação deve seguir as seguintes diretrizes:
 
 Testes de integração devem ser escritos para validar a estratégia de tratamento de erros de serialização. Isso inclui simular chunks corrompidos e fora de ordem, e verificar se o cliente reage corretamente.
 
+{"pt-BR": "Tradução para pt-BR"}

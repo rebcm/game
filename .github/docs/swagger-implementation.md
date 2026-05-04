@@ -13,3 +13,4 @@ This document outlines the steps to implement Swagger in the backend repository.
 
 * The `validate_swagger.sh` script is available in the `.github/scripts/ci_validation/swagger_validation` directory.
 * The Swagger YAML file is expected to be at the path `../backend/swagger.yaml` relative to the game repository.
+{"pt-BR": "Tradução para pt-BR"}

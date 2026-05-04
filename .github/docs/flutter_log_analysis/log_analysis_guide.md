@@ -23,3 +23,4 @@ Este guia fornece instruções sobre como coletar, analisar e solucionar problem
 
 1. Mantenha os logs organizados e facilmente acessíveis.
 2. Utilize ferramentas de análise de logs para melhorar a eficiência da solução de problemas.
+{"pt-BR": "Tradução para pt-BR"}

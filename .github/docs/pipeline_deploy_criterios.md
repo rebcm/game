@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para o deploy do jogo "Constr
 ## Verificação
 
 Os critérios de sucesso serão verificados automaticamente pela pipeline CI/CD.
+{"pt-BR": "Tradução para pt-BR"}

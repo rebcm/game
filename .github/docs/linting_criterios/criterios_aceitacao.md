@@ -21,3 +21,4 @@ A verificação da configuração de linting será feita executando o comando `d
 ## Manutenção
 
 A configuração de linting deve ser mantida atualizada e revisada periodicamente para garantir que continue a atender às necessidades do projeto.
+{"pt-BR": "Tradução para pt-BR"}

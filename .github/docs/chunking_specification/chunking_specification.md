@@ -10,3 +10,4 @@ A margem de pré-carregamento ao redor do jogador é de 2 chunks.
 A implementação do chunking seguirá as seguintes diretrizes:
 - Os chunks serão carregados e descarregados dinamicamente com base na posição do jogador.
 - A margem de pré-carregamento será utilizada para carregar chunks adjacentes ao chunk atual do jogador.
+{"pt-BR": "Tradução para pt-BR"}

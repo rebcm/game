@@ -26,3 +26,4 @@ Este documento define os critérios de aceitação para os edge cases de física
 
 Testes devem ser implementados para garantir que os critérios acima sejam atendidos. Isso inclui testes de unidade, integração e stress tests para simular condições extremas.
 
+{"pt-BR": "Tradução para pt-BR"}

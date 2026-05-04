@@ -31,3 +31,4 @@ Este documento define os requisitos mínimos para a documentação de áudio do 
 ## Conclusão
 
 A documentação de áudio é crucial para o desenvolvimento e manutenção do jogo Rebeca. Este checklist serve como um guia para garantir que a documentação seja completa e útil para a equipe.
+{"pt-BR": "Tradução para pt-BR"}

@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para os testes de contrato im
 ## Conclusão
 
 Os testes de contrato são fundamentais para garantir a integridade da documentação e a implementação dos endpoints.
+{"pt-BR": "Tradução para pt-BR"}

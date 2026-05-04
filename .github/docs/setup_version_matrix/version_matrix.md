@@ -13,3 +13,4 @@ Documentar as versões exatas do Flutter, Dart e Java utilizadas no projeto para
 ## Manutenção
 
 Este documento deve ser atualizado sempre que houver uma mudança nas versões das ferramentas utilizadas no projeto.
+{"pt-BR": "Tradução para pt-BR"}

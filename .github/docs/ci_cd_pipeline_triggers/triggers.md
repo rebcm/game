@@ -10,3 +10,4 @@ The following environment variables are used in the pipeline:
 * `CLOUDFLARE_ACCOUNT_ID`
 
 These variables should be set as secrets in the GitHub repository settings.
+{"pt-BR": "Tradução para pt-BR"}

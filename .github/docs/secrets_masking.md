@@ -12,3 +12,4 @@ loads secrets from the `.env` file and masks them.
 
 This script should be executed at the beginning of the CI workflow to ensure 
 that all sensitive values are properly masked.
+{"pt-BR": "Tradução para pt-BR"}

@@ -17,3 +17,4 @@ O script `validate_cloudflare_token.sh` localizado em `.github/scripts/validate_
 ### Uso
 
 O script deve ser executado em um ambiente onde as variáveis de ambiente `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ZONE_ID` estejam configuradas.
+{"pt-BR": "Tradução para pt-BR"}

@@ -23,3 +23,4 @@ Este documento define os critérios de aceitação para o profiling de memória 
 ## Considerações Finais
 
 Os critérios definidos neste documento devem ser utilizados como referência para garantir a qualidade e performance do jogo Construção Criativa da Rebeca. Qualquer alteração nos critérios deve ser documentada e aprovada pela equipe de desenvolvimento.
+{"pt-BR": "Tradução para pt-BR"}

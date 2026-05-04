@@ -30,3 +30,4 @@ Este documento apresenta a matriz de dicas obrigatórias para o aplicativo PassD
 ## Conclusão
 
 A matriz de dicas obrigatórias apresentada neste documento visa auxiliar os usuários do PassDriver Flutter a utilizar o aplicativo de forma eficaz e segura.
+{"pt-BR": "Tradução para pt-BR"}

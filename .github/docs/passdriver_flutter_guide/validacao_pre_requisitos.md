@@ -27,3 +27,4 @@ Este guia visa documentar os pré-requisitos necessários para executar o projet
 ## Conclusão
 
 Seguindo os passos acima, você deve ser capaz de validar os pré-requisitos necessários para executar o projeto Flutter em diferentes plataformas.
+{"pt-BR": "Tradução para pt-BR"}

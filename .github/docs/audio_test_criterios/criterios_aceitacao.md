@@ -19,3 +19,4 @@ Este documento define os critérios de aceitação para os testes de áudio no a
 2. Reprodução de áudio no iOS
 3. Parada de áudio em perda de conexão
 4. Áudio silencioso em modo silencioso
+{"pt-BR": "Tradução para pt-BR"}

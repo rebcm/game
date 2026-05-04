@@ -29,3 +29,4 @@ A matriz de testes de carga define os valores exatos para densidade de blocos e 
 ## Conclusão
 
 Os critérios de aceitação definidos neste documento garantem que o jogo Construção Criativa da Rebeca seja estável e performático sob diferentes condições de carga. A matriz de testes de carga fornece uma base sólida para a realização de testes rigorosos e para a identificação de áreas que necessitam de otimização.
+{"pt-BR": "Tradução para pt-BR"}

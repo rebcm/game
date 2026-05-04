@@ -13,3 +13,4 @@ Este documento define os critérios de aceitação para a validação de secrets
 ## Validação
 
 O script `validate_secrets.sh` deve ser executado durante o pipeline de CI para validar as chaves de assinatura.
+{"pt-BR": "Tradução para pt-BR"}
