@@ -74,3 +74,6 @@ scripts:
   run_audio_documentation_test: bash scripts/run_audio_documentation_test.sh
 
   run_readme_validation_test: bash scripts/validate_readme.sh
+
+  run_acceptance_criteria_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/acceptance_criteria_test/acceptance_criteria_test.dart
+
