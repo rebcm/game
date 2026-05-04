@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "As palavras-chave obrigatórias estão incluídas na documentação?",
+      "type": "boolean"
+    },
+    {
+      "id": 2,
+      "text": "Os limites de caracteres por campo estão respeitados?",
+      "type": "boolean"
+    },
+    {
+      "id": 3,
+      "text": "O tom de voz é amigável, informativo e coerente?",
+      "type": "boolean"
+    }
+  ]
+}

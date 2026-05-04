@@ -56,6 +56,7 @@ flutter:
     - assets/
     - assets/audio/
     - .github/docs/passdriver_flutter_tips_criterios/tips.json
+    - .github/docs/seo_validation_matrix/feedback_form.json
   integration_test_config:
     stress_test_config:
     path: ./integration_test/config/integration_test_config.yaml
@@ -79,10 +80,4 @@ flutter:
   cleaning_policy_test:
     path: ./integration_test/cleaning_policy_test
   deploy_validation_test:
-    path: ./integration_test/deploy_validation_test
-  performance_tracking:
-    path: ./benchmarks/performance_tracking
-  performance_tracking_test:
-    path: ./benchmarks/performance_tracking
-  physics_engine_tests:
-    path: ./integration_test/physics_engine_tests
+    path: ./integration
