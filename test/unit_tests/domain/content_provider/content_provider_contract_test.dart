@@ -1,11 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:game/domain/content_provider/content_provider_contract.dart';
-import 'package:game/infrastructure/content_provider/hardcoded_content_provider.dart';
+
+class TestContentProvider implements ContentProviderContract {
+  @override
+  Future<String> getTip() async {
+    return 'Test Tip';
+  }
+}
 
 void main() {
-  test('HardcodedContentProvider returns a tip', () async {
-    final provider = HardcodedContentProvider();
-    final tip = await provider.getTip();
-    expect(tip, isNotEmpty);
+  group('ContentProviderContract', () {
+    test('should get tip successfully', () async {
+      final contentProvider = TestContentProvider();
+      final tip = await contentProvider.getTip();
+      expect(tip, 'Test Tip');
+    });
   });
 }

@@ -1,8 +1,8 @@
-import 'package:game/domain/content_provider/content_provider.dart';
+import 'package:game/domain/content_provider/content_provider_contract.dart';
 
-class HardcodedContentProvider implements ContentProvider {
+class HardcodedContentProvider implements ContentProviderContract {
   @override
   Future<String> getTip() async {
-    return 'Hardcoded tip';
+    return 'Hardcoded Tip';
   }
 }
