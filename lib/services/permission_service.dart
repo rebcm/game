@@ -1,9 +1,12 @@
-import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class PermissionService {
-  Future<void> requestNotificationPermission() async {
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
+  final http.Client _client;
+
+  PermissionService(this._client);
+
+  Future<http.Response> makeRequest() async {
+    final response = await _client.get(Uri.parse('https://example.com/api/test'));
+    return response;
   }
 }
