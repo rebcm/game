@@ -1,15 +1,10 @@
-# Environment Variables Validation
+## Environment Variables Validation
 
-The application now validates the presence of required environment variables at startup.
+The following environment variables are required for the Cloudflare R2 integration:
 
-## Required Variables
+- CLOUDFLARE_ACCOUNT_ID
+- CLOUDFLARE_ACCESS_KEY_ID
+- CLOUDFLARE_SECRET_ACCESS_KEY
+- CLOUDFLARE_BUCKET
 
-The following variables are checked:
-
-* KEY1
-* KEY2
-<!-- Add other required keys here as per .env.example -->
-
-## Error Handling
-
-If any required variable is missing, the application will log an error and exit.
+These variables should be set in the environment where the tests are run.
