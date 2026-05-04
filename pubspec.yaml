@@ -38,7 +38,6 @@ flutter_i18n:
 scripts:
   run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
 
-  run_global_shortcuts_test: flutter drive --driver=test/integration_tests/global_shortcuts_test/global_shortcuts_driver.dart --target=test/integration_tests/global_shortcuts_test/global_shortcuts_test.dart
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart 
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
@@ -50,3 +49,4 @@ scripts:
 
   run_pseudo_localization_test: flutter drive --driver=test/integration_tests/pseudo_localiza
   run_passdriver_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/passdriver_integration_test/passdriver_integration_test.dart
+  run_global_shortcuts_test: flutter drive --driver=test/integration_tests/global_shortcuts_test/global_shortcuts_driver.dart --target=test/integration_tests/global_shortcuts_test/global_shortcuts_test.dart
