@@ -79,3 +79,6 @@ flutter:
     path: ./test/offset_consistency_test
   offset_consistency_test:
   permission_validation_te
+
+  code_coverage:
+    path: ./test/code_coverage_test.dart
