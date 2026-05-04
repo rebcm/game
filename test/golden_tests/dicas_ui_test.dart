@@ -7,13 +7,15 @@ void main() {
     testGoldens('Dicas UI snapshot test', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: DicasUI(),
+          home: Scaffold(
+            body: DicasUI(),
+          ),
         ),
       );
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile('golden/dicas_ui.png'),
+        matchesGoldenFile('goldens/dicas_ui.png'),
       );
     });
 
@@ -23,13 +25,15 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: DicasUI(),
+          home: Scaffold(
+            body: DicasUI(),
+          ),
         ),
       );
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile('golden/dicas_ui_800x600.png'),
+        matchesGoldenFile('goldens/dicas_ui_800x600.png'),
       );
     });
   });
