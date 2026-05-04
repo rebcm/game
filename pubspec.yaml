@@ -79,3 +79,5 @@ scripts:
   run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
 
   run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
+
+  run_backend_contract_test: flutter test test/contract_tests/backend_contract_test.dart
