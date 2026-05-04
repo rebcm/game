@@ -107,3 +107,10 @@ scripts:
     path: test/technical_comparison_tests/technical_comparison_test.dart
 scripts:
   run_technical_comparison_tests: bash scripts/run_technical_comparison_tests.sh
+
+  traceability_test:
+    path: test/integration_tests/traceability_matrix/traceability_test.dart
+  traceability_test_driver:
+    path: test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart
+  run_traceability_tests: flutter drive --driver=test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart --target=test/integration_tests/traceability_matrix/traceability_test.dart
+  run_traceability_tests: bash scripts/run_traceability_tests.sh
