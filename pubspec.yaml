@@ -129,3 +129,6 @@ scripts:
 
 scripts:
   run_stress_test_retencao: bash scripts/run_stress_test_retencao_closures_streams
+
+  run_setup_validation_test: bash scripts/run_setup_validation_test
+  run_setup_validation_test: bash scripts/run_setup_validation_test

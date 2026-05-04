@@ -12,7 +12,7 @@ void main() {
     driver?.close();
   });
 
-  test('setup validation test', () async {
-    // Implement test logic here
+  test('setup validation test driver', () async {
+    await driver?.waitUntilNoTransientCallbacks();
   });
 }
