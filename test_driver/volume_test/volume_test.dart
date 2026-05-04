@@ -1,39 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:game/main.dart' as app;
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Volume Tests', () {
-    testWidgets('Test volume at minimum value (0.0)', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implement logic to set volume to 0.0 and verify UI doesn't break
-      // await tester.tap(find.byTooltip('Volume Slider'));
-      // await tester.enterText(find.byType(Slider), '0.0');
-      // await tester.pumpAndSettle();
-      // expect(find.text('Volume: 0.0'), findsOneWidget);
-    });
+  testWidgets('Test volume control within the game', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
 
-    testWidgets('Test volume at maximum value (1.0)', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implement logic to set volume to 1.0 and verify UI doesn't break
-      // await tester.tap(find.byTooltip('Volume Slider'));
-      // await tester.enterText(find.byType(Slider), '1.0');
-      // await tester.pumpAndSettle();
-      // expect(find.text('Volume: 1.0'), findsOneWidget);
-    });
+    // Test volume up
+    final audioPlayer = AudioPlayer();
+    await audioPlayer.setVolume(1.0);
+    await tester.pumpAndSettle();
+    // Add verification logic here
 
-    testWidgets('Test volume with null or invalid value', (tester) async {
-      app.main();
-      await tester.pumpAndSettle();
-      // Implement logic to set volume to null or invalid and verify UI handles it gracefully
-      // await tester.tap(find.byTooltip('Volume Slider'));
-      // await tester.enterText(find.byType(Slider), 'invalid');
-      // await tester.pumpAndSettle();
-      // expect(find.text('Error or default volume'), findsOneWidget);
-    });
+    // Test volume down
+    await audioPlayer.setVolume(0.0);
+    await tester.pumpAndSettle();
+    // Add verification logic here
+
+    // Test mute
+    await audioPlayer.setVolume(0.0);
+    await tester.pumpAndSettle();
+    // Add verification logic here
   });
 }

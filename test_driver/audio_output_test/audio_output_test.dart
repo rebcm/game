@@ -6,30 +6,43 @@ import 'package:audioplayers/audioplayers.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Test audio output switch between speaker and headphones', (tester) async {
+  testWidgets('Test audio output switching between speaker and headphones', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Simulate headphones connection and verify audio output
-    // Assume there's a method to simulate headphones connection
-    // await simulateHeadphonesConnection();
-    // Verify audio is playing through headphones
+    // Simulate headphones being plugged in
+    await tester.binding.setSemanticsEnabled(true);
+    await tester.binding.handleAccessibilityEvent(const AccessibilityEvent(type: AccessibilityEventType.headphonesConnected));
+    await tester.pumpAndSettle();
 
-    // Simulate headphones disconnection and verify audio output switches to speaker
-    // await simulateHeadphonesDisconnection();
-    // Verify audio is now playing through speaker
+    // Verify audio output is directed to headphones
+    final audioPlayer = AudioPlayer();
+    await audioPlayer.play(AssetSource('audio/test_audio.mp3'));
+    await tester.pumpAndSettle();
+    // Add verification logic here
 
-    expect(true, true); // Placeholder, implement actual verification logic
+    // Simulate headphones being unplugged
+    await tester.binding.handleAccessibilityEvent(const AccessibilityEvent(type: AccessibilityEventType.headphonesDisconnected));
+    await tester.pumpAndSettle();
+
+    // Verify audio output is directed to speaker
+    await audioPlayer.play(AssetSource('audio/test_audio.mp3'));
+    await tester.pumpAndSettle();
+    // Add verification logic here
   });
 
   testWidgets('Test volume control with system volume changes', (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
-    // Simulate system volume change and verify game audio volume adjusts accordingly
-    // await simulateSystemVolumeChange(0.5);
-    // Verify game audio volume is 0.5
+    // Simulate system volume change
+    await tester.binding.handleAccessibilityEvent(const AccessibilityEvent(type: AccessibilityEventType.systemVolumeChanged));
+    await tester.pumpAndSettle();
 
-    expect(true, true); // Placeholder, implement actual verification logic
+    // Verify game volume adjusts accordingly
+    final audioPlayer = AudioPlayer();
+    await audioPlayer.play(AssetSource('audio/test_audio.mp3'));
+    await tester.pumpAndSettle();
+    // Add verification logic here
   });
 }
