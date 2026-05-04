@@ -69,3 +69,5 @@ scripts:
   run_precision_test: flutter drive --driver=test/integration_tests/precision_test/precision_test_driver.dart --target=test/integration_tests/precision_test/precision_test.dart
 
   run_audio_test: flutter drive --driver=test/integration_tests/audio_test/audio_test_driver.dart --target=test/integration_tests/audio_test/audio_test.dart
+
+  run_interruption_test: bash scripts/run_interruption_test.sh
