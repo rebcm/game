@@ -1,11 +1,11 @@
 name: game
 description: Construção Criativa da Rebeca - jogo voxel modo criativo
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.16.0"
+  flutter: "3.16.0"
 
 dependencies:
   dio_mock: ^1.0.0
@@ -53,58 +53,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  integration_test_config:
-    enabled: true
   assets:
     - assets/
     - assets/audio/
-    - .github/docs/passdriver_flutter_tips_criterios/tips.json
-- .github/docs/passdriver_flutter_tips_criterios/criterios_aceitacao.md
-    - .github/docs/seo_validation_matrix/feedback_form.json
-  integration_test_config:
-    enabled: true
-    stress_test_config:
-    path: ./integration_test/config/integration_test_config.yaml
-    path: ./integration_test/config/integration_test_config.yaml
-  benchmark:
-    path: ./benchmarks
-  fps_benchmark:
-    path: ./benchmarks/fps_benchmark
-  performance_baseline:
-    path: ./benchmarks/performance_baseline
-  performance_baseline_test:
-    path: ./benchmarks/performance_baseline
-  fps_stress_test:
-    path: ./benchmarks/fps_stress_test
-  integration_test_config:
-    enabled: true
-    stress_test_config:
-    path: ./integration_test/config/integration_test_config.yaml
-    path: ./integration_test/config/integration_test_config.yaml
-  onboarding_smoke_test:
-    path: ./integration_test/onboarding_smoke_test
-  cleaning_policy_test:
-    path: ./integration_test/cleaning_policy_test
-  deploy_validation_test:
-    path: ./integration
-
-  assets:
-    - .github/docs/passdriver_flutter_checklist/feedback_form.json
-
-  ci_cd_validation_test:
-    path: ./integration_test/ci_cd_validation
-
-  input_concurrency_test:
-    path: ./integration_test/input_concurrency_test
-
-  ui_test_config:
-    path: ./test/ui/test_config/resolution_config.yaml
-
-  integration_test:
-    sdk: flutter
-
-  integration_test:
-    path: ./integration_test
-
-  integration_test:
-    path: ./integration_test
