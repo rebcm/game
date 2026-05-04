@@ -72,3 +72,5 @@ scripts:
   run_console_error_test: ./scripts/run_console_error_test.sh
 
   run_passdriver_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_integration_test/passdriver_integration_test.dart
+
+  run_scene_rebuild_profiling_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/scene_rebuild_profiling_test/scene_rebuild_profiling_test.dart
