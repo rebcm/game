@@ -1,7 +1,7 @@
-import 'package:game/domain/content_provider/content_provider.dart';
+import 'package:game/domain/content_provider/content_provider_contract.dart';
 import 'package:http/http.dart' as http;
 
-class ApiContentProvider implements ContentProvider {
+class ApiContentProvider implements ContentProviderContract {
   @override
   Future<String> getTip() async {
     final response = await http.get(Uri.parse('https://example.com/tip'));
