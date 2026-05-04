@@ -1,17 +1,22 @@
-# Hardware Baseline
-The following devices and OS versions will serve as the standard for collecting FPS baselines:
+# Hardware Baseline Definition
 
-## Android Devices
-- Google Pixel 4 (Android 12)
-- Samsung Galaxy S22 (Android 12)
-- OnePlus 9 Pro (Android 12)
+## Objective
+Define the hardware and OS versions to be used as a reference for collecting the baseline FPS in the Rebeca game.
 
-## iOS Devices
-- Apple iPhone 13 (iOS 16)
-- Apple iPhone 12 (iOS 16)
-- Apple iPad Pro (iOS 16)
+## Devices and OS Versions
+The following devices and OS versions will be used for baseline FPS collection:
 
-## Requirements
-- All devices must have the latest version of the game installed.
-- All devices must have the same version of the operating system.
-- All tests must be run with the same settings and configurations.
+| Device ID | Device Name | OS Version |
+|-----------|-------------|------------|
+| TBD       | TBD         | TBD        |
+
+## Data Collection Script
+The `data_collection_script.sh` will be used to list available devices and collect FPS data.
+
+## Usage
+1. Run `flutter devices` to list available devices.
+2. Execute the `data_collection_script.sh` to collect FPS data on the selected devices.
+
+## Notes
+- The devices and OS versions listed above will serve as the standard for performance testing.
+- The FPS data collected will be used to establish a performance baseline for the game.

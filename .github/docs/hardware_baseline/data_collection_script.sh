@@ -1,30 +1,18 @@
 #!/bin/bash
 
-# Set the devices and OS versions
-android_devices=("Google Pixel 4" "Samsung Galaxy S22" "OnePlus 9 Pro")
-android_os="Android 12"
-ios_devices=("Apple iPhone 13" "Apple iPhone 12" "Apple iPad Pro")
-ios_os="iOS 16"
+# List available devices
+flutter devices
 
-# Set the game version
-game_version="1.0.0+1"
+# Run the FPS benchmark on each device
+# For Android: flutter run --profile --target lib/main.dart
+# For iOS: flutter run --profile --target lib/main.dart
 
-# Set the test settings
-test_settings=("low" "medium" "high")
+# Collect FPS data
+# fps_data=$(flutter drive --profile --target test/performance_test/fps_test.dart --driver test/performance_test/fps_test_driver.dart)
 
-# Run the tests and collect the data
-for device in "${android_devices[@]}"; do
-  for setting in "${test_settings[@]}"; do
-    # Run the test and collect the FPS data
-    fps_data=$(run_test "$device" "$android_os" "$game_version" "$setting")
-    echo "Device: $device, OS: $android_os, Game Version: $game_version, Setting: $setting, FPS: $fps_data"
-  done
-done
+# Output the FPS data to a file
+# echo "$fps_data" > fps_data.txt
 
-for device in "${ios_devices[@]}"; do
-  for setting in "${test_settings[@]}"; do
-    # Run the test and collect the FPS data
-    fps_data=$(run_test "$device" "$ios_os" "$game_version" "$setting")
-    echo "Device: $device, OS: $ios_os, Game Version: $game_version, Setting: $setting, FPS: $fps_data"
-  done
-done
+# List the devices and OS versions that will serve as the baseline
+echo "List of devices and OS versions for baseline FPS collection:"
+flutter devices --machine | jq '.[] | {device_id, name, osVersion}'
