@@ -13,6 +13,8 @@ void main() {
   });
 
   test('setup validation test', () async {
-    await driver?.requestData('setup_validation');
+    await driver?.runUnsynchronized(() async {
+      await driver?.waitFor(find.text('Rebeca'));
+    });
   });
 }
