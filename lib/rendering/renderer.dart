@@ -5,7 +5,7 @@ class Renderer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Texture(
-      filterQuality: TextureConfig.filterQuality,
+      filterQuality: TextureConfig.filter,
       // Other texture properties...
     );
   }
