@@ -12,7 +12,7 @@ void main() {
     driver?.close();
   });
 
-  test('Memory test driver', () async {
-    await driver?.requestData('some_data');
+  test('memory test driver', () async {
+    await driver?.requestData('memory_test');
   });
 }

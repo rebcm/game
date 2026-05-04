@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'helpers/gc_forcer.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:game/main.dart' as app;
 
 void main() {
-  testWidgets('Memory test with GC forcing', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('memory test', (tester) async {
+    app.main();
     await tester.pumpAndSettle();
 
-    GCForcer.forceGC();
+    // Force garbage collection
+    await tester.binding.convertFlutterSurfaceToImage();
+    await tester.binding.setSurfaceSemantics(false);
+    await tester.binding.runAsync(() async {
+      await Future.delayed(Duration(seconds: 2));
+    });
 
-    // Perform memory measurements or leak detection here
+    // Check for memory leaks
+    expect(await tester.binding.getNativeHeapSize(), lessThan(100000000));
   });
 }

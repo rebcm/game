@@ -73,3 +73,6 @@ scripts:
 
   acceptance_criteria_template:
     - .github/docs/acceptance_criteria_template/template.md
+
+scripts:
+  run_memory_test_with_gc_protocol: bash scripts/run_memory_test_with_gc_protocol.sh
