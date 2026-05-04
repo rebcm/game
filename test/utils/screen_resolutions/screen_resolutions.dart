@@ -1,0 +1,8 @@
+class ScreenResolutions {
+  static const List<Map<String, int>> resolutions = [
+    {'width': 320, 'height': 568}, 
+    {'width': 360, 'height': 640}, 
+    {'width': 414, 'height': 896}, 
+    {'width': 1080, 'height': 1920}, 
+  ];
+}
