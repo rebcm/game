@@ -64,3 +64,6 @@ flutter:
     - test_driver/passdriver_flutter_version_check/version_check_test.dart
 
 golden_toolkit: ^0.15.0
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_load_test/load_test.dart
