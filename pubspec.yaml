@@ -7,6 +7,8 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
+  archive: ^3.3.0
+  http: ^0.13.5
   audioplayers: ^1.0.1
   flutter:
     sdk: flutter
@@ -15,6 +17,8 @@ dependencies:
   rive: ^0.10.6
 
 dev_dependencies:
+  archive: ^3.3.0
+  http: ^0.13.5
   audioplayers: ^1.0.1
   flutter_test:
     sdk: flutter
@@ -31,6 +35,8 @@ flutter:
 flutter_i18n:
   path: lib/i18n/locales
 dependencies:
+  archive: ^3.3.0
+  http: ^0.13.5
   audioplayers: ^1.0.1
   flutter_i18n: ^0.32.0
 
