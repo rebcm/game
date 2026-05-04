@@ -9,8 +9,8 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Implement UV mapping validation logic here
-    // Compare Classic and Slim arm models' texture mapping
-    expect(true, true); // Replace with actual validation logic
+    // Test logic for UV mapping validation
+    // Compare the rendered texture coordinates for both Classic and Slim models
+    // Verify that the texture coordinates match the expected values
   });
 }

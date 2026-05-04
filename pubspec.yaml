@@ -163,3 +163,5 @@ scripts:
 
   feedback_form:
     path: lib/features/feedback_form
+
+  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
