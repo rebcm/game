@@ -99,3 +99,6 @@ flutter:
 
   ui_test_config:
     path: ./test/ui/test_config/resolution_config.yaml
+
+  integration_test:
+    sdk: flutter

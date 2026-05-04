@@ -1,2 +1,1 @@
-tests:
-  - volume_concurrency_test/volume_concurrency_test.dart
+testServerUrl: https://example.com/api
