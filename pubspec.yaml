@@ -160,3 +160,6 @@ scripts:
 scripts:
   run_edge_cases_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test/edge_cases_test.dart
 
+
+scripts:
+  update_guia_construcao_template: bash scripts/update_guia_construcao_template.sh
