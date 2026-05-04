@@ -68,3 +68,5 @@ flutter_i18n:
   run_api_contract_validation_test: bash scripts/run_api_contract_validation_test.sh
 
   run_heap_metrics_test: ./scripts/heap_metrics/extract_heap_metrics.sh
+
+  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases_test/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases_test/content_edge_cases_integration_test.dart
