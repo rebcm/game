@@ -51,3 +51,5 @@ scripts:
   run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
 
   run_suavidade_test: flutter drive --driver=test/integration_tests/suavidade_test/suavidade_driver.dart --target=test/integration_tests/suavidade_test/suavidade_test.dart
+
+  run_onboarding_test: flutter drive --driver=test/integration_tests/onboarding_test/onboarding_driver.dart --target=test/integration_tests/onboarding_test/onboarding_test.dart
