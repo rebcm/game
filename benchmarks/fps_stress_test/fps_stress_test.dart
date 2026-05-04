@@ -15,6 +15,6 @@ void main() {
 
     // Verify FPS
     final fps = await tester.binding.frameRate;
-    expect(fps, greaterThanOrEqualTo(30));
+    expect(fps, greaterThan(30)); // Adjust the expected FPS value as needed
   });
 }

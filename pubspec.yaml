@@ -162,3 +162,6 @@ flutter:
 
   cross_browser_tests:
     path: ./test/cross_browser_tests
+
+  fps_stress_test_driver:
+    path: ./test_driver/integration_test.dart
