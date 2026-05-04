@@ -1,37 +1,40 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ContentService {
-  Future<String> loadContent() async {
-    try {
-      // Tentar carregar o conteúdo da API
-      final response = await http.get(Uri.parse('https://api.example.com/content'));
-      if (response.statusCode == 200) {
-        return response.body;
-      } else {
-        // Se a API não estiver disponível, tentar carregar o conteúdo local
-        return await loadLocalContent();
-      }
-    } catch (e) {
-      // Se a API não estiver disponível, tentar carregar o conteúdo local
-      return await loadLocalContent();
+  Future<String> fetchContentWithTimeout({required Duration timeout}) async {
+    final response = await http.get(Uri.parse('https://example.com/content')).timeout(timeout);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load content');
     }
   }
 
-  Future<String> loadLocalContent() async {
+  Future<String> loadLocalContent(String filePath) async {
     try {
-      // Tentar carregar o conteúdo local
-      // Implementação para carregar o conteúdo local
-      // ...
+      // Implementation to load local content
+      throw UnimplementedError();
     } catch (e) {
-      // Se o conteúdo local não estiver disponível, utilizar o conteúdo hardcoded
-      return getHardcodedContent();
+      throw FileNotFoundException('File not found: $filePath');
     }
   }
 
-  String getHardcodedContent() {
-    // Retornar o conteúdo hardcoded
-    // Implementação para retornar o conteúdo hardcoded
-    // ...
+  dynamic parseJson(String jsonString) {
+    try {
+      return jsonDecode(jsonString);
+    } catch (e) {
+      throw FormatException('Invalid JSON: $jsonString');
+    }
   }
 }
 
+class FileNotFoundException implements Exception {
+  final String message;
+  FileNotFoundException(this.message);
+}
+
+class TimeoutException implements Exception {
+  final String message;
+  TimeoutException(this.message);
+}

@@ -75,3 +75,6 @@ scripts:
 
 scripts:
   update_documentation_checklist: ./scripts/update_documentation_checklist.sh
+
+  http: ^0.13.5
+  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
