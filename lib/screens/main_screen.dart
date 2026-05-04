@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rebcm/widgets/lazy_list.dart';
+import 'package:game/widgets/tips_display/tips_display.dart';
 
 class MainScreen extends StatelessWidget {
-  final List<String> items = List.generate(100, (index) => 'Item $index');
+  final String tip = 'This is a tip';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LazyList(items: items),
+      body: Column(
+        children: [
+          TipsDisplay(tip: tip),
+        ],
+      ),
     );
   }
 }
