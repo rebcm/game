@@ -38,3 +38,5 @@ scripts:
   coverage: bash scripts/generate_coverage_report.sh
 scripts:
   update_erros_comuns_docs: bash scripts/update_erros_comuns_docs.sh
+scripts:
+  run_input_tests: bash scripts/run_input_tests.sh
