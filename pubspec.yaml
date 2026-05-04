@@ -62,3 +62,5 @@ scripts:
   deploy: bash scripts/deploy.sh
 
   run_memory_leak_test: bash scripts/run_memory_leak_test.sh
+
+  run_cumulative_precision_test: bash scripts/run_cumulative_precision_test.sh
