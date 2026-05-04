@@ -6,13 +6,16 @@ Este documento define os critérios de aceitação para os testes de áudio no a
 
 ## Critérios de Aceitação
 
-| Cenário | Critério de Aceitação | Pass/Fail |
+| Critério | Descrição | Pass/Fail |
 | --- | --- | --- |
-| Reprodução de áudio no Android | O áudio é reproduzido corretamente |  |
-| Reprodução de áudio no iOS | O áudio é reproduzido corretamente |  |
-| Comportamento do áudio em perda de conexão | O áudio pausa ou se comporta conforme esperado |  |
-| Comportamento do áudio em modo silencioso | O áudio é silenciado ou se comporta conforme esperado |  |
+| Reprodução de áudio no Android | O áudio deve ser reproduzido corretamente no Android. |  |
+| Reprodução de áudio no iOS | O áudio deve ser reproduzido corretamente no iOS. |  |
+| Parada de áudio em perda de conexão | O áudio deve parar quando a conexão for perdida. |  |
+| Áudio silencioso em modo silencioso | O áudio deve estar silencioso quando o dispositivo estiver em modo silencioso. |  |
 
-## Implementação
+## Cenários de Teste
 
-Os testes devem ser implementados utilizando o framework de teste de integração do Flutter.
+1. Reprodução de áudio no Android
+2. Reprodução de áudio no iOS
+3. Parada de áudio em perda de conexão
+4. Áudio silencioso em modo silencioso
