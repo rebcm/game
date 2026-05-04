@@ -76,3 +76,6 @@ golden_toolkit: ^0.15.0
 
   additional_test_paths:
     - test_driver/passdriver_flutter_retention_test/retention_test.dart
+
+  additional_test_paths:
+    - test_driver/passdriver_flutter_edge_cases/edge_cases_test.dart
