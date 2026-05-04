@@ -9,10 +9,10 @@ void main() {
   });
 
   tearDownAll(() async {
-    driver?.close();
+    await driver?.close();
   });
 
-  test('code coverage test driver', () async {
+  test('code coverage test', () async {
     // Implement code coverage test driver logic here
   });
 }

@@ -18,3 +18,15 @@ This document describes the CI/CD pipeline for the Rebeca game project.
 ## Triggers
 
 The pipeline is triggered on push events to the main branch.
+
+## Code Coverage Test
+
+The code coverage test is executed using the `run_code_coverage_test.sh` script.
+
+### Configuration
+
+The code coverage test is configured to run automatically after the execution of the unit tests and widget tests.
+
+### Report Generation
+
+The code coverage report is generated using the `lcov` tool.

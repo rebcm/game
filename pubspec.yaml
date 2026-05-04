@@ -66,3 +66,5 @@ scripts:
   run_frame_timing_test: bash scripts/run_frame_timing_test.sh
 
   run_memory_profiling_test: ./scripts/run_memory_profiling_test.sh
+
+  run_code_coverage_test: bash scripts/run_code_coverage_test.sh
