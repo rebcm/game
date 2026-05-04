@@ -95,3 +95,5 @@ scripts:
   send_notification: bash scripts/send_notification.sh
 
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
+
+  run_uv_mapping_test: flutter drive --driver=test/integration_tests/uv_mapping_test/uv_mapping_test_driver.dart --target=test/integration_tests/uv_mapping_test/uv_mapping_test.dart

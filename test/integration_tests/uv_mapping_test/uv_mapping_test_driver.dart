@@ -14,8 +14,8 @@ void main() {
 
   test('UV mapping test', () async {
     await driver?.runUnsynchronized(() async {
-      await driver?.requestData('uv_mapping_test');
+      await driver?.tap(find.text('Start'));
+      // Add test steps as necessary to verify UV mapping
     });
   });
 }
-

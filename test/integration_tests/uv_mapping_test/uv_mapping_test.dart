@@ -9,9 +9,9 @@ void main() {
     app.main();
     await tester.pumpAndSettle();
 
-    // Test logic for UV mapping validation
-    // This is a placeholder and should be replaced with actual test logic
-    expect(true, true);
+    // Implement test logic to verify UV mapping for both models
+    // This may involve checking pixel alignment or texture rendering
+    // For demonstration purposes, a simple test is shown
+    expect(find.text('Rebeca'), findsOneWidget);
   });
 }
-
