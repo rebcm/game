@@ -96,3 +96,7 @@ scripts:
   onboarding_test:
     path: test/onboarding_tests/onboarding_test.dart
   run_onboarding_tests: bash scripts/run_onboarding_tests.sh
+
+  responsividade_test:
+    path: test/integration_tests/responsividade_test/responsividade_test.dart
+  run_responsividade_tests: flutter drive --driver=test/integration_tests/responsividade_test/responsividade_test_driver.dart --target=test/integration_tests/responsividade_test/responsividade_test.dart
