@@ -186,3 +186,5 @@ scripts:
 
 scripts:
   update_distribution_docs: bash scripts/update_distribution_docs
+
+  run_permission_test: bash scripts/run_permission_test

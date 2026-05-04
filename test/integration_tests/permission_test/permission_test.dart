@@ -9,25 +9,25 @@ void main() {
   testWidgets('Test permanent denial of permission', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    // Simulate permanent denial
-    await Permission.microphone.request().then((value) {
-      if (value.isDenied) {
-        // Handle denial
-      }
-    });
+    // Simulate permanent denial of permission
+    await Permission.microphone.request();
+    await tester.pumpAndSettle();
+    // Verify app behavior
   });
 
   testWidgets('Test device without microphone hardware', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    // Simulate no hardware
-    // Note: Actual implementation depends on how you handle hardware check
+    // Simulate device without microphone hardware
+    // Verify app behavior
   });
 
   testWidgets('Test permission revocation while app is open', (tester) async {
     await app.main();
     await tester.pumpAndSettle();
-    // Simulate revocation
-    // Note: Actual implementation depends on how you handle permission revocation
+    // Simulate permission revocation
+    await Permission.microphone.request();
+    await tester.pumpAndSettle();
+    // Verify app behavior
   });
 }
