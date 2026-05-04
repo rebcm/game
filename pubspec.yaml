@@ -72,3 +72,6 @@ scripts:
   run_deploy_edge_cases_test: ./scripts/run_deploy_edge_cases_test.sh
 
   run_flutter_sdk_installation_test: ./scripts/run_flutter_sdk_installation_test.sh
+
+scripts:
+  update_documentation_checklist: ./scripts/update_documentation_checklist.sh
