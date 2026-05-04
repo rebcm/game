@@ -3,4 +3,4 @@
 | Route | Required Permission |
 | --- | --- |
 | /api/example | read:example |
-| /api/example/create | write:example |
+| /api/another-example | write:another-example |

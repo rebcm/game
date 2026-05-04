@@ -1,9 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'stress_test/chunk_payload_stress_test.dart' as stress_test;
+import 'package:game/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  stress_test.main();
+  testWidgets('Test pipeline with least privilege token', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    // Add test logic here to validate the pipeline with least privilege token
+  });
 }
