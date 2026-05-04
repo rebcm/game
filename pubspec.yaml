@@ -30,136 +30,14 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   golden_toolkit: ^0.13.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
 
 flutter_i18n:
   path: lib/i18n/locales
-dependencies:
-  provider: ^6.0.3
-  archive: ^3.3.0
-  http: ^0.13.5
-  audioplayers: ^1.0.1
-  flutter_i18n: ^0.32.0
 
 scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  coverage:test --coverage
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  coverage: bash scripts/generate_coverage_report.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  update_erros_comuns_docs: bash scripts/update_erros_comuns_docs.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_input_tests: bash scripts/run_input_tests.sh
-
-  shortcuts_exceptions_test:
-    path: test/shortcuts_exceptions_test
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_memory_profiling_test: bash scripts/run_memory_profiling_test.sh
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_stress_tests: bash scripts/run_stress_tests.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_floating_point_stress_tests: bash scripts/run_floating_point_stress_tests.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_ci_cd_pipeline: bash scripts/run_ci_cd_pipeline.sh
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  coverage: bash scripts/generate_coverage_report.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_input_validation_tests: bash scripts/run_input_validation_tests.sh
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_package_tracking_tests: bash scripts/run_package_tracking_tests.sh
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_package_tracking_tests: bash scripts/run_package_tracking_tests.sh
-
-  api_test:
-    path: test/api_tests/api_test.dart
-  integration_test:
-    path: test/integration_tests/integration_test.dart
-  load_test:
-    path: test/load_tests/load_test.dart
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_api_tests: flutter test test/api_tests/api_test.dart
-  run_integration_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/integration_test.dart
-  run_load_tests: flutter test test/load_tests/load_test.dart
-
-  edge_cases_test:
-    path: test/integration_tests/edge_cases_test.dart
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_edge_cases_tests: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test.dart
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_error_pattern_tests: bash scripts/run_error_pattern_tests.sh
-  edge_cases_input_test:
-    path: test/integration_tests/inputs/edge_cases_input_test.dart
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_edge_cases_input_tests: bash scripts/run_edge_cases_input_tests.sh
-
-  golden_test:
-    path: test/golden_tests/dicas_ui_test.dart
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_golden_tests: bash scripts/run_golden_tests.sh
-
-  onboarding_test:
-    path: test/onboarding_tests/onboarding_test.dart
-  run_onboarding_tests: bash scripts/run_onboarding_tests.sh
-
-  responsividade_test:
-    path: test/integration_tests/responsividade_test/responsividade_test.dart
-  run_responsividade_tests: flutter drive --driver=test/integration_tests/responsividade_test/responsividade_test_driver.dart --target=test/integration_tests/responsividade_test/responsividade_test.dart
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_performance_tests: bash scripts/run_performance_tests.sh
-  technical_comparison_test:
-    path: test/technical_comparison_tests/technical_comparison_test.dart
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_technical_comparison_tests: bash scripts/run_technical_comparison_tests.sh
-
-  traceability_test:
-    path: test/integration_tests/traceability_matrix/traceability_test.dart
-  traceability_test_driver:
-    path: test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart
-  run_traceability_tests: flutter drive --driver=test/integration_tests/traceability_matrix_driver/traceability_test_driver.dart --target=test/integration_tests/traceability_matrix/traceability_test.dart
-  run_traceability_tests: bash scripts/run_traceability_tests.sh
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  run_environment_matrix_tests: bash scripts/run_environment_matrix_tests.sh
-
-scripts:
-  run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
-  update_guia_construcao_template: bash scripts/update_guia_construcao_template.sh
-
-  glossario_test:
-    path: test/glossario_tecnico_test/voxel_test.dart
-
-scripts:
-  run_edge_cases_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/edge_cases_test/edge_cases_test.dart
-
-
-scripts:
-  update_guia_construcao_template: bash scripts/update_guia_construcao_template.sh
+  run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
