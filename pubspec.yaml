@@ -62,3 +62,5 @@ scripts:
   run_data_integrity_test: bash scripts/run_data_integrity_test.sh
 
   run_memory_test: bash scripts/run_memory_test.sh
+
+  run_frame_timing_test: bash scripts/run_frame_timing_test.sh

@@ -2,10 +2,19 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Frame timing test driver', () async {
-    final FlutterDriver driver = await FlutterDriver.connect();
-    await driver.requestData('start');
-    await driver.waitUntilFirstFrameRasterized();
-    await driver.close();
+  group('Frame Timing Test', () {
+    late FlutterDriver driver;
+
+    setUpAll(() async {
+      driver = await FlutterDriver.connect();
+    });
+
+    tearDownAll(() async {
+      await driver.close();
+    });
+
+    test('run frame timing test', () async {
+      await driver.requestData('run_test');
+    });
   });
 }
