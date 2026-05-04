@@ -32,3 +32,12 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+import 'package:game/utils/error_handler.dart';
+
+void main() {
+  FlutterError.onError = (details) {
+    ErrorHandler.handleError(details.exception, details.stack);
+  };
+
+  runApp(MyApp());
+}
