@@ -2,28 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioSettingsProvider with ChangeNotifier {
-  bool _isMusicMuted = false;
-  bool _isSfxMuted = false;
+  bool _musicEnabled = true;
   double _musicVolume = 1.0;
+  bool _sfxEnabled = true;
   double _sfxVolume = 1.0;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  bool get isMusicMuted => _isMusicMuted;
-  bool get isSfxMuted => _isSfxMuted;
+  bool get musicEnabled => _musicEnabled;
   double get musicVolume => _musicVolume;
+  bool get sfxEnabled => _sfxEnabled;
   double get sfxVolume => _sfxVolume;
 
-  void toggleMusicMute() {
-    _isMusicMuted = !_isMusicMuted;
-    notifyListeners();
-  }
-
-  void toggleSfxMute() {
-    _isSfxMuted = !_isSfxMuted;
+  void toggleMusic() {
+    _musicEnabled = !_musicEnabled;
+    _audioPlayer.setEnabled(_musicEnabled);
     notifyListeners();
   }
 
   void setMusicVolume(double volume) {
     _musicVolume = volume;
+    _audioPlayer.setVolume(volume);
+    notifyListeners();
+  }
+
+  void toggleSfx() {
+    _sfxEnabled = !_sfxEnabled;
     notifyListeners();
   }
 
