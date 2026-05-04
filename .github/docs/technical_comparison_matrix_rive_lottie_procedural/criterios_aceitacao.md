@@ -1,27 +1,37 @@
-# Critérios de Aceitação: Matriz de Comparação Técnica (Rive vs Lottie vs Procedural)
+# Matriz de Comparação Técnica: Rive vs Lottie vs Procedural
 
 ## Introdução
 
-Este documento define os critérios de aceitação para a tarefa de desenvolvimento da matriz de comparação técnica entre Rive, Lottie e animações procedurais no contexto do projeto Rebcm/game.
+Este documento visa comparar tecnicamente as bibliotecas Rive, Lottie e a abordagem procedural para animações no Flutter, considerando aspectos como consumo de CPU/RAM, tamanho do arquivo, facilidade de alteração de cores via código e performance de interpolação.
 
 ## Critérios de Aceitação
 
-1. **Consumo de CPU/RAM**: A comparação deve avaliar o consumo de recursos (CPU e RAM) das três tecnologias.
-2. **Tamanho do Arquivo**: A comparação deve incluir o tamanho dos arquivos associados a cada tecnologia.
-3. **Facilidade de Alteração de Cores via Código**: A comparação deve avaliar a facilidade de alterar cores utilizando código para cada tecnologia.
-4. **Performance de Interpolação**: A comparação deve avaliar a performance de interpolação das três tecnologias.
+1. **Consumo de CPU/RAM**: Avaliar o impacto no desempenho do aplicativo em termos de uso de CPU e RAM.
+2. **Tamanho do Arquivo**: Medir o tamanho dos arquivos utilizados por cada abordagem.
+3. **Facilidade de Alteração de Cores via Código**: Avaliar a simplicidade de alterar cores das animações diretamente no código.
+4. **Performance de Interpolação**: Analisar a eficiência das animações em termos de interpolação.
 
-## Métricas de Avaliação
+## Matriz de Comparação
 
-As métricas de avaliação devem ser quantitativas sempre que possível. Para aspectos subjetivos, como "facilidade de alteração de cores", deve ser utilizada uma escala de avaliação clara.
+| Critério | Rive | Lottie | Procedural |
+| --- | --- | --- | --- |
+| Consumo de CPU/RAM |  |  |  |
+| Tamanho do Arquivo |  |  |  |
+| Facilidade de Alteração de Cores |  |  |  |
+| Performance de Interpolação |  |  |  |
 
 ## Resultados Esperados
 
-- Um documento markdown que resume as descobertas da comparação técnica.
-- Gráficos ou tabelas que ilustrem as diferenças entre as tecnologias avaliadas.
+- Uma comparação clara entre Rive, Lottie e a abordagem procedural.
+- Identificação da melhor abordagem para o projeto com base nos critérios definidos.
 
-## Aprovação
+## Passos para Implementação
 
-A tarefa será considerada aprovada quando:
-- Todos os critérios de aceitação forem atendidos.
-- O documento de comparação técnica for revisado e aprovado pela equipe.
+1. Desenvolver um benchmark para cada critério.
+2. Executar os benchmarks e coletar dados.
+3. Preencher a matriz de comparação com os resultados.
+4. Analisar os resultados e recomendar a melhor abordagem.
+
+## Considerações Finais
+
+A escolha da tecnologia de animação deve ser baseada nos resultados desta comparação, visando manter o jogo simples, estável e divertido.
