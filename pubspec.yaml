@@ -61,3 +61,5 @@ scripts:
   run_texture_mapping_test: flutter drive --driver=test/integration_tests/texture_mapping_test/texture_mapping_test_driver.dart --target=test/integration_tests/texture_mapping_test/texture_mapping_test.dart
 
   run_data_integrity_test: bash scripts/run_data_integrity_test.sh
+
+  deploy: bash scripts/deploy.sh
