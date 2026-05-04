@@ -64,9 +64,9 @@ flutter:
     path: test_driver/integration_test/integration_test.dart
   volume_test:
     path: test_driver/volume_test/volume_test.dart
-
   contract_test:
     path: test_driver/contract_test/contract_test.dart
-
   api_test:
     path: test_driver/api_test/api_test.dart
+  audio_output_test:
+    path: test_driver/audio_output_test/audio_output_test.dart
