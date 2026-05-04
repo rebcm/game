@@ -76,3 +76,5 @@ flutter_i18n:
   path: lib/i18n/locales
 
   run_undo_redo_performance_test: ./scripts/run_undo_redo_performance_test.sh
+
+  run_logging_integration_test: flutter drive --driver=test/integration_tests/logging_integration_test/logging_integration_test_driver.dart --target=test/integration_tests/logging_integration_test/logging_integration_test.dart

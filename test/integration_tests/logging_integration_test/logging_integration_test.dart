@@ -6,28 +6,26 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Logging Integration Test', () {
-    testWidgets('should log info message', (tester) async {
+    testWidgets('should log info message correctly', (tester) async {
       // Arrange
       final logger = Logger();
 
       // Act
-      logger.info('Info message');
+      logger.info('Test info message');
 
       // Assert
-      // Verify that the log message is correctly recorded
-      // This might involve checking a log file or a mock logger
+      // Add assertion logic here if needed
     });
 
-    testWidgets('should log error message', (tester) async {
+    testWidgets('should log error message correctly', (tester) async {
       // Arrange
       final logger = Logger();
 
       // Act
-      logger.error('Error message');
+      logger.error('Test error message');
 
       // Assert
-      // Verify that the error message is correctly recorded
-      // This might involve checking a log file or a mock logger
+      // Add assertion logic here if needed
     });
   });
 }

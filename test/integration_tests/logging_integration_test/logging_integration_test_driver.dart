@@ -9,7 +9,7 @@ void main() {
   });
 
   tearDownAll(() async {
-    await driver?.close();
+    driver?.close();
   });
 
   test('logging integration test', () async {
