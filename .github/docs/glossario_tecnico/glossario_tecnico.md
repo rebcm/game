@@ -1,18 +1,18 @@
 # Glossário Técnico
 
-Este documento define termos técnicos utilizados no projeto Construção Criativa da Rebeca.
+Este glossário visa padronizar os termos técnicos utilizados na documentação do projeto.
 
 ## Termos
 
 ### Voxel
-Um voxel é a unidade básica de representação 3D no jogo, equivalente a um pixel em 2D.
+Unidade básica de representação 3D no jogo, equivalente a um pixel em 3D.
 
 ### Chunk
-Um chunk é uma subdivisão do mundo do jogo em seções menores para otimizar a renderização.
+Conjunto de voxels organizados para otimização de renderização e processamento.
 
-### API
-API (Application Programming Interface) é uma interface de programação de aplicações que permite a comunicação entre diferentes componentes do sistema.
+### Passdriver Flutter
+Framework utilizado para integração de funcionalidades específicas no jogo.
 
-## Exemplos
+### Criativo
+Modo de jogo que permite construção livre sem restrições de sobrevivência.
 
-Para ilustrar o uso dos termos técnicos, consulte os exemplos na pasta `exemplos`.
