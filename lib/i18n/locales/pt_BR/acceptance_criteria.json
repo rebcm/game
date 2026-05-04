@@ -1,0 +1,6 @@
+{
+  "acceptance_criteria": "Critérios de Aceitação",
+  "ci_cd_integration": "Integração com CI/CD",
+  "preview_environment": "Ambiente de Preview",
+  "https_communication": "Comunicação Segura com HTTPS"
+}

@@ -70,3 +70,6 @@ scripts:
 
   assets:
     - assets/swagger-ui/index.html
+
+  acceptance_criteria_template:
+    - .github/docs/acceptance_criteria_template/template.md
