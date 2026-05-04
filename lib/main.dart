@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:game/services/permission/permission_service.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:game/state_management/state_management.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final permissionService = PermissionService();
-  final storagePermission = await permissionService.requestPermission(Permission.storage);
-  if (!storagePermission) {
-    // Handle permission denied
-  }
-  runApp(MyApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => StateManagement()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,11 +18,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rebeca Game',
-      home: Scaffold(
-        body: Center(
-          child: Text('Rebeca Game'),
-        ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final stateManagement = Provider.of<StateManagement>(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rebeca Game'),
+      ),
+      body: Center(
+        child: Text('Counter: ${stateManagement.counter}'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: stateManagement.increment,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
       ),
     );
   }
 }
+
