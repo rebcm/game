@@ -1,4 +1,4 @@
-name: Main Workflow
+name: Flutter CI/CD
 
 on:
   push:
@@ -6,27 +6,29 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          flutter-version: '3.0.5'
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
 
-      - name: Deploy to Cloudflare
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Generate coverage report
         run: |
-          npm install -g wrangler
-          wrangler pages deploy --project-name=rebcm-game --branch=main
+          genhtml coverage/lcov.info -o coverage/html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/html
