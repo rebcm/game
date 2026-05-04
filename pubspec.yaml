@@ -181,3 +181,5 @@ scripts:
   run_audio_compatibility_test: flutter drive --driver=test/integration_tests/audio_compatibility_test/audio_compatibility_test_driver.dart --target=test/integration_tests/audio_compatibility_test/audio_compatibility_test.dart
 
   run_content_regression_test: bash scripts/run_content_regression_test
+
+  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test

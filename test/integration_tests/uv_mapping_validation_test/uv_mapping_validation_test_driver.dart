@@ -9,14 +9,13 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (driver != null) {
-      await driver?.close();
-    }
+    await driver?.close();
   });
 
-  test('UV mapping validation test', () async {
+  test('UV Mapping Validation Test', () async {
     await driver?.runUnsynchronized(() async {
-      // Test logic to verify the UV mapping
+      await driver?.waitFor(find.text('Rebeca')); // Wait for the app to load
+      // Implement driver-based test logic if needed
     });
   });
 }
