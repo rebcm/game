@@ -81,3 +81,5 @@ scripts:
   run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
 
   run_backend_contract_test: flutter test test/contract_tests/backend_contract_test.dart
+
+  run_content_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/content_integration_test/content_integration_test.dart
