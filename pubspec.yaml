@@ -135,3 +135,6 @@ flutter:
 
   network_edge_cases_test:
     path: ./integration_test/network_edge_cases
+
+  text_input_test:
+    path: ./test/widget_tests/text_input_test.dart
