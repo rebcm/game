@@ -70,3 +70,5 @@ scripts:
   run_error_handling_test: bash scripts/run_error_handling_test.sh
 
   run_console_error_test: ./scripts/run_console_error_test.sh
+
+  run_passdriver_integration_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/passdriver_integration_test/passdriver_integration_test.dart
