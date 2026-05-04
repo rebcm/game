@@ -16,6 +16,5 @@ void main() {
 
     final buildTime = stopwatch.elapsedMilliseconds;
     expect(buildTime, lessThan(3000)); // 3 seconds
-    print('Build time: $buildTime ms');
   });
 }

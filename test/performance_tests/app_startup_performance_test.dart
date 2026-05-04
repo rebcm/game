@@ -14,6 +14,5 @@ void main() {
 
     final startupTime = stopwatch.elapsedMilliseconds;
     expect(startupTime, lessThan(5000)); // 5 seconds
-    print('Startup time: $startupTime ms');
   });
 }
