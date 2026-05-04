@@ -1,20 +1,23 @@
-import 'package:game/models/logging/package_log.dart';
+import 'package:logger/logger.dart';
 
 class PackageLogger {
-  List<PackageLog> _log = [];
+  static final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodIndentation: 2,
+      errorMethodCount: 8,
+      lineLength: 120,
+      colors: true,
+      printEmojis: true,
+      printTime: true,
+    ),
+  );
 
-  void logPackage(int id, String status) {
-    _log.add(PackageLog(id: id, status: status, timestamp: DateTime.now()));
+  static void logPackageSequence(List<int> packageIds) {
+    _logger.d('Package sequence: $packageIds');
   }
 
-  List<PackageLog> getLog() => _log;
-
-  bool validateSequence() {
-    for (var i = 1; i < _log.length; i++) {
-      if (_log[i].id != _log[i - 1].id + 1) {
-        return false;
-      }
-    }
-    return true;
+  static void logMissingPackages(List<int> expectedIds, List<int> actualIds) {
+    final missingIds = expectedIds.where((id) => !actualIds.contains(id)).toList();
+    _logger.e('Missing packages: $missingIds');
   }
 }

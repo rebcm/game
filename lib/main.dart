@@ -1,64 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:game/services/tracking/package_tracker.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    this.renderConfigAppliedKey,
-    this.startPerformanceCollectionKey,
-    super.key,
-  });
-
-  final Key? renderConfigAppliedKey;
-  final Key? startPerformanceCollectionKey;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Construção Criativa da Rebeca',
-      home: const MyHomePage(),
-      builder: (context, child) {
-        return Stack(
-          children: [
-            child!,
-            if (renderConfigAppliedKey != null)
-              Container(key: renderConfigAppliedKey),
-            if (startPerformanceCollectionKey != null)
-              ElevatedButton(
-                key: startPerformanceCollectionKey,
-                onPressed: () {
-                  // Coletar performance aqui
-                },
-                child: const Text('Iniciar Coleta de Performance'),
-              ),
-          ],
-        );
-      },
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    // Aplicar configurações de renderização aqui
+  final PackageTracker _packageTracker = PackageTracker();
+
+  void _handleInput(int packageId) {
+    _packageTracker.addPackageId(packageId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Package Tracking Demo'),
+      ),
       body: Center(
-        child: Text('Construção Criativa da Rebeca'),
+        child: ElevatedButton(
+          onPressed: () => _handleInput(1),
+          child: Text('Send Package'),
+        ),
       ),
     );
   }
