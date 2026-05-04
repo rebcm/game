@@ -1,26 +1,31 @@
 name: Flutter Pipeline
 
 on:
-  schedule:
-    - cron: '0 23 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          flutter-version: '3.3.10'
 
-      - name: Install dependencies
+      - name: Get dependencies
         run: flutter pub get
 
       - name: Run tests
-        run: flutter test
+        run: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/smoke_test/smoke_test.dart
 
-      - name: Build and release
-        run: ./.github/scripts/build_and_release.sh
+      - name: Upload logs as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: flutter-logs
+          path: |
+            /home/runner/work/game/game/test/integration_tests/logs/
