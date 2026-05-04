@@ -84,3 +84,11 @@ flutter:
     path: test_driver/audio_edge_cases_test/audio_edge_cases_test_driver.dart
   permission_validation_test:
     path: test_driver/permission_validation_test/permission_validation_test.dart
+  i18n_layout_test:
+    path: test_driver/i18n_layout_test/i18n_layout_test.dart
+  i18n_layout_test_driver:
+    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
+  i18n_layout_test:
+    path: test_driver/i18n_layout_test/i18n_layout_test.dart
+  i18n_layout_test_driver:
+    path: test_driver/i18n_layout_test/i18n_layout_test_driver.dart
