@@ -1,4 +1,4 @@
-/// Exemplo de uso de voxel no jogo
+/// Representa um voxel no jogo
 class Voxel {
   int x, y, z;
 
@@ -7,9 +7,4 @@ class Voxel {
   void render() {
     // Lógica para renderizar o voxel
   }
-}
-
-void main() {
-  Voxel voxel = Voxel(1, 2, 3);
-  voxel.render();
 }

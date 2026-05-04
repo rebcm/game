@@ -153,3 +153,6 @@ scripts:
 scripts:
   run_traceability_matrix_test: flutter drive --driver=test/integration_tests/integration_test_driver.dart --target=test/integration_tests/traceability_matrix_test/traceability_matrix_test.dart
   update_guia_construcao_template: bash scripts/update_guia_construcao_template.sh
+
+  glossario_test:
+    path: test/glossario_tecnico_test/voxel_test.dart
