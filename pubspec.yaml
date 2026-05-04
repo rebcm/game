@@ -61,23 +61,5 @@ scripts:
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
   run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
   run_rendering_test: flutter drive --driver=test/integration_tests/rendering_test/rendering_test_driver.dart --target=test/integration_tests/rendering_test/rendering_test.dart
-  run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart --profile --trace-systrace --target-platform android
-  run_build_runner: ./scripts/run_build_runner.sh
-  run_state_validation_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/state_validation_test/state_validation_test.dart
-  run_player_state_test: flutter drive --d
-  run_tip_validation_test: ./scripts/run_tip_validation_test.sh
-  run_setup_validation_test: ./scripts/run_setup_validation_test.sh
-
-  run_profiling_test: flutter drive --driver=test/profiling_tests/scene_rebuild_profiling_test_driver.dart --target=test/profiling_tests/scene_rebuild_profiling_test.dart --profile --trace-systrace
-
-  run_deploy_edge_cases_test: ./scripts/run_deploy_edge_cases_test.sh
-
-  run_flutter_sdk_installation_test: ./scripts/run_flutter_sdk_installation_test.sh
-
-scripts:
-  update_documentation_checklist: ./scripts/update_documentation_checklist.sh
-
-  http: ^0.13.5
-  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
-
-  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
+  run_animation_performance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
+  run_performance_test: flutter drive --driver=test/integration_tests/performance_test_driver/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart
