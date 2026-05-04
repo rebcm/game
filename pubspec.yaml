@@ -45,6 +45,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+    - .env
   assets:
     - assets/
     - .github/docs/passdriver_flutter_tips_criterios/tips.json
