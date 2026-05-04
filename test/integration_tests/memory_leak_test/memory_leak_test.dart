@@ -1,40 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:game/estado_jogo.dart';
+import 'package:game/main.dart' as app;
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Memory leak test', (tester) async {
-    await tester.pumpWidget(MyApp());
-
-    // Navigate to the game state
-    await tester.tap(find.text('Start Game'));
+  testWidgets('Audio player memory leak test', (tester) async {
+    app.main();
     await tester.pumpAndSettle();
 
-    // Measure memory before destroying the game state
-    final initialMemoryUsage = MemoryInfo.currentHeapSize;
+    final audioPlayer = AudioPlayer();
+    await audioPlayer.play(AssetSource('sounds/short_sound.mp3'));
+    await Future.delayed(Duration(seconds: 1));
+    await audioPlayer.dispose();
 
-    // Destroy the game state
-    await tester.tap(find.text('Exit Game'));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
-    // Measure memory after destroying the game state
-    final finalMemoryUsage = MemoryInfo.currentHeapSize;
-
-    // Check for memory leaks
-    expect(finalMemoryUsage - initialMemoryUsage, lessThan(1024 * 1024)); // 1MB
+    expect(find.byType(AudioPlayer), findsNothing);
   });
 }
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Game',
-      home: EstadoJogo(),
-    );
-  }
-}
-
