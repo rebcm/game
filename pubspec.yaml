@@ -9,15 +9,12 @@ environment:
 dependencies:
   http: ^0.13.5
   dotenv: ^4.0.0
-  http: ^0.13.5
   freezed_annotation: ^2.2.0
   json_annotation: ^4.6.0
   provider: ^6.0.3
   archive: ^3.3.0
-  http: ^0.13.5
   audioplayers: ^1.0.1
   flutter:
-    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
     sdk: flutter
   assets:
     - assets/documentacao/
@@ -28,7 +25,6 @@ dependencies:
   rive: ^0.10.6
   crypto: ^3.0.2
   leak_canary_flutter: ^2.0.0
-    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
   flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
@@ -36,7 +32,6 @@ dev_dependencies:
   dotenv: ^4.0.0
   flutter_driver:
     sdk: flutter
-  http: ^0.13.5
   build_runner: ^2.3.3
   freezed: ^2.3.2
   json_serializable: ^6.5.4
@@ -48,9 +43,9 @@ dev_dependencies:
   golden_toolkit: ^0.13.0
   integration_test:
     sdk: flutter
+  markdownlint: ^0.0.1
 
 flutter:
-    - .github/docs/documentacao_criterios_aceitacao/criterios_aceitacao.md
   assets:
     - assets/documentacao/
     - assets/rebeca_animation.riv
@@ -62,129 +57,4 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_failure_mapping_test: bash scripts/run_failure_mapping_test
-  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
-  run_test_and_analyze: flutter test && flutter analyze
-  run_tip_validation_test: flutter drive --driver=test/integration_tests/tip_validation_test/tip_validation_test_driver.dart --target=test/integration_tests/tip_validation_test/tip_validation_test.dart
-  run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
-  run_checksum_test: bash scripts/run_checksum_test.sh
-  run_code_generation: dart run build_runner build --delete-conflicting-outputs
-  run_animation_integration_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-  run_resolution_test: flutter drive --driver=test/integration_tests/resolution_test/resolution_test_driver.dart --target=test/integration_tests/resolution_test/resolution_test.dart
-  run_gc_forcing_test: flutter drive --driver=test/integration_tests/gc_forcing_test/gc_forcing_test_driver.dart --target=test/integration_tests/gc_forcing_test/gc_forcing_test.dart
-
-scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_failure_mapping_test: bash scripts/run_failure_mapping_test
-  run_animation_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-
-  run_content_regression_test: bash scripts/run_content_regression_test.sh
-
-  run_jdk_compatibility_test: bash scripts/run_jdk_compatibility_test.sh
-
-  run_uv_rendering_test: bash scripts/run_uv_rendering_test
-
-  run_schema_test: flutter test test/schema_test/schema_test.dart
-
-  run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
-
-  run_performance_test: flutter drive --driver=test/integration_tests/performance_test/performance_test_driver.dart --target=test/integration_tests/performance_test/performance_test.dart
-
-  flutter_test:
-    sdk: flutter
-  mockito: ^5.3.2
-  run_content_edge_cases_test: flutter drive --driver=test/integration_tests/content_edge_cases/content_edge_cases_test_driver.dart --target=test/integration_tests/content_edge_cases/content_edge_cases_test.dart
-  run_setup_validation_test: bash scripts/run_setup_validation_test.sh
-
-  run_uv_mapping_test: bash scripts/run_uv_mapping_test
-
-  run_permission_test: flutter drive --driver=test/integration_tests/permission_test/permission_test_driver.dart --target=test/integration_tests/permission_test/permission_test.dart
-
-flutter_i18n:
-  path: lib/i18n/locales
-
-  run_animation_acceptance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-
-  run_animation_acceptance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-
-  run_animation_acceptance_test: flutter drive --driver=test/integration_tests/animation_test/animation_test_driver.dart --target=test/integration_tests/animation_test/animation_test.dart
-
-  run_stress_test_retention_closures_streams: flutter drive --driver=test/integration_tests/stress_test_retention_closures_streams/stress_test_retention_closures_streams_driver.dart --target=test/integration_tests/stress_test_retention_closures_streams/stress_test_retention_closures_streams.dart
-
-flutter_i18n:
-  path: lib/i18n/locales
-
-scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_failure_mapping_test: bash scripts/run_failure_mapping_test
-  run_pr_description_validation_test: flutter drive --driver=test/integration_tests/pr_description_validation_test/pr_description_validation_test_driver.dart --target=test/integration_tests/pr_description_validation_test/pr_description_validation_test.dart
-
-  assets:
-    - assets/documentacao/versionamento_documentacao.md
-
-  scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-    run_pr_description_validation_test: flutter test test/unit_tests/utils/pr_description_validator_test.dart
-
-  run_failure_mapping_test: bash scripts/run_failure_mapping_test
-
-  run_undo_redo_performance_test: bash scripts/run_undo_redo_performance_test
-
-scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_stress_test_retencao: bash scripts/run_stress_test_retencao_closures_streams
-
-  run_setup_validation_test: bash scripts/run_setup_validation_test
-  run_setup_validation_test: bash scripts/run_setup_validation_test
-
-  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
-
-scripts:
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-  run_markdown_lint_test: bash scripts/run_markdown_lint_test.sh
-
-  run_setup_validation_test: flutter drive --driver=test/integration_tests/setup_validation_test/setup_validation_test_driver.dart --target=test/integration_tests/setup_validation_test/setup_validation_test.dart
-
-  run_content_regression_test: bash scripts/run_content_regression_test
-
-  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
-
-  run_acceptance_criteria_test: bash scripts/run_acceptance_criteria_test
-
-  run_content_regression_test: bash scripts/run_content_regression_test
-  run_setup_validation_test: bash scripts/run_setup_validation_test
-
-  feedback_form:
-    path: lib/features/feedback_form
-
-  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
-
-  run_setup_validation_test: flutter drive --driver=test/integration_tests/setup_validation_test/setup_validation_test_driver.dart --target=test/integration_tests/setup_validation_test/setup_validation_test.dart
-
-  run_device_compatibility_test: bash scripts/run_device_compatibility_test
-
-  run_translation_validation_test: bash scripts/translation_validation/validate_translation.sh
-
-  run_audio_compatibility_test: flutter drive --driver=test/integration_tests/audio_compatibility_test/audio_compatibility_test_driver.dart --target=test/integration_tests/audio_compatibility_test/audio_compatibility_test.dart
-
-  run_content_regression_test: bash scripts/run_content_regression_test
-
-  run_uv_mapping_validation_test: bash scripts/run_uv_mapping_validation_test
-
-scripts:
-  update_distribution_docs: bash scripts/update_distribution_docs
-
-  run_permission_test: bash scripts/run_permission_test
+  lint_markdown: markdownlint .github/docs/

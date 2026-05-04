@@ -1,9 +1,7 @@
 {
-  "java.configuration.runtimes": [
-    {
-      "name": "JavaSE-17",
-      "path": "/usr/lib/jvm/java-17-openjdk-amd64",
-      "default": true
-    }
-  ]
+  "markdownlint.config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false
+  }
 }
