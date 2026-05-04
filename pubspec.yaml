@@ -51,6 +51,7 @@ flutter_i18n:
   path: lib/i18n/locales
 
 scripts:
+  run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
   run_memory_test: ./scripts/run_memory_test.sh
   run_checksum_test: bash scripts/run_checksum_test.sh
   run_code_generation: dart run build_runner build --delete-conflicting-outputs
@@ -62,6 +63,7 @@ scripts:
   run_uv_map_test: flutter drive --driver=test/integration_tests/uv_map_test/uv_map_test_driver.dart --target=test/integration_tests/uv_map_test/uv_map_test.dart
 
 scripts:
+  run_coverage_threshold_test: flutter test test/coverage_threshold/coverage_threshold_test.dart
   run_performance_test: ./scripts/run_performance_test.sh
 
   run_traceability_test: flutter drive --driver=test/integration_tests/traceability_test/traceability_test_driver.dart --target=test/integration_tests/traceability_test/traceability_test.dart

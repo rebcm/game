@@ -1,11 +1,5 @@
-# Documentação da Pipeline de CI/CD
+# CI/CD Pipeline Documentation
 
-## Etapas da Pipeline
+## Coverage Threshold
 
-1. Construção do projeto Flutter.
-2. Execução de testes unitários e de integração.
-3. Validação da documentação de instalação via `scripts/validate_installation_docs.sh`.
-
-## Guia de Implementação
-
-1. Adicionar o script `validate_installation_docs.sh` à pipeline de CI/CD.
+The pipeline will fail if the coverage threshold is not met. The threshold is set to 80%.
