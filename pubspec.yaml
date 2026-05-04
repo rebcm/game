@@ -18,10 +18,6 @@ dependencies:
   rive: ^0.10.6
 
 dev_dependencies:
-  provider: ^6.0.3
-  archive: ^3.3.0
-  http: ^0.13.5
-  audioplayers: ^1.0.1
   flutter_test:
     sdk: flutter
   test: ^1.21.4
@@ -47,20 +43,10 @@ scripts:
   run_build_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/build_performance_test.dart
   run_app_startup_performance_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/app_startup_performance_test.dart
 
-
   run_floating_point_precision_test: flutter drive --driver=test/stress_tests/floating_point_precision_test/floating_point_precision_driver.dart --target=test/stress_tests/floating_point_precision_test/floating_point_precision_test.dart
 
   run_suavidade_test: flutter drive --driver=test/integration_tests/suavidade_test/suavidade_driver.dart --target=test/integration_tests/suavidade_test/suavidade_test.dart
 
   run_onboarding_test: flutter drive --driver=test/integration_tests/onboarding_test/onboarding_driver.dart --target=test/integration_tests/onboarding_test/onboarding_test.dart
-  run_secrets_test: flutter drive --driver=test/integration_tests/secrets_test/secrets_driver.dart --target=test/integration_tests/secrets_test/secrets_test.dart
 
-  run_contract_test: flutter test test/contract_tests/contract_test.dart
-
-  run_technical_comparison_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/performance_tests/technical_comparison_test/technical_comparison_test.dart
-
-  run_fisica_edge_cases_test: flutter drive --driver=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_driver.dart --target=test/stress_tests/fisica_edge_cases_test/fisica_edge_cases_test.dart
-
-  run_env_validation_test: flutter drive --driver=test/integration_tests/env_validation_test/env_validation_driver.dart --target=test/integration_tests/env_validation_test/env_validation_test.dart
-
-  run_ui_dicas_golden_test: flutter test --update-goldens test/golden_tests/ui_dicas_test/ui_dicas_test.dart
+  run_audio_settings_test: flutter drive --driver=test/integration_tests/integration_test_driver/integration_test_driver.dart --target=test/integration_tests/audio_settings_test/audio_settings_test.dart

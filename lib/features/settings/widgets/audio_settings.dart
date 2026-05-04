@@ -5,16 +5,16 @@ import 'package:game/features/settings/providers/audio_settings_provider.dart';
 class AudioSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final audioSettings = context.watch<AudioSettingsProvider>();
+    final audioSettings = Provider.of<AudioSettingsProvider>(context);
 
     return Column(
       children: [
         Row(
           children: [
-            Text('Music'),
+            Text('Música'),
             Switch(
-              value: audioSettings.musicEnabled,
-              onChanged: (value) => audioSettings.toggleMusic(),
+              value: audioSettings.isMusicMuted,
+              onChanged: (value) => audioSettings.toggleMusicMute(),
             ),
           ],
         ),
@@ -24,16 +24,16 @@ class AudioSettings extends StatelessWidget {
         ),
         Row(
           children: [
-            Text('SFX'),
+            Text('Efeitos Sonoros'),
             Switch(
-              value: audioSettings.sfxEnabled,
-              onChanged: (value) => audioSettings.toggleSFX(),
+              value: audioSettings.isSfxMuted,
+              onChanged: (value) => audioSettings.toggleSfxMute(),
             ),
           ],
         ),
         Slider(
           value: audioSettings.sfxVolume,
-          onChanged: (value) => audioSettings.setSFXVolume(value),
+          onChanged: (value) => audioSettings.setSfxVolume(value),
         ),
       ],
     );
