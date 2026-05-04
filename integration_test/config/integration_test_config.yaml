@@ -1,2 +1,2 @@
 tests:
-  - test: ui_validation_test/ui_text_validation_test.dart
+  - input_concurrency_test/input_concurrency_test.dart

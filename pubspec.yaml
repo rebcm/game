@@ -87,3 +87,6 @@ flutter:
 
   ci_cd_validation_test:
     path: ./integration_test/ci_cd_validation
+
+  input_concurrency_test:
+    path: ./integration_test/input_concurrency_test
