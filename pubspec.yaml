@@ -81,3 +81,6 @@ flutter:
     path: ./integration_test/permission_validation_test
   emulator_validation_test:
     path: ./integration_test/emulator_validation_test
+
+  input_performance_benchmark:
+    path: ./benchmarks/input_performance

@@ -1,0 +1,2 @@
+max_latency: 100
+acceptable_loss_rate: 0.05
