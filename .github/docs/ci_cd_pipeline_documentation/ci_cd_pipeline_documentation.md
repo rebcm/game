@@ -1,27 +1,20 @@
-# Documentação do Pipeline de CI/CD
+# CI/CD Pipeline Documentation
 
-## Introdução
+## Overview
 
-Este documento descreve o pipeline de CI/CD utilizado no projeto Rebeca.
+This document describes the CI/CD pipeline for the Rebeca game project.
 
-## Configuração do Pipeline
+## Pipeline Steps
 
-O pipeline é configurado através dos arquivos YAML localizados em `.github/workflows`.
+1. Checkout code
+2. Setup Flutter
+3. Verify Flutter version
+4. Setup JDK
+5. Verify Java version
+6. Install dependencies
+7. Analyze code
+8. Run tests
 
-## Execução do Pipeline
+## Triggers
 
-O pipeline é executado automaticamente em cada push para o repositório.
-
-## Testes e Validações
-
-O pipeline executa os seguintes testes e validações:
-- Testes de integração
-- Testes de performance
-- Validação da configuração do CI/CD
-
-## Atualização da Documentação
-
-A documentação do pipeline é atualizada automaticamente sempre que houver alterações nos arquivos de configuração do CI/CD.
-### JDK Version Validation
-
-The CI/CD pipeline now validates the JDK version to ensure it matches the required version (17).
+The pipeline is triggered on push events to the main branch.
