@@ -20,19 +20,36 @@ enum TipoBloco {
   agua,
   lava,
   obsidiana,
+  workbench,   // bloco crafting (4 pranchas)
+  la,          // wool (drop ovelha)
+  tocha,       // ilumina e é colocada
 }
 
 extension TipoBlocoProps on TipoBloco {
-  bool get solido => this != TipoBloco.ar;
+  bool get solido =>
+      this != TipoBloco.ar &&
+      this != TipoBloco.tocha; // tocha não bloqueia colisão
   bool get transparente =>
       this == TipoBloco.ar ||
       this == TipoBloco.vidro ||
       this == TipoBloco.folha ||
-      this == TipoBloco.agua;
+      this == TipoBloco.agua ||
+      this == TipoBloco.tocha;
   bool get emiteLuz =>
-      this == TipoBloco.luz || this == TipoBloco.lava;
+      this == TipoBloco.luz ||
+      this == TipoBloco.lava ||
+      this == TipoBloco.tocha;
   bool get liquido => this == TipoBloco.agua || this == TipoBloco.lava;
   bool get perigoso => this == TipoBloco.lava || this == TipoBloco.cacto;
+  /// Intensidade da luz emitida (0..15 estilo Minecraft).
+  int get nivelLuz {
+    switch (this) {
+      case TipoBloco.lava: return 15;
+      case TipoBloco.luz: return 14;
+      case TipoBloco.tocha: return 13;
+      default: return 0;
+    }
+  }
 
   String get nome {
     switch (this) {
@@ -55,6 +72,9 @@ extension TipoBlocoProps on TipoBloco {
       case TipoBloco.agua: return 'Água';
       case TipoBloco.lava: return 'Lava';
       case TipoBloco.obsidiana: return 'Obsidiana';
+      case TipoBloco.workbench: return 'Workbench';
+      case TipoBloco.la: return 'Lã';
+      case TipoBloco.tocha: return 'Tocha';
     }
   }
 
@@ -79,6 +99,9 @@ extension TipoBlocoProps on TipoBloco {
       case TipoBloco.agua: return const Color(0xCC2196F3);
       case TipoBloco.lava: return const Color(0xFFFF5722);
       case TipoBloco.obsidiana: return const Color(0xFF1A1A2E);
+      case TipoBloco.workbench: return const Color(0xFF6D4C41);
+      case TipoBloco.la: return const Color(0xFFFAFAFA);
+      case TipoBloco.tocha: return const Color(0xFFFFB300);
     }
   }
 

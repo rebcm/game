@@ -32,6 +32,11 @@ class ConstrucaoCriativa extends FlameGame
   int fomeMax = 20;
   bool morto = false;
 
+  /// Modo de jogo. true = creative (voo livre, sem dano de queda, blocos
+  /// infinitos no inv… na próxima iteração); false = survival (gravidade
+  /// real, dano de queda, recursos limitados).
+  bool creative = true;
+
   // Tempo desde último dano para regen.
   double _semDano = 0.0;
   double _accFome = 0.0;
@@ -127,7 +132,18 @@ class ConstrucaoCriativa extends FlameGame
     if (morto) return;
 
     rebeca.mover(_joyX, _joyZ, dt, mundo);
-    if (_joyY != 0) rebeca.subirDescer(_joyY, dt);
+    if (creative) {
+      // Voo livre: subir/descer manual, sem gravidade.
+      if (_joyY != 0) rebeca.subirDescer(_joyY, dt);
+    } else {
+      // Survival: gravidade. _joyY > 0 vira pulo; _joyY < 0 ignorado.
+      if (_joyY > 0) rebeca.pular();
+      final queda = rebeca.aplicarGravidade(dt, mundo);
+      if (queda > 4.0) {
+        final dano = (queda - 3).round();
+        if (dano > 0) _aplicarDano(dano, 'queda ${queda.toStringAsFixed(1)} blocos');
+      }
+    }
 
     if (_quebrando) {
       final alvo = rebeca.blocoAlvo;
@@ -328,6 +344,8 @@ class ConstrucaoCriativa extends FlameGame
       if (event.logicalKey == LogicalKeyboardKey.keyR) _renderer.rotacionarCamera();
       if (event.logicalKey == LogicalKeyboardKey.keyF) atacarMobProximo();
       if (event.logicalKey == LogicalKeyboardKey.keyE) comerSlotAtual();
+      if (event.logicalKey == LogicalKeyboardKey.keyG) alternarModo();
+      if (event.logicalKey == LogicalKeyboardKey.space && !creative) rebeca.pular();
       // 1..9: selecionar slot da hotbar.
       const digitos = [
         LogicalKeyboardKey.digit1, LogicalKeyboardKey.digit2,
@@ -444,6 +462,36 @@ class ConstrucaoCriativa extends FlameGame
   }
 
   void rotacionarCamera() => _renderer.rotacionarCamera();
+
+  /// Alterna entre criativo (voo livre, sem dano de queda) e sobrevivência
+  /// (gravidade, dano de queda). Disponível em qualquer momento.
+  void alternarModo() {
+    creative = !creative;
+    if (creative) {
+      rebeca.vy = 0;
+      rebeca.noChao = true;
+      rebeca.yMaxQueda = rebeca.y;
+    }
+    mensagem.value = creative ? 'Modo Criativo (voo)' : 'Modo Sobrevivência (gravidade)';
+  }
+
+  /// Verifica se há um workbench em raio 3 do player. Habilita receitas
+  /// avançadas no painel de craft.
+  bool get workbenchProximo {
+    final px = rebeca.x.round();
+    final py = rebeca.y.round();
+    final pz = rebeca.z.round();
+    for (int dx = -3; dx <= 3; dx++) {
+      for (int dz = -3; dz <= 3; dz++) {
+        for (int dy = -2; dy <= 2; dy++) {
+          if (mundo.get(px + dx, py + dy, pz + dz) == TipoBloco.workbench) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 
   void selecionarSlot(int slot) {
     inv.selecionarSlot(slot);

@@ -243,6 +243,17 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
             }),
           ],
         ),
+        const SizedBox(height: 6),
+        _miniBotao(
+          widget.game.creative ? '🦅' : '⚔',
+          widget.game.creative ? 'Criativo' : 'Survival',
+          widget.game.creative ? Colors.lightBlue.shade700 : Colors.deepOrange.shade700,
+          () {
+            widget.game.alternarModo();
+            setState(() {});
+          },
+          wide: true,
+        ),
       ],
     );
   }
@@ -548,7 +559,8 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
 
   /// Painel de crafting com receitas disponíveis.
   Widget _buildCraftOverlay() {
-    final disponiveis = Crafting.disponiveis(inv, perto: true);
+    final perto = widget.game.workbenchProximo;
+    final disponiveis = Crafting.disponiveis(inv, perto: perto);
     return Positioned.fill(
       child: GestureDetector(
         onTap: () => setState(() => _craftAberto = false),
@@ -576,9 +588,12 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Workbench virtual ativo. Toque numa receita para criar.',
-                    style: TextStyle(color: Colors.white60, fontSize: 10),
+                  Text(
+                    perto
+                        ? '🪵 Workbench próximo — receitas avançadas habilitadas.'
+                        : 'Sem workbench por perto: só receitas básicas. Crie e coloque um workbench (4× pranchas) para habilitar ferramentas.',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white60, fontSize: 10),
                   ),
                   const SizedBox(height: 10),
                   if (disponiveis.isEmpty)
@@ -613,14 +628,14 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
                               ),
                             ),
                             subtitle: Text(
-                              _resumoReceita(r.custos),
+                              r.textoCustos,
                               style: const TextStyle(
                                 color: Colors.white60,
                                 fontSize: 10,
                               ),
                             ),
                             onTap: () {
-                              Crafting.craftar(inv, r, perto: true);
+                              Crafting.craftar(inv, r, perto: perto);
                             },
                           );
                         },
@@ -638,10 +653,6 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
         ),
       ),
     );
-  }
-
-  String _resumoReceita(List<dynamic> custos) {
-    return 'consome materiais';
   }
 
   /// Tela de game over.
@@ -727,6 +738,9 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
       case TipoBloco.agua:      return '💧';
       case TipoBloco.lava:      return '🔥';
       case TipoBloco.obsidiana: return '⬣';
+      case TipoBloco.workbench: return '🪚';
+      case TipoBloco.la:        return '☁';
+      case TipoBloco.tocha:     return '🕯';
       default: return '■';
     }
   }

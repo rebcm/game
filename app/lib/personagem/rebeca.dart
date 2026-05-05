@@ -16,16 +16,22 @@ class BlocoAlvo {
 
 class Rebeca {
   double x, y, z;
-  double vx = 0, vy = 0, vz = 0;
-  double direcao = pi / 4; // NE by default
+  double vy = 0; // velocidade vertical (gravidade no modo survival)
+  double direcao = pi / 4; // NE por padrão
 
   // Quebra em curso (alvo + progresso 0..1).
   BlocoAlvo? blocoAlvo;
   double progressoQuebra = 0.0;
 
-  // Para detecção de queda: y do último frame em que estava no chão.
+  // Para detecção de queda: y mais alto que o player atingiu desde o
+  // último contato com o chão.
   double yMaxQueda = 0.0;
   bool noChao = true;
+
+  // Gravidade: aceleração para baixo e cap de velocidade terminal.
+  static const double gravidade = -22.0;
+  static const double velTerminal = -32.0;
+  static const double pulo = 8.5;
 
   Rebeca({required this.x, required this.y, required this.z}) {
     yMaxQueda = y;
@@ -43,8 +49,63 @@ class Rebeca {
     _atualizarBlocoAlvo(mundo);
   }
 
+  /// Vôo livre (modo creative): movimento direto em Y.
   void subirDescer(double dy, double dt) {
     y = (y + dy * Constantes.velocidade * dt).clamp(1.0, Constantes.worldY - 1.0);
+    yMaxQueda = y;
+    noChao = true;
+  }
+
+  /// Aplica gravidade e detecta colisão com o chão. Retorna a altura de
+  /// queda (em blocos) se aterrissou neste frame; 0 caso contrário.
+  /// O caller decide se transforma a queda em dano (modo survival).
+  double aplicarGravidade(double dt, Mundo mundo) {
+    vy += gravidade * dt;
+    if (vy < velTerminal) vy = velTerminal;
+    final ny = y + vy * dt;
+
+    // Bloco alvo (cabeça/pés do player). Player ocupa ~1 bloco vertical.
+    final px = x.round();
+    final pz = z.round();
+
+    if (vy < 0) {
+      // Caindo: chão = bloco em (px, floor(ny)-1, pz)? Verificar pé do
+      // player aproximadamente em y-0.0; bloco abaixo é (floor(y)-1).
+      final yFloor = ny.floor();
+      if (mundo.isSolido(px, yFloor, pz)) {
+        // Aterrissou em yFloor+1.
+        final landY = yFloor + 1.0;
+        final delta = yMaxQueda - landY;
+        y = landY;
+        vy = 0;
+        noChao = true;
+        yMaxQueda = y;
+        return delta > 0 ? delta : 0;
+      } else {
+        y = ny;
+        noChao = false;
+        return 0;
+      }
+    } else {
+      // Subindo (após pulo): teto = bloco acima da cabeça.
+      final yCeil = (ny + 1).floor();
+      if (mundo.isSolido(px, yCeil, pz)) {
+        vy = 0;
+        return 0;
+      } else {
+        y = ny;
+        if (y > yMaxQueda) yMaxQueda = y;
+        return 0;
+      }
+    }
+  }
+
+  /// Tenta pular (apenas se está no chão).
+  void pular() {
+    if (noChao) {
+      vy = pulo;
+      noChao = false;
+    }
   }
 
   /// Reseta progressoQuebra ao trocar slot ou parar de quebrar.

@@ -4,7 +4,7 @@ import 'package:rebcm/inventario/item.dart';
 
 /// Receita de crafting: consome itens (bloco ou item) e produz um item.
 class Receita {
-  final List<_Custo> custos;
+  final List<CustoReceita> custos;
   final Item resultado;
   final bool requerWorkbench;
 
@@ -15,15 +15,25 @@ class Receita {
   });
 
   String get nome => resultado.nome;
+
+  /// Texto curto descrevendo os custos para a UI: "3× pranchas, 2× pau".
+  String get textoCustos {
+    return custos
+        .map((c) => '${c.qtd}× ${c.bloco != null ? c.bloco!.nome : c.item!.nome}')
+        .join(' + ');
+  }
 }
 
-class _Custo {
+class CustoReceita {
   final TipoBloco? bloco;
   final TipoItem? item;
   final int qtd;
-  const _Custo.bloco(TipoBloco b, this.qtd) : bloco = b, item = null;
-  const _Custo.item(TipoItem i, this.qtd) : bloco = null, item = i;
+  const CustoReceita.bloco(TipoBloco b, this.qtd) : bloco = b, item = null;
+  const CustoReceita.item(TipoItem i, this.qtd) : bloco = null, item = i;
 }
+
+// Aliases curtos usados internamente nas tabelas de receita.
+typedef _Custo = CustoReceita;
 
 /// Receitas hardcoded estilo Minecraft. Receitas básicas (sem workbench)
 /// usam só pranchas; receitas avançadas (com workbench) habilitam ferramentas.
@@ -39,11 +49,18 @@ class Crafting {
       custos: [_Custo.item(TipoItem.pranchas, 2)],
       resultado: Item.item(TipoItem.pau, qtd: 4),
     ),
-    // 4 pranchas → 1 workbench (vira bloco "tijolo" como placeholder até criarmos workbench bloco)
+    // 4 pranchas → 1 workbench (bloco oficial)
     Receita(
       custos: [_Custo.item(TipoItem.pranchas, 4)],
-      resultado: Item.bloco(TipoBloco.tijolo),
+      resultado: Item.bloco(TipoBloco.workbench),
     ),
+    // 1 carvão + 1 pau → 4 tochas (sem workbench)
+    Receita(
+      custos: [_Custo.item(TipoItem.carvao, 1), _Custo.item(TipoItem.pau, 1)],
+      resultado: Item.bloco(TipoBloco.tocha, qtd: 4),
+    ),
+    // 4 lã → bandeira/cama (placeholder usando tijolo decorativo) — pulamos
+    // 8 pedras (cobblestone) ainda não diferenciadas, então não há fornalha
     // 3 pranchas + 2 paus → picareta de madeira (workbench)
     Receita(
       custos: [_Custo.item(TipoItem.pranchas, 3), _Custo.item(TipoItem.pau, 2)],

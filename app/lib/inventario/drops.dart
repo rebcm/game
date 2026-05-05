@@ -53,6 +53,12 @@ class Drops {
         return const [];
       case TipoBloco.obsidiana:
         return [Item.bloco(TipoBloco.obsidiana)];
+      case TipoBloco.workbench:
+        return [Item.bloco(TipoBloco.workbench)];
+      case TipoBloco.la:
+        return [Item.bloco(TipoBloco.la)];
+      case TipoBloco.tocha:
+        return [Item.bloco(TipoBloco.tocha)];
     }
   }
 
@@ -85,6 +91,9 @@ class Drops {
       case TipoBloco.luz:
       case TipoBloco.neve:
       case TipoBloco.cacto:
+      case TipoBloco.workbench:
+      case TipoBloco.la:
+      case TipoBloco.tocha:
         return true;
       case TipoBloco.ar:
       case TipoBloco.agua:
