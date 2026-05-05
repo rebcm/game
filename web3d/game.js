@@ -816,6 +816,11 @@ class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x87CEEB);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // scene.background passa pelo pipeline de cor adequado (sRGB →
+    // linear → tone map → sRGB output). setClearColor sozinho ignora
+    // tone mapping → escavações grandes pareciam um vazio preto ao
+    // invés do céu. Mantemos os dois sincronizados em atualizarCeu.
+    this.scene.background = new THREE.Color(0x87CEEB);
     // === Tone mapping ACES Filmic ===
     // CineonToneMapping aplica pow(.,2.2) internamente (gamma encode)
     // e o renderer com outputColorSpace=SRGBColorSpace encoda de novo
@@ -1162,6 +1167,7 @@ class Renderer {
       bg = c2.clone().lerp(c3, (sun - 0.35) / 0.65);
     }
     this.renderer.setClearColor(bg);
+    if (this.scene.background) this.scene.background.copy(bg);
     if (this.scene.fog) this.scene.fog.color.copy(bg);
 
     // Posição dos discos sol/lua: arco em torno do player
