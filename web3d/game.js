@@ -811,11 +811,19 @@ class Renderer {
     this.atlas = criarAtlasTexturas();
     // Material de bloco com texture atlas + tinting por vertex colors
     // (vertex colors aplicam ambient-occlusion fake e tinting de bioma).
-    // EXPLÍCITO: transparent=false + alphaTest=0 + depthWrite=true para
-    // garantir que blocos opacos não deixem passar luz por bug de
-    // canal alpha residual no atlas.
+    //
+    // === Luz mínima própria via emissiveMap ===
+    // Sem emissive, faces opostas à luz direcional ficavam pretas em
+    // cavernas e sombras pesadas. Aplicamos a própria textura também
+    // como emissiveMap com intensidade ~0.55 — assim cada bloco "brilha"
+    // 55% de sua cor original mesmo SEM nenhuma luz incidindo. PointLights
+    // (tochas) ainda iluminam por cima; sol cria highlights visíveis.
+    // Resultado: nenhum bloco fica preto, mas sombras ainda dão volume.
     this.materialOpaco = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
+      emissive: new THREE.Color(0xffffff),
+      emissiveMap: this.atlas.texture,
+      emissiveIntensity: 0.55,
       vertexColors: true,
       transparent: false,
       alphaTest: 0,
@@ -824,6 +832,9 @@ class Renderer {
     });
     this.materialTransp = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
+      emissive: new THREE.Color(0xffffff),
+      emissiveMap: this.atlas.texture,
+      emissiveIntensity: 0.55,
       vertexColors: true, transparent: true, opacity: 0.78,
       side: THREE.DoubleSide,
     });
@@ -1088,13 +1099,13 @@ class Renderer {
   atualizarCeu(tempoDia, playerPos) {
     // sun = sin(2π·t - π/2): pico em t=0.25 (meio-dia)
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    // Mínimos elevados pra noite continuar legível (estilo Minecraft
-    // onde mesmo de noite o mundo não fica 100% preto). HemisphereLight
-    // (this.hemi) cobre a luz "neutra" do céu/chão com cor.
-    this.hemi.intensity   = 0.40 + 0.45 * sun;     // 0.40 noite → 0.85 dia
-    this.ambient.intensity = 0.30 + 0.30 * sun;    // 0.30 noite → 0.60 dia
-    this.sol.intensity     = 0.15 + 0.75 * sun;    // 0.15 noite → 0.90 dia
-    this.luaLuz.intensity  = 0.35 * (1 - sun);     // 0.35 noite → 0.0 dia
+    // Como cada bloco já emite 55% da própria textura via emissiveMap,
+    // reduzimos as outras luzes pra não ficar lavado de dia. Mas
+    // mantemos suficiente pra criar contraste sol/sombra visível.
+    this.hemi.intensity    = 0.20 + 0.30 * sun;    // 0.20 noite → 0.50 dia
+    this.ambient.intensity = 0.10 + 0.20 * sun;    // 0.10 noite → 0.30 dia
+    this.sol.intensity     = 0.10 + 0.55 * sun;    // 0.10 noite → 0.65 dia
+    this.luaLuz.intensity  = 0.25 * (1 - sun);     // 0.25 noite → 0.0 dia
     // Cor do hemi muda também: noite tinge azulado, dia neutro.
     if (sun < 0.4) {
       this.hemi.color.setHex(0x4a6ba8); // azul-noite
