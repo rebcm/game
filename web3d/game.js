@@ -74,7 +74,7 @@ const BLOCO_INFO = {
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
   [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
-  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x1A1A2E, lateral: 0x101020 },
+  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x3a3360, lateral: 0x2a2350 },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
   [BLOCO.LA]:        { nome: 'Lã',        solido: true,  transp: false, emiteLuz: 0,  cor: 0xFAFAFA, lateral: 0xEEEEEE },
   [BLOCO.TOCHA]:     { nome: 'Tocha',     solido: false, transp: true,  emiteLuz: 13, cor: 0xFFB300, lateral: 0xFF6F00 },
@@ -349,7 +349,10 @@ class World {
     const n2 = hash2((x / 4) | 0, y * 31, this.seed ^ 0xc41e2) / 0xFFFFFFFF;
     const n3 = hash2(y * 17, (z / 4) | 0, this.seed ^ 0xc41e3) / 0xFFFFFFFF;
     const v = (n1 + n2 + n3) / 3;
-    const yFactor = y < 8 ? 0.34 : (y < 16 ? 0.30 : 0.24);
+    // Threshold reduzido — gera cavernas mais raras e em sua maioria
+    // profundas (não visíveis da superfície). Antes 0.34/0.30/0.24
+    // gerava esponja com furos visíveis de cima.
+    const yFactor = y < 6 ? 0.22 : (y < 12 ? 0.18 : 0.10);
     return v < yFactor;
   }
   plantarArvore(c, lx, y, lz) {
@@ -604,7 +607,7 @@ function criarAtlasTexturas() {
   pintar(16, 0x388E3C, 18);                                            // cacto
   pintar(17, 0x1976D2, 12);                                            // água
   pintar(18, 0xBF360C, 30);                                            // lava
-  pintar(19, 0x101020, 12);                                            // obsidiana
+  pintar(19, 0x3a3360, 18);                                            // obsidiana (clareada)
   pintar(20, 0x4E342E, 18, listrasMadeira);                            // workbench lateral
   pintar(21, 0x6D4C41, 18, (i, c, cs) => {                             // workbench topo
     aneisMadeiraTopo(i, c, cs);
@@ -1124,8 +1127,12 @@ class Renderer {
       this.hemi.groundColor.setHex(0x6b5a3f);
     }
 
-    // Cor do céu: noite escura → crepúsculo laranja → dia azul
-    const c1 = new THREE.Color(0x0B1430);
+    // Cor do céu: noite escura → crepúsculo laranja → dia azul.
+    // Piso noturno elevado pra que "ver o céu" através de buracos no
+    // terreno nunca pareça uma região preta-vazia. Antes c1 era
+    // 0x0B1430 (RGB 11/20/48) — perto do preto perceptual; agora
+    // 0x4a5878 (RGB 74/88/120) — ainda noturno mas sempre visível.
+    const c1 = new THREE.Color(0x4a5878);
     const c2 = new THREE.Color(0xFF8A65);
     const c3 = new THREE.Color(0x87CEEB);
     let bg;
