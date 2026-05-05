@@ -49,8 +49,11 @@ const BLOCO = {
   WORKBENCH: 19,
   LA:        20,
   TOCHA:     21,
+  BAU:       22,
+  FORNALHA:  23,
+  CAMA:      24,
 };
-const N_BLOCOS = 22;
+const N_BLOCOS = 25;
 
 const BLOCO_INFO = {
   [BLOCO.AR]:        { nome: 'Ar',        solido: false, transp: true,  emiteLuz: 0,  cor: 0x000000, lateral: 0x000000 },
@@ -75,6 +78,9 @@ const BLOCO_INFO = {
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
   [BLOCO.LA]:        { nome: 'Lã',        solido: true,  transp: false, emiteLuz: 0,  cor: 0xFAFAFA, lateral: 0xEEEEEE },
   [BLOCO.TOCHA]:     { nome: 'Tocha',     solido: false, transp: true,  emiteLuz: 13, cor: 0xFFB300, lateral: 0xFF6F00 },
+  [BLOCO.BAU]:       { nome: 'Baú',       solido: true,  transp: false, emiteLuz: 0,  cor: 0x8B5A2B, lateral: 0x6D4C41 },
+  [BLOCO.FORNALHA]:  { nome: 'Fornalha',  solido: true,  transp: false, emiteLuz: 0,  cor: 0x6E6E6E, lateral: 0x424242 },
+  [BLOCO.CAMA]:      { nome: 'Cama',      solido: true,  transp: false, emiteLuz: 0,  cor: 0xE53935, lateral: 0xC62828 },
 };
 const ICONE = {
   [BLOCO.GRAMA]: '🌿', [BLOCO.TERRA]: '🟫', [BLOCO.PEDRA]: '🪨',
@@ -84,6 +90,7 @@ const ICONE = {
   [BLOCO.CARVAO]: '⬛', [BLOCO.FERRO]: '⚙', [BLOCO.CACTO]: '🌵',
   [BLOCO.AGUA]: '💧', [BLOCO.LAVA]: '🔥', [BLOCO.OBSIDIANA]: '⬣',
   [BLOCO.WORKBENCH]: '🪚', [BLOCO.LA]: '☁', [BLOCO.TOCHA]: '🕯',
+  [BLOCO.BAU]: '📦', [BLOCO.FORNALHA]: '🔥', [BLOCO.CAMA]: '🛏',
 };
 
 // Tipos de item (não-bloco)
@@ -162,6 +169,13 @@ const RECEITAS = [
   { custos: [{i: ITEM.DIAMANTE, q: 8}], saida: {i: ITEM.PEI_DIAMANTE, q: 1}, wb: true },
   { custos: [{i: ITEM.DIAMANTE, q: 7}], saida: {i: ITEM.PER_DIAMANTE, q: 1}, wb: true },
   { custos: [{i: ITEM.DIAMANTE, q: 4}], saida: {i: ITEM.BOT_DIAMANTE, q: 1}, wb: true },
+  // === Blocos funcionais ===
+  // Baú: 8 pranchas
+  { custos: [{i: ITEM.PRANCHAS, q: 8}], saida: {b: BLOCO.BAU, q: 1}, wb: true },
+  // Fornalha: 8 pedras
+  { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
+  // Cama: 3 lã + 3 pranchas
+  { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
 ];
 
 // ===================================================================
@@ -210,6 +224,34 @@ class World {
   constructor(seed = 42) {
     this.seed = seed;
     this.chunks = new Map(); // chunkKey -> Chunk
+    // Estado de blocos funcionais. Chave = "x,y,z" string.
+    // bauTesouros[chave] = array de 27 slots ({b/i/q})
+    this.bauTesouros = new Map();
+    // fornalhaEstados[chave] = { input, output, combustivel, progresso, ativa }
+    this.fornalhaEstados = new Map();
+  }
+  static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
+  getBau(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    if (!this.bauTesouros.has(k)) {
+      this.bauTesouros.set(k, new Array(27).fill(null));
+    }
+    return this.bauTesouros.get(k);
+  }
+  getFornalha(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    if (!this.fornalhaEstados.has(k)) {
+      this.fornalhaEstados.set(k, {
+        input: null, combustivel: null, output: null,
+        progresso: 0, ativa: false,
+      });
+    }
+    return this.fornalhaEstados.get(k);
+  }
+  removerEstadoBloco(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    this.bauTesouros.delete(k);
+    this.fornalhaEstados.delete(k);
   }
   alturaTerreno(x, z) {
     const nx = x / 32, nz = z / 32;
@@ -576,7 +618,62 @@ function criarAtlasTexturas() {
   });
   pintar(22, 0xEEEEEE, 14);                                            // lã
   pintar(23, 0xFFB300, 6);                                             // tocha
-  next = 24;
+  // Baú: lateral com fechadura central + bordas
+  pintar(24, 0x8B5A2B, 18, (i, c, cs) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(60,30,15,0.9)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + 0.5, y0 + 0.5, cs - 1, cs - 1);
+    // fechadura
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + 7, y0 + 6, 2, 4);
+    // tampa (linha horizontal no meio)
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + 5.5);
+    ctx.lineTo(x0 + cs, y0 + 5.5);
+    ctx.stroke();
+  });
+  // Fornalha: face com "fogo"
+  pintar(25, 0x6E6E6E, 22, (i, c, cs) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // abertura preta retangular
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 4, y0 + 6, 8, 8);
+    // fogo laranja dentro
+    ctx.fillStyle = '#FF6F00';
+    ctx.fillRect(x0 + 5, y0 + 11, 6, 2);
+    ctx.fillStyle = '#FFC107';
+    ctx.fillRect(x0 + 6, y0 + 12, 4, 1);
+    // moldura
+    ctx.strokeStyle = 'rgba(20,20,20,0.7)';
+    ctx.strokeRect(x0 + 0.5, y0 + 0.5, cs - 1, cs - 1);
+  });
+  // Fornalha topo (sem fogo)
+  pintar(26, 0x6E6E6E, 22, (i, c, cs) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(20,20,20,0.6)';
+    ctx.strokeRect(x0 + 1.5, y0 + 1.5, cs - 3, cs - 3);
+  });
+  // Cama: vermelha com "lençol" branco
+  pintar(27, 0xE53935, 14, (i, c, cs) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // travesseiro branco no canto superior
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 1, y0 + 1, cs - 2, 5);
+    // listra acolchoado
+    ctx.strokeStyle = 'rgba(140,30,30,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + 6.5);
+    ctx.lineTo(x0 + cs, y0 + 6.5);
+    ctx.stroke();
+  });
+  // Cama lateral (madeira marrom)
+  pintar(28, 0x8D6E63, 18, listrasMadeira);
+  next = 29;
 
   const M = {};
   M[BLOCO.GRAMA]     = cell(0, 1, 2);
@@ -600,6 +697,9 @@ function criarAtlasTexturas() {
   M[BLOCO.WORKBENCH] = cell(21, 20, 6);
   M[BLOCO.LA]        = cell(22, 22, 22);
   M[BLOCO.TOCHA]     = cell(23, 23, 23);
+  M[BLOCO.BAU]       = cell(24, 24, 24);  // mesma textura todas faces
+  M[BLOCO.FORNALHA]  = cell(26, 25, 26);  // topo limpo, lateral com fogo
+  M[BLOCO.CAMA]      = cell(27, 28, 28);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.magFilter = THREE.NearestFilter;
@@ -773,7 +873,12 @@ class Renderer {
     this.camera.add(this.maoGroup);
     this.scene.add(this.camera); // garantir que camera está na scene
     this.swingProgress = 0; // 0..1, animação de swing ao bater
-    this.transparenciaAtiva = true; // default: estado atual (folha/vidro semi-transp)
+    // Default: SÓLIDO (sem transparência). Usuário pode habilitar
+    // transparência via botão 🪟. Aplicamos imediatamente:
+    this.transparenciaAtiva = false;
+    this.materialTransp.transparent = false;
+    this.materialTransp.opacity = 1.0;
+    this.materialTransp.depthWrite = true;
   }
   criarDisco(cor, raio) {
     const g = new THREE.SphereGeometry(raio, 16, 16);
@@ -1101,6 +1206,7 @@ class Player {
     this.terceiraPessoa = false;
     this.hp = 20; this.hpMax = 20;
     this.fome = 20; this.fomeMax = 20;
+    this.xp = 0; this.nivel = 0;
     this.morto = false;
     this.spawn = this.pos.clone();
     this.semDano = 99;
@@ -1404,6 +1510,8 @@ const Drops = {
       case BLOCO.FOLHA:    return Math.random() < 0.05 ? [{ i: ITEM.PAU, q: 1 }] : [];
       case BLOCO.VIDRO:    return [];
       case BLOCO.AGUA: case BLOCO.LAVA: return [];
+      case BLOCO.BAU: case BLOCO.FORNALHA: case BLOCO.CAMA:
+        return [{ b, q: 1 }];
       default: return [{ b, q: 1 }];
     }
   },
@@ -1920,6 +2028,17 @@ class UI {
   atualizar() {
     this.renderHotbar();
     this.renderBars();
+    this.atualizarXP();
+  }
+  atualizarXP() {
+    if (!player) return;
+    const nivel = player.nivel || 0;
+    const cur = player.xp || 0;
+    const max = (typeof xpProximoNivel === 'function') ? xpProximoNivel() : 7;
+    const fill = document.getElementById('xp-fill');
+    const lbl = document.getElementById('xp-nivel');
+    if (fill) fill.style.width = `${Math.min(100, (cur / max) * 100)}%`;
+    if (lbl)  lbl.textContent = `Nv.${nivel}  ${cur}/${max}`;
   }
   renderHotbar() {
     if (!inv) return;
@@ -2083,6 +2202,112 @@ class UI {
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
   }
+  // === Painel do baú: 27 slots do baú + inventário (27) + hotbar (9) ===
+  renderBauPainel() {
+    if (!_bauAtivoCoords) return;
+    const bau = world.getBau(_bauAtivoCoords.x, _bauAtivoCoords.y, _bauAtivoCoords.z);
+    const elBau = document.getElementById('bau-grid');
+    const elInv = document.getElementById('bau-inv');
+    const elHot = document.getElementById('bau-hotbar');
+    elBau.innerHTML = ''; elInv.innerHTML = ''; elHot.innerHTML = '';
+    // 27 slots do baú
+    for (let i = 0; i < 27; i++) {
+      const div = document.createElement('div');
+      div.className = 'slot';
+      div.innerHTML = this._slotHTML(bau[i]);
+      div.onclick = () => {
+        // Move bau[i] para inv (primeiro slot livre)
+        if (bau[i]) {
+          if (inv.adicionar({ ...bau[i] })) bau[i] = null;
+        }
+        this.renderBauPainel();
+      };
+      elBau.appendChild(div);
+    }
+    // 27 slots do inv (bag)
+    for (let i = 9; i < 36; i++) {
+      const div = document.createElement('div');
+      div.className = 'slot';
+      div.innerHTML = this._slotHTML(inv.slots[i]);
+      div.onclick = () => {
+        if (inv.slots[i]) {
+          // procura slot livre no baú
+          for (let j = 0; j < 27; j++) {
+            if (!bau[j]) { bau[j] = { ...inv.slots[i] }; inv.slots[i] = null; break; }
+          }
+        }
+        this.renderBauPainel();
+      };
+      elInv.appendChild(div);
+    }
+    // 9 slots da hotbar
+    for (let i = 0; i < 9; i++) {
+      const div = document.createElement('div');
+      div.className = 'slot' + (i === inv.slotSel ? ' sel' : '');
+      div.innerHTML = this._slotHTML(inv.slots[i]);
+      div.onclick = () => {
+        if (inv.slots[i]) {
+          for (let j = 0; j < 27; j++) {
+            if (!bau[j]) { bau[j] = { ...inv.slots[i] }; inv.slots[i] = null; break; }
+          }
+        }
+        this.renderBauPainel();
+      };
+      elHot.appendChild(div);
+    }
+  }
+
+  // === Painel da fornalha: input/combustível/output + botão cozinhar ===
+  renderFornalhaPainel() {
+    if (!_fornAtivaCoords) return;
+    const f = world.getFornalha(_fornAtivaCoords.x, _fornAtivaCoords.y, _fornAtivaCoords.z);
+    const elIn  = document.getElementById('forn-input');
+    const elFu  = document.getElementById('forn-fuel');
+    const elOut = document.getElementById('forn-output');
+    elIn.innerHTML  = this._slotHTML(f.input);
+    elFu.innerHTML  = this._slotHTML(f.combustivel);
+    elOut.innerHTML = this._slotHTML(f.output);
+    elIn.classList.toggle('ativo', !!f.input);
+    elFu.classList.toggle('ativo', !!f.combustivel);
+    elOut.classList.toggle('ativo', !!f.output);
+
+    // Click → trocar entre slot ativo da hotbar e o slot da fornalha
+    const trocaSlot = (campo) => {
+      const sel = inv.slots[inv.slotSel];
+      const atual = f[campo];
+      if (atual) {
+        if (inv.adicionar({ ...atual })) f[campo] = null;
+        else if (!sel) { f[campo] = null; inv.slots[inv.slotSel] = atual; }
+      } else if (sel) {
+        f[campo] = { ...sel };
+        inv.slots[inv.slotSel] = null;
+      }
+      this.renderFornalhaPainel();
+    };
+    elIn.onclick  = () => trocaSlot('input');
+    elFu.onclick  = () => trocaSlot('combustivel');
+    elOut.onclick = () => {
+      if (f.output) {
+        if (inv.adicionar({ ...f.output })) f.output = null;
+      }
+      this.renderFornalhaPainel();
+    };
+
+    // Botão cozinhar como elemento extra: usar o ícone 🔥
+    document.querySelector('.forn-fogo').onclick = () => cozinharFornalha(_fornAtivaCoords);
+
+    // Hotbar
+    const hot = document.getElementById('fornalha-hotbar');
+    hot.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const div = document.createElement('div');
+      div.className = 'slot' + (i === inv.slotSel ? ' sel' : '');
+      div.innerHTML = this._slotHTML(inv.slots[i]);
+      div.onclick = () => { inv.selecionar(i); this.renderFornalhaPainel(); };
+      hot.appendChild(div);
+    }
+  }
+
   mostrarMorte() {
     // Libera o ponteiro ANTES de mostrar — sem isso, qualquer clique
     // continua sendo capturado pelo canvas (pointer lock) e nunca chega
@@ -2127,13 +2352,27 @@ const Save = {
         const a = inv.armadura[peca];
         if (a) armSerializada[peca] = { b: a.b, i: a.i, q: a.q };
       }
+      // Estado de blocos funcionais (baú/fornalha)
+      const bausSerializados = [];
+      for (const [k, slots] of world.bauTesouros) {
+        if (slots.some(s => s)) bausSerializados.push({ k, slots });
+      }
+      const fornsSerializadas = [];
+      for (const [k, f] of world.fornalhaEstados) {
+        if (f.input || f.combustivel || f.output) {
+          fornsSerializadas.push({ k, input: f.input, combustivel: f.combustivel, output: f.output });
+        }
+      }
       const data = {
-        v: 2, seed: world.seed,
+        v: 3, seed: world.seed,
         p: { x: player.pos.x, y: player.pos.y, z: player.pos.z },
         slot: inv.slotSel, hp: player.hp, fome: player.fome,
+        xp: player.xp, nivel: player.nivel,
         td: tempoDia, modo: player.modo,
         inv: invSerializado,
         arm: armSerializada,
+        baus: bausSerializados,
+        forn: fornsSerializadas,
         chunks: chunksMod,
       };
       localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -2197,9 +2436,8 @@ function init() {
     tempoDia = save.td ?? 0.25;
     inv.slots.fill(null);
     inv.slotSel = save.slot ?? 0;
-    // Schema v2: usa s.sx como índice do slot. v1 (compat): s.i era o
-    // índice — ignorar saves antigos pra não corromper.
-    if (save.v === 2 && save.inv) {
+    // Schema v2/v3: usa s.sx como índice do slot. v1 ignorado.
+    if ((save.v === 2 || save.v === 3) && save.inv) {
       for (const s of save.inv) {
         if (s.sx === undefined) continue;
         inv.slots[s.sx] = { b: s.b, i: s.i, q: s.q };
@@ -2210,6 +2448,23 @@ function init() {
       for (const peca of Object.keys(save.arm)) {
         if (inv.armadura[peca] !== undefined) {
           inv.armadura[peca] = { ...save.arm[peca] };
+        }
+      }
+    }
+    // Schema v3: XP e estado de baús/fornalhas
+    if (save.v === 3) {
+      player.xp = save.xp || 0;
+      player.nivel = save.nivel || 0;
+      if (save.baus) {
+        for (const { k, slots } of save.baus) {
+          world.bauTesouros.set(k, slots);
+        }
+      }
+      if (save.forn) {
+        for (const { k, input, combustivel, output } of save.forn) {
+          world.fornalhaEstados.set(k, {
+            input, combustivel, output, progresso: 0, ativa: false,
+          });
         }
       }
     }
@@ -2436,6 +2691,18 @@ function setupInput() {
   });
   // Mouse: roda no body para hover; click L = quebrar; click R = colocar.
   document.addEventListener('mousedown', (e) => {
+    // Não disparar quando algum painel modal está aberto
+    const algumPainelAberto = document.querySelector('.painel:not(.hidden)') !== null;
+    if (algumPainelAberto) return;
+    // === Re-lock automático ===
+    // Quando usuário aperta ESC, pointer-lock é liberado pelo browser.
+    // Aqui, qualquer clique no canvas re-trava o cursor — pra ele
+    // continuar jogando sem ter que apertar JOGAR de novo.
+    if (!isTouchDevice && !player.controls.isLocked && !player.morto) {
+      try { player.controls.lock(); } catch (_) {}
+      // Engole esse clique (não dispara quebra/colocar imediatamente).
+      return;
+    }
     if (!player.controls.isLocked) return;
     if (e.button === 0) { player.holdE = true; player.cliqueE = true; }
     else if (e.button === 2) { player.cliqueD = true; }
@@ -2520,6 +2787,88 @@ function alternarTransparencia() {
   ui.toast(novo ? 'Blocos: transparentes' : 'Blocos: sólidos');
 }
 
+// === Sistema de XP ===
+// Curva tipo Minecraft simplificada: nivel*nivel*4 pra subir.
+function xpProximoNivel() {
+  return Math.max(7, player.nivel * player.nivel * 4 + 7);
+}
+function ganharXP(pts) {
+  player.xp += pts;
+  while (player.xp >= xpProximoNivel()) {
+    player.xp -= xpProximoNivel();
+    player.nivel += 1;
+    Audio.respawn();
+    ui.toast(`⭐ Nível ${player.nivel}!`);
+  }
+  ui.atualizarXP();
+}
+
+// === Cama: pula pra manhã se for noite ===
+function dormir() {
+  // luzDia precisa estar baixa pra poder dormir
+  const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
+  if (sun > 0.4) {
+    ui.toast('Você só pode dormir à noite');
+    return;
+  }
+  const overlay = document.getElementById('dormindo-overlay');
+  overlay.classList.remove('hidden');
+  setTimeout(() => {
+    tempoDia = 0.22;            // amanhecer
+    player.hp = player.hpMax;   // restaura HP ao acordar (Minecraft-like)
+    player.fome = Math.max(player.fome - 1, 0);
+    overlay.classList.add('hidden');
+    ui.toast('Bom dia! ☀️');
+  }, 1200);
+}
+
+// === Painel do baú ===
+let _bauAtivoCoords = null;
+function abrirPainelBau(x, y, z) {
+  _bauAtivoCoords = { x, y, z };
+  ui.renderBauPainel();
+  document.getElementById('painel-bau').classList.remove('hidden');
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
+// === Painel da fornalha ===
+let _fornAtivaCoords = null;
+function abrirPainelFornalha(x, y, z) {
+  _fornAtivaCoords = { x, y, z };
+  ui.renderFornalhaPainel();
+  document.getElementById('painel-fornalha').classList.remove('hidden');
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
+// Receita de cozimento na fornalha: {input → output}
+const RECEITAS_FORNALHA = [
+  { entrada: { i: ITEM.CARNE_CRUA }, saida: { i: ITEM.CARNE_COZIDA, q: 1 } },
+  // Ferro lingote → ferro lingote (já é "lingote") — pulamos
+];
+function cozinharFornalha(coords) {
+  const f = world.getFornalha(coords.x, coords.y, coords.z);
+  if (!f.input || !f.combustivel) return;
+  // Encontra receita matching o input
+  const r = RECEITAS_FORNALHA.find(x =>
+    (x.entrada.i !== undefined && f.input.i === x.entrada.i) ||
+    (x.entrada.b !== undefined && f.input.b === x.entrada.b));
+  if (!r) { ui.toast('Item não pode ser cozido'); return; }
+  // Saída precisa caber
+  if (f.output && (f.output.i !== r.saida.i || f.output.b !== r.saida.b || f.output.q >= 64)) {
+    ui.toast('Slot de saída cheio'); return;
+  }
+  // Consome 1 input + 1 combustível, produz 1 output
+  f.input.q -= 1;
+  if (f.input.q <= 0) f.input = null;
+  f.combustivel.q -= 1;
+  if (f.combustivel.q <= 0) f.combustivel = null;
+  if (f.output) f.output.q += r.saida.q;
+  else f.output = { ...r.saida };
+  Audio.colocar();
+  ganharXP(1);
+  ui.renderFornalhaPainel();
+}
+
 function atacarMob() {
   if (player.morto) return;
   const m = mobMgr.maisProximo(player, ALCANCE_BLOCO);
@@ -2531,7 +2880,10 @@ function atacarMob() {
   if (m.hp <= 0) {
     const drops = MOB_INFO[m.tipo].drops();
     for (const d of drops) inv.adicionar(d);
-    ui.toast(`${m.tipo} derrotado!`);
+    const info = MOB_INFO[m.tipo];
+    const xp = info.hostil ? 5 : 2;
+    ganharXP(xp);
+    ui.toast(`${m.tipo} derrotado! (+${xp} XP)`);
   } else {
     ui.toast(`Atingiu ${m.tipo} (-${dano})`);
   }
@@ -2639,28 +2991,69 @@ function loop(now) {
         for (const d of drops) inv.adicionar(d);
         // Spawn partículas ANTES de remover o bloco — usa o tipo dele
         particulas.spawnQuebra(t.x, t.y, t.z, t.b);
+        // Se for bloco funcional, dropar também o conteúdo do estado.
+        if (t.b === BLOCO.BAU) {
+          const bau = world.bauTesouros.get(World.keyXYZ(t.x, t.y, t.z));
+          if (bau) for (const it of bau) if (it) inv.adicionar({ ...it });
+          world.removerEstadoBloco(t.x, t.y, t.z);
+        } else if (t.b === BLOCO.FORNALHA) {
+          const f = world.fornalhaEstados.get(World.keyXYZ(t.x, t.y, t.z));
+          if (f) {
+            for (const it of [f.input, f.combustivel, f.output]) {
+              if (it) inv.adicionar({ ...it });
+            }
+          }
+          world.removerEstadoBloco(t.x, t.y, t.z);
+        }
         world.set(t.x, t.y, t.z, BLOCO.AR);
         Audio.quebrar();
         progressoVisual = 0;
+        // Ganha XP ao minerar minério.
+        const xpGanho = (t.b === BLOCO.CARVAO) ? 1 :
+                       (t.b === BLOCO.FERRO) ? 2 :
+                       (t.b === BLOCO.OURO) ? 3 :
+                       (t.b === BLOCO.DIAMANTE) ? 7 : 0;
+        if (xpGanho > 0) ganharXP(xpGanho);
       }
     } else if (!player.holdE) {
       player.progressoQuebra = 0;
       player.alvoQuebra = null;
     }
 
-    // Click direito: colocar bloco (ou interagir)
+    // Click direito: interação (baú/fornalha/cama/workbench) ou colocar bloco
     if (player.cliqueD) {
       player.cliqueD = false;
       if (ray) {
-        const sel = inv.itemSelecionado();
-        if (sel && sel.b !== undefined) {
-          const a = ray.adj;
-          const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
-          if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
-            world.set(a.x, a.y, a.z, sel.b);
-            inv.consumirAtual();
-            Audio.colocar();
-            renderer.swingProgress = 0.01; // disparar swing
+        const t = ray.hit;
+        const blocoAlvo = t.b;
+        // 1) Interagir com baú
+        if (blocoAlvo === BLOCO.BAU) {
+          abrirPainelBau(t.x, t.y, t.z);
+        }
+        // 2) Interagir com fornalha
+        else if (blocoAlvo === BLOCO.FORNALHA) {
+          abrirPainelFornalha(t.x, t.y, t.z);
+        }
+        // 3) Cama: dormir se for noite
+        else if (blocoAlvo === BLOCO.CAMA) {
+          dormir();
+        }
+        // 4) Workbench: abre painel craft
+        else if (blocoAlvo === BLOCO.WORKBENCH) {
+          togglePainel('painel-craft');
+        }
+        // 5) Caso contrário, colocar bloco do slot atual
+        else {
+          const sel = inv.itemSelecionado();
+          if (sel && sel.b !== undefined) {
+            const a = ray.adj;
+            const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
+            if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
+              world.set(a.x, a.y, a.z, sel.b);
+              inv.consumirAtual();
+              Audio.colocar();
+              renderer.swingProgress = 0.01;
+            }
           }
         }
       }

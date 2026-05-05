@@ -469,6 +469,126 @@ kbd {
 .receita .info .nome { font-weight: bold; font-size: 13px; }
 .receita .info .custo { font-size: 10px; color: #aaa; }
 
+/* === Barra de XP === */
+#xp-wrap {
+  position: relative;
+  width: 220px; height: 11px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+#xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #43A047, #66BB6A, #81C784);
+  width: 0%;
+  transition: width 0.3s;
+}
+#xp-nivel {
+  position: absolute;
+  top: -2px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+  line-height: 14px;
+}
+
+/* === Painel baú === */
+#bau-grid, #bau-inv, #bau-hotbar {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+#bau-grid .slot, #bau-inv .slot, #bau-hotbar .slot { width: 44px; height: 44px; }
+#bau-hotbar { margin-top: 8px; padding-top: 8px; border-top: 1px solid #ffffff22; }
+
+/* === Painel fornalha === */
+#fornalha-corpo {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+}
+.fornalha-coluna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.forn-label {
+  font-size: 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.forn-arrow { color: #ff9800; font-size: 18px; line-height: 1; }
+.fornalha-slot {
+  width: 50px; height: 50px;
+  border: 2px solid rgba(255, 152, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+}
+.fornalha-slot.ativo { border-color: #ff5722; box-shadow: 0 0 10px #ff572266; }
+.forn-progresso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.forn-fogo { font-size: 28px; }
+#forn-bar {
+  width: 80px; height: 8px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 152, 0, 0.4);
+}
+#forn-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9800, #ff5722);
+  width: 0%;
+}
+#fornalha-hotbar {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #ffffff22;
+}
+#fornalha-hotbar .slot { width: 44px; height: 44px; }
+
+/* === Overlay dormindo === */
+#dormindo-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 30, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 250;
+  pointer-events: none;
+}
+.dormindo-icone {
+  font-size: 80px;
+  animation: dormindo 1.2s ease-in-out infinite;
+}
+@keyframes dormindo {
+  0%, 100% { transform: scale(1) rotate(-5deg); opacity: 0.7; }
+  50%      { transform: scale(1.15) rotate(5deg); opacity: 1; }
+}
+#dormindo-overlay p {
+  color: #ffe082;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
 /* Tela de morte */
 #morte {
   position: fixed; inset: 0;

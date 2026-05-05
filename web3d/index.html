@@ -63,6 +63,10 @@
     <div id="bars">
       <div id="hp" class="bar"></div>
       <div id="fome" class="bar"></div>
+      <div id="xp-wrap">
+        <div id="xp-fill"></div>
+        <span id="xp-nivel">Nv. 0</span>
+      </div>
     </div>
     <div id="hotbar"></div>
     <div id="toast"></div>
@@ -70,7 +74,7 @@
     <button id="btn-craft" class="hud-btn" title="Crafting (C)">⚒</button>
     <button id="btn-modo" class="hud-btn" title="Alternar modo (G)">🦅</button>
     <button id="btn-save" class="hud-btn" title="Salvar">💾</button>
-    <button id="btn-transp" class="hud-btn" title="Alternar transparência (T)">🪟</button>
+    <button id="btn-transp" class="hud-btn solido" title="Alternar transparência (T)">🧱</button>
   </div>
 
   <!-- Painel inventário -->
@@ -130,6 +134,51 @@
     </div>
     <div id="craft-status">Sem workbench por perto: só receitas básicas</div>
     <div id="craft-lista"></div>
+  </div>
+
+  <!-- Painel baú -->
+  <div id="painel-bau" class="painel hidden">
+    <div class="painel-header">
+      <span>📦 Baú</span>
+      <button class="fechar" data-painel="painel-bau">✕</button>
+    </div>
+    <div id="bau-grid"></div>
+    <div class="dica">↑ Conteúdo do baú · ↓ seu inventário (toque para mover)</div>
+    <div id="bau-inv"></div>
+    <div id="bau-hotbar"></div>
+  </div>
+
+  <!-- Painel fornalha -->
+  <div id="painel-fornalha" class="painel hidden">
+    <div class="painel-header">
+      <span>🔥 Fornalha</span>
+      <button class="fechar" data-painel="painel-fornalha">✕</button>
+    </div>
+    <div id="fornalha-corpo">
+      <div class="fornalha-coluna">
+        <div class="forn-label">Item</div>
+        <div id="forn-input" class="slot fornalha-slot"></div>
+        <div class="forn-arrow">↓</div>
+        <div class="forn-label">Combustível</div>
+        <div id="forn-fuel" class="slot fornalha-slot"></div>
+      </div>
+      <div class="forn-progresso">
+        <div class="forn-fogo">🔥</div>
+        <div id="forn-bar"><div id="forn-bar-fill"></div></div>
+      </div>
+      <div class="fornalha-coluna">
+        <div class="forn-label">Resultado</div>
+        <div id="forn-output" class="slot fornalha-slot"></div>
+      </div>
+    </div>
+    <div class="dica">Toque num slot pra colocar o item ativo da hotbar (ou tirar). Ferro+carvão → lingote · carne crua+carvão → cozida.</div>
+    <div id="fornalha-hotbar"></div>
+  </div>
+
+  <!-- Tela "dormindo" (efeito de transição) -->
+  <div id="dormindo-overlay" class="hidden">
+    <div class="dormindo-icone">💤</div>
+    <p>Dormindo... esperando o amanhecer.</p>
   </div>
 
   <!-- Tela de morte -->
