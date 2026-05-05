@@ -376,18 +376,289 @@ class World {
 // ===================================================================
 // 4) Renderer Three.js
 // ===================================================================
+
+// Gera um atlas de texturas procedurais 16×16 por face, com ruído,
+// para todos os 22 tipos de bloco. Cada bloco recebe 3 índices: top,
+// side, bottom — assim grama/madeira têm faces distintas.
+function criarAtlasTexturas() {
+  const cellSize = 16;
+  const cols = 8, rows = 8;
+  const canvas = document.createElement('canvas');
+  canvas.width = cols * cellSize;
+  canvas.height = rows * cellSize;
+  const ctx = canvas.getContext('2d');
+
+  function bg(idx, r, g, b) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cellSize, y0 = row * cellSize;
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(x0, y0, cellSize, cellSize);
+  }
+  function ruido(idx, intensidade = 22) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cellSize, y0 = row * cellSize;
+    const data = ctx.getImageData(x0, y0, cellSize, cellSize);
+    for (let i = 0; i < data.data.length; i += 4) {
+      const n = (Math.random() - 0.5) * intensidade;
+      data.data[i]   = clamp(data.data[i]   + n | 0, 0, 255);
+      data.data[i+1] = clamp(data.data[i+1] + n | 0, 0, 255);
+      data.data[i+2] = clamp(data.data[i+2] + n | 0, 0, 255);
+    }
+    ctx.putImageData(data, x0, y0);
+  }
+  function pintar(idx, hex, ruidoAmt = 22, padraoExtra) {
+    const r = (hex >> 16) & 0xFF, g = (hex >> 8) & 0xFF, b = hex & 0xFF;
+    bg(idx, r, g, b);
+    ruido(idx, ruidoAmt);
+    if (padraoExtra) padraoExtra(idx, ctx, cellSize);
+  }
+  // Padrões úteis
+  function listrasMadeira(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(80,55,40,0.5)';
+    ctx.lineWidth = 1;
+    for (let y = 2; y < cs; y += 4) {
+      ctx.beginPath();
+      ctx.moveTo(x0, y0 + y + 0.5);
+      ctx.lineTo(x0 + cs, y0 + y + 0.5);
+      ctx.stroke();
+    }
+  }
+  function aneisMadeiraTopo(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const cx = col * cs + cs / 2, cy = row * cs + cs / 2;
+    ctx.strokeStyle = 'rgba(80,55,40,0.55)';
+    ctx.lineWidth = 1;
+    for (let r = 2; r < cs / 2; r += 3) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  function texturaTijolo(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(60,30,30,0.7)';
+    ctx.lineWidth = 1;
+    // 4 fileiras de 2 tijolos, alternadas
+    for (let i = 0; i < 4; i++) {
+      const y = y0 + i * 4 + 0.5;
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + cs, y); ctx.stroke();
+      const offset = (i % 2 === 0) ? 0 : cs / 2;
+      ctx.beginPath();
+      ctx.moveTo(x0 + offset, y); ctx.lineTo(x0 + offset, y + 4); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x0 + offset + cs / 2, y); ctx.lineTo(x0 + offset + cs / 2, y + 4); ctx.stroke();
+    }
+  }
+  function gramaTopoBordaSombra(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // Toques mais escuros aleatórios (tufos)
+    ctx.fillStyle = 'rgba(20,80,30,0.4)';
+    for (let i = 0; i < 6; i++) {
+      const x = x0 + Math.floor(Math.random() * cs);
+      const y = y0 + Math.floor(Math.random() * cs);
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+  function gramaLateralFaixa(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // Faixa de grama no topo (5 px) por cima da textura terra.
+    ctx.fillStyle = '#4CAF50';
+    for (let x = 0; x < cs; x++) {
+      const dy = Math.floor(Math.random() * 2) + 4;
+      ctx.fillRect(x0 + x, y0, 1, dy);
+    }
+    // Pontilhado de transição
+    ctx.fillStyle = '#388E3C';
+    for (let i = 0; i < 8; i++) {
+      const x = x0 + Math.floor(Math.random() * cs);
+      const y = y0 + 4 + Math.floor(Math.random() * 2);
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+  function vidroBorda(idx, ctx, cs) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(100,180,220,0.7)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + 0.5, y0 + 0.5, cs - 1, cs - 1);
+  }
+  function pontosOuro(idx, ctx, cs, cor) {
+    const col = idx % cols, row = Math.floor(idx / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.fillStyle = cor;
+    for (let i = 0; i < 8; i++) {
+      const x = x0 + Math.floor(Math.random() * cs);
+      const y = y0 + Math.floor(Math.random() * cs);
+      ctx.fillRect(x, y, 2, 2);
+    }
+  }
+
+  // === Mapa de TipoBloco → índices (top, side, bottom) ===
+  // Reservamos um conjunto de índices contíguos (0..47).
+  const mapa = {};
+  let next = 0;
+  function cell(top, side, bottom) {
+    const r = { top: top, side: side, bottom: bottom ?? side };
+    return r;
+  }
+
+  // Texturas individuais
+  pintar(0, 0x4CAF50, 24, gramaTopoBordaSombra);                       // grama topo
+  pintar(1, 0x8D6E63, 18, gramaLateralFaixa);                          // grama lateral
+  pintar(2, 0x8D6E63, 18);                                             // terra
+  pintar(3, 0x9E9E9E, 22);                                             // pedra
+  pintar(4, 0xFFEB3B, 14);                                             // areia
+  pintar(5, 0x6D4C41, 18, listrasMadeira);                             // madeira lateral
+  pintar(6, 0x8D6E63, 18, aneisMadeiraTopo);                           // madeira topo
+  pintar(7, 0x66BB6A, 22);                                             // folha
+  pintar(8, 0xC62828, 14, texturaTijolo);                              // tijolo
+  pintar(9, 0xB3E5FC, 8, vidroBorda);                                  // vidro
+  pintar(10, 0xFBC02D, 18, (i, c, cs) => pontosOuro(i, c, cs, '#FFD54F'));   // ouro
+  pintar(11, 0x4DD0E1, 18, (i, c, cs) => pontosOuro(i, c, cs, '#80DEEA'));   // diamante
+  pintar(12, 0xFFF59D, 6);                                             // luz
+  pintar(13, 0xECEFF1, 6);                                             // neve
+  pintar(14, 0x9E9E9E, 22, (i, c, cs) => pontosOuro(i, c, cs, '#212121')); // carvão
+  pintar(15, 0xCFD8DC, 18, (i, c, cs) => pontosOuro(i, c, cs, '#90A4AE')); // ferro
+  pintar(16, 0x388E3C, 18);                                            // cacto
+  pintar(17, 0x1976D2, 12);                                            // água
+  pintar(18, 0xBF360C, 30);                                            // lava
+  pintar(19, 0x101020, 12);                                            // obsidiana
+  pintar(20, 0x4E342E, 18, listrasMadeira);                            // workbench lateral
+  pintar(21, 0x6D4C41, 18, (i, c, cs) => {                             // workbench topo
+    aneisMadeiraTopo(i, c, cs);
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    ctx.strokeStyle = 'rgba(60,40,30,0.8)';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + cs / 2); ctx.lineTo(x0 + cs, y0 + cs / 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x0 + cs / 2, y0); ctx.lineTo(x0 + cs / 2, y0 + cs); ctx.stroke();
+  });
+  pintar(22, 0xEEEEEE, 14);                                            // lã
+  pintar(23, 0xFFB300, 6);                                             // tocha
+  next = 24;
+
+  const M = {};
+  M[BLOCO.GRAMA]     = cell(0, 1, 2);
+  M[BLOCO.TERRA]     = cell(2, 2, 2);
+  M[BLOCO.PEDRA]     = cell(3, 3, 3);
+  M[BLOCO.AREIA]     = cell(4, 4, 4);
+  M[BLOCO.MADEIRA]   = cell(6, 5, 6);
+  M[BLOCO.FOLHA]     = cell(7, 7, 7);
+  M[BLOCO.TIJOLO]    = cell(8, 8, 8);
+  M[BLOCO.VIDRO]     = cell(9, 9, 9);
+  M[BLOCO.OURO]      = cell(10, 10, 10);
+  M[BLOCO.DIAMANTE]  = cell(11, 11, 11);
+  M[BLOCO.LUZ]       = cell(12, 12, 12);
+  M[BLOCO.NEVE]      = cell(13, 13, 13);
+  M[BLOCO.CARVAO]    = cell(14, 14, 14);
+  M[BLOCO.FERRO]     = cell(15, 15, 15);
+  M[BLOCO.CACTO]     = cell(16, 16, 16);
+  M[BLOCO.AGUA]      = cell(17, 17, 17);
+  M[BLOCO.LAVA]      = cell(18, 18, 18);
+  M[BLOCO.OBSIDIANA] = cell(19, 19, 19);
+  M[BLOCO.WORKBENCH] = cell(21, 20, 6);
+  M[BLOCO.LA]        = cell(22, 22, 22);
+  M[BLOCO.TOCHA]     = cell(23, 23, 23);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestMipmapLinearFilter;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.generateMipmaps = true;
+  return { texture: tex, mapa: M, cols, rows, cellSize };
+}
+
+// Gera uma textura única com 5 estágios de "cracks" lado-a-lado (16×16 cada).
+// Estágio 0 = sem cracks (transparente), 1..4 = cracks progressivamente
+// mais densos. Renderer escolhe estágio aplicando offset de UV.
+function criarTexturaCracks() {
+  const cell = 16, n = 5;
+  const c = document.createElement('canvas');
+  c.width = cell * n; c.height = cell;
+  const ctx = c.getContext('2d');
+  // Estágio 0: vazio
+  // Estágios 1-4: linhas pretas aleatórias com densidade crescente
+  for (let s = 1; s < n; s++) {
+    const x0 = s * cell;
+    ctx.strokeStyle = `rgba(0,0,0,${0.45 + s * 0.13})`;
+    ctx.lineWidth = 1;
+    const linhas = 2 + s * 2;
+    // Seed determinística por estágio
+    let seed = s * 12345;
+    const rng = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    for (let i = 0; i < linhas; i++) {
+      ctx.beginPath();
+      ctx.moveTo(x0 + rng() * cell, rng() * cell);
+      for (let j = 0; j < 3 + s; j++) {
+        ctx.lineTo(x0 + rng() * cell, rng() * cell);
+      }
+      ctx.stroke();
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestFilter;
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  // Estado inicial mostra estágio 0 (vazio) — repeat horizontal 1/n
+  tex.repeat.set(1 / n, 1);
+  tex.offset.set(0, 0);
+  tex.estagios = n;
+  return tex;
+}
+
+// Retorna os 4 UVs (em CCW) para a célula [idx] do atlas, no plano
+// (u: 0→u_max, v: 0→v_max). Coordenadas v invertidas (canvas top→bot).
+function uvCelula(atlas, idx) {
+  const col = idx % atlas.cols, row = Math.floor(idx / atlas.cols);
+  const u0 = col * atlas.cellSize / (atlas.cols * atlas.cellSize);
+  const u1 = (col + 1) * atlas.cellSize / (atlas.cols * atlas.cellSize);
+  // canvas: y=0 no topo; texture UV: v=1 no topo. Inverter:
+  const v0 = 1 - (row + 1) * atlas.cellSize / (atlas.rows * atlas.cellSize);
+  const v1 = 1 - row * atlas.cellSize / (atlas.rows * atlas.cellSize);
+  // 4 cantos: (u0,v0)(u1,v0)(u1,v1)(u0,v1) — mesmo CCW usado em addFace
+  return [u0, v0, u1, v0, u1, v1, u0, v1];
+}
+
 class Renderer {
   constructor(canvas) {
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(0x87CEEB, 30, VIEW_RADIUS * CHUNK_SIZE - 4);
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Fog estilo Minecraft: cobre o último anel de chunks.
+    this.scene.fog = new THREE.Fog(0x87CEEB, (VIEW_RADIUS - 1) * CHUNK_SIZE,
+                                            (VIEW_RADIUS + 1) * CHUNK_SIZE);
+    // FOV 70 (Minecraft default = 70).
+    this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      powerPreference: 'high-performance',
+      alpha: false,
+      stencil: false,
+    });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x87CEEB);
-    // Material de bloco usando vertex colors
-    this.materialOpaco = new THREE.MeshLambertMaterial({ vertexColors: true });
-    this.materialTransp = new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, opacity: 0.7, side: THREE.DoubleSide });
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.05;
+    // Atlas de texturas procedurais 16×16 px por face, cor + ruído.
+    this.atlas = criarAtlasTexturas();
+    // Material de bloco com texture atlas + tinting por vertex colors
+    // (vertex colors aplicam ambient-occlusion fake e tinting de bioma).
+    this.materialOpaco = new THREE.MeshLambertMaterial({
+      map: this.atlas.texture,
+      vertexColors: true,
+    });
+    this.materialTransp = new THREE.MeshLambertMaterial({
+      map: this.atlas.texture,
+      vertexColors: true, transparent: true, opacity: 0.78,
+      side: THREE.DoubleSide,
+    });
 
     // Iluminação
     this.ambient = new THREE.AmbientLight(0xffffff, 0.45);
@@ -416,6 +687,46 @@ class Renderer {
       this.scene.add(l);
       this.poolLuzes.push(l);
     }
+
+    // === Highlight do bloco-alvo === (wireframe branco)
+    const hgEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.002, 1.002, 1.002));
+    this.highlight = new THREE.LineSegments(
+      hgEdges,
+      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, depthTest: true })
+    );
+    this.highlight.visible = false;
+    this.scene.add(this.highlight);
+
+    // === Cracks progressivos === plano em cada face do bloco quebrando.
+    // Gera 5 estágios (0..4) num atlas separado.
+    this.crackTexture = criarTexturaCracks();
+    this.crackMat = new THREE.MeshBasicMaterial({
+      map: this.crackTexture, transparent: true, opacity: 1.0,
+      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
+    });
+    // Cubo levemente maior pro overlay de cracks
+    this.crackMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(1.004, 1.004, 1.004),
+      this.crackMat
+    );
+    this.crackMesh.visible = false;
+    this.scene.add(this.crackMesh);
+    this.crackEstagioAtual = -1;
+
+    // === Mão / ferramenta visual === anexada à câmera
+    this.maoGroup = new THREE.Group();
+    this.maoMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(0.12, 0.32, 0.12),
+      new THREE.MeshLambertMaterial({ color: 0xFFCDA4 }) // pele
+    );
+    this.maoMesh.position.set(0, 0, 0);
+    this.maoGroup.add(this.maoMesh);
+    // Posição da mão em frente à câmera (canto inferior direito)
+    this.maoGroup.position.set(0.32, -0.32, -0.55);
+    this.maoGroup.rotation.set(-0.3, 0.2, -0.1);
+    this.camera.add(this.maoGroup);
+    this.scene.add(this.camera); // garantir que camera está na scene
+    this.swingProgress = 0; // 0..1, animação de swing ao bater
   }
   criarDisco(cor, raio) {
     const g = new THREE.SphereGeometry(raio, 16, 16);
@@ -430,29 +741,43 @@ class Renderer {
   }
   // === Build mesh por chunk ===
   // Para cada bloco sólido, gera só faces visíveis (vizinho não-sólido).
+  // Cada face usa UVs do atlas (textura procedural) e vertex colors com
+  // ambient-occlusion fake direcional (top mais claro que side mais
+  // claro que bottom), simulando profundidade.
   buildChunkMesh(world, chunk) {
-    const positions = [], normals = [], colors = [], indices = [];
-    const positionsT = [], normalsT = [], colorsT = [], indicesT = [];
+    const positions = [], normals = [], colors = [], uvs = [], indices = [];
+    const positionsT = [], normalsT = [], colorsT = [], uvsT = [], indicesT = [];
     chunk.lights = [];
     const cs = CHUNK_SIZE;
     const ox = chunk.cx * cs, oz = chunk.cz * cs;
 
-    const addFace = (transp, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz, cor) => {
+    // Fatores de luz fake por face (vertex color tinting). Top recebe
+    // mais luz, bottom mínimo, sides intermediário com leve variação por
+    // direção (eixo X mais claro que Z para sugerir AO direcional).
+    const SHADE = {
+      top:    1.00,
+      sideX:  0.86,
+      sideZ:  0.78,
+      bottom: 0.62,
+    };
+
+    const addFace = (transp, faceShade, uvIdx, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
       const arrP = transp ? positionsT : positions;
       const arrN = transp ? normalsT  : normals;
       const arrC = transp ? colorsT   : colors;
+      const arrU = transp ? uvsT      : uvs;
       const arrI = transp ? indicesT  : indices;
       const i0 = arrP.length / 3;
-      // 4 cantos: (0,0), (1,0), (1,1), (0,1) na base u/v
       arrP.push(x,           y,           z);
       arrP.push(x + ux,      y + uy,      z + uz);
       arrP.push(x + ux + vx, y + uy + vy, z + uz + vz);
       arrP.push(x + vx,      y + vy,      z + vz);
       for (let i = 0; i < 4; i++) arrN.push(nx, ny, nz);
-      const r = ((cor >> 16) & 0xFF) / 255;
-      const g = ((cor >>  8) & 0xFF) / 255;
-      const b = ( cor        & 0xFF) / 255;
-      for (let i = 0; i < 4; i++) arrC.push(r, g, b);
+      // Vertex color = shading fake (mesmo valor para os 4 cantos)
+      for (let i = 0; i < 4; i++) arrC.push(faceShade, faceShade, faceShade);
+      // UVs do atlas
+      const cellUV = uvCelula(this.atlas, uvIdx);
+      for (let i = 0; i < 8; i++) arrU.push(cellUV[i]);
       arrI.push(i0, i0 + 1, i0 + 2, i0, i0 + 2, i0 + 3);
     };
 
@@ -462,69 +787,70 @@ class Renderer {
           const t = chunk.get(lx, y, lz);
           if (t === BLOCO.AR) continue;
           const info = BLOCO_INFO[t];
-          // pula blocos não-sólidos sem face desenhável (água/tocha)
-          if (!info.solido && t === BLOCO.AGUA) {
-            // água: render como cubo transparente, sem face contra ar acima se há água
-          } else if (!info.solido && t === BLOCO.TOCHA) {
-            // tocha: cruz pequena em vez de cubo, e adiciona luz
+          if (!info.solido && t === BLOCO.TOCHA) {
+            // Tocha: cruzeta visual + adiciona luz pontual
             this.adicionarTocha(chunk, ox + lx, y, oz + lz);
             continue;
           }
           if (info.emiteLuz) {
             chunk.lights.push({ x: ox + lx + 0.5, y: y + 0.5, z: oz + lz + 0.5, nivel: info.emiteLuz });
           }
-          // Para faces, vizinhos cross-chunk são consultados via world.
           const x = ox + lx, z = oz + lz;
           const transp = info.transp;
-          const corT = info.cor, corL = info.lateral;
+          const cellMap = this.atlas.mapa[t];
+          if (!cellMap) continue; // tipo desconhecido
+          const idxTop = cellMap.top, idxSide = cellMap.side, idxBot = cellMap.bottom;
           // +Y top
-          if (this.faceVisivel(world, x, y + 1, z, t)) addFace(transp, x, y+1, z, 0,1,0, 1,0,0, 0,0,1, corT);
+          if (this.faceVisivel(world, x, y + 1, z, t))
+            addFace(transp, SHADE.top, idxTop, x, y+1, z, 0,1,0, 1,0,0, 0,0,1);
           // -Y bottom
-          if (this.faceVisivel(world, x, y - 1, z, t)) addFace(transp, x, y, z+1, 0,-1,0, 1,0,0, 0,0,-1, corL);
+          if (this.faceVisivel(world, x, y - 1, z, t))
+            addFace(transp, SHADE.bottom, idxBot, x, y, z+1, 0,-1,0, 1,0,0, 0,0,-1);
           // +X east
-          if (this.faceVisivel(world, x + 1, y, z, t)) addFace(transp, x+1, y, z, 1,0,0, 0,0,1, 0,1,0, corL);
+          if (this.faceVisivel(world, x + 1, y, z, t))
+            addFace(transp, SHADE.sideX, idxSide, x+1, y, z, 1,0,0, 0,0,1, 0,1,0);
           // -X west
-          if (this.faceVisivel(world, x - 1, y, z, t)) addFace(transp, x, y, z+1, -1,0,0, 0,0,-1, 0,1,0, corL);
+          if (this.faceVisivel(world, x - 1, y, z, t))
+            addFace(transp, SHADE.sideX, idxSide, x, y, z+1, -1,0,0, 0,0,-1, 0,1,0);
           // +Z south
-          if (this.faceVisivel(world, x, y, z + 1, t)) addFace(transp, x+1, y, z+1, 0,0,1, -1,0,0, 0,1,0, corL);
+          if (this.faceVisivel(world, x, y, z + 1, t))
+            addFace(transp, SHADE.sideZ, idxSide, x+1, y, z+1, 0,0,1, -1,0,0, 0,1,0);
           // -Z north
-          if (this.faceVisivel(world, x, y, z - 1, t)) addFace(transp, x, y, z, 0,0,-1, 1,0,0, 0,1,0, corL);
+          if (this.faceVisivel(world, x, y, z - 1, t))
+            addFace(transp, SHADE.sideZ, idxSide, x, y, z, 0,0,-1, 1,0,0, 0,1,0);
         }
       }
     }
 
-    // Construir/atualizar Mesh com 2 grupos: opaco + transparente
-    if (chunk.mesh) {
-      this.scene.remove(chunk.mesh);
-      chunk.mesh.geometry.dispose();
-      if (chunk.meshT) {
-        this.scene.remove(chunk.meshT);
-        chunk.meshT.geometry.dispose();
-      }
+    // Liberar mesh anterior
+    if (chunk.mesh)  { this.scene.remove(chunk.mesh);  chunk.mesh.geometry.dispose();  chunk.mesh = null; }
+    if (chunk.meshT) { this.scene.remove(chunk.meshT); chunk.meshT.geometry.dispose(); chunk.meshT = null; }
+    if (chunk.meshTochas) {
+      for (const m of chunk.meshTochas) { this.scene.remove(m); m.geometry.dispose(); }
+      chunk.meshTochas = null;
     }
+
     if (positions.length > 0) {
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
       g.setAttribute('normal',   new THREE.Float32BufferAttribute(normals, 3));
       g.setAttribute('color',    new THREE.Float32BufferAttribute(colors, 3));
+      g.setAttribute('uv',       new THREE.Float32BufferAttribute(uvs, 2));
       g.setIndex(indices);
-      const mesh = new THREE.Mesh(g, this.materialOpaco);
-      this.scene.add(mesh);
-      chunk.mesh = mesh;
-    } else {
-      chunk.mesh = null;
+      chunk.mesh = new THREE.Mesh(g, this.materialOpaco);
+      chunk.mesh.frustumCulled = true;
+      this.scene.add(chunk.mesh);
     }
     if (positionsT.length > 0) {
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(positionsT, 3));
       g.setAttribute('normal',   new THREE.Float32BufferAttribute(normalsT, 3));
       g.setAttribute('color',    new THREE.Float32BufferAttribute(colorsT, 3));
+      g.setAttribute('uv',       new THREE.Float32BufferAttribute(uvsT, 2));
       g.setIndex(indicesT);
-      const mesh = new THREE.Mesh(g, this.materialTransp);
-      this.scene.add(mesh);
-      chunk.meshT = mesh;
-    } else {
-      chunk.meshT = null;
+      chunk.meshT = new THREE.Mesh(g, this.materialTransp);
+      chunk.meshT.frustumCulled = true;
+      this.scene.add(chunk.meshT);
     }
     chunk.dirty = false;
   }
@@ -628,12 +954,70 @@ class Renderer {
       }
     }
   }
+  // === Atualiza highlight e cracks com base no alvo do raycast ===
+  atualizarAlvo(hit, progressoQuebra) {
+    if (hit) {
+      this.highlight.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
+      this.highlight.visible = true;
+      // Cracks: estágio 0..4 conforme progresso 0..1
+      const estagio = Math.min(4, Math.floor(progressoQuebra * 5));
+      if (estagio > 0) {
+        this.crackMesh.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
+        this.crackMesh.visible = true;
+        if (estagio !== this.crackEstagioAtual) {
+          this.crackTexture.offset.x = estagio / this.crackTexture.estagios;
+          this.crackEstagioAtual = estagio;
+        }
+      } else {
+        this.crackMesh.visible = false;
+        this.crackEstagioAtual = -1;
+      }
+    } else {
+      this.highlight.visible = false;
+      this.crackMesh.visible = false;
+      this.crackEstagioAtual = -1;
+    }
+  }
+
+  // === Animação da mão === swing rápido ao quebrar/atacar.
+  atualizarMao(dt, swinging, ferramenta) {
+    // Cor/forma da mão muda conforme item segurado
+    if (ferramenta) {
+      // Empunhando ferramenta: cubo mais alongado e cinza
+      this.maoMesh.material.color.setHex(0x9E9E9E);
+      this.maoMesh.scale.set(1.0, 2.4, 1.0);
+    } else {
+      // Mão nua: pele
+      this.maoMesh.material.color.setHex(0xFFCDA4);
+      this.maoMesh.scale.set(1.0, 1.0, 1.0);
+    }
+    // Swing: progredir de 0→1 quando swinging, decair caso contrário
+    const swingSpeed = 4.0;
+    if (swinging) {
+      this.swingProgress += dt * swingSpeed;
+      if (this.swingProgress >= 1) this.swingProgress = 0; // loop contínuo
+    } else {
+      this.swingProgress = Math.max(0, this.swingProgress - dt * swingSpeed * 1.4);
+    }
+    // Função sine para movimento smooth (rotação no eixo X)
+    const a = Math.sin(this.swingProgress * Math.PI);
+    this.maoGroup.rotation.x = -0.3 - a * 1.1;       // bate para frente
+    this.maoGroup.rotation.z = -0.1 + a * 0.4;       // gira levemente
+    this.maoGroup.position.y = -0.32 + a * 0.06;     // sobe um pouco
+  }
+
   render() { this.renderer.render(this.scene, this.camera); }
 }
 
 // ===================================================================
 // 5) Player + Controles
 // ===================================================================
+// Vetores temporários reutilizados a cada frame (evita alocações GC).
+const _tmpVecFwd = new THREE.Vector3();
+const _tmpVecRight = new THREE.Vector3();
+const _tmpVecAux = new THREE.Vector3();
+const _yAxis = new THREE.Vector3(0, 1, 0);
+
 class Player {
   constructor(camera) {
     this.pos = new THREE.Vector3(8, 30, 8);
@@ -660,13 +1044,23 @@ class Player {
   }
   atualizar(dt, world) {
     if (this.morto) return;
-    // === Input WASD relativo à direção da câmera ===
-    const yaw = this.controls ? this.camera.rotation.y : 0;
-    const fx = -Math.sin(yaw), fz = -Math.cos(yaw); // forward
-    const sx =  Math.cos(yaw), sz = -Math.sin(yaw); // right (strafe)
+    // === Input WASD relativo à direção real da câmera ===
+    // camera.getWorldDirection() retorna a direção forward verdadeira
+    // (após qualquer pitch/yaw aplicado pelos PointerLockControls), sem
+    // depender da convenção de eixos de Three.js. Projetamos no plano
+    // horizontal pra que olhar para cima/baixo não levante/abaixe ao
+    // andar para frente.
+    const fwd = _tmpVecFwd.set(0, 0, 0);
+    this.camera.getWorldDirection(fwd);
+    fwd.y = 0;
+    if (fwd.lengthSq() > 1e-6) fwd.normalize();
+    const right = _tmpVecRight.crossVectors(fwd, _yAxis).normalize();
+
     const speed = (this.input.sprint ? VEL_SPRINT : VEL_ANDAR);
-    let dx = (fx * this.input.fwd + sx * this.input.side);
-    let dz = (fz * this.input.fwd + sz * this.input.side);
+    // W (fwd=1) → +forward, S (fwd=-1) → -forward
+    // D (side=1) → +right, A (side=-1) → -right
+    let dx = fwd.x * this.input.fwd + right.x * this.input.side;
+    let dz = fwd.z * this.input.fwd + right.z * this.input.side;
     const len = Math.hypot(dx, dz);
     if (len > 0) { dx /= len; dz /= len; }
     const move = (this.modo === 'creative' || this.noChao) ? speed : VEL_AR;
@@ -1531,55 +1925,63 @@ function loop(now) {
 
     mobMgr.atualizar(dt, world, player, sun);
 
-    // Quebra contínua
-    if (player.holdE) {
-      const ray = raycastBloco(world,
-        renderer.camera.position,
-        renderer.camera.getWorldDirection(new THREE.Vector3()),
-        ALCANCE_BLOCO);
-      if (ray) {
-        const t = ray.hit;
-        if (!player.alvoQuebra ||
-            player.alvoQuebra.x !== t.x || player.alvoQuebra.y !== t.y || player.alvoQuebra.z !== t.z) {
-          player.alvoQuebra = { x: t.x, y: t.y, z: t.z };
-          player.progressoQuebra = 0;
-        }
-        const tier = inv.melhorPicareta();
-        const sel = inv.itemSelecionado();
-        const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
-        const mult = Drops.velocidadeQuebra(t.b, tier, ferr);
-        player.progressoQuebra += dt / TEMPO_QUEBRA_BASE * mult;
-        if (player.progressoQuebra >= 1) {
-          player.progressoQuebra = 0;
-          const drops = Drops.dropDeBloco(t.b, tier);
-          for (const d of drops) inv.adicionar(d);
-          world.set(t.x, t.y, t.z, BLOCO.AR);
-          Audio.quebrar();
-        }
-      } else {
-        player.alvoQuebra = null;
+    // === Raycast a cada frame (para highlight e quebra/colocar) ===
+    const dirCamera = renderer.camera.getWorldDirection(_tmpVecAux);
+    const ray = raycastBloco(world, renderer.camera.position, dirCamera, ALCANCE_BLOCO);
+
+    // Quebra contínua (hold click esquerdo)
+    let progressoVisual = 0;
+    if (player.holdE && ray) {
+      const t = ray.hit;
+      if (!player.alvoQuebra ||
+          player.alvoQuebra.x !== t.x || player.alvoQuebra.y !== t.y || player.alvoQuebra.z !== t.z) {
+        player.alvoQuebra = { x: t.x, y: t.y, z: t.z };
+        player.progressoQuebra = 0;
       }
+      const tier = inv.melhorPicareta();
+      const sel = inv.itemSelecionado();
+      const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
+      const mult = Drops.velocidadeQuebra(t.b, tier, ferr);
+      player.progressoQuebra += dt / TEMPO_QUEBRA_BASE * mult;
+      progressoVisual = player.progressoQuebra;
+      if (player.progressoQuebra >= 1) {
+        player.progressoQuebra = 0;
+        const drops = Drops.dropDeBloco(t.b, tier);
+        for (const d of drops) inv.adicionar(d);
+        world.set(t.x, t.y, t.z, BLOCO.AR);
+        Audio.quebrar();
+        progressoVisual = 0;
+      }
+    } else if (!player.holdE) {
+      player.progressoQuebra = 0;
+      player.alvoQuebra = null;
     }
+
+    // Click direito: colocar bloco (ou interagir)
     if (player.cliqueD) {
       player.cliqueD = false;
-      const ray = raycastBloco(world,
-        renderer.camera.position,
-        renderer.camera.getWorldDirection(new THREE.Vector3()),
-        ALCANCE_BLOCO);
       if (ray) {
         const sel = inv.itemSelecionado();
         if (sel && sel.b !== undefined) {
-          // Não coloca dentro do player
           const a = ray.adj;
           const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
           if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
             world.set(a.x, a.y, a.z, sel.b);
             inv.consumirAtual();
             Audio.colocar();
+            renderer.swingProgress = 0.01; // disparar swing
           }
         }
       }
     }
+
+    // Highlight + cracks visuais
+    renderer.atualizarAlvo(ray ? ray.hit : null, progressoVisual);
+
+    // Animação da mão
+    const sel = inv.itemSelecionado();
+    const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
+    renderer.atualizarMao(dt, player.holdE && !!ray, ferr);
   }
 
   // Carregamento on-demand de chunks ao redor do player
