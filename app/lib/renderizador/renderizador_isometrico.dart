@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
@@ -24,6 +25,10 @@ class RenderizadorIsometrico {
 
   // Atmosfera dinâmica (0..1) — 0 = noite, 1 = dia.
   double luzDia = 1.0;
+  // Fração 0..1 do dia, controla posição de sol/lua.
+  double tempoDia = 0.25;
+  // Offset de animação acumulado (para nuvens em movimento).
+  double tempoAnim = 0.0;
 
   final _fillPaint = Paint()..style = PaintingStyle.fill;
   final _strokePaint = Paint()
@@ -305,15 +310,31 @@ class RenderizadorIsometrico {
   }
 
   void _desenharCeu(Canvas canvas, Vector2 tela) {
-    // Mistura entre cor de dia e cor de noite conforme luzDia.
+    // Gradient do céu interpola entre cores de dia e noite conforme luzDia.
     final cTopoDia = const Color(0xFF1E88E5);
     final cBaseDia = const Color(0xFF87CEEB);
+    final cTopoCrep = const Color(0xFFFF8A65); // crepúsculo laranja
+    final cBaseCrep = const Color(0xFFFFCC80);
     final cTopoNoite = const Color(0xFF0B1430);
     final cBaseNoite = const Color(0xFF1A2147);
 
     final t = luzDia.clamp(0.0, 1.0);
-    final cTopo = Color.lerp(cTopoNoite, cTopoDia, t)!;
-    final cBase = Color.lerp(cBaseNoite, cBaseDia, t)!;
+    Color cTopo, cBase;
+    if (t < 0.35) {
+      // noite → crepúsculo
+      final k = (t / 0.35).clamp(0.0, 1.0);
+      cTopo = Color.lerp(cTopoNoite, cTopoCrep, k)!;
+      cBase = Color.lerp(cBaseNoite, cBaseCrep, k)!;
+    } else if (t < 0.6) {
+      // crepúsculo → dia
+      final k = ((t - 0.35) / 0.25).clamp(0.0, 1.0);
+      cTopo = Color.lerp(cTopoCrep, cTopoDia, k)!;
+      cBase = Color.lerp(cBaseCrep, cBaseDia, k)!;
+    } else {
+      cTopo = cTopoDia;
+      cBase = cBaseDia;
+    }
+
     final rect = Rect.fromLTWH(0, 0, tela.x, tela.y);
     final shader = Gradient.linear(
       Offset(rect.center.dx, rect.top),
@@ -322,25 +343,90 @@ class RenderizadorIsometrico {
     );
     canvas.drawRect(rect, Paint()..shader = shader);
 
-    if (t > 0.5) {
-      // Nuvens visíveis durante o dia.
-      final cloudPaint = Paint()
-        ..color = Color.fromARGB((220 * t).toInt(), 255, 255, 255);
-      for (int i = 0; i < 5; i++) {
-        final cx2 = (i * 0.2 + 0.1) * tela.x;
-        final cy2 = tela.y * 0.15;
-        canvas.drawOval(Rect.fromCenter(center: Offset(cx2, cy2), width: 70, height: 22), cloudPaint);
-        canvas.drawOval(Rect.fromCenter(center: Offset(cx2 + 25, cy2 - 8), width: 50, height: 18), cloudPaint);
-      }
-    } else {
-      // Estrelas durante a noite.
+    // === Sol e lua === acompanham tempoDia, com posição em arco visível.
+    // Mapeamento: tempoDia=0.25 (meio-dia) → sol no topo. tempoDia=0.75
+    // (meia-noite) → lua no topo. Em outros momentos eles entram/saem
+    // pelo horizonte.
+    final solAng = (tempoDia - 0.25) * 2 * math.pi; // -π/2 nascendo, 0 zênite, π/2 poente
+    final solX = tela.x * 0.5 + math.sin(solAng) * tela.x * 0.45;
+    final solY = tela.y * 0.35 - math.cos(solAng) * tela.y * 0.32;
+    if (solY < tela.y * 0.55) {
+      // Halo amarelo
+      final halo = Paint()
+        ..color = const Color(0x33FFEB3B)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
+      canvas.drawCircle(Offset(solX, solY), 50, halo);
+      // Disco do sol
+      canvas.drawCircle(
+        Offset(solX, solY),
+        24,
+        Paint()..color = const Color(0xFFFFEE58),
+      );
+      canvas.drawCircle(
+        Offset(solX, solY),
+        18,
+        Paint()..color = const Color(0xFFFFF59D),
+      );
+    }
+
+    final luaAng = solAng + math.pi;
+    final luaX = tela.x * 0.5 + math.sin(luaAng) * tela.x * 0.45;
+    final luaY = tela.y * 0.35 - math.cos(luaAng) * tela.y * 0.32;
+    if (luaY < tela.y * 0.55) {
+      // Halo azulado
+      final halo = Paint()
+        ..color = const Color(0x33B3E5FC)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+      canvas.drawCircle(Offset(luaX, luaY), 40, halo);
+      canvas.drawCircle(
+        Offset(luaX, luaY),
+        20,
+        Paint()..color = const Color(0xFFECEFF1),
+      );
+      // Crateras
+      final cra = Paint()..color = const Color(0xFFB0BEC5);
+      canvas.drawCircle(Offset(luaX - 6, luaY - 4), 3, cra);
+      canvas.drawCircle(Offset(luaX + 5, luaY + 3), 2, cra);
+      canvas.drawCircle(Offset(luaX + 2, luaY - 6), 1.5, cra);
+    }
+
+    // === Estrelas (apenas à noite) ===
+    if (t < 0.45) {
+      final alphaEstrela = ((1.0 - t / 0.45) * 220).clamp(0, 255).toInt();
       final starPaint = Paint()
-        ..color = Color.fromARGB((255 * (1.0 - t)).toInt(), 255, 255, 230);
-      for (int i = 0; i < 30; i++) {
-        // Posições pseudo-aleatórias estáveis por sessão.
+        ..color = Color.fromARGB(alphaEstrela, 255, 255, 230);
+      for (int i = 0; i < 60; i++) {
         final sx = (i * 137 % tela.x.toInt()).toDouble();
         final sy = (i * 71 % (tela.y.toInt() ~/ 2)).toDouble();
-        canvas.drawCircle(Offset(sx, sy), 1.0, starPaint);
+        // pisca leve
+        final twinkle = 0.7 + 0.3 * math.sin(tempoAnim * 2 + i * 0.4);
+        canvas.drawCircle(Offset(sx, sy),
+            (1.0 + (i % 3) * 0.4) * twinkle, starPaint);
+      }
+    }
+
+    // === Nuvens em movimento (visíveis de dia) ===
+    if (t > 0.4) {
+      final alphaNuvem = ((t - 0.4) / 0.6 * 220).clamp(0, 255).toInt();
+      final cloudPaint = Paint()..color = Color.fromARGB(alphaNuvem, 255, 255, 255);
+      for (int i = 0; i < 7; i++) {
+        // Cada nuvem tem deslocamento próprio em x; wrap pelo tela.
+        final base = (i * 0.18 + 0.1) * tela.x;
+        final speed = 8.0 + (i % 3) * 4.0;
+        final x = (base + tempoAnim * speed) % (tela.x + 200) - 100;
+        final y = tela.y * (0.10 + (i % 4) * 0.04);
+        canvas.drawOval(
+          Rect.fromCenter(center: Offset(x, y), width: 80, height: 22),
+          cloudPaint,
+        );
+        canvas.drawOval(
+          Rect.fromCenter(center: Offset(x + 25, y - 8), width: 56, height: 18),
+          cloudPaint,
+        );
+        canvas.drawOval(
+          Rect.fromCenter(center: Offset(x - 22, y + 4), width: 48, height: 16),
+          cloudPaint,
+        );
       }
     }
   }

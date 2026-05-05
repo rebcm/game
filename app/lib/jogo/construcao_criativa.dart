@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rebcm/audio/audio.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
 import 'package:rebcm/inventario/drops.dart';
@@ -162,6 +163,8 @@ class ConstrucaoCriativa extends FlameGame
     final sun = (0.5 + 0.5 * math.sin(tempoDia * 2 * math.pi - math.pi / 2))
         .clamp(0.05, 1.0);
     _renderer.luzDia = sun;
+    _renderer.tempoDia = tempoDia;
+    _renderer.tempoAnim += dt;
 
     mobs.atualizar(dt, mundo, rebeca.x, rebeca.z, sun);
     mobs.atualizarMobs(dt, mundo, rebeca.x, rebeca.z);
@@ -226,6 +229,7 @@ class ConstrucaoCriativa extends FlameGame
     if (morto) return;
     hp -= d;
     _semDano = 0.0;
+    Audio.hit();
     if (hp <= 0) {
       hp = 0;
       morto = true;
@@ -244,6 +248,7 @@ class ConstrucaoCriativa extends FlameGame
     fome = fomeMax;
     morto = false;
     rebeca.atualizarAlvoManual(mundo);
+    Audio.respawn();
     mensagem.value = 'Respawn no ponto inicial';
   }
 
@@ -253,6 +258,7 @@ class ConstrucaoCriativa extends FlameGame
     final tier = inv.melhorPicareta;
     final drops = Drops.dropDeBloco(bloco, tier);
     mundo.set(bx, by, bz, TipoBloco.ar);
+    Audio.quebrar();
     for (final d in drops) {
       inv.adicionar(d);
     }
@@ -347,7 +353,8 @@ class ConstrucaoCriativa extends FlameGame
     final m = mobs.maisProximo(rebeca.x, rebeca.y, rebeca.z, Constantes.alcanceBloco);
     if (m == null) return false;
     final tier = inv.melhorEspada;
-    final dano = 2 + tier.index * 2; // mão=2, madeira=4, pedra=6, ferro=8, diamante=10
+    final dano = 2 + tier.index * 2;
+    Audio.atacar();
     final morreu = m.aplicarDano(dano);
     if (morreu) {
       final drops = Drops.dropDeMob(m.tipo);
@@ -373,6 +380,7 @@ class ConstrucaoCriativa extends FlameGame
     final restaurar = s.item!.nutricao;
     fome = (fome + restaurar).clamp(0, fomeMax);
     inv.consumirSlotAtual();
+    Audio.comer();
     if (s.item!.suspeito && math.Random().nextDouble() < 0.15) {
       _aplicarDano(1, 'comida estragada');
     } else {
@@ -417,9 +425,11 @@ class ConstrucaoCriativa extends FlameGame
     if (!mundo.isSolido(alvo.x, by, alvo.z)) {
       mundo.set(alvo.x, by, alvo.z, bloco);
       inv.consumirSlotAtual();
+      Audio.colocar();
     } else if (!mundo.isSolido(alvo.x, alvo.y, alvo.z)) {
       mundo.set(alvo.x, alvo.y, alvo.z, bloco);
       inv.consumirSlotAtual();
+      Audio.colocar();
     }
   }
 
