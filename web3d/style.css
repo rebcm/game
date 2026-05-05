@@ -344,14 +344,21 @@ kbd {
 #morte h2 { font-size: 38px; margin: 8px 0; text-shadow: 0 2px 12px #000; }
 #morte p { color: #ffe0e0; }
 
-/* Mobile: esconde help de teclado e mostra controles touch */
+/* Mobile: esconde help de teclado e mostra controles touch.
+   Reposiciona os 5 .hud-btn em uma FILEIRA horizontal no topo direito
+   pra não colidirem com a coluna de botões touch (que ocupa a parte
+   inferior direita da tela). */
 @media (max-width: 700px), (pointer: coarse) {
   #boot .controles-help { display: none; }
-  .hud-btn { width: 36px; height: 36px; font-size: 17px; }
-  #btn-craft  { top: 58px; }
-  #btn-modo   { top: 102px; }
-  #btn-save   { top: 146px; }
-  #btn-transp { top: 190px; }
+  .hud-btn { width: 38px; height: 38px; font-size: 18px; }
+  #btn-bag    { top: 8px; right: 8px; }
+  #btn-craft  { top: 8px; right: 54px; }
+  #btn-modo   { top: 8px; right: 100px; }
+  #btn-save   { top: 8px; right: 146px; }
+  #btn-transp { top: 8px; right: 192px; }
+  /* HUD topo desce um pouco pra não sobrepor a fileira de botões */
+  #topo { top: 52px; }
+  #bars { top: 90px; }
 }
 
 /* === Controles touch === */
