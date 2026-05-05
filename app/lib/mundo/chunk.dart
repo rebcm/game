@@ -166,7 +166,43 @@ class ChunkMundo {
       }
     }
 
+    // 4) Cavernas: blocos sólidos abaixo da superfície viram ar quando o
+    //    noise 3D ultrapassa um threshold. Mantemos uma camada espessa
+    //    de superfície intacta (não cava grama/terra) para não esfacelar
+    //    o terreno visível.
+    for (int lx = 0; lx < cs; lx++) {
+      for (int lz = 0; lz < cs; lz++) {
+        final gx = cx * cs + lx;
+        final gz = cz * cs + lz;
+        final hSurf = alturaTerreno(gx, gz);
+        for (int y = 1; y < hSurf - 2; y++) {
+          // Não esculpe bedrock e poças de lava do fundo.
+          if (y <= 2) continue;
+          final atual = c.get(lx, y, lz);
+          if (atual == TipoBloco.ar || atual == TipoBloco.lava) continue;
+          if (_caverna(gx, y, gz)) {
+            c.set(lx, y, lz, TipoBloco.ar);
+          }
+        }
+      }
+    }
+
     return c;
+  }
+
+  /// Noise 3D simples (combinação de hashes em três planos) para
+  /// determinar se uma posição faz parte de uma caverna. Threshold
+  /// ajustado para gerar cavernas conectadas mas não muito densas.
+  bool _caverna(int x, int y, int z) {
+    final n1 = _hash2(x ~/ 3, z ~/ 3, seed ^ 0xc41e1) & 0xFFFF;
+    final n2 = _hash2(x ~/ 4, y * 31, seed ^ 0xc41e2) & 0xFFFF;
+    final n3 = _hash2(y * 17, z ~/ 4, seed ^ 0xc41e3) & 0xFFFF;
+    // Mistura simples: média dos 3 com peso, normalizado em 0..1.
+    final v = (n1 + n2 + n3) / (3 * 0xFFFF);
+    // Cavernas mais frequentes em y baixo (5..18), raras perto da
+    // superfície.
+    final yFactor = y < 8 ? 0.34 : (y < 16 ? 0.30 : 0.24);
+    return v < yFactor;
   }
 
   void _plantarArvore(Chunk c, int lx, int y, int lz) {

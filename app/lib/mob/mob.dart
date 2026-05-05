@@ -8,77 +8,111 @@ enum TipoMob {
   galinha,
   porco,
   zumbi,
+  ovelha,
+  esqueleto,
+  aranha,
+  creeper,
+  lobo, // amigável, ataca zumbis se próximo
 }
 
 extension TipoMobProps on TipoMob {
-  bool get hostil => this == TipoMob.zumbi;
+  bool get hostil =>
+      this == TipoMob.zumbi ||
+      this == TipoMob.esqueleto ||
+      this == TipoMob.aranha ||
+      this == TipoMob.creeper;
+  bool get amigavel => this == TipoMob.lobo;
 
   /// Vida máxima do mob.
   int get hpMax {
     switch (this) {
-      case TipoMob.vaca:
-        return 8;
-      case TipoMob.galinha:
-        return 4;
-      case TipoMob.porco:
-        return 6;
-      case TipoMob.zumbi:
-        return 16;
+      case TipoMob.vaca: return 8;
+      case TipoMob.galinha: return 4;
+      case TipoMob.porco: return 6;
+      case TipoMob.zumbi: return 16;
+      case TipoMob.ovelha: return 8;
+      case TipoMob.esqueleto: return 14;
+      case TipoMob.aranha: return 12;
+      case TipoMob.creeper: return 10;
+      case TipoMob.lobo: return 12;
     }
   }
 
-  /// Velocidade base em blocos/segundo.
   double get velocidade {
     switch (this) {
-      case TipoMob.vaca:
-        return 1.4;
-      case TipoMob.galinha:
-        return 1.7;
-      case TipoMob.porco:
-        return 1.5;
-      case TipoMob.zumbi:
-        return 2.2;
+      case TipoMob.vaca: return 1.4;
+      case TipoMob.galinha: return 1.7;
+      case TipoMob.porco: return 1.5;
+      case TipoMob.zumbi: return 2.2;
+      case TipoMob.ovelha: return 1.3;
+      case TipoMob.esqueleto: return 1.8;
+      case TipoMob.aranha: return 2.6;
+      case TipoMob.creeper: return 1.9;
+      case TipoMob.lobo: return 2.4;
     }
   }
 
-  /// Cor principal do corpo (renderizada como diamante isométrico).
   int get corARGB {
     switch (this) {
-      case TipoMob.vaca:
-        return 0xFFFFFFFF;
-      case TipoMob.galinha:
-        return 0xFFFFF59D;
-      case TipoMob.porco:
-        return 0xFFF8BBD0;
-      case TipoMob.zumbi:
-        return 0xFF4CAF50;
+      case TipoMob.vaca: return 0xFFFFFFFF;
+      case TipoMob.galinha: return 0xFFFFF59D;
+      case TipoMob.porco: return 0xFFF8BBD0;
+      case TipoMob.zumbi: return 0xFF4CAF50;
+      case TipoMob.ovelha: return 0xFFFAFAFA;
+      case TipoMob.esqueleto: return 0xFFE0E0E0;
+      case TipoMob.aranha: return 0xFF263238;
+      case TipoMob.creeper: return 0xFF2E7D32;
+      case TipoMob.lobo: return 0xFF9E9E9E;
     }
   }
 
-  /// Cor secundária (manchas, sombra).
   int get corARGBSecundaria {
     switch (this) {
-      case TipoMob.vaca:
-        return 0xFF424242;
-      case TipoMob.galinha:
-        return 0xFFFF6F00;
-      case TipoMob.porco:
-        return 0xFFEC407A;
-      case TipoMob.zumbi:
-        return 0xFF2E7D32;
+      case TipoMob.vaca: return 0xFF424242;
+      case TipoMob.galinha: return 0xFFFF6F00;
+      case TipoMob.porco: return 0xFFEC407A;
+      case TipoMob.zumbi: return 0xFF2E7D32;
+      case TipoMob.ovelha: return 0xFFEEEEEE;
+      case TipoMob.esqueleto: return 0xFF9E9E9E;
+      case TipoMob.aranha: return 0xFFB71C1C;
+      case TipoMob.creeper: return 0xFF1B5E20;
+      case TipoMob.lobo: return 0xFFEEEEEE;
     }
   }
 
   String get nome {
     switch (this) {
-      case TipoMob.vaca:
-        return 'Vaca';
-      case TipoMob.galinha:
-        return 'Galinha';
-      case TipoMob.porco:
-        return 'Porco';
+      case TipoMob.vaca: return 'Vaca';
+      case TipoMob.galinha: return 'Galinha';
+      case TipoMob.porco: return 'Porco';
+      case TipoMob.zumbi: return 'Zumbi';
+      case TipoMob.ovelha: return 'Ovelha';
+      case TipoMob.esqueleto: return 'Esqueleto';
+      case TipoMob.aranha: return 'Aranha';
+      case TipoMob.creeper: return 'Creeper';
+      case TipoMob.lobo: return 'Lobo';
+    }
+  }
+
+  /// Distância máxima a que o mob pode atacar/agir contra o player.
+  double get alcanceAtaque {
+    switch (this) {
       case TipoMob.zumbi:
-        return 'Zumbi';
+      case TipoMob.aranha: return 1.8;
+      case TipoMob.esqueleto: return 8.0; // ranged
+      case TipoMob.creeper: return 2.0;   // explode quando perto
+      default: return 0.0;
+    }
+  }
+
+  /// Dano causado por um ataque do mob ao player.
+  int get danoAtaque {
+    switch (this) {
+      case TipoMob.zumbi: return 2;
+      case TipoMob.aranha: return 3;
+      case TipoMob.esqueleto: return 2;
+      case TipoMob.creeper: return 8; // explosão
+      default: return 0;
     }
   }
 }

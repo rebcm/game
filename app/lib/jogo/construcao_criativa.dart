@@ -218,11 +218,28 @@ class ConstrucaoCriativa extends FlameGame
       }
     }
 
-    // Zumbi a < 1.5 blocos = ataque a cada 1s.
-    final z = mobs.maisProximo(rebeca.x, rebeca.y, rebeca.z, 1.5);
-    if (z != null && z.tipo == TipoMob.zumbi) {
-      if (_semDano >= 1.0) {
-        _aplicarDano(2, 'zumbi');
+    // Hostis: cada tipo ataca conforme alcanceAtaque + danoAtaque,
+    // respeitando cooldown global de 1s por dano recebido.
+    if (_semDano >= 1.0) {
+      for (final m in mobs.mobs) {
+        if (!m.tipo.hostil) continue;
+        final dx = m.x - rebeca.x;
+        final dy = m.y - rebeca.y;
+        final dz = m.z - rebeca.z;
+        final d2 = dx * dx + dy * dy + dz * dz;
+        final alc = m.tipo.alcanceAtaque;
+        if (alc == 0) continue;
+        if (d2 > alc * alc) continue;
+        if (m.tipo == TipoMob.creeper && d2 < 4.0) {
+          // Creeper explode: dano 8 + remove blocos em raio 2.
+          _explosao(m.x, m.y, m.z, 2);
+          _aplicarDano(m.tipo.danoAtaque, 'creeper');
+          m.aplicarDano(m.tipo.hpMax); // creeper morre na explosão
+          break;
+        } else {
+          _aplicarDano(m.tipo.danoAtaque, m.tipo.nome.toLowerCase());
+          break;
+        }
       }
     }
 
@@ -473,6 +490,29 @@ class ConstrucaoCriativa extends FlameGame
       rebeca.yMaxQueda = rebeca.y;
     }
     mensagem.value = creative ? 'Modo Criativo (voo)' : 'Modo Sobrevivência (gravidade)';
+  }
+
+  /// Explosão estilo creeper: remove todos os blocos sólidos em raio
+  /// [raio] do ponto (cx, cy, cz). Drop dos blocos é descartado para
+  /// não inundar o inventário.
+  void _explosao(double cxF, double cyF, double czF, int raio) {
+    final cx = cxF.round();
+    final cy = cyF.round();
+    final cz = czF.round();
+    for (int dx = -raio; dx <= raio; dx++) {
+      for (int dy = -raio; dy <= raio; dy++) {
+        for (int dz = -raio; dz <= raio; dz++) {
+          if (dx * dx + dy * dy + dz * dz > raio * raio) continue;
+          final bx = cx + dx;
+          final by = cy + dy;
+          final bz = cz + dz;
+          final b = mundo.get(bx, by, bz);
+          if (b == TipoBloco.ar || b == TipoBloco.obsidiana) continue;
+          mundo.set(bx, by, bz, TipoBloco.ar);
+        }
+      }
+    }
+    Audio.hit();
   }
 
   /// Verifica se há um workbench em raio 3 do player. Habilita receitas

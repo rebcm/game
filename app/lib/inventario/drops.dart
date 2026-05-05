@@ -142,23 +142,38 @@ class Drops {
   static List<Item> dropDeMob(TipoMob t) {
     switch (t) {
       case TipoMob.vaca:
-        return [
-          Item.item(TipoItem.carneCrua, qtd: 1 + _rng.nextInt(2)),
-        ];
+        return [Item.item(TipoItem.carneCrua, qtd: 1 + _rng.nextInt(2))];
       case TipoMob.galinha:
         return [
           Item.item(TipoItem.carneCrua, qtd: 1),
           if (_rng.nextDouble() < 0.5) Item.item(TipoItem.ovo),
         ];
       case TipoMob.porco:
-        return [
-          Item.item(TipoItem.carneCrua, qtd: 1 + _rng.nextInt(3)),
-        ];
+        return [Item.item(TipoItem.carneCrua, qtd: 1 + _rng.nextInt(3))];
       case TipoMob.zumbi:
         return [
           if (_rng.nextDouble() < 0.6)
             Item.item(TipoItem.carnePodre, qtd: _rng.nextBool() ? 1 : 2),
         ];
+      case TipoMob.ovelha:
+        return [Item.bloco(TipoBloco.la, qtd: 1 + _rng.nextInt(2))];
+      case TipoMob.esqueleto:
+        return [
+          // Drops "ossos" não modelados — usamos pau como proxy.
+          Item.item(TipoItem.pau, qtd: 1 + _rng.nextInt(2)),
+        ];
+      case TipoMob.aranha:
+        return [
+          // Lã como proxy de teia + pau.
+          if (_rng.nextDouble() < 0.5) Item.bloco(TipoBloco.la),
+          if (_rng.nextDouble() < 0.4) Item.item(TipoItem.pau),
+        ];
+      case TipoMob.creeper:
+        return [
+          if (_rng.nextDouble() < 0.5) Item.item(TipoItem.carvao, qtd: 1 + _rng.nextInt(2)),
+        ];
+      case TipoMob.lobo:
+        return const []; // lobo não dropa
     }
   }
 }
