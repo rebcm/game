@@ -1,38 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Construção Criativa da Rebeca — jogo voxel isométrico com mundo infinito, mobs e ciclo dia/noite.">
+  <meta name="theme-color" content="#1a1a2e">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Construção Criativa">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="rebcm">
+
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" href="favicon.png" type="image/png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>rebcm</title>
+  <title>Construção Criativa da Rebeca</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Garante que o app ocupe 100% da viewport sem barras de rolagem
+       nem áreas brancas em torno da Flutter view. */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1a1a2e;
+      /* Bloqueia gestos default (pinch-zoom, double-tap-zoom, swipe-back). */
+      touch-action: none;
+      overscroll-behavior: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body { color: #fff; font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+
+    flutter-view, flt-glass-pane {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Tela inicial (loader + botão "começar / tela cheia"). */
+    #boot {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0d47a1 0%, #1b5e20 50%, #0d47a1 100%);
+      background-size: 300% 300%;
+      animation: bg 8s ease infinite;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    @keyframes bg {
+      0%, 100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+
+    #boot h1 {
+      font-size: clamp(28px, 6vw, 56px);
+      margin: 0 0 6px;
+      text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF5044;
+      animation: glow 2.4s ease-in-out infinite;
+    }
+    #boot h2 {
+      font-size: clamp(16px, 3vw, 28px);
+      margin: 0 0 4px;
+      color: #FFD700;
+      font-weight: 500;
+    }
+    #boot .sub {
+      color: #a5d6a7;
+      margin: 4px 0 28px;
+      font-size: clamp(12px, 2vw, 16px);
+    }
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF5044; }
+      50%      { text-shadow: 0 0 40px #FFD700, 0 0 80px #FFD70066; }
+    }
+
+    .spinner {
+      width: 48px; height: 48px;
+      border: 5px solid rgba(255,255,255,0.18);
+      border-top-color: #FFD700;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 8px 0 22px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #boot button {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: #fff;
+      border: none;
+      padding: 14px 56px;
+      font-size: clamp(15px, 2.4vw, 20px);
+      letter-spacing: 1.5px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px #4CAF5088;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    #boot button:hover {
+      transform: scale(1.06);
+      box-shadow: 0 8px 32px #4CAF50aa;
+    }
+    #boot button:active { transform: scale(0.98); }
+    #boot .creditos {
+      margin-top: 22px;
+      color: #ffffff44;
+      font-size: 11px;
+    }
+    #boot.fade { opacity: 0; pointer-events: none; }
+  </style>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <div id="boot">
+    <h1>Construção Criativa</h1>
+    <h2>da Rebeca</h2>
+    <div class="sub">Mundo infinito · Modo criativo · Mobs</div>
+    <div class="spinner" id="spinner"></div>
+    <button id="play" type="button">JOGAR EM TELA CHEIA</button>
+    <div class="creditos">por Rebeca Alves Moreira</div>
+  </div>
+
+  <script>
+    // Tenta colocar o documento em fullscreen e travar a orientação em
+    // landscape. Browsers só permitem isso em resposta a um gesto do
+    // usuário, por isso amarramos no botão JOGAR.
+    function entrarTelaCheia() {
+      const el = document.documentElement;
+      const req = el.requestFullscreen
+                || el.webkitRequestFullscreen
+                || el.mozRequestFullScreen
+                || el.msRequestFullscreen;
+      if (req) {
+        try { req.call(el).catch(() => {}); } catch (_) { /* engole */ }
+      }
+      // Lock orientação só funciona após fullscreen. Falhas silenciosas
+      // (desktop, iOS) são esperadas.
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch (_) { /* engole */ }
+    }
+
+    // Bloqueia gestos comuns que quebram a imersão.
+    function bloquearGestosNativos() {
+      // Right-click e long-press menu.
+      window.addEventListener('contextmenu', (e) => e.preventDefault());
+      // Pinch-zoom em iOS Safari.
+      window.addEventListener('gesturestart', (e) => e.preventDefault());
+      window.addEventListener('gesturechange', (e) => e.preventDefault());
+      window.addEventListener('gestureend', (e) => e.preventDefault());
+      // Wheel zoom com Ctrl no desktop.
+      window.addEventListener('wheel', (e) => {
+        if (e.ctrlKey) e.preventDefault();
+      }, { passive: false });
+      // Pull-to-refresh, swipe-back.
+      document.body.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+    }
+
+    let flutterIniciado = false;
+    function iniciarFlutter() {
+      if (flutterIniciado) return;
+      flutterIniciado = true;
+      const s = document.createElement('script');
+      s.src = 'flutter_bootstrap.js';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    function esconderBoot() {
+      const boot = document.getElementById('boot');
+      if (!boot) return;
+      boot.classList.add('fade');
+      setTimeout(() => boot.remove(), 500);
+    }
+
+    // Quando o player aperta JOGAR: pede tela cheia, bloqueia gestos,
+    // inicia Flutter e remove a tela inicial. Iniciar Flutter exige
+    // gesto do usuário em alguns navegadores móveis (autoplay/audio).
+    document.getElementById('play').addEventListener('click', () => {
+      entrarTelaCheia();
+      bloquearGestosNativos();
+      iniciarFlutter();
+      // Damos uma janela curta para a tela cheia entrar antes de
+      // descartar o overlay, suavizando o flash visual.
+      setTimeout(esconderBoot, 250);
+    }, { once: true });
+
+    // Pré-bloqueia gestos imediatamente para evitar bounce/zoom durante
+    // a espera no menu.
+    bloquearGestosNativos();
+
+    // Se o usuário sair do fullscreen com ESC, marca o estado para o
+    // Flutter mostrar (futuro botão de re-entrar via overlay).
+    document.addEventListener('fullscreenchange', () => {
+      window.__rebcm_fullscreen = !!document.fullscreenElement;
+    });
+  </script>
 </body>
 </html>

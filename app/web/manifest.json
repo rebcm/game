@@ -1,12 +1,13 @@
 {
-    "name": "rebcm",
-    "short_name": "rebcm",
+    "name": "Construção Criativa da Rebeca",
+    "short_name": "Construção Criativa",
     "start_url": ".",
-    "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "display": "fullscreen",
+    "display_override": ["fullscreen", "standalone"],
+    "background_color": "#1a1a2e",
+    "theme_color": "#1a1a2e",
+    "description": "Jogo voxel isométrico com mundo infinito, mobs e ciclo dia/noite — feito em Flutter + Flame.",
+    "orientation": "landscape",
     "prefer_related_applications": false,
     "icons": [
         {

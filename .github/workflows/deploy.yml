@@ -6,6 +6,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        # O projeto Flutter publicado vive em ./app/. O lib/ do root é um
+        # menu legado e não deve ser empacotado para Cloudflare Pages.
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -14,9 +19,12 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build web --release --web-renderer canvaskit --base-href /
+      - run: flutter build web --release --base-href /
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build/web --project-name=construcao-criativa --commit-dirty=true
+          # Ajusta o caminho do build relativo ao working-directory (./app).
+          command: pages deploy app/build/web --project-name=construcao-criativa --commit-dirty=true
+          # wrangler-action usa o cwd do step, não o defaults.run.working-directory.
+          workingDirectory: ./
