@@ -1,5 +1,10 @@
 .dev.vars
 
+# Secrets / credenciais — NUNCA commitar
+.env
+.env.*
+!.env.example
+
 # Flutter / Dart
 **/.dart_tool/
 **/.flutter-plugins
