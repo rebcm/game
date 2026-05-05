@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
 import 'package:rebcm/mundo/mundo.dart';
 
@@ -20,24 +19,17 @@ class Rebeca {
   double vx = 0, vy = 0, vz = 0;
   double direcao = pi / 4; // NE by default
 
-  TipoBloco blocoSelecionado = TipoBloco.grama;
-  int slotAtual = 0;
-
+  // Quebra em curso (alvo + progresso 0..1).
   BlocoAlvo? blocoAlvo;
   double progressoQuebra = 0.0;
 
-  static const List<TipoBloco> hotbar = [
-    TipoBloco.grama,
-    TipoBloco.terra,
-    TipoBloco.pedra,
-    TipoBloco.madeira,
-    TipoBloco.folha,
-    TipoBloco.tijolo,
-    TipoBloco.vidro,
-    TipoBloco.luz,
-  ];
+  // Para detecção de queda: y do último frame em que estava no chão.
+  double yMaxQueda = 0.0;
+  bool noChao = true;
 
-  Rebeca({required this.x, required this.y, required this.z});
+  Rebeca({required this.x, required this.y, required this.z}) {
+    yMaxQueda = y;
+  }
 
   void mover(double dx, double dz, double dt, Mundo mundo) {
     if (dx != 0 || dz != 0) direcao = atan2(dz, dx);
@@ -55,9 +47,8 @@ class Rebeca {
     y = (y + dy * Constantes.velocidade * dt).clamp(1.0, Constantes.worldY - 1.0);
   }
 
-  void selecionarSlot(int slot) {
-    slotAtual = slot.clamp(0, hotbar.length - 1);
-    blocoSelecionado = hotbar[slotAtual];
+  /// Reseta progressoQuebra ao trocar slot ou parar de quebrar.
+  void resetQuebra() {
     progressoQuebra = 0.0;
   }
 

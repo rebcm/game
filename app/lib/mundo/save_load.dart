@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
+import 'package:rebcm/inventario/inventario.dart';
+import 'package:rebcm/inventario/item.dart';
 import 'package:rebcm/mundo/chunk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,6 +45,7 @@ class SaveLoad {
     int? hp,
     int? fome,
     double? tempoDia,
+    List<Map<String, Object>>? inventario,
   }) async {
     try {
       final chunksList = <Map<String, Object>>[];
@@ -63,6 +67,7 @@ class SaveLoad {
         if (hp != null) 'hp': hp,
         if (fome != null) 'fome': fome,
         if (tempoDia != null) 'td': tempoDia,
+        if (inventario != null) 'inv': inventario,
         'chunks': chunksList,
       };
 
@@ -125,6 +130,16 @@ class SaveLoad {
         }
       }
 
+      // Inventário (opcional, presente em saves v3+).
+      List<Map<String, Object?>>? invList;
+      final invRaw = decoded['inv'];
+      if (invRaw is List) {
+        invList = invRaw
+            .whereType<Map>()
+            .map((m) => m.map<String, Object?>((k, v) => MapEntry(k.toString(), v)))
+            .toList();
+      }
+
       return SaveData(
         seed: seed,
         px: px,
@@ -135,6 +150,7 @@ class SaveLoad {
         fome: fome,
         tempoDia: tempoDia,
         chunks: chunksList,
+        inventario: invList,
       );
     } catch (_) {
       return null;
@@ -145,6 +161,38 @@ class SaveLoad {
   static void aplicarOverrides(ChunkMundo chunks, SaveData data) {
     for (final sc in data.chunks) {
       chunks.injetarChunk(sc.cx, sc.cz, sc.blocos);
+    }
+  }
+
+  /// Serializa o inventário para uma lista de mapas JSON-friendly.
+  /// Cada slot vira `{i: <slot_index>, b: <bloco_index>?, t: <item_index>?, q: <qtd>}`.
+  static List<Map<String, Object>> serializarInventario(Inventario inv) {
+    final out = <Map<String, Object>>[];
+    for (int i = 0; i < inv.slots.length; i++) {
+      final s = inv.slots[i];
+      if (s == null) continue;
+      final entry = <String, Object>{'i': i, 'q': s.qtd};
+      if (s.isBloco) entry['b'] = s.bloco!.index;
+      if (s.isItem) entry['t'] = s.item!.index;
+      out.add(entry);
+    }
+    return out;
+  }
+
+  /// Aplica uma lista serializada ao inventário (limpando-o antes).
+  static void aplicarInventario(Inventario inv, List<Map<String, Object?>> data) {
+    inv.limpar();
+    for (final e in data) {
+      final i = e['i'] as int?;
+      final q = e['q'] as int?;
+      if (i == null || q == null || i < 0 || i >= inv.slots.length) continue;
+      final bIdx = e['b'] as int?;
+      final tIdx = e['t'] as int?;
+      if (bIdx != null && bIdx >= 0 && bIdx < TipoBloco.values.length) {
+        inv.slots[i] = Item.bloco(TipoBloco.values[bIdx], qtd: q);
+      } else if (tIdx != null && tIdx >= 0 && tIdx < TipoItem.values.length) {
+        inv.slots[i] = Item.item(TipoItem.values[tIdx], qtd: q);
+      }
     }
   }
 
@@ -174,6 +222,7 @@ class SaveData {
   final int? fome;
   final double? tempoDia;
   final List<SaveChunk> chunks;
+  final List<Map<String, Object?>>? inventario;
 
   const SaveData({
     required this.seed,
@@ -185,5 +234,6 @@ class SaveData {
     this.fome,
     this.tempoDia,
     required this.chunks,
+    this.inventario,
   });
 }

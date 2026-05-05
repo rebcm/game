@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
+import 'package:rebcm/inventario/crafting.dart';
+import 'package:rebcm/inventario/inventario.dart';
+import 'package:rebcm/inventario/item.dart';
 import 'package:rebcm/jogo/construcao_criativa.dart';
-import 'package:rebcm/personagem/rebeca.dart';
+import 'package:rebcm/web_fullscreen.dart';
 
 class ControlesOverlay extends StatefulWidget {
   final ConstrucaoCriativa game;
@@ -15,134 +18,50 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
   Offset _joyBase = Offset.zero;
   Offset _joyKnob = Offset.zero;
   bool _joyActive = false;
-  int _slotAtual = 0;
+  bool _bagAberta = false;
+  bool _craftAberto = false;
 
   static const double _maxR = 48.0;
   static const double _joySize = 120.0;
   static const List<String> _camLabels = ['NE', 'SE', 'SW', 'NW'];
 
+  Inventario get inv => widget.game.inv;
+
+  @override
+  void initState() {
+    super.initState();
+    inv.addListener(_onInvChange);
+    widget.game.hudTick.addListener(_onTick);
+  }
+
+  @override
+  void dispose() {
+    inv.removeListener(_onInvChange);
+    widget.game.hudTick.removeListener(_onTick);
+    super.dispose();
+  }
+
+  void _onInvChange() => setState(() {});
+  void _onTick() {
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Joystick bottom-left
         Positioned(left: 16, bottom: 80, child: _buildJoystick()),
-
-        // Action buttons bottom-right
         Positioned(right: 16, bottom: 120, child: _buildAcoes()),
-
-        // Fly buttons top-right (logo abaixo do menu de save)
         Positioned(right: 16, top: 96, child: _buildVooButtons()),
-
-        // Save / Load buttons top-right
         Positioned(right: 16, top: 16, child: _buildMenuTopo()),
-
-        // Camera rotate bottom-left below joystick
         Positioned(left: 16, bottom: 20, child: _buildCamButton()),
-
-        // Hotbar bottom-center
         Positioned(bottom: 12, left: 0, right: 0, child: _buildHotbar()),
-
-        // HUD top-left
         Positioned(top: 12, left: 12, child: _buildHud()),
-
-        // Toast central (top) — feedback de save/load
-        Positioned(
-          top: 12,
-          left: 0,
-          right: 0,
-          child: Center(child: _buildToast()),
-        ),
+        Positioned(top: 12, left: 0, right: 0, child: Center(child: _buildToast())),
+        if (_bagAberta) _buildBagOverlay(),
+        if (_craftAberto) _buildCraftOverlay(),
+        if (widget.game.morto) _buildMorteOverlay(),
       ],
-    );
-  }
-
-  Widget _buildMenuTopo() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _miniBotao('💾', 'Salvar', Colors.indigo, () async {
-              await widget.game.salvarAgora();
-              setState(() {});
-            }),
-            const SizedBox(width: 6),
-            _miniBotao('📂', 'Carregar', Colors.teal, () async {
-              await widget.game.carregarAgora();
-              setState(() {});
-            }),
-          ],
-        ),
-        const SizedBox(height: 6),
-        _miniBotao('🗑', 'Apagar Save', Colors.red.shade700, () async {
-          await widget.game.apagarSave();
-          setState(() {});
-        }, wide: true),
-      ],
-    );
-  }
-
-  Widget _miniBotao(String icon, String label, Color cor, VoidCallback onTap,
-      {bool wide = false}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: wide ? 122 : 58,
-        height: 36,
-        decoration: BoxDecoration(
-          color: cor.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white30, width: 1.0),
-          boxShadow: const [BoxShadow(color: Color(0x44000000), blurRadius: 3)],
-        ),
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 15)),
-            const SizedBox(width: 4),
-            Text(label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToast() {
-    return ValueListenableBuilder<String?>(
-      valueListenable: widget.game.mensagem,
-      builder: (ctx, msg, _) {
-        if (msg == null || msg.isEmpty) return const SizedBox.shrink();
-        return AnimatedOpacity(
-          opacity: 1.0,
-          duration: const Duration(milliseconds: 300),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white24),
-            ),
-            child: Text(
-              msg,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -206,17 +125,20 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _botaoSimples('🧱', 'Colocar', Colors.green, widget.game.colocarBloco),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         GestureDetector(
           onLongPressStart: (_) => widget.game.iniciarQuebra(),
           onLongPressEnd: (_) => widget.game.pararQuebra(),
           onTap: widget.game.quebrarBlocoImediato,
           child: _botaoWidget('⛏', 'Quebrar', Colors.orange),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         _botaoSimples('⚔', 'Atacar', Colors.red.shade700, () {
           widget.game.atacarMobProximo();
-          setState(() {});
+        }),
+        const SizedBox(height: 8),
+        _botaoSimples('🍖', 'Comer', Colors.amber.shade800, () {
+          widget.game.comerSlotAtual();
         }),
       ],
     );
@@ -275,63 +197,162 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
     );
   }
 
-  Widget _buildHud() {
-    return StreamBuilder(
-      stream: Stream.periodic(const Duration(milliseconds: 250)),
-      builder: (ctx, _) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.black54,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildMenuTopo() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.game.coordenadas,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontFamily: 'monospace',
-              ),
-            ),
-            Text(
-              'Criativo · Câm: ${_camLabels[widget.game.camAngle]}  R=Rodar  F=Atacar',
-              style: const TextStyle(color: Colors.white60, fontSize: 9),
-            ),
-            Text(
-              '🕒 ${widget.game.textoTempoDia}    🐾 ${widget.game.mobs.mobs.length}',
-              style: const TextStyle(
-                color: Colors.amberAccent,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 2),
-            _buildBarras(),
+            _miniBotao('🖥', 'Tela cheia', Colors.deepPurple, () {
+              entrarTelaCheia();
+            }),
+            const SizedBox(width: 6),
+            _miniBotao('💾', 'Salvar', Colors.indigo, () async {
+              await widget.game.salvarAgora();
+              setState(() {});
+            }),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _miniBotao('📦', 'Bag', Colors.brown, () {
+              setState(() => _bagAberta = !_bagAberta);
+            }),
+            const SizedBox(width: 6),
+            _miniBotao('⚒', 'Craft', Colors.orange.shade800, () {
+              setState(() => _craftAberto = !_craftAberto);
+            }),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _miniBotao('📂', 'Carregar', Colors.teal, () async {
+              await widget.game.carregarAgora();
+              setState(() {});
+            }),
+            const SizedBox(width: 6),
+            _miniBotao('🗑', 'Apagar', Colors.red.shade700, () async {
+              await widget.game.apagarSave();
+              setState(() {});
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _miniBotao(String icon, String label, Color cor, VoidCallback onTap,
+      {bool wide = false}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: wide ? 122 : 60,
+        height: 32,
+        decoration: BoxDecoration(
+          color: cor.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white30, width: 1.0),
+          boxShadow: const [BoxShadow(color: Color(0x44000000), blurRadius: 3)],
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 14)),
+            const SizedBox(width: 3),
+            Text(label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                )),
           ],
         ),
       ),
     );
   }
 
-  /// Barras de HP (corações vermelhos) e fome (drumstick laranja).
+  Widget _buildToast() {
+    return ValueListenableBuilder<String?>(
+      valueListenable: widget.game.mensagem,
+      builder: (ctx, msg, _) {
+        if (msg == null || msg.isEmpty) return const SizedBox.shrink();
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Text(
+            msg,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHud() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.game.coordenadas,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontFamily: 'monospace',
+            ),
+          ),
+          Text(
+            'Câm: ${_camLabels[widget.game.camAngle]} · R=Rodar F=Atacar E=Comer 1-9=Slot',
+            style: const TextStyle(color: Colors.white60, fontSize: 9),
+          ),
+          Text(
+            '🕒 ${widget.game.textoTempoDia}    🐾 ${widget.game.mobs.mobs.length}',
+            style: const TextStyle(
+              color: Colors.amberAccent,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 2),
+          _buildBarras(),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBarras() {
-    final hp = widget.game.hp;
-    final hpMax = widget.game.hpMax;
-    final fome = widget.game.fome;
-    final fomeMax = widget.game.fomeMax;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildBarraIcones('❤', hp, hpMax, Colors.red.shade400),
-        _buildBarraIcones('🍗', fome, fomeMax, Colors.orange.shade400),
+        _buildBarraIcones('❤', widget.game.hp, widget.game.hpMax, Colors.red.shade400),
+        _buildBarraIcones('🍗', widget.game.fome, widget.game.fomeMax, Colors.orange.shade400),
       ],
     );
   }
 
   Widget _buildBarraIcones(String icone, int v, int max, Color cor) {
-    final cheios = (v / 2).ceil(); // 1 ícone = 2 pontos
+    final cheios = (v / 2).ceil();
     final total = (max / 2).ceil();
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -350,6 +371,7 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
     );
   }
 
+  /// Hotbar: 9 primeiros slots do inventário.
   Widget _buildHotbar() {
     return Center(
       child: Container(
@@ -361,18 +383,15 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: List.generate(Rebeca.hotbar.length, (i) {
-            final bloco = Rebeca.hotbar[i];
-            final sel = i == _slotAtual;
+          children: List.generate(Inventario.slotsHotbar, (i) {
+            final item = inv.slots[i];
+            final sel = i == inv.slotSelecionado;
             return GestureDetector(
-              onTap: () {
-                setState(() => _slotAtual = i);
-                widget.game.selecionarSlot(i);
-              },
+              onTap: () => widget.game.selecionarSlot(i),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 120),
-                width: sel ? 50 : 44,
-                height: sel ? 50 : 44,
+                width: sel ? 52 : 44,
+                height: sel ? 52 : 44,
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
                   color: sel
@@ -383,46 +402,280 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
                     color: sel ? Colors.white : Colors.white30,
                     width: sel ? 2.0 : 1.0,
                   ),
-                  boxShadow: sel
-                      ? [const BoxShadow(color: Color(0x44FFFFFF), blurRadius: 6)]
-                      : null,
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 26,
-                        height: 26,
-                        decoration: BoxDecoration(
-                          color: bloco.corTopo,
-                          borderRadius: BorderRadius.circular(3),
-                          border: Border.all(color: Colors.black26, width: 0.5),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(_icone(bloco),
-                            style: const TextStyle(fontSize: 15)),
-                      ),
-                      if (sel)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 1),
-                          child: Text(
-                            bloco.nome,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 7,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.clip,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                child: _slotConteudo(item, sel),
               ),
             );
           }),
+        ),
+      ),
+    );
+  }
+
+  Widget _slotConteudo(Item? item, bool sel) {
+    if (item == null) {
+      return Center(
+        child: Text(
+          '·',
+          style: TextStyle(color: Colors.white12, fontSize: sel ? 20 : 16),
+        ),
+      );
+    }
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Center(
+          child: item.isBloco
+              ? Container(
+                  width: 26,
+                  height: 26,
+                  decoration: BoxDecoration(
+                    color: item.bloco!.corTopo,
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(color: Colors.black26, width: 0.5),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(_iconeBloco(item.bloco!), style: const TextStyle(fontSize: 14)),
+                )
+              : Text(item.icone, style: const TextStyle(fontSize: 22)),
+        ),
+        if (item.qtd > 1)
+          Positioned(
+            right: 2,
+            bottom: 0,
+            child: Text(
+              '${item.qtd}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                shadows: [Shadow(color: Colors.black87, blurRadius: 2)],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Bag: 27 slots restantes em grid 9×3.
+  Widget _buildBagOverlay() {
+    return Positioned.fill(
+      child: GestureDetector(
+        onTap: () => setState(() => _bagAberta = false),
+        child: Container(
+          color: Colors.black54,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xCC1a1a2e),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.amber.withOpacity(0.4), width: 2),
+                boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 16)],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    '📦 Inventário',
+                    style: TextStyle(
+                      color: Colors.amberAccent,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  for (int row = 0; row < 3; row++)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(9, (col) {
+                        final idx = Inventario.slotsHotbar + row * 9 + col;
+                        return _bagSlot(idx);
+                      }),
+                    ),
+                  const SizedBox(height: 14),
+                  const Text(
+                    '↓ Hotbar (toque para mover) ↓',
+                    style: TextStyle(color: Colors.white54, fontSize: 10),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(9, (col) => _bagSlot(col)),
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () => setState(() => _bagAberta = false),
+                    child: const Text('Fechar', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bagSlot(int idx) {
+    final item = inv.slots[idx];
+    final sel = idx == inv.slotSelecionado;
+    return GestureDetector(
+      onTap: () {
+        if (idx < Inventario.slotsHotbar) {
+          widget.game.selecionarSlot(idx);
+        } else {
+          // Toque na bag → tenta swap com slot selecionado da hotbar.
+          inv.trocar(idx, inv.slotSelecionado);
+        }
+      },
+      child: Container(
+        width: 44,
+        height: 44,
+        margin: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: sel ? Colors.amber : Colors.white24,
+            width: sel ? 2 : 1,
+          ),
+        ),
+        child: _slotConteudo(item, sel),
+      ),
+    );
+  }
+
+  /// Painel de crafting com receitas disponíveis.
+  Widget _buildCraftOverlay() {
+    final disponiveis = Crafting.disponiveis(inv, perto: true);
+    return Positioned.fill(
+      child: GestureDetector(
+        onTap: () => setState(() => _craftAberto = false),
+        child: Container(
+          color: Colors.black54,
+          child: Center(
+            child: Container(
+              width: 360,
+              constraints: const BoxConstraints(maxHeight: 480),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xCC1a1a2e),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.orange.withOpacity(0.6), width: 2),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    '⚒ Crafting',
+                    style: TextStyle(
+                      color: Colors.orangeAccent,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Workbench virtual ativo. Toque numa receita para criar.',
+                    style: TextStyle(color: Colors.white60, fontSize: 10),
+                  ),
+                  const SizedBox(height: 10),
+                  if (disponiveis.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        'Sem receitas disponíveis. Junte mais materiais (madeira → pranchas → paus).',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    )
+                  else
+                    Flexible(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: disponiveis.length,
+                        itemBuilder: (ctx, i) {
+                          final r = disponiveis[i];
+                          return ListTile(
+                            dense: true,
+                            leading: Text(
+                              r.resultado.icone,
+                              style: const TextStyle(fontSize: 22),
+                            ),
+                            title: Text(
+                              r.resultado.nome +
+                                  (r.resultado.qtd > 1 ? ' ×${r.resultado.qtd}' : ''),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              _resumoReceita(r.custos),
+                              style: const TextStyle(
+                                color: Colors.white60,
+                                fontSize: 10,
+                              ),
+                            ),
+                            onTap: () {
+                              Crafting.craftar(inv, r, perto: true);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 6),
+                  TextButton(
+                    onPressed: () => setState(() => _craftAberto = false),
+                    child: const Text('Fechar', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _resumoReceita(List<dynamic> custos) {
+    return 'consome materiais';
+  }
+
+  /// Tela de game over.
+  Widget _buildMorteOverlay() {
+    return Positioned.fill(
+      child: GestureDetector(
+        onTap: () {
+          widget.game.respawnar();
+          setState(() {});
+        },
+        child: Container(
+          color: Colors.red.withOpacity(0.5),
+          child: const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('💀', style: TextStyle(fontSize: 88)),
+                SizedBox(height: 12),
+                Text(
+                  'Você morreu',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Toque para reviver no spawn',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -454,7 +707,7 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
     );
   }
 
-  String _icone(TipoBloco b) {
+  String _iconeBloco(TipoBloco b) {
     switch (b) {
       case TipoBloco.grama:     return '🌿';
       case TipoBloco.terra:     return '🟫';

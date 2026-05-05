@@ -41,6 +41,7 @@ class RenderizadorIsometrico {
     Rebeca rebeca,
     Vector2 tela, {
     List<Mob> mobs = const [],
+    TipoBloco? blocoMao,
   }) {
     _desenharCeu(canvas, tela);
 
@@ -137,7 +138,7 @@ class RenderizadorIsometrico {
 
     _desenharMobs(canvas, cx, cy, mobs);
     _desenharRebeca(canvas, cx, cy, rebeca);
-    _desenharMao(canvas, tela, rebeca.blocoSelecionado);
+    if (blocoMao != null) _desenharMao(canvas, tela, blocoMao);
     _desenharMirinha(canvas, tela);
   }
 

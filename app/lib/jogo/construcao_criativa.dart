@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
+import 'package:rebcm/inventario/drops.dart';
+import 'package:rebcm/inventario/inventario.dart';
+import 'package:rebcm/inventario/item.dart';
 import 'package:rebcm/mob/mob.dart';
 import 'package:rebcm/mob/spawner.dart';
 import 'package:rebcm/mundo/mundo.dart';
@@ -19,66 +22,83 @@ class ConstrucaoCriativa extends FlameGame
   late Rebeca rebeca;
   final RenderizadorIsometrico _renderer = RenderizadorIsometrico();
   final MobSpawner mobs = MobSpawner();
+  final Inventario inv = Inventario();
 
-  // HP/fome do player (modo criativo: apenas visualização por hora).
+  // HP/fome reais.
   int hp = 20;
   int hpMax = 20;
   int fome = 20;
   int fomeMax = 20;
+  bool morto = false;
+
+  // Tempo desde último dano para regen.
+  double _semDano = 0.0;
+  double _accFome = 0.0;
+  double _accRegen = 0.0;
+  double _accDanoTerreno = 0.0;
+
+  // Spawn point para respawn.
+  double spawnX = 0, spawnY = 0, spawnZ = 0;
 
   double _joyX = 0, _joyZ = 0, _joyY = 0;
   bool _quebrando = false;
 
-  // Throttle: lembra o último chunk em que o player estava para só
-  // recarregar vizinhos quando atravessa a borda.
   int _ultimoCx = 0, _ultimoCz = 0;
   bool _chunksInicializados = false;
-
-  // Auto-save.
   double _segundosDesdeSave = 0.0;
 
-  // Ciclo dia/noite — fração 0..1 de um dia completo.
-  // 0 = nascer do sol, 0.25 = meio-dia, 0.5 = pôr do sol, 0.75 = meia-noite.
   double tempoDia = 0.25;
-  static const double _diaSegundos = 240.0; // 4 minutos = 1 dia completo
+  static const double _diaSegundos = 240.0;
 
-  // Notificações para a UI (atualiza badges save/load).
   final ValueNotifier<String?> mensagem = ValueNotifier<String?>(null);
+  // Notificações para a UI re-renderizar quando algo importante muda.
+  final ValueNotifier<int> hudTick = ValueNotifier<int>(0);
 
   int get camAngle => _renderer.camAngle;
+
+  /// Bloco selecionado vindo do inventário (null se slot atual não é bloco).
+  TipoBloco? get blocoSelecionado => inv.blocoSelecionado;
 
   @override
   Color backgroundColor() => const Color(0xFF87CEEB);
 
   @override
   Future<void> onLoad() async {
-    // Tenta carregar save existente; senão começa um mundo novo.
     final save = await SaveLoad.carregar();
     if (save != null) {
       mundo = Mundo(seed: save.seed);
       SaveLoad.aplicarOverrides(mundo.chunks, save);
       rebeca = Rebeca(x: save.px, y: save.py, z: save.pz);
-      rebeca.selecionarSlot(save.hotbarSlot);
+      inv.selecionarSlot(save.hotbarSlot);
       if (save.tempoDia != null) tempoDia = save.tempoDia!;
+      if (save.hp != null) hp = save.hp!.clamp(0, hpMax);
+      if (save.fome != null) fome = save.fome!.clamp(0, fomeMax);
+      if (save.inventario != null) {
+        SaveLoad.aplicarInventario(inv, save.inventario!);
+      } else {
+        _kitInicial();
+      }
       mensagem.value = 'Mundo carregado';
     } else {
       mundo = Mundo();
-      // Spawn no centro do "chunk 0,0", em cima do terreno.
-      final spawnX = Constantes.chunkSize ~/ 2;
-      final spawnZ = Constantes.chunkSize ~/ 2;
-      final hSurf = mundo.alturaSuperficie(spawnX, spawnZ);
+      final spawnXi = Constantes.chunkSize ~/ 2;
+      final spawnZi = Constantes.chunkSize ~/ 2;
+      final hSurf = mundo.alturaSuperficie(spawnXi, spawnZi);
       rebeca = Rebeca(
-        x: spawnX.toDouble(),
+        x: spawnXi.toDouble(),
         y: (hSurf + 5).toDouble(),
-        z: spawnZ.toDouble(),
+        z: spawnZi.toDouble(),
       );
-      mensagem.value = 'Bem-vinda ao novo mundo!';
+      _kitInicial();
+      mensagem.value = 'Bem-vinda! Hotbar com kit inicial';
     }
+    spawnX = rebeca.x;
+    spawnY = rebeca.y;
+    spawnZ = rebeca.z;
 
     rebeca.atualizarAlvoManual(mundo);
     overlays.add('controles');
 
-    // Garante chunks ao redor do spawn.
     final cs = Constantes.chunkSize;
     _ultimoCx = (rebeca.x / cs).floor();
     _ultimoCz = (rebeca.z / cs).floor();
@@ -86,9 +106,24 @@ class ConstrucaoCriativa extends FlameGame
     _chunksInicializados = true;
   }
 
+  /// Itens iniciais para um novo mundo: blocos básicos + 1 picareta de
+  /// madeira para já permitir minerar pedra.
+  void _kitInicial() {
+    inv.adicionar(Item.bloco(TipoBloco.grama, qtd: 32));
+    inv.adicionar(Item.bloco(TipoBloco.terra, qtd: 32));
+    inv.adicionar(Item.bloco(TipoBloco.pedra, qtd: 16));
+    inv.adicionar(Item.bloco(TipoBloco.madeira, qtd: 16));
+    inv.adicionar(Item.bloco(TipoBloco.folha, qtd: 16));
+    inv.adicionar(Item.bloco(TipoBloco.tijolo, qtd: 8));
+    inv.adicionar(Item.bloco(TipoBloco.vidro, qtd: 8));
+    inv.adicionar(Item.bloco(TipoBloco.luz, qtd: 4));
+    inv.adicionar(Item.item(TipoItem.picaretaMadeira));
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
+    if (morto) return;
 
     rebeca.mover(_joyX, _joyZ, dt, mundo);
     if (_joyY != 0) rebeca.subirDescer(_joyY, dt);
@@ -96,8 +131,15 @@ class ConstrucaoCriativa extends FlameGame
     if (_quebrando) {
       final alvo = rebeca.blocoAlvo;
       if (alvo != null && mundo.isSolido(alvo.x, alvo.y, alvo.z)) {
-        if (rebeca.avancarQuebra(dt)) {
-          mundo.set(alvo.x, alvo.y, alvo.z, TipoBloco.ar);
+        // Velocidade de quebra depende da ferramenta vs bloco.
+        final bloco = mundo.get(alvo.x, alvo.y, alvo.z);
+        final tier = inv.melhorPicareta;
+        final ferramenta = inv.itemSelecionado?.item?.ferramenta;
+        final mult = Drops.velocidadeQuebra(bloco, tier, ferramenta);
+        rebeca.progressoQuebra += (dt / Constantes.tempoQuebra) * mult;
+        if (rebeca.progressoQuebra >= 1.0) {
+          rebeca.progressoQuebra = 0.0;
+          _quebrarComDrops(alvo.x, alvo.y, alvo.z, bloco);
           rebeca.atualizarAlvoManual(mundo);
         }
       } else {
@@ -105,7 +147,6 @@ class ConstrucaoCriativa extends FlameGame
       }
     }
 
-    // Atualiza chunks ao atravessar borda.
     if (_chunksInicializados) {
       final cs = Constantes.chunkSize;
       final cx = (rebeca.x / cs).floor();
@@ -117,21 +158,103 @@ class ConstrucaoCriativa extends FlameGame
       }
     }
 
-    // Ciclo dia/noite. Pico de luz em tempoDia=0.25 (meio-dia), mínimo em 0.75.
     tempoDia = (tempoDia + dt / _diaSegundos) % 1.0;
     final sun = (0.5 + 0.5 * math.sin(tempoDia * 2 * math.pi - math.pi / 2))
         .clamp(0.05, 1.0);
     _renderer.luzDia = sun;
 
-    // Mobs: spawn + atualização.
     mobs.atualizar(dt, mundo, rebeca.x, rebeca.z, sun);
     mobs.atualizarMobs(dt, mundo, rebeca.x, rebeca.z);
 
-    // Auto-save.
+    _atualizarSobrevivencia(dt);
+
     _segundosDesdeSave += dt;
     if (_segundosDesdeSave >= Constantes.autosavePeriodo) {
       _segundosDesdeSave = 0.0;
       _autoSave();
+    }
+
+    hudTick.value++;
+  }
+
+  /// Sobrevivência: dano por terreno (lava/cacto), zumbi adjacente,
+  /// fome decrescente, regen HP quando fome cheia.
+  void _atualizarSobrevivencia(double dt) {
+    _semDano += dt;
+
+    // Bloco em que o player está pisando ou dentro: lava ou cacto = dano
+    // contínuo.
+    final bx = rebeca.x.round();
+    final by = rebeca.y.round();
+    final bz = rebeca.z.round();
+    final blocoNoCorpo = mundo.get(bx, by, bz);
+    final blocoNosPes = mundo.get(bx, by - 1, bz);
+    _accDanoTerreno += dt;
+    if (_accDanoTerreno >= 0.5) {
+      _accDanoTerreno = 0.0;
+      if (blocoNoCorpo == TipoBloco.lava || blocoNosPes == TipoBloco.lava) {
+        _aplicarDano(3, 'lava');
+      } else if (blocoNoCorpo == TipoBloco.cacto || blocoNosPes == TipoBloco.cacto) {
+        _aplicarDano(1, 'cacto');
+      }
+    }
+
+    // Zumbi a < 1.5 blocos = ataque a cada 1s.
+    final z = mobs.maisProximo(rebeca.x, rebeca.y, rebeca.z, 1.5);
+    if (z != null && z.tipo == TipoMob.zumbi) {
+      if (_semDano >= 1.0) {
+        _aplicarDano(2, 'zumbi');
+      }
+    }
+
+    // Fome decresce ~1 ponto a cada 30s.
+    _accFome += dt;
+    if (_accFome >= 30.0 && fome > 0) {
+      _accFome = 0.0;
+      fome -= 1;
+    }
+
+    // Regen HP: se fome >= 18 E sem dano há 4s+ E hp < max.
+    _accRegen += dt;
+    if (fome >= 18 && _semDano >= 4.0 && hp < hpMax && _accRegen >= 4.0) {
+      _accRegen = 0.0;
+      hp += 1;
+    }
+  }
+
+  void _aplicarDano(int d, String fonte) {
+    if (morto) return;
+    hp -= d;
+    _semDano = 0.0;
+    if (hp <= 0) {
+      hp = 0;
+      morto = true;
+      mensagem.value = 'Você morreu! ($fonte) — toque para reviver';
+    } else {
+      mensagem.value = '-$d HP ($fonte)';
+    }
+  }
+
+  void respawnar() {
+    if (!morto) return;
+    rebeca.x = spawnX;
+    rebeca.y = spawnY;
+    rebeca.z = spawnZ;
+    hp = hpMax;
+    fome = fomeMax;
+    morto = false;
+    rebeca.atualizarAlvoManual(mundo);
+    mensagem.value = 'Respawn no ponto inicial';
+  }
+
+  /// Quebra o bloco em (bx,by,bz), gera drops conforme ferramenta atual e
+  /// adiciona ao inventário (descartando se não couber).
+  void _quebrarComDrops(int bx, int by, int bz, TipoBloco bloco) {
+    final tier = inv.melhorPicareta;
+    final drops = Drops.dropDeBloco(bloco, tier);
+    mundo.set(bx, by, bz, TipoBloco.ar);
+    for (final d in drops) {
+      inv.adicionar(d);
     }
   }
 
@@ -141,8 +264,11 @@ class ConstrucaoCriativa extends FlameGame
       px: rebeca.x,
       py: rebeca.y,
       pz: rebeca.z,
-      hotbarSlot: rebeca.slotAtual,
+      hotbarSlot: inv.slotSelecionado,
+      hp: hp,
+      fome: fome,
       tempoDia: tempoDia,
+      inventario: SaveLoad.serializarInventario(inv),
     );
     if (ok) {
       mensagem.value = 'Auto-save ✓';
@@ -152,7 +278,14 @@ class ConstrucaoCriativa extends FlameGame
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    _renderer.render(canvas, mundo, rebeca, size, mobs: mobs.mobs);
+    _renderer.render(
+      canvas,
+      mundo,
+      rebeca,
+      size,
+      mobs: mobs.mobs,
+      blocoMao: blocoSelecionado,
+    );
   }
 
   @override
@@ -182,36 +315,77 @@ class ConstrucaoCriativa extends FlameGame
       _joyX = speed * 0.7;
       _joyZ = -speed * 0.7;
     }
-    if (keysPressed.contains(LogicalKeyboardKey.space)) {
-      _joyY = 1.0;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
-      _joyY = -1.0;
-    }
+    if (keysPressed.contains(LogicalKeyboardKey.space)) _joyY = 1.0;
+    if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) _joyY = -1.0;
 
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyR) {
-      _renderer.rotacionarCamera();
-    }
-    // F = atacar mob mais próximo dentro do alcance.
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyF) {
-      atacarMobProximo();
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.keyR) _renderer.rotacionarCamera();
+      if (event.logicalKey == LogicalKeyboardKey.keyF) atacarMobProximo();
+      if (event.logicalKey == LogicalKeyboardKey.keyE) comerSlotAtual();
+      // 1..9: selecionar slot da hotbar.
+      const digitos = [
+        LogicalKeyboardKey.digit1, LogicalKeyboardKey.digit2,
+        LogicalKeyboardKey.digit3, LogicalKeyboardKey.digit4,
+        LogicalKeyboardKey.digit5, LogicalKeyboardKey.digit6,
+        LogicalKeyboardKey.digit7, LogicalKeyboardKey.digit8,
+        LogicalKeyboardKey.digit9,
+      ];
+      for (int i = 0; i < digitos.length; i++) {
+        if (event.logicalKey == digitos[i]) {
+          selecionarSlot(i);
+          break;
+        }
+      }
     }
 
     return KeyEventResult.handled;
   }
 
-  /// Tenta atacar o mob mais próximo dentro de [Constantes.alcanceBloco].
-  /// Causa 4 de dano. Retorna `true` se o mob morreu nesse hit.
+  /// Atacar mob com dano que escala com a melhor espada do inventário.
   bool atacarMobProximo() {
+    if (morto) return false;
     final m = mobs.maisProximo(rebeca.x, rebeca.y, rebeca.z, Constantes.alcanceBloco);
     if (m == null) return false;
-    final morreu = m.aplicarDano(4);
-    mensagem.value = morreu ? '${m.tipo.nome} derrotado!' : 'Atingiu ${m.tipo.nome}';
+    final tier = inv.melhorEspada;
+    final dano = 2 + tier.index * 2; // mão=2, madeira=4, pedra=6, ferro=8, diamante=10
+    final morreu = m.aplicarDano(dano);
+    if (morreu) {
+      final drops = Drops.dropDeMob(m.tipo);
+      for (final d in drops) {
+        inv.adicionar(d);
+      }
+      mensagem.value = '${m.tipo.nome} derrotado! +${drops.length} drop';
+    } else {
+      mensagem.value = 'Atingiu ${m.tipo.nome} (-$dano)';
+    }
     return morreu;
+  }
+
+  /// Come o item da hotbar atual se for comestível. Restaura fome e
+  /// pode causar dano por carne crua/podre (5% de chance).
+  void comerSlotAtual() {
+    if (morto) return;
+    final s = inv.itemSelecionado;
+    if (s == null || !s.isItem || !s.item!.comestivel) {
+      mensagem.value = 'Nada comestível selecionado';
+      return;
+    }
+    final restaurar = s.item!.nutricao;
+    fome = (fome + restaurar).clamp(0, fomeMax);
+    inv.consumirSlotAtual();
+    if (s.item!.suspeito && math.Random().nextDouble() < 0.15) {
+      _aplicarDano(1, 'comida estragada');
+    } else {
+      mensagem.value = 'Comeu ${s.item!.nome} (+$restaurar fome)';
+    }
   }
 
   @override
   void onTapUp(TapUpEvent event) {
+    if (morto) {
+      respawnar();
+      return;
+    }
     colocarBloco();
   }
 
@@ -223,6 +397,7 @@ class ConstrucaoCriativa extends FlameGame
   void setVertical(double dy) => _joyY = dy;
 
   void iniciarQuebra() {
+    if (morto) return;
     _quebrando = true;
     rebeca.atualizarAlvoManual(mundo);
   }
@@ -235,26 +410,35 @@ class ConstrucaoCriativa extends FlameGame
   void colocarBloco() {
     final alvo = rebeca.blocoAlvo;
     if (alvo == null) return;
+    final bloco = blocoSelecionado;
+    if (bloco == null) return;
 
     final by = (alvo.y + 1).clamp(0, Constantes.worldY - 1);
     if (!mundo.isSolido(alvo.x, by, alvo.z)) {
-      mundo.set(alvo.x, by, alvo.z, rebeca.blocoSelecionado);
+      mundo.set(alvo.x, by, alvo.z, bloco);
+      inv.consumirSlotAtual();
     } else if (!mundo.isSolido(alvo.x, alvo.y, alvo.z)) {
-      mundo.set(alvo.x, alvo.y, alvo.z, rebeca.blocoSelecionado);
+      mundo.set(alvo.x, alvo.y, alvo.z, bloco);
+      inv.consumirSlotAtual();
     }
   }
 
   void quebrarBlocoImediato() {
     final alvo = rebeca.blocoAlvo;
     if (alvo == null) return;
-    mundo.set(alvo.x, alvo.y, alvo.z, TipoBloco.ar);
+    final bloco = mundo.get(alvo.x, alvo.y, alvo.z);
+    if (bloco == TipoBloco.ar) return;
+    _quebrarComDrops(alvo.x, alvo.y, alvo.z, bloco);
     rebeca.cancelarQuebra();
     rebeca.atualizarAlvoManual(mundo);
   }
 
   void rotacionarCamera() => _renderer.rotacionarCamera();
 
-  void selecionarSlot(int slot) => rebeca.selecionarSlot(slot);
+  void selecionarSlot(int slot) {
+    inv.selecionarSlot(slot);
+    rebeca.resetQuebra();
+  }
 
   String get coordenadas =>
       'X:${rebeca.x.toStringAsFixed(1)} '
@@ -268,21 +452,22 @@ class ConstrucaoCriativa extends FlameGame
     return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
   }
 
-  /// Save manual disparado por botão.
   Future<bool> salvarAgora() async {
     final ok = await SaveLoad.salvar(
       chunks: mundo.chunks,
       px: rebeca.x,
       py: rebeca.y,
       pz: rebeca.z,
-      hotbarSlot: rebeca.slotAtual,
+      hotbarSlot: inv.slotSelecionado,
+      hp: hp,
+      fome: fome,
       tempoDia: tempoDia,
+      inventario: SaveLoad.serializarInventario(inv),
     );
     mensagem.value = ok ? 'Salvo!' : 'Erro ao salvar';
     return ok;
   }
 
-  /// Carrega o save default sobre o mundo atual. Quase tudo é resetado.
   Future<bool> carregarAgora() async {
     final save = await SaveLoad.carregar();
     if (save == null) {
@@ -294,8 +479,17 @@ class ConstrucaoCriativa extends FlameGame
     rebeca.x = save.px;
     rebeca.y = save.py;
     rebeca.z = save.pz;
-    rebeca.selecionarSlot(save.hotbarSlot);
+    inv.selecionarSlot(save.hotbarSlot);
     if (save.tempoDia != null) tempoDia = save.tempoDia!;
+    if (save.hp != null) hp = save.hp!.clamp(0, hpMax);
+    if (save.fome != null) fome = save.fome!.clamp(0, fomeMax);
+    inv.limpar();
+    if (save.inventario != null) {
+      SaveLoad.aplicarInventario(inv, save.inventario!);
+    } else {
+      _kitInicial();
+    }
+    morto = false;
     rebeca.atualizarAlvoManual(mundo);
     final cs = Constantes.chunkSize;
     _ultimoCx = (rebeca.x / cs).floor();
@@ -305,7 +499,6 @@ class ConstrucaoCriativa extends FlameGame
     return true;
   }
 
-  /// Apaga o save persistido (mas o mundo em RAM continua).
   Future<bool> apagarSave() async {
     final ok = await SaveLoad.apagar();
     mensagem.value = ok ? 'Save apagado' : 'Sem save';
