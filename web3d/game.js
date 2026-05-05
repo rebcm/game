@@ -74,7 +74,7 @@ const BLOCO_INFO = {
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
   [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
-  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6e3a8c, lateral: 0x4e2a6c },
+  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x3a2148, lateral: 0x2a1838 },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
   [BLOCO.LA]:        { nome: 'Lã',        solido: true,  transp: false, emiteLuz: 0,  cor: 0xFAFAFA, lateral: 0xEEEEEE },
   [BLOCO.TOCHA]:     { nome: 'Tocha',     solido: false, transp: true,  emiteLuz: 13, cor: 0xFFB300, lateral: 0xFF6F00 },
@@ -279,9 +279,13 @@ class World {
         const h = this.alturaTerreno(gx, gz);
         for (let y = 0; y <= h; y++) {
           let b;
-          if (y === 0) b = BLOCO.OBSIDIANA;
-          else if (y <= 2) {
-            const hh = hash2(gx, gz, this.seed ^ 0xfee10) & 0xFF;
+          // Bedrock 3 camadas: y=0..2 sempre OBSIDIANA. Garantia
+          // dura de que cavernas (que carvam y>=4) NUNCA possam
+          // expor obsidiana via paredes laterais — sem isso, vista
+          // de cima atravessava o piso e o roxo dominava a tela.
+          if (y <= 2) b = BLOCO.OBSIDIANA;
+          else if (y <= 4) {
+            const hh = hash2(gx, gz + y * 31, this.seed ^ 0xfee10) & 0xFF;
             b = hh < 14 ? BLOCO.LAVA : BLOCO.PEDRA;
           } else if (y < h - 3) {
             const hh = hash3(gx, y, gz, this.seed ^ 0xa1b2) & 0xFF;
@@ -333,7 +337,9 @@ class World {
         const gx = cx * CHUNK_SIZE + lx;
         const gz = cz * CHUNK_SIZE + lz;
         const hSurf = this.alturaTerreno(gx, gz);
-        for (let y = 3; y < hSurf - 2; y++) {
+        // Caverna começa em y=5 (bedrock 0..2 + lava/pedra 3..4 não
+        // são carvados — preserva piso sólido sob qualquer ângulo).
+        for (let y = 5; y < hSurf - 2; y++) {
           const atual = c.get(lx, y, lz);
           if (atual === BLOCO.AR || atual === BLOCO.LAVA) continue;
           if (this.caverna(gx, y, gz)) {
@@ -349,10 +355,12 @@ class World {
     const n2 = hash2((x / 4) | 0, y * 31, this.seed ^ 0xc41e2) / 0xFFFFFFFF;
     const n3 = hash2(y * 17, (z / 4) | 0, this.seed ^ 0xc41e3) / 0xFFFFFFFF;
     const v = (n1 + n2 + n3) / 3;
-    // Threshold reduzido — gera cavernas mais raras e em sua maioria
-    // profundas (não visíveis da superfície). Antes 0.34/0.30/0.24
-    // gerava esponja com furos visíveis de cima.
-    const yFactor = y < 6 ? 0.22 : (y < 12 ? 0.18 : 0.10);
+    // Cavernas raras e estritamente subterrâneas. Reduzido pra que
+    // a vista superior do mundo não fique dominada por buracos
+    // expondo blocos profundos (lava/obsidiana). Os números abaixo
+    // dão ~3% de cavernas por bloco no nível raso — suficiente pra
+    // dungeons exploráveis sem virar queijo suíço.
+    const yFactor = y < 8 ? 0.12 : (y < 14 ? 0.10 : 0.06);
     return v < yFactor;
   }
   plantarArvore(c, lx, y, lz) {
@@ -607,7 +615,7 @@ function criarAtlasTexturas() {
   pintar(16, 0x388E3C, 18);                                            // cacto
   pintar(17, 0x1976D2, 12);                                            // água
   pintar(18, 0xBF360C, 30);                                            // lava
-  pintar(19, 0x6e3a8c, 22);                                            // obsidiana (roxo distintivo)
+  pintar(19, 0x3a2148, 22);                                            // obsidiana (roxo escuro, não fluorescente)
   pintar(20, 0x4E342E, 18, listrasMadeira);                            // workbench lateral
   pintar(21, 0x6D4C41, 18, (i, c, cs) => {                             // workbench topo
     aneisMadeiraTopo(i, c, cs);
@@ -808,16 +816,15 @@ class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x87CEEB);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    // === Tone mapping suave (Cineon) ===
-    // SEM tone mapping, a soma das luzes (ambient + hemi + sol +
-    // emissive) ultrapassa 1.0 nas faces top em pleno sol e clipa
-    // pra branco — blocos parecem "translúcidos/desbotados" (a queixa
-    // recorrente de "transparência"). Com Cineon, o rolloff suave
-    // comprime os highlights sem matar as sombras (caverna continua
-    // visível graças ao emissiveMap). Exposure 1.05 compensa o leve
-    // escurecimento que o tone mapping introduz nos meios-tons.
-    this.renderer.toneMapping = THREE.CineonToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
+    // === Tone mapping ACES Filmic ===
+    // CineonToneMapping aplica pow(.,2.2) internamente (gamma encode)
+    // e o renderer com outputColorSpace=SRGBColorSpace encoda de novo
+    // → DOUBLE-GAMMA. Cores saturadas (obsidiana 0x6e3a8c) viravam
+    // lavanda fluorescente que dominava a tela inteira. ACES Filmic
+    // retorna em espaço LINEAR, então o sRGB output só encoda uma vez.
+    // Exposure 1.1 compensa a leve compressão dos highlights.
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.1;
     // Atlas de texturas procedurais 16×16 px por face, cor + ruído.
     this.atlas = criarAtlasTexturas();
     // Material de bloco com texture atlas + tinting por vertex colors

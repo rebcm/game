@@ -98,20 +98,21 @@ t('canvas do atlas é forçado a alpha=255 antes de virar textura',
   'Sem isso, padrões com strokeStyle rgba(...,0.5) vazam alpha < 255.');
 
 // ---------------------------------------------------------------------
-// Tone mapping Cineon (suave, comprime overbright sem matar escuros)
-// Antes era NoToneMapping pra evitar caverna preta, mas isso fazia
-// faces top em pleno sol clipar pra branco e parecer "translúcidas".
-// Cineon é mais suave que ACESFilmic — o piso de luz vem do
-// emissiveMap + ambient/hemi reduzidos.
+// Tone mapping ACES Filmic (correto pro pipeline sRGB).
+// Cineon retorna em espaço gamma 2.2 e o renderer com
+// outputColorSpace=SRGBColorSpace encoda DE NOVO → cores saturadas
+// viravam fluorescentes (roxo neon dominava a tela). ACES retorna
+// linear, então o sRGB output só encoda uma vez.
 // ---------------------------------------------------------------------
 grupo('Tone mapping');
-t('renderer com CineonToneMapping (rolloff suave)',
-  /toneMapping\s*=\s*THREE\.CineonToneMapping/.test(game));
-t('toneMappingExposure entre 0.9 e 1.2 (compensa Cineon sem estourar)', (() => {
+t('renderer com ACESFilmicToneMapping (linear, sem double-gamma)',
+  /toneMapping\s*=\s*THREE\.ACESFilmicToneMapping/.test(game),
+  'CineonToneMapping double-encoda gamma com SRGBColorSpace; ACES é o correto.');
+t('toneMappingExposure entre 0.95 e 1.25 (compensa compressão ACES)', (() => {
   const m = game.match(/toneMappingExposure\s*=\s*(\d+\.?\d*)/);
   if (!m) return false;
   const v = parseFloat(m[1]);
-  return v >= 0.9 && v <= 1.2;
+  return v >= 0.95 && v <= 1.25;
 }));
 
 // ---------------------------------------------------------------------
@@ -175,29 +176,40 @@ t('c1 (cor noturna) tem RGB médio > 60 (não-preto)', (() => {
 }), 'Antes era 0x0B1430 (RGB med 26) — quase preto.');
 
 // ---------------------------------------------------------------------
-// Obsidiana visualmente distinta (não confundir com céu noturno)
+// Obsidiana: visível mas não fluorescente.
+// Antes 0x6e3a8c (média 87) saturava demais e dominava a tela quando
+// exposta por cavernas. Agora 0x3a2148 (média 49) — distinguível do
+// céu noturno (RGB 60 floor) mas discreto.
 // ---------------------------------------------------------------------
-grupo('Obsidiana distinta do céu');
-t('cor da obsidiana tem brilho médio > 40 (visível mesmo em sombra)', (() => {
+grupo('Obsidiana: tom discreto');
+t('cor da obsidiana com brilho médio entre 40 e 80', (() => {
   const m = game.match(/\[BLOCO\.OBSIDIANA\][\s\S]*?cor:\s*0x([0-9a-fA-F]{6})/);
   if (!m) return false;
   const v = parseInt(m[1], 16);
   const r = (v >> 16) & 0xFF, g = (v >> 8) & 0xFF, b = v & 0xFF;
-  return (r + g + b) / 3 > 40;
-}), 'Antes 0x1A1A2E (RGB med 26) parecia idêntica ao céu noturno.');
+  const med = (r + g + b) / 3;
+  return med >= 40 && med <= 80;
+}), '< 40 confunde com céu noturno; > 80 vira fluorescente sob ACES.');
 
 // ---------------------------------------------------------------------
-// Cavernas não muito densas
+// Cavernas estritamente subterrâneas (não vazam pra vista superior)
 // ---------------------------------------------------------------------
-grupo('Cavernas: thresholds moderados');
-t('threshold raso < 0.20 (poucos buracos perto da superfície)', (() => {
-  const m = game.match(/y < 12 \?\s*(0\.\d+)/);
-  return m && parseFloat(m[1]) < 0.20;
+grupo('Cavernas: subterrâneas e raras');
+t('threshold profundo <= 0.15 (cavernas raras mesmo no nível mais raso)', (() => {
+  const m = game.match(/y < 8 \?\s*(0\.\d+)/);
+  return m && parseFloat(m[1]) <= 0.15;
+}), 'Antes 0.22 deixava o piso esponjoso e expunha obsidiana de cima.');
+t('threshold mediano <= 0.12', (() => {
+  const m = game.match(/y < 14 \?\s*(0\.\d+)/);
+  return m && parseFloat(m[1]) <= 0.12;
 }));
-t('threshold superficial < 0.15 (quase nenhum buraco perto do topo)', (() => {
-  const m = game.match(/y < 12 \? [^:]+:\s*(0\.\d+)\)/);
-  return m && parseFloat(m[1]) < 0.15;
-}));
+t('caverna começa em y >= 5 (preserva bedrock + camada lava/pedra)', (() => {
+  const m = game.match(/for \(let y = (\d+); y < hSurf - 2/);
+  return m && parseInt(m[1]) >= 5;
+}), 'Cavernas em y<5 podem expor bedrock obsidiana — vista superior fica dominada por roxo.');
+t('bedrock 3 camadas: y<=2 sempre OBSIDIANA', (() => {
+  return /if \(y <= 2\) b = BLOCO\.OBSIDIANA/.test(game);
+}), 'Sem bedrock espesso, paredes laterais de cavernas baixas vazam obsidiana.');
 
 // ---------------------------------------------------------------------
 // Default sólido (não transparente)
