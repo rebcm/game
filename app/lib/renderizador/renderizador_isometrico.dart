@@ -13,9 +13,16 @@ class _Quad {
   _Quad(this.path, this.color, this.sortKey, {this.isOverlay = false});
 }
 
+/// Renderiza o mundo isométrico em torno do player, varrendo apenas os chunks
+/// dentro de [Constantes.viewRadius]. A rotação de câmera é discreta em 4
+/// passos (NE/SE/SW/NW) e gira em torno da posição do player — coerente para
+/// mundo infinito por chunks.
 class RenderizadorIsometrico {
   // Camera angle: 0=NE, 1=SE, 2=SW, 3=NW
   int camAngle = 0;
+
+  // Atmosfera dinâmica (0..1) — 0 = noite, 1 = dia.
+  double luzDia = 1.0;
 
   final _fillPaint = Paint()..style = PaintingStyle.fill;
   final _strokePaint = Paint()
@@ -30,23 +37,42 @@ class RenderizadorIsometrico {
   void render(Canvas canvas, Mundo mundo, Rebeca rebeca, Vector2 tela) {
     _desenharCeu(canvas, tela);
 
-    final cx = tela.x / 2 - rebeca.telaX;
-    final cy = tela.y / 2 - rebeca.telaY;
+    // Translação para centralizar o player na tela.
+    final telaPlayer = _projetarMundo(rebeca.x, rebeca.y, rebeca.z);
+    final cx = tela.x / 2 - telaPlayer.$1;
+    final cy = tela.y / 2 - telaPlayer.$2;
+
+    // Range de iteração em torno do player.
+    final cs = Constantes.chunkSize;
+    final pcx = (rebeca.x / cs).floor();
+    final pcz = (rebeca.z / cs).floor();
+    final r = Constantes.viewRadius;
+    final xMin = (pcx - r) * cs;
+    final xMax = (pcx + r + 1) * cs;
+    final zMin = (pcz - r) * cs;
+    final zMax = (pcz + r + 1) * cs;
 
     final quads = <_Quad>[];
     Path? highlightPath;
 
-    for (int bx = 0; bx < mundo.largura; bx++) {
-      for (int bz = 0; bz < mundo.profundidade; bz++) {
-        for (int by = 0; by < mundo.altura; by++) {
+    for (int bx = xMin; bx < xMax; bx++) {
+      for (int bz = zMin; bz < zMax; bz++) {
+        // Pular colunas vazias rápido (terreno sem blocos sólidos).
+        final hSurf = mundo.alturaSuperficie(bx, bz);
+        // Iteramos até hSurf+8 para incluir folhas de árvores acima do solo
+        // e blocos colocados pelo player ligeiramente acima do terreno.
+        // Blocos colocados muito alto também aparecem se alturaSuperficie
+        // já refletiu eles (alturaSuperficie consulta worldY-1 down to 0).
+        final yMax = (hSurf + 8).clamp(0, Constantes.worldY - 1);
+        for (int by = 0; by <= yMax; by++) {
           final bloco = mundo.get(bx, by, bz);
           if (!bloco.solido) continue;
 
-          final proj = _project(bx.toDouble(), by.toDouble(), bz.toDouble());
+          final proj = _projetarMundo(bx.toDouble(), by.toDouble(), bz.toDouble());
           final sx = cx + proj.$1;
           final sy = cy + proj.$2;
 
-          // Frustum cull
+          // Frustum cull rápido.
           if (sx < -Constantes.halfW * 3 || sx > tela.x + Constantes.halfW * 3) continue;
           if (sy < -Constantes.sideH * 3 || sy > tela.y + Constantes.sideH * 3) continue;
 
@@ -60,13 +86,17 @@ class RenderizadorIsometrico {
               rebeca.blocoAlvo!.y == by &&
               rebeca.blocoAlvo!.z == bz;
 
-          final double sk = _sortKey(bx, by, bz);
+          // Sort key relativo à posição do player.
+          final sk = _sortKey(bx, by, bz, rebeca.x, rebeca.z);
 
-          if (topoV) quads.add(_buildTop(sx, sy, bloco.corTopo, sk));
-          if (f1V) quads.add(_buildFace1(sx, sy, bloco.corEsquerda, sk - 0.1));
-          if (f2V) quads.add(_buildFace2(sx, sy, bloco.corDireita, sk - 0.2));
+          final corTopo = _aplicarLuz(bloco.corTopo, by, bloco.emiteLuz);
+          final corEsq = _aplicarLuz(bloco.corEsquerda, by, bloco.emiteLuz);
+          final corDir = _aplicarLuz(bloco.corDireita, by, bloco.emiteLuz);
 
-          // Breaking cracks
+          if (topoV) quads.add(_buildTop(sx, sy, corTopo, sk));
+          if (f1V) quads.add(_buildFace1(sx, sy, corEsq, sk - 0.1));
+          if (f2V) quads.add(_buildFace2(sx, sy, corDir, sk - 0.2));
+
           if (isAlvo && rebeca.progressoQuebra > 0) {
             final stage = (rebeca.progressoQuebra * 4).floor().clamp(1, 4);
             final alpha = (stage * 50).clamp(0, 200);
@@ -74,7 +104,6 @@ class RenderizadorIsometrico {
             if (topoV) quads.add(_buildTop(sx, sy, crackColor, sk + 0.6, isOverlay: true));
             if (f1V) quads.add(_buildFace1(sx, sy, crackColor, sk + 0.5, isOverlay: true));
             if (f2V) quads.add(_buildFace2(sx, sy, crackColor, sk + 0.4, isOverlay: true));
-            // Crack lines
             if (topoV) quads.add(_crackLines(sx, sy, 'top', stage, sk + 0.7));
             if (f1V) quads.add(_crackLines(sx, sy, 'f1', stage, sk + 0.65));
             if (f2V) quads.add(_crackLines(sx, sy, 'f2', stage, sk + 0.62));
@@ -96,7 +125,7 @@ class RenderizadorIsometrico {
     }
 
     if (highlightPath != null) {
-      canvas.drawPath(highlightPath!, _highlightPaint);
+      canvas.drawPath(highlightPath, _highlightPaint);
     }
 
     _desenharRebeca(canvas, cx, cy, rebeca);
@@ -104,16 +133,41 @@ class RenderizadorIsometrico {
     _desenharMirinha(canvas, tela);
   }
 
-  (double, double) _project(double bx, double by, double bz) {
+  /// Aplica fator de luz (dia/noite) à cor de um bloco. Blocos que emitem
+  /// luz própria não são escurecidos. A luz cai com a profundidade abaixo
+  /// do solo para sugerir cavernas escuras.
+  Color _aplicarLuz(Color c, int y, bool emite) {
+    if (emite) return c;
+    // Curva: luzDia=1 → fator 1; luzDia=0 → fator 0.35.
+    double f = 0.35 + 0.65 * luzDia;
+    // Atenuação de profundidade: y baixo escurece um pouco.
+    if (y < 5) f *= 0.85;
+    return Color.fromARGB(
+      c.alpha,
+      (c.red * f).clamp(0, 255).toInt(),
+      (c.green * f).clamp(0, 255).toInt(),
+      (c.blue * f).clamp(0, 255).toInt(),
+    );
+  }
+
+  /// Projeta coordenadas globais (x,y,z) para a tela isométrica, aplicando
+  /// rotação de câmera em torno da origem (a translação para o player é
+  /// feita pelo caller).
+  (double, double) _projetarMundo(double bx, double by, double bz) {
     double rx = bx, rz = bz;
-    final W = Constantes.worldX - 1.0;
     switch (camAngle) {
       case 1:
-        final tmp = rx; rx = W - rz; rz = tmp;
+        // 90° CCW: (x,z) → (-z, x)
+        final tmp = rx;
+        rx = -rz;
+        rz = tmp;
       case 2:
-        rx = W - rx; rz = W - rz;
+        rx = -rx;
+        rz = -rz;
       case 3:
-        final tmp = rx; rx = rz; rz = W - tmp;
+        final tmp = rx;
+        rx = rz;
+        rz = -tmp;
     }
     return (
       (rx - rz) * Constantes.halfW,
@@ -121,16 +175,20 @@ class RenderizadorIsometrico {
     );
   }
 
-  double _sortKey(int bx, int by, int bz) {
+  double _sortKey(int bx, int by, int bz, double px, double pz) {
     double rx = bx.toDouble(), rz = bz.toDouble();
-    final W = Constantes.worldX - 1.0;
     switch (camAngle) {
       case 1:
-        final tmp = rx; rx = W - rz; rz = tmp;
+        final tmp = rx;
+        rx = -rz;
+        rz = tmp;
       case 2:
-        rx = W - rx; rz = W - rz;
+        rx = -rx;
+        rz = -rz;
       case 3:
-        final tmp = rx; rx = rz; rz = W - tmp;
+        final tmp = rx;
+        rx = rz;
+        rz = -tmp;
     }
     return (rx + rz) * 1000.0 + by.toDouble();
   }
@@ -238,29 +296,53 @@ class RenderizadorIsometrico {
   }
 
   void _desenharCeu(Canvas canvas, Vector2 tela) {
-    final rect = Rect.fromLTWH(0, 0, tela.x, tela.y);
-    final gradient = const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF1E88E5), Color(0xFF87CEEB)],
-    ).createShader(rect);
-    canvas.drawRect(rect, Paint()..shader = gradient);
+    // Mistura entre cor de dia e cor de noite conforme luzDia.
+    final cTopoDia = const Color(0xFF1E88E5);
+    final cBaseDia = const Color(0xFF87CEEB);
+    final cTopoNoite = const Color(0xFF0B1430);
+    final cBaseNoite = const Color(0xFF1A2147);
 
-    // Clouds (simple white ovals)
-    final cloudPaint = Paint()..color = const Color(0xCCFFFFFF);
-    for (int i = 0; i < 5; i++) {
-      final cx2 = (i * 0.2 + 0.1) * tela.x;
-      final cy2 = tela.y * 0.15;
-      canvas.drawOval(Rect.fromCenter(center: Offset(cx2, cy2), width: 70, height: 22), cloudPaint);
-      canvas.drawOval(Rect.fromCenter(center: Offset(cx2 + 25, cy2 - 8), width: 50, height: 18), cloudPaint);
+    final t = luzDia.clamp(0.0, 1.0);
+    final cTopo = Color.lerp(cTopoNoite, cTopoDia, t)!;
+    final cBase = Color.lerp(cBaseNoite, cBaseDia, t)!;
+    final rect = Rect.fromLTWH(0, 0, tela.x, tela.y);
+    final shader = Gradient.linear(
+      Offset(rect.center.dx, rect.top),
+      Offset(rect.center.dx, rect.bottom),
+      [cTopo, cBase],
+    );
+    canvas.drawRect(rect, Paint()..shader = shader);
+
+    if (t > 0.5) {
+      // Nuvens visíveis durante o dia.
+      final cloudPaint = Paint()
+        ..color = Color.fromARGB((220 * t).toInt(), 255, 255, 255);
+      for (int i = 0; i < 5; i++) {
+        final cx2 = (i * 0.2 + 0.1) * tela.x;
+        final cy2 = tela.y * 0.15;
+        canvas.drawOval(Rect.fromCenter(center: Offset(cx2, cy2), width: 70, height: 22), cloudPaint);
+        canvas.drawOval(Rect.fromCenter(center: Offset(cx2 + 25, cy2 - 8), width: 50, height: 18), cloudPaint);
+      }
+    } else {
+      // Estrelas durante a noite.
+      final starPaint = Paint()
+        ..color = Color.fromARGB((255 * (1.0 - t)).toInt(), 255, 255, 230);
+      for (int i = 0; i < 30; i++) {
+        // Posições pseudo-aleatórias estáveis por sessão.
+        final sx = (i * 137 % tela.x.toInt()).toDouble();
+        final sy = (i * 71 % (tela.y.toInt() ~/ 2)).toDouble();
+        canvas.drawCircle(Offset(sx, sy), 1.0, starPaint);
+      }
     }
   }
 
   void _desenharRebeca(Canvas canvas, double cx, double cy, Rebeca rebeca) {
-    final sx = cx + rebeca.telaX;
-    final sy = cy + rebeca.telaY;
+    // Player sempre fica no centro da tela — a translação cx/cy compensa
+    // sua posição global, então desenhamos relativo a (cx + telaPlayer).
+    final telaPlayer = _projetarMundo(rebeca.x, rebeca.y, rebeca.z);
+    final sx = cx + telaPlayer.$1;
+    final sy = cy + telaPlayer.$2;
 
-    // Ground shadow
     canvas.drawOval(
       Rect.fromCenter(center: Offset(sx, sy + 14), width: 24, height: 9),
       Paint()
@@ -268,7 +350,6 @@ class RenderizadorIsometrico {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
     );
 
-    // Body (pink isometric diamond)
     final fill = Paint()..style = PaintingStyle.fill..color = const Color(0xFFE91E63);
     final body = Path()
       ..moveTo(sx, sy - 18)
@@ -278,7 +359,6 @@ class RenderizadorIsometrico {
       ..close();
     canvas.drawPath(body, fill);
 
-    // Shirt/body detail (slightly lighter stripe)
     fill.color = const Color(0xFFAD1457);
     final shirt = Path()
       ..moveTo(sx - 7, sy + 2)
@@ -288,20 +368,17 @@ class RenderizadorIsometrico {
       ..close();
     canvas.drawPath(shirt, fill);
 
-    // White outline
     canvas.drawPath(body, Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..color = const Color(0xCCFFFFFF));
 
-    // Eyes
     canvas.drawCircle(Offset(sx - 4, sy - 7), 2.5, Paint()..color = const Color(0xFFFFFFFF));
     canvas.drawCircle(Offset(sx + 4, sy - 7), 2.5, Paint()..color = const Color(0xFFFFFFFF));
     canvas.drawCircle(Offset(sx - 4, sy - 7), 1.2, Paint()..color = const Color(0xFF1A237E));
     canvas.drawCircle(Offset(sx + 4, sy - 7), 1.2, Paint()..color = const Color(0xFF1A237E));
   }
 
-  // Player hand — mini isometric cube in bottom-right
   void _desenharMao(Canvas canvas, Vector2 tela, TipoBloco bloco) {
     if (bloco == TipoBloco.ar) return;
     final cx = tela.x - 80.0;
@@ -313,14 +390,12 @@ class RenderizadorIsometrico {
       ..strokeWidth = 1.0
       ..color = const Color(0x99000000);
 
-    // Background circle
     canvas.drawCircle(
       Offset(cx, cy + hh + sh / 2),
       42,
       Paint()..color = const Color(0x44000000),
     );
 
-    // Right face
     fill.color = bloco.corDireita;
     final right = Path()
       ..moveTo(cx, cy + hh)..lineTo(cx + hw, cy)
@@ -328,7 +403,6 @@ class RenderizadorIsometrico {
     canvas.drawPath(right, fill);
     canvas.drawPath(right, stroke);
 
-    // Left face
     fill.color = bloco.corEsquerda;
     final left = Path()
       ..moveTo(cx - hw, cy)..lineTo(cx, cy + hh)
@@ -336,7 +410,6 @@ class RenderizadorIsometrico {
     canvas.drawPath(left, fill);
     canvas.drawPath(left, stroke);
 
-    // Top face
     fill.color = bloco.corTopo;
     final top = Path()
       ..moveTo(cx, cy - hh)..lineTo(cx + hw, cy)
@@ -345,7 +418,6 @@ class RenderizadorIsometrico {
     canvas.drawPath(top, stroke);
   }
 
-  // Center crosshair
   void _desenharMirinha(Canvas canvas, Vector2 tela) {
     final cx = tela.x / 2;
     final cy = tela.y / 2;
@@ -368,7 +440,6 @@ class RenderizadorIsometrico {
       canvas.drawLine(Offset(cx, cy - size), Offset(cx, cy - gap), p);
       canvas.drawLine(Offset(cx, cy + gap), Offset(cx, cy + size), p);
     }
-    // Center dot
     canvas.drawCircle(Offset(cx, cy), 1.5, Paint()..color = const Color(0xEEFFFFFF));
   }
 

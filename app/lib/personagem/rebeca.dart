@@ -45,10 +45,9 @@ class Rebeca {
     final vel = Constantes.velocidade;
     final nx = x + dx * vel * dt;
     final nz = z + dz * vel * dt;
+    // Mundo infinito por chunks: sem clamp em x/z.
     if (!mundo.isSolido(nx.round(), y.round(), z.round())) x = nx;
     if (!mundo.isSolido(x.round(), y.round(), nz.round())) z = nz;
-    x = x.clamp(0.0, Constantes.worldX - 1.0);
-    z = z.clamp(0.0, Constantes.worldZ - 1.0);
     _atualizarBlocoAlvo(mundo);
   }
 
@@ -68,8 +67,8 @@ class Rebeca {
     final py = y.round();
 
     for (double step = 1.5; step <= Constantes.alcanceBloco; step += 0.5) {
-      final tx = (x + dx * step).round().clamp(0, Constantes.worldX - 1);
-      final tz = (z + dz * step).round().clamp(0, Constantes.worldZ - 1);
+      final tx = (x + dx * step).round();
+      final tz = (z + dz * step).round();
       if (mundo.isSolido(tx, py, tz)) {
         blocoAlvo = BlocoAlvo(tx, py, tz);
         return;
@@ -79,8 +78,8 @@ class Rebeca {
         return;
       }
     }
-    final tx = (x + dx * 2).round().clamp(0, Constantes.worldX - 1);
-    final tz = (z + dz * 2).round().clamp(0, Constantes.worldZ - 1);
+    final tx = (x + dx * 2).round();
+    final tz = (z + dz * 2).round();
     blocoAlvo = BlocoAlvo(tx, py, tz);
   }
 

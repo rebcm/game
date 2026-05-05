@@ -31,8 +31,11 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
         // Action buttons bottom-right
         Positioned(right: 16, bottom: 120, child: _buildAcoes()),
 
-        // Fly buttons top-right
-        Positioned(right: 16, top: 16, child: _buildVooButtons()),
+        // Fly buttons top-right (logo abaixo do menu de save)
+        Positioned(right: 16, top: 96, child: _buildVooButtons()),
+
+        // Save / Load buttons top-right
+        Positioned(right: 16, top: 16, child: _buildMenuTopo()),
 
         // Camera rotate bottom-left below joystick
         Positioned(left: 16, bottom: 20, child: _buildCamButton()),
@@ -42,7 +45,104 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
 
         // HUD top-left
         Positioned(top: 12, left: 12, child: _buildHud()),
+
+        // Toast central (top) — feedback de save/load
+        Positioned(
+          top: 12,
+          left: 0,
+          right: 0,
+          child: Center(child: _buildToast()),
+        ),
       ],
+    );
+  }
+
+  Widget _buildMenuTopo() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _miniBotao('💾', 'Salvar', Colors.indigo, () async {
+              await widget.game.salvarAgora();
+              setState(() {});
+            }),
+            const SizedBox(width: 6),
+            _miniBotao('📂', 'Carregar', Colors.teal, () async {
+              await widget.game.carregarAgora();
+              setState(() {});
+            }),
+          ],
+        ),
+        const SizedBox(height: 6),
+        _miniBotao('🗑', 'Apagar Save', Colors.red.shade700, () async {
+          await widget.game.apagarSave();
+          setState(() {});
+        }, wide: true),
+      ],
+    );
+  }
+
+  Widget _miniBotao(String icon, String label, Color cor, VoidCallback onTap,
+      {bool wide = false}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: wide ? 122 : 58,
+        height: 36,
+        decoration: BoxDecoration(
+          color: cor.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white30, width: 1.0),
+          boxShadow: const [BoxShadow(color: Color(0x44000000), blurRadius: 3)],
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 15)),
+            const SizedBox(width: 4),
+            Text(label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToast() {
+    return ValueListenableBuilder<String?>(
+      valueListenable: widget.game.mensagem,
+      builder: (ctx, msg, _) {
+        if (msg == null || msg.isEmpty) return const SizedBox.shrink();
+        return AnimatedOpacity(
+          opacity: 1.0,
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: Text(
+              msg,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -193,6 +293,14 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
             Text(
               'Criativo · Câm: ${_camLabels[widget.game.camAngle]}  R=Rodar',
               style: const TextStyle(color: Colors.white60, fontSize: 9),
+            ),
+            Text(
+              '🕒 ${widget.game.textoTempoDia}',
+              style: const TextStyle(
+                color: Colors.amberAccent,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
