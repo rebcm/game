@@ -456,14 +456,24 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
 
   String _icone(TipoBloco b) {
     switch (b) {
-      case TipoBloco.grama:    return '🌿';
-      case TipoBloco.terra:    return '🟫';
-      case TipoBloco.pedra:    return '🪨';
-      case TipoBloco.areia:    return '🏖';
-      case TipoBloco.madeira:  return '🪵';
-      case TipoBloco.tijolo:   return '🧱';
-      case TipoBloco.ouro:     return '🥇';
-      case TipoBloco.diamante: return '💎';
+      case TipoBloco.grama:     return '🌿';
+      case TipoBloco.terra:     return '🟫';
+      case TipoBloco.pedra:     return '🪨';
+      case TipoBloco.areia:     return '🏖';
+      case TipoBloco.madeira:   return '🪵';
+      case TipoBloco.folha:     return '🍃';
+      case TipoBloco.tijolo:    return '🧱';
+      case TipoBloco.vidro:     return '🔲';
+      case TipoBloco.ouro:      return '🥇';
+      case TipoBloco.diamante:  return '💎';
+      case TipoBloco.luz:       return '💡';
+      case TipoBloco.neve:      return '❄';
+      case TipoBloco.carvao:    return '⬛';
+      case TipoBloco.ferro:     return '⚙';
+      case TipoBloco.cacto:     return '🌵';
+      case TipoBloco.agua:      return '💧';
+      case TipoBloco.lava:      return '🔥';
+      case TipoBloco.obsidiana: return '⬣';
       default: return '■';
     }
   }

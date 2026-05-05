@@ -31,7 +31,9 @@ class Constantes {
 
   // === Save / Load ===
   // Versão do schema de save — incrementar quando o formato muda.
-  static const int saveVersion = 1;
+  // v2: novos TipoBloco (carvão, ferro, cacto, água, lava, obsidiana).
+  // Saves v1 são descartados ao carregar (Mundo novo é criado).
+  static const int saveVersion = 2;
   // Período de autosave em segundos.
   static const double autosavePeriodo = 30.0;
 }

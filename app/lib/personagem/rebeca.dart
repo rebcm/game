@@ -30,11 +30,11 @@ class Rebeca {
     TipoBloco.grama,
     TipoBloco.terra,
     TipoBloco.pedra,
-    TipoBloco.areia,
     TipoBloco.madeira,
+    TipoBloco.folha,
     TipoBloco.tijolo,
-    TipoBloco.ouro,
-    TipoBloco.diamante,
+    TipoBloco.vidro,
+    TipoBloco.luz,
   ];
 
   Rebeca({required this.x, required this.y, required this.z});

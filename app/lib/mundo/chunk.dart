@@ -100,14 +100,27 @@ class ChunkMundo {
         for (int y = 0; y <= h; y++) {
           TipoBloco b;
           if (y == 0) {
-            b = TipoBloco.pedra; // bedrock
+            b = TipoBloco.obsidiana; // bedrock visualmente distinto
+          } else if (y == 1 || y == 2) {
+            // Camada de lava ocasional no fundo (lagos profundos).
+            final hh = _hash2(gx, gz, seed ^ 0xfee10);
+            if ((hh & 0xFF) < 14) {
+              b = TipoBloco.lava;
+            } else {
+              b = TipoBloco.pedra;
+            }
           } else if (y < h - 3) {
             // Possíveis minérios em pedra subterrânea.
             final hh = _hash2(gx * 257 + y, gz, seed ^ 0xa1b2);
-            if (y < 6 && (hh & 0xFF) < 4) {
+            final r = hh & 0xFF;
+            if (y < 6 && r < 3) {
               b = TipoBloco.diamante;
-            } else if (y < 10 && (hh & 0xFF) < 8) {
+            } else if (y < 10 && r < 6) {
               b = TipoBloco.ouro;
+            } else if (y < 14 && r < 14) {
+              b = TipoBloco.ferro;
+            } else if (r < 26) {
+              b = TipoBloco.carvao;
             } else {
               b = TipoBloco.pedra;
             }
@@ -129,9 +142,27 @@ class ChunkMundo {
         final h = alturaTerreno(gx, gz);
         if (h < 5 || h >= Constantes.worldY - 8) continue;
         if (c.get(lx, h, lz) != TipoBloco.grama) continue;
-        // ~5% de chance por bloco de grama.
         if ((_hash2(gx, gz, seed ^ 0xc1c2c3) & 0xFF) >= 12) continue;
         _plantarArvore(c, lx, h + 1, lz);
+      }
+    }
+
+    // 3) Cactos no deserto (areia).
+    for (int lx = 0; lx < cs; lx++) {
+      for (int lz = 0; lz < cs; lz++) {
+        final gx = cx * cs + lx;
+        final gz = cz * cs + lz;
+        final h = alturaTerreno(gx, gz);
+        if (h >= Constantes.worldY - 4) continue;
+        if (c.get(lx, h, lz) != TipoBloco.areia) continue;
+        if ((_hash2(gx, gz, seed ^ 0xcac10) & 0xFF) >= 6) continue;
+        // Cacto de 1-3 blocos.
+        final altCacto = 1 + ((_hash2(gx, gz, seed ^ 0xcac20) >> 8) & 0x2);
+        for (int i = 1; i <= altCacto; i++) {
+          if (h + i < Constantes.worldY) {
+            c.set(lx, h + i, lz, TipoBloco.cacto);
+          }
+        }
       }
     }
 

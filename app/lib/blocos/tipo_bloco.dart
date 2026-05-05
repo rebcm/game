@@ -14,6 +14,12 @@ enum TipoBloco {
   diamante,
   luz,
   neve,
+  carvao,
+  ferro,
+  cacto,
+  agua,
+  lava,
+  obsidiana,
 }
 
 extension TipoBlocoProps on TipoBloco {
@@ -21,8 +27,12 @@ extension TipoBlocoProps on TipoBloco {
   bool get transparente =>
       this == TipoBloco.ar ||
       this == TipoBloco.vidro ||
-      this == TipoBloco.folha;
-  bool get emiteLuz => this == TipoBloco.luz;
+      this == TipoBloco.folha ||
+      this == TipoBloco.agua;
+  bool get emiteLuz =>
+      this == TipoBloco.luz || this == TipoBloco.lava;
+  bool get liquido => this == TipoBloco.agua || this == TipoBloco.lava;
+  bool get perigoso => this == TipoBloco.lava || this == TipoBloco.cacto;
 
   String get nome {
     switch (this) {
@@ -39,6 +49,12 @@ extension TipoBlocoProps on TipoBloco {
       case TipoBloco.diamante: return 'Diamante';
       case TipoBloco.luz: return 'Luz';
       case TipoBloco.neve: return 'Neve';
+      case TipoBloco.carvao: return 'Carvão';
+      case TipoBloco.ferro: return 'Ferro';
+      case TipoBloco.cacto: return 'Cacto';
+      case TipoBloco.agua: return 'Água';
+      case TipoBloco.lava: return 'Lava';
+      case TipoBloco.obsidiana: return 'Obsidiana';
     }
   }
 
@@ -57,6 +73,12 @@ extension TipoBlocoProps on TipoBloco {
       case TipoBloco.diamante: return const Color(0xFF80DEEA);
       case TipoBloco.luz: return const Color(0xFFFFF9C4);
       case TipoBloco.neve: return const Color(0xFFECEFF1);
+      case TipoBloco.carvao: return const Color(0xFF424242);
+      case TipoBloco.ferro: return const Color(0xFFCFD8DC);
+      case TipoBloco.cacto: return const Color(0xFF388E3C);
+      case TipoBloco.agua: return const Color(0xCC2196F3);
+      case TipoBloco.lava: return const Color(0xFFFF5722);
+      case TipoBloco.obsidiana: return const Color(0xFF1A1A2E);
     }
   }
 
