@@ -1,1 +1,0 @@
-$(cat "$file" | sed '/jobs:/a\    steps:\n      - uses: actions/checkout@v3')
