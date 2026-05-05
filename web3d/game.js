@@ -828,10 +828,18 @@ class Renderer {
       side: THREE.DoubleSide,
     });
 
-    // Iluminação
-    this.ambient = new THREE.AmbientLight(0xffffff, 0.45);
+    // === Iluminação ===
+    // HemisphereLight em vez de AmbientLight: dá luz de cima (céu) com
+    // cor diferente da luz de baixo (chão), resultando em faces
+    // laterais bem mais legíveis mesmo sem iluminação direcional. Sem
+    // isso, faces opostas ao sol ficavam quase pretas (Lambert puro).
+    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.55);
+    this.scene.add(this.hemi);
+    // Ambient extra de baixa intensidade — garante que NADA fique 100%
+    // preto, nem mesmo de noite ou em cavernas profundas sem tochas.
+    this.ambient = new THREE.AmbientLight(0xffffff, 0.35);
     this.scene.add(this.ambient);
-    this.sol = new THREE.DirectionalLight(0xffffff, 0.9);
+    this.sol = new THREE.DirectionalLight(0xffffff, 0.85);
     this.sol.position.set(50, 100, 30);
     this.scene.add(this.sol);
     this.luaLuz = new THREE.DirectionalLight(0xb3c8ff, 0.0);
@@ -943,13 +951,15 @@ class Renderer {
     const ox = chunk.cx * cs, oz = chunk.cz * cs;
 
     // Fatores de luz fake por face (vertex color tinting). Top recebe
-    // mais luz, bottom mínimo, sides intermediário com leve variação por
-    // direção (eixo X mais claro que Z para sugerir AO direcional).
+    // mais luz, bottom mínimo, sides intermediário com leve variação
+    // por direção. Mínimos elevados pra que faces escuras (de noite ou
+    // em cavernas) não virem buracos pretos visualmente — Minecraft
+    // sempre mantém luminância mínima por face mesmo sem luz direta.
     const SHADE = {
       top:    1.00,
-      sideX:  0.86,
-      sideZ:  0.78,
-      bottom: 0.62,
+      sideX:  0.92,
+      sideZ:  0.86,
+      bottom: 0.78,
     };
 
     const addFace = (transp, faceShade, uvIdx, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
@@ -1078,9 +1088,21 @@ class Renderer {
   atualizarCeu(tempoDia, playerPos) {
     // sun = sin(2π·t - π/2): pico em t=0.25 (meio-dia)
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    this.ambient.intensity = 0.18 + 0.4 * sun;
-    this.sol.intensity = 0.15 + 0.85 * sun;
-    this.luaLuz.intensity = 0.2 * (1 - sun);
+    // Mínimos elevados pra noite continuar legível (estilo Minecraft
+    // onde mesmo de noite o mundo não fica 100% preto). HemisphereLight
+    // (this.hemi) cobre a luz "neutra" do céu/chão com cor.
+    this.hemi.intensity   = 0.40 + 0.45 * sun;     // 0.40 noite → 0.85 dia
+    this.ambient.intensity = 0.30 + 0.30 * sun;    // 0.30 noite → 0.60 dia
+    this.sol.intensity     = 0.15 + 0.75 * sun;    // 0.15 noite → 0.90 dia
+    this.luaLuz.intensity  = 0.35 * (1 - sun);     // 0.35 noite → 0.0 dia
+    // Cor do hemi muda também: noite tinge azulado, dia neutro.
+    if (sun < 0.4) {
+      this.hemi.color.setHex(0x4a6ba8); // azul-noite
+      this.hemi.groundColor.setHex(0x2e2820);
+    } else {
+      this.hemi.color.setHex(0xbcd8ff);
+      this.hemi.groundColor.setHex(0x6b5a3f);
+    }
 
     // Cor do céu: noite escura → crepúsculo laranja → dia azul
     const c1 = new THREE.Color(0x0B1430);
