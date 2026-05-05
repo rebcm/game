@@ -701,6 +701,21 @@ function criarAtlasTexturas() {
   M[BLOCO.FORNALHA]  = cell(26, 25, 26);  // topo limpo, lateral com fogo
   M[BLOCO.CAMA]      = cell(27, 28, 28);
 
+  // === Força o atlas a ser 100% opaco ===
+  // Vários padrões usam strokeStyle com rgba(...,0.5..0.9), o que deixa
+  // alpha < 255 em alguns pixels do canvas. Quando essa textura
+  // alimenta um material configurado como `transparent: false`, o
+  // browser rasteriza esses pixels com fundo translúcido — gerando
+  // artefatos de "blocos vazando" (especialmente face top vista de
+  // cima, quando dois blocos sólidos opacos parecem deixar passar luz).
+  // Solução: forçar todos os pixels a alpha = 255 antes de criar a
+  // CanvasTexture.
+  const dataAll = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  for (let i = 3; i < dataAll.data.length; i += 4) {
+    dataAll.data[i] = 255;
+  }
+  ctx.putImageData(dataAll, 0, 0);
+
   const tex = new THREE.CanvasTexture(canvas);
   tex.magFilter = THREE.NearestFilter;
   tex.minFilter = THREE.NearestMipmapLinearFilter;
@@ -796,9 +811,16 @@ class Renderer {
     this.atlas = criarAtlasTexturas();
     // Material de bloco com texture atlas + tinting por vertex colors
     // (vertex colors aplicam ambient-occlusion fake e tinting de bioma).
+    // EXPLÍCITO: transparent=false + alphaTest=0 + depthWrite=true para
+    // garantir que blocos opacos não deixem passar luz por bug de
+    // canal alpha residual no atlas.
     this.materialOpaco = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       vertexColors: true,
+      transparent: false,
+      alphaTest: 0,
+      depthWrite: true,
+      side: THREE.FrontSide,
     });
     this.materialTransp = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
@@ -834,12 +856,29 @@ class Renderer {
       this.poolLuzes.push(l);
     }
 
-    // === Highlight do bloco-alvo === (wireframe branco)
-    const hgEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.002, 1.002, 1.002));
-    this.highlight = new THREE.LineSegments(
-      hgEdges,
-      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, depthTest: true })
-    );
+    // === Highlight do bloco-alvo === (dupla borda preta + branca,
+    // estilo Minecraft). Renderizado sempre por cima (depthTest=false)
+    // pra ficar visível mesmo com bloco "atrás" no z-buffer.
+    const hgEdges1 = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.008, 1.008, 1.008));
+    const hgPretoMat = new THREE.LineBasicMaterial({
+      color: 0x000000,
+      transparent: true, opacity: 0.95,
+      depthTest: false, depthWrite: false,
+      linewidth: 2, // só funciona em alguns browsers/desktops
+    });
+    this.highlightPreto = new THREE.LineSegments(hgEdges1, hgPretoMat);
+    this.highlightPreto.renderOrder = 999;
+    this.highlightPreto.visible = false;
+    this.scene.add(this.highlightPreto);
+
+    const hgEdges2 = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.020, 1.020, 1.020));
+    const hgBrancoMat = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true, opacity: 0.55,
+      depthTest: false, depthWrite: false,
+    });
+    this.highlight = new THREE.LineSegments(hgEdges2, hgBrancoMat);
+    this.highlight.renderOrder = 998;
     this.highlight.visible = false;
     this.scene.add(this.highlight);
 
@@ -1128,8 +1167,11 @@ class Renderer {
   // === Atualiza highlight, cracks e tremor com base no alvo do raycast ===
   atualizarAlvo(hit, progressoQuebra) {
     if (hit) {
-      this.highlight.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
+      const cx = hit.x + 0.5, cy = hit.y + 0.5, cz = hit.z + 0.5;
+      this.highlight.position.set(cx, cy, cz);
       this.highlight.visible = true;
+      this.highlightPreto.position.set(cx, cy, cz);
+      this.highlightPreto.visible = true;
       // Cracks: estágio 0..9 (10 estágios como Minecraft real)
       const estagio = Math.min(9, Math.floor(progressoQuebra * 10));
       if (estagio > 0) {
@@ -1153,6 +1195,7 @@ class Renderer {
       }
     } else {
       this.highlight.visible = false;
+      this.highlightPreto.visible = false;
       this.crackMesh.visible = false;
       this.crackEstagioAtual = -1;
     }
