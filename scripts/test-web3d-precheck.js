@@ -94,14 +94,30 @@ t('renderer com NoToneMapping (cores diretas, evita preto absoluto)',
 grupo('Iluminação mínima');
 t('emissiveMap aplicado nos materiais (piso de luz própria)',
   /emissiveMap:\s*this\.atlas\.texture/.test(game));
-t('emissiveIntensity >= 0.7',
-  /emissiveIntensity:\s*0\.[7-9]/.test(game),
-  'Abaixo de 0.7 não cobre cavernas profundas.');
-t('SHADE.bottom >= 0.85 (face inferior não fica preta)',
+t('emissiveIntensity entre 0.20 e 0.40 (não overbright nem preto)', (() => {
+  const matches = game.match(/emissiveIntensity:\s*(0\.\d+)/g);
+  if (!matches) return false;
+  return matches.every(m => {
+    const v = parseFloat(m.match(/0\.\d+/)[0]);
+    return v >= 0.20 && v <= 0.40;
+  });
+}), 'Abaixo de 0.2 = preto em cavernas; acima de 0.4 = blocos fundem visualmente.');
+t('hemi e ambient compensam o emissive baixo (>= 0.50 noite)', (() => {
+  const m1 = game.match(/this\.hemi\.intensity\s*=\s*(0\.\d+)/);
+  const m2 = game.match(/this\.ambient\.intensity\s*=\s*(0\.\d+)/);
+  return m1 && m2 && parseFloat(m1[1]) >= 0.50 && parseFloat(m2[1]) >= 0.30;
+}), 'Sem isso, blocos longe de luz ficam escuros demais.');
+t('PointLight intensity da lava/tocha reduzida (<= 1.0)', (() => {
+  const m = game.match(/l\.intensity\s*=\s*c\.nivel\s*\/\s*15\s*\*\s*(\d+\.?\d*)/);
+  return m && parseFloat(m[1]) <= 1.0;
+}), 'Intensity > 1.0 satura blocos próximos da lava → parecem transparentes.');
+t('SHADE.bottom entre 0.65 e 0.95 (contraste sem virar preto)',
   (() => {
     const m = game.match(/bottom:\s*(0\.\d+)/);
-    return m && parseFloat(m[1]) >= 0.85;
-  })());
+    if (!m) return false;
+    const v = parseFloat(m[1]);
+    return v >= 0.65 && v <= 0.95;
+  })(), 'Muito alto = sem volume; muito baixo = preto absoluto.');
 
 // ---------------------------------------------------------------------
 // Cor de céu: c1 (noite) não pode estar perto do preto

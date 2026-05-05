@@ -829,23 +829,27 @@ class Renderer {
     // 55% de sua cor original mesmo SEM nenhuma luz incidindo. PointLights
     // (tochas) ainda iluminam por cima; sol cria highlights visíveis.
     // Resultado: nenhum bloco fica preto, mas sombras ainda dão volume.
+    // emissiveIntensity 0.30 (era 0.85 — overbright, blocos fundiam
+    // visualmente, parecendo translúcidos perto de fontes de luz forte
+    // como lava). Com 0.30, há piso visível em sombras MAS a iluminação
+    // direcional (sol/PointLights) ainda cria contraste claro de volume.
     this.materialOpaco = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.85, // sobe pra garantir piso visível mesmo com vertex color baixo
+      emissiveIntensity: 0.30,
       vertexColors: true,
       transparent: false,
       alphaTest: 0,
       depthWrite: true,
       side: THREE.FrontSide,
-      toneMapped: false, // desliga tone mapping no material (defesa em profundidade)
+      toneMapped: false,
     });
     this.materialTransp = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.85,
+      emissiveIntensity: 0.30,
       vertexColors: true, transparent: true, opacity: 0.78,
       side: THREE.DoubleSide,
       toneMapped: false,
@@ -973,16 +977,15 @@ class Renderer {
     const cs = CHUNK_SIZE;
     const ox = chunk.cx * cs, oz = chunk.cz * cs;
 
-    // Fatores de luz fake por face (vertex color tinting). Reduzimos a
-    // amplitude pra que NENHUMA face do bloco fique abaixo de 90% da
-    // cor original — sombras direcionais agora vêm do Lambert (sol/
-    // hemi). Antes vertexColor 0.62 multiplicava também o emissive,
-    // resultando em pretos absolutos.
+    // SHADE com contraste maior agora que emissive caiu pra 0.30 — a
+    // diferença entre top/side/bottom dá VOLUME visual aos blocos sem
+    // o desbotamento causado pelo emissive antigo de 0.85. Mas ainda
+    // mantemos bottom >= 0.70 pra que cavernas não fiquem pretas.
     const SHADE = {
       top:    1.00,
-      sideX:  0.96,
-      sideZ:  0.93,
-      bottom: 0.90,
+      sideX:  0.88,
+      sideZ:  0.78,
+      bottom: 0.70,
     };
 
     const addFace = (transp, faceShade, uvIdx, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
@@ -1111,13 +1114,13 @@ class Renderer {
   atualizarCeu(tempoDia, playerPos) {
     // sun = sin(2π·t - π/2): pico em t=0.25 (meio-dia)
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    // Como cada bloco já emite 55% da própria textura via emissiveMap,
-    // reduzimos as outras luzes pra não ficar lavado de dia. Mas
-    // mantemos suficiente pra criar contraste sol/sombra visível.
-    this.hemi.intensity    = 0.20 + 0.30 * sun;    // 0.20 noite → 0.50 dia
-    this.ambient.intensity = 0.10 + 0.20 * sun;    // 0.10 noite → 0.30 dia
-    this.sol.intensity     = 0.10 + 0.55 * sun;    // 0.10 noite → 0.65 dia
-    this.luaLuz.intensity  = 0.25 * (1 - sun);     // 0.25 noite → 0.0 dia
+    // emissive agora é apenas 30% (não 85%), então as luzes ambientes
+    // precisam carregar mais peso pra que blocos longe de fontes de luz
+    // não fiquem escuros demais.
+    this.hemi.intensity    = 0.55 + 0.50 * sun;    // 0.55 noite → 1.05 dia
+    this.ambient.intensity = 0.40 + 0.35 * sun;    // 0.40 noite → 0.75 dia
+    this.sol.intensity     = 0.20 + 0.80 * sun;    // 0.20 noite → 1.00 dia
+    this.luaLuz.intensity  = 0.40 * (1 - sun);     // 0.40 noite → 0.0 dia
     // Cor do hemi muda também: noite tinge azulado, dia neutro.
     if (sun < 0.4) {
       this.hemi.color.setHex(0x4a6ba8); // azul-noite
@@ -1186,7 +1189,9 @@ class Renderer {
       if (c) {
         l.visible = true;
         l.position.set(c.x, c.y, c.z);
-        l.intensity = c.nivel / 15 * 1.4;
+        // Intensity reduzida (1.4 → 0.8) pra evitar overbright que
+        // saturava blocos próximos da lava, parecendo desbotamento.
+        l.intensity = c.nivel / 15 * 0.8;
         l.distance = c.nivel + 1;
         l.color.setHex(c.nivel >= 15 ? 0xff6622 : 0xffaa55);
       } else {
