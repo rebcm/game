@@ -239,6 +239,43 @@
           if (fn) fn();
         } catch (_) { /* engole */ }
       });
+
+      // === Música ambient procedural ===
+      // Loop melódico calmo; volume baixo, instância única.
+      let musicaAtiva = false;
+      let musicaTimer = null;
+      const escala = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // C-major pentatônica + 6
+      function tocarNotaAmbient() {
+        const c = ensureCtx(); if (!c) return;
+        const freq = escala[Math.floor(Math.random() * escala.length)];
+        const o = c.createOscillator();
+        const g = c.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        const t0 = c.currentTime;
+        const dur = 1.6 + Math.random() * 1.2;
+        g.gain.setValueAtTime(0, t0);
+        g.gain.linearRampToValueAtTime(0.04, t0 + 0.3);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(c.destination);
+        o.start(t0); o.stop(t0 + dur);
+      }
+      window.rebcm.musica = {
+        iniciar: () => {
+          if (musicaAtiva) return;
+          musicaAtiva = true;
+          const tick = () => {
+            if (!musicaAtiva) return;
+            tocarNotaAmbient();
+            musicaTimer = setTimeout(tick, 1800 + Math.random() * 2400);
+          };
+          tick();
+        },
+        parar: () => {
+          musicaAtiva = false;
+          if (musicaTimer) { clearTimeout(musicaTimer); musicaTimer = null; }
+        },
+      };
     })();
 
     let flutterIniciado = false;
@@ -265,6 +302,8 @@
       entrarTelaCheia();
       bloquearGestosNativos();
       iniciarFlutter();
+      // Música ambient começa após primeiro gesto (autoplay policy).
+      try { window.rebcm.musica.iniciar(); } catch (_) {/* engole */}
       // Damos uma janela curta para a tela cheia entrar antes de
       // descartar o overlay, suavizando o flash visual.
       setTimeout(esconderBoot, 250);

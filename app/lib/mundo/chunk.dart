@@ -198,6 +198,12 @@ class ChunkMundo {
       }
     }
 
+    // 3.5) Estrutura ocasional: pequena cabana 5×5 com tijolos, telhado
+    //      de madeira e uma tocha dentro. ~1.5% dos chunks têm uma.
+    if ((_hash2(cx, cz, seed ^ 0xbe1a) & 0xFF) < 4) {
+      _construirCabana(c);
+    }
+
     // 4) Cavernas: blocos sólidos abaixo da superfície viram ar quando o
     //    noise 3D ultrapassa um threshold. Mantemos uma camada espessa
     //    de superfície intacta (não cava grama/terra) para não esfacelar
@@ -235,6 +241,67 @@ class ChunkMundo {
     // superfície.
     final yFactor = y < 8 ? 0.34 : (y < 16 ? 0.30 : 0.24);
     return v < yFactor;
+  }
+
+  /// Constrói uma cabana 5×5 com paredes de tijolo, telhado de madeira,
+  /// piso de pranchas (madeira) e uma tocha no meio. Ancora num ponto
+  /// determinístico do chunk em terreno acima de areia/grama.
+  void _construirCabana(Chunk c) {
+    final cs = Constantes.chunkSize;
+    // Centro determinístico baseado em hash, dentro de margem 2..cs-2.
+    final cx0 = 2 + ((_hash2(c.cx, c.cz, seed ^ 0xb1) & 0xFF) % (cs - 4));
+    final cz0 = 2 + ((_hash2(c.cz, c.cx, seed ^ 0xb2) & 0xFF) % (cs - 4));
+    final gx0 = c.cx * cs + cx0;
+    final gz0 = c.cz * cs + cz0;
+    final base = alturaTerreno(gx0, gz0);
+    if (base < 4 || base >= Constantes.worldY - 6) return;
+    // Não construir sobre lava/areia muito baixa.
+    if (c.get(cx0, base, cz0) == TipoBloco.areia && base < 5) return;
+
+    // Piso 5×5 de pranchas (madeira), 1 bloco acima do solo.
+    for (int dx = -2; dx <= 2; dx++) {
+      for (int dz = -2; dz <= 2; dz++) {
+        final lx = cx0 + dx;
+        final lz = cz0 + dz;
+        if (lx < 0 || lx >= cs || lz < 0 || lz >= cs) continue;
+        c.set(lx, base + 1, lz, TipoBloco.madeira);
+      }
+    }
+    // Paredes 5×5 de tijolo, altura 3 blocos. Deixa um vão de 1 bloco
+    // como porta no meio do lado +x.
+    for (int dx = -2; dx <= 2; dx++) {
+      for (int dz = -2; dz <= 2; dz++) {
+        final lx = cx0 + dx;
+        final lz = cz0 + dz;
+        if (lx < 0 || lx >= cs || lz < 0 || lz >= cs) continue;
+        final isBorda = dx == -2 || dx == 2 || dz == -2 || dz == 2;
+        if (!isBorda) continue;
+        for (int dy = 1; dy <= 3; dy++) {
+          // Vão de porta: dx=2, dz=0, dy in 1..2.
+          if (dx == 2 && dz == 0 && dy <= 2) continue;
+          if (base + 1 + dy >= Constantes.worldY) continue;
+          c.set(lx, base + 1 + dy, lz, TipoBloco.tijolo);
+        }
+      }
+    }
+    // Telhado plano 5×5 de madeira no topo.
+    for (int dx = -2; dx <= 2; dx++) {
+      for (int dz = -2; dz <= 2; dz++) {
+        final lx = cx0 + dx;
+        final lz = cz0 + dz;
+        if (lx < 0 || lx >= cs || lz < 0 || lz >= cs) continue;
+        if (base + 5 >= Constantes.worldY) continue;
+        c.set(lx, base + 5, lz, TipoBloco.madeira);
+      }
+    }
+    // Tocha no centro, no piso interno.
+    if (base + 2 < Constantes.worldY) {
+      c.set(cx0, base + 2, cz0, TipoBloco.tocha);
+    }
+    // Workbench dentro, num canto.
+    if (base + 2 < Constantes.worldY) {
+      c.set(cx0 + 1, base + 2, cz0 + 1, TipoBloco.workbench);
+    }
   }
 
   void _plantarArvore(Chunk c, int lx, int y, int lz) {

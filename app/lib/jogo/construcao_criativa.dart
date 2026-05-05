@@ -58,7 +58,11 @@ class ConstrucaoCriativa extends FlameGame
 
   final ValueNotifier<String?> mensagem = ValueNotifier<String?>(null);
   // Notificações para a UI re-renderizar quando algo importante muda.
+  // Throttle: incrementa a cada [_hudPeriodo] segundos para evitar
+  // 60 setState/s no overlay.
   final ValueNotifier<int> hudTick = ValueNotifier<int>(0);
+  double _accHudTick = 0.0;
+  static const double _hudPeriodo = 0.20; // 5 Hz
 
   int get camAngle => _renderer.camAngle;
 
@@ -193,7 +197,11 @@ class ConstrucaoCriativa extends FlameGame
       _autoSave();
     }
 
-    hudTick.value++;
+    _accHudTick += dt;
+    if (_accHudTick >= _hudPeriodo) {
+      _accHudTick = 0.0;
+      hudTick.value++;
+    }
   }
 
   /// Sobrevivência: dano por terreno (lava/cacto), zumbi adjacente,
