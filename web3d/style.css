@@ -246,6 +246,12 @@ kbd {
 #btn-craft { right: 14px; top: 64px; }
 #btn-modo  { right: 14px; top: 114px; }
 #btn-save  { right: 14px; top: 164px; }
+#btn-transp { right: 14px; top: 214px; }
+#btn-transp.solido {
+  background: rgba(255, 200, 60, 0.85);
+  border-color: rgba(255, 200, 60, 0.95);
+  box-shadow: 0 0 8px rgba(255, 200, 60, 0.4);
+}
 
 /* === Painéis modais === */
 .painel {
@@ -342,7 +348,8 @@ kbd {
 @media (max-width: 700px) {
   #boot .controles-help { display: none; }
   .hud-btn { width: 36px; height: 36px; font-size: 17px; }
-  #btn-craft { top: 58px; }
-  #btn-modo  { top: 102px; }
-  #btn-save  { top: 146px; }
+  #btn-craft  { top: 58px; }
+  #btn-modo   { top: 102px; }
+  #btn-save   { top: 146px; }
+  #btn-transp { top: 190px; }
 }

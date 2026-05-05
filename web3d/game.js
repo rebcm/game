@@ -727,6 +727,7 @@ class Renderer {
     this.camera.add(this.maoGroup);
     this.scene.add(this.camera); // garantir que camera está na scene
     this.swingProgress = 0; // 0..1, animação de swing ao bater
+    this.transparenciaAtiva = true; // default: estado atual (folha/vidro semi-transp)
   }
   criarDisco(cor, raio) {
     const g = new THREE.SphereGeometry(raio, 16, 16);
@@ -954,6 +955,25 @@ class Renderer {
       }
     }
   }
+  // === Alterna transparência global ===
+  // ativa=true (default): folhas/vidro/água/tocha são semitransparentes
+  // (mostram blocos atrás). ativa=false: tudo vira sólido (opaco), útil
+  // quando o usuário acha que está vendo "transparência demais" e quer
+  // o visual cheio Minecraft-style.
+  setTransparenciaAtiva(ativa) {
+    this.transparenciaAtiva = ativa;
+    if (ativa) {
+      this.materialTransp.transparent = true;
+      this.materialTransp.opacity = 0.78;
+      this.materialTransp.depthWrite = false;
+    } else {
+      this.materialTransp.transparent = false;
+      this.materialTransp.opacity = 1.0;
+      this.materialTransp.depthWrite = true;
+    }
+    this.materialTransp.needsUpdate = true;
+  }
+
   // === Atualiza highlight e cracks com base no alvo do raycast ===
   atualizarAlvo(hit, progressoQuebra) {
     if (hit) {
@@ -1772,6 +1792,7 @@ function setupInput() {
       case 'KeyQ': comerSlot(); break;
       case 'F5': player.terceiraPessoa = !player.terceiraPessoa;
                  ui.toast(player.terceiraPessoa ? '3ª pessoa' : '1ª pessoa'); break;
+      case 'KeyT': alternarTransparencia(); break;
     }
     if (e.code.startsWith('Digit')) {
       const n = parseInt(e.code.slice(5));
@@ -1810,6 +1831,7 @@ function setupInput() {
   document.getElementById('btn-craft').onclick = () => togglePainel('painel-craft');
   document.getElementById('btn-modo').onclick = () => alternarModo();
   document.getElementById('btn-save').onclick = () => Save.salvar();
+  document.getElementById('btn-transp').onclick = () => alternarTransparencia();
   document.querySelectorAll('.fechar').forEach(b => {
     b.onclick = () => ui.fecharPainel(b.dataset.painel);
   });
@@ -1859,6 +1881,18 @@ function alternarModo() {
   document.getElementById('btn-modo').textContent = player.modo === 'creative' ? '🦅' : '⚔';
   document.getElementById('modo').textContent = player.modo === 'creative' ? 'Criativo' : 'Sobrevivência';
   ui.toast(player.modo === 'creative' ? 'Modo Criativo (voo livre)' : 'Modo Sobrevivência (gravidade)');
+}
+
+function alternarTransparencia() {
+  const novo = !renderer.transparenciaAtiva;
+  renderer.setTransparenciaAtiva(novo);
+  const btn = document.getElementById('btn-transp');
+  btn.textContent = novo ? '🪟' : '🧱';
+  btn.title = novo
+    ? 'Modo: transparente (folha/vidro/água semi-transp). Clique para sólido.'
+    : 'Modo: sólido (tudo opaco). Clique para transparente.';
+  btn.classList.toggle('solido', !novo);
+  ui.toast(novo ? 'Blocos: transparentes' : 'Blocos: sólidos');
 }
 
 function atacarMob() {
