@@ -15,6 +15,12 @@ class _Quad {
   _Quad(this.path, this.color, this.sortKey, {this.isOverlay = false});
 }
 
+class _Luz {
+  final double x, y, z;
+  final int nivel; // 1..15
+  const _Luz(this.x, this.y, this.z, this.nivel);
+}
+
 /// Renderiza o mundo isométrico em torno do player, varrendo apenas os chunks
 /// dentro de [Constantes.viewRadius]. A rotação de câmera é discreta em 4
 /// passos (NE/SE/SW/NW) e gira em torno da posição do player — coerente para
@@ -65,6 +71,15 @@ class RenderizadorIsometrico {
     final zMin = (pcz - r) * cs;
     final zMax = (pcz + r + 1) * cs;
 
+    // === Pré-scan: coleta luzes ativas no range, via cache por chunk. ===
+    // ChunkMundo.iterarLuzes só visita os índices marcados como luminosos
+    // (cache invalidado quando chunk dirty). Cap total para perf.
+    final luzes = <_Luz>[];
+    for (final l in mundo.chunks.iterarLuzes(pcx - r, pcx + r, pcz - r, pcz + r)) {
+      luzes.add(_Luz(l.$1.toDouble(), l.$2.toDouble(), l.$3.toDouble(), l.$4));
+      if (luzes.length >= 32) break;
+    }
+
     final quads = <_Quad>[];
     Path? highlightPath;
 
@@ -102,9 +117,10 @@ class RenderizadorIsometrico {
           // Sort key relativo à posição do player.
           final sk = _sortKey(bx, by, bz, rebeca.x, rebeca.z);
 
-          final corTopo = _aplicarLuz(bloco.corTopo, by, bloco.emiteLuz);
-          final corEsq = _aplicarLuz(bloco.corEsquerda, by, bloco.emiteLuz);
-          final corDir = _aplicarLuz(bloco.corDireita, by, bloco.emiteLuz);
+          final lp = _luzPontual(bx.toDouble(), by.toDouble(), bz.toDouble(), luzes);
+          final corTopo = _aplicarLuz2(bloco.corTopo, by, bloco.emiteLuz, lp);
+          final corEsq = _aplicarLuz2(bloco.corEsquerda, by, bloco.emiteLuz, lp);
+          final corDir = _aplicarLuz2(bloco.corDireita, by, bloco.emiteLuz, lp);
 
           if (topoV) quads.add(_buildTop(sx, sy, corTopo, sk));
           if (f1V) quads.add(_buildFace1(sx, sy, corEsq, sk - 0.1));
@@ -147,21 +163,40 @@ class RenderizadorIsometrico {
     _desenharMirinha(canvas, tela);
   }
 
-  /// Aplica fator de luz (dia/noite) à cor de um bloco. Blocos que emitem
-  /// luz própria não são escurecidos. A luz cai com a profundidade abaixo
-  /// do solo para sugerir cavernas escuras.
-  Color _aplicarLuz(Color c, int y, bool emite) {
+  /// Combina luz ambiente (luzDia, atenuada por profundidade) com luz
+  /// pontual local (emitida por blocos próximos). Usa o máximo das duas
+  /// fontes — assim uma tocha pode iluminar uma caverna mesmo de noite.
+  Color _aplicarLuz2(Color c, int y, bool emite, double pontual) {
     if (emite) return c;
-    // Curva: luzDia=1 → fator 1; luzDia=0 → fator 0.35.
-    double f = 0.35 + 0.65 * luzDia;
-    // Atenuação de profundidade: y baixo escurece um pouco.
-    if (y < 5) f *= 0.85;
+    double ambiente = 0.35 + 0.65 * luzDia;
+    if (y < 5) ambiente *= 0.85;
+    final fp = 0.35 + 0.65 * pontual.clamp(0.0, 1.0);
+    final f = ambiente > fp ? ambiente : fp;
     return Color.fromARGB(
       c.alpha,
       (c.red * f).clamp(0, 255).toInt(),
       (c.green * f).clamp(0, 255).toInt(),
       (c.blue * f).clamp(0, 255).toInt(),
     );
+  }
+
+  /// Calcula contribuição de luz pontual (0..1) das luzes próximas para
+  /// um bloco. Decaimento quadrático na distância.
+  double _luzPontual(double bx, double by, double bz, List<_Luz> luzes) {
+    if (luzes.isEmpty) return 0.0;
+    double melhor = 0.0;
+    for (final l in luzes) {
+      final dx = bx - l.x;
+      final dy = by - l.y;
+      final dz = bz - l.z;
+      final d2 = dx * dx + dy * dy + dz * dz;
+      final raio = l.nivel.toDouble();
+      final raio2 = raio * raio;
+      if (d2 >= raio2) continue;
+      final cont = 1.0 - d2 / raio2;
+      if (cont > melhor) melhor = cont;
+    }
+    return melhor;
   }
 
   /// Projeta coordenadas globais (x,y,z) para a tela isométrica, aplicando

@@ -14,10 +14,41 @@ class Chunk {
   final Uint8List blocos;
   bool dirty = false; // foi modificado pelo player desde o último save?
 
+  /// Cache de blocos luminosos no chunk (índices linear do array `blocos`).
+  /// Recalculado quando `_luzesDirty` é true.
+  bool _luzesDirty = true;
+  List<int> _luzes = const [];
+
   Chunk(this.cx, this.cz)
       : blocos = Uint8List(
           Constantes.chunkSize * Constantes.chunkSize * Constantes.worldY,
         );
+
+  /// Lista de índices linear no array [blocos] que são blocos luminosos.
+  /// Use [decodificarIndice] para extrair (lx, y, lz) global.
+  List<int> get luzes {
+    if (_luzesDirty) {
+      final novo = <int>[];
+      for (int i = 0; i < blocos.length; i++) {
+        final t = blocos[i];
+        if (t < TipoBloco.values.length && TipoBloco.values[t].emiteLuz) {
+          novo.add(i);
+        }
+      }
+      _luzes = novo;
+      _luzesDirty = false;
+    }
+    return _luzes;
+  }
+
+  /// Converte índice linear de [blocos] de volta para (lx, y, lz).
+  static (int, int, int) decodificarIndice(int idx) {
+    final cs = Constantes.chunkSize;
+    final lz = idx % cs;
+    final lx = (idx ~/ cs) % cs;
+    final y = idx ~/ (cs * cs);
+    return (lx, y, lz);
+  }
 
   static int _idx(int lx, int y, int lz) {
     final cs = Constantes.chunkSize;
@@ -36,6 +67,7 @@ class Chunk {
     if (lz < 0 || lz >= Constantes.chunkSize) return;
     if (y < 0 || y >= Constantes.worldY) return;
     blocos[_idx(lx, y, lz)] = b.index;
+    _luzesDirty = true;
   }
 }
 
@@ -286,6 +318,27 @@ class ChunkMundo {
     for (int dx = -raio; dx <= raio; dx++) {
       for (int dz = -raio; dz <= raio; dz++) {
         getChunk(cxCenter + dx, czCenter + dz);
+      }
+    }
+  }
+
+  /// Itera todos os blocos luminosos em chunks dentro do retângulo
+  /// (chunkRangeX, chunkRangeZ). Retorna posições globais.
+  Iterable<(int, int, int, int)> iterarLuzes(
+      int cxMin, int cxMax, int czMin, int czMax) sync* {
+    final cs = Constantes.chunkSize;
+    for (int cx = cxMin; cx <= cxMax; cx++) {
+      for (int cz = czMin; cz <= czMax; cz++) {
+        if (!hasChunk(cx, cz)) continue;
+        final c = _chunks[chunkKey(cx, cz)]!;
+        for (final idx in c.luzes) {
+          final pos = Chunk.decodificarIndice(idx);
+          final t = c.blocos[idx];
+          final nivel = t < TipoBloco.values.length
+              ? TipoBloco.values[t].nivelLuz
+              : 0;
+          yield (cx * cs + pos.$1, pos.$2, cz * cs + pos.$3, nivel);
+        }
       }
     }
   }
