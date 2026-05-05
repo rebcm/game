@@ -805,8 +805,15 @@ class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x87CEEB);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
+    // === Sem tone mapping ===
+    // ACESFilmic comprime agressivamente valores baixos (sombras),
+    // resultando em pretos absolutos em cavernas e faces opostas à
+    // luz, mesmo com emissive ativo. Minecraft real renderiza sem
+    // tone mapping (cores diretas da textura). Trocamos para
+    // NoToneMapping com exposure 1.0 para preservar luminosidade
+    // mínima nos pixels mais escuros.
+    this.renderer.toneMapping = THREE.NoToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
     // Atlas de texturas procedurais 16×16 px por face, cor + ruído.
     this.atlas = criarAtlasTexturas();
     // Material de bloco com texture atlas + tinting por vertex colors
@@ -823,20 +830,22 @@ class Renderer {
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.55,
+      emissiveIntensity: 0.85, // sobe pra garantir piso visível mesmo com vertex color baixo
       vertexColors: true,
       transparent: false,
       alphaTest: 0,
       depthWrite: true,
       side: THREE.FrontSide,
+      toneMapped: false, // desliga tone mapping no material (defesa em profundidade)
     });
     this.materialTransp = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.55,
+      emissiveIntensity: 0.85,
       vertexColors: true, transparent: true, opacity: 0.78,
       side: THREE.DoubleSide,
+      toneMapped: false,
     });
 
     // === Iluminação ===
@@ -961,16 +970,16 @@ class Renderer {
     const cs = CHUNK_SIZE;
     const ox = chunk.cx * cs, oz = chunk.cz * cs;
 
-    // Fatores de luz fake por face (vertex color tinting). Top recebe
-    // mais luz, bottom mínimo, sides intermediário com leve variação
-    // por direção. Mínimos elevados pra que faces escuras (de noite ou
-    // em cavernas) não virem buracos pretos visualmente — Minecraft
-    // sempre mantém luminância mínima por face mesmo sem luz direta.
+    // Fatores de luz fake por face (vertex color tinting). Reduzimos a
+    // amplitude pra que NENHUMA face do bloco fique abaixo de 90% da
+    // cor original — sombras direcionais agora vêm do Lambert (sol/
+    // hemi). Antes vertexColor 0.62 multiplicava também o emissive,
+    // resultando em pretos absolutos.
     const SHADE = {
       top:    1.00,
-      sideX:  0.92,
-      sideZ:  0.86,
-      bottom: 0.78,
+      sideX:  0.96,
+      sideZ:  0.93,
+      bottom: 0.90,
     };
 
     const addFace = (transp, faceShade, uvIdx, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
