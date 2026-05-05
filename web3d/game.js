@@ -74,7 +74,7 @@ const BLOCO_INFO = {
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
   [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
-  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x3a3360, lateral: 0x2a2350 },
+  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6e3a8c, lateral: 0x4e2a6c },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
   [BLOCO.LA]:        { nome: 'Lã',        solido: true,  transp: false, emiteLuz: 0,  cor: 0xFAFAFA, lateral: 0xEEEEEE },
   [BLOCO.TOCHA]:     { nome: 'Tocha',     solido: false, transp: true,  emiteLuz: 13, cor: 0xFFB300, lateral: 0xFF6F00 },
@@ -607,7 +607,7 @@ function criarAtlasTexturas() {
   pintar(16, 0x388E3C, 18);                                            // cacto
   pintar(17, 0x1976D2, 12);                                            // água
   pintar(18, 0xBF360C, 30);                                            // lava
-  pintar(19, 0x3a3360, 18);                                            // obsidiana (clareada)
+  pintar(19, 0x6e3a8c, 22);                                            // obsidiana (roxo distintivo)
   pintar(20, 0x4E342E, 18, listrasMadeira);                            // workbench lateral
   pintar(21, 0x6D4C41, 18, (i, c, cs) => {                             // workbench topo
     aneisMadeiraTopo(i, c, cs);

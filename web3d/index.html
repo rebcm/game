@@ -324,6 +324,14 @@
     })();
   </script>
 
-  <script type="module" src="game.js"></script>
+  <!-- Cache-busting: __BUILD_VERSION__ é substituído em cada deploy
+       pelo timestamp do build, gerando uma URL única para o JS após
+       qualquer alteração. Cloudflare Pages serve o HTML com cache
+       curto (ver _headers), e o navegador revalida game.js sempre
+       que o version muda. -->
+  <script type="module">
+    const BUILD_VERSION = '__BUILD_VERSION__';
+    import(`./game.js?v=${BUILD_VERSION}`);
+  </script>
 </body>
 </html>

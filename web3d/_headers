@@ -1,0 +1,27 @@
+# Cloudflare Pages: configura Cache-Control por path.
+#
+# index.html: nunca cachear (deve sempre buscar a versão atualizada
+# que aponta pra ?v=BUILD do dia).
+/index.html
+  Cache-Control: no-cache, must-revalidate
+
+/
+  Cache-Control: no-cache, must-revalidate
+
+# game.js: imutável quando acessado via ?v=BUILD (cada build = URL
+# diferente). Sem versão, vale 60s.
+/game.js
+  Cache-Control: public, max-age=60, must-revalidate
+
+/style.css
+  Cache-Control: public, max-age=60, must-revalidate
+
+# Assets estáticos (favicon, manifest): cache médio.
+/favicon.svg
+  Cache-Control: public, max-age=3600
+
+/favicon.png
+  Cache-Control: public, max-age=3600
+
+/manifest.json
+  Cache-Control: public, max-age=300
