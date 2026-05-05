@@ -1619,8 +1619,20 @@ class UI {
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
   }
-  mostrarMorte() { document.getElementById('morte').classList.remove('hidden'); }
-  esconderMorte() { document.getElementById('morte').classList.add('hidden'); }
+  mostrarMorte() {
+    // Libera o ponteiro ANTES de mostrar — sem isso, qualquer clique
+    // continua sendo capturado pelo canvas (pointer lock) e nunca chega
+    // ao overlay, fazendo a tela de morte parecer "travada".
+    try { document.exitPointerLock?.(); } catch (_) {}
+    document.getElementById('morte').classList.remove('hidden');
+  }
+  esconderMorte() {
+    document.getElementById('morte').classList.add('hidden');
+    // Re-lock após pequena pausa para o browser registrar o gesto.
+    setTimeout(() => {
+      try { player?.controls?.lock(); } catch (_) {}
+    }, 80);
+  }
   abrirPainel(id) { document.getElementById(id).classList.remove('hidden'); }
   fecharPainel(id) { document.getElementById(id).classList.add('hidden'); }
 }
@@ -1802,8 +1814,25 @@ function setupInput() {
     b.onclick = () => ui.fecharPainel(b.dataset.painel);
   });
 
-  // Tela de morte: clique reviva
-  document.getElementById('morte').onclick = () => player.respawnar();
+  // Tela de morte: vários gestos disparam o respawn (mais robusto em
+  // mobile e em browsers que tratam click/touch diferente).
+  const morteEl = document.getElementById('morte');
+  const respawnHandler = (e) => {
+    if (!player.morto) return;
+    e.preventDefault();
+    e.stopPropagation();
+    player.respawnar();
+  };
+  morteEl.addEventListener('pointerdown', respawnHandler);
+  morteEl.addEventListener('click',       respawnHandler);
+  morteEl.addEventListener('touchend',    respawnHandler);
+  // Também aceita Space ou Enter no teclado.
+  document.addEventListener('keydown', (e) => {
+    if (player.morto && (e.code === 'Space' || e.code === 'Enter')) {
+      e.preventDefault();
+      player.respawnar();
+    }
+  });
 
   // Pointer lock: ao perder, mostra cursor; ao recuperar, esconde.
   document.addEventListener('pointerlockchange', () => {
