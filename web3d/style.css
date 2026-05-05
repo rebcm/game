@@ -1,0 +1,348 @@
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0d1f3c;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+#game {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  cursor: crosshair;
+}
+
+.hidden { display: none !important; }
+
+/* === Tela inicial === */
+#boot {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0d47a1 0%, #1b5e20 50%, #0d47a1 100%);
+  background-size: 300% 300%;
+  animation: bg 8s ease infinite;
+  z-index: 9999;
+  padding: 20px;
+}
+@keyframes bg {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+#boot h1 {
+  font-size: clamp(28px, 6vw, 56px);
+  margin: 0 0 6px;
+  text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF5044;
+  animation: glow 2.4s ease-in-out infinite;
+}
+#boot h2 {
+  font-size: clamp(16px, 3vw, 28px);
+  margin: 0 0 4px;
+  color: #FFD700;
+  font-weight: 500;
+}
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF5044; }
+  50%      { text-shadow: 0 0 40px #FFD700, 0 0 80px #FFD70066; }
+}
+#boot .sub {
+  color: #a5d6a7;
+  margin: 4px 0 28px;
+  font-size: clamp(12px, 2vw, 16px);
+}
+#boot button#play {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: #fff;
+  border: none;
+  padding: 14px 56px;
+  font-size: clamp(15px, 2.4vw, 20px);
+  letter-spacing: 1.5px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px #4CAF5088;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+#boot button#play:hover { transform: scale(1.06); box-shadow: 0 8px 32px #4CAF50aa; }
+#boot button#play:active { transform: scale(0.98); }
+#boot .creditos {
+  margin-top: 22px;
+  color: #ffffff44;
+  font-size: 11px;
+}
+#boot .controles-help {
+  margin-top: 26px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 14px 22px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 520px;
+}
+#boot .controles-help table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+#boot .controles-help th {
+  color: #FFD700;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ffffff22;
+}
+#boot .controles-help td {
+  padding: 4px 8px;
+  color: #e0e0e0;
+}
+#boot .controles-help td:first-child { color: #fff; font-weight: bold; min-width: 110px; }
+kbd {
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #fff;
+}
+
+/* === HUD === */
+#hud {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+#hud .hud-btn,
+#hud #hotbar,
+#hud .painel,
+#hud #morte {
+  pointer-events: auto;
+}
+
+#crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  font-family: monospace;
+  font-weight: bold;
+  line-height: 1;
+}
+
+#topo {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: rgba(0,0,0,0.55);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: monospace;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+#topo #modo { color: #FFD700; font-weight: bold; }
+#topo #relogio { color: #FFAB91; }
+#topo #fps { color: #80CBC4; }
+
+#bars {
+  position: absolute;
+  top: 48px; left: 12px;
+  background: rgba(0,0,0,0.45);
+  padding: 6px 8px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.bar {
+  display: flex;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1;
+}
+.bar span { display: inline-block; width: 12px; text-align: center; }
+
+/* Hotbar */
+#hotbar {
+  position: absolute;
+  bottom: 14px; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.55);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #ffffff22;
+}
+.slot {
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid #ffffff22;
+  border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.slot.sel {
+  border-color: #FFD700;
+  border-width: 2px;
+  background: rgba(255,255,255,0.18);
+  width: 56px; height: 56px;
+  margin-top: -8px;
+  font-size: 22px;
+  box-shadow: 0 0 12px #FFD70066;
+}
+.slot .qtd {
+  position: absolute;
+  bottom: 2px; right: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+#toast {
+  position: absolute;
+  top: 80px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  border: 1px solid #ffffff22;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; }
+
+.hud-btn {
+  position: absolute;
+  background: rgba(50, 50, 60, 0.7);
+  border: 1px solid #ffffff33;
+  color: #fff;
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.hud-btn:hover { background: rgba(80, 80, 100, 0.85); }
+#btn-bag   { right: 14px; top: 14px; }
+#btn-craft { right: 14px; top: 64px; }
+#btn-modo  { right: 14px; top: 114px; }
+#btn-save  { right: 14px; top: 164px; }
+
+/* === Painéis modais === */
+.painel {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(20, 20, 38, 0.96);
+  border: 2px solid #ffd60099;
+  border-radius: 14px;
+  padding: 16px;
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  min-width: 380px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #FFD700;
+}
+.fechar {
+  background: #c62828;
+  border: none;
+  color: #fff;
+  width: 26px; height: 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.dica {
+  font-size: 10px;
+  color: #ffffff77;
+  margin: 8px 0 4px;
+  text-align: center;
+}
+#bag-grid, #bag-hotbar {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+#bag-grid .slot, #bag-hotbar .slot { width: 44px; height: 44px; }
+
+#craft-status {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  padding: 6px;
+  margin-bottom: 8px;
+}
+#craft-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.receita {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.receita:hover { background: rgba(255,255,255,0.12); }
+.receita .icone { font-size: 22px; width: 32px; text-align: center; }
+.receita .info { flex: 1; }
+.receita .info .nome { font-weight: bold; font-size: 13px; }
+.receita .info .custo { font-size: 10px; color: #aaa; }
+
+/* Tela de morte */
+#morte {
+  position: fixed; inset: 0;
+  background: rgba(150, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  cursor: pointer;
+}
+.morte-icone { font-size: 96px; }
+#morte h2 { font-size: 38px; margin: 8px 0; text-shadow: 0 2px 12px #000; }
+#morte p { color: #ffe0e0; }
+
+/* Mobile: esconde help mobile pequeno */
+@media (max-width: 700px) {
+  #boot .controles-help { display: none; }
+  .hud-btn { width: 36px; height: 36px; font-size: 17px; }
+  #btn-craft { top: 58px; }
+  #btn-modo  { top: 102px; }
+  #btn-save  { top: 146px; }
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <title>Construção Criativa da Rebeca — 3D</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Tela inicial / lock pointer -->
+  <div id="boot">
+    <h1>Construção Criativa</h1>
+    <h2>da Rebeca — 3D</h2>
+    <div class="sub">Mundo voxel infinito · Mouse para olhar · WASD para mover</div>
+    <button id="play">JOGAR EM TELA CHEIA</button>
+    <div class="creditos">por Rebeca Alves Moreira</div>
+    <div class="controles-help">
+      <table>
+        <tr><th colspan="2">Controles</th></tr>
+        <tr><td><kbd>Mouse</kbd></td><td>Olhar (pointer lock)</td></tr>
+        <tr><td><kbd>W A S D</kbd></td><td>Mover</td></tr>
+        <tr><td><kbd>Espaço</kbd></td><td>Pular / subir (creative)</td></tr>
+        <tr><td><kbd>Shift</kbd></td><td>Sprintar / descer (creative)</td></tr>
+        <tr><td><kbd>Click esq.</kbd></td><td>Quebrar bloco</td></tr>
+        <tr><td><kbd>Click dir.</kbd></td><td>Colocar bloco</td></tr>
+        <tr><td><kbd>Scroll</kbd> / <kbd>1-9</kbd></td><td>Trocar slot da hotbar</td></tr>
+        <tr><td><kbd>E</kbd></td><td>Inventário (bag)</td></tr>
+        <tr><td><kbd>C</kbd></td><td>Painel de crafting</td></tr>
+        <tr><td><kbd>F</kbd></td><td>Atacar mob (corpo a corpo)</td></tr>
+        <tr><td><kbd>Q</kbd></td><td>Comer item da hotbar</td></tr>
+        <tr><td><kbd>G</kbd></td><td>Alternar Criativo / Sobrevivência</td></tr>
+        <tr><td><kbd>F5</kbd></td><td>Trocar 1ª / 3ª pessoa</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Liberar mouse / pausar</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- HUD em jogo -->
+  <div id="hud" class="hidden">
+    <div id="crosshair">+</div>
+    <div id="topo">
+      <div id="coords">X:0 Y:0 Z:0</div>
+      <div id="modo">Criativo</div>
+      <div id="relogio">06:00</div>
+      <div id="fps">60 FPS</div>
+    </div>
+    <div id="bars">
+      <div id="hp" class="bar"></div>
+      <div id="fome" class="bar"></div>
+    </div>
+    <div id="hotbar"></div>
+    <div id="toast"></div>
+    <button id="btn-bag" class="hud-btn" title="Inventário (E)">📦</button>
+    <button id="btn-craft" class="hud-btn" title="Crafting (C)">⚒</button>
+    <button id="btn-modo" class="hud-btn" title="Alternar modo (G)">🦅</button>
+    <button id="btn-save" class="hud-btn" title="Salvar">💾</button>
+  </div>
+
+  <!-- Painel inventário -->
+  <div id="painel-bag" class="painel hidden">
+    <div class="painel-header">
+      <span>📦 Inventário</span>
+      <button class="fechar" data-painel="painel-bag">✕</button>
+    </div>
+    <div id="bag-grid"></div>
+    <div class="dica">Hotbar (toque pra selecionar; clique no slot da bag para mover ao slot ativo)</div>
+    <div id="bag-hotbar"></div>
+  </div>
+
+  <!-- Painel crafting -->
+  <div id="painel-craft" class="painel hidden">
+    <div class="painel-header">
+      <span>⚒ Crafting</span>
+      <button class="fechar" data-painel="painel-craft">✕</button>
+    </div>
+    <div id="craft-status">Sem workbench por perto: só receitas básicas</div>
+    <div id="craft-lista"></div>
+  </div>
+
+  <!-- Tela de morte -->
+  <div id="morte" class="hidden">
+    <div class="morte-icone">💀</div>
+    <h2>Você morreu</h2>
+    <p>Toque para reviver no spawn</p>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <!-- SFX procedurais via Web Audio (chamados pelo engine) -->
+  <script>
+    (function setupSfx() {
+      let ctx = null;
+      function ensureCtx() {
+        if (!ctx) {
+          try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) { return null; }
+        }
+        if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+        return ctx;
+      }
+      function tom({ freq, dur, type='square', vol=0.12 }) {
+        const c = ensureCtx(); if (!c) return;
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = type; o.frequency.value = freq;
+        const t0 = c.currentTime;
+        g.gain.setValueAtTime(0, t0);
+        g.gain.linearRampToValueAtTime(vol, t0 + 0.005);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(c.destination);
+        o.start(t0); o.stop(t0 + dur);
+      }
+      function ruido({ dur, vol=0.15, cutoff=1000 }) {
+        const c = ensureCtx(); if (!c) return;
+        const len = Math.floor(c.sampleRate * dur);
+        const buf = c.createBuffer(1, len, c.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) {
+          const env = 1 - i / len;
+          data[i] = (Math.random() * 2 - 1) * env * 0.6;
+        }
+        const src = c.createBufferSource(); src.buffer = buf;
+        const filt = c.createBiquadFilter(); filt.type = 'lowpass'; filt.frequency.value = cutoff;
+        const g = c.createGain(); g.gain.value = vol;
+        src.connect(filt).connect(g).connect(c.destination);
+        src.start();
+      }
+      window.rebcm = window.rebcm || {};
+      window.rebcm.sfx = {
+        quebrar: () => ruido({ dur: 0.18, cutoff: 800, vol: 0.18 }),
+        colocar: () => tom({ freq: 280, dur: 0.08 }),
+        atacar:  () => tom({ freq: 220, dur: 0.12, type: 'sawtooth', vol: 0.14 }),
+        hit:     () => tom({ freq: 110, dur: 0.18, type: 'sawtooth', vol: 0.18 }),
+        passo:   () => ruido({ dur: 0.05, cutoff: 400, vol: 0.06 }),
+        comer:   () => {
+          tom({ freq: 380, dur: 0.07, type: 'sine' });
+          setTimeout(() => tom({ freq: 540, dur: 0.06, type: 'sine' }), 80);
+        },
+        respawn: () => {
+          tom({ freq: 440, dur: 0.12, type: 'sine' });
+          setTimeout(() => tom({ freq: 660, dur: 0.12, type: 'sine' }), 120);
+          setTimeout(() => tom({ freq: 880, dur: 0.18, type: 'sine' }), 240);
+        },
+      };
+      // Música ambient: notas pentatônica C-major em loop solto.
+      let musicaAtiva = false, musicaTimer = null;
+      const escala = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+      function tocarNota() {
+        const c = ensureCtx(); if (!c) return;
+        const freq = escala[Math.floor(Math.random() * escala.length)];
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine'; o.frequency.value = freq;
+        const t0 = c.currentTime, dur = 1.6 + Math.random() * 1.2;
+        g.gain.setValueAtTime(0, t0);
+        g.gain.linearRampToValueAtTime(0.04, t0 + 0.3);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(c.destination);
+        o.start(t0); o.stop(t0 + dur);
+      }
+      window.rebcm.musica = {
+        iniciar: () => {
+          if (musicaAtiva) return;
+          musicaAtiva = true;
+          const tick = () => {
+            if (!musicaAtiva) return;
+            tocarNota();
+            musicaTimer = setTimeout(tick, 1800 + Math.random() * 2400);
+          };
+          tick();
+        },
+        parar: () => { musicaAtiva = false; if (musicaTimer) clearTimeout(musicaTimer); },
+      };
+    })();
+  </script>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
