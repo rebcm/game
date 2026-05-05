@@ -79,9 +79,47 @@
       <span>📦 Inventário</span>
       <button class="fechar" data-painel="painel-bag">✕</button>
     </div>
-    <div id="bag-grid"></div>
-    <div class="dica">Hotbar (toque pra selecionar; clique no slot da bag para mover ao slot ativo)</div>
-    <div id="bag-hotbar"></div>
+    <div id="bag-conteudo">
+      <!-- Coluna esquerda: personagem + slots de armadura -->
+      <div id="bag-armadura">
+        <div class="armor-row">
+          <div class="armor-slot" data-peca="cabeca" title="Capacete">
+            <span class="armor-icon">🪖</span>
+          </div>
+          <div class="player-sprite">
+            <div class="ps-cabeca"></div>
+            <div class="ps-corpo"></div>
+            <div class="ps-bracos">
+              <div class="ps-braco"></div>
+              <div class="ps-braco"></div>
+            </div>
+            <div class="ps-pernas">
+              <div class="ps-perna"></div>
+              <div class="ps-perna"></div>
+            </div>
+          </div>
+          <div class="armor-slot" data-peca="torso" title="Peitoral">
+            <span class="armor-icon">👕</span>
+          </div>
+        </div>
+        <div class="armor-row armor-row-baixo">
+          <div class="armor-slot" data-peca="pernas" title="Perneiras">
+            <span class="armor-icon">👖</span>
+          </div>
+          <div class="armor-slot" data-peca="botas" title="Botas">
+            <span class="armor-icon">🥾</span>
+          </div>
+        </div>
+        <div class="armor-info">Defesa: <span id="armor-defesa">0</span> pts</div>
+      </div>
+
+      <!-- Coluna direita: grid de inventário + hotbar -->
+      <div id="bag-direito">
+        <div id="bag-grid"></div>
+        <div class="dica">Toque no slot da bag pra mover ao slot ativo da hotbar. Toque num item de armadura para equipar/desequipar.</div>
+        <div id="bag-hotbar"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Painel crafting -->
@@ -137,6 +175,32 @@
         if (ctx.state === 'suspended') ctx.resume().catch(() => {});
         return ctx;
       }
+      // === iOS/Safari mobile fix ===
+      // Em iOS Safari (e em alguns Android Chrome), AudioContext fica
+      // 'suspended' e nunca toca som a não ser que ctx.resume() seja
+      // chamado DENTRO de um gesto de toque do usuário. Adicionamos um
+      // listener global em vários eventos de toque para garantir que o
+      // contexto seja desbloqueado na primeira interação real.
+      const desbloquear = () => {
+        const c = ensureCtx();
+        if (!c) return;
+        if (c.state === 'suspended') c.resume();
+        // Toca um beep inaudível pra "primar" o áudio em iOS antigo.
+        try {
+          const o = c.createOscillator();
+          const g = c.createGain();
+          g.gain.value = 0.0001;
+          o.connect(g).connect(c.destination);
+          o.start();
+          o.stop(c.currentTime + 0.01);
+        } catch (_) {}
+      };
+      ['touchstart', 'touchend', 'click', 'keydown', 'pointerdown'].forEach(ev => {
+        document.addEventListener(ev, desbloquear, { passive: true, capture: true });
+      });
+      // Expõe pra quem queira chamar manualmente (ex: handler do JOGAR).
+      window.rebcm = window.rebcm || {};
+      window.rebcm.desbloquearAudio = desbloquear;
       function tom({ freq, dur, type='square', vol=0.12 }) {
         const c = ensureCtx(); if (!c) return;
         const o = c.createOscillator(), g = c.createGain();

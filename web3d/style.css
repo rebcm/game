@@ -293,6 +293,138 @@ kbd {
   margin: 8px 0 4px;
   text-align: center;
 }
+/* === Painel inventário com personagem === */
+#bag-conteudo {
+  display: grid;
+  grid-template-columns: minmax(160px, auto) 1fr;
+  gap: 18px;
+  align-items: start;
+}
+#bag-armadura {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.armor-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.armor-row-baixo { gap: 14px; margin-top: 4px; }
+.armor-slot {
+  width: 44px; height: 44px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+  font-size: 16px;
+}
+.armor-slot:hover {
+  border-color: #FFD700;
+  background: rgba(255, 215, 0, 0.12);
+}
+.armor-slot.equipado {
+  border-style: solid;
+  border-color: #FFD700;
+  background: rgba(255, 215, 0, 0.18);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+}
+.armor-slot .armor-icon {
+  opacity: 0.4;
+  font-size: 22px;
+}
+.armor-slot.equipado .armor-icon { display: none; }
+.armor-slot .equip-display {
+  font-size: 22px;
+  text-align: center;
+  width: 100%;
+}
+.armor-slot .equip-tier {
+  position: absolute;
+  bottom: 1px; right: 3px;
+  font-size: 9px;
+  color: #FFD700;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+}
+.armor-info {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #aaa;
+  font-weight: bold;
+}
+#armor-defesa { color: #FFD700; }
+
+/* Sprite do personagem (mini-boneco voxel) */
+.player-sprite {
+  width: 64px;
+  height: 96px;
+  position: relative;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border-radius: 4px;
+  padding: 2px;
+}
+.ps-cabeca {
+  width: 28px; height: 28px;
+  background: #FFCDA4;          /* pele */
+  border: 1px solid #B0855B;
+  margin: 0 auto 1px;
+  border-radius: 3px;
+  position: relative;
+}
+.ps-cabeca::before, .ps-cabeca::after {
+  content: '';
+  position: absolute;
+  top: 10px; width: 4px; height: 4px;
+  background: #1A237E;
+  border-radius: 1px;
+}
+.ps-cabeca::before { left: 5px; }
+.ps-cabeca::after  { right: 5px; }
+.ps-corpo {
+  width: 32px; height: 28px;
+  background: #E91E63;          /* camisa Rebeca */
+  margin: 0 auto;
+  border-radius: 2px;
+}
+.ps-bracos {
+  position: absolute;
+  top: 30px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+.ps-braco {
+  width: 8px; height: 26px;
+  background: #FFCDA4;
+  border-radius: 1px;
+}
+.ps-pernas {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin-top: 1px;
+}
+.ps-perna {
+  width: 12px; height: 24px;
+  background: #3F51B5;          /* calça azul */
+  border-radius: 1px;
+}
+
+/* Layout da coluna direita */
+#bag-direito {
+  min-width: 0;
+}
 #bag-grid, #bag-hotbar {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
@@ -300,6 +432,14 @@ kbd {
   margin-bottom: 8px;
 }
 #bag-grid .slot, #bag-hotbar .slot { width: 44px; height: 44px; }
+
+/* Mobile: empilha personagem em cima da bag */
+@media (max-width: 700px) {
+  #bag-conteudo { grid-template-columns: 1fr; gap: 10px; }
+  #bag-armadura { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .player-sprite { display: none; }
+  #bag-grid .slot, #bag-hotbar .slot { width: 38px; height: 38px; }
+}
 
 #craft-status {
   text-align: center;

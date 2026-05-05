@@ -90,8 +90,13 @@ const ICONE = {
 const ITEM = {
   CARNE_CRUA: 100, CARNE_COZIDA: 101, OVO: 102, CARNE_PODRE: 103,
   PRANCHAS: 110, PAU: 111, CARVAO: 112, FERRO: 113, OURO: 114, DIAMANTE: 115,
+  COURO: 120,
   PIC_MADEIRA: 200, PIC_PEDRA: 201, PIC_FERRO: 202, PIC_DIAMANTE: 203,
   ESP_MADEIRA: 210, ESP_PEDRA: 211, ESP_FERRO: 212,
+  // Armaduras: tier × peça
+  CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
+  CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
+  CAP_DIAMANTE: 308, PEI_DIAMANTE: 309, PER_DIAMANTE: 310, BOT_DIAMANTE: 311,
 };
 const ITEM_INFO = {
   [ITEM.CARNE_CRUA]:   { nome: 'Carne crua',   icone: '🥩', nutricao: 3, suspeito: true },
@@ -104,6 +109,7 @@ const ITEM_INFO = {
   [ITEM.FERRO]:        { nome: 'Ferro',        icone: '⚙'  },
   [ITEM.OURO]:         { nome: 'Ouro',         icone: '🥇' },
   [ITEM.DIAMANTE]:     { nome: 'Diamante',     icone: '💎' },
+  [ITEM.COURO]:        { nome: 'Couro',        icone: '🟤' },
   [ITEM.PIC_MADEIRA]:  { nome: 'Picareta madeira',  icone: '⛏', tier: 1, ferramenta: 'pic' },
   [ITEM.PIC_PEDRA]:    { nome: 'Picareta pedra',    icone: '⛏', tier: 2, ferramenta: 'pic' },
   [ITEM.PIC_FERRO]:    { nome: 'Picareta ferro',    icone: '⛏', tier: 3, ferramenta: 'pic' },
@@ -111,6 +117,19 @@ const ITEM_INFO = {
   [ITEM.ESP_MADEIRA]:  { nome: 'Espada madeira',   icone: '⚔', tier: 1, ferramenta: 'esp' },
   [ITEM.ESP_PEDRA]:    { nome: 'Espada pedra',     icone: '⚔', tier: 2, ferramenta: 'esp' },
   [ITEM.ESP_FERRO]:    { nome: 'Espada ferro',     icone: '⚔', tier: 3, ferramenta: 'esp' },
+  // Armaduras (defesa em pontos; 4 pts ≈ 16% redução)
+  [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
+  [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
+  [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
+  [ITEM.BOT_COURO]:    { nome: 'Botas couro',       icone: '🥾', armadura: 'botas',   defesa: 1 },
+  [ITEM.CAP_FERRO]:    { nome: 'Capacete ferro',    icone: '🪖', armadura: 'cabeca',  defesa: 2 },
+  [ITEM.PEI_FERRO]:    { nome: 'Peitoral ferro',    icone: '👕', armadura: 'torso',   defesa: 6 },
+  [ITEM.PER_FERRO]:    { nome: 'Perneiras ferro',   icone: '👖', armadura: 'pernas',  defesa: 5 },
+  [ITEM.BOT_FERRO]:    { nome: 'Botas ferro',       icone: '🥾', armadura: 'botas',   defesa: 2 },
+  [ITEM.CAP_DIAMANTE]: { nome: 'Capacete diamante', icone: '🪖', armadura: 'cabeca',  defesa: 3 },
+  [ITEM.PEI_DIAMANTE]: { nome: 'Peitoral diamante', icone: '👕', armadura: 'torso',   defesa: 8 },
+  [ITEM.PER_DIAMANTE]: { nome: 'Perneiras diamante',icone: '👖', armadura: 'pernas',  defesa: 6 },
+  [ITEM.BOT_DIAMANTE]: { nome: 'Botas diamante',    icone: '🥾', armadura: 'botas',   defesa: 3 },
 };
 
 // Receitas (workbench=true exige workbench próximo)
@@ -127,6 +146,22 @@ const RECEITAS = [
   { custos: [{b: BLOCO.PEDRA, q: 2},   {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_PEDRA,   q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 2},    {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_FERRO,   q: 1}, wb: true },
   { custos: [{i: ITEM.CARNE_CRUA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.CARNE_COZIDA, q: 1}, wb: false },
+  // === Armaduras ===
+  // Couro
+  { custos: [{i: ITEM.COURO, q: 5}], saida: {i: ITEM.CAP_COURO, q: 1}, wb: true },
+  { custos: [{i: ITEM.COURO, q: 8}], saida: {i: ITEM.PEI_COURO, q: 1}, wb: true },
+  { custos: [{i: ITEM.COURO, q: 7}], saida: {i: ITEM.PER_COURO, q: 1}, wb: true },
+  { custos: [{i: ITEM.COURO, q: 4}], saida: {i: ITEM.BOT_COURO, q: 1}, wb: true },
+  // Ferro
+  { custos: [{i: ITEM.FERRO, q: 5}], saida: {i: ITEM.CAP_FERRO, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 8}], saida: {i: ITEM.PEI_FERRO, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 7}], saida: {i: ITEM.PER_FERRO, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 4}], saida: {i: ITEM.BOT_FERRO, q: 1}, wb: true },
+  // Diamante
+  { custos: [{i: ITEM.DIAMANTE, q: 5}], saida: {i: ITEM.CAP_DIAMANTE, q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 8}], saida: {i: ITEM.PEI_DIAMANTE, q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 7}], saida: {i: ITEM.PER_DIAMANTE, q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 4}], saida: {i: ITEM.BOT_DIAMANTE, q: 1}, wb: true },
 ];
 
 // ===================================================================
@@ -574,38 +609,49 @@ function criarAtlasTexturas() {
   return { texture: tex, mapa: M, cols, rows, cellSize };
 }
 
-// Gera uma textura única com 5 estágios de "cracks" lado-a-lado (16×16 cada).
-// Estágio 0 = sem cracks (transparente), 1..4 = cracks progressivamente
-// mais densos. Renderer escolhe estágio aplicando offset de UV.
+// Gera uma textura única com 10 estágios de "cracks" lado-a-lado (16×16
+// cada), idêntico ao Minecraft real (destroy_stage_0 a destroy_stage_9).
+// Estágio 0 = sem cracks, 1..9 = cracks progressivamente mais densos
+// até o bloco prestes a quebrar. Renderer escolhe estágio aplicando
+// offset de UV.
 function criarTexturaCracks() {
-  const cell = 16, n = 5;
+  const cell = 16, n = 10;
   const c = document.createElement('canvas');
   c.width = cell * n; c.height = cell;
   const ctx = c.getContext('2d');
   // Estágio 0: vazio
-  // Estágios 1-4: linhas pretas aleatórias com densidade crescente
+  // Estágios 1-9: linhas pretas aleatórias com densidade crescente +
+  // pixels pretos espalhados (destroy_stage do Minecraft).
   for (let s = 1; s < n; s++) {
     const x0 = s * cell;
-    ctx.strokeStyle = `rgba(0,0,0,${0.45 + s * 0.13})`;
-    ctx.lineWidth = 1;
-    const linhas = 2 + s * 2;
-    // Seed determinística por estágio
+    // Seed determinística por estágio (mesma cada vez)
     let seed = s * 12345;
     const rng = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    // Linhas (3 a 11 conforme estágio)
+    ctx.strokeStyle = `rgba(0,0,0,${0.55 + s * 0.04})`;
+    ctx.lineWidth = 1;
+    const linhas = 2 + Math.ceil(s * 1.1);
     for (let i = 0; i < linhas; i++) {
       ctx.beginPath();
       ctx.moveTo(x0 + rng() * cell, rng() * cell);
-      for (let j = 0; j < 3 + s; j++) {
+      for (let j = 0; j < 2 + Math.ceil(s / 2); j++) {
         ctx.lineTo(x0 + rng() * cell, rng() * cell);
       }
       ctx.stroke();
+    }
+    // Pixels pretos espalhados (lascas)
+    ctx.fillStyle = `rgba(0,0,0,${0.4 + s * 0.05})`;
+    const pixels = s * 4;
+    for (let i = 0; i < pixels; i++) {
+      const px = x0 + Math.floor(rng() * cell);
+      const py = Math.floor(rng() * cell);
+      ctx.fillRect(px, py, 1, 1);
     }
   }
   const tex = new THREE.CanvasTexture(c);
   tex.magFilter = THREE.NearestFilter;
   tex.minFilter = THREE.NearestFilter;
   tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-  // Estado inicial mostra estágio 0 (vazio) — repeat horizontal 1/n
   tex.repeat.set(1 / n, 1);
   tex.offset.set(0, 0);
   tex.estagios = n;
@@ -974,15 +1020,23 @@ class Renderer {
     this.materialTransp.needsUpdate = true;
   }
 
-  // === Atualiza highlight e cracks com base no alvo do raycast ===
+  // === Atualiza highlight, cracks e tremor com base no alvo do raycast ===
   atualizarAlvo(hit, progressoQuebra) {
     if (hit) {
       this.highlight.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
       this.highlight.visible = true;
-      // Cracks: estágio 0..4 conforme progresso 0..1
-      const estagio = Math.min(4, Math.floor(progressoQuebra * 5));
+      // Cracks: estágio 0..9 (10 estágios como Minecraft real)
+      const estagio = Math.min(9, Math.floor(progressoQuebra * 10));
       if (estagio > 0) {
-        this.crackMesh.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
+        // Tremor leve do bloco quebrando — translação aleatória
+        // proporcional ao progresso. Em Minecraft o bloco "vibra" enquanto
+        // quebra; aqui aplicamos pequeno offset randômico em x/y/z.
+        const intensidade = 0.012 + progressoQuebra * 0.025;
+        const tx = (Math.random() - 0.5) * intensidade;
+        const ty = (Math.random() - 0.5) * intensidade;
+        const tz = (Math.random() - 0.5) * intensidade;
+        this.crackMesh.position.set(
+          hit.x + 0.5 + tx, hit.y + 0.5 + ty, hit.z + 0.5 + tz);
         this.crackMesh.visible = true;
         if (estagio !== this.crackEstagioAtual) {
           this.crackTexture.offset.x = estagio / this.crackTexture.estagios;
@@ -1179,7 +1233,12 @@ class Player {
   }
   aplicarDano(d, fonte) {
     if (this.morto) return;
-    this.hp -= d;
+    // Aplica redução por armadura: cada ponto de defesa = 4% redução,
+    // até o teto de 80% (clamp Minecraft-like). Dano mínimo é 1.
+    const defesa = inv ? inv.defesaTotal() : 0;
+    const reducao = Math.min(0.8, defesa * 0.04);
+    const danoReal = Math.max(1, Math.round(d * (1 - reducao)));
+    this.hp -= danoReal;
     this.semDano = 0;
     Audio.hit();
     if (this.hp <= 0) {
@@ -1188,7 +1247,7 @@ class Player {
       ui.toast(`Você morreu (${fonte})`);
       ui.mostrarMorte();
     } else {
-      ui.toast(`-${d} HP (${fonte})`);
+      ui.toast(`-${danoReal} HP (${fonte})${defesa > 0 ? ` [armadura: -${d - danoReal}]` : ''}`);
     }
   }
   respawnar() {
@@ -1211,6 +1270,42 @@ class Inventario {
   constructor() {
     this.slots = new Array(36).fill(null); // {b?, i?, q}
     this.slotSel = 0;
+    // 4 slots de armadura (cabeca/torso/pernas/botas) — sempre 1 item cada.
+    this.armadura = { cabeca: null, torso: null, pernas: null, botas: null };
+  }
+  // Defesa total (em pontos) = soma das defesas de cada peça equipada.
+  defesaTotal() {
+    let total = 0;
+    for (const peca of Object.values(this.armadura)) {
+      if (peca && peca.i !== undefined) {
+        total += ITEM_INFO[peca.i]?.defesa || 0;
+      }
+    }
+    return total;
+  }
+  // Tenta equipar item na peça correta. Se há armadura no slot, troca
+  // (item retorna pro inventário no slot original). Retorna true se ok.
+  equiparDoSlot(idx) {
+    const it = this.slots[idx];
+    if (!it || it.i === undefined) return false;
+    const info = ITEM_INFO[it.i];
+    if (!info?.armadura) return false;
+    const peca = info.armadura;
+    const anterior = this.armadura[peca];
+    this.armadura[peca] = { ...it, q: 1 };
+    this.slots[idx] = anterior; // pode ser null
+    ui.atualizar();
+    return true;
+  }
+  desequipar(peca) {
+    const item = this.armadura[peca];
+    if (!item) return false;
+    if (this.adicionar(item)) {
+      this.armadura[peca] = null;
+      ui.atualizar();
+      return true;
+    }
+    return false;
   }
   itemSelecionado() { return this.slots[this.slotSel]; }
   selecionar(idx) { this.slotSel = ((idx % 9) + 9) % 9; ui.atualizar(); }
@@ -1346,6 +1441,72 @@ const Crafting = {
 };
 
 // ===================================================================
+// 6.5) Sistema de partículas (faíscas ao quebrar bloco)
+// ===================================================================
+class Particulas {
+  constructor(scene) {
+    this.scene = scene;
+    this.geo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
+    this.lista = [];
+    this.materiaisCache = new Map(); // hex → MeshBasicMaterial
+  }
+  _matPara(corHex) {
+    let m = this.materiaisCache.get(corHex);
+    if (!m) {
+      m = new THREE.MeshBasicMaterial({ color: corHex });
+      this.materiaisCache.set(corHex, m);
+    }
+    return m;
+  }
+  // Spawna 10-14 partículas voando ao redor do ponto (x,y,z) com a cor
+  // do bloco quebrado. Cada partícula tem velocidade + gravidade + life.
+  spawnQuebra(cx, cy, cz, blocoTipo) {
+    const cor = BLOCO_INFO[blocoTipo]?.cor ?? 0x888888;
+    const mat = this._matPara(cor);
+    const n = 10 + Math.floor(Math.random() * 5);
+    for (let i = 0; i < n; i++) {
+      const m = new THREE.Mesh(this.geo, mat);
+      m.position.set(
+        cx + 0.5 + (Math.random() - 0.5) * 0.6,
+        cy + 0.5 + (Math.random() - 0.5) * 0.6,
+        cz + 0.5 + (Math.random() - 0.5) * 0.6
+      );
+      m.userData = {
+        vx: (Math.random() - 0.5) * 4.5,
+        vy: 1.5 + Math.random() * 3.5,
+        vz: (Math.random() - 0.5) * 4.5,
+        life: 0.8 + Math.random() * 0.4,
+        lifeMax: 1.0,
+      };
+      m.userData.lifeMax = m.userData.life;
+      this.scene.add(m);
+      this.lista.push(m);
+    }
+  }
+  atualizar(dt) {
+    for (let i = this.lista.length - 1; i >= 0; i--) {
+      const p = this.lista[i];
+      const u = p.userData;
+      p.position.x += u.vx * dt;
+      p.position.y += u.vy * dt;
+      p.position.z += u.vz * dt;
+      u.vy -= 14 * dt;
+      // Atrito horizontal
+      u.vx *= 0.92;
+      u.vz *= 0.92;
+      u.life -= dt;
+      // Encolhe ao morrer
+      const k = Math.max(0, u.life / u.lifeMax);
+      p.scale.setScalar(0.6 + 0.5 * k);
+      if (u.life <= 0) {
+        this.scene.remove(p);
+        this.lista.splice(i, 1);
+      }
+    }
+  }
+}
+
+// ===================================================================
 // 7) Mobs (versão simples 3D — cubos coloridos com AI)
 // ===================================================================
 const TIPO_MOB = {
@@ -1353,9 +1514,19 @@ const TIPO_MOB = {
   ZUMBI: 'zumbi', ESQUELETO: 'esqueleto', ARANHA: 'aranha', CREEPER: 'creeper', LOBO: 'lobo',
 };
 const MOB_INFO = {
-  vaca:      { hp: 8,  vel: 1.4, hostil: false, drops: () => [{ i: ITEM.CARNE_CRUA, q: 1 + (Math.random() < 0.5 ? 1 : 0) }], cor: 0xffffff, sec: 0x424242 },
+  vaca:      { hp: 8,  vel: 1.4, hostil: false,
+               drops: () => [
+                 { i: ITEM.CARNE_CRUA, q: 1 + (Math.random() < 0.5 ? 1 : 0) },
+                 { i: ITEM.COURO, q: 1 + (Math.random() < 0.5 ? 1 : 0) },
+               ],
+               cor: 0xffffff, sec: 0x424242 },
   galinha:   { hp: 4,  vel: 1.7, hostil: false, drops: () => [{ i: ITEM.CARNE_CRUA, q: 1 }, ...(Math.random() < 0.5 ? [{ i: ITEM.OVO, q: 1 }] : [])], cor: 0xfff59d, sec: 0xff6f00 },
-  porco:     { hp: 6,  vel: 1.5, hostil: false, drops: () => [{ i: ITEM.CARNE_CRUA, q: 1 + (Math.random() < 0.5 ? 1 : 0) }], cor: 0xf8bbd0, sec: 0xec407a },
+  porco:     { hp: 6,  vel: 1.5, hostil: false,
+               drops: () => [
+                 { i: ITEM.CARNE_CRUA, q: 1 + (Math.random() < 0.5 ? 1 : 0) },
+                 ...(Math.random() < 0.4 ? [{ i: ITEM.COURO, q: 1 }] : []),
+               ],
+               cor: 0xf8bbd0, sec: 0xec407a },
   ovelha:    { hp: 8,  vel: 1.3, hostil: false, drops: () => [{ b: BLOCO.LA, q: 1 + (Math.random() < 0.5 ? 1 : 0) }], cor: 0xfafafa, sec: 0xeeeeee },
   zumbi:     { hp: 16, vel: 2.2, hostil: true, dano: 2, alcance: 1.6, drops: () => Math.random() < 0.6 ? [{ i: ITEM.CARNE_PODRE, q: 1 }] : [], cor: 0x4caf50, sec: 0x2e7d32 },
   esqueleto: { hp: 14, vel: 1.8, hostil: true, dano: 2, alcance: 6.0, drops: () => [{ i: ITEM.PAU, q: 1 }], cor: 0xe0e0e0, sec: 0x9e9e9e },
@@ -1363,6 +1534,192 @@ const MOB_INFO = {
   creeper:   { hp: 10, vel: 1.9, hostil: true, dano: 8, alcance: 2.0, drops: () => Math.random() < 0.5 ? [{ i: ITEM.CARVAO, q: 1 }] : [], cor: 0x2e7d32, sec: 0x1b5e20, explode: true },
   lobo:      { hp: 12, vel: 2.4, hostil: false, amigavel: true, drops: () => [], cor: 0x9e9e9e, sec: 0xeeeeee },
 };
+
+// Constrói um Group de Three.js com o modelo geométrico do mob (cabeça,
+// corpo, pernas, braços) estilo Minecraft. Preenche userData.partes com
+// referências para que a animação consiga oscilar pernas/braços.
+function construirModeloMob(tipo, info) {
+  const matCor = (c) => new THREE.MeshLambertMaterial({ color: c });
+  const cubo = (w, h, d, c) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), matCor(c));
+  const grp = new THREE.Group();
+  const partes = {};
+
+  // Pivot trick: pra animar pernas oscilando, criamos um Group por
+  // perna com pivot no topo dela, e o cubo da perna pendurado abaixo.
+  const pernaComPivot = (w, h, d, cor, posY) => {
+    const pivot = new THREE.Group();
+    pivot.position.y = posY;
+    const m = cubo(w, h, d, cor);
+    m.position.y = -h / 2;
+    pivot.add(m);
+    return pivot;
+  };
+
+  switch (tipo) {
+    case 'vaca':
+    case 'porco':
+    case 'ovelha':
+    case 'lobo': {
+      // Quadrupede
+      const corpo = cubo(0.5, 0.5, 0.85, info.cor);
+      corpo.position.y = 0.65;
+      grp.add(corpo);
+      const cabeca = cubo(0.4, 0.4, 0.4, info.cor);
+      cabeca.position.set(0, 0.7, 0.55);
+      grp.add(cabeca);
+      // Detalhe: orelhas/manchas via cubo da cor secundária
+      if (tipo === 'vaca') {
+        const m1 = cubo(0.52, 0.05, 0.2, info.sec);
+        m1.position.set(0.0, 0.92, 0.05); grp.add(m1);
+        const m2 = cubo(0.52, 0.05, 0.18, info.sec);
+        m2.position.set(0.0, 0.92, -0.25); grp.add(m2);
+      }
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.15 : 0.15);
+        const dz = (i < 2 ? 0.28 : -0.28);
+        const p = pernaComPivot(0.16, 0.4, 0.16, info.sec, 0.4);
+        p.position.x = dx;
+        p.position.z = dz;
+        grp.add(p);
+        pernas.push(p);
+      }
+      partes.cabeca = cabeca;
+      partes.pernas = pernas;
+      partes.corpo = corpo;
+      break;
+    }
+    case 'galinha': {
+      const corpo = cubo(0.3, 0.35, 0.45, info.cor);
+      corpo.position.y = 0.5;
+      grp.add(corpo);
+      const cabeca = cubo(0.22, 0.25, 0.22, info.cor);
+      cabeca.position.set(0, 0.78, 0.22);
+      grp.add(cabeca);
+      // crista vermelha
+      const crista = cubo(0.08, 0.08, 0.18, 0xC62828);
+      crista.position.set(0, 0.95, 0.22); grp.add(crista);
+      // bico
+      const bico = cubo(0.1, 0.08, 0.12, info.sec);
+      bico.position.set(0, 0.76, 0.4);
+      grp.add(bico);
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.07, 0.28, 0.07, info.sec, 0.28);
+        p.position.x = (i === 0 ? -0.1 : 0.1);
+        grp.add(p);
+        pernas.push(p);
+      }
+      partes.cabeca = cabeca;
+      partes.pernas = pernas;
+      partes.corpo = corpo;
+      break;
+    }
+    case 'zumbi':
+    case 'esqueleto': {
+      // Humanoide: cabeça + corpo + 2 braços + 2 pernas
+      const corpo = cubo(0.5, 0.7, 0.25, info.cor);
+      corpo.position.y = 1.0;
+      grp.add(corpo);
+      const cabeca = cubo(0.45, 0.45, 0.45, info.sec);
+      cabeca.position.set(0, 1.6, 0);
+      grp.add(cabeca);
+      // Olhos vermelhos pra hostis
+      const oR = cubo(0.07, 0.07, 0.04, 0xff2222);
+      oR.position.set(-0.1, 1.62, 0.23); grp.add(oR);
+      const oL = cubo(0.07, 0.07, 0.04, 0xff2222);
+      oL.position.set( 0.1, 1.62, 0.23); grp.add(oL);
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.18, 0.65, 0.18, info.cor, 1.3);
+        b.position.x = (i === 0 ? -0.34 : 0.34);
+        grp.add(b);
+        bracos.push(b);
+      }
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.2, 0.65, 0.2, info.sec, 0.65);
+        p.position.x = (i === 0 ? -0.12 : 0.12);
+        grp.add(p);
+        pernas.push(p);
+      }
+      partes.cabeca = cabeca;
+      partes.corpo = corpo;
+      partes.bracos = bracos;
+      partes.pernas = pernas;
+      break;
+    }
+    case 'aranha': {
+      const corpoTras = cubo(0.7, 0.45, 0.55, info.cor);
+      corpoTras.position.set(0, 0.4, -0.15); grp.add(corpoTras);
+      const cabeca = cubo(0.4, 0.35, 0.4, info.sec);
+      cabeca.position.set(0, 0.4, 0.35); grp.add(cabeca);
+      // Olhos vermelhos
+      for (let i = 0; i < 4; i++) {
+        const o = cubo(0.06, 0.06, 0.04, 0xff0000);
+        const x = (i % 2 === 0 ? -0.12 : 0.12);
+        const y = (i < 2 ? 0.5 : 0.4);
+        o.position.set(x, y, 0.55); grp.add(o);
+      }
+      const pernas = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = ((i / 8) - 0.5) * Math.PI;
+        const lado = i < 4 ? -1 : 1;
+        const ang2 = angle * lado;
+        const p = pernaComPivot(0.07, 0.5, 0.07, 0x000000, 0.45);
+        p.position.set(lado * 0.3, 0.45,
+          (i < 4 ? i - 1.5 : (i - 5.5)) * 0.16);
+        p.rotation.z = lado * (0.4 + (i % 4) * 0.05);
+        grp.add(p);
+        pernas.push(p);
+      }
+      partes.cabeca = cabeca;
+      partes.pernas = pernas;
+      break;
+    }
+    case 'creeper': {
+      const corpo = cubo(0.4, 1.3, 0.4, info.cor);
+      corpo.position.y = 0.95;
+      grp.add(corpo);
+      const cabeca = cubo(0.42, 0.42, 0.42, info.sec);
+      cabeca.position.set(0, 1.7, 0); grp.add(cabeca);
+      // Padrão de "rosto" do creeper
+      const olhoE = cubo(0.1, 0.1, 0.04, 0x000000);
+      olhoE.position.set(-0.1, 1.74, 0.22); grp.add(olhoE);
+      const olhoD = cubo(0.1, 0.1, 0.04, 0x000000);
+      olhoD.position.set( 0.1, 1.74, 0.22); grp.add(olhoD);
+      const boca = cubo(0.14, 0.18, 0.04, 0x000000);
+      boca.position.set(0, 1.62, 0.22); grp.add(boca);
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.1 : 0.1);
+        const dz = (i < 2 ? 0.1 : -0.1);
+        const p = pernaComPivot(0.18, 0.3, 0.18, info.cor, 0.3);
+        p.position.x = dx; p.position.z = dz;
+        grp.add(p);
+        pernas.push(p);
+      }
+      partes.cabeca = cabeca;
+      partes.pernas = pernas;
+      partes.corpo = corpo;
+      break;
+    }
+    default: {
+      // Fallback: cubo + cabeça
+      const corpo = cubo(0.6, 0.7, 0.4, info.cor);
+      corpo.position.y = 0.45;
+      grp.add(corpo);
+      const cabeca = cubo(0.4, 0.4, 0.4, info.sec);
+      cabeca.position.y = 1.0;
+      grp.add(cabeca);
+      partes.cabeca = cabeca;
+      partes.corpo = corpo;
+    }
+  }
+
+  grp.userData.partes = partes;
+  return grp;
+}
 
 class Mob {
   constructor(tipo, x, y, z) {
@@ -1373,22 +1730,12 @@ class Mob {
     this.dir = Math.random() * Math.PI * 2;
     this.proxMudanca = 0;
     this.cooldownAtaque = 0;
-    // Mesh: 2 cubos (corpo + cabeça)
-    const grp = new THREE.Group();
-    const corpo = new THREE.Mesh(
-      new THREE.BoxGeometry(0.6, 0.7, 0.4),
-      new THREE.MeshLambertMaterial({ color: info.cor })
-    );
-    corpo.position.y = 0.45;
-    grp.add(corpo);
-    const cabeca = new THREE.Mesh(
-      new THREE.BoxGeometry(0.4, 0.4, 0.4),
-      new THREE.MeshLambertMaterial({ color: info.sec })
-    );
-    cabeca.position.y = 1.0;
-    grp.add(cabeca);
-    grp.position.set(x, y, z);
-    this.mesh = grp;
+    this.fase = Math.random() * Math.PI * 2; // fase própria pra animação
+    // Modelo Minecraft-like: cabeça + corpo + 4 (ou 2/8) pernas + braços
+    this.mesh = construirModeloMob(tipo, info);
+    this.mesh.position.set(x, y, z);
+    // Cache das partes pra animação (preenchido por construirModeloMob)
+    this.partes = this.mesh.userData.partes;
   }
   atualizar(dt, world, alvo) {
     const info = MOB_INFO[this.tipo];
@@ -1403,15 +1750,46 @@ class Mob {
     }
     const dx = Math.cos(this.dir) * info.vel * dt;
     const dz = Math.sin(this.dir) * info.vel * dt;
-    if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) this.x += dx;
-    if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) this.z += dz;
-    // gravidade simplificada: snap pra superfície
+    let movendo = false;
+    if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
+      this.x += dx; movendo = true;
+    }
+    if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
+      this.z += dz; movendo = true;
+    }
     let h = WORLD_Y;
     while (h > 0 && !world.isSolido(Math.floor(this.x), h - 1, Math.floor(this.z))) h--;
     this.y = h;
     this.mesh.position.set(this.x, this.y, this.z);
     this.mesh.rotation.y = -this.dir + Math.PI / 2;
     this.cooldownAtaque -= dt;
+
+    // === Animação ===
+    this.fase += dt * (movendo ? 8 : 0);
+    if (this.partes && this.partes.pernas) {
+      const amp = movendo ? 0.55 : 0;
+      for (let i = 0; i < this.partes.pernas.length; i++) {
+        const sign = (i % 2 === 0) ? 1 : -1;
+        const fase = this.fase + (i < 2 ? 0 : Math.PI);
+        // pivots rotacionam em X (oscilação fwd/back)
+        this.partes.pernas[i].rotation.x = Math.sin(fase) * amp * sign * 0.7;
+      }
+    }
+    if (this.partes && this.partes.bracos) {
+      const amp = movendo ? 0.5 : (info.hostil ? 0.3 : 0);
+      // Braços oscilam em contrafase com pernas
+      this.partes.bracos[0].rotation.x = Math.sin(this.fase + Math.PI) * amp;
+      this.partes.bracos[1].rotation.x = Math.sin(this.fase) * amp;
+      // Hostis com braços levantados (zumbi clássico)
+      if (info.hostil) {
+        this.partes.bracos[0].rotation.x -= 1.2;
+        this.partes.bracos[1].rotation.x -= 1.2;
+      }
+    }
+    if (this.partes && this.partes.cabeca) {
+      // Leve oscilação da cabeça enquanto vagueia
+      this.partes.cabeca.rotation.y = Math.sin(this.fase * 0.5) * 0.15;
+    }
   }
   vivo() { return this.hp > 0; }
 }
@@ -1588,16 +1966,82 @@ class UI {
       const div = document.createElement('div');
       div.className = 'slot';
       div.innerHTML = this._slotHTML(inv.slots[i]);
-      div.onclick = () => inv.trocar(i, inv.slotSel);
+      div.onclick = () => {
+        // Se item da bag é armadura, equipa direto. Senão, troca pra hotbar.
+        const it = inv.slots[i];
+        if (it && it.i !== undefined && ITEM_INFO[it.i]?.armadura) {
+          inv.equiparDoSlot(i);
+        } else {
+          inv.trocar(i, inv.slotSel);
+        }
+        this.renderBag(); // re-render porque equipar muda armadura também
+      };
       this.elBag.appendChild(div);
     }
     for (let i = 0; i < 9; i++) {
       const div = document.createElement('div');
       div.className = 'slot' + (i === inv.slotSel ? ' sel' : '');
       div.innerHTML = this._slotHTML(inv.slots[i]);
-      div.onclick = () => inv.selecionar(i);
+      div.onclick = () => {
+        const it = inv.slots[i];
+        if (it && it.i !== undefined && ITEM_INFO[it.i]?.armadura) {
+          inv.equiparDoSlot(i);
+          this.renderBag();
+        } else {
+          inv.selecionar(i);
+        }
+      };
       this.elBagHot.appendChild(div);
     }
+    this.renderArmaduraSlots();
+  }
+
+  // Atualiza os 4 slots visuais de armadura no painel da bag.
+  renderArmaduraSlots() {
+    document.querySelectorAll('.armor-slot').forEach(el => {
+      const peca = el.dataset.peca;
+      const item = inv.armadura[peca];
+      const ic = el.querySelector('.armor-icon');
+      let display = el.querySelector('.equip-display');
+      let tierEl = el.querySelector('.equip-tier');
+      if (item) {
+        el.classList.add('equipado');
+        if (ic) ic.style.display = 'none';
+        if (!display) {
+          display = document.createElement('div');
+          display.className = 'equip-display';
+          el.appendChild(display);
+        }
+        const info = ITEM_INFO[item.i];
+        display.textContent = info?.icone ?? '?';
+        display.style.display = 'block';
+        if (!tierEl) {
+          tierEl = document.createElement('div');
+          tierEl.className = 'equip-tier';
+          el.appendChild(tierEl);
+        }
+        // Tier visual: couro/ferro/diamante
+        let tier = '';
+        if (info.nome.toLowerCase().includes('diamante')) tier = '💎';
+        else if (info.nome.toLowerCase().includes('ferro')) tier = '⚙';
+        else if (info.nome.toLowerCase().includes('couro')) tier = '🟤';
+        tierEl.textContent = tier;
+        // Click → desequipa (volta pro inventário)
+        el.onclick = () => {
+          inv.desequipar(peca);
+          this.renderBag();
+        };
+      } else {
+        el.classList.remove('equipado');
+        if (ic) ic.style.display = 'inline';
+        if (display) display.style.display = 'none';
+        if (tierEl) tierEl.textContent = '';
+        el.onclick = () => ui.toast(`Equipe um ${peca === 'cabeca' ? 'capacete' : peca === 'torso' ? 'peitoral' : peca === 'pernas' ? 'perneiras' : 'botas'} clicando nele no inventário.`);
+      }
+    });
+    const def = inv.defesaTotal();
+    const elDef = document.getElementById('armor-defesa');
+    if (elDef) elDef.textContent = String(def);
   }
   renderCraft(perto) {
     const disp = Crafting.disponiveis(inv, perto);
@@ -1669,12 +2113,27 @@ const Save = {
           chunksMod.push({ cx: c.cx, cz: c.cz, b: btoa(String.fromCharCode(...c.blocks)) });
         }
       }
+      // Serializa cada slot preservando "b" (bloco), "i" (item) e "q",
+      // junto do índice do slot (sx). Bug fixed: antes o índice pisava
+      // sobre s.i de itens-tipo.
+      const invSerializado = [];
+      for (let k = 0; k < inv.slots.length; k++) {
+        const s = inv.slots[k];
+        if (!s) continue;
+        invSerializado.push({ sx: k, b: s.b, i: s.i, q: s.q });
+      }
+      const armSerializada = {};
+      for (const peca of Object.keys(inv.armadura)) {
+        const a = inv.armadura[peca];
+        if (a) armSerializada[peca] = { b: a.b, i: a.i, q: a.q };
+      }
       const data = {
-        v: 1, seed: world.seed,
+        v: 2, seed: world.seed,
         p: { x: player.pos.x, y: player.pos.y, z: player.pos.z },
         slot: inv.slotSel, hp: player.hp, fome: player.fome,
         td: tempoDia, modo: player.modo,
-        inv: inv.slots.map((s, i) => s ? { i: i, ...s } : null).filter(Boolean),
+        inv: invSerializado,
+        arm: armSerializada,
         chunks: chunksMod,
       };
       localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -1695,7 +2154,7 @@ const Save = {
 // ===================================================================
 // 11) Globals + bootstrap
 // ===================================================================
-let renderer, world, player, mobMgr, inv, ui;
+let renderer, world, player, mobMgr, inv, ui, particulas;
 let tempoDia = 0.25;
 let chunkLoadOrcamento = 2; // chunks novos a carregar por frame
 let frameCount = 0, fpsAcc = 0, fpsTimer = 0;
@@ -1724,6 +2183,7 @@ function init() {
   renderer.scene.add(player.controls.object);
 
   mobMgr = new MobManager(renderer.scene);
+  particulas = new Particulas(renderer.scene);
 
   // Tenta carregar save
   const save = Save.carregar();
@@ -1737,9 +2197,21 @@ function init() {
     tempoDia = save.td ?? 0.25;
     inv.slots.fill(null);
     inv.slotSel = save.slot ?? 0;
-    if (save.inv) for (const s of save.inv) {
-      inv.slots[s.i] = { b: s.b, i: s.i, q: s.q };
-      delete inv.slots[s.i].i; if (s.b === undefined) inv.slots[s.i].i = s.i;
+    // Schema v2: usa s.sx como índice do slot. v1 (compat): s.i era o
+    // índice — ignorar saves antigos pra não corromper.
+    if (save.v === 2 && save.inv) {
+      for (const s of save.inv) {
+        if (s.sx === undefined) continue;
+        inv.slots[s.sx] = { b: s.b, i: s.i, q: s.q };
+      }
+    }
+    inv.armadura = { cabeca: null, torso: null, pernas: null, botas: null };
+    if (save.arm) {
+      for (const peca of Object.keys(save.arm)) {
+        if (inv.armadura[peca] !== undefined) {
+          inv.armadura[peca] = { ...save.arm[peca] };
+        }
+      }
     }
     if (save.chunks) {
       for (const sc of save.chunks) {
@@ -2140,6 +2612,7 @@ function loop(now) {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
 
     mobMgr.atualizar(dt, world, player, sun);
+    particulas.atualizar(dt);
 
     // === Raycast a cada frame (para highlight e quebra/colocar) ===
     const dirCamera = renderer.camera.getWorldDirection(_tmpVecAux);
@@ -2164,6 +2637,8 @@ function loop(now) {
         player.progressoQuebra = 0;
         const drops = Drops.dropDeBloco(t.b, tier);
         for (const d of drops) inv.adicionar(d);
+        // Spawn partículas ANTES de remover o bloco — usa o tipo dele
+        particulas.spawnQuebra(t.x, t.y, t.z, t.b);
         world.set(t.x, t.y, t.z, BLOCO.AR);
         Audio.quebrar();
         progressoVisual = 0;
@@ -2253,6 +2728,11 @@ function loop(now) {
 // 12) Boot — esconder splash + entrar fullscreen + lock pointer
 // ===================================================================
 document.getElementById('play').addEventListener('click', async () => {
+  // Desbloqueia AudioContext IMEDIATAMENTE dentro do gesto do clique.
+  // Em iOS Safari isto é obrigatório — qualquer await/setTimeout antes
+  // do resume() faz o navegador invalidar o gesto e o som não toca.
+  try { window.rebcm?.desbloquearAudio?.(); } catch (_) {}
+
   // Tela cheia
   try {
     await document.documentElement.requestFullscreen?.();
