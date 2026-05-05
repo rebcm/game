@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
+import 'package:rebcm/mob/mob.dart';
+import 'package:rebcm/mob/spawner.dart';
 import 'package:rebcm/mundo/mundo.dart';
 import 'package:rebcm/mundo/save_load.dart';
 import 'package:rebcm/personagem/rebeca.dart';
@@ -16,6 +18,13 @@ class ConstrucaoCriativa extends FlameGame
   late Mundo mundo;
   late Rebeca rebeca;
   final RenderizadorIsometrico _renderer = RenderizadorIsometrico();
+  final MobSpawner mobs = MobSpawner();
+
+  // HP/fome do player (modo criativo: apenas visualização por hora).
+  int hp = 20;
+  int hpMax = 20;
+  int fome = 20;
+  int fomeMax = 20;
 
   double _joyX = 0, _joyZ = 0, _joyY = 0;
   bool _quebrando = false;
@@ -114,6 +123,10 @@ class ConstrucaoCriativa extends FlameGame
         .clamp(0.05, 1.0);
     _renderer.luzDia = sun;
 
+    // Mobs: spawn + atualização.
+    mobs.atualizar(dt, mundo, rebeca.x, rebeca.z, sun);
+    mobs.atualizarMobs(dt, mundo, rebeca.x, rebeca.z);
+
     // Auto-save.
     _segundosDesdeSave += dt;
     if (_segundosDesdeSave >= Constantes.autosavePeriodo) {
@@ -139,7 +152,7 @@ class ConstrucaoCriativa extends FlameGame
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    _renderer.render(canvas, mundo, rebeca, size);
+    _renderer.render(canvas, mundo, rebeca, size, mobs: mobs.mobs);
   }
 
   @override
@@ -179,8 +192,22 @@ class ConstrucaoCriativa extends FlameGame
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyR) {
       _renderer.rotacionarCamera();
     }
+    // F = atacar mob mais próximo dentro do alcance.
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyF) {
+      atacarMobProximo();
+    }
 
     return KeyEventResult.handled;
+  }
+
+  /// Tenta atacar o mob mais próximo dentro de [Constantes.alcanceBloco].
+  /// Causa 4 de dano. Retorna `true` se o mob morreu nesse hit.
+  bool atacarMobProximo() {
+    final m = mobs.maisProximo(rebeca.x, rebeca.y, rebeca.z, Constantes.alcanceBloco);
+    if (m == null) return false;
+    final morreu = m.aplicarDano(4);
+    mensagem.value = morreu ? '${m.tipo.nome} derrotado!' : 'Atingiu ${m.tipo.nome}';
+    return morreu;
   }
 
   @override

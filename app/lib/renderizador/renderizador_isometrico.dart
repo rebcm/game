@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:rebcm/blocos/tipo_bloco.dart';
 import 'package:rebcm/constantes.dart';
+import 'package:rebcm/mob/mob.dart';
 import 'package:rebcm/mundo/mundo.dart';
 import 'package:rebcm/personagem/rebeca.dart';
 
@@ -34,7 +35,13 @@ class RenderizadorIsometrico {
     ..strokeWidth = 2.5
     ..color = const Color(0xFFFFFFFF);
 
-  void render(Canvas canvas, Mundo mundo, Rebeca rebeca, Vector2 tela) {
+  void render(
+    Canvas canvas,
+    Mundo mundo,
+    Rebeca rebeca,
+    Vector2 tela, {
+    List<Mob> mobs = const [],
+  }) {
     _desenharCeu(canvas, tela);
 
     // Translação para centralizar o player na tela.
@@ -128,6 +135,7 @@ class RenderizadorIsometrico {
       canvas.drawPath(highlightPath, _highlightPaint);
     }
 
+    _desenharMobs(canvas, cx, cy, mobs);
     _desenharRebeca(canvas, cx, cy, rebeca);
     _desenharMao(canvas, tela, rebeca.blocoSelecionado);
     _desenharMirinha(canvas, tela);
@@ -441,6 +449,129 @@ class RenderizadorIsometrico {
       canvas.drawLine(Offset(cx, cy + gap), Offset(cx, cy + size), p);
     }
     canvas.drawCircle(Offset(cx, cy), 1.5, Paint()..color = const Color(0xEEFFFFFF));
+  }
+
+  /// Desenha todos os mobs ordenados por profundidade isométrica para que
+  /// os mais ao fundo apareçam atrás dos da frente.
+  void _desenharMobs(Canvas canvas, double cx, double cy, List<Mob> mobs) {
+    if (mobs.isEmpty) return;
+    final ordenados = [...mobs];
+    ordenados.sort((a, b) {
+      final keyA = _sortKeyMob(a);
+      final keyB = _sortKeyMob(b);
+      return keyA.compareTo(keyB);
+    });
+    for (final m in ordenados) {
+      final proj = _projetarMundo(m.x, m.y, m.z);
+      final sx = cx + proj.$1;
+      final sy = cy + proj.$2;
+      _desenharMob(canvas, sx, sy, m);
+    }
+  }
+
+  double _sortKeyMob(Mob m) {
+    double rx = m.x, rz = m.z;
+    switch (camAngle) {
+      case 1:
+        final tmp = rx;
+        rx = -rz;
+        rz = tmp;
+      case 2:
+        rx = -rx;
+        rz = -rz;
+      case 3:
+        final tmp = rx;
+        rx = rz;
+        rz = -tmp;
+    }
+    return (rx + rz) * 1000.0 + m.y;
+  }
+
+  void _desenharMob(Canvas canvas, double sx, double sy, Mob m) {
+    // Sombra.
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(sx, sy + 14), width: 22, height: 8),
+      Paint()
+        ..color = const Color(0x55000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+    );
+
+    final corPrim = Color(_aplicarLuzARGB(m.tipo.corARGB));
+    final corSec = Color(_aplicarLuzARGB(m.tipo.corARGBSecundaria));
+
+    // Corpo: diamante isométrico ligeiramente maior que o player.
+    final corpo = Path()
+      ..moveTo(sx, sy - 16)
+      ..lineTo(sx + 13, sy - 1)
+      ..lineTo(sx, sy + 14)
+      ..lineTo(sx - 13, sy - 1)
+      ..close();
+    canvas.drawPath(corpo, Paint()..color = corPrim);
+
+    // Manchas/detalhe.
+    final mancha = Path()
+      ..moveTo(sx - 6, sy + 2)
+      ..lineTo(sx, sy - 4)
+      ..lineTo(sx + 6, sy + 2)
+      ..lineTo(sx, sy + 8)
+      ..close();
+    canvas.drawPath(mancha, Paint()..color = corSec);
+
+    // Outline.
+    canvas.drawPath(
+      corpo,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2
+        ..color = const Color(0x88000000),
+    );
+
+    // Olhos.
+    final olhoBranco = Paint()..color = const Color(0xFFFFFFFF);
+    final olhoPupila = Paint()..color = m.tipo.hostil ? const Color(0xFFD32F2F) : const Color(0xFF1A237E);
+    canvas.drawCircle(Offset(sx - 3, sy - 6), 2.0, olhoBranco);
+    canvas.drawCircle(Offset(sx + 3, sy - 6), 2.0, olhoBranco);
+    canvas.drawCircle(Offset(sx - 3, sy - 6), 1.0, olhoPupila);
+    canvas.drawCircle(Offset(sx + 3, sy - 6), 1.0, olhoPupila);
+
+    // Bico/focinho.
+    if (m.tipo == TipoMob.galinha) {
+      final bico = Path()
+        ..moveTo(sx, sy - 3)
+        ..lineTo(sx + 3, sy - 1)
+        ..lineTo(sx, sy + 1)
+        ..close();
+      canvas.drawPath(bico, Paint()..color = const Color(0xFFFF6F00));
+    }
+
+    // Barra de HP fininha acima quando dano.
+    if (m.hp < m.tipo.hpMax) {
+      final pct = m.hp / m.tipo.hpMax;
+      final wTotal = 22.0;
+      final left = sx - wTotal / 2;
+      final top = sy - 24;
+      canvas.drawRect(
+        Rect.fromLTWH(left, top, wTotal, 3),
+        Paint()..color = const Color(0xAA000000),
+      );
+      canvas.drawRect(
+        Rect.fromLTWH(left, top, wTotal * pct, 3),
+        Paint()..color = const Color(0xFFE53935),
+      );
+    }
+  }
+
+  /// Versão de [_aplicarLuz] que opera sobre um inteiro ARGB direto.
+  int _aplicarLuzARGB(int argb) {
+    final a = (argb >> 24) & 0xFF;
+    final r = (argb >> 16) & 0xFF;
+    final g = (argb >> 8) & 0xFF;
+    final b = argb & 0xFF;
+    final f = 0.35 + 0.65 * luzDia;
+    final nr = (r * f).clamp(0, 255).toInt();
+    final ng = (g * f).clamp(0, 255).toInt();
+    final nb = (b * f).clamp(0, 255).toInt();
+    return (a << 24) | (nr << 16) | (ng << 8) | nb;
   }
 
   void rotacionarCamera() => camAngle = (camAngle + 1) % 4;

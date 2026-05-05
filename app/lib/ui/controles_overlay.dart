@@ -213,6 +213,11 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
           onTap: widget.game.quebrarBlocoImediato,
           child: _botaoWidget('⛏', 'Quebrar', Colors.orange),
         ),
+        const SizedBox(height: 10),
+        _botaoSimples('⚔', 'Atacar', Colors.red.shade700, () {
+          widget.game.atacarMobProximo();
+          setState(() {});
+        }),
       ],
     );
   }
@@ -291,20 +296,57 @@ class _ControlesOverlayState extends State<ControlesOverlay> {
               ),
             ),
             Text(
-              'Criativo · Câm: ${_camLabels[widget.game.camAngle]}  R=Rodar',
+              'Criativo · Câm: ${_camLabels[widget.game.camAngle]}  R=Rodar  F=Atacar',
               style: const TextStyle(color: Colors.white60, fontSize: 9),
             ),
             Text(
-              '🕒 ${widget.game.textoTempoDia}',
+              '🕒 ${widget.game.textoTempoDia}    🐾 ${widget.game.mobs.mobs.length}',
               style: const TextStyle(
                 color: Colors.amberAccent,
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 2),
+            _buildBarras(),
           ],
         ),
       ),
+    );
+  }
+
+  /// Barras de HP (corações vermelhos) e fome (drumstick laranja).
+  Widget _buildBarras() {
+    final hp = widget.game.hp;
+    final hpMax = widget.game.hpMax;
+    final fome = widget.game.fome;
+    final fomeMax = widget.game.fomeMax;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildBarraIcones('❤', hp, hpMax, Colors.red.shade400),
+        _buildBarraIcones('🍗', fome, fomeMax, Colors.orange.shade400),
+      ],
+    );
+  }
+
+  Widget _buildBarraIcones(String icone, int v, int max, Color cor) {
+    final cheios = (v / 2).ceil(); // 1 ícone = 2 pontos
+    final total = (max / 2).ceil();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(total, (i) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0.5),
+          child: Text(
+            icone,
+            style: TextStyle(
+              fontSize: 10,
+              color: i < cheios ? cor : Colors.white24,
+            ),
+          ),
+        );
+      }),
     );
   }
 
