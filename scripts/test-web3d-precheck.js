@@ -70,8 +70,24 @@ t('materialOpaco com alphaTest: 0 (não cull pixels translúcidos)',
   /materialOpaco\s*=[\s\S]*?alphaTest:\s*0/.test(game));
 t('materialOpaco com depthWrite: true',
   /materialOpaco\s*=[\s\S]*?depthWrite:\s*true/.test(game));
-t('materialOpaco com toneMapped: false (defesa contra ACES)',
-  /materialOpaco\s*=[\s\S]*?toneMapped:\s*false/.test(game));
+t('materialOpaco com toneMapped: true (Cineon comprime overbright)',
+  /materialOpaco\s*=[\s\S]*?toneMapped:\s*true/.test(game),
+  'toneMapped:false faz o material ignorar o tonemap e clipar pra branco — top faces parecem "translúcidas".');
+
+// ---------------------------------------------------------------------
+// materialTransp inicia idêntico ao opaco no modo "sólido" (default).
+// Antes: side: DoubleSide ficava ligado mesmo com transparência off,
+// expondo back-faces de leaves/vidro — parecia "ver através do bloco".
+// ---------------------------------------------------------------------
+grupo('materialTransp arranque sólido');
+t('materialTransp inicia com transparent: false',
+  /materialTransp\s*=[\s\S]*?transparent:\s*false/.test(game));
+t('materialTransp inicia com side: FrontSide (não DoubleSide)',
+  /materialTransp\s*=[\s\S]*?side:\s*THREE\.FrontSide/.test(game),
+  'DoubleSide com transparência off vaza back-faces — leitura de "transparência" pelo usuário.');
+t('setTransparenciaAtiva alterna side junto com transparent',
+  /setTransparenciaAtiva[\s\S]*?side\s*=\s*THREE\.DoubleSide[\s\S]*?side\s*=\s*THREE\.FrontSide/.test(game),
+  'Toggle precisa flippar side também — senão o modo "sólido" continua com DoubleSide herdado.');
 
 // ---------------------------------------------------------------------
 // Atlas opaco
@@ -82,11 +98,21 @@ t('canvas do atlas é forçado a alpha=255 antes de virar textura',
   'Sem isso, padrões com strokeStyle rgba(...,0.5) vazam alpha < 255.');
 
 // ---------------------------------------------------------------------
-// Tone mapping desligado (regressão: ACES Filmic crushava escuros)
+// Tone mapping Cineon (suave, comprime overbright sem matar escuros)
+// Antes era NoToneMapping pra evitar caverna preta, mas isso fazia
+// faces top em pleno sol clipar pra branco e parecer "translúcidas".
+// Cineon é mais suave que ACESFilmic — o piso de luz vem do
+// emissiveMap + ambient/hemi reduzidos.
 // ---------------------------------------------------------------------
 grupo('Tone mapping');
-t('renderer com NoToneMapping (cores diretas, evita preto absoluto)',
-  /toneMapping\s*=\s*THREE\.NoToneMapping/.test(game));
+t('renderer com CineonToneMapping (rolloff suave)',
+  /toneMapping\s*=\s*THREE\.CineonToneMapping/.test(game));
+t('toneMappingExposure entre 0.9 e 1.2 (compensa Cineon sem estourar)', (() => {
+  const m = game.match(/toneMappingExposure\s*=\s*(\d+\.?\d*)/);
+  if (!m) return false;
+  const v = parseFloat(m[1]);
+  return v >= 0.9 && v <= 1.2;
+}));
 
 // ---------------------------------------------------------------------
 // Iluminação mínima (regressão: cavernas ficavam pretas)
@@ -94,19 +120,32 @@ t('renderer com NoToneMapping (cores diretas, evita preto absoluto)',
 grupo('Iluminação mínima');
 t('emissiveMap aplicado nos materiais (piso de luz própria)',
   /emissiveMap:\s*this\.atlas\.texture/.test(game));
-t('emissiveIntensity entre 0.20 e 0.40 (não overbright nem preto)', (() => {
+t('emissiveIntensity entre 0.15 e 0.30 (não overbright nem preto)', (() => {
   const matches = game.match(/emissiveIntensity:\s*(0\.\d+)/g);
   if (!matches) return false;
   return matches.every(m => {
     const v = parseFloat(m.match(/0\.\d+/)[0]);
-    return v >= 0.20 && v <= 0.40;
+    return v >= 0.15 && v <= 0.30;
   });
-}), 'Abaixo de 0.2 = preto em cavernas; acima de 0.4 = blocos fundem visualmente.');
-t('hemi e ambient compensam o emissive baixo (>= 0.50 noite)', (() => {
+}), 'Abaixo de 0.15 = preto em cavernas; acima de 0.30 = blocos fundem visualmente.');
+t('hemi (>= 0.30 noite) + ambient (>= 0.18 noite) carregam piso de luz', (() => {
   const m1 = game.match(/this\.hemi\.intensity\s*=\s*(0\.\d+)/);
   const m2 = game.match(/this\.ambient\.intensity\s*=\s*(0\.\d+)/);
-  return m1 && m2 && parseFloat(m1[1]) >= 0.50 && parseFloat(m2[1]) >= 0.30;
-}), 'Sem isso, blocos longe de luz ficam escuros demais.');
+  return m1 && m2 && parseFloat(m1[1]) >= 0.30 && parseFloat(m2[1]) >= 0.18;
+}), 'Valores reduzidos vs antes (eram 0.55/0.40) pq agora o Cineon comprime picos suavemente.');
+t('soma de luzes em pleno dia <= 1.7 (evita clipping)', (() => {
+  // ambient_dia + hemi_dia + sol_dia <= 1.7 garante que com tone
+  // mapping Cineon (rolloff suave acima de ~0.8) os top faces fiquem
+  // próximos de 1.0 sem virar branco puro.
+  const m1 = game.match(/this\.hemi\.intensity\s*=\s*(0\.\d+)\s*\+\s*(0\.\d+)/);
+  const m2 = game.match(/this\.ambient\.intensity\s*=\s*(0\.\d+)\s*\+\s*(0\.\d+)/);
+  const m3 = game.match(/this\.sol\.intensity\s*=\s*(0\.\d+)\s*\+\s*(0\.\d+)/);
+  if (!m1 || !m2 || !m3) return false;
+  const dia = parseFloat(m1[1]) + parseFloat(m1[2])
+            + parseFloat(m2[1]) + parseFloat(m2[2])
+            + parseFloat(m3[1]) + parseFloat(m3[2]);
+  return dia <= 1.7;
+}), 'Antes (0.75 + 1.05 + 1.00 = 2.80) clipava top faces pra branco.');
 t('PointLight intensity da lava/tocha reduzida (<= 1.0)', (() => {
   const m = game.match(/l\.intensity\s*=\s*c\.nivel\s*\/\s*15\s*\*\s*(\d+\.?\d*)/);
   return m && parseFloat(m[1]) <= 1.0;

@@ -808,15 +808,16 @@ class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x87CEEB);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    // === Sem tone mapping ===
-    // ACESFilmic comprime agressivamente valores baixos (sombras),
-    // resultando em pretos absolutos em cavernas e faces opostas à
-    // luz, mesmo com emissive ativo. Minecraft real renderiza sem
-    // tone mapping (cores diretas da textura). Trocamos para
-    // NoToneMapping com exposure 1.0 para preservar luminosidade
-    // mínima nos pixels mais escuros.
-    this.renderer.toneMapping = THREE.NoToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
+    // === Tone mapping suave (Cineon) ===
+    // SEM tone mapping, a soma das luzes (ambient + hemi + sol +
+    // emissive) ultrapassa 1.0 nas faces top em pleno sol e clipa
+    // pra branco — blocos parecem "translúcidos/desbotados" (a queixa
+    // recorrente de "transparência"). Com Cineon, o rolloff suave
+    // comprime os highlights sem matar as sombras (caverna continua
+    // visível graças ao emissiveMap). Exposure 1.05 compensa o leve
+    // escurecimento que o tone mapping introduz nos meios-tons.
+    this.renderer.toneMapping = THREE.CineonToneMapping;
+    this.renderer.toneMappingExposure = 1.05;
     // Atlas de texturas procedurais 16×16 px por face, cor + ruído.
     this.atlas = criarAtlasTexturas();
     // Material de bloco com texture atlas + tinting por vertex colors
@@ -829,30 +830,39 @@ class Renderer {
     // 55% de sua cor original mesmo SEM nenhuma luz incidindo. PointLights
     // (tochas) ainda iluminam por cima; sol cria highlights visíveis.
     // Resultado: nenhum bloco fica preto, mas sombras ainda dão volume.
-    // emissiveIntensity 0.30 (era 0.85 — overbright, blocos fundiam
-    // visualmente, parecendo translúcidos perto de fontes de luz forte
-    // como lava). Com 0.30, há piso visível em sombras MAS a iluminação
-    // direcional (sol/PointLights) ainda cria contraste claro de volume.
+    // emissiveIntensity 0.20: garante piso de luminosidade em
+    // cavernas/sombra mas sem inflar tanto a soma com ambient+hemi+sol
+    // (o Cineon do renderer agora dá conta dos picos). toneMapped:true
+    // permite que o tone mapping compresse highlights — antes false
+    // deixava o material ignorar o tonemap e clipar pra branco.
     this.materialOpaco = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.30,
+      emissiveIntensity: 0.20,
       vertexColors: true,
       transparent: false,
       alphaTest: 0,
       depthWrite: true,
       side: THREE.FrontSide,
-      toneMapped: false,
+      toneMapped: true,
     });
+    // materialTransp inicia idêntico ao opaco (transparency OFF é o
+    // default). setTransparenciaAtiva(true) ativa transparent + opacity
+    // + DoubleSide. ANTES: side: DoubleSide ficava ligado mesmo no
+    // modo "sólido" — leaves/vidro renderizavam back-faces, resultando
+    // em artefatos de "vejo através do bloco" pelo lado de dentro.
     this.materialTransp = new THREE.MeshLambertMaterial({
       map: this.atlas.texture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: this.atlas.texture,
-      emissiveIntensity: 0.30,
-      vertexColors: true, transparent: true, opacity: 0.78,
-      side: THREE.DoubleSide,
-      toneMapped: false,
+      emissiveIntensity: 0.20,
+      vertexColors: true,
+      transparent: false,
+      opacity: 1.0,
+      depthWrite: true,
+      side: THREE.FrontSide,
+      toneMapped: true,
     });
 
     // === Iluminação ===
@@ -860,13 +870,13 @@ class Renderer {
     // cor diferente da luz de baixo (chão), resultando em faces
     // laterais bem mais legíveis mesmo sem iluminação direcional. Sem
     // isso, faces opostas ao sol ficavam quase pretas (Lambert puro).
-    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.55);
+    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.40);
     this.scene.add(this.hemi);
     // Ambient extra de baixa intensidade — garante que NADA fique 100%
     // preto, nem mesmo de noite ou em cavernas profundas sem tochas.
-    this.ambient = new THREE.AmbientLight(0xffffff, 0.35);
+    this.ambient = new THREE.AmbientLight(0xffffff, 0.22);
     this.scene.add(this.ambient);
-    this.sol = new THREE.DirectionalLight(0xffffff, 0.85);
+    this.sol = new THREE.DirectionalLight(0xffffff, 0.55);
     this.sol.position.set(50, 100, 30);
     this.scene.add(this.sol);
     this.luaLuz = new THREE.DirectionalLight(0xb3c8ff, 0.0);
@@ -947,12 +957,10 @@ class Renderer {
     this.camera.add(this.maoGroup);
     this.scene.add(this.camera); // garantir que camera está na scene
     this.swingProgress = 0; // 0..1, animação de swing ao bater
-    // Default: SÓLIDO (sem transparência). Usuário pode habilitar
-    // transparência via botão 🪟. Aplicamos imediatamente:
+    // Default: SÓLIDO (sem transparência). materialTransp já foi
+    // criado com transparent:false/FrontSide acima — o usuário pode
+    // habilitar a transparência via botão 🪟.
     this.transparenciaAtiva = false;
-    this.materialTransp.transparent = false;
-    this.materialTransp.opacity = 1.0;
-    this.materialTransp.depthWrite = true;
   }
   criarDisco(cor, raio) {
     const g = new THREE.SphereGeometry(raio, 16, 16);
@@ -1114,13 +1122,15 @@ class Renderer {
   atualizarCeu(tempoDia, playerPos) {
     // sun = sin(2π·t - π/2): pico em t=0.25 (meio-dia)
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    // emissive agora é apenas 30% (não 85%), então as luzes ambientes
-    // precisam carregar mais peso pra que blocos longe de fontes de luz
-    // não fiquem escuros demais.
-    this.hemi.intensity    = 0.55 + 0.50 * sun;    // 0.55 noite → 1.05 dia
-    this.ambient.intensity = 0.40 + 0.35 * sun;    // 0.40 noite → 0.75 dia
-    this.sol.intensity     = 0.20 + 0.80 * sun;    // 0.20 noite → 1.00 dia
-    this.luaLuz.intensity  = 0.40 * (1 - sun);     // 0.40 noite → 0.0 dia
+    // Soma de luzes (ambient + hemi + sol) limitada a ~1.0 em pleno
+    // dia — antes (0.75 + 1.05 + 1.00 = 2.80) clipava nas faces top
+    // pra branco e os blocos pareciam "translúcidos/desbotados". O
+    // tone mapping Cineon ainda comprime suavemente os picos extras
+    // gerados pelas PointLights de tocha/lava.
+    this.hemi.intensity    = 0.40 + 0.30 * sun;    // 0.40 noite → 0.70 dia
+    this.ambient.intensity = 0.22 + 0.15 * sun;    // 0.22 noite → 0.37 dia
+    this.sol.intensity     = 0.10 + 0.50 * sun;    // 0.10 noite → 0.60 dia
+    this.luaLuz.intensity  = 0.25 * (1 - sun);     // 0.25 noite → 0.0 dia
     // Cor do hemi muda também: noite tinge azulado, dia neutro.
     if (sun < 0.4) {
       this.hemi.color.setHex(0x4a6ba8); // azul-noite
@@ -1210,10 +1220,16 @@ class Renderer {
       this.materialTransp.transparent = true;
       this.materialTransp.opacity = 0.78;
       this.materialTransp.depthWrite = false;
+      // DoubleSide só faz sentido com translucidez — vê-se "atrás" da
+      // folha/vidro pelo outro lado da face também.
+      this.materialTransp.side = THREE.DoubleSide;
     } else {
       this.materialTransp.transparent = false;
       this.materialTransp.opacity = 1.0;
       this.materialTransp.depthWrite = true;
+      // Sólido: FrontSide, idêntico ao materialOpaco. Sem isto, o
+      // back-face de leaves/vidro vazava e parecia "transparente".
+      this.materialTransp.side = THREE.FrontSide;
     }
     this.materialTransp.needsUpdate = true;
   }
