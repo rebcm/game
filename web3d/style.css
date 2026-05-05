@@ -344,12 +344,131 @@ kbd {
 #morte h2 { font-size: 38px; margin: 8px 0; text-shadow: 0 2px 12px #000; }
 #morte p { color: #ffe0e0; }
 
-/* Mobile: esconde help mobile pequeno */
-@media (max-width: 700px) {
+/* Mobile: esconde help de teclado e mostra controles touch */
+@media (max-width: 700px), (pointer: coarse) {
   #boot .controles-help { display: none; }
   .hud-btn { width: 36px; height: 36px; font-size: 17px; }
   #btn-craft  { top: 58px; }
   #btn-modo   { top: 102px; }
   #btn-save   { top: 146px; }
   #btn-transp { top: 190px; }
+}
+
+/* === Controles touch === */
+#touch-controls {
+  position: fixed; inset: 0;
+  z-index: 150;
+  pointer-events: none; /* só zonas filhas pegam */
+}
+#touch-controls .touch-zone,
+#touch-controls .t-btn { pointer-events: auto; }
+
+/* Zona de movimento (joystick) à esquerda */
+#touch-joy {
+  position: absolute;
+  left: 16px; bottom: 80px;
+  width: 160px; height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Aceita o toque mesmo sem o knob estar exatamente no dedo */
+  touch-action: none;
+}
+.joy-base {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.30);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  position: relative;
+  box-shadow: 0 0 14px rgba(0,0,0,0.4) inset;
+}
+.joy-knob {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  pointer-events: none;
+  transition: background 0.1s;
+}
+.joy-knob.ativo { background: rgba(255, 215, 0, 0.85); }
+
+/* Zona de olhar (drag para girar câmera) — ocupa lado direito */
+#touch-look {
+  position: absolute;
+  left: 200px;   /* depois do joystick */
+  right: 110px;  /* antes da coluna de botões */
+  top: 60px;
+  bottom: 60px;
+  /* Invisível mas captura toques */
+  background: transparent;
+  touch-action: none;
+}
+
+/* Botões de ação à direita */
+#touch-buttons {
+  position: absolute;
+  right: 14px;
+  bottom: 80px;
+  display: grid;
+  grid-template-columns: repeat(2, 64px);
+  gap: 8px;
+  touch-action: none;
+}
+.t-btn {
+  width: 64px; height: 64px;
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  background: rgba(40, 40, 50, 0.7);
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  transition: transform 0.1s, background 0.1s;
+}
+.t-btn:active, .t-btn.pressionado {
+  transform: scale(0.95);
+  background: rgba(80, 80, 100, 0.95);
+  border-color: rgba(255, 215, 0, 0.8);
+}
+.t-jump   { background: rgba(80, 160, 240, 0.7); }
+.t-break  { background: rgba(220, 130, 50, 0.7); }
+.t-place  { background: rgba(80, 180, 90, 0.7); }
+.t-attack { background: rgba(200, 60, 60, 0.7); }
+.t-down   { background: rgba(80, 120, 200, 0.7); }
+
+/* Em paisagem só, esconde botões em portrait pra forçar landscape */
+@media (orientation: portrait) and (pointer: coarse) {
+  #touch-controls::after {
+    content: '🔄  Por favor, gire o aparelho para paisagem';
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    color: #FFD700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9000;
+  }
+}
+
+/* Telas pequenas: hotbar mais compacta */
+@media (max-width: 500px) {
+  #hotbar { gap: 2px; padding: 2px; }
+  .slot { width: 38px; height: 38px; font-size: 14px; }
+  .slot.sel { width: 46px; height: 46px; font-size: 18px; margin-top: -6px; }
+  #touch-buttons { grid-template-columns: repeat(2, 56px); gap: 6px; bottom: 70px; }
+  .t-btn { width: 56px; height: 56px; font-size: 22px; }
+  #touch-joy { width: 140px; height: 140px; left: 10px; bottom: 70px; }
+  .joy-base { width: 110px; height: 110px; }
+  .joy-knob { width: 48px; height: 48px; }
+  #touch-look { left: 170px; right: 90px; }
 }

@@ -1761,6 +1761,7 @@ function init() {
 
   // Eventos
   setupInput();
+  setupTouchControls();
   ui.atualizar();
 
   // Iniciar autosave a cada 30s
@@ -1770,6 +1771,158 @@ function init() {
   window.addEventListener('resize', () => renderer.resize());
   ultimoT = performance.now();
   requestAnimationFrame(loop);
+}
+
+// === Touch Controls ===
+// Joystick virtual + look-arrastar + botões touch para paridade com
+// teclado/mouse em smartphones e tablets.
+const isTouchDevice = (typeof window !== 'undefined') &&
+  (('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0);
+
+function setupTouchControls() {
+  if (!isTouchDevice) return;
+  const tc = document.getElementById('touch-controls');
+  tc.classList.remove('hidden');
+  // Esconde a "mão" pra não ocupar espaço em mobile (a UI já cobre)
+  if (renderer?.maoGroup) renderer.maoGroup.visible = false;
+
+  // === Joystick ===
+  const joy = document.getElementById('touch-joy');
+  const joyBase = joy.querySelector('.joy-base');
+  const joyKnob = joy.querySelector('.joy-knob');
+  let joyTouchId = null;
+  let joyCx = 0, joyCy = 0;
+  const joyMaxR = 50;
+
+  function joyAtualizar(x, y) {
+    let dx = x - joyCx;
+    let dy = y - joyCy;
+    const dist = Math.hypot(dx, dy);
+    if (dist > joyMaxR) { dx = dx / dist * joyMaxR; dy = dy / dist * joyMaxR; }
+    joyKnob.style.transform =
+      `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+    // Mapeia para input.fwd / input.side
+    // - knob para cima (dy<0)  → fwd = +1 (avança)
+    // - knob para baixo (dy>0) → fwd = -1 (recua)
+    // - knob direita (dx>0)    → side = +1
+    // - knob esquerda (dx<0)   → side = -1
+    player.input.fwd  = -dy / joyMaxR;
+    player.input.side =  dx / joyMaxR;
+    // Auto-sprint quando knob bate na borda
+    player.input.sprint = dist > joyMaxR * 0.85;
+  }
+  function joyResetar() {
+    joyKnob.style.transform = 'translate(-50%, -50%)';
+    joyKnob.classList.remove('ativo');
+    player.input.fwd = 0;
+    player.input.side = 0;
+    player.input.sprint = false;
+    joyTouchId = null;
+  }
+
+  joy.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (joyTouchId !== null) return;
+    const t = e.changedTouches[0];
+    joyTouchId = t.identifier;
+    const r = joyBase.getBoundingClientRect();
+    joyCx = r.left + r.width / 2;
+    joyCy = r.top + r.height / 2;
+    joyKnob.classList.add('ativo');
+    joyAtualizar(t.clientX, t.clientY);
+  }, { passive: false });
+  document.addEventListener('touchmove', (e) => {
+    if (joyTouchId === null) return;
+    for (const t of e.changedTouches) {
+      if (t.identifier === joyTouchId) {
+        joyAtualizar(t.clientX, t.clientY);
+        return;
+      }
+    }
+  }, { passive: false });
+  const joyEnd = (e) => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === joyTouchId) { joyResetar(); return; }
+    }
+  };
+  document.addEventListener('touchend', joyEnd);
+  document.addEventListener('touchcancel', joyEnd);
+
+  // === Look (drag = girar câmera) ===
+  // Em mobile não há pointer lock; manipulamos camera.rotation diretamente.
+  const lookZone = document.getElementById('touch-look');
+  let lookTouchId = null, lookLastX = 0, lookLastY = 0;
+  const lookSens = 0.0035;
+  const _euler = new THREE.Euler(0, 0, 0, 'YXZ');
+
+  lookZone.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (lookTouchId !== null) return;
+    const t = e.changedTouches[0];
+    lookTouchId = t.identifier;
+    lookLastX = t.clientX;
+    lookLastY = t.clientY;
+  }, { passive: false });
+  lookZone.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (lookTouchId === null) return;
+    for (const t of e.changedTouches) {
+      if (t.identifier !== lookTouchId) continue;
+      const dx = t.clientX - lookLastX;
+      const dy = t.clientY - lookLastY;
+      lookLastX = t.clientX;
+      lookLastY = t.clientY;
+      _euler.setFromQuaternion(renderer.camera.quaternion);
+      _euler.y -= dx * lookSens;
+      _euler.x -= dy * lookSens;
+      // Clamp pitch entre -89° e +89°
+      _euler.x = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, _euler.x));
+      renderer.camera.quaternion.setFromEuler(_euler);
+      return;
+    }
+  }, { passive: false });
+  const lookEnd = (e) => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === lookTouchId) { lookTouchId = null; return; }
+    }
+  };
+  lookZone.addEventListener('touchend', lookEnd);
+  lookZone.addEventListener('touchcancel', lookEnd);
+
+  // === Botões de ação ===
+  const btn = (id, ondown, onup) => {
+    const el = document.querySelector(`.t-btn[data-action="${id}"]`);
+    if (!el) return;
+    const bDown = (e) => { e.preventDefault(); el.classList.add('pressionado'); ondown && ondown(); };
+    const bUp   = (e) => { e.preventDefault(); el.classList.remove('pressionado'); onup && onup(); };
+    el.addEventListener('touchstart', bDown, { passive: false });
+    el.addEventListener('touchend',   bUp,   { passive: false });
+    el.addEventListener('touchcancel', bUp,  { passive: false });
+    // Também aceita click (suporta navegadores que disparam click extra)
+    el.addEventListener('mousedown', bDown);
+    el.addEventListener('mouseup',   bUp);
+    el.addEventListener('mouseleave', bUp);
+  };
+  btn('jump',
+      () => { player.input.up = 1; player.input.jump = true; },
+      () => { player.input.up = 0; });
+  btn('down',
+      () => { if (player.modo === 'creative') player.input.up = -1; },
+      () => { if (player.modo === 'creative') player.input.up = 0; });
+  btn('break',
+      () => { player.holdE = true; },
+      () => { player.holdE = false; player.progressoQuebra = 0; player.alvoQuebra = null; });
+  btn('place',
+      () => { player.cliqueD = true; });
+  btn('attack',
+      () => { atacarMob(); });
+
+  // Esconde botão "down" em modo survival (não voa)
+  const atualizarTouchVisibility = () => {
+    const down = document.querySelector('.t-btn[data-action="down"]');
+    if (down) down.style.display = player.modo === 'creative' ? 'flex' : 'none';
+  };
+  setInterval(atualizarTouchVisibility, 500);
 }
 
 function setupInput() {
@@ -2115,8 +2268,12 @@ document.getElementById('play').addEventListener('click', async () => {
   document.getElementById('boot').classList.add('hidden');
   document.getElementById('hud').classList.remove('hidden');
 
-  // Pointer lock para mouse-look
-  setTimeout(() => player.controls.lock(), 100);
+  // Pointer lock só faz sentido em mouse/teclado (desktop). Em touch
+  // devices o look é feito via drag — pulamos o lock para evitar que o
+  // browser bloqueie a UI tentando capturar um cursor inexistente.
+  if (!isTouchDevice) {
+    setTimeout(() => player.controls.lock(), 100);
+  }
 
   // Música ambient
   try { window.rebcm?.musica?.iniciar?.(); } catch (_) {}

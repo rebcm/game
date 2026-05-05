@@ -101,6 +101,29 @@
     <p>Toque para reviver no spawn</p>
   </div>
 
+  <!-- Controles touch (só visíveis em dispositivos touch) -->
+  <div id="touch-controls" class="hidden">
+    <!-- Zona de movimento (joystick virtual) à esquerda -->
+    <div id="touch-joy" class="touch-zone">
+      <div class="joy-base">
+        <div class="joy-knob"></div>
+      </div>
+    </div>
+
+    <!-- Zona de look (lado direito sem botões) — recebe drag pra
+         girar a câmera (yaw+pitch) -->
+    <div id="touch-look" class="touch-zone"></div>
+
+    <!-- Botões de ação à direita -->
+    <div id="touch-buttons">
+      <button class="t-btn t-jump"   data-action="jump"  title="Pular">↑</button>
+      <button class="t-btn t-break"  data-action="break" title="Quebrar (segurar)">⛏</button>
+      <button class="t-btn t-place"  data-action="place" title="Colocar">🧱</button>
+      <button class="t-btn t-attack" data-action="attack" title="Atacar mob">⚔</button>
+      <button class="t-btn t-down"   data-action="down"  title="Descer (creative)">↓</button>
+    </div>
+  </div>
+
   <canvas id="game"></canvas>
 
   <!-- SFX procedurais via Web Audio (chamados pelo engine) -->
