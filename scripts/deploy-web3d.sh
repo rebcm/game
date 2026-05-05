@@ -31,10 +31,15 @@ node --check "$BUILD/game.js" >/dev/null
 
 echo "🧪 Rodando testes pré-deploy …"
 if [ -f "$ROOT/scripts/test-web3d-precheck.js" ]; then
-  node "$ROOT/scripts/test-web3d-precheck.js" "$BUILD" || {
+  # Roda de dentro do BUILD (cwd!=$ROOT) — o package.json vazio na
+  # raiz quebra o resolver do Node ao subir a árvore. BUILD é um tmp
+  # limpo onde o Node não encontra package.json malformado.
+  cp "$ROOT/scripts/test-web3d-precheck.js" "$BUILD/_precheck.js"
+  ( cd "$BUILD" && node ./_precheck.js . ) || {
     echo "❌ Testes falharam — abortando deploy"
     exit 1
   }
+  rm -f "$BUILD/_precheck.js"
 else
   echo "  (sem testes pre-check definidos)"
 fi
