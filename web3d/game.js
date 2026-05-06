@@ -52,8 +52,9 @@ const BLOCO = {
   BAU:       22,
   FORNALHA:  23,
   CAMA:      24,
+  BEDROCK:   25,
 };
-const N_BLOCOS = 25;
+const N_BLOCOS = 26;
 
 const BLOCO_INFO = {
   [BLOCO.AR]:        { nome: 'Ar',        solido: false, transp: true,  emiteLuz: 0,  cor: 0x000000, lateral: 0x000000 },
@@ -74,13 +75,14 @@ const BLOCO_INFO = {
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
   [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
-  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x3a2148, lateral: 0x2a1838 },
+  [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x4d3e5e, lateral: 0x3a2c4a },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
   [BLOCO.LA]:        { nome: 'Lã',        solido: true,  transp: false, emiteLuz: 0,  cor: 0xFAFAFA, lateral: 0xEEEEEE },
   [BLOCO.TOCHA]:     { nome: 'Tocha',     solido: false, transp: true,  emiteLuz: 13, cor: 0xFFB300, lateral: 0xFF6F00 },
   [BLOCO.BAU]:       { nome: 'Baú',       solido: true,  transp: false, emiteLuz: 0,  cor: 0x8B5A2B, lateral: 0x6D4C41 },
   [BLOCO.FORNALHA]:  { nome: 'Fornalha',  solido: true,  transp: false, emiteLuz: 0,  cor: 0x6E6E6E, lateral: 0x424242 },
   [BLOCO.CAMA]:      { nome: 'Cama',      solido: true,  transp: false, emiteLuz: 0,  cor: 0xE53935, lateral: 0xC62828 },
+  [BLOCO.BEDROCK]:   { nome: 'Bedrock',   solido: true,  transp: false, emiteLuz: 0,  cor: 0x555555, lateral: 0x4a4a4a },
 };
 const ICONE = {
   [BLOCO.GRAMA]: '🌿', [BLOCO.TERRA]: '🟫', [BLOCO.PEDRA]: '🪨',
@@ -91,6 +93,7 @@ const ICONE = {
   [BLOCO.AGUA]: '💧', [BLOCO.LAVA]: '🔥', [BLOCO.OBSIDIANA]: '⬣',
   [BLOCO.WORKBENCH]: '🪚', [BLOCO.LA]: '☁', [BLOCO.TOCHA]: '🕯',
   [BLOCO.BAU]: '📦', [BLOCO.FORNALHA]: '🔥', [BLOCO.CAMA]: '🛏',
+  [BLOCO.BEDROCK]: '⬛',
 };
 
 // Tipos de item (não-bloco)
@@ -279,11 +282,13 @@ class World {
         const h = this.alturaTerreno(gx, gz);
         for (let y = 0; y <= h; y++) {
           let b;
-          // Bedrock 3 camadas: y=0..2 sempre OBSIDIANA. Garantia
-          // dura de que cavernas (que carvam y>=4) NUNCA possam
-          // expor obsidiana via paredes laterais — sem isso, vista
-          // de cima atravessava o piso e o roxo dominava a tela.
-          if (y <= 2) b = BLOCO.OBSIDIANA;
+          // Bedrock 3 camadas: y=0..2 sempre BEDROCK (cinza estilo
+          // Minecraft). Antes era OBSIDIANA (roxo escuro) — vista de
+          // cima de cavernas/escavações grandes virava um borrão
+          // escuro indistinguível de "vazio", quebrando a leitura
+          // visual. Bedrock cinza com ruído fica legível e idêntico
+          // ao Minecraft real.
+          if (y <= 2) b = BLOCO.BEDROCK;
           else if (y <= 4) {
             const hh = hash2(gx, gz + y * 31, this.seed ^ 0xfee10) & 0xFF;
             b = hh < 14 ? BLOCO.LAVA : BLOCO.PEDRA;
@@ -599,7 +604,26 @@ function criarAtlasTexturas() {
   pintar(0, 0x4CAF50, 24, gramaTopoBordaSombra);                       // grama topo
   pintar(1, 0x8D6E63, 18, gramaLateralFaixa);                          // grama lateral
   pintar(2, 0x8D6E63, 18);                                             // terra
-  pintar(3, 0x9E9E9E, 22);                                             // pedra
+  pintar(3, 0x9E9E9E, 22, (i, c, cs) => {                              // pedra com chunks
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // 6 "rachaduras" claras irregulares + 4 escuras pra dar volume
+    const claros = ['#B0B0B0', '#A8A8A8', '#BFBFBF'];
+    const escuros = ['#7E7E7E', '#888888', '#6E6E6E'];
+    for (let k = 0; k < 6; k++) {
+      ctx.fillStyle = claros[k % 3];
+      ctx.fillRect(x0 + Math.floor(Math.random() * (cs - 2)),
+                   y0 + Math.floor(Math.random() * (cs - 2)),
+                   1 + Math.floor(Math.random() * 3),
+                   1 + Math.floor(Math.random() * 2));
+    }
+    for (let k = 0; k < 4; k++) {
+      ctx.fillStyle = escuros[k % 3];
+      ctx.fillRect(x0 + Math.floor(Math.random() * (cs - 1)),
+                   y0 + Math.floor(Math.random() * (cs - 1)),
+                   1 + Math.floor(Math.random() * 2), 1);
+    }
+  });
   pintar(4, 0xFFEB3B, 14);                                             // areia
   pintar(5, 0x6D4C41, 18, listrasMadeira);                             // madeira lateral
   pintar(6, 0x8D6E63, 18, aneisMadeiraTopo);                           // madeira topo
@@ -615,7 +639,29 @@ function criarAtlasTexturas() {
   pintar(16, 0x388E3C, 18);                                            // cacto
   pintar(17, 0x1976D2, 12);                                            // água
   pintar(18, 0xBF360C, 30);                                            // lava
-  pintar(19, 0x3a2148, 22);                                            // obsidiana (roxo escuro, não fluorescente)
+  pintar(19, 0x4d3e5e, 18, (i, c, cs) => {                             // obsidiana / bedrock chunky
+    // Pattern Minecraft-bedrock-style: pebbles claras + escuras +
+    // alguns "veios" pra que o piso não vire um void uniforme.
+    // Sem isso, exposto via cavernas/escavações o jogador percebe
+    // como "buraco preto" em vez de bloco rocha.
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    const claros = ['#6e5b85', '#7a6b95', '#5e4c75'];
+    const escuros = ['#332545', '#2a1d3b', '#3d2e55'];
+    for (let k = 0; k < 8; k++) {
+      ctx.fillStyle = claros[k % 3];
+      ctx.fillRect(x0 + Math.floor(Math.random() * (cs - 2)),
+                   y0 + Math.floor(Math.random() * (cs - 2)),
+                   1 + Math.floor(Math.random() * 3),
+                   1 + Math.floor(Math.random() * 2));
+    }
+    for (let k = 0; k < 5; k++) {
+      ctx.fillStyle = escuros[k % 3];
+      ctx.fillRect(x0 + Math.floor(Math.random() * (cs - 1)),
+                   y0 + Math.floor(Math.random() * (cs - 1)),
+                   1 + Math.floor(Math.random() * 2), 1);
+    }
+  });
   pintar(20, 0x4E342E, 18, listrasMadeira);                            // workbench lateral
   pintar(21, 0x6D4C41, 18, (i, c, cs) => {                             // workbench topo
     aneisMadeiraTopo(i, c, cs);
@@ -684,7 +730,30 @@ function criarAtlasTexturas() {
   });
   // Cama lateral (madeira marrom)
   pintar(28, 0x8D6E63, 18, listrasMadeira);
-  next = 29;
+  // Bedrock: cinza escuro com manchas mais escuras (rochoso, idêntico
+  // ao Minecraft real). Ruído alto pra dar variação visível mesmo de
+  // longe — essencial pra que o piso do mundo não pareça "vazio".
+  pintar(29, 0x555555, 30, (i, c, cs) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x0 = col * cs, y0 = row * cs;
+    // Manchas escuras (carvão/falhas)
+    ctx.fillStyle = '#2e2e2e';
+    for (let k = 0; k < 10; k++) {
+      const x = x0 + Math.floor(Math.random() * cs);
+      const y = y0 + Math.floor(Math.random() * cs);
+      const w = 1 + Math.floor(Math.random() * 2);
+      const h = 1 + Math.floor(Math.random() * 2);
+      ctx.fillRect(x, y, w, h);
+    }
+    // Lascas claras
+    ctx.fillStyle = '#7a7a7a';
+    for (let k = 0; k < 6; k++) {
+      const x = x0 + Math.floor(Math.random() * cs);
+      const y = y0 + Math.floor(Math.random() * cs);
+      ctx.fillRect(x, y, 1, 1);
+    }
+  });
+  next = 30;
 
   const M = {};
   M[BLOCO.GRAMA]     = cell(0, 1, 2);
@@ -711,6 +780,7 @@ function criarAtlasTexturas() {
   M[BLOCO.BAU]       = cell(24, 24, 24);  // mesma textura todas faces
   M[BLOCO.FORNALHA]  = cell(26, 25, 26);  // topo limpo, lateral com fogo
   M[BLOCO.CAMA]      = cell(27, 28, 28);
+  M[BLOCO.BEDROCK]   = cell(29, 29, 29);
 
   // === Pinta células ainda não usadas com cinza neutro ===
   // O canvas começa transparente-preto. O alpha-fix abaixo força
@@ -1107,10 +1177,13 @@ class Renderer {
 
     // === AO: força do escurecimento por vértice ===
     // ao=3 (sem oclusão) → fator 1.00. ao=0 (canto fechado) → fator
-    // 0.62. Range 0.62..1.0 — escurecimento perceptível em cantos
-    // sem afundar pra preto. Calibrado pra casar com piso emissive
+    // 0.72. Range 0.72..1.0 — escurecimento sutil em cantos sem
+    // afundar pra preto. Antes (0.62) os cantos viravam quase pretos
+    // em blocos escuros (obsidiana), reforçando a percepção de "void"
+    // — usuário interpretava o canto AO como se o bloco estivesse
+    // transparente / vazio. Calibrado pra casar com piso emissive
     // (0.20) + ambient/hemi/sol existentes.
-    const AO_FACTOR = [0.62, 0.78, 0.90, 1.00];
+    const AO_FACTOR = [0.72, 0.84, 0.93, 1.00];
 
     const addFace = (transp, faceShade, uvIdx, faceIdx, sx, sy, sz,
                      x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
