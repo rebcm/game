@@ -13,6 +13,26 @@ html, body {
   overscroll-behavior: none;
 }
 
+/* === Fonte pixelada estilo Minecraftia ===
+   Usa "Press Start 2P" do Google Fonts quando disponível, com fallback
+   para fontes monospace pixeladas do sistema. As classes .pixel-font
+   recebem essa fonte; o resto do site usa system-ui pra legibilidade. */
+.pixel-font, #boot h1, #boot h2, #boot button#play, #morte h2,
+#pause-menu h2, .pause-btn, #f3-debug, #topo, .bar, .slot .qtd,
+.painel-header, #xp-nivel, #criativo-busca, #tooltip {
+  font-family: "Press Start 2P", "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
+  font-feature-settings: "kern" 0, "liga" 0;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+}
+/* Slots e ícones com pixel-art rendering — sem antialiasing nas bordas. */
+.slot, #hotbar, .armor-slot, .fornalha-slot, #vinheta, #flash-dano,
+#overlay-underwater, .criativo-aba {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
 #game {
   display: block;
   width: 100vw;
@@ -791,6 +811,244 @@ kbd {
     justify-content: center;
     z-index: 9000;
   }
+}
+
+/* === Vinheta nas bordas (estilo Minecraft) ===
+   Escurecimento sutil radial para focar a atenção no centro. */
+#vinheta {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0) 50%,
+    rgba(0,0,0,0.35) 100%);
+  z-index: 5;
+}
+
+/* === Flash vermelho de dano ===
+   Quando player.hp diminui, addClass('show') por ~250ms. */
+#flash-dano {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+    rgba(180,0,0,0) 30%,
+    rgba(180,0,0,0.55) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+  z-index: 6;
+}
+#flash-dano.show { opacity: 1; transition: opacity 0.05s ease-in; }
+
+/* HP <= 4 (2 corações): pulse vermelho lento na vinheta. */
+#vinheta.low-hp {
+  animation: lowHpPulse 1.2s ease-in-out infinite;
+}
+@keyframes lowHpPulse {
+  0%, 100% { background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0) 40%, rgba(120,0,0,0.45) 100%); }
+  50% { background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0) 30%, rgba(180,0,0,0.65) 100%); }
+}
+
+/* === Overlay underwater (azul translúcido) === */
+#overlay-underwater {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(20,80,180,0.32) 0%,
+    rgba(40,120,220,0.40) 100%);
+  display: none;
+  z-index: 4;
+}
+#overlay-underwater.show { display: block; }
+
+/* === F3 debug overlay (toggle por F3) === */
+#f3-debug {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 6px 10px;
+  border-radius: 0;
+  font-size: 10px;
+  font-family: "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  line-height: 1.5;
+  z-index: 110;
+  /* Sobrepõe o #topo quando ativo */
+  pointer-events: none;
+  max-width: 380px;
+  border-left: 2px solid #66BB6A;
+}
+#f3-debug.show { display: block; }
+#f3-debug .f3-titulo {
+  color: #FFD700;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+#f3-debug div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* === Barra de ar/oxigênio (visível só submerso) === */
+#ar-wrap {
+  display: flex;
+  align-items: center;
+}
+#ar.bar span { color: #4FC3F7; }
+
+/* === Pause menu === */
+#pause-menu {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 30, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+  backdrop-filter: blur(2px);
+}
+.pause-box {
+  background: rgba(20, 20, 38, 0.96);
+  padding: 32px 48px;
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  text-align: center;
+  min-width: 320px;
+}
+.pause-box h2 {
+  font-size: 18px;
+  color: #FFD700;
+  margin: 0 0 24px;
+  letter-spacing: 1px;
+}
+.pause-btn {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px 16px;
+  background: rgba(60, 60, 80, 0.9);
+  color: #fff;
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  border-radius: 0;
+  font-size: 12px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+  transition: background 0.12s;
+}
+.pause-btn:hover { background: rgba(100, 100, 130, 0.95); }
+.pause-btn:active {
+  border-color: rgba(0,0,0,0.65) rgba(255,255,255,0.45) rgba(255,255,255,0.45) rgba(0,0,0,0.65);
+}
+.pause-creditos {
+  margin-top: 20px;
+  font-size: 8px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.5px;
+}
+
+/* === Tela de morte enriquecida === */
+#morte-respawn {
+  margin-top: 18px;
+  padding: 12px 36px;
+  background: rgba(60, 60, 80, 0.9);
+  color: #fff;
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  font-size: 12px;
+  font-family: "Press Start 2P", "Consolas", monospace;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 1px;
+}
+#morte-respawn:hover { background: rgba(100, 100, 130, 0.95); }
+
+/* === Tooltip de hover em item === */
+#tooltip {
+  position: fixed;
+  background: rgba(15, 15, 30, 0.95);
+  border: 1px solid #6c63ff;
+  padding: 6px 10px;
+  font-size: 10px;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;
+  z-index: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+#tooltip .tt-nome { font-weight: bold; color: #fff; }
+#tooltip .tt-tipo { color: #aaa; font-size: 9px; }
+#tooltip .tt-tier { color: #FFD700; font-size: 9px; }
+#tooltip .tt-defesa { color: #4FC3F7; font-size: 9px; }
+#tooltip .tt-nutri { color: #FF8A65; font-size: 9px; }
+
+/* === Painel inventário criativo === */
+#criativo-abas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.criativo-aba {
+  width: 38px; height: 38px;
+  background: rgba(0,0,0,0.4);
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.25) rgba(0,0,0,0.55) rgba(0,0,0,0.55) rgba(255,255,255,0.25);
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+.criativo-aba:hover { background: rgba(80,80,100,0.6); }
+.criativo-aba.ativa {
+  background: rgba(255, 215, 0, 0.20);
+  border-color: #FFD700 rgba(0,0,0,0.55) rgba(0,0,0,0.55) #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.35) inset;
+}
+#criativo-busca {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid #66BB6A;
+  color: #fff;
+  font-size: 10px;
+  margin-bottom: 8px;
+  outline: none;
+}
+#criativo-busca:focus { border-color: #FFD700; box-shadow: 0 0 6px #FFD70044; }
+#criativo-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 44px);
+  gap: 4px;
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  padding: 4px;
+  background: rgba(0,0,0,0.2);
+}
+#criativo-grid .slot { width: 44px; height: 44px; cursor: pointer; }
+#criativo-grid .slot:hover {
+  outline: 2px solid #FFD700;
+  background: rgba(255, 215, 0, 0.18);
+}
+#criativo-hotbar {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #ffffff22;
+}
+#criativo-hotbar .slot { width: 44px; height: 44px; }
+
+/* === Nuvens em movimento (CSS pure, fundo do boot) === */
+@keyframes nuvensCorrer {
+  from { background-position: 0 0; }
+  to   { background-position: -800px 0; }
 }
 
 /* Telas pequenas: hotbar mais compacta — slots menores mas mantendo

@@ -1,16 +1,32 @@
-# rebcm
+# 🧊 Construção Criativa — Versão Flutter 2D (Legado)
 
-A new Flutter project.
+**Autora:** Rebeca Alves Moreira
 
-## Getting Started
+> ⚠️ **Esta é a versão antiga em modo manutenção.** A versão atual em produção é Three.js, em [`../web3d/`](../web3d/).
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Sobre
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Pasta `app/` contém o wrapper Flutter da versão 2D isométrica do jogo. O motor real fica em [`../lib/`](../lib/).
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Esta versão segue as regras originais do projeto: **modo criativo puro**, sem mobs, sem morte, sem fome.
+
+## Como rodar
+
+```bash
+flutter pub get
+dart analyze --no-fatal-warnings
+flutter run
+```
+
+## Build web
+
+```bash
+flutter build web --release --base-href /
+# Output: app/build/web/
+```
+
+## Documentação
+
+Veja `../README.md` para a documentação completa do projeto, incluindo a versão Three.js atual.

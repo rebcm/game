@@ -1,19 +1,57 @@
-# Checklist de Validação de Documentação
+# ✅ Checklist de QA da Documentação
 
-## Critérios de Aceitação
+**Projeto:** Construção Criativa da Rebeca
+**Autora:** Rebeca Alves Moreira
 
-1. **Formatação correta**: Verificar se a formatação Markdown está correta e consistente.
-2. **Links válidos**: Verificar se todos os links presentes no documento estão válidos e apontam para recursos existentes.
-3. **Conteúdo claro e conciso**: Avaliar se o conteúdo é claro, conciso e fácil de entender.
-4. **Ortografia e gramática**: Verificar se o texto está livre de erros de ortografia e gramática.
-5. **Consistência**: Verificar se a terminologia e o estilo são consistentes ao longo do documento.
+Critérios para validar qualquer arquivo `.md` antes de mergear.
 
-## Guia de Uso
+---
 
-1. **Executar o workflow**: Ao criar ou atualizar um arquivo `.md`, o workflow `Docs QA Checklist` será executado automaticamente.
-2. **Revisar os resultados**: Verificar os resultados da validação no log do workflow.
-3. **Corrigir problemas**: Corrigir quaisquer problemas identificados durante a validação.
+## 📋 Critérios Obrigatórios
 
-## Implementação
+| # | Critério | Como verificar |
+|---|----------|----------------|
+| 1 | **Reflete o estado atual** | Versão atual é Web3D (Three.js); não falar de PassDriver, OpenStreetMap, ou Flutter como única tecnologia |
+| 2 | **Em português brasileiro** | Sem trechos em inglês exceto APIs ou termos técnicos consagrados |
+| 3 | **Autoria preservada** | "Rebeca Alves Moreira" mencionada quando relevante |
+| 4 | **Links válidos** | Caminhos relativos resolvem para arquivos existentes |
+| 5 | **Comandos funcionam** | Comandos shell de exemplo testados localmente |
+| 6 | **Formatação consistente** | Headers em ordem hierárquica, listas indentadas, tabelas alinhadas |
+| 7 | **Sem TODO ou seções vazias** | Conteúdo concreto, não placeholder |
+| 8 | **Ortografia correta** | Sem typos óbvios |
 
-O checklist de validação será implementado como parte do workflow de CI/CD, utilizando a ferramenta de validação Markdown configurada para verificar os critérios de aceitação definidos.
+---
+
+## 🛠 Validação automática
+
+Por enquanto, validação é manual via review humana. No futuro pode-se adicionar:
+
+- `markdownlint` no CI/CD.
+- Link checker (`lychee` ou `markdown-link-check`).
+- Spell checker em PT-BR.
+
+---
+
+## 📚 Documentos Críticos
+
+Estes precisam estar **sempre atualizados**:
+
+- [`README.md`](README.md) — visão geral pública.
+- [`AGENTS.md`](AGENTS.md) — regras para agentes de IA.
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — arquitetura técnica.
+- [`docs/walkthrough.md`](docs/walkthrough.md) — guia jogável.
+- [`docs/SETUP.md`](docs/SETUP.md) — setup de dev.
+- [`docs/deploy/procedimento-deploy.md`](docs/deploy/procedimento-deploy.md) — fluxo de deploy.
+- [`docs/CLAUDE.md`](docs/CLAUDE.md) — contexto para agentes IA.
+- [`docs/blocos/README.md`](docs/blocos/README.md) — catálogo de blocos.
+- [`docs/biomas.md`](docs/biomas.md) — geração do mundo.
+
+---
+
+## 📂 Documentos Legados
+
+Arquivos em `assets/docs/`, `docs/checklists/*`, `docs/criterios_aceitacao/*`, e diversos sub-diretórios contêm **checklists e templates herdados** de fases anteriores do projeto. Eles não são mais críticos para o jogo, mas ficam no repo como histórico de processo. Não bloqueiam mergeações novos.
+
+---
+
+*Atualizado em maio/2026.*

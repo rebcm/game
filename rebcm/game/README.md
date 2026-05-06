@@ -1,44 +1,48 @@
-# Rebeca Criativa
+# 🧱 Construção Criativa da Rebeca
 
-Jogo de construção criativa inspirado no Minecraft, desenvolvido para crianças.
+**Autora:** Rebeca Alves Moreira
 
-## Descrição
+> Esta pasta é um sub-diretório histórico. A documentação principal e atualizada está na raiz do projeto.
 
-Rebeca Criativa é um jogo de construção criativa que permite às crianças criar e explorar mundos virtuais.
+---
 
-## Screenshots
+## 📚 Documentação Principal
 
-[Inserir screenshots]
+Veja os documentos atualizados na raiz do repositório:
 
-## Instruções de Instalação
+- **[README.md](../../README.md)** — visão geral completa do jogo
+- **[AGENTS.md](../../AGENTS.md)** — regras para agentes de desenvolvimento
+- **[ARCHITECTURE.md](../../ARCHITECTURE.md)** — arquitetura técnica
+- **[docs/walkthrough.md](../../docs/walkthrough.md)** — passo-a-passo do jogo
+- **[docs/SETUP.md](../../docs/SETUP.md)** — setup de desenvolvimento
 
-1. Instale o Flutter: https://docs.flutter.dev/get-started/install
-2. Instale o Cloudflare Wrangler: https://developers.cloudflare.com/workers/cli-wrangler/install-update
+---
 
-## Guia de Desenvolvimento
+## 🎮 Jogar
 
-1. Clone o repositório: git clone https://github.com/rebcm/game.git
-2. Instale as dependências: flutter pub get
-3. Execute o jogo: flutter run
+A versão online está em: **https://construcao-criativa.pages.dev**
 
-## Arquitetura Técnica
+## 🛠 Tecnologia atual
 
-O jogo é desenvolvido utilizando Flutter para a interface gráfica e Cloudflare Workers para o backend.
+- **Versão ativa:** Three.js + WebGL puro em [`../../web3d/`](../../web3d/)
+- **Versão legada:** Flutter 2D em [`../../app/`](../../app/) e [`../../lib/`](../../lib/)
 
-## Lista de Blocos Disponíveis
+---
 
-* [Inserir lista de blocos]
+## 🎯 Controles
 
-## Controles do Jogo
+| Tecla | Ação |
+|-------|------|
+| `W A S D` | Mover |
+| `Mouse` | Olhar |
+| `Espaço` | Pular / subir |
+| `Shift` | Sprintar / descer |
+| `Click esq.` | Quebrar bloco |
+| `Click dir.` | Colocar bloco |
+| `E` | Inventário |
+| `F3` | Debug overlay |
+| `Esc` | Pausar |
 
-* WASD: movimento
-* Mouse: rotação da câmera
-* Touch: controle de toque
+---
 
-## Roadmap de Funcionalidades
-
-* [Inserir roadmap]
-
-## Créditos
-
-Desenvolvido por [Seu Nome] e inspirado no Minecraft.
+*Atualizado em maio/2026.*

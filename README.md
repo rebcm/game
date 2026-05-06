@@ -1,207 +1,289 @@
 # 🧱 Construção Criativa da Rebeca
 
-> Jogo voxel isométrico no estilo Minecraft — modo criativo puro, feito com Flutter + Flame.
+> Jogo voxel inspirado no Minecraft, em primeira/terceira pessoa, rodando 100% no navegador. Mundo infinito por chunks, modos Criativo e Sobrevivência, mobs, crafting, fornalha, baú, ciclo dia/noite e muito mais.
 
 **🎮 [JOGAR AGORA](https://construcao-criativa.pages.dev)**
-
----
-
-## Sobre o Jogo
-
-Construção Criativa da Rebeca é um jogo de blocos 3D com visão isométrica, inspirado no modo criativo do Minecraft. O objetivo é simples: explore o mundo gerado proceduralmente, construa livremente, quebre blocos e deixe a criatividade fluir.
-
-Não há inimigos, não há fome, não há morte. Apenas construção.
 
 **Autora:** Rebeca Alves Moreira
 
 ---
 
-## 🎮 Jogar Online
+## 🌟 Sobre o Jogo
 
-Acesse diretamente no navegador, sem instalação:
+Construção Criativa é um jogo de blocos 3D inspirado no Minecraft, escrito do zero em **JavaScript com Three.js + WebGL**. Roda inteiro no navegador — sem instalação, sem Flash, sem cliente nativo. Funciona em desktop, celular e tablet.
 
-**[https://construcao-criativa.pages.dev](https://construcao-criativa.pages.dev)**
+Você pode escolher entre dois modos:
 
-Funciona em celular, tablet e desktop. Recomendado no modo paisagem (landscape).
+- **🦅 Modo Criativo** — voo livre, blocos infinitos, sem dano, inventário com abas e busca para colocar qualquer bloco/item da Rebeca.
+- **⚔ Modo Sobrevivência** — gravidade, fome, oxigênio submerso, dano de queda, lava, cacto, mobs hostis. Você junta recursos, fabrica ferramentas e armaduras, cozinha comida e sobrevive à noite.
+
+Alterne entre eles a qualquer momento com a tecla `G`.
 
 ---
 
-## Funcionalidades
+## 🚀 Como Jogar
+
+Acesse o navegador e clique em **JOGAR EM TELA CHEIA**:
+
+**[https://construcao-criativa.pages.dev](https://construcao-criativa.pages.dev)**
+
+Funciona em qualquer dispositivo moderno (Chrome, Firefox, Safari, Edge). Em celular e tablet, recomenda-se modo paisagem.
+
+---
+
+## ✨ Funcionalidades
 
 ### 🌍 Mundo
-- Mapa **32 × 32 × 20 blocos** gerado proceduralmente com variação de altura natural
-- Terreno suave com ondas senoidais em múltiplas frequências
-- Superfícies diferenciadas por altitude: **areia** (baixo), **grama** (médio), **neve** (alto)
-- **18 árvores** com troncos e copas esféricas distribuídas pelo mapa
-- **Minérios** (ouro e diamante) escondidos na pedra underground
-- Camadas geológicas realistas: grama → terra → pedra
+- **Mundo voxel infinito**, gerado por chunks de 16×16×64 sob demanda enquanto você caminha.
+- Terreno com **areia, grama, neve e pedra**, distribuído por altitude e ruído (paridade visual com Minecraft).
+- **Bedrock** indestrutível nas três camadas inferiores.
+- **Cavernas subterrâneas** geradas por ruído 3D.
+- **Minérios** distribuídos por profundidade: carvão (raso) → ferro → ouro → diamante (fundo).
+- **Estruturas espalhadas**: árvores, cabanas com workbench, cactos no deserto, lagos de lava.
+- **Ciclo dia/noite real**, durando 4 minutos por dia, com sol e lua animados em arco e nuvens em movimento.
 
-### 🧱 Blocos (13 tipos)
+### 🧱 26 Tipos de Bloco
 
-| Bloco | Ícone | Cor | Descrição |
-|-------|-------|-----|-----------|
-| Grama | 🌿 | Verde | Superfície dos campos |
-| Terra | 🟫 | Marrom | Solo abaixo da grama |
-| Pedra | 🪨 | Cinza | Rocha base do terreno |
-| Areia | 🏖 | Amarelo | Praias e vales |
-| Madeira | 🪵 | Bege | Troncos das árvores |
-| Folha | 🌳 | Verde-escuro | Copa das árvores |
-| Tijolo | 🧱 | Vermelho-tijolo | Construção clássica |
-| Vidro | 🔷 | Azul translúcido | Janelas e decoração |
-| Ouro | 🥇 | Dourado | Minério raro |
-| Diamante | 💎 | Ciano | Minério mais raro |
-| Luz | 💡 | Amarelo-claro | Bloco de iluminação |
-| Neve | ❄️ | Branco | Topo das montanhas |
+| 🧱 Construção | 🌿 Natureza | 💎 Minérios | 💧 Líquidos | 🪟 Decoração | ⚒ Funcionais |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| Tijolo, Pedra, Madeira | Grama, Terra, Areia, Folha, Cacto, Neve | Carvão, Ferro, Ouro, Diamante, Obsidiana | Água, Lava | Vidro, Lã, Tocha, Cama, Luz | Workbench, Baú, Fornalha, Bedrock |
 
-### 🖼️ Renderização Isométrica
-- **4 ângulos de câmera** isométrica: **NE · SE · SW · NW** — gire para ver o mundo de todos os lados
-- **Algoritmo do pintor** (painter's algorithm) para ordem de renderização correta em profundidade
-- **Culling de faces ocultas**: apenas as faces visíveis de cada bloco são desenhadas
-- **Culling de frustum**: blocos fora da tela são ignorados (performance otimizada)
-- **3 faces com sombreamento**: topo (claro), esquerda (escuro), direita (médio)
-- **Céu gradiente** do azul profundo ao azul claro, com nuvens decorativas
-- **Sombra suave** sob a personagem com efeito blur
+Cada bloco tem **textura procedural pixelada** estilo Minecraft, gerada em tempo real num atlas.
 
 ### 👧 Personagem — Rebeca
-- Avatar em forma de losango rosa com olhos e detalhe de roupa
-- **Modo voo criativo** permanente — sem gravidade, sobe e desce livremente
-- Movimento suave em todas as direções
-- **Colisão com blocos** detectada por raio de 1 bloco
-- **Raycasting de mira**: detecta o bloco alvo na direção do movimento (alcance 6 blocos)
-- A direção do personagem é atualizada automaticamente pelo joystick
+- Movimento WASD com **sprint** (Shift), **agachar** (Ctrl) e **pulo** (Espaço).
+- **Voo livre** no Criativo (Espaço sobe, Shift desce).
+- **Câmera 1ª/3ª pessoa** com `F5`.
+- **Animação de mão** com swing realista ao quebrar/colocar.
+- **FOV pulse** ao sprintar (paridade Minecraft).
 
-### ⚒️ Mecânicas de Jogo
-- **Colocar bloco**: aperte 🧱 para colocar o bloco selecionado sobre o bloco alvo
-- **Quebrar — instantâneo**: toque rápido em ⛏ remove o bloco imediatamente
-- **Quebrar — progressivo**: segure ⛏ (long press) para quebrar com animação de 4 estágios
-- **Bloco alvo destacado**: outline branco indica qual bloco será afetado
-- **Animação de rachaduras**: 4 estágios de crack durante a quebra progressiva
+### ⚔ Mobs (9 tipos)
+- **Pacíficos**: 🐄 vaca, 🐔 galinha, 🐖 porco, 🐑 ovelha, 🐺 lobo (que ataca hostis).
+- **Hostis** (spawnam à noite): 🧟 zumbi, 💀 esqueleto, 🕷 aranha, 💥 creeper.
+- Modelos 3D com cabeça, corpo, braços, pernas animadas estilo Minecraft.
+- **Drops realistas**: vaca solta carne crua + couro, galinha solta ovo, esqueleto solta paus, etc.
 
-### 🖥️ Interface (HUD)
-- **Mira central**: crosshair com sombra sempre visível no centro da tela
-- **Mão do jogador**: cubo isométrico mini no canto inferior direito mostrando o bloco selecionado
-- **Hotbar com 8 slots**: base da tela com ícone, cor e nome do bloco ativo
-- **Coordenadas em tempo real**: posição X, Y, Z no canto superior esquerdo
-- **Indicador de câmera**: ângulo atual (NE/SE/SW/NW) com botão de rotação 🔄
+### 🎒 Inventário e Crafting
+- **Hotbar de 9 slots** (paridade Minecraft).
+- **Inventário** 27 slots + 4 slots de armadura (capacete/peitoral/perneiras/botas).
+- **Crafting** com 25+ receitas: pranchas, paus, picaretas (4 tiers), espadas (3 tiers), armaduras (couro/ferro/diamante), workbench, baú, fornalha, cama, tochas.
+- **Workbench** habilita receitas avançadas quando próximo.
+- **Fornalha** cozinha carne crua → cozida (ou minérios → lingotes) com combustível.
+- **Baú** armazena 27 slots.
+- **Cama** pula a noite quando você dorme (restaura HP).
+- **Inventário Criativo** com abas (🧱 construção, 🌿 natureza, 💎 minérios, 💧 líquidos, 🪟 decoração, ⛏ ferramentas, ⚔ combate, 🍖 comida) e busca por nome.
+
+### ⚒ Ferramentas e Combate
+- **Picaretas em 4 tiers** (madeira → pedra → ferro → diamante). Tier mais alto = mais rápido + acessa minérios mais raros.
+- **Espadas em 3 tiers** (madeira → pedra → ferro). Dano = 2 + tier × 2.
+- **Armadura em 3 tiers** com até 21 pontos de defesa total (paridade Minecraft).
+- **XP** ao minerar minérios e derrotar mobs, com curva de níveis.
+
+### 🩸 Sistema de Sobrevivência
+- **20 HP** (10 corações), com regeneração quando bem alimentado.
+- **20 pontos de fome** com sistema de **saturação** (paridade Minecraft).
+- **20 pontos de oxigênio** (10 bolhas) submerso.
+- **Dano por queda** (>4 blocos), lava (3/0.5s), cacto (1/0.5s), afogamento (2/1s).
+- **Sneak (Ctrl)** impede cair de borda.
+- **Swimming**: água reduz velocidade a 55%, gravidade a 12%; bracejar pra subir.
+- **Item drops voando**: blocos quebrados e drops de mobs viram entidades visíveis flutuantes que você coleta a 1.5m.
+
+### 🖥️ HUD e UI
+- **Crosshair** estilo Minecraft (cruz pixelada com inverter).
+- **Barras visuais**: ❤ HP (corações), 🍗 fome, 💎 XP com nível, 🫧 ar (submerso).
+- **Vinheta** nas bordas + **flash vermelho** ao receber dano + **pulse low-HP** quando crítico.
+- **Tela de morte** com causa formatada + botão Respawn.
+- **Pause menu** (ESC) com Voltar / Salvar / Modo / Sair.
+- **F3 debug overlay** com XYZ, chunk, facing, light level, biome, FPS, MB de heap, dia/hora, contagem de entidades.
+- **Tooltips** ao passar o mouse em itens (nome, tier, defesa, nutrição).
+- **Highlight do bloco mirado** com outline preto+branco e cracks progressivos durante a quebra.
+
+### 🎵 Áudio
+- **SFX procedurais** via Web Audio: passos por material (grama, pedra, madeira, areia, água, folha, neve, metal, vidro), quebrar, colocar, atacar, hit, comer, splash, bolha, level-up, pickup, explosão.
+- **Música ambiente** em escala pentatônica C-maior, em loop solto.
+
+### 💾 Save / Load
+- **Autosave a cada 30 segundos** no `localStorage`.
+- Salva: posição, HP, fome, XP, nível, modo, hora do dia, inventário, armadura, blocos modificados, baús e fornalhas.
+- Botão **💾 Salvar** ou opção pelo menu de pause.
 
 ---
 
 ## 🕹️ Controles
 
-### Celular / Tablet (Touch)
-| Controle | Ação |
-|----------|------|
-| 🕹️ Joystick esquerdo | Mover Rebeca em todas as direções |
-| ▲ (topo direito) | Subir (voar) |
-| ▼ (topo direito) | Descer (voar) |
-| 🧱 Colocar | Colocar bloco selecionado |
-| ⛏ Quebrar (toque rápido) | Quebrar bloco instantaneamente |
-| ⛏ Quebrar (segurar) | Quebrar com animação progressiva |
-| 🔄 (canto inferior esq.) | Rotacionar câmera → NE → SE → SW → NW |
-| Hotbar (base da tela) | Selecionar tipo de bloco |
+### 🖱 Desktop (Teclado + Mouse)
 
-### Desktop / Web (Teclado)
 | Tecla | Ação |
 |-------|------|
-| `W` / `↑` | Mover para frente (NE) |
-| `S` / `↓` | Mover para trás (SW) |
-| `A` / `←` | Mover para esquerda (NW) |
-| `D` / `→` | Mover para direita (SE) |
-| `Espaço` | Subir (voar) |
-| `Shift Esq.` | Descer (voar) |
-| `R` | Rotacionar câmera isométrica |
+| `Mouse` | Olhar (pointer lock) |
+| `W A S D` | Mover |
+| `Espaço` | Pular / subir (Criativo) |
+| `Shift` | Sprintar (Sobrevivência) / descer (Criativo) |
+| `Ctrl` | Agachar (sneak) |
+| `Click esq.` | Quebrar bloco (segurar para quebra progressiva) |
+| `Click dir.` | Colocar bloco / interagir |
+| `Scroll` ou `1`–`9` | Trocar slot da hotbar |
+| `E` | Inventário (Criativo abre painel com abas) |
+| `C` | Painel de Crafting |
+| `F` | Atacar mob mais próximo |
+| `Q` | Comer item da hotbar |
+| `G` | Alternar Criativo / Sobrevivência |
+| `T` | Alternar transparência de blocos |
+| `F5` | Trocar 1ª / 3ª pessoa |
+| `F3` | Tela de debug |
+| `Esc` | Pausar |
+
+### 📱 Celular / Tablet (Touch)
+
+| Controle | Ação |
+|----------|------|
+| 🕹️ Joystick (esq.) | Mover (knob na borda = sprint) |
+| ☝️ Arrastar (dir.) | Olhar |
+| ↑ | Pular |
+| ↓ | Descer (só no Criativo) |
+| ⛏ | Quebrar bloco (segurar) |
+| 🧱 | Colocar bloco |
+| ⚔ | Atacar mob |
+| 📦 ⚒ 🦅 💾 🪟 | Botões de inventário, craft, modo, salvar, transparência |
 
 ---
 
 ## 🛠️ Tecnologia
 
-| Componente | Tecnologia |
-|-----------|-----------|
-| Framework | [Flutter](https://flutter.dev) 3.24+ |
-| Game Engine | [Flame](https://flame-engine.org) ^1.18.0 |
-| Linguagem | Dart 3.0+ |
-| Renderização | Isométrica custom com painter's algorithm |
-| Geração de terreno | Sine-wave layered noise |
-| Build web | `flutter build web --release --base-href /` |
-| Deploy | [Cloudflare Pages](https://pages.cloudflare.com) |
-| CI/CD | GitHub Actions |
+| Componente | Stack |
+|------------|-------|
+| Renderização | [Three.js 0.165](https://threejs.org/) + WebGL |
+| Linguagem | JavaScript ES2022 (módulos nativos) |
+| Áudio | Web Audio API (SFX procedurais) |
+| Persistência | `localStorage` |
+| Build | **Sem build step** — `index.html` carrega `game.js` diretamente |
+| Cache busting | `__BUILD_VERSION__` substituído no deploy pelo timestamp |
+| Hospedagem | [Cloudflare Pages](https://pages.cloudflare.com) |
+| CI/CD | GitHub Actions + Wrangler |
 
-### Arquitetura do Código
+### 📂 Estrutura do Projeto
+
 ```
-app/lib/
-├── main.dart                          # Entrada: landscape + immersive mode
-├── constantes.dart                    # Dimensões isométricas, velocidades, alcances
-├── blocos/
-│   └── tipo_bloco.dart               # 13 blocos: enum + cores (3 faces) + propriedades
-├── mundo/
-│   └── mundo.dart                    # Grid 3D + geração procedural + árvores + minérios
-├── personagem/
-│   └── rebeca.dart                   # Movimento, direção, raycasting, progresso de quebra
-├── renderizador/
-│   └── renderizador_isometrico.dart  # Painter's algorithm, câmeras, highlight, mão, crosshair
-├── jogo/
-│   └── construcao_criativa.dart      # FlameGame: loop, teclado, TapCallbacks, ações
-└── ui/
-    └── controles_overlay.dart        # Joystick, botões, hotbar animada, HUD de coords
+game/
+├── web3d/                    # 🎮 VERSÃO ATUAL (Three.js)
+│   ├── index.html            # HTML + HUD + áudio inline
+│   ├── style.css             # Estilo pixel-perfect
+│   ├── game.js               # Engine 3D completo (~4200 linhas)
+│   └── manifest.json
+├── lib/                      # 🧊 Versão antiga Flutter 2D isométrico
+├── app/                      # Wrapper Flutter (compila lib/)
+├── docs/                     # Documentação técnica
+├── scripts/
+│   ├── deploy-web3d.sh       # Script de deploy Cloudflare Pages
+│   └── test-web3d-precheck.js # Smoke tests pré-deploy
+└── README.md                 # Você está aqui
 ```
+
+A pasta `web3d/` é a versão **atual e ativa**. Ela é totalmente standalone — pode ser servida por qualquer servidor estático.
 
 ---
 
-## 🚀 Build e Desenvolvimento Local
+## 🚀 Rodar Localmente
 
-### Pré-requisitos
-- Flutter SDK 3.24 ou superior
-- Dart 3.0+
+Requer apenas um servidor HTTP estático (qualquer um).
 
-### Executar
+### Opção 1 — Python
 ```bash
-git clone https://github.com/rebcm/game
-cd game/app
-
-flutter pub get
-dart analyze --no-fatal-warnings     # Zero erros obrigatório
-flutter run                          # Rodar em dispositivo/emulador
+cd web3d
+python3 -m http.server 8000
+# Acesse http://localhost:8000
 ```
 
-### Build Web
+### Opção 2 — Node
 ```bash
-flutter build web --release --base-href /
-# Output em: app/build/web/
+cd web3d
+npx serve .
 ```
+
+### Opção 3 — Live reload (desenvolvimento)
+```bash
+cd web3d
+npx live-server .
+```
+
+> **Importante:** o jogo precisa ser servido por HTTP (não `file://`) por causa de módulos ES e da política de pointer-lock dos browsers.
 
 ---
 
-## 🌐 Deploy Automático
+## ☁ Deploy
 
-A cada push para `main`, o GitHub Actions:
-1. Instala Flutter 3.24 stable
-2. Executa `flutter pub get`
-3. Valida com `dart analyze --no-fatal-warnings`
-4. Faz `flutter build web --release`
-5. Deploya automaticamente no **Cloudflare Pages**
+Deploy é feito via Cloudflare Pages com cache-busting automático.
+
+### Variáveis de ambiente
+Crie um `.env` na raiz baseado em `.env.example`:
+```bash
+CLOUDFLARE_API_TOKEN=seu_token_pages_edit
+CLOUDFLARE_ACCOUNT_ID=seu_account_id_32_hex
+```
+
+### Deploy manual
+```bash
+set -a; source .env; set +a
+./scripts/deploy-web3d.sh
+```
+
+O script:
+1. Copia `web3d/` para um diretório temporário.
+2. Substitui `__BUILD_VERSION__` pelo timestamp UTC atual.
+3. Valida sintaxe com `node --check`.
+4. Roda smoke tests pré-deploy (`scripts/test-web3d-precheck.js`).
+5. Publica via `wrangler pages deploy` no projeto `construcao-criativa`.
+
+### Deploy automático
+A cada push para `main`, o GitHub Actions executa o mesmo script automaticamente.
 
 **URL de produção:** [https://construcao-criativa.pages.dev](https://construcao-criativa.pages.dev)
 
 ---
 
-## 📋 Regras do Projeto
+## 📋 Filosofia do Projeto
 
-Este projeto segue regras invioláveis definidas em `AGENTS.md`:
+Este projeto foi construído com algumas regras simples:
 
-1. **Modo criativo puro** — sem sobrevivência, saúde, fome, morte ou mobs
-2. **Um único bioma** — sem portais, fases ou dimensões adicionais
-3. **Sem NPCs ou monstros** — a única personagem é a Rebeca
-4. **Código 100% funcional** — nenhum stub, TODO ou implementação parcial aceita
-5. **`dart analyze` sem erros** — obrigatório antes de qualquer commit
-6. **Autoria preservada**: `Constantes.autora = 'Rebeca Alves Moreira'`
+1. **Diversão primeiro.** O jogo deve ser estável e divertido para a Rebeca jogar.
+2. **Web puro.** Sem build step, sem dependências pesadas, sem WASM. Carrega rápido em qualquer celular.
+3. **Single-file engine.** Todo o motor 3D em `web3d/game.js` — fácil de auditar, refatorar e clonar.
+4. **Código que funciona.** Sem TODO, sem stub, sem implementação parcial. Cada feature roda.
+5. **Pixel-perfect Minecraft.** Quando possível, copiamos os números reais do Minecraft (15 níveis de luz, 20 HP, 20 fome, 64 stack, 4 tiers de ferramenta).
+6. **Autoria preservada:** Rebeca Alves Moreira aparece em todos os arquivos relevantes e na tela inicial.
+
+---
+
+## 🤝 Como Contribuir
+
+1. Faça fork do repositório.
+2. Trabalhe num branch novo: `git checkout -b feature/sua-ideia`.
+3. Garanta que `web3d/game.js` passa em `node --check` e que `scripts/test-web3d-precheck.js` está verde.
+4. Abra um Pull Request explicando o que mudou e por quê.
+5. Mantenha a paridade visual e mecânica com o Minecraft real quando possível.
+
+Veja também o [`AGENTS.md`](AGENTS.md) para regras específicas a agentes de desenvolvimento (Claude Code, Copilot, etc.).
 
 ---
 
 ## 🏆 Créditos
 
-**Autora e personagem principal:** Rebeca Alves Moreira  
-**Motor de jogo:** [Flame](https://flame-engine.org) + [Flutter](https://flutter.dev)  
-**Hospedagem:** [Cloudflare Pages](https://pages.cloudflare.com)  
+**Autora e personagem principal:** **Rebeca Alves Moreira**
+
+**Tecnologias:**
+- [Three.js](https://threejs.org/) (BSD-3) — engine 3D WebGL
+- [Cloudflare Pages](https://pages.cloudflare.com) — hospedagem
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) — deploy
+
+Inspirado no Minecraft (Mojang/Microsoft). Este é um projeto educacional independente, sem afiliação com a Mojang.
+
+---
+
+## 📜 Licença
+
+Projeto pessoal da Rebeca Alves Moreira. Todos os direitos reservados sobre o código próprio.
+
+Three.js mantém sua licença BSD-3. Texturas, sons e arte são gerados proceduralmente em tempo de execução.
 
 ---
 

@@ -1,13 +1,27 @@
-# Instruções para Agentes
+# Instruções para Agentes — Sub-diretório `rebcm/game/`
 
-Este repositório contém o código-fonte do jogo Rebeca Criativa.
+**Autora:** Rebeca Alves Moreira
 
-## Guia de Contribuição
+> Este sub-diretório é histórico. A documentação principal está na raiz.
 
-1. Leia o README.md para entender o projeto
-2. Abra uma issue para discutir suas alterações
-3. Envie um pull request com suas alterações
+---
 
-## Código de Conduta
+## 📚 Veja a documentação principal
 
-Seja respeitoso e profissional ao interagir com outros contribuidores.
+- [`../../AGENTS.md`](../../AGENTS.md) — regras completas para agentes
+- [`../../docs/CLAUDE.md`](../../docs/CLAUDE.md) — contexto rápido para Claude Code
+- [`../../README.md`](../../README.md) — visão geral
+
+---
+
+## 🎯 Resumo
+
+- **Versão ativa do jogo:** Three.js em [`../../web3d/`](../../web3d/)
+- **Não editar `app/lib/` (Flutter)** — é legado.
+- **Sem build step** — `index.html` carrega `game.js` direto.
+- **Validar com:** `cp web3d/game.js /tmp/check.mjs && node --check /tmp/check.mjs`
+- **Deploy:** `./scripts/deploy-web3d.sh` (precisa `.env` com Cloudflare creds).
+
+---
+
+*Atualizado em maio/2026.*

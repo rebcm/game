@@ -343,7 +343,23 @@
         colocar: () => tom({ freq: 280, dur: 0.08 }),
         atacar:  () => tom({ freq: 220, dur: 0.12, type: 'sawtooth', vol: 0.14 }),
         hit:     () => tom({ freq: 110, dur: 0.18, type: 'sawtooth', vol: 0.18 }),
-        passo:   () => ruido({ dur: 0.05, cutoff: 400, vol: 0.06 }),
+        // === Passos por material (paridade com Minecraft) ===
+        // Cada material usa frequência+cutoff diferente para o ruído filtrado.
+        // 'mat' é uma string: 'grama', 'pedra', 'madeira', 'areia', 'agua',
+        // 'folha', 'neve' — fallback é 'grama'. Defaults se nada for passado.
+        passo: (mat) => {
+          switch (mat) {
+            case 'pedra':   ruido({ dur: 0.07, cutoff: 1800, vol: 0.07 }); break;
+            case 'madeira': ruido({ dur: 0.06, cutoff: 700,  vol: 0.07 }); break;
+            case 'areia':   ruido({ dur: 0.08, cutoff: 250,  vol: 0.05 }); break;
+            case 'agua':    ruido({ dur: 0.10, cutoff: 200,  vol: 0.04 }); break;
+            case 'folha':   ruido({ dur: 0.05, cutoff: 1200, vol: 0.04 }); break;
+            case 'neve':    ruido({ dur: 0.06, cutoff: 500,  vol: 0.04 }); break;
+            case 'metal':   ruido({ dur: 0.04, cutoff: 3000, vol: 0.06 }); break;
+            case 'vidro':   tom({ freq: 1200, dur: 0.04, type: 'triangle', vol: 0.05 }); break;
+            default:        ruido({ dur: 0.05, cutoff: 400,  vol: 0.06 });
+          }
+        },
         comer:   () => {
           tom({ freq: 380, dur: 0.07, type: 'sine' });
           setTimeout(() => tom({ freq: 540, dur: 0.06, type: 'sine' }), 80);
@@ -352,6 +368,31 @@
           tom({ freq: 440, dur: 0.12, type: 'sine' });
           setTimeout(() => tom({ freq: 660, dur: 0.12, type: 'sine' }), 120);
           setTimeout(() => tom({ freq: 880, dur: 0.18, type: 'sine' }), 240);
+        },
+        // Som de splash ao entrar na água
+        splash: () => {
+          ruido({ dur: 0.25, cutoff: 600, vol: 0.12 });
+          setTimeout(() => ruido({ dur: 0.18, cutoff: 1200, vol: 0.08 }), 60);
+        },
+        // Bolha (debaixo d'água)
+        bolha: () => {
+          tom({ freq: 600 + Math.random() * 400, dur: 0.14, type: 'sine', vol: 0.05 });
+        },
+        // Subir nível
+        levelUp: () => {
+          tom({ freq: 523, dur: 0.10, type: 'sine', vol: 0.10 });
+          setTimeout(() => tom({ freq: 659, dur: 0.10, type: 'sine', vol: 0.10 }), 100);
+          setTimeout(() => tom({ freq: 784, dur: 0.18, type: 'sine', vol: 0.12 }), 200);
+        },
+        // Item pickup (jingle curto)
+        pickup: () => {
+          tom({ freq: 880, dur: 0.05, type: 'sine', vol: 0.06 });
+          setTimeout(() => tom({ freq: 1100, dur: 0.06, type: 'sine', vol: 0.05 }), 50);
+        },
+        // Boom de explosão
+        explosao: () => {
+          ruido({ dur: 0.6, cutoff: 200, vol: 0.30 });
+          setTimeout(() => ruido({ dur: 0.4, cutoff: 80, vol: 0.25 }), 40);
         },
       };
       // Música ambient: notas pentatônica C-major em loop solto.

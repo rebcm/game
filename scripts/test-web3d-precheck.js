@@ -342,13 +342,14 @@ t('window.rebcm.desbloquearAudio exposto',
 // UX polish Minecraft authenticity: footstep, hotbar toast, FOV sprint.
 // ---------------------------------------------------------------------
 grupo('UX Minecraft polish');
-t('Audio.passo() existe e chama sfx.passo',
-  /passo\(\)\s*\{\s*\(this\._sfx\(\)\.passo\s*\|\|/.test(game),
-  'window.rebcm.sfx.passo já existia mas nunca era chamado.');
+t('Audio.passo(mat) existe e delega para sfx.passo com material',
+  /passo\(mat\)[^\n]*this\._sfx\(\)\.passo[^\n]*\(mat\)/.test(game),
+  'Audio.passo agora aceita material (grama/pedra/madeira/etc) para variar o SFX.');
 t('Player tem distAndada accumulator',
   /this\.distAndada\s*=\s*0/.test(game));
-t('Player.atualizar acumula distAndada e dispara Audio.passo a ~0.45m',
-  /this\.distAndada\s*\+=\s*distH[\s\S]*?if\s*\(\s*this\.distAndada\s*>=\s*0\.45\s*\)[\s\S]*?Audio\.passo\(\)/.test(game));
+t('Player.atualizar acumula distAndada e dispara Audio.passo com material do bloco',
+  /this\.distAndada\s*\+=\s*distH[\s\S]*?if\s*\(\s*this\.distAndada\s*>=\s*passoLimiar\s*\)[\s\S]*?materialDeBloco\(bPe\)[\s\S]*?Audio\.passo\(this\.materialPasso\)/.test(game),
+  'Passo dispara o SFX correto baseado no material do bloco abaixo dos pés.');
 t('Inventario.selecionar emite toast com nome do bloco/item (slot não vazio)',
   /selecionar\(idx\)\s*\{[\s\S]*?BLOCO_INFO\[it\.b\]\?\.nome[\s\S]*?ITEM_INFO\[it\.i\]\?\.nome[\s\S]*?ui\.toast\(nome\)/.test(game),
   'Hotbar deve indicar o que está selecionado quando há item — Minecraft style.');

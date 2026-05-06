@@ -96,6 +96,27 @@ const ICONE = {
   [BLOCO.BEDROCK]: '⬛',
 };
 
+// Categoria de material de pisar — usada pra escolher SFX de passo
+// (paridade Minecraft: cada material soa diferente sob os pés).
+function materialDeBloco(b) {
+  switch (b) {
+    case BLOCO.GRAMA:    return 'grama';
+    case BLOCO.TERRA:    return 'grama'; // dirt soa próximo de grass em MC
+    case BLOCO.PEDRA: case BLOCO.TIJOLO: case BLOCO.OBSIDIANA: case BLOCO.BEDROCK: case BLOCO.CARVAO:
+                         return 'pedra';
+    case BLOCO.MADEIRA: case BLOCO.WORKBENCH: case BLOCO.BAU: case BLOCO.CAMA:
+                         return 'madeira';
+    case BLOCO.AREIA:    return 'areia';
+    case BLOCO.AGUA:     return 'agua';
+    case BLOCO.FOLHA: case BLOCO.LA: return 'folha';
+    case BLOCO.NEVE:     return 'neve';
+    case BLOCO.OURO: case BLOCO.FERRO: case BLOCO.DIAMANTE: case BLOCO.FORNALHA:
+                         return 'metal';
+    case BLOCO.VIDRO:    return 'vidro';
+    default:             return 'grama';
+  }
+}
+
 // Tipos de item (não-bloco)
 const ITEM = {
   CARNE_CRUA: 100, CARNE_COZIDA: 101, OVO: 102, CARNE_PODRE: 103,
@@ -1071,6 +1092,58 @@ class Renderer {
     this.scene.add(this.discoSol);
     this.scene.add(this.discoLua);
 
+    // === Nuvens em movimento (plano grande no céu, textura noise scrolling) ===
+    // Plano horizontal acima do mundo a y=70, com textura procedural de
+    // nuvens que rola lentamente em +X (paridade visual com Minecraft).
+    // Branco com alpha threshold; renderizado depois do céu via renderOrder.
+    {
+      const cnv = document.createElement('canvas');
+      cnv.width = 256; cnv.height = 256;
+      const ctx = cnv.getContext('2d');
+      // Fundo transparente; pinta "manchas" brancas pixeladas estilo MC.
+      ctx.clearRect(0, 0, 256, 256);
+      ctx.fillStyle = '#ffffff';
+      // Hash determinístico pra padrão estável.
+      let seed = 1234;
+      const rand = () => {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      };
+      // Manchas grandes (16x16 cada blob)
+      for (let i = 0; i < 80; i++) {
+        const x = Math.floor(rand() * 256 / 16) * 16;
+        const y = Math.floor(rand() * 256 / 16) * 16;
+        const w = (3 + Math.floor(rand() * 5)) * 16;
+        const h = (1 + Math.floor(rand() * 3)) * 16;
+        ctx.fillRect(x, y, w, h);
+      }
+      // Algumas "ilhas" menores
+      for (let i = 0; i < 50; i++) {
+        const x = Math.floor(rand() * 256 / 16) * 16;
+        const y = Math.floor(rand() * 256 / 16) * 16;
+        ctx.fillRect(x, y, 16, 16);
+      }
+      const texCloud = new THREE.CanvasTexture(cnv);
+      texCloud.wrapS = texCloud.wrapT = THREE.RepeatWrapping;
+      texCloud.repeat.set(8, 8);   // 8 tiles → 256*8 = 2048 unidades de mundo
+      texCloud.magFilter = THREE.NearestFilter;
+      texCloud.minFilter = THREE.NearestFilter;
+      this.cloudTexture = texCloud;
+      const cloudMat = new THREE.MeshBasicMaterial({
+        map: texCloud,
+        transparent: true,
+        opacity: 0.85,
+        depthWrite: false,
+        alphaTest: 0.5,
+      });
+      const cloudGeo = new THREE.PlaneGeometry(2048, 2048);
+      this.cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
+      this.cloudMesh.rotation.x = -Math.PI / 2;
+      this.cloudMesh.position.y = 70;
+      this.cloudMesh.renderOrder = -1;
+      this.scene.add(this.cloudMesh);
+    }
+
     // Pool de PointLights para tochas/lava (cap 8 — performance)
     this.poolLuzes = [];
     for (let i = 0; i < 8; i++) {
@@ -1389,6 +1462,20 @@ class Renderer {
     // Direção do sol/lua aponta para origem do mundo
     this.sol.position.copy(this.discoSol.position);
     this.luaLuz.position.copy(this.discoLua.position);
+
+    // === Nuvens em movimento ===
+    // O plano de nuvens acompanha o player (xz) pra ficar sempre acima,
+    // e a textura rola lentamente em X simulando vento (paridade Minecraft:
+    // cloud speed ≈ 0.6 blocos/s).
+    if (this.cloudMesh) {
+      this.cloudMesh.position.x = playerPos.x;
+      this.cloudMesh.position.z = playerPos.z;
+      // Avança UV; uses tempoDia pra travar a velocidade independente de FPS.
+      // 0.0009 * 240s = 0.22 ciclo/dia — valor empírico que parece "lento".
+      this.cloudTexture.offset.x = (tempoDia * 8) % 1;
+      // Visibilidade: nuvens somem em parte da noite (paridade MC).
+      this.cloudMesh.material.opacity = 0.30 + 0.55 * Math.max(0, sun);
+    }
   }
   atualizarLuzesPontuais(world, playerPos) {
     // Coleta as luzes mais próximas do player (até 8)
@@ -1541,13 +1628,26 @@ class Player {
     this.terceiraPessoa = false;
     this.hp = 20; this.hpMax = 20;
     this.fome = 20; this.fomeMax = 20;
+    // Saturation: reservatório oculto que esvazia antes da fome (paridade MC).
+    this.saturation = 5.0;
+    // Oxigênio submerso (20 = bolhas cheias; vai a 0 → começa dano de afogamento).
+    this.ar = 20; this.arMax = 20;
+    this.accAr = 0;
     this.xp = 0; this.nivel = 0;
     this.morto = false;
+    this.causaMorte = '';
     this.spawn = this.pos.clone();
     this.semDano = 99;
     this.accFome = 0;
     this.accRegen = 0;
     this.accDanoTerreno = 0;
+    // Sneak (Ctrl): reduz velocidade e impede cair em borda — paridade Minecraft.
+    this.sneak = false;
+    // Submerso (cabeça em água) — controla overlay underwater + bolhas.
+    this.submerso = false;
+    this.foiSubmerso = false; // pra detectar splash de entrada na água
+    // Pause: quando true congela física e tempo (ESC abre pause-menu).
+    this.pausado = false;
 
     this.camera = camera;
     this.controls = null;
@@ -1558,37 +1658,69 @@ class Player {
     this.alvoQuebra = null; // {x,y,z}
     // Acumulador de distância andada (chão) — dispara passo() a cada 0.45m.
     this.distAndada = 0;
+    // Material do bloco abaixo do player no último passo (pra escolher SFX).
+    this.materialPasso = 'grama';
   }
   atualizar(dt, world) {
-    if (this.morto) return;
+    if (this.morto || this.pausado) return;
     // === Input WASD relativo à direção real da câmera ===
-    // camera.getWorldDirection() retorna a direção forward verdadeira
-    // (após qualquer pitch/yaw aplicado pelos PointerLockControls), sem
-    // depender da convenção de eixos de Three.js. Projetamos no plano
-    // horizontal pra que olhar para cima/baixo não levante/abaixe ao
-    // andar para frente.
     const fwd = _tmpVecFwd.set(0, 0, 0);
     this.camera.getWorldDirection(fwd);
     fwd.y = 0;
     if (fwd.lengthSq() > 1e-6) fwd.normalize();
     const right = _tmpVecRight.crossVectors(fwd, _yAxis).normalize();
 
-    const speed = (this.input.sprint ? VEL_SPRINT : VEL_ANDAR);
-    // W (fwd=1) → +forward, S (fwd=-1) → -forward
-    // D (side=1) → +right, A (side=-1) → -right
+    // === Detecta submersão (cabeça dentro de água) ===
+    // Em Minecraft, o head-block determina se está submerso. Aqui aproximamos
+    // checando o bloco onde a câmera está (pos.y + PLAYER_HEIGHT*0.85).
+    const bCabeca = world.get(
+      Math.floor(this.pos.x),
+      Math.floor(this.pos.y + PLAYER_HEIGHT * 0.85),
+      Math.floor(this.pos.z),
+    );
+    const submersoAgora = (bCabeca === BLOCO.AGUA);
+    if (submersoAgora && !this.foiSubmerso) {
+      Audio.splash && Audio.splash();
+    }
+    this.foiSubmerso = submersoAgora;
+    this.submerso = submersoAgora;
+
+    // === Detecta corpo dentro de água (pra reduzir velocidade/gravidade) ===
+    const bCorpo = world.get(
+      Math.floor(this.pos.x),
+      Math.floor(this.pos.y + 0.5),
+      Math.floor(this.pos.z),
+    );
+    const naAgua = (bCorpo === BLOCO.AGUA || bCabeca === BLOCO.AGUA);
+
+    // === Velocidade: sneak < andar < sprint, multiplicador de água ===
+    const VEL_SNEAK = 1.8;
+    let speed = (this.input.sprint && !this.sneak) ? VEL_SPRINT
+              : (this.sneak && this.modo === 'survival') ? VEL_SNEAK
+              : VEL_ANDAR;
+    if (naAgua) speed *= 0.55; // Minecraft: água reduz velocidade ~45%.
+
     let dx = fwd.x * this.input.fwd + right.x * this.input.side;
     let dz = fwd.z * this.input.fwd + right.z * this.input.side;
     const len = Math.hypot(dx, dz);
     if (len > 0) { dx /= len; dz /= len; }
-    const move = (this.modo === 'creative' || this.noChao) ? speed : VEL_AR;
+    const move = (this.modo === 'creative' || this.noChao || naAgua) ? speed : VEL_AR;
     let vx = dx * move, vz = dz * move;
     let vy;
     if (this.modo === 'creative') {
       vy = this.input.up * speed;
       this.vel.y = vy;
       this.noChao = true;
+    } else if (naAgua) {
+      // Swim: gravidade reduzida; segurar Espaço sobe; deixa flutuar lento.
+      this.vel.y += (GRAVIDADE * 0.12) * dt;          // afundar lento
+      if (this.input.jump || this.input.up > 0) {
+        this.vel.y = Math.max(this.vel.y, 3.5);        // bracejar pra cima
+      }
+      this.vel.y = clamp(this.vel.y, -3.0, 5.0);
+      vy = this.vel.y;
     } else {
-      // Gravidade
+      // Gravidade normal
       this.vel.y += GRAVIDADE * dt;
       if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
       vy = this.vel.y;
@@ -1605,34 +1737,52 @@ class Player {
     this.spawnY = yMaxAntes;
 
     const xAntes = this.pos.x, zAntes = this.pos.z;
-    this.moverEixo(world, vx * dt, 0, 0);
-    this.moverEixo(world, 0, vy * dt, 0);
-    this.moverEixo(world, 0, 0, vz * dt);
 
-    // === Footstep SFX ===
-    // Acumula distância horizontal real (pós-colisão); a cada ~0.45m no
-    // chão dispara passo(). No ar não toca pra evitar spam em pulos.
+    // === Sneak: bloqueia caminhada que faria cair de borda (paridade MC) ===
+    // Tenta mover em X. Se o player ficar sem chão sob os pés depois do
+    // movimento, e estiver em sneak no chão, reverte X.
+    if (this.sneak && this.noChao && this.modo === 'survival') {
+      const xPrev = this.pos.x;
+      this.moverEixo(world, vx * dt, 0, 0);
+      if (!this._haChaoSob(world)) this.pos.x = xPrev;
+      const zPrev = this.pos.z;
+      this.moverEixo(world, 0, 0, vz * dt);
+      if (!this._haChaoSob(world)) this.pos.z = zPrev;
+    } else {
+      this.moverEixo(world, vx * dt, 0, 0);
+      this.moverEixo(world, 0, 0, vz * dt);
+    }
+    this.moverEixo(world, 0, vy * dt, 0);
+
+    // === Footstep SFX (com material) ===
     const dxReal = this.pos.x - xAntes;
     const dzReal = this.pos.z - zAntes;
     const distH = Math.hypot(dxReal, dzReal);
     if (this.noChao && distH > 1e-4) {
       this.distAndada += distH;
-      if (this.distAndada >= 0.45) {
+      // Sneak anda mais quieto: passos a cada 0.55m em vez de 0.45m.
+      const passoLimiar = this.sneak ? 0.55 : (this.input.sprint ? 0.32 : 0.45);
+      if (this.distAndada >= passoLimiar) {
         this.distAndada = 0;
-        Audio.passo();
+        // Detecta material do bloco abaixo dos pés.
+        const bPe = world.get(
+          Math.floor(this.pos.x),
+          Math.floor(this.pos.y - 0.1),
+          Math.floor(this.pos.z),
+        );
+        this.materialPasso = materialDeBloco(bPe);
+        Audio.passo(this.materialPasso);
       }
     }
 
-    // === Câmera ===
+    // === Câmera (com offset menor em sneak) ===
+    const camYOffset = (this.sneak && this.modo === 'survival') ? PLAYER_HEIGHT * 0.65 : PLAYER_HEIGHT * 0.85;
     if (this.terceiraPessoa) {
-      // Yaw da câmera: PointerLockControls escreve em camera.rotation.y.
-      // Antes a variável `yaw` era usada solta — não declarada; cada
-      // tecla F5 derrubava o frame com ReferenceError silencioso.
       const yawCam = this.camera.rotation.y;
       const back = new THREE.Vector3(Math.sin(yawCam), 0.5, Math.cos(yawCam)).multiplyScalar(4);
-      this.camera.position.copy(this.pos).add(back).add(new THREE.Vector3(0, PLAYER_HEIGHT * 0.85, 0));
+      this.camera.position.copy(this.pos).add(back).add(new THREE.Vector3(0, camYOffset, 0));
     } else {
-      this.camera.position.set(this.pos.x, this.pos.y + PLAYER_HEIGHT * 0.85, this.pos.z);
+      this.camera.position.set(this.pos.x, this.pos.y + camYOffset, this.pos.z);
     }
 
     // === Sobrevivência ===
@@ -1645,12 +1795,62 @@ class Player {
       if (bDentro === BLOCO.LAVA || bPe === BLOCO.LAVA) this.aplicarDano(3, 'lava');
       else if (bDentro === BLOCO.CACTO || bPe === BLOCO.CACTO) this.aplicarDano(1, 'cacto');
     }
-    this.accFome += dt;
-    if (this.accFome >= 30 && this.fome > 0) { this.accFome = 0; this.fome -= 1; }
-    this.accRegen += dt;
-    if (this.fome >= 18 && this.semDano >= 4 && this.hp < this.hpMax && this.accRegen >= 4) {
-      this.accRegen = 0; this.hp += 1;
+
+    // === Oxigênio (submerso): drena 1 a cada 1s; vazio → dano 2 a cada 1s ===
+    this.accAr += dt;
+    if (this.submerso) {
+      if (this.accAr >= 1.0) {
+        this.accAr = 0;
+        if (this.ar > 0) {
+          this.ar -= 1;
+          // Ocasionalmente toca bolha enquanto perde ar
+          if (Math.random() < 0.4 && Audio.bolha) Audio.bolha();
+        } else if (this.modo === 'survival') {
+          this.aplicarDano(2, 'afogamento');
+        }
+      }
+    } else {
+      // Recupera ar fora d'água: 2 por 0.5s.
+      if (this.accAr >= 0.5 && this.ar < this.arMax) {
+        this.accAr = 0;
+        this.ar = Math.min(this.arMax, this.ar + 2);
+      }
     }
+
+    // === Fome / saturation (paridade MC simplificada) ===
+    // Sprint consome saturation rápido; andar lento. Saturation>0 ⇒ fome
+    // estável. Saturation=0 ⇒ fome decai.
+    const consumoSat = this.input.sprint ? 0.05 * dt : (distH > 0 ? 0.005 * dt : 0);
+    if (this.modo === 'survival') {
+      this.saturation = Math.max(0, this.saturation - consumoSat);
+      if (this.saturation <= 0) {
+        this.accFome += dt;
+        if (this.accFome >= 30 && this.fome > 0) { this.accFome = 0; this.fome -= 1; }
+      }
+      // Hunger=0: dano lento (Minecraft: -0.5HP a cada 4s em normal).
+      if (this.fome <= 0) {
+        if (this.accRegen >= 4) { this.accRegen = 0; this.aplicarDano(1, 'fome'); }
+        this.accRegen += dt;
+      } else if (this.fome >= 18 && this.semDano >= 4 && this.hp < this.hpMax && this.accRegen >= 4) {
+        // Regen quando bem alimentado e sem dano recente.
+        this.accRegen = 0; this.hp += 1;
+        // Regen consome um ponto de saturation/fome (paridade MC).
+        if (this.saturation > 1) this.saturation -= 1; else this.fome = Math.max(0, this.fome - 1);
+      } else {
+        this.accRegen += dt;
+      }
+    }
+  }
+  // Auxiliar pra sneak: existe bloco sólido em algum dos 4 cantos da AABB?
+  _haChaoSob(world) {
+    const r = PLAYER_RADIUS - 0.02;
+    const y = Math.floor(this.pos.y - 0.05);
+    const xs = [this.pos.x - r, this.pos.x + r];
+    const zs = [this.pos.z - r, this.pos.z + r];
+    for (const x of xs) for (const z of zs) {
+      if (BLOCO_INFO[world.get(Math.floor(x), y, Math.floor(z))].solido) return true;
+    }
+    return false;
   }
   moverEixo(world, dx, dy, dz) {
     if (dx === 0 && dy === 0 && dz === 0) return;
@@ -1694,6 +1894,8 @@ class Player {
   }
   aplicarDano(d, fonte) {
     if (this.morto) return;
+    // Em criativo o player é invulnerável (paridade Minecraft).
+    if (this.modo === 'creative' && fonte !== 'void') return;
     // Aplica redução por armadura: cada ponto de defesa = 4% redução,
     // até o teto de 80% (clamp Minecraft-like). Dano mínimo é 1.
     const defesa = inv ? inv.defesaTotal() : 0;
@@ -1702,11 +1904,14 @@ class Player {
     this.hp -= danoReal;
     this.semDano = 0;
     Audio.hit();
+    // Flash visual de dano (overlay vermelho radial via CSS)
+    if (ui && ui.flashDano) ui.flashDano();
     if (this.hp <= 0) {
       this.hp = 0;
       this.morto = true;
+      this.causaMorte = fonte;
       ui.toast(`Você morreu (${fonte})`);
-      ui.mostrarMorte();
+      ui.mostrarMorte(fonte);
     } else {
       ui.toast(`-${danoReal} HP (${fonte})${defesa > 0 ? ` [armadura: -${d - danoReal}]` : ''}`);
     }
@@ -1716,7 +1921,10 @@ class Player {
     this.vel.set(0, 0, 0);
     this.hp = this.hpMax;
     this.fome = this.fomeMax;
+    this.saturation = 5.0;
+    this.ar = this.arMax;
     this.morto = false;
+    this.causaMorte = '';
     this.spawnY = this.pos.y;
     Audio.respawn();
     ui.toast('Respawn');
@@ -1979,6 +2187,103 @@ class Particulas {
         this.scene.remove(p);
         this.lista.splice(i, 1);
       }
+    }
+  }
+}
+
+// ===================================================================
+// 6.6) Item drops voando — entidades visíveis estilo Minecraft
+// ===================================================================
+// Quando um bloco é quebrado ou um mob morre, ao invés de cair direto no
+// inventário do player, primeiro vira uma entidade "drop" pequena que
+// flutua (rotacionando) por ~30s e é coletada quando o player chega
+// perto (raio 1.5m). Visualmente: cubo pequeno (0.25) com cor do bloco
+// ou ícone do item, rodando lentamente.
+window._dropEntidades = [];
+
+class ItemDrop {
+  constructor(scene, drop, x, y, z) {
+    this.scene = scene;
+    this.drop = drop; // {b?, i?, q}
+    this.x = x; this.y = y; this.z = z;
+    this.vx = (Math.random() - 0.5) * 1.5;
+    this.vy = 2.0 + Math.random() * 1.5;
+    this.vz = (Math.random() - 0.5) * 1.5;
+    this.life = 60.0; // 1 minuto de vida (paridade Minecraft: 5 min, mas aqui agressivo)
+    this.tempoColeta = 0.5; // 0.5s de "shield" pra não coletar imediatamente
+    // Visual: cubo pequeno colorido. Bloco usa cor do BLOCO_INFO; item
+    // usa cor cinza+textura plana.
+    const cor = drop.b !== undefined
+      ? (BLOCO_INFO[drop.b]?.cor ?? 0xcccccc)
+      : 0xeeeeee;
+    const geo = new THREE.BoxGeometry(0.28, 0.28, 0.28);
+    const mat = new THREE.MeshLambertMaterial({ color: cor });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.set(x, y + 0.4, z);
+    this.scene.add(this.mesh);
+  }
+  atualizar(dt, world, player) {
+    this.life -= dt;
+    this.tempoColeta -= dt;
+    // Gravidade + atrito
+    this.vy += GRAVIDADE * 0.5 * dt;
+    this.vy = Math.max(this.vy, -8);
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.z += this.vz * dt;
+    this.vx *= 0.92;
+    this.vz *= 0.92;
+    // Colisão simples: para no chão
+    if (this.y < 0.4) {
+      this.y = 0.4; this.vy = 0;
+    }
+    let yChao = WORLD_Y;
+    while (yChao > 0 && !world.isSolido(Math.floor(this.x), yChao - 1, Math.floor(this.z))) yChao--;
+    if (this.y < yChao + 0.3) { this.y = yChao + 0.3; this.vy = 0; this.vx *= 0.6; this.vz *= 0.6; }
+    // Atualiza mesh
+    this.mesh.position.set(this.x, this.y + Math.sin(this.life * 2) * 0.05, this.z);
+    this.mesh.rotation.y += dt * 1.5;
+    this.mesh.rotation.x += dt * 0.7;
+    // Coleta automática se player < 1.5m
+    if (this.tempoColeta <= 0 && player && !player.morto) {
+      const dx = this.x - player.pos.x;
+      const dy = this.y - (player.pos.y + 0.5);
+      const dz = this.z - player.pos.z;
+      const d2 = dx*dx + dy*dy + dz*dz;
+      if (d2 < 2.25 /* 1.5² */) {
+        // Adiciona ao inventário e remove do mundo.
+        if (inv.adicionar({ ...this.drop })) {
+          Audio.pickup();
+          this.life = 0;
+        }
+      }
+    }
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+  }
+}
+
+// API global para spawn e update.
+function spawnItemDrop(drop, x, y, z) {
+  if (!drop || drop.q <= 0) return;
+  // Limita para não floodar — máximo 60 drops simultâneos.
+  if (window._dropEntidades.length > 60) {
+    const old = window._dropEntidades.shift();
+    old.destruir();
+  }
+  const d = new ItemDrop(renderer.scene, drop, x, y, z);
+  window._dropEntidades.push(d);
+}
+function atualizarItemDrops(dt) {
+  for (let i = window._dropEntidades.length - 1; i >= 0; i--) {
+    const d = window._dropEntidades[i];
+    d.atualizar(dt, world, player);
+    if (d.life <= 0) {
+      d.destruir();
+      window._dropEntidades.splice(i, 1);
     }
   }
 }
@@ -2358,7 +2663,7 @@ class MobManager {
     return melhor;
   }
   explosao(world, cx, cy, cz, raio) {
-    Audio.hit();
+    Audio.explosao();
     for (let dx = -raio; dx <= raio; dx++) for (let dy = -raio; dy <= raio; dy++) for (let dz = -raio; dz <= raio; dz++) {
       if (dx*dx + dy*dy + dz*dz > raio*raio) continue;
       const x = Math.floor(cx + dx), y = Math.floor(cy + dy), z = Math.floor(cz + dz);
@@ -2380,7 +2685,13 @@ const Audio = {
   hit()     { (this._sfx().hit     || (() => {}))(); },
   comer()   { (this._sfx().comer   || (() => {}))(); },
   respawn() { (this._sfx().respawn || (() => {}))(); },
-  passo()   { (this._sfx().passo   || (() => {}))(); },
+  // passo agora aceita material (grama/pedra/madeira/areia/agua/folha/neve/metal/vidro)
+  passo(mat){ (this._sfx().passo   || (() => {}))(mat); },
+  splash()  { (this._sfx().splash  || (() => {}))(); },
+  bolha()   { (this._sfx().bolha   || (() => {}))(); },
+  levelUp() { (this._sfx().levelUp || this._sfx().respawn || (() => {}))(); },
+  pickup()  { (this._sfx().pickup  || (() => {}))(); },
+  explosao(){ (this._sfx().explosao|| this._sfx().hit || (() => {}))(); },
 };
 
 // ===================================================================
@@ -2389,16 +2700,46 @@ const Audio = {
 class UI {
   constructor() {
     this.toastTimer = null;
+    this.flashTimer = null;
     this.elHotbar = document.getElementById('hotbar');
     this.elBag = document.getElementById('bag-grid');
     this.elBagHot = document.getElementById('bag-hotbar');
     this.elCraftLista = document.getElementById('craft-lista');
     this.elCraftStatus = document.getElementById('craft-status');
+    this.elTooltip = document.getElementById('tooltip');
+    this.f3Ativo = false;
+    this.criativoAbaAtual = 'construcao';
+    this.criativoFiltro = '';
   }
   atualizar() {
     this.renderHotbar();
     this.renderBars();
     this.atualizarXP();
+    this.atualizarOverlays();
+  }
+  // === Overlays e estados visuais (low HP, underwater) ===
+  // Atualiza vinheta low-hp, overlay underwater e barra de ar com base
+  // no estado do player. Chamado via atualizar() em cada frame relevante.
+  atualizarOverlays() {
+    if (!player) return;
+    const vin = document.getElementById('vinheta');
+    if (vin) vin.classList.toggle('low-hp', player.hp <= 4 && player.modo === 'survival');
+    const uw = document.getElementById('overlay-underwater');
+    if (uw) uw.classList.toggle('show', !!player.submerso);
+    // Mostra/esconde barra de ar baseada em submersão (ou ar < max em survival).
+    const arWrap = document.getElementById('ar-wrap');
+    if (arWrap) {
+      const mostrar = player.submerso || (player.ar < player.arMax && player.modo === 'survival');
+      arWrap.classList.toggle('hidden', !mostrar);
+    }
+  }
+  // === Flash vermelho ao receber dano ===
+  flashDano() {
+    const el = document.getElementById('flash-dano');
+    if (!el) return;
+    el.classList.add('show');
+    if (this.flashTimer) clearTimeout(this.flashTimer);
+    this.flashTimer = setTimeout(() => el.classList.remove('show'), 220);
   }
   atualizarXP() {
     if (!player) return;
@@ -2418,6 +2759,10 @@ class UI {
         div.className = 'slot';
         div.dataset.idx = i;
         div.onclick = () => inv.selecionar(i);
+        // Tooltip ao passar o mouse — exibe nome + atributos do item.
+        div.addEventListener('mouseenter', (e) => this._tooltipMostrar(inv.slots[i], e));
+        div.addEventListener('mousemove', (e) => this._tooltipMostrar(inv.slots[i], e));
+        div.addEventListener('mouseleave', () => this._tooltipEsconder());
         this.elHotbar.appendChild(div);
       }
     }
@@ -2434,19 +2779,77 @@ class UI {
     const qtd = s.q > 1 ? `<span class="qtd">${s.q}</span>` : '';
     return `${ic}${qtd}`;
   }
+  // === Tooltip ===
+  // Exibe um popover com nome, tipo e atributos (defesa, nutrição, tier).
+  // Posicionado acima do cursor; se sair pela parte de cima da tela,
+  // re-posiciona abaixo. Esconde se slot vazio.
+  _tooltipMostrar(slot, ev) {
+    const el = this.elTooltip;
+    if (!el || !slot) { this._tooltipEsconder(); return; }
+    const linhas = [];
+    if (slot.b !== undefined) {
+      const info = BLOCO_INFO[slot.b];
+      linhas.push(`<div class="tt-nome">${info?.nome ?? 'Bloco'}</div>`);
+      linhas.push(`<div class="tt-tipo">Bloco · ${slot.q} un.</div>`);
+      if (info?.emiteLuz) linhas.push(`<div class="tt-tier">Emite luz: ${info.emiteLuz}</div>`);
+      if (info?.transp)   linhas.push(`<div class="tt-tier">Translúcido</div>`);
+    } else if (slot.i !== undefined) {
+      const info = ITEM_INFO[slot.i];
+      linhas.push(`<div class="tt-nome">${info?.nome ?? 'Item'}</div>`);
+      const tipo = info?.armadura ? `Armadura (${info.armadura})`
+                : info?.ferramenta ? `Ferramenta (${info.ferramenta})`
+                : info?.nutricao ? 'Comida'
+                : 'Item';
+      linhas.push(`<div class="tt-tipo">${tipo} · ${slot.q} un.</div>`);
+      if (info?.tier)     linhas.push(`<div class="tt-tier">Tier ${info.tier}</div>`);
+      if (info?.defesa)   linhas.push(`<div class="tt-defesa">+${info.defesa} defesa</div>`);
+      if (info?.nutricao) linhas.push(`<div class="tt-nutri">+${info.nutricao} fome</div>`);
+      if (info?.suspeito) linhas.push(`<div class="tt-tier" style="color:#e57373">⚠ pode envenenar</div>`);
+    } else { this._tooltipEsconder(); return; }
+    el.innerHTML = linhas.join('');
+    el.classList.remove('hidden');
+    // Posiciona acima do cursor por padrão.
+    const x = ev.clientX + 14;
+    const y = ev.clientY - 40;
+    el.style.left = `${x}px`;
+    el.style.top = `${Math.max(8, y)}px`;
+  }
+  _tooltipEsconder() {
+    if (this.elTooltip) this.elTooltip.classList.add('hidden');
+  }
   renderBars() {
     if (!player) return;
     const hp = player.hp, hpMax = player.hpMax, fome = player.fome, fomeMax = player.fomeMax;
-    const barHTML = (icone, v, max, cor) => {
-      const cheios = Math.ceil(v / 2), total = Math.ceil(max / 2);
+    // === Barras estilo Minecraft: ícones cheios/meio/vazios ===
+    // Para HP/fome usamos 10 ícones (paridade Minecraft: 20 pontos = 10 ícones).
+    // Em HP baixo (<=4) há um pulse adicional via classe .low-hp na vinheta.
+    const barHTML = (iconeCheio, iconeVazio, v, max, cor) => {
+      const cheios = Math.floor(v / 2);
+      const meio = (v % 2 === 1) ? 1 : 0;
+      const total = Math.ceil(max / 2);
       let h = '';
       for (let i = 0; i < total; i++) {
-        h += `<span style="color:${i < cheios ? cor : '#ffffff22'}">${icone}</span>`;
+        let opacity, content;
+        if (i < cheios) { content = iconeCheio; opacity = 1; }
+        else if (i === cheios && meio) { content = iconeCheio; opacity = 0.5; }
+        else { content = iconeVazio; opacity = 0.18; }
+        h += `<span style="color:${cor};opacity:${opacity}">${content}</span>`;
       }
       return h;
     };
-    document.getElementById('hp').innerHTML = barHTML('❤', hp, hpMax, '#e57373');
-    document.getElementById('fome').innerHTML = barHTML('🍗', fome, fomeMax, '#ffb74d');
+    document.getElementById('hp').innerHTML = barHTML('❤', '🤍', hp, hpMax, '#e57373');
+    document.getElementById('fome').innerHTML = barHTML('🍗', '🍗', fome, fomeMax, '#ffb74d');
+    // Barra de ar (10 bolhas, só visível quando submerso ou recuperando).
+    const elAr = document.getElementById('ar');
+    if (elAr) {
+      const cheios = Math.ceil(player.ar / 2);
+      const total = Math.ceil(player.arMax / 2);
+      let h = '';
+      for (let i = 0; i < total; i++) {
+        h += `<span style="color:#4FC3F7;opacity:${i < cheios ? 1 : 0.18}">●</span>`;
+      }
+      elAr.innerHTML = h;
+    }
   }
   renderBag() {
     this.elBag.innerHTML = '';
@@ -2678,19 +3081,203 @@ class UI {
     }
   }
 
-  mostrarMorte() {
-    // Libera o ponteiro ANTES de mostrar — sem isso, qualquer clique
-    // continua sendo capturado pelo canvas (pointer lock) e nunca chega
-    // ao overlay, fazendo a tela de morte parecer "travada".
+  mostrarMorte(causa) {
     try { document.exitPointerLock?.(); } catch (_) {}
-    document.getElementById('morte').classList.remove('hidden');
+    const el = document.getElementById('morte');
+    const causaEl = document.getElementById('morte-causa');
+    if (causaEl) {
+      const map = {
+        lava: '🔥 Você caiu na lava',
+        cacto: '🌵 Espinhos do cacto',
+        afogamento: '💧 Você se afogou',
+        fome: '🍗 Morreu de fome',
+        creeper: '💥 Foi explodido por um Creeper',
+        zumbi: '🧟 Devorado por um Zumbi',
+        esqueleto: '🏹 Flechado por um Esqueleto',
+        aranha: '🕷 Envenenado por uma Aranha',
+        void: '⬛ Caiu no vazio',
+      };
+      const nice = map[causa] ||
+        (causa && causa.startsWith('queda') ? `🪂 Caiu de muito alto (${causa})` : `Causa: ${causa || '?'}`);
+      causaEl.textContent = nice;
+    }
+    el.classList.remove('hidden');
   }
   esconderMorte() {
     document.getElementById('morte').classList.add('hidden');
-    // Re-lock após pequena pausa para o browser registrar o gesto.
     setTimeout(() => {
       try { player?.controls?.lock(); } catch (_) {}
     }, 80);
+  }
+  // === Pause menu ===
+  mostrarPause() {
+    const el = document.getElementById('pause-menu');
+    if (!el) return;
+    el.classList.remove('hidden');
+    try { document.exitPointerLock?.(); } catch (_) {}
+    if (player) player.pausado = true;
+  }
+  esconderPause() {
+    const el = document.getElementById('pause-menu');
+    if (!el) return;
+    el.classList.add('hidden');
+    if (player) player.pausado = false;
+    setTimeout(() => {
+      try { player?.controls?.lock(); } catch (_) {}
+    }, 50);
+  }
+  // === F3 debug overlay ===
+  // Toggle ON/OFF; quando ON, atualiza informações do jogo a cada frame.
+  toggleF3() {
+    this.f3Ativo = !this.f3Ativo;
+    const el = document.getElementById('f3-debug');
+    if (el) el.classList.toggle('hidden', !this.f3Ativo);
+    // Esconde o painel #topo simples quando F3 está ativo (overlap).
+    const topo = document.getElementById('topo');
+    if (topo) topo.style.opacity = this.f3Ativo ? '0' : '1';
+  }
+  atualizarF3(extra) {
+    if (!this.f3Ativo || !player || !world) return;
+    const px = player.pos.x, py = player.pos.y, pz = player.pos.z;
+    const cx = Math.floor(px / CHUNK_SIZE), cz = Math.floor(pz / CHUNK_SIZE);
+    const yawCam = renderer ? renderer.camera.rotation.y : 0;
+    // Direção dominante do facing
+    const yawDeg = ((yawCam * 180 / Math.PI) % 360 + 360) % 360;
+    let face = 'south (+Z)';
+    if (yawDeg < 45 || yawDeg >= 315)        face = 'south (+Z)';
+    else if (yawDeg < 135)                    face = 'east (+X)';
+    else if (yawDeg < 225)                    face = 'north (-Z)';
+    else                                      face = 'west (-X)';
+    document.getElementById('f3-pos').textContent =
+      `XYZ: ${px.toFixed(2)} / ${py.toFixed(2)} / ${pz.toFixed(2)}`;
+    document.getElementById('f3-block').textContent =
+      `Block: ${Math.floor(px)} ${Math.floor(py)} ${Math.floor(pz)}`;
+    document.getElementById('f3-chunk').textContent =
+      `Chunk: ${cx},${cz} (in ${Math.floor(px) - cx*CHUNK_SIZE}, ${Math.floor(pz) - cz*CHUNK_SIZE})`;
+    document.getElementById('f3-facing').textContent = `Facing: ${face}`;
+    // Bioma simples (apenas baseado no bloco do topo)
+    const ySup = Math.max(0, Math.floor(py));
+    const topoB = world.get(Math.floor(px), ySup - 1, Math.floor(pz));
+    const biomaNome = (topoB === BLOCO.NEVE) ? 'tundra'
+                    : (topoB === BLOCO.AREIA) ? 'deserto'
+                    : (topoB === BLOCO.GRAMA || topoB === BLOCO.TERRA) ? 'planicies'
+                    : (topoB === BLOCO.PEDRA) ? 'montanha'
+                    : 'subterraneo';
+    document.getElementById('f3-biome').textContent = `Biome: ${biomaNome}`;
+    // Light level aproximado (sun) e block-light proxy (luz emissiva próxima).
+    const sun = (typeof tempoDia !== 'undefined')
+      ? Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2))
+      : 1;
+    const skyL = Math.round(sun * 15);
+    let blockL = 0;
+    for (let dy = -2; dy <= 2; dy++) for (let dx = -3; dx <= 3; dx++) for (let dz = -3; dz <= 3; dz++) {
+      const b = world.get(Math.floor(px) + dx, Math.floor(py) + dy, Math.floor(pz) + dz);
+      const e = BLOCO_INFO[b]?.emiteLuz || 0;
+      if (e > blockL) blockL = e;
+    }
+    document.getElementById('f3-light').textContent = `Sky / Block light: ${skyL} / ${blockL}`;
+    // Bloco mirado
+    const tEl = document.getElementById('f3-target');
+    if (extra && extra.targetBlock) {
+      const t = extra.targetBlock;
+      const nome = BLOCO_INFO[t.b]?.nome || '?';
+      tEl.textContent = `Targeted: ${nome} @ ${t.x},${t.y},${t.z}`;
+    } else {
+      tEl.textContent = 'Targeted: --';
+    }
+    // Memória JS (só Chrome expõe performance.memory)
+    const memEl = document.getElementById('f3-mem');
+    const mem = performance && performance.memory;
+    if (mem) {
+      const used = (mem.usedJSHeapSize / 1048576).toFixed(0);
+      const tot  = (mem.totalJSHeapSize / 1048576).toFixed(0);
+      memEl.textContent = `Mem: ${used} / ${tot} MB`;
+    } else {
+      memEl.textContent = `Mem: --`;
+    }
+    // Tempo do dia
+    const horas = Math.floor((tempoDia * 24 + 6) % 24);
+    const mins = Math.floor(((tempoDia * 24 + 6) % 1) * 60);
+    document.getElementById('f3-time').textContent =
+      `Day time: ${String(horas).padStart(2,'0')}:${String(mins).padStart(2,'0')} (sun ${sun.toFixed(2)})`;
+    document.getElementById('f3-mobs').textContent =
+      `Entities: ${mobMgr ? mobMgr.mobs.length : 0} mobs / ${(window._dropEntidades?.length) || 0} drops`;
+  }
+  // === Inventário criativo (abas + busca) ===
+  // Categorização determinística dos blocos/itens em 8 abas.
+  _categoriaItem(slot) {
+    if (slot.b !== undefined) {
+      const b = slot.b;
+      if ([BLOCO.AGUA, BLOCO.LAVA].includes(b)) return 'liquidos';
+      if ([BLOCO.OURO, BLOCO.FERRO, BLOCO.DIAMANTE, BLOCO.CARVAO, BLOCO.OBSIDIANA].includes(b)) return 'minerios';
+      if ([BLOCO.GRAMA, BLOCO.TERRA, BLOCO.AREIA, BLOCO.NEVE, BLOCO.FOLHA, BLOCO.MADEIRA, BLOCO.CACTO].includes(b)) return 'natureza';
+      if ([BLOCO.VIDRO, BLOCO.LUZ, BLOCO.LA, BLOCO.TOCHA, BLOCO.CAMA].includes(b)) return 'decoracao';
+      if ([BLOCO.WORKBENCH, BLOCO.BAU, BLOCO.FORNALHA].includes(b)) return 'decoracao';
+      return 'construcao';
+    }
+    const i = slot.i;
+    const info = ITEM_INFO[i];
+    if (info?.armadura) return 'combate';
+    if (info?.ferramenta === 'esp') return 'combate';
+    if (info?.ferramenta === 'pic') return 'ferramentas';
+    if (info?.nutricao) return 'comida';
+    return 'ferramentas';
+  }
+  renderCriativo() {
+    const grid = document.getElementById('criativo-grid');
+    const hot = document.getElementById('criativo-hotbar');
+    if (!grid || !hot) return;
+    grid.innerHTML = '';
+    hot.innerHTML = '';
+    // Lista todos os itens disponíveis.
+    const todos = [];
+    for (const k of Object.keys(BLOCO_INFO)) {
+      const b = parseInt(k, 10);
+      if (b === BLOCO.AR || b === BLOCO.BEDROCK) continue;
+      todos.push({ b, q: 64 });
+    }
+    for (const k of Object.keys(ITEM_INFO)) {
+      todos.push({ i: parseInt(k, 10), q: 1 });
+    }
+    // Filtra por aba + busca.
+    const filtro = (this.criativoFiltro || '').toLowerCase().trim();
+    const filtrados = todos.filter(s => {
+      if (this._categoriaItem(s) !== this.criativoAbaAtual) return false;
+      if (!filtro) return true;
+      const nome = s.b !== undefined ? BLOCO_INFO[s.b]?.nome : ITEM_INFO[s.i]?.nome;
+      return (nome || '').toLowerCase().includes(filtro);
+    });
+    for (const s of filtrados) {
+      const div = document.createElement('div');
+      div.className = 'slot';
+      div.innerHTML = this._slotHTML(s);
+      div.addEventListener('mouseenter', (e) => this._tooltipMostrar(s, e));
+      div.addEventListener('mousemove', (e) => this._tooltipMostrar(s, e));
+      div.addEventListener('mouseleave', () => this._tooltipEsconder());
+      div.onclick = () => {
+        // Substitui o slot ativo da hotbar por uma stack de 64 (ou 1 se item de tier).
+        const novo = s.b !== undefined ? { b: s.b, q: 64 }
+                  : { i: s.i, q: (ITEM_INFO[s.i]?.tier || ITEM_INFO[s.i]?.armadura) ? 1 : 64 };
+        inv.slots[inv.slotSel] = novo;
+        ui.atualizar();
+        this.renderCriativoHotbar();
+        Audio.pickup();
+      };
+      grid.appendChild(div);
+    }
+    this.renderCriativoHotbar();
+  }
+  renderCriativoHotbar() {
+    const hot = document.getElementById('criativo-hotbar');
+    if (!hot) return;
+    hot.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const div = document.createElement('div');
+      div.className = 'slot' + (i === inv.slotSel ? ' sel' : '');
+      div.innerHTML = this._slotHTML(inv.slots[i]);
+      div.onclick = () => { inv.selecionar(i); this.renderCriativo(); };
+      hot.appendChild(div);
+    }
   }
   abrirPainel(id) { document.getElementById(id).classList.remove('hidden'); }
   fecharPainel(id) { document.getElementById(id).classList.add('hidden'); }
@@ -3035,6 +3622,23 @@ function setupInput() {
   // Teclado
   document.addEventListener('keydown', (e) => {
     if (e.repeat) return;
+    // F3 e Escape são especiais: F3 sempre toggla; Escape pausa/desfecha.
+    if (e.code === 'F3') { e.preventDefault(); ui.toggleF3(); return; }
+    if (e.code === 'Escape') {
+      // Se algum painel estiver aberto, fecha-o; senão abre/fecha pause.
+      const painel = document.querySelector('.painel:not(.hidden)');
+      if (painel) {
+        painel.classList.add('hidden');
+      } else {
+        const pause = document.getElementById('pause-menu');
+        if (pause.classList.contains('hidden')) {
+          ui.mostrarPause();
+        } else {
+          ui.esconderPause();
+        }
+      }
+      return;
+    }
     switch (e.code) {
       case 'KeyW': player.input.fwd = 1; break;
       case 'KeyS': player.input.fwd = -1; break;
@@ -3042,9 +3646,27 @@ function setupInput() {
       case 'KeyD': player.input.side = 1; break;
       case 'Space': player.input.up = 1; player.input.jump = true; break;
       case 'ShiftLeft': case 'ShiftRight':
+        // Em criativo: Shift = descer; em sobrevivência: Shift = sprintar.
         if (player.modo === 'creative') player.input.up = -1;
-        player.input.sprint = true; break;
-      case 'KeyE': togglePainel('painel-bag'); break;
+        else player.input.sprint = true;
+        break;
+      // Ctrl: sneak (sobrevivência) — reduz velocidade e impede cair em borda.
+      case 'ControlLeft': case 'ControlRight':
+        e.preventDefault();
+        player.sneak = true;
+        break;
+      case 'KeyE':
+        // Em criativo, E abre o inventário criativo (paridade Minecraft); em
+        // sobrevivência, abre a bag tradicional.
+        if (player.modo === 'creative') {
+          togglePainel('painel-criativo');
+          if (!document.getElementById('painel-criativo').classList.contains('hidden')) {
+            ui.renderCriativo();
+          }
+        } else {
+          togglePainel('painel-bag');
+        }
+        break;
       case 'KeyC': togglePainel('painel-craft'); break;
       case 'KeyG': alternarModo(); break;
       case 'KeyF': atacarMob(); break;
@@ -3065,7 +3687,11 @@ function setupInput() {
       case 'Space': player.input.up = 0; break;
       case 'ShiftLeft': case 'ShiftRight':
         if (player.modo === 'creative') player.input.up = 0;
-        player.input.sprint = false; break;
+        else player.input.sprint = false;
+        break;
+      case 'ControlLeft': case 'ControlRight':
+        player.sneak = false;
+        break;
     }
   });
   // Mouse: roda no body para hover; click L = quebrar; click R = colocar.
@@ -3098,7 +3724,10 @@ function setupInput() {
   }, { passive: true });
 
   // Botões UI
-  document.getElementById('btn-bag').onclick = () => togglePainel('painel-bag');
+  document.getElementById('btn-bag').onclick = () => {
+    if (player.modo === 'creative') togglePainel('painel-criativo');
+    else togglePainel('painel-bag');
+  };
   document.getElementById('btn-craft').onclick = () => togglePainel('painel-craft');
   document.getElementById('btn-modo').onclick = () => alternarModo();
   document.getElementById('btn-save').onclick = () => Save.salvar();
@@ -3132,6 +3761,53 @@ function setupInput() {
     const locked = document.pointerLockElement === document.body;
     document.getElementById('game').style.cursor = locked ? 'none' : 'crosshair';
   });
+
+  // === Pause menu: botões ===
+  // "Voltar ao Jogo" fecha o pause; "Salvar" salva e mostra toast; "Modo"
+  // alterna criativo/sobrevivência; "Sair para o Menu" fecha o jogo
+  // completamente (volta pra tela de boot).
+  document.querySelectorAll('.pause-btn').forEach(btn => {
+    btn.onclick = () => {
+      const a = btn.dataset.action;
+      if (a === 'voltar') ui.esconderPause();
+      else if (a === 'salvar') { Save.salvar(); }
+      else if (a === 'modo') { alternarModo(); ui.esconderPause(); }
+      else if (a === 'sair') {
+        Save.salvar();
+        ui.esconderPause();
+        document.getElementById('hud').classList.add('hidden');
+        document.getElementById('boot').style.display = 'flex';
+        try { player.controls.unlock(); } catch (_) {}
+      }
+    };
+  });
+
+  // === Botão Respawn na tela de morte ===
+  const btnResp = document.getElementById('morte-respawn');
+  if (btnResp) {
+    btnResp.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (player.morto) player.respawnar();
+    });
+  }
+
+  // === Abas + busca do inventário criativo ===
+  document.querySelectorAll('.criativo-aba').forEach(aba => {
+    aba.onclick = () => {
+      document.querySelectorAll('.criativo-aba').forEach(a => a.classList.remove('ativa'));
+      aba.classList.add('ativa');
+      ui.criativoAbaAtual = aba.dataset.aba;
+      ui.renderCriativo();
+    };
+  });
+  const buscaEl = document.getElementById('criativo-busca');
+  if (buscaEl) {
+    buscaEl.addEventListener('input', (e) => {
+      ui.criativoFiltro = e.target.value;
+      ui.renderCriativo();
+    });
+  }
 }
 
 function togglePainel(id) {
@@ -3139,6 +3815,7 @@ function togglePainel(id) {
   if (el.classList.contains('hidden')) {
     if (id === 'painel-bag') ui.renderBag();
     if (id === 'painel-craft') ui.renderCraft(ui.workbenchPerto());
+    if (id === 'painel-criativo') ui.renderCriativo();
     el.classList.remove('hidden');
     document.exitPointerLock?.();
   } else {
@@ -3261,7 +3938,12 @@ function atacarMob() {
   m.hp -= dano;
   if (m.hp <= 0) {
     const drops = MOB_INFO[m.tipo].drops();
-    for (const d of drops) inv.adicionar(d);
+    // Drops de mob viram entidades flutuantes (paridade Minecraft).
+    if (player.modo === 'creative') {
+      for (const d of drops) inv.adicionar(d);
+    } else {
+      for (const d of drops) spawnItemDrop(d, m.x, m.y, m.z);
+    }
     const info = MOB_INFO[m.tipo];
     const xp = info.hostil ? 5 : 2;
     ganharXP(xp);
@@ -3334,10 +4016,15 @@ function loop(now) {
     fpsAcc = 0; fpsTimer = 0;
   }
 
-  if (!document.getElementById('painel-bag').classList.contains('hidden') ||
-      !document.getElementById('painel-craft').classList.contains('hidden') ||
-      player.morto) {
-    // Pausa lógica enquanto painel aberto / morto
+  // === Pausas globais ===
+  // Lógica do mundo congela enquanto algum painel modal estiver aberto OU
+  // o jogador estiver morto OU pausado pelo menu (ESC).
+  const algumPainelAberto = document.querySelector('.painel:not(.hidden)') !== null;
+  const pausado = !document.getElementById('pause-menu').classList.contains('hidden');
+  // ray é declarado fora pra ficar visível no F3 debug + finalização do loop.
+  let ray = null;
+  if (algumPainelAberto || pausado || player.morto) {
+    // Pausa lógica enquanto painel aberto / morto / pausado
   } else {
     player.atualizar(dt, world);
 
@@ -3350,7 +4037,7 @@ function loop(now) {
 
     // === Raycast a cada frame (para highlight e quebra/colocar) ===
     const dirCamera = renderer.camera.getWorldDirection(_tmpVecAux);
-    const ray = raycastBloco(world, renderer.camera.position, dirCamera, ALCANCE_BLOCO);
+    ray = raycastBloco(world, renderer.camera.position, dirCamera, ALCANCE_BLOCO);
 
     // Quebra contínua (hold click esquerdo)
     let progressoVisual = 0;
@@ -3371,19 +4058,35 @@ function loop(now) {
       if (player.progressoQuebra >= 1) {
         player.progressoQuebra = 0;
         const drops = Drops.dropDeBloco(t.b, tier);
-        for (const d of drops) inv.adicionar(d);
+        // Em criativo, drops vão direto pro inventário sem virar entidades
+        // (paridade Minecraft: criativo não dropa). Em sobrevivência,
+        // spawna entidades visíveis flutuantes que o player coleta.
+        if (player.modo === 'creative') {
+          // Em criativo nem o próprio bloco vai pro inventário (já está cheio
+          // de tudo); só efeito visual. Mas guardamos pra preencher hotbar
+          // se vazia? Mantemos comportamento atual de adicionar.
+          for (const d of drops) inv.adicionar(d);
+        } else {
+          for (const d of drops) spawnItemDrop(d, t.x, t.y, t.z);
+        }
         // Spawn partículas ANTES de remover o bloco — usa o tipo dele
         particulas.spawnQuebra(t.x, t.y, t.z, t.b);
         // Se for bloco funcional, dropar também o conteúdo do estado.
         if (t.b === BLOCO.BAU) {
           const bau = world.bauTesouros.get(World.keyXYZ(t.x, t.y, t.z));
-          if (bau) for (const it of bau) if (it) inv.adicionar({ ...it });
+          if (bau) for (const it of bau) if (it) {
+            if (player.modo === 'creative') inv.adicionar({ ...it });
+            else spawnItemDrop({ ...it }, t.x, t.y, t.z);
+          }
           world.removerEstadoBloco(t.x, t.y, t.z);
         } else if (t.b === BLOCO.FORNALHA) {
           const f = world.fornalhaEstados.get(World.keyXYZ(t.x, t.y, t.z));
           if (f) {
             for (const it of [f.input, f.combustivel, f.output]) {
-              if (it) inv.adicionar({ ...it });
+              if (it) {
+                if (player.modo === 'creative') inv.adicionar({ ...it });
+                else spawnItemDrop({ ...it }, t.x, t.y, t.z);
+              }
             }
           }
           world.removerEstadoBloco(t.x, t.y, t.z);
@@ -3501,6 +4204,16 @@ function loop(now) {
   document.getElementById('coords').textContent =
     `X:${player.pos.x.toFixed(1)} Y:${player.pos.y.toFixed(1)} Z:${player.pos.z.toFixed(1)}`;
   ui.renderBars();
+  ui.atualizarOverlays();
+  // F3 debug overlay (atualiza só quando ativo, ~1x por frame).
+  if (ui.f3Ativo) {
+    ui.atualizarF3({ targetBlock: ray ? ray.hit : null });
+  }
+  // Atualiza item drops voando (entidades visíveis) — chama o updater
+  // global declarado pelo módulo de drops, se já carregado.
+  if (typeof atualizarItemDrops === 'function') {
+    atualizarItemDrops(dt);
+  }
 
   renderer.render();
   requestAnimationFrame(loop);
