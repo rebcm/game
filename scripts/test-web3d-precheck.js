@@ -75,37 +75,43 @@ t('materialOpaco com toneMapped: true (Cineon comprime overbright)',
   'toneMapped:false faz o material ignorar o tonemap e clipar pra branco — top faces parecem "translúcidas".');
 
 // ---------------------------------------------------------------------
-// materialTransp inicia idêntico ao opaco no modo "sólido" (default).
-// Antes: side: DoubleSide ficava ligado mesmo com transparência off,
-// expondo back-faces de leaves/vidro — parecia "ver através do bloco".
+// materialTransp arranca sólido no construtor (transparent:false /
+// FrontSide). setTransparenciaAtiva(true) ativa transparency real
+// (transparent + opacity 0.78 + DoubleSide) — Minecraft-style.
 // ---------------------------------------------------------------------
-grupo('materialTransp arranque sólido');
-t('materialTransp inicia com transparent: false',
+grupo('materialTransp arranque + toggle real');
+t('materialTransp criado com transparent: false (estado base)',
   /materialTransp\s*=[\s\S]*?transparent:\s*false/.test(game));
-t('materialTransp inicia com side: FrontSide (não DoubleSide)',
+t('materialTransp criado com side: FrontSide (estado base)',
   /materialTransp\s*=[\s\S]*?side:\s*THREE\.FrontSide/.test(game),
-  'DoubleSide com transparência off vaza back-faces — leitura de "transparência" pelo usuário.');
-t('setTransparenciaAtiva força modo sólido (no-op para true) — transparência desabilitada nesta fase',
-  /setTransparenciaAtiva\([^)]*\)\s*\{[\s\S]*?this\.transparenciaAtiva\s*=\s*false[\s\S]*?this\.materialTransp\.transparent\s*=\s*false[\s\S]*?this\.materialTransp\.side\s*=\s*THREE\.FrontSide/.test(game),
-  'Nesta fase o toggle não pode ativar transparência — força sempre estado sólido.');
-t('setTransparenciaAtiva não tem mais branch DoubleSide ativo',
-  !/setTransparenciaAtiva[\s\S]*?side\s*=\s*THREE\.DoubleSide/.test(game),
-  'DoubleSide reintroduziria back-faces translúcidas — proibido nesta fase.');
+  'O construtor cria sólido; setTransparenciaAtiva(true) liga transparência ao final.');
+t('setTransparenciaAtiva ativa: transparent=true, opacity ~0.78, DoubleSide',
+  /setTransparenciaAtiva\([^)]*\)\s*\{[\s\S]*?this\.transparenciaAtiva\s*=\s*ativa[\s\S]*?if\s*\(\s*ativa\s*\)\s*\{[\s\S]*?this\.materialTransp\.transparent\s*=\s*true[\s\S]*?this\.materialTransp\.opacity\s*=\s*0\.78[\s\S]*?this\.materialTransp\.side\s*=\s*THREE\.DoubleSide/.test(game),
+  'Toggle precisa ligar transparency real (Minecraft default).');
+t('setTransparenciaAtiva inativa: transparent=false, opacity=1.0, FrontSide',
+  /setTransparenciaAtiva[\s\S]*?else\s*\{[\s\S]*?this\.materialTransp\.transparent\s*=\s*false[\s\S]*?this\.materialTransp\.opacity\s*=\s*1\.0[\s\S]*?this\.materialTransp\.side\s*=\s*THREE\.FrontSide/.test(game),
+  'Branch sólido precisa restaurar tudo para opaco/FrontSide.');
 
 // ---------------------------------------------------------------------
-// Folha/Vidro/Água viram cubos opacos (transp=false). Air e Tocha
-// continuam transp=true (ar precisa pra face-culling; tocha é mesh
+// Minecraft real: FOLHA/VIDRO/ÁGUA são semi-transparentes (transp=true).
+// AR e TOCHA também transp=true (ar pra face-culling, tocha é mesh
 // especial, não cubo).
 // ---------------------------------------------------------------------
-grupo('BLOCO_INFO: folha/vidro/água opacos nesta fase');
-t('BLOCO_INFO[BLOCO.FOLHA].transp === false',
-  /\[BLOCO\.FOLHA\][^}]*transp:\s*false/.test(game));
-t('BLOCO_INFO[BLOCO.VIDRO].transp === false',
-  /\[BLOCO\.VIDRO\][^}]*transp:\s*false/.test(game));
-t('BLOCO_INFO[BLOCO.AGUA].transp === false',
-  /\[BLOCO\.AGUA\][^}]*transp:\s*false/.test(game));
+grupo('BLOCO_INFO: folha/vidro/água semi-transparentes (Minecraft real)');
+t('BLOCO_INFO[BLOCO.FOLHA].transp === true',
+  /\[BLOCO\.FOLHA\][^}]*transp:\s*true/.test(game));
+t('BLOCO_INFO[BLOCO.VIDRO].transp === true',
+  /\[BLOCO\.VIDRO\][^}]*transp:\s*true/.test(game));
+t('BLOCO_INFO[BLOCO.AGUA].transp === true',
+  /\[BLOCO\.AGUA\][^}]*transp:\s*true/.test(game));
 t('BLOCO_INFO[BLOCO.AR].transp === true (necessário para face-culling)',
   /\[BLOCO\.AR\][^}]*transp:\s*true/.test(game));
+t('BLOCO_INFO[BLOCO.TOCHA].transp === true (mesh especial)',
+  /\[BLOCO\.TOCHA\][^}]*transp:\s*true/.test(game));
+t('Apenas 5 blocos com transp:true (AR/FOLHA/VIDRO/AGUA/TOCHA)', (() => {
+  const matches = game.match(/\[BLOCO\.[A-Z_]+\][^}]*transp:\s*true/g) || [];
+  return matches.length === 5;
+}), 'Qualquer bloco extra com transp:true seria erro de copy/paste.');
 
 // ---------------------------------------------------------------------
 // Atlas opaco
@@ -273,16 +279,20 @@ t('bedrock 3 camadas: y<=2 sempre OBSIDIANA', (() => {
 }), 'Sem bedrock espesso, paredes laterais de cavernas baixas vazam obsidiana.');
 
 // ---------------------------------------------------------------------
-// Default sólido (não transparente)
+// Default Minecraft real: transparenciaAtiva = true no init do Renderer.
 // ---------------------------------------------------------------------
-grupo('Default visual: modo sólido');
-t('Renderer init com transparenciaAtiva = false', (() => {
-  // Procura pelo bloco onde inicializa transparenciaAtiva
-  return /this\.transparenciaAtiva\s*=\s*false/.test(game);
+grupo('Default visual: modo transparente (Minecraft real)');
+t('Renderer init com transparenciaAtiva = true', (() => {
+  return /this\.transparenciaAtiva\s*=\s*true/.test(game);
 }));
-t('botão btn-transp inicia com classe solido', (() => {
-  return /id="btn-transp"\s+class="hud-btn solido"/.test(html);
+t('Renderer chama setTransparenciaAtiva(true) no construtor', (() => {
+  // Garantir que materialTransp arranca com flags certos (transparent +
+  // DoubleSide + opacity 0.78), não só com transparenciaAtiva=true setado.
+  return /this\.transparenciaAtiva\s*=\s*true;\s*this\.setTransparenciaAtiva\(true\)/.test(game);
 }));
+t('init() sincroniza btn-transp com default transparente (sem classe solido)',
+  /btn-transp[\s\S]*?classList\.remove\(['"]solido['"]\)/.test(game),
+  'HTML inicia com classe solido — init precisa removê-la pra refletir o default Minecraft.');
 
 // ---------------------------------------------------------------------
 // Pointer lock re-mapeia ao clicar
@@ -327,6 +337,38 @@ t('listener global desbloqueia AudioContext em touchstart',
   /touchstart[\s\S]*?desbloquear|desbloquear[\s\S]*?touchstart/.test(html));
 t('window.rebcm.desbloquearAudio exposto',
   /rebcm\.desbloquearAudio/.test(html));
+
+// ---------------------------------------------------------------------
+// UX polish Minecraft authenticity: footstep, hotbar toast, FOV sprint.
+// ---------------------------------------------------------------------
+grupo('UX Minecraft polish');
+t('Audio.passo() existe e chama sfx.passo',
+  /passo\(\)\s*\{\s*\(this\._sfx\(\)\.passo\s*\|\|/.test(game),
+  'window.rebcm.sfx.passo já existia mas nunca era chamado.');
+t('Player tem distAndada accumulator',
+  /this\.distAndada\s*=\s*0/.test(game));
+t('Player.atualizar acumula distAndada e dispara Audio.passo a ~0.45m',
+  /this\.distAndada\s*\+=\s*distH[\s\S]*?if\s*\(\s*this\.distAndada\s*>=\s*0\.45\s*\)[\s\S]*?Audio\.passo\(\)/.test(game));
+t('Inventario.selecionar emite toast com nome do bloco/item (slot não vazio)',
+  /selecionar\(idx\)\s*\{[\s\S]*?BLOCO_INFO\[it\.b\]\?\.nome[\s\S]*?ITEM_INFO\[it\.i\]\?\.nome[\s\S]*?ui\.toast\(nome\)/.test(game),
+  'Hotbar deve indicar o que está selecionado quando há item — Minecraft style.');
+t('Renderer.atualizarFOV implementa lerp para 70 + (correndo ? 8 : 0)',
+  /atualizarFOV\(dt,\s*correndo\)[\s\S]*?const alvo\s*=\s*70\s*\+\s*\(correndo\s*\?\s*8\s*:\s*0\)[\s\S]*?this\.camera\.updateProjectionMatrix\(\)/.test(game),
+  'FOV pulse durante sprint reforça sensação de velocidade.');
+t('loop chama renderer.atualizarFOV com player.input.sprint',
+  /renderer\.atualizarFOV\(dt,[^)]*player\.input\.sprint/.test(game));
+
+// ---------------------------------------------------------------------
+// alternarTransparencia handler: real toggle (não no-op)
+// ---------------------------------------------------------------------
+grupo('alternarTransparencia handler real');
+t('alternarTransparencia inverte transparenciaAtiva (não força false)',
+  /function alternarTransparencia\(\)\s*\{[\s\S]*?const novo\s*=\s*!renderer\.transparenciaAtiva[\s\S]*?renderer\.setTransparenciaAtiva\(novo\)/.test(game),
+  'Handler precisa toggle real, não força sólido.');
+t('alternarTransparencia atualiza btn-transp class via toggle',
+  /alternarTransparencia[\s\S]*?btn\.classList\.toggle\(['"]solido['"],\s*!novo\)/.test(game));
+t('alternarTransparencia emite toast com estado',
+  /alternarTransparencia[\s\S]*?ui\.toast\([^)]*Blocos:\s*transparentes[^)]*\|\|[^)]*Blocos:\s*sólidos|alternarTransparencia[\s\S]*?ui\.toast\(novo\s*\?\s*['"][^'"]*transparentes[^'"]*['"]\s*:\s*['"][^'"]*sólidos/.test(game));
 
 // ---------------------------------------------------------------------
 // Resumo

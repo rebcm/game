@@ -46,13 +46,21 @@
         <tr><td><kbd>Q</kbd></td><td>Comer item da hotbar</td></tr>
         <tr><td><kbd>G</kbd></td><td>Alternar Criativo / Sobrevivência</td></tr>
         <tr><td><kbd>F5</kbd></td><td>Trocar 1ª / 3ª pessoa</td></tr>
-        <tr><td><kbd>Esc</kbd></td><td>Liberar mouse / pausar</td></tr>
+        <tr><td><kbd>F3</kbd></td><td>Tela de debug (chunk, luz, bioma)</td></tr>
+        <tr><td><kbd>Ctrl</kbd></td><td>Agachar (sneak)</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Pausar</td></tr>
       </table>
     </div>
   </div>
 
   <!-- HUD em jogo -->
   <div id="hud" class="hidden">
+    <!-- Vinheta nas bordas (escurecimento sutil estilo MC) -->
+    <div id="vinheta"></div>
+    <!-- Flash vermelho ao receber dano -->
+    <div id="flash-dano"></div>
+    <!-- Overlay de underwater (azul translúcido quando submerso) -->
+    <div id="overlay-underwater"></div>
     <div id="crosshair"></div>
     <div id="topo">
       <div id="coords">X:0 Y:0 Z:0</div>
@@ -60,15 +68,33 @@
       <div id="relogio">06:00</div>
       <div id="fps">60 FPS</div>
     </div>
+    <!-- F3 debug overlay (toggle por F3) -->
+    <div id="f3-debug" class="hidden">
+      <div class="f3-titulo">Construção Criativa 3D — debug</div>
+      <div id="f3-pos">XYZ: 0.000 / 0.000 / 0.000</div>
+      <div id="f3-block">Block: 0 0 0</div>
+      <div id="f3-chunk">Chunk: 0,0</div>
+      <div id="f3-facing">Facing: north (-Z)</div>
+      <div id="f3-light">Sky / Block light: 15 / 0</div>
+      <div id="f3-biome">Biome: planicies</div>
+      <div id="f3-target">Targeted: --</div>
+      <div id="f3-mem">Mem: --</div>
+      <div id="f3-time">Day time: 06:00 (sun 1.00)</div>
+      <div id="f3-mobs">Entities: 0 mobs / 0 drops</div>
+    </div>
     <div id="bars">
       <div id="hp" class="bar"></div>
       <div id="fome" class="bar"></div>
+      <div id="ar-wrap" class="hidden">
+        <div id="ar" class="bar"></div>
+      </div>
       <div id="xp-wrap">
         <div id="xp-fill"></div>
         <span id="xp-nivel">Nv. 0</span>
       </div>
     </div>
     <div id="hotbar"></div>
+    <div id="tooltip" class="hidden"></div>
     <div id="toast"></div>
     <button id="btn-bag" class="hud-btn" title="Inventário (E)">📦</button>
     <button id="btn-craft" class="hud-btn" title="Crafting (C)">⚒</button>
@@ -185,7 +211,42 @@
   <div id="morte" class="hidden">
     <div class="morte-icone">💀</div>
     <h2>Você morreu</h2>
-    <p>Toque para reviver no spawn</p>
+    <p id="morte-causa">Toque para reviver no spawn</p>
+    <button id="morte-respawn">Respawn</button>
+  </div>
+
+  <!-- Pause menu (ESC abre quando jogando) -->
+  <div id="pause-menu" class="hidden">
+    <div class="pause-box">
+      <h2>Jogo Pausado</h2>
+      <button class="pause-btn" data-action="voltar">Voltar ao Jogo</button>
+      <button class="pause-btn" data-action="salvar">Salvar Mundo</button>
+      <button class="pause-btn" data-action="modo">Alternar Criativo / Sobrevivência</button>
+      <button class="pause-btn" data-action="sair">Sair para o Menu</button>
+      <div class="pause-creditos">Construção Criativa da Rebeca — 3D · por Rebeca Alves Moreira</div>
+    </div>
+  </div>
+
+  <!-- Painel inventário criativo (modo creative com abas + busca) -->
+  <div id="painel-criativo" class="painel hidden">
+    <div class="painel-header">
+      <span>🎨 Inventário Criativo</span>
+      <button class="fechar" data-painel="painel-criativo">✕</button>
+    </div>
+    <div id="criativo-abas">
+      <button class="criativo-aba ativa" data-aba="construcao" title="Blocos de construção">🧱</button>
+      <button class="criativo-aba" data-aba="natureza"  title="Natureza">🌿</button>
+      <button class="criativo-aba" data-aba="minerios"  title="Minérios e metais">💎</button>
+      <button class="criativo-aba" data-aba="liquidos"  title="Líquidos">💧</button>
+      <button class="criativo-aba" data-aba="decoracao" title="Decoração">🪟</button>
+      <button class="criativo-aba" data-aba="ferramentas" title="Ferramentas">⛏</button>
+      <button class="criativo-aba" data-aba="combate"  title="Combate / Armaduras">⚔</button>
+      <button class="criativo-aba" data-aba="comida"   title="Comida">🍖</button>
+    </div>
+    <input id="criativo-busca" type="text" placeholder="Buscar item por nome…" autocomplete="off">
+    <div id="criativo-grid"></div>
+    <div class="dica">Toque num item para colocar 64 unidades no slot ativo da hotbar.</div>
+    <div id="criativo-hotbar"></div>
   </div>
 
   <!-- Controles touch (só visíveis em dispositivos touch) -->

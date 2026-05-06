@@ -63,9 +63,9 @@ const BLOCO_INFO = {
   [BLOCO.PEDRA]:     { nome: 'Pedra',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x9E9E9E, lateral: 0x757575 },
   [BLOCO.AREIA]:     { nome: 'Areia',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xFFEB3B, lateral: 0xFDD835 },
   [BLOCO.MADEIRA]:   { nome: 'Madeira',   solido: true,  transp: false, emiteLuz: 0,  cor: 0xA1887F, lateral: 0x8D6E63 },
-  [BLOCO.FOLHA]:     { nome: 'Folha',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x66BB6A, lateral: 0x66BB6A },
+  [BLOCO.FOLHA]:     { nome: 'Folha',     solido: true,  transp: true,  emiteLuz: 0,  cor: 0x66BB6A, lateral: 0x66BB6A },
   [BLOCO.TIJOLO]:    { nome: 'Tijolo',    solido: true,  transp: false, emiteLuz: 0,  cor: 0xE57373, lateral: 0xC62828 },
-  [BLOCO.VIDRO]:     { nome: 'Vidro',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xB3E5FC, lateral: 0xB3E5FC },
+  [BLOCO.VIDRO]:     { nome: 'Vidro',     solido: true,  transp: true,  emiteLuz: 0,  cor: 0xB3E5FC, lateral: 0xB3E5FC },
   [BLOCO.OURO]:      { nome: 'Ouro',      solido: true,  transp: false, emiteLuz: 0,  cor: 0xFFD54F, lateral: 0xFBC02D },
   [BLOCO.DIAMANTE]:  { nome: 'Diamante',  solido: true,  transp: false, emiteLuz: 0,  cor: 0x80DEEA, lateral: 0x4DD0E1 },
   [BLOCO.LUZ]:       { nome: 'Luz',       solido: true,  transp: false, emiteLuz: 14, cor: 0xFFF9C4, lateral: 0xFFEE58 },
@@ -73,7 +73,7 @@ const BLOCO_INFO = {
   [BLOCO.CARVAO]:    { nome: 'Carvão',    solido: true,  transp: false, emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
   [BLOCO.FERRO]:     { nome: 'Ferro',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xCFD8DC, lateral: 0xB0BEC5 },
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
-  [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: false, emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
+  [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
   [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x4d3e5e, lateral: 0x3a2c4a },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
@@ -1136,10 +1136,11 @@ class Renderer {
     this.camera.add(this.maoGroup);
     this.scene.add(this.camera); // garantir que camera está na scene
     this.swingProgress = 0; // 0..1, animação de swing ao bater
-    // Default: SÓLIDO (sem transparência). materialTransp já foi
-    // criado com transparent:false/FrontSide acima — o usuário pode
-    // habilitar a transparência via botão 🪟.
-    this.transparenciaAtiva = false;
+    // Default Minecraft real: transparência ATIVA (folha/vidro/água
+    // semi-transp). Aplica via setTransparenciaAtiva pra material já
+    // arrancar com flags corretos (transparent/opacity/DoubleSide).
+    this.transparenciaAtiva = true;
+    this.setTransparenciaAtiva(true);
   }
   criarDisco(cor, raio) {
     const g = new THREE.SphereGeometry(raio, 16, 16);
@@ -1422,21 +1423,24 @@ class Renderer {
     }
   }
   // === Alterna transparência global ===
-  // Nesta fase a transparência está PERMANENTEMENTE desabilitada — o
-  // material fica sempre transparent:false/FrontSide/opacity 1.0. O
-  // toggle continua existindo na UI por requisito do usuário ("manter
-  // botão mas desabilitar efeito"); chamadas com ativa=true viram no-op
-  // e logam um aviso uma única vez.
+  // Default Minecraft real: folha/vidro/água são semi-transparentes
+  // (mostram blocos atrás). Toggle off vira tudo opaco — útil quando o
+  // usuário acha que está "vendo demais" através de leaves/vidro/água.
+  // DoubleSide: pra ver back-faces de água quando o player está dentro,
+  // e folhas/vidro mostrarem ambos os lados como em Minecraft.
   setTransparenciaAtiva(ativa) {
-    if (ativa && !Renderer._transpDesabilitadaAvisada) {
-      Renderer._transpDesabilitadaAvisada = true;
-      console.warn('setTransparenciaAtiva(true) ignorado: transparência desabilitada nesta fase.');
+    this.transparenciaAtiva = ativa;
+    if (ativa) {
+      this.materialTransp.transparent = true;
+      this.materialTransp.opacity = 0.78;
+      this.materialTransp.depthWrite = false;
+      this.materialTransp.side = THREE.DoubleSide;
+    } else {
+      this.materialTransp.transparent = false;
+      this.materialTransp.opacity = 1.0;
+      this.materialTransp.depthWrite = true;
+      this.materialTransp.side = THREE.FrontSide;
     }
-    this.transparenciaAtiva = false;
-    this.materialTransp.transparent = false;
-    this.materialTransp.opacity = 1.0;
-    this.materialTransp.depthWrite = true;
-    this.materialTransp.side = THREE.FrontSide;
     this.materialTransp.needsUpdate = true;
   }
 
@@ -1504,6 +1508,18 @@ class Renderer {
     this.maoGroup.position.y = -0.32 + a * 0.06;     // sobe um pouco
   }
 
+  // === FOV pulse on sprint ===
+  // Lerp suave do FOV em direção a 70 (idle) ou 78 (correndo). Rate 10*dt
+  // dá pulso perceptível mas não enjoativo. Sem updateProjectionMatrix
+  // o frustum não recalcula e o FOV não muda visualmente.
+  atualizarFOV(dt, correndo) {
+    const alvo = 70 + (correndo ? 8 : 0);
+    const atual = this.camera.fov;
+    if (Math.abs(atual - alvo) < 0.01) return;
+    const k = Math.min(1, 10 * dt);
+    this.camera.fov = atual + (alvo - atual) * k;
+    this.camera.updateProjectionMatrix();
+  }
   render() { this.renderer.render(this.scene, this.camera); }
 }
 
@@ -1540,6 +1556,8 @@ class Player {
     this.cliqueE = false; this.cliqueD = false; this.holdE = false;
     this.progressoQuebra = 0;
     this.alvoQuebra = null; // {x,y,z}
+    // Acumulador de distância andada (chão) — dispara passo() a cada 0.45m.
+    this.distAndada = 0;
   }
   atualizar(dt, world) {
     if (this.morto) return;
@@ -1586,9 +1604,24 @@ class Player {
     const yMaxAntes = Math.max(this.pos.y, this.spawnY || this.pos.y);
     this.spawnY = yMaxAntes;
 
+    const xAntes = this.pos.x, zAntes = this.pos.z;
     this.moverEixo(world, vx * dt, 0, 0);
     this.moverEixo(world, 0, vy * dt, 0);
     this.moverEixo(world, 0, 0, vz * dt);
+
+    // === Footstep SFX ===
+    // Acumula distância horizontal real (pós-colisão); a cada ~0.45m no
+    // chão dispara passo(). No ar não toca pra evitar spam em pulos.
+    const dxReal = this.pos.x - xAntes;
+    const dzReal = this.pos.z - zAntes;
+    const distH = Math.hypot(dxReal, dzReal);
+    if (this.noChao && distH > 1e-4) {
+      this.distAndada += distH;
+      if (this.distAndada >= 0.45) {
+        this.distAndada = 0;
+        Audio.passo();
+      }
+    }
 
     // === Câmera ===
     if (this.terceiraPessoa) {
@@ -1736,7 +1769,20 @@ class Inventario {
     return false;
   }
   itemSelecionado() { return this.slots[this.slotSel]; }
-  selecionar(idx) { this.slotSel = ((idx % 9) + 9) % 9; ui.atualizar(); }
+  selecionar(idx) {
+    const novo = ((idx % 9) + 9) % 9;
+    if (novo === this.slotSel) { ui.atualizar(); return; }
+    this.slotSel = novo;
+    ui.atualizar();
+    // Toast com nome do bloco/item — só se slot tem conteúdo (Minecraft style).
+    const it = this.slots[novo];
+    if (it) {
+      const nome = it.b !== undefined ? BLOCO_INFO[it.b]?.nome
+                : it.i !== undefined ? ITEM_INFO[it.i]?.nome
+                : null;
+      if (nome) ui.toast(nome);
+    }
+  }
   adicionar(item) {
     // empilhar em slots existentes
     for (let i = 0; i < this.slots.length; i++) {
@@ -2334,6 +2380,7 @@ const Audio = {
   hit()     { (this._sfx().hit     || (() => {}))(); },
   comer()   { (this._sfx().comer   || (() => {}))(); },
   respawn() { (this._sfx().respawn || (() => {}))(); },
+  passo()   { (this._sfx().passo   || (() => {}))(); },
 };
 
 // ===================================================================
@@ -2814,6 +2861,15 @@ function init() {
   setupTouchControls();
   ui.atualizar();
 
+  // Sincroniza visual do botão de transparência com o default (true).
+  // HTML inicia com class="solido"+🧱; default Minecraft é transparente.
+  const btnTransp = document.getElementById('btn-transp');
+  if (btnTransp) {
+    btnTransp.textContent = '🪟';
+    btnTransp.title = 'Modo: transparente (folha/vidro/água semi-transp). Clique para sólido.';
+    btnTransp.classList.remove('solido');
+  }
+
   // Iniciar autosave a cada 30s
   setInterval(() => Save.salvar(), 30_000);
 
@@ -3099,14 +3155,18 @@ function alternarModo() {
 }
 
 function alternarTransparencia() {
-  // Transparência desabilitada nesta fase: o toggle continua existindo
-  // na UI mas não muda o material — força o estado sólido sempre.
-  renderer.setTransparenciaAtiva(false);
+  const novo = !renderer.transparenciaAtiva;
+  renderer.setTransparenciaAtiva(novo);
   const btn = document.getElementById('btn-transp');
-  btn.textContent = '🧱';
-  btn.title = 'Modo: sólido (transparência desabilitada nesta fase).';
-  btn.classList.add('solido');
-  ui.toast('Modo sólido — transparência desabilitada nesta fase');
+  btn.textContent = novo ? '🪟' : '🧱';
+  btn.title = novo
+    ? 'Modo: transparente (folha/vidro/água semi-transp). Clique para sólido.'
+    : 'Modo: sólido (tudo opaco). Clique para transparente.';
+  btn.classList.toggle('solido', !novo);
+  // Marca chunks dirty pra rebuild dos meshes transparentes (necessário
+  // se algum bloco mudou de transp:true→false ou vice-versa no BLOCO_INFO).
+  for (const c of world.chunks.values()) c.dirty = true;
+  ui.toast(novo ? 'Blocos: transparentes' : 'Blocos: sólidos');
 }
 
 // === Sistema de XP ===
@@ -3375,6 +3435,9 @@ function loop(now) {
               world.set(a.x, a.y, a.z, sel.b);
               inv.consumirAtual();
               Audio.colocar();
+              // Puff de partículas igual ao spawnQuebra — sem isso a colocação
+              // fica muda visualmente vs. quebra (assimetria não-Minecraft).
+              particulas.spawnQuebra(a.x, a.y, a.z, sel.b);
               renderer.swingProgress = 0.01;
             }
           }
@@ -3426,12 +3489,15 @@ function loop(now) {
 
   renderer.atualizarCeu(tempoDia, player.pos);
   renderer.atualizarLuzesPontuais(world, player.pos);
+  renderer.atualizarFOV(dt, !!player.input.sprint && (Math.abs(player.input.fwd) + Math.abs(player.input.side)) > 0);
 
   // HUD
   const t = tempoDia * 24;
   const h = Math.floor(t), m = Math.floor((t - h) * 60);
+  // Glifo sol/lua antes do horário — leitura dia/noite imediata sem ler números.
+  const glifo = (tempoDia >= 0.25 && tempoDia < 0.75) ? '☀' : '☾';
   document.getElementById('relogio').textContent =
-    `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    `${glifo} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
   document.getElementById('coords').textContent =
     `X:${player.pos.x.toFixed(1)} Y:${player.pos.y.toFixed(1)} Z:${player.pos.z.toFixed(1)}`;
   ui.renderBars();
