@@ -1,197 +1,210 @@
-# 🏛 Arquitetura do Projeto
+# 🏛 Arquitetura — Construção Criativa da Rebeca
 
-**Projeto:** Construção Criativa da Rebeca
 **Autora:** Rebeca Alves Moreira
+**Versão:** Web3D modular (Three.js + ES modules)
 
 ---
 
-## 🎯 Visão Geral
+## 🎯 Visão geral
 
-O repositório `rebcm/game` contém **dois sandboxes coexistentes** do mesmo conceito (jogo voxel da Rebeca), com tecnologias diferentes:
+O jogo é uma **single-page web app** rodando 100% no navegador. Não há backend, não há build step, não há servidor de jogo.
 
-| Sandbox | Stack | Status | Localização |
-|---------|-------|--------|-------------|
-| **Web3D** | Three.js + WebGL puro | ✅ **Ativo (versão deployada)** | [`web3d/`](web3d/) |
-| **Flutter 2D** | Flutter + Flame | 🧊 Manutenção (legado) | [`lib/`](lib/), [`app/`](app/) |
-
-A versão **Web3D** é a única em desenvolvimento ativo e a que está em produção em https://construcao-criativa.pages.dev.
-
-A versão **Flutter** é mantida no repo como referência histórica e como base de comparação. Não é deployada.
+Todo o código fica em [`web3d/`](web3d/) e é deployado direto no Cloudflare Pages como arquivos estáticos.
 
 ---
 
-## 🎮 Web3D (Versão Ativa)
+## 📂 Estrutura de pastas
 
-### Stack
-- **Three.js 0.165** via importmap CDN unpkg
-- **JavaScript ES2022** (módulos nativos, sem build)
-- **WebGL** via `THREE.WebGLRenderer`
-- **Web Audio API** para SFX procedurais
-- **localStorage** para persistência
-
-### Arquivos
 ```
-web3d/
-├── index.html       # Entrada: HUD em DOM, áudio inline, importmap, boot screen
-├── style.css        # Estilo pixel-perfect com fonte "Press Start 2P"
-├── game.js          # Engine completo (~4200 linhas, single-file)
-├── manifest.json    # PWA manifest
-├── favicon.svg      # Ícone voxel isométrico
-└── _headers         # Cache headers do Cloudflare Pages
+game/
+├── README.md                # Visão geral pública
+├── CLAUDE.md                # Instruções para Claude Code auto-continue
+├── AGENTS.md                # Regras detalhadas para agentes de IA
+├── ARCHITECTURE.md          # Você está aqui
+├── .env.example             # Template de credenciais Cloudflare
+├── .gitignore
+├── .github/workflows/
+│   └── deploy.yml           # Deploy automático
+├── docs/
+│   ├── MODULES.md           # Referência módulo por módulo
+│   ├── walkthrough.md       # Como jogar
+│   └── SETUP.md             # Setup de desenvolvimento
+├── scripts/
+│   ├── deploy-web3d.sh      # Cache busting + smoke tests + wrangler
+│   └── test-web3d-precheck.js  # 93 smoke tests
+└── web3d/                   # ⭐ O jogo
+    ├── index.html           # HUD em DOM + áudio inline (window.rebcm.sfx)
+    ├── style.css            # Pixel-perfect com Press Start 2P
+    ├── manifest.json        # PWA
+    ├── _headers             # Cache headers (HTML 60s, JS immutable)
+    ├── favicon.svg / .png
+    └── src/                 # 14 módulos ES
+        ├── main.js          # Entry: init() + loop + handlers de ações
+        ├── state.js         # Estado global compartilhado
+        ├── constants.js     # BLOCO, ITEM, RECEITAS, dimensões
+        ├── utils.js         # Hashes, AO, materialDeBloco, uvCelula
+        ├── audio.js         # Wrapper sobre window.rebcm.sfx
+        ├── world.js         # Chunk, World, geração, lighting 15 níveis
+        ├── render.js        # Renderer Three.js, atlas, sky, mesh builder
+        ├── player.js        # Player, física AABB, swim, sneak
+        ├── inventory.js     # Inventario, Drops, Crafting
+        ├── mobs.js          # Mob, MobManager, 11 espécies
+        ├── particles.js     # Particulas, ItemDrop, XPOrb, ambient
+        ├── ui.js            # UI, paineis, F3, pause, criativo
+        ├── save.js          # localStorage v4
+        └── input.js         # Keyboard + mouse + touch
 ```
 
-### Estrutura interna do `game.js`
+---
 
-O arquivo é dividido em seções marcadas por banners `// ====== N) Nome ======`:
-
-| # | Seção | Responsabilidade |
-|---|-------|------------------|
-| 1 | Constantes | `BLOCO`, `BLOCO_INFO`, `ITEM`, `ITEM_INFO`, `RECEITAS`, dimensões |
-| 2 | Utilitários | `hash2`, `hash3`, `clamp`, `chunkKey`, `materialDeBloco` |
-| 3 | Mundo / Chunk | `Chunk` (16×16×64 voxels), `World` (chunks Map + estados de baú/fornalha) |
-| 4 | Renderer | Cena Three.js, atlas procedural, mesh por chunk, céu, sol/lua, nuvens |
-| 5 | Player + Controles | `Player` com física AABB, swim, sneak, fall damage, ar/oxigênio |
-| 6 | Inventário, Drops, Crafting | `Inventario`, `Drops`, `Crafting` |
-| 6.5 | Partículas | `Particulas` (faíscas ao quebrar bloco) |
-| 6.6 | Item Drops | `ItemDrop` (entidades flutuantes coletáveis) |
-| 7 | Mobs | `Mob`, `MobManager`, modelos 3D de 9 espécies |
-| 8 | Audio | wrapper sobre `window.rebcm.sfx` definido no HTML |
-| 9 | UI | `UI` class — hotbar, barras, painéis, F3, pause, criativo |
-| 10 | Save / Load | `Save.salvar()` / `Save.carregar()` em localStorage |
-| 11 | Globals + Bootstrap | `init()`, declaração das instâncias globais |
-| 12 | Boot | listener do botão `JOGAR`, fullscreen, pointer lock |
-
-### Fluxo de Execução
+## 🔄 Fluxo de execução
 
 ```
 [Usuário clica JOGAR]
        ↓
-init()
-  ├─ new Renderer(canvas)
-  │     └─ cria scene, camera, atlas, sol/lua/nuvens, highlight, mão
-  ├─ new World(seed)
-  ├─ new Player(camera) + PointerLockControls
-  ├─ new MobManager(scene)
-  ├─ new Particulas(scene)
-  ├─ Save.carregar()  → restaura estado (ou spawn fresh)
-  ├─ setupInput()      → keyboard, mouse, F3, pause, criativo
-  ├─ setupTouchControls() → joystick, look-zone, botões touch
+main.js: handler do botão #play
+  ├─ desbloqueia AudioContext (gesto do clique)
+  ├─ requestFullscreen + screen.orientation.lock('landscape')
+  ├─ esconde #boot, mostra #hud
+  └─ chama init()
+       ↓
+init() (main.js)
+  ├─ state.ui = new UI()
+  ├─ state.inv = new Inventario() + hotbar inicial
+  ├─ state.renderer = new Renderer(canvas)
+  ├─ state.world = new World(seed)
+  ├─ state.player = new Player(camera) + PointerLockControls
+  ├─ state.mobMgr = new MobManager(scene)
+  ├─ state.particulas = new Particulas(scene)
+  ├─ Save.carregar() → restaura ou spawn novo
+  ├─ setActions({ atacarMob, comerSlot, ... })
+  ├─ setupInput()        # keyboard + mouse + UI buttons
+  ├─ setupTouchControls() # joystick + look + touch buttons
+  ├─ Audio.musicaIniciar()
+  ├─ setInterval(Save.salvar, 30s)
   └─ requestAnimationFrame(loop)
        ↓
-loop(dt)  [60 fps]
+loop(dt) [60 fps]
   ├─ FPS counter
-  ├─ if !pausado:
-  │     ├─ player.atualizar(dt) → input → física → swim → sneak → fome → ar
-  │     ├─ tempoDia += dt/240
-  │     ├─ mobMgr.atualizar(dt, world, player, sun)
-  │     ├─ particulas.atualizar(dt)
-  │     ├─ raycast → highlight + quebra/colocar
-  │     └─ renderer.atualizarMao(dt, ...)
+  ├─ Verifica pausa (paineis abertos / morto / pause menu)
+  ├─ Se não pausado:
+  │   ├─ player.atualizar(dt) → input → física → swim → sneak → fome → ar
+  │   ├─ tempoDia += dt/240
+  │   ├─ mobMgr.atualizar(dt, world, player, sun)
+  │   ├─ particulas.atualizar(dt)  # incluindo ambient (smoke fornalha, lava sparks)
+  │   ├─ raycastBloco → highlight + quebra/colocar
+  │   └─ renderer.atualizarMao(dt)
   ├─ Carrega chunks faltantes (orçamento 2/frame)
   ├─ Build mesh dos chunks dirty (orçamento 2/frame)
   ├─ Libera chunks fora do view radius
-  ├─ renderer.atualizarCeu(tempoDia, playerPos)  # nuvens, sol, lua
+  ├─ renderer.atualizarCeu(tempoDia, playerPos)  # nuvens, sol, lua, estrelas
   ├─ renderer.atualizarLuzesPontuais(...)
   ├─ ui.renderBars()
-  ├─ ui.atualizarOverlays()  → vinheta, underwater, low-hp
-  ├─ ui.atualizarF3({targetBlock: ray?.hit})
+  ├─ ui.atualizarOverlays()  # vinheta, underwater, low-hp
+  ├─ ui.atualizarF3({targetBlock})
   ├─ atualizarItemDrops(dt)
+  ├─ atualizarXpOrbs(dt, ganharXP)
+  ├─ atualizarAmbientTriggers(dt)  # cave drip, vento
+  ├─ Camera shake offset
   └─ renderer.render()
 ```
 
-### Decisões de Design
+---
 
-- **Chunks 16×16×64 com altura limitada a 64**: paridade próxima do Minecraft, suficiente para dispositivos móveis.
-- **Per-face meshing** (não greedy ainda): mais simples, viável para `VIEW_RADIUS=4` (~81 chunks visíveis).
-- **Iluminação 15 níveis** (paridade Minecraft): cada chunk armazena dois canais de luz por voxel — **skylight** (vertical, 0-15) e **blocklight** (BFS flood-fill, 0-15) em 1 byte (4+4 bits). O mesh builder lê a luz do voxel adjacente à cada face e modula a vertex color resultante. Recalculada quando o chunk é alterado.
-- **AO por vértice**: três blocos vizinhos por vértice; combinado multiplicativamente com luz e shade.
-- **Modelos de mob com `THREE.Group`** + pivots para cabeça/corpo/pernas/braços animadas. 11 espécies (vaca, galinha, porco, ovelha, lobo, zumbi, esqueleto, aranha, creeper, slime, enderman).
-- **HUD em DOM** sobreposto ao canvas (não em WebGL): permite Press Start 2P, emojis, tooltips fáceis.
-- **Áudio Web Audio inline** no HTML: o módulo `game.js` apenas consome `window.rebcm.sfx` exposto pelo `<script>` da raiz. **Todos os sons são procedurais** (osciladores + ruído filtrado), gerados em runtime — zero arquivos de áudio.
-- **Música ambient** com progressão harmônica de 4 acordes (pad) + melodia esparsa em escala diatônica, ambos sintetizados via osciladores.
-- **Save em localStorage com versão `v3`**: migrações sem quebra. `chunks` modificados serializados em base64.
-- **Camera shake + flash dano + heart shake** ao receber dano — feedback poliviszal (CSS animations + shake offset 3D).
-- **Mob spawn rules por light level**: hostis aparecem onde luz combinada ≤ 7; pacíficos onde luz ≥ 9 + chão de grama/areia.
+## 💡 Decisões de design chave
+
+### Modularidade
+- **14 módulos ES** com responsabilidade única, importados via `import` nativo do browser.
+- **Sem ciclos de import**: estado compartilhado fica em [`state.js`](web3d/src/state.js) (objeto mutável); módulos referenciam `state.world`, `state.player` etc.
+
+### Sem build step
+- `index.html` define `<script type="importmap">` apontando Three.js para CDN unpkg.
+- `index.html` carrega `src/main.js?v=__BUILD_VERSION__` (substituído no deploy pelo timestamp).
+- Cache: HTML `max-age=60`, JS `max-age=31536000 immutable` — quando deploya algo novo, a URL do JS muda e o browser revalida sozinho.
+
+### Iluminação 15 níveis
+- Cada `Chunk` tem `light: Uint8Array` (1 byte por voxel: 4 bits sky + 4 bits block).
+- `World.recalcLuzChunk(chunk)`:
+  1. **Skylight vertical**: desce do topo, fica em 15 enquanto não bater bloco sólido.
+  2. **Blocklight BFS**: enfileira fontes emissivas (lava, luz, tocha) e propaga -1 por bloco.
+- Mesh builder lê `world.getLightAt(adjacent_voxel)` para cada face → vertex color modulada.
+- Recalc local por chunk (não cruza bordas) — simplificação aceitável.
+
+### Blocos opacos (sem transparência)
+- Após refatoração, `BLOCO_INFO` não tem mais `transp: true`.
+- Mesh builder único (sem `meshT/positionsT`).
+- Faces visíveis: `world.get(adj) === BLOCO.AR`.
+- Vidro/folha/água/tocha aparecem como blocos sólidos com cores próprias.
+
+### Estado compartilhado
+- [`state.js`](web3d/src/state.js) exporta um objeto único `state` com referências às instâncias.
+- Módulos fazem `import { state } from './state.js'` e leem/escrevem `state.world.foo()`.
+- Evita ciclos de import e prop drilling.
+
+### Save em localStorage v4
+- JSON único: posição, HP, fome, XP, nível, modo, hora, inventário, armadura, baús, fornalhas, chunks modificados (base64).
+- Versão `v4` corresponde à refatoração modular sem transparência.
+
+### Mobs com IA leve
+- 11 espécies em `MOB_INFO` com `hp`, `vel`, `hostil`, `dano`, `alcance`, `drops()`, `cor`, `sec`.
+- Spawn por light level (paridade Minecraft real).
+- Comportamentos especiais: slime pula, enderman teleporta.
+- Sons casuais por mob a cada 6–18s quando perto (raio 24m).
+
+### Áudio procedural
+- HTML inline `<script>` define `window.rebcm.sfx` com osciladores Web Audio.
+- ~40 SFX: passos por material, mob calls, ambient (cave drip/vento), UI (chest, eat, equip), combate (hurt/critical/explosao).
+- Música: progressão harmônica de 4 acordes (pad sustenido) + melodia em escala diatônica, em loop.
+- [`audio.js`](web3d/src/audio.js) só faz wrapper com nomes amigáveis.
+
+### HUD em DOM
+- Não usa WebGL para HUD. Vinheta/flash/tooltip/F3/pause são `<div>` sobre o canvas.
+- Permite Press Start 2P + emojis + animações CSS.
 
 ---
 
-## 🧊 Flutter 2D (Legado)
-
-### Stack
-- Flutter 3.24 + Flame 1.18
-- Renderização isométrica custom com painter's algorithm
-- Build via `flutter build web --release`
-
-### Estrutura
-```
-app/lib/
-├── main.dart                          # Entrada: landscape + immersive
-├── constantes.dart                    # Dimensões, velocidades
-├── blocos/tipo_bloco.dart            # 13 blocos
-├── mundo/mundo.dart                  # Grid 32×32×20 + ondas senoidais
-├── personagem/rebeca.dart            # Movimento, raycasting
-├── renderizador/renderizador_isometrico.dart  # Painter's algorithm
-├── jogo/construcao_criativa.dart     # FlameGame loop
-└── ui/controles_overlay.dart         # Joystick, hotbar, HUD
-
-lib/                                  # Cópia/módulo Flutter
-```
-
-Esta versão segue a regra original "criativo puro, sem mobs/morte". Não tem paridade com Minecraft moderno.
-
----
-
-## 🔄 Comparação Web3D × Flutter
-
-| Aspecto | Web3D ✅ | Flutter 2D 🧊 |
-|---------|----------|---------------|
-| Vista | 1ª/3ª pessoa real 3D | Isométrica 2.5D |
-| Mundo | Infinito por chunks | 32×32×20 fixo |
-| Tipos de bloco | 26 | 13 |
-| Mobs | 9 espécies com IA | nenhum |
-| Modos | Criativo + Sobrevivência | Criativo apenas |
-| Crafting | 25+ receitas + workbench + fornalha | nenhum |
-| Inventário | 36 slots + 4 armadura + abas | hotbar 8 slots |
-| Save | localStorage v3 com chunks | nenhum |
-| Day/Night | Ciclo de 4 minutos com sol/lua/nuvens | nenhum |
-| Mobile | Touch otimizado | Touch básico |
-| Performance | 60 fps em celular médio | 30 fps em celular médio |
-| Build size | ~180 KB total (game.js) | ~4 MB (Flutter web bundle) |
-
----
-
-## 🚀 Pipeline de Deploy
-
-### Web3D (atual)
+## 🚀 Pipeline de deploy
 
 ```
 git push origin main
        ↓
-GitHub Actions (.github/workflows/Deploy.yml)
-       ↓
-scripts/deploy-web3d.sh
-       ├─ cp web3d/* /tmp/web3d-build-XXXX/
-       ├─ sed __BUILD_VERSION__ → timestamp UTC
-       ├─ node --check game.js
-       ├─ node test-web3d-precheck.js   # 30 smoke tests
-       └─ wrangler pages deploy → construcao-criativa.pages.dev
+GitHub Actions (.github/workflows/deploy.yml)
+  └─ scripts/deploy-web3d.sh
+       ├─ cp web3d/* /tmp/build-XXXX/
+       ├─ sed __BUILD_VERSION__ → timestamp UTC (cache busting)
+       ├─ for f in src/*.js; node --check "$f"
+       ├─ node test-web3d-precheck.js .   # 93 smoke tests
+       └─ wrangler pages deploy /tmp/build-XXXX
+              └→ construcao-criativa.pages.dev
 ```
 
-### Flutter (legado)
-Existe workflow histórico em `.github/workflows/`. Não é mais executado em prod.
+Se algum smoke test falhar, **deploy aborta com exit 1** e o status do PR fica vermelho.
 
 ---
 
-## 📚 Documentação Relacionada
+## 🛡 Smoke tests (93 invariantes)
 
-- [`README.md`](README.md) — visão geral pública
-- [`AGENTS.md`](AGENTS.md) — instruções para agentes de IA
-- [`docs/walkthrough.md`](docs/walkthrough.md) — guia jogável
-- [`docs/SETUP.md`](docs/SETUP.md) — ambiente de desenvolvimento
-- [`docs/deploy/procedimento-deploy.md`](docs/deploy/procedimento-deploy.md) — fluxo de deploy detalhado
-- [`docs/blocos/README.md`](docs/blocos/README.md) — catálogo de blocos
-- [`docs/biomas.md`](docs/biomas.md) — biomas e geração de terreno
+[`scripts/test-web3d-precheck.js`](scripts/test-web3d-precheck.js) verifica:
+
+- **Estrutura**: 14 módulos `src/*.js` existem; `game.js` antigo NÃO existe.
+- **Sintaxe**: `node --check` em cada módulo.
+- **Blocos opacos**: `transp:true` ausente em `constants.js`; `meshT/positionsT` ausentes em `render.js`.
+- **HTML**: `import("./src/main.js")` correto; sem `btn-transp`; divs essenciais presentes.
+- **Por módulo**: invariantes específicos (ex.: `World.recalcLuzChunk` faz BFS, `Player.sneak` existe, `MobManager` tem 11 espécies, etc).
+
+Adicione um novo teste a cada bug que regrediu, para impedir reincidência.
 
 ---
 
-*Atualizado em maio/2026 — migração Three.js completa.*
+## 📚 Documentos relacionados
+
+- [`README.md`](README.md) — visão pública
+- [`CLAUDE.md`](CLAUDE.md) — auto-continue para Claude Code
+- [`AGENTS.md`](AGENTS.md) — regras detalhadas
+- [`docs/MODULES.md`](docs/MODULES.md) — referência por módulo
+- [`docs/walkthrough.md`](docs/walkthrough.md) — passo-a-passo
+- [`docs/SETUP.md`](docs/SETUP.md) — setup local
+
+---
+
+*Atualizado em maio/2026 — arquitetura modular completa.*

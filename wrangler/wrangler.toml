@@ -1,8 +1,0 @@
-name = "rebcm-worker"
-main = "src/index.js"
-compatibility_date = "2023-01-01"
-account_id = "${CLOUDFLARE_ACCOUNT_ID}"
-vars = {
-  API_KEY = "${API_KEY}",
-  # Add other vars here
-}

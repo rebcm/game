@@ -1,14 +1,21 @@
-.dev.vars
-
-# Secrets / credenciais — NUNCA commitar
+# === Secrets / credenciais — NUNCA commitar ===
 .env
 .env.*
 !.env.example
+.dev.vars
 
-# Flutter / Dart
+# === Diretórios de build / cache ===
+node_modules/
+.wrangler/
+build/
+
+# === Legados Flutter (mantidos no FS mas não commitados) ===
+android/
+app/
+ios/
 **/.dart_tool/
 **/.flutter-plugins
 **/.flutter-plugins-dependencies
 **/.packages
-**/build/
 **/pubspec.lock.bak
+flutter_doctor_output.txt

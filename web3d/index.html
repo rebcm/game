@@ -47,6 +47,7 @@
         <tr><td><kbd>G</kbd></td><td>Alternar Criativo / Sobrevivência</td></tr>
         <tr><td><kbd>F5</kbd></td><td>Trocar 1ª / 3ª pessoa</td></tr>
         <tr><td><kbd>F3</kbd></td><td>Tela de debug (chunk, luz, bioma)</td></tr>
+        <tr><td><kbd>F1</kbd></td><td>Esconder / mostrar HUD</td></tr>
         <tr><td><kbd>Ctrl</kbd></td><td>Agachar (sneak)</td></tr>
         <tr><td><kbd>Esc</kbd></td><td>Pausar</td></tr>
       </table>
@@ -101,7 +102,6 @@
     <button id="btn-craft" class="hud-btn" title="Crafting (C)">⚒</button>
     <button id="btn-modo" class="hud-btn" title="Alternar modo (G)">🦅</button>
     <button id="btn-save" class="hud-btn" title="Salvar">💾</button>
-    <button id="btn-transp" class="hud-btn solido" title="Alternar transparência (T)">🧱</button>
   </div>
 
   <!-- Painel inventário -->
@@ -602,14 +602,14 @@
     })();
   </script>
 
-  <!-- Cache-busting: __BUILD_VERSION__ é substituído em cada deploy
-       pelo timestamp do build, gerando uma URL única para o JS após
-       qualquer alteração. Cloudflare Pages serve o HTML com cache
-       curto (ver _headers), e o navegador revalida game.js sempre
-       que o version muda. -->
+  <!-- Entry point modular ES.
+       __BUILD_VERSION__ é substituído pelo timestamp do build no deploy,
+       garantindo cache busting sempre que o código muda. O Cloudflare
+       Pages serve o HTML com max-age=60 (ver _headers), e o navegador
+       revalida main.js quando o ?v= muda. -->
   <script type="module">
     const BUILD_VERSION = '__BUILD_VERSION__';
-    import(`./game.js?v=${BUILD_VERSION}`);
+    import(`./src/main.js?v=${BUILD_VERSION}`);
   </script>
 </body>
 </html>

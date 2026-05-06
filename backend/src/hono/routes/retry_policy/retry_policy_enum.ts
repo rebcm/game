@@ -1,4 +1,0 @@
-enum RetryPolicy {
-  retry,
-  failFast
-}

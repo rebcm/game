@@ -1,7 +1,0 @@
-{
-  "tip": "This is a tip",
-  "@tip": {
-    "description": "A tip message",
-    "type": "text"
-  }
-}

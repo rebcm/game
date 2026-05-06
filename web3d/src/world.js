@@ -1,0 +1,304 @@
+// =====================================================================
+// world.js — Chunks, geração de mundo e iluminação 15 níveis
+// =====================================================================
+
+import {
+  CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO,
+} from './constants.js';
+import { hash2, hash3, clamp, chunkKey } from './utils.js';
+
+// Um chunk de 16×16×64 voxels.
+// `blocks` armazena IDs de bloco (0-25). `light` armazena luz por voxel
+// num só byte: 4 bits sky + 4 bits block (0-15 cada).
+export class Chunk {
+  constructor(cx, cz) {
+    this.cx = cx; this.cz = cz;
+    this.blocks = new Uint8Array(CHUNK_SIZE * CHUNK_SIZE * WORLD_Y);
+    this.light = new Uint8Array(CHUNK_SIZE * CHUNK_SIZE * WORLD_Y);
+    this.dirty = true;       // mesh precisa rebuild
+    this.luzDirty = true;    // luz precisa recalcular
+    this.modificado = false; // foi alterado pelo player (vai pro save)
+    this.mesh = null;
+    this.lights = [];        // lista de blocos emissivos (lava/luz/tocha)
+  }
+  static idx(lx, y, lz) { return y * CHUNK_SIZE * CHUNK_SIZE + lx * CHUNK_SIZE + lz; }
+  get(lx, y, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return BLOCO.AR;
+    if (y < 0 || y >= WORLD_Y) return BLOCO.AR;
+    return this.blocks[Chunk.idx(lx, y, lz)];
+  }
+  set(lx, y, lz, t) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return;
+    if (y < 0 || y >= WORLD_Y) return;
+    const i = Chunk.idx(lx, y, lz);
+    if (this.blocks[i] === t) return;
+    this.blocks[i] = t;
+    this.dirty = true;
+    this.luzDirty = true;
+  }
+  getLightSky(lx, y, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return 15;
+    if (y < 0 || y >= WORLD_Y) return 15;
+    return (this.light[Chunk.idx(lx, y, lz)] >> 4) & 0x0F;
+  }
+  getLightBlock(lx, y, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return 0;
+    if (y < 0 || y >= WORLD_Y) return 0;
+    return this.light[Chunk.idx(lx, y, lz)] & 0x0F;
+  }
+  setLightCombinado(lx, y, lz, sky, block) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return;
+    if (y < 0 || y >= WORLD_Y) return;
+    this.light[Chunk.idx(lx, y, lz)] = ((sky & 0x0F) << 4) | (block & 0x0F);
+  }
+}
+
+// O mundo: dicionário de chunks + estados de blocos funcionais (baú, fornalha).
+export class World {
+  constructor(seed = 42) {
+    this.seed = seed;
+    this.chunks = new Map();
+    this.bauTesouros = new Map();    // "x,y,z" -> array de 27 slots
+    this.fornalhaEstados = new Map(); // "x,y,z" -> {input, combustivel, output, progresso, ativa}
+  }
+  static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
+
+  getBau(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    if (!this.bauTesouros.has(k)) this.bauTesouros.set(k, new Array(27).fill(null));
+    return this.bauTesouros.get(k);
+  }
+  getFornalha(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    if (!this.fornalhaEstados.has(k)) {
+      this.fornalhaEstados.set(k, {
+        input: null, combustivel: null, output: null,
+        progresso: 0, ativa: false,
+      });
+    }
+    return this.fornalhaEstados.get(k);
+  }
+  removerEstadoBloco(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    this.bauTesouros.delete(k);
+    this.fornalhaEstados.delete(k);
+  }
+
+  // === Geração de terreno ===
+  // Altura por somatório de senoides. Range [2, WORLD_Y-8].
+  alturaTerreno(x, z) {
+    const nx = x / 32, nz = z / 32;
+    let v = Math.sin(nx * Math.PI) * Math.cos(nz * Math.PI) * 0.45 +
+            Math.sin(nx * Math.PI * 2.5 + 1.3) * Math.sin(nz * Math.PI * 1.7 + 0.8) * 0.30 +
+            Math.sin(nx * Math.PI * 5.5 + 2.5) * Math.cos(nz * Math.PI * 3.5 + 1.9) * 0.15 +
+            Math.sin(nx * Math.PI * 8.5 + 4.1) * Math.sin(nz * Math.PI * 6.5 + 3.3) * 0.10;
+    v = (v + 1) / 2;
+    return clamp(6 + Math.floor(v * 18), 2, WORLD_Y - 8);
+  }
+  // Bloco do topo dependendo da altura + zona (areia/grama/neve).
+  topoBioma(x, z, h) {
+    if (h <= 4) return BLOCO.AREIA;
+    if (h >= 22) return BLOCO.NEVE;
+    if (((z + this.seed) % 256 + 256) % 256 > 200) return BLOCO.NEVE;
+    if (((z - this.seed) % 256 + 256) % 256 < 76)  return BLOCO.AREIA;
+    return BLOCO.GRAMA;
+  }
+  // Cavernas via hash 3D (proxy de Simplex). Retorna true se ar.
+  caverna(x, y, z) {
+    if (y <= 4 || y >= WORLD_Y - 4) return false;
+    const h = hash3(x, y, z, this.seed ^ 0xCAFE) & 0xFFF;
+    return h < 100; // ~3% dos voxels
+  }
+
+  // Gera (uma única vez) o conteúdo do chunk.
+  gerarChunk(cx, cz) {
+    const c = new Chunk(cx, cz);
+    // 1. Terreno + minérios
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      for (let lz = 0; lz < CHUNK_SIZE; lz++) {
+        const gx = cx * CHUNK_SIZE + lx;
+        const gz = cz * CHUNK_SIZE + lz;
+        const h = this.alturaTerreno(gx, gz);
+        for (let y = 0; y <= h; y++) {
+          let b;
+          if (y <= 2) b = BLOCO.BEDROCK;
+          else if (y <= 4) {
+            const hh = hash2(gx, gz + y * 31, this.seed ^ 0xfee10) & 0xFF;
+            b = hh < 14 ? BLOCO.LAVA : BLOCO.PEDRA;
+          } else if (y < h - 3) {
+            // Cavernas
+            if (this.caverna(gx, y, gz)) { c.set(lx, y, lz, BLOCO.AR); continue; }
+            const hh = hash3(gx, y, gz, this.seed ^ 0xa1b2) & 0xFF;
+            if (y < 6 && hh < 3) b = BLOCO.DIAMANTE;
+            else if (y < 10 && hh < 6) b = BLOCO.OURO;
+            else if (y < 14 && hh < 14) b = BLOCO.FERRO;
+            else if (hh < 26) b = BLOCO.CARVAO;
+            else b = BLOCO.PEDRA;
+          } else if (y < h) {
+            b = BLOCO.TERRA;
+          } else {
+            b = this.topoBioma(gx, gz, h);
+          }
+          c.set(lx, y, lz, b);
+        }
+      }
+    }
+    // 2. Árvores
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      for (let lz = 0; lz < CHUNK_SIZE; lz++) {
+        const gx = cx * CHUNK_SIZE + lx;
+        const gz = cz * CHUNK_SIZE + lz;
+        const h = this.alturaTerreno(gx, gz);
+        if (c.get(lx, h, lz) !== BLOCO.GRAMA) continue;
+        const hh = hash2(gx, gz, this.seed ^ 0xA75) & 0xFF;
+        if (hh > 8) continue; // ~3% chance
+        const altura = 4 + (hh & 0x3);
+        for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.MADEIRA);
+        // Copa esférica
+        for (let dx = -2; dx <= 2; dx++) {
+          for (let dz = -2; dz <= 2; dz++) {
+            for (let dy = 0; dy <= 2; dy++) {
+              if (dx*dx + dz*dz + dy*dy <= 5) {
+                if (lx + dx < 0 || lx + dx >= CHUNK_SIZE) continue;
+                if (lz + dz < 0 || lz + dz >= CHUNK_SIZE) continue;
+                if (c.get(lx + dx, h + altura + dy, lz + dz) === BLOCO.AR) {
+                  c.set(lx + dx, h + altura + dy, lz + dz, BLOCO.FOLHA);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // 3. Cactos no deserto
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      for (let lz = 0; lz < CHUNK_SIZE; lz++) {
+        const gx = cx * CHUNK_SIZE + lx;
+        const gz = cz * CHUNK_SIZE + lz;
+        const h = this.alturaTerreno(gx, gz);
+        if (c.get(lx, h, lz) !== BLOCO.AREIA) continue;
+        const hh = hash2(gx, gz, this.seed ^ 0xCAC) & 0xFF;
+        if (hh > 6) continue;
+        const altura = 1 + (hh & 0x2);
+        for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.CACTO);
+      }
+    }
+    return c;
+  }
+
+  // Carrega chunk (gera se não existe).
+  getChunk(cx, cz) {
+    const k = chunkKey(cx, cz);
+    let c = this.chunks.get(k);
+    if (!c) { c = this.gerarChunk(cx, cz); this.chunks.set(k, c); }
+    return c;
+  }
+  hasChunk(cx, cz) { return this.chunks.has(chunkKey(cx, cz)); }
+
+  // Acesso global por (x, y, z).
+  get(x, y, z) {
+    if (y < 0 || y >= WORLD_Y) return BLOCO.AR;
+    const cx = Math.floor(x / CHUNK_SIZE);
+    const cz = Math.floor(z / CHUNK_SIZE);
+    const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    return this.getChunk(cx, cz).get(lx, y, lz);
+  }
+  set(x, y, z, t) {
+    if (y < 0 || y >= WORLD_Y) return null;
+    const cx = Math.floor(x / CHUNK_SIZE);
+    const cz = Math.floor(z / CHUNK_SIZE);
+    const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    const c = this.getChunk(cx, cz);
+    if (c.get(lx, y, lz) === t) return null;
+    c.set(lx, y, lz, t);
+    c.modificado = true;
+    // Marca chunks vizinhos como dirty/luzDirty (faces/luz cruzam borda)
+    const out = [c];
+    if (lx === 0)               out.push(this.getChunk(cx - 1, cz));
+    if (lx === CHUNK_SIZE - 1)  out.push(this.getChunk(cx + 1, cz));
+    if (lz === 0)               out.push(this.getChunk(cx, cz - 1));
+    if (lz === CHUNK_SIZE - 1)  out.push(this.getChunk(cx, cz + 1));
+    for (const cc of out) { cc.dirty = true; cc.luzDirty = true; }
+    return c;
+  }
+  isSolido(x, y, z) {
+    return BLOCO_INFO[this.get(x, y, z)].solido;
+  }
+
+  // === Iluminação 15 níveis (skylight + blocklight) ===
+  // Skylight vertical: desce do topo, fica em 15 enquanto não bater opaco.
+  // Blocklight: BFS partindo de fontes emissivas, decaindo 1 por bloco.
+  // BFS é per-chunk (não cruza bordas) — simplificação aceitável.
+  recalcLuzChunk(chunk) {
+    const cs = CHUNK_SIZE;
+    chunk.light.fill(0);
+    // 1) Skylight vertical
+    for (let lx = 0; lx < cs; lx++) {
+      for (let lz = 0; lz < cs; lz++) {
+        let sky = 15;
+        for (let y = WORLD_Y - 1; y >= 0; y--) {
+          const b = chunk.blocks[Chunk.idx(lx, y, lz)];
+          // Bloco sólido bloqueia skylight (todos opacos agora).
+          if (BLOCO_INFO[b].solido) sky = 0;
+          chunk.light[Chunk.idx(lx, y, lz)] = ((sky & 0x0F) << 4);
+        }
+      }
+    }
+    // 2) Blocklight BFS — fila plana com 4 entries por nó (lx, y, lz, level)
+    const queue = [];
+    for (let lx = 0; lx < cs; lx++) {
+      for (let lz = 0; lz < cs; lz++) {
+        for (let y = 0; y < WORLD_Y; y++) {
+          const b = chunk.blocks[Chunk.idx(lx, y, lz)];
+          const emite = BLOCO_INFO[b]?.emiteLuz || 0;
+          if (emite > 0) {
+            const i = Chunk.idx(lx, y, lz);
+            chunk.light[i] = (chunk.light[i] & 0xF0) | (emite & 0x0F);
+            queue.push(lx, y, lz, emite);
+          }
+        }
+      }
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const lx = queue[head++];
+      const y  = queue[head++];
+      const lz = queue[head++];
+      const lvl = queue[head++];
+      if (lvl <= 1) continue;
+      const novo = lvl - 1;
+      const cand = [
+        [lx - 1, y, lz], [lx + 1, y, lz],
+        [lx, y - 1, lz], [lx, y + 1, lz],
+        [lx, y, lz - 1], [lx, y, lz + 1],
+      ];
+      for (let k = 0; k < 6; k++) {
+        const vx = cand[k][0], vy = cand[k][1], vz = cand[k][2];
+        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) continue;
+        if (vy < 0 || vy >= WORLD_Y) continue;
+        const i = Chunk.idx(vx, vy, vz);
+        const bv = chunk.blocks[i];
+        // Luz não passa por blocos sólidos.
+        if (BLOCO_INFO[bv].solido) continue;
+        const luzAtual = chunk.light[i] & 0x0F;
+        if (luzAtual >= novo) continue;
+        chunk.light[i] = (chunk.light[i] & 0xF0) | (novo & 0x0F);
+        queue.push(vx, vy, vz, novo);
+      }
+    }
+    chunk.luzDirty = false;
+  }
+  // Lê luz num voxel global. Retorna {sky, block} ambos 0-15.
+  getLightAt(x, y, z) {
+    if (y < 0 || y >= WORLD_Y) return { sky: 15, block: 0 };
+    const cx = Math.floor(x / CHUNK_SIZE), cz = Math.floor(z / CHUNK_SIZE);
+    const c = this.chunks.get(chunkKey(cx, cz));
+    if (!c) return { sky: 15, block: 0 };
+    if (c.luzDirty) this.recalcLuzChunk(c);
+    const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    return { sky: c.getLightSky(lx, y, lz), block: c.getLightBlock(lx, y, lz) };
+  }
+}

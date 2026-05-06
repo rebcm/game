@@ -1,2 +1,0 @@
-#!/bin/bash
-wrangler deploy

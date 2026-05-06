@@ -1,135 +1,114 @@
-# AGENTS.md — Instruções para Agentes de Desenvolvimento
+# AGENTS.md — Regras detalhadas para agentes de IA
 
-**Projeto:** Construção Criativa da Rebeca
+**Projeto:** Construção Criativa da Rebeca — 3D
 **Autora:** Rebeca Alves Moreira
-**Repositório:** https://github.com/rebcm/game
-**Produção:** https://construcao-criativa.pages.dev
+**Versão atual:** Web3D modular (Three.js + ES modules nativos)
 
 ---
 
 ## 🎯 Missão
 
-Evoluir o jogo voxel **Construção Criativa** mantendo a paridade visual e mecânica com o Minecraft real. O jogo deve permanecer **estável, divertido e leve** para rodar em qualquer celular ou desktop, sem build step e sem dependências pesadas.
+Evoluir o jogo voxel **Construção Criativa** em direção a paridade visual e mecânica com Minecraft real, mantendo:
 
-A versão **ativa** está em [`web3d/`](web3d/) (Three.js + WebGL). A versão antiga em Flutter (`lib/`, `app/`) está em modo manutenção.
+- Estabilidade absoluta em produção (https://construcao-criativa.pages.dev).
+- Performance fluida em mobile.
+- Modularidade que permite auto-continue por agentes de IA.
 
----
-
-## 📜 Regras Invioláveis
-
-1. **Autoria preservada.** O nome `Rebeca Alves Moreira` deve aparecer:
-   - na tela inicial (`#boot .creditos`),
-   - no `README.md`,
-   - em comentários ou metadados quando relevante.
-
-2. **Código que funciona.** Nenhum stub, TODO, mock ou implementação parcial é aceito. Toda feature comitada deve rodar de ponta a ponta.
-
-3. **Web3D é single-file.** Todo o motor 3D vive em `web3d/game.js`. Não fragmentar em múltiplos módulos sem necessidade clara.
-
-4. **Sem build step.** O jogo carrega via `index.html` → `game.js` direto. Não introduza Webpack, Vite, TypeScript transpilation, JSX, Babel ou qualquer pipeline que precise de `npm run build`.
-
-5. **Sem dependências runtime extras.** Apenas o `three.js` via importmap CDN. Nada de React, Vue, jQuery, Lodash, etc.
-
-6. **Validar antes de commitar.**
-   ```bash
-   node --check /tmp/check.mjs   # após copiar web3d/game.js
-   ./scripts/deploy-web3d.sh     # roda smoke tests pré-deploy
-   ```
-
-7. **`package.json` está intencionalmente vazio.** A raiz do repo não usa npm. Não preencher.
-
-8. **Mobile-first.** Toda mudança deve continuar rodando suavemente num celular Android médio em modo paisagem.
+A versão **ativa e única** está em [`web3d/`](web3d/). Sem Flutter, sem build step, sem dependências extras além de Three.js via CDN.
 
 ---
 
-## ✅ O que pode evoluir livremente
+## 📜 Regras invioláveis
 
-A versão `web3d/` aceita expansões na direção de mais paridade com Minecraft. Os commits recentes já adicionaram **mobs, sobrevivência, armadura, baú, fornalha, XP, tela de morte, modo creative+survival** — isso é desejado e deve continuar.
+1. **Autoria preservada.** "Rebeca Alves Moreira" deve aparecer:
+   - na tela inicial de boot,
+   - no [`README.md`](README.md),
+   - em mensagens de commit relevantes.
 
-Sinta-se autorizado a adicionar:
+2. **Código que funciona.** Sem TODO/FIXME/HACK no código mergeado. Cada feature roda completa.
 
-- 🌱 Iluminação 15 níveis (skylight + blocklight com flood-fill BFS)
-- 🌍 Perlin/Simplex noise para terreno orgânico
-- 🏘 Estruturas (vilas, dungeons, ravinas)
-- 🎮 Animações 1ª pessoa mais ricas (bobbing, swing por ação)
-- 🌧 Clima (chuva, neve, trovões)
-- 🐺 Pathfinding A* para mobs
-- 🎨 Greedy meshing para performance em mobile
-- 🎵 Sons mais ricos por bioma e ação
+3. **Modular.** Engine vive em [`web3d/src/*.js`](web3d/src/) com 14 módulos. Adicione novos arquivos quando justificar; não inflar módulos existentes além de ~700 LOC.
 
----
+4. **Sem build step.** `index.html` carrega `src/main.js` diretamente. Sem Webpack/Vite/Rollup/TypeScript/JSX/Babel.
 
-## 🚫 O que evitar
+5. **Sem deps runtime extras.** Só Three.js via importmap CDN. Sem React/Vue/jQuery/Lodash.
 
-- **Fragmentar `game.js` em vários arquivos** sem benefício mensurável.
-- **Adicionar build pipeline** (Webpack/Vite/Rollup/etc).
-- **Multiplayer / netcode** (escopo gigante, foge do propósito).
-- **PvP, sistema de economia ou trading** (não é o foco).
-- **Redstone, Nether, End** (escopo demais).
-- **Dependências CSS frameworks** (Tailwind, Bootstrap). O `style.css` é mantido à mão pra ficar pixel-perfect.
-- **Microtransações, ads, telemetria** — projeto da Rebeca, sem comércio.
+6. **Sem transparência em blocos.** Vidro/folha/água/tocha são todos opacos. Smoke test impede regressão (verifica `transp:true` ausente em `constants.js`).
+
+7. **Validar antes de commitar:**
+   - `node --check web3d/src/*.js` (cada módulo)
+   - smoke tests em `scripts/test-web3d-precheck.js` (93 invariantes)
+
+8. **`package.json` está intencionalmente ausente** na raiz. Não criar.
+
+9. **Mobile-first.** Mudanças devem rodar em celular Android médio em modo paisagem.
 
 ---
 
-## 🛠 Comandos Essenciais
+## ✅ O que pode evoluir
 
-### Rodar local
-```bash
-cd web3d
-python3 -m http.server 8000
-# Acesse http://localhost:8000
-```
+- Iluminação (skylight lateral, smooth lighting).
+- Geração de mundo (Perlin, biomas, vilas, dungeons, ravinas).
+- Mobs (pathfinding, novos tipos, drops).
+- Combate (arco/flecha, shield, attack cooldown).
+- Visual (greedy meshing, weather, particles).
+- Áudio (mais SFX, novas tracks ambient).
+- UI/UX (achievement popups, HUD enhancements).
 
-### Validar sintaxe
-```bash
-cp web3d/game.js /tmp/check.mjs
-node --check /tmp/check.mjs
-```
+---
 
-### Smoke test pré-deploy
-```bash
-node scripts/test-web3d-precheck.js web3d
-```
+## 🚫 Fora do escopo
 
-### Deploy
+- Multiplayer / netcode.
+- PvP / economia / trading.
+- Redstone / Nether / End.
+- Microtransações, ads, telemetria.
+- CSS frameworks (Tailwind, Bootstrap).
+- Servidor backend (o jogo é 100% client-side).
+
+---
+
+## 🛠 Comandos essenciais
+
 ```bash
+# Dev local
+cd web3d && python3 -m http.server 8000
+
+# Validação
+for f in web3d/src/*.js; do node --check "$f"; done
+
+# Smoke tests (93 invariantes)
+TMPDIR=$(mktemp -d) && cp -R web3d/* "$TMPDIR/" && \
+  cp scripts/test-web3d-precheck.js "$TMPDIR/_p.js" && \
+  ( cd "$TMPDIR" && node ./_p.js . ) && rm -rf "$TMPDIR"
+
+# Deploy
 set -a; source .env; set +a
 ./scripts/deploy-web3d.sh
 ```
 
 ---
 
-## 🧠 Memória de Contexto (para LLM agents)
-
-Ao trabalhar neste projeto:
-
-- A **versão atual do jogo está em `web3d/`** — não em `app/lib/`. Edite arquivos errados é um erro comum.
-- O **`AGENTS.md` original (anterior a maio/2026)** dizia "criativo puro, sem mobs/morte". Essa regra foi superada pelos commits recentes; **agora survival + mobs é desejável**.
-- O **`package.json` da raiz está vazio de propósito**. `node` direto na raiz quebra; copie o arquivo pra `/tmp` e rode dali.
-- O **deploy precisa de `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`** no `.env`. Não commitar o `.env`.
-- A **fonte pixelada do HUD** usa "Press Start 2P" do Google Fonts; se ela não carregar, o fallback é Consolas/Menlo monospace.
-
----
-
-## 🧱 Convenções de Estilo
-
-- **Português** em comentários e identifiers de domínio (Rebeca, blocos, mundo). 
-- **Inglês** em APIs Three.js e padrões de código consagrados (clamp, hash, mesh).
-- **Comentários explicam o "porquê"**, não o "o quê". Quando o código é óbvio, sem comentário.
-- **Funções curtas**, classes coesas, sem deep inheritance.
-- **Camelo** para variáveis JS (`tempoDia`, `materialDeBloco`).
-- **UPPER_SNAKE** para constantes (`CHUNK_SIZE`, `VEL_SPRINT`).
-
----
-
-## 📚 Documentos Relacionados
+## 📚 Documentação relacionada
 
 - [`README.md`](README.md) — visão geral do jogo
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — arquitetura técnica
+- [`CLAUDE.md`](CLAUDE.md) — instruções específicas para Claude Code auto-continue
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — arquitetura técnica detalhada
+- [`docs/MODULES.md`](docs/MODULES.md) — referência de cada módulo
 - [`docs/walkthrough.md`](docs/walkthrough.md) — passo-a-passo do jogo
-- [`docs/SETUP.md`](docs/SETUP.md) — setup de ambiente local
-- [`docs/deploy/procedimento-deploy.md`](docs/deploy/procedimento-deploy.md) — fluxo de deploy
+- [`docs/SETUP.md`](docs/SETUP.md) — setup de desenvolvimento
 
 ---
 
-*Atualizado em maio/2026 para refletir a migração para Three.js e o estado atual do jogo.*
+## 🧠 Convenções de estilo
+
+- **Português** em comentários e identifiers de domínio (`Rebeca`, `blocos`, `mundo`).
+- **Inglês** em APIs Three.js e padrões de código consagrados.
+- **Comentários** explicam o "porquê", não o "o quê" óbvio.
+- **CamelCase** para variáveis e funções (`tempoDia`, `materialDeBloco`).
+- **UPPER_SNAKE** para constantes (`CHUNK_SIZE`, `VEL_SPRINT`).
+- **PascalCase** para classes (`Player`, `World`, `MobManager`).
+
+---
+
+*Atualizado em maio/2026 — refatoração modular completa.*
