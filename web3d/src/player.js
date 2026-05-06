@@ -80,8 +80,10 @@ export class Player {
     const naAgua = (bCorpo === BLOCO.AGUA || bCabeca === BLOCO.AGUA);
 
     // Velocidade: sneak < andar < sprint, modulado por água.
+    // Sneak agora reduz vel em qualquer modo (criativo OU sobrevivência).
+    // Bloqueio de borda continua apenas em sobrevivência (movimento abaixo).
     let speed = (this.input.sprint && !this.sneak) ? VEL_SPRINT
-              : (this.sneak && this.modo === 'survival') ? VEL_SNEAK
+              : this.sneak ? VEL_SNEAK
               : VEL_ANDAR;
     if (naAgua) speed *= 0.55;
 
@@ -223,31 +225,64 @@ export class Player {
 
   moverEixo(world, dx, dy, dz) {
     if (dx === 0 && dy === 0 && dz === 0) return;
-    const novoX = this.pos.x + dx;
-    const novoY = this.pos.y + dy;
-    const novoZ = this.pos.z + dz;
-    if (this.colisaoBlocos(world, novoX, this.pos.y, this.pos.z)) {
-      // bloqueado em X
-    } else { this.pos.x = novoX; }
-    if (this.colisaoBlocos(world, this.pos.x, novoY, this.pos.z)) {
-      if (dy < 0) {
-        const queda = (this.spawnY || this.pos.y) - novoY;
-        if (this.modo === 'survival' && queda > 4) {
-          const dano = Math.round(queda - 3);
-          if (dano > 0) this.aplicarDano(dano, `queda ${queda.toFixed(1)}`);
+
+    // === X com auto step-up ===
+    // Se há colisão e o player está no chão, tenta subir 0.55 (slab)
+    // ou 1.0 (bloco inteiro). Paridade Minecraft real — sem precisar
+    // pular para cada degrau.
+    if (dx !== 0) {
+      const novoX = this.pos.x + dx;
+      if (!this.colisaoBlocos(world, novoX, this.pos.y, this.pos.z)) {
+        this.pos.x = novoX;
+      } else if (this.noChao) {
+        for (const subir of [0.55, 1.0]) {
+          if (!this.colisaoBlocos(world, novoX, this.pos.y + subir, this.pos.z)) {
+            this.pos.x = novoX;
+            this.pos.y += subir;
+            this.spawnY = this.pos.y;
+            break;
+          }
         }
-        this.spawnY = this.pos.y;
-        this.noChao = true;
       }
-      this.vel.y = 0;
-    } else {
-      this.pos.y = novoY;
-      if (dy > 0) this.spawnY = Math.max(this.spawnY || this.pos.y, this.pos.y);
-      else this.noChao = false;
     }
-    if (this.colisaoBlocos(world, this.pos.x, this.pos.y, novoZ)) {
-      // bloqueado em Z
-    } else { this.pos.z = novoZ; }
+
+    // === Y (gravidade/pulo) ===
+    if (dy !== 0) {
+      const novoY = this.pos.y + dy;
+      if (this.colisaoBlocos(world, this.pos.x, novoY, this.pos.z)) {
+        if (dy < 0) {
+          const queda = (this.spawnY || this.pos.y) - novoY;
+          if (this.modo === 'survival' && queda > 4) {
+            const dano = Math.round(queda - 3);
+            if (dano > 0) this.aplicarDano(dano, `queda ${queda.toFixed(1)}`);
+          }
+          this.spawnY = this.pos.y;
+          this.noChao = true;
+        }
+        this.vel.y = 0;
+      } else {
+        this.pos.y = novoY;
+        if (dy > 0) this.spawnY = Math.max(this.spawnY || this.pos.y, this.pos.y);
+        else this.noChao = false;
+      }
+    }
+
+    // === Z com auto step-up (mesmo padrão do X) ===
+    if (dz !== 0) {
+      const novoZ = this.pos.z + dz;
+      if (!this.colisaoBlocos(world, this.pos.x, this.pos.y, novoZ)) {
+        this.pos.z = novoZ;
+      } else if (this.noChao) {
+        for (const subir of [0.55, 1.0]) {
+          if (!this.colisaoBlocos(world, this.pos.x, this.pos.y + subir, novoZ)) {
+            this.pos.z = novoZ;
+            this.pos.y += subir;
+            this.spawnY = this.pos.y;
+            break;
+          }
+        }
+      }
+    }
   }
 
   colisaoBlocos(world, px, py, pz) {
@@ -258,7 +293,10 @@ export class Player {
     for (let x = x0; x <= x1; x++)
       for (let y = y0; y <= y1; y++)
         for (let z = z0; z <= z1; z++) {
-          if (BLOCO_INFO[world.get(x, y, z)].solido) return true;
+          const b = world.get(x, y, z);
+          // Água é passável (swim physics trata drag/buoyancy separado)
+          if (b === BLOCO.AGUA) continue;
+          if (BLOCO_INFO[b].solido) return true;
         }
     return false;
   }

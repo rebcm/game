@@ -296,6 +296,92 @@ export function atualizarXpOrbs(dt, ganharXPFn) {
   }
 }
 
+// =====================================================================
+// Arrow — projétil de flecha (bow).
+// Voa em linha reta com gravidade leve. Atinge mob no caminho.
+// =====================================================================
+class Arrow {
+  constructor(scene, x, y, z, vx, vy, vz, dano) {
+    this.scene = scene;
+    this.x = x; this.y = y; this.z = z;
+    this.vx = vx; this.vy = vy; this.vz = vz;
+    this.dano = dano;
+    this.life = 4.0; // viagem máx ~120m em 4s
+    const geo = new THREE.BoxGeometry(0.08, 0.08, 0.5);
+    const mat = new THREE.MeshLambertMaterial({ color: 0xa1887f });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.set(x, y, z);
+    // Aponta na direção de voo
+    this.mesh.lookAt(x + vx, y + vy, z + vz);
+    this.scene.add(this.mesh);
+  }
+  atualizar(dt, world, mobMgr) {
+    this.life -= dt;
+    if (this.life <= 0) return false;
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.z += this.vz * dt;
+    this.vy -= 4 * dt; // gravidade leve (paridade Minecraft real)
+    this.mesh.position.set(this.x, this.y, this.z);
+    this.mesh.lookAt(this.x + this.vx, this.y + this.vy, this.z + this.vz);
+    // Colisão com bloco sólido
+    if (world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z))) {
+      Audio.flechaImpacto();
+      return false;
+    }
+    // Colisão com mob (raio 0.7)
+    if (mobMgr) {
+      for (const m of mobMgr.mobs) {
+        const ddx = m.x - this.x;
+        const ddy = (m.y + 0.8) - this.y;
+        const ddz = m.z - this.z;
+        if (ddx*ddx + ddy*ddy + ddz*ddz < 0.5) {
+          m.hp -= this.dano;
+          Audio.flechaImpacto();
+          if (m.tipo === 'zumbi') Audio.zumbiHit(); else Audio.hit();
+          // Knockback
+          m.x += this.vx * 0.05;
+          m.z += this.vz * 0.05;
+          if (state.ui) state.ui.toast(`Acertou ${m.tipo} -${this.dano} 🏹`);
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+  }
+}
+
+if (typeof window !== 'undefined') window._arrows = window._arrows || [];
+
+export function spawnArrow(origem, dir, dano = 4) {
+  if (!state.renderer) return;
+  // Velocidade base 28 blocos/s na direção da câmera
+  const vel = 28;
+  const vx = dir.x * vel, vy = dir.y * vel, vz = dir.z * vel;
+  // Spawn um pouco à frente da câmera para não atingir o player
+  const a = new Arrow(state.renderer.scene,
+    origem.x + dir.x * 0.6, origem.y + dir.y * 0.6 - 0.1, origem.z + dir.z * 0.6,
+    vx, vy, vz, dano);
+  window._arrows.push(a);
+  Audio.flechaSolta();
+}
+
+export function atualizarArrows(dt) {
+  if (!state.world || !state.mobMgr) return;
+  for (let i = window._arrows.length - 1; i >= 0; i--) {
+    const a = window._arrows[i];
+    if (!a.atualizar(dt, state.world, state.mobMgr)) {
+      a.destruir();
+      window._arrows.splice(i, 1);
+    }
+  }
+}
+
 // === Ambient triggers (cave drip, vento) ===
 export function atualizarAmbientTriggers(dt) {
   if (!state.player || !state.world) return;

@@ -8,17 +8,21 @@
 // Dimensões do mundo
 export const CHUNK_SIZE = 16;
 export const WORLD_Y = 64;
-export const VIEW_RADIUS = 4;            // chunks ao redor do player
+export const VIEW_RADIUS = 6;            // chunks ao redor do player
 export const TILE = 1.0;
 export const PLAYER_HEIGHT = 1.8;
 export const PLAYER_RADIUS = 0.3;
-export const GRAVIDADE = -28;
-export const VEL_TERM = -55;
-export const PULO_VEL = 9.0;
-export const VEL_ANDAR = 4.5;
-export const VEL_SPRINT = 7.0;
-export const VEL_SNEAK = 1.8;
-export const VEL_AR = 4.0;
+// Constantes de física calibradas para paridade com Minecraft real:
+// - GRAVIDADE -27 dá queda perceptível mas não brusca.
+// - PULO_VEL 8.4 produz altura de pulo ~1.25 blocos (Minecraft Java).
+// - VEL_TERM -65 evita explosão de fall damage em quedas livres longas.
+export const GRAVIDADE = -27;
+export const VEL_TERM = -65;
+export const PULO_VEL = 8.4;
+export const VEL_ANDAR = 4.3;
+export const VEL_SPRINT = 5.6;   // Minecraft real: andar 4.3 → sprint ~5.6 (1.3×)
+export const VEL_SNEAK = 1.3;    // 30% da andar (paridade MC)
+export const VEL_AR = 3.6;       // Controle aéreo reduzido (MC real)
 export const MOUSE_SENS = 0.0022;
 export const ALCANCE_BLOCO = 6.0;
 export const TEMPO_QUEBRA_BASE = 0.45;
@@ -107,6 +111,7 @@ export const ITEM = {
   COURO: 120,
   PIC_MADEIRA: 200, PIC_PEDRA: 201, PIC_FERRO: 202, PIC_DIAMANTE: 203,
   ESP_MADEIRA: 210, ESP_PEDRA: 211, ESP_FERRO: 212,
+  ARCO: 220, FLECHA: 221,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -132,6 +137,8 @@ export const ITEM_INFO = {
   [ITEM.ESP_MADEIRA]:  { nome: 'Espada madeira',   icone: '⚔', tier: 1, ferramenta: 'esp' },
   [ITEM.ESP_PEDRA]:    { nome: 'Espada pedra',     icone: '⚔', tier: 2, ferramenta: 'esp' },
   [ITEM.ESP_FERRO]:    { nome: 'Espada ferro',     icone: '⚔', tier: 3, ferramenta: 'esp' },
+  [ITEM.ARCO]:         { nome: 'Arco',             icone: '🏹', ferramenta: 'arco' },
+  [ITEM.FLECHA]:       { nome: 'Flecha',           icone: '➹' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -159,6 +166,9 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 2}, {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_MADEIRA, q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 2},   {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_PEDRA,   q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 2},    {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_FERRO,   q: 1}, wb: true },
+  // Arco: 3 paus + 3 lã (proxy de corda). Flechas: 1 pau + 1 lã = 4.
+  { custos: [{i: ITEM.PAU, q: 3}, {b: BLOCO.LA, q: 3}], saida: {i: ITEM.ARCO,   q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 1}, {b: BLOCO.LA, q: 1}], saida: {i: ITEM.FLECHA, q: 4}, wb: false },
   { custos: [{i: ITEM.CARNE_CRUA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.CARNE_COZIDA, q: 1}, wb: false },
   { custos: [{i: ITEM.COURO, q: 5}], saida: {i: ITEM.CAP_COURO, q: 1}, wb: true },
   { custos: [{i: ITEM.COURO, q: 8}], saida: {i: ITEM.PEI_COURO, q: 1}, wb: true },

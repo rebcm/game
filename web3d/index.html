@@ -534,6 +534,25 @@
         pageFlip: () => {
           ruido({ dur: 0.06, cutoff: 1200, vol: 0.06 });
         },
+        // Chuva ambiente — ruído filtrado contínuo de baixo volume.
+        // Chamado periodicamente enquanto chove.
+        chuva: () => {
+          ruido({ dur: 1.6, cutoff: 1500, vol: 0.06 });
+        },
+        // Trovão distante (raro)
+        trovao: () => {
+          ruido({ dur: 0.4, cutoff: 80, vol: 0.20 });
+          setTimeout(() => ruido({ dur: 0.8, cutoff: 60, vol: 0.15 }), 250);
+        },
+        // Disparo de flecha
+        flechaSolta: () => {
+          tom({ freq: 320, dur: 0.04, type: 'square', vol: 0.10 });
+        },
+        // Flecha pousando / acertando alvo
+        flechaImpacto: () => {
+          ruido({ dur: 0.06, cutoff: 600, vol: 0.10 });
+          setTimeout(() => tom({ freq: 200, dur: 0.05, type: 'square', vol: 0.08 }), 30);
+        },
       };
       // === Música ambient melhorada ===
       // Toca um pad harmônico (acorde sustenido) + melodia esparsa por

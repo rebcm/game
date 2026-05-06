@@ -5,7 +5,7 @@
 import {
   CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO,
 } from './constants.js';
-import { hash2, hash3, clamp, chunkKey } from './utils.js';
+import { hash2, hash3, clamp, chunkKey, perlin2, perlin3, fbm2 } from './utils.js';
 
 // Um chunk de 16×16×64 voxels.
 // `blocks` armazena IDs de bloco (0-25). `light` armazena luz por voxel
@@ -85,15 +85,15 @@ export class World {
   }
 
   // === Geração de terreno ===
-  // Altura por somatório de senoides. Range [2, WORLD_Y-8].
+  // Altura por fBM (fractal Brownian motion) Perlin 2D — paridade com
+  // Minecraft real. 4 oitavas dão relevo orgânico (colinas + detalhe).
   alturaTerreno(x, z) {
-    const nx = x / 32, nz = z / 32;
-    let v = Math.sin(nx * Math.PI) * Math.cos(nz * Math.PI) * 0.45 +
-            Math.sin(nx * Math.PI * 2.5 + 1.3) * Math.sin(nz * Math.PI * 1.7 + 0.8) * 0.30 +
-            Math.sin(nx * Math.PI * 5.5 + 2.5) * Math.cos(nz * Math.PI * 3.5 + 1.9) * 0.15 +
-            Math.sin(nx * Math.PI * 8.5 + 4.1) * Math.sin(nz * Math.PI * 6.5 + 3.3) * 0.10;
-    v = (v + 1) / 2;
-    return clamp(6 + Math.floor(v * 18), 2, WORLD_Y - 8);
+    // Frequência base 1/64 → colinas a cada ~64 blocos. Persistência
+    // 0.5 e lacunarity 2.0 são valores padrão para terreno suave.
+    const v = fbm2(x / 64, z / 64, 4, 2.0, 0.5, this.seed);
+    // v vem em ~[-1, 1]. Normaliza para [0, 1] e mapeia para altura.
+    const n = (v + 1) * 0.5;
+    return clamp(6 + Math.floor(n * 22), 2, WORLD_Y - 8);
   }
   // Bloco do topo dependendo da altura + zona (areia/grama/neve).
   topoBioma(x, z, h) {
@@ -103,28 +103,35 @@ export class World {
     if (((z - this.seed) % 256 + 256) % 256 < 76)  return BLOCO.AREIA;
     return BLOCO.GRAMA;
   }
-  // Cavernas via hash 3D (proxy de Simplex). Retorna true se ar.
+  // Cavernas via Perlin 3D — paridade Minecraft real.
+  // Threshold > 0.55 cria túneis/câmaras orgânicas. Concentra y em [5, 50].
   caverna(x, y, z) {
     if (y <= 4 || y >= WORLD_Y - 4) return false;
-    const h = hash3(x, y, z, this.seed ^ 0xCAFE) & 0xFFF;
-    return h < 100; // ~3% dos voxels
+    const v = perlin3(x / 18, y / 14, z / 18, this.seed ^ 0xCAFE);
+    return v > 0.42;
   }
 
   // Gera (uma única vez) o conteúdo do chunk.
   gerarChunk(cx, cz) {
     const c = new Chunk(cx, cz);
+    const NIVEL_AGUA = 8; // blocos abaixo desse nível viram água
     // 1. Terreno + minérios
     for (let lx = 0; lx < CHUNK_SIZE; lx++) {
       for (let lz = 0; lz < CHUNK_SIZE; lz++) {
         const gx = cx * CHUNK_SIZE + lx;
         const gz = cz * CHUNK_SIZE + lz;
         const h = this.alturaTerreno(gx, gz);
-        for (let y = 0; y <= h; y++) {
+        for (let y = 0; y <= Math.max(h, NIVEL_AGUA); y++) {
           let b;
           if (y <= 2) b = BLOCO.BEDROCK;
           else if (y <= 4) {
             const hh = hash2(gx, gz + y * 31, this.seed ^ 0xfee10) & 0xFF;
             b = hh < 14 ? BLOCO.LAVA : BLOCO.PEDRA;
+          } else if (y > h && y <= NIVEL_AGUA) {
+            // Preenche com água até o nível do mar
+            b = BLOCO.AGUA;
+          } else if (y > h) {
+            continue;
           } else if (y < h - 3) {
             // Cavernas
             if (this.caverna(gx, y, gz)) { c.set(lx, y, lz, BLOCO.AR); continue; }
@@ -240,10 +247,37 @@ export class World {
         let sky = 15;
         for (let y = WORLD_Y - 1; y >= 0; y--) {
           const b = chunk.blocks[Chunk.idx(lx, y, lz)];
-          // Bloco sólido bloqueia skylight (todos opacos agora).
           if (BLOCO_INFO[b].solido) sky = 0;
           chunk.light[Chunk.idx(lx, y, lz)] = ((sky & 0x0F) << 4);
         }
+      }
+    }
+    // 1b) Skylight lateral BFS — propaga horizontalmente com -1 por bloco
+    const skyQ = [];
+    for (let lx = 0; lx < cs; lx++) {
+      for (let lz = 0; lz < cs; lz++) {
+        for (let y = WORLD_Y - 1; y >= 0; y--) {
+          const i = Chunk.idx(lx, y, lz);
+          const sky = (chunk.light[i] >> 4) & 0x0F;
+          if (sky > 1) skyQ.push(lx, y, lz, sky);
+        }
+      }
+    }
+    let sH = 0;
+    while (sH < skyQ.length) {
+      const lx = skyQ[sH++], y = skyQ[sH++], lz = skyQ[sH++], lvl = skyQ[sH++];
+      if (lvl <= 1) continue;
+      const novo = lvl - 1;
+      const vizinhos = [[lx-1,y,lz],[lx+1,y,lz],[lx,y-1,lz],[lx,y+1,lz],[lx,y,lz-1],[lx,y,lz+1]];
+      for (const [vx,vy,vz] of vizinhos) {
+        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) continue;
+        if (vy < 0 || vy >= WORLD_Y) continue;
+        const vi = Chunk.idx(vx, vy, vz);
+        if (BLOCO_INFO[chunk.blocks[vi]].solido) continue;
+        const curSky = (chunk.light[vi] >> 4) & 0x0F;
+        if (curSky >= novo) continue;
+        chunk.light[vi] = ((novo & 0x0F) << 4) | (chunk.light[vi] & 0x0F);
+        skyQ.push(vx, vy, vz, novo);
       }
     }
     // 2) Blocklight BFS — fila plana com 4 entries por nó (lx, y, lz, level)

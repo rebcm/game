@@ -2,6 +2,7 @@
 // ui.js — UI: HUD, paineis, F3 debug, pause menu, criativo, tooltip
 // =====================================================================
 
+import * as THREE from 'three';
 import {
   BLOCO, BLOCO_INFO, ITEM, ITEM_INFO, ICONE, RECEITAS, CHUNK_SIZE,
 } from './constants.js';
@@ -51,6 +52,51 @@ export class UI {
     el.classList.add('show');
     if (this.flashTimer) clearTimeout(this.flashTimer);
     this.flashTimer = setTimeout(() => el.classList.remove('show'), 220);
+  }
+
+  // === Damage numbers flutuantes ===
+  // Renderizado como div HTML posicionado por projeção 3D → 2D.
+  // Cada número anima fade-up por 1.2s e remove.
+  spawnDamageNumber(x, y, z, dano, isCrit) {
+    if (!this._damageNums) this._damageNums = [];
+    const el = document.createElement('div');
+    el.className = 'damage-number' + (isCrit ? ' crit' : '');
+    el.textContent = isCrit ? `-${dano} ⚡` : `-${dano}`;
+    el.style.position = 'fixed';
+    el.style.zIndex = '90';
+    document.body.appendChild(el);
+    this._damageNums.push({
+      el, x, y, z,
+      vy: 1.0,
+      life: 1.2,
+      ageMax: 1.2,
+    });
+  }
+  atualizarDamageNumbers(dt) {
+    if (!this._damageNums || !state.renderer) return;
+    const cam = state.renderer.camera;
+    const v = new THREE.Vector3();
+    const w = window.innerWidth, h = window.innerHeight;
+    for (let i = this._damageNums.length - 1; i >= 0; i--) {
+      const d = this._damageNums[i];
+      d.life -= dt;
+      d.y += d.vy * dt;
+      if (d.life <= 0) {
+        d.el.remove();
+        this._damageNums.splice(i, 1);
+        continue;
+      }
+      // Projeta posição 3D → coordenada de tela
+      v.set(d.x, d.y, d.z).project(cam);
+      // Atrás da câmera? esconde.
+      if (v.z > 1) { d.el.style.display = 'none'; continue; }
+      d.el.style.display = '';
+      const sx = (v.x * 0.5 + 0.5) * w;
+      const sy = (-v.y * 0.5 + 0.5) * h;
+      d.el.style.left = `${sx}px`;
+      d.el.style.top  = `${sy}px`;
+      d.el.style.opacity = `${Math.max(0, d.life / d.ageMax)}`;
+    }
   }
 
   subtitle(texto) {
@@ -105,9 +151,66 @@ export class UI {
     }
   }
 
+  // Cache de mini-blocos isométricos (canvas 32×32) por bloco ID
+  _blockIconCache = new Map();
+  _criarBlocoIcon(blocoId) {
+    if (this._blockIconCache.has(blocoId)) return this._blockIconCache.get(blocoId);
+    const info = BLOCO_INFO[blocoId];
+    if (!info) return null;
+    const cnv = document.createElement('canvas');
+    cnv.width = 32; cnv.height = 32;
+    const ctx = cnv.getContext('2d');
+    // Desenha cubo isométrico simples com 3 faces visíveis
+    const corTop = '#' + (info.cor).toString(16).padStart(6, '0');
+    const corSide = '#' + (info.lateral).toString(16).padStart(6, '0');
+    // Face frontal (esquerda): cor lateral levemente mais escura
+    const r = (info.lateral >> 16) & 0xFF;
+    const g = (info.lateral >> 8) & 0xFF;
+    const b = info.lateral & 0xFF;
+    const corFront = `rgb(${Math.max(0,r-25)},${Math.max(0,g-25)},${Math.max(0,b-25)})`;
+    // Topo (paralelogramo)
+    ctx.fillStyle = corTop;
+    ctx.beginPath();
+    ctx.moveTo(16, 4); ctx.lineTo(28, 10); ctx.lineTo(16, 16); ctx.lineTo(4, 10);
+    ctx.closePath(); ctx.fill();
+    // Lado direito
+    ctx.fillStyle = corSide;
+    ctx.beginPath();
+    ctx.moveTo(16, 16); ctx.lineTo(28, 10); ctx.lineTo(28, 24); ctx.lineTo(16, 30);
+    ctx.closePath(); ctx.fill();
+    // Lado esquerdo (mais escuro)
+    ctx.fillStyle = corFront;
+    ctx.beginPath();
+    ctx.moveTo(16, 16); ctx.lineTo(4, 10); ctx.lineTo(4, 24); ctx.lineTo(16, 30);
+    ctx.closePath(); ctx.fill();
+    // Bordas finas pretas
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(16, 4); ctx.lineTo(28, 10); ctx.lineTo(28, 24); ctx.lineTo(16, 30);
+    ctx.lineTo(4, 24); ctx.lineTo(4, 10); ctx.closePath();
+    ctx.moveTo(16, 16); ctx.lineTo(28, 10);
+    ctx.moveTo(16, 16); ctx.lineTo(4, 10);
+    ctx.moveTo(16, 16); ctx.lineTo(16, 30);
+    ctx.stroke();
+    const dataUrl = cnv.toDataURL();
+    this._blockIconCache.set(blocoId, dataUrl);
+    return dataUrl;
+  }
+
   _slotHTML(s) {
     if (!s) return '';
-    const ic = s.b !== undefined ? (ICONE[s.b] || '■') : (ITEM_INFO[s.i]?.icone || '?');
+    let ic;
+    if (s.b !== undefined) {
+      const icon = this._criarBlocoIcon(s.b);
+      if (icon) {
+        ic = `<img src="${icon}" style="width:28px;height:28px;image-rendering:pixelated;">`;
+      } else {
+        ic = ICONE[s.b] || '■';
+      }
+    } else {
+      ic = ITEM_INFO[s.i]?.icone || '?';
+    }
     const qtd = s.q > 1 ? `<span class="qtd">${s.q}</span>` : '';
     return `${ic}${qtd}`;
   }

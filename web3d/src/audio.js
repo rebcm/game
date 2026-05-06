@@ -60,6 +60,12 @@ export const Audio = {
   cama()        { call('cama'); },
   fornalhaLit() { call('fornalhaLit'); },
   pageFlip()    { call('pageFlip'); },
+  // Clima
+  chuva()       { call('chuva'); },
+  trovao()      { call('trovao'); },
+  // Combate à distância
+  flechaSolta()   { call('flechaSolta'); },
+  flechaImpacto() { call('flechaImpacto'); },
   // Wrapper genérico para call casual de mob por tipo
   mobCall(tipo) {
     const map = {

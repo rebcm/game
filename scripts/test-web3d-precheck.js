@@ -45,6 +45,7 @@ const arquivosObrigatorios = [
   'src/audio.js', 'src/world.js', 'src/render.js', 'src/player.js',
   'src/inventory.js', 'src/mobs.js', 'src/particles.js',
   'src/ui.js', 'src/save.js', 'src/input.js',
+  'src/weather.js',  // Novo: sistema de chuva
 ];
 for (const f of arquivosObrigatorios) {
   t(`existe ${f}`, fs.existsSync(path.join(dir, f)));
@@ -215,6 +216,65 @@ t('Save versão v: 4',
   /v\s*:\s*4/.test(save));
 t('Save serializa chunks modificados em base64',
   /btoa\(String\.fromCharCode/.test(save));
+
+grupo('utils.js — Perlin noise');
+const utils = lerArquivo('src/utils.js') || '';
+t('export perlin2(x, y, seed)',
+  /export\s+function\s+perlin2\s*\(/.test(utils));
+t('export perlin3(x, y, z, seed)',
+  /export\s+function\s+perlin3\s*\(/.test(utils));
+t('export fbm2 (fractal Brownian motion)',
+  /export\s+function\s+fbm2\s*\(/.test(utils));
+
+grupo('world.js — Perlin aplicado');
+t('alturaTerreno usa fbm2 (Perlin orgânico)',
+  /alturaTerreno[\s\S]*?fbm2\s*\(/.test(world));
+t('caverna usa perlin3 (paridade Minecraft)',
+  /caverna[\s\S]*?perlin3\s*\(/.test(world));
+
+grupo('weather.js — Sistema de clima');
+const weather = lerArquivo('src/weather.js') || '';
+t('export atualizarClima(dt)',
+  /export\s+function\s+atualizarClima/.test(weather));
+t('export corCeuComClima(cor, sun)',
+  /export\s+function\s+corCeuComClima/.test(weather));
+t('Define modo clear/rain',
+  /'clear'/.test(weather) && /'rain'/.test(weather));
+t('Toca SFX de chuva e trovão',
+  /Audio\.chuva/.test(weather) && /Audio\.trovao/.test(weather));
+
+grupo('Bow + Arrow combat');
+t('ITEM.ARCO + ITEM.FLECHA em constants.js',
+  /ARCO\s*:\s*\d+/.test(constants) && /FLECHA\s*:\s*\d+/.test(constants));
+t('Receita ARCO em RECEITAS',
+  /saida\s*:\s*\{\s*i\s*:\s*ITEM\.ARCO/.test(constants));
+t('Receita FLECHA em RECEITAS',
+  /saida\s*:\s*\{\s*i\s*:\s*ITEM\.FLECHA/.test(constants));
+t('class Arrow em particles.js',
+  /class\s+Arrow/.test(particles));
+t('export spawnArrow + atualizarArrows',
+  /export\s+function\s+spawnArrow/.test(particles) &&
+  /export\s+function\s+atualizarArrows/.test(particles));
+
+grupo('Camera bobbing + Damage numbers');
+t('Renderer.atualizarBobbing(dt, andando, sprintando)',
+  /atualizarBobbing\s*\(dt,\s*andando,\s*sprintando\)/.test(render));
+t('main.js aplica bob na camera',
+  /atualizarBobbing[\s\S]{0,400}camera\.position\.x\s*\+=/.test(main));
+t('UI.spawnDamageNumber + atualizarDamageNumbers',
+  /spawnDamageNumber\s*\(/.test(ui) && /atualizarDamageNumbers\s*\(/.test(ui));
+t('CSS .damage-number definido',
+  /\.damage-number\s*\{/.test(lerArquivo('style.css') || ''));
+
+grupo('main.js — integração das novas features');
+t('main.js importa atualizarClima',
+  /import\s+\{\s*atualizarClima/.test(main));
+t('main.js chama atualizarArrows no loop',
+  /atualizarArrows\s*\(\s*dt\s*\)/.test(main));
+t('atacarMob detecta ITEM.ARCO + spawnArrow',
+  /usandoArco[\s\S]{0,400}spawnArrow/.test(main));
+t('atacarMob spawn damage number',
+  /spawnDamageNumber/.test(main));
 
 // =====================================================================
 // Sumário

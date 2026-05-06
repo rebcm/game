@@ -862,6 +862,26 @@ kbd {
   75% { transform: translate(1px, 0); }
 }
 
+/* === Damage numbers flutuantes ===
+   Posicionados via JS (projeção 3D→2D). Anima fade-up por 1.2s. */
+.damage-number {
+  position: fixed;
+  pointer-events: none;
+  font-family: "Press Start 2P", "Consolas", monospace;
+  font-size: 14px;
+  color: #ffeb3b;
+  text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  z-index: 90;
+  font-weight: bold;
+}
+.damage-number.crit {
+  color: #ff5722;
+  font-size: 18px;
+  text-shadow: 1px 1px 0 #000, 2px 2px 0 #000, 0 0 6px #ff5722;
+}
+
 /* Subtitle popup (canto inferior direito) — exibe nome do som que tocou. */
 #subtitles {
   position: absolute;

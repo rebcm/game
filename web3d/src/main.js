@@ -19,10 +19,12 @@ import { MobManager, MOB_INFO } from './mobs.js';
 import {
   Particulas, spawnItemDrop, atualizarItemDrops,
   spawnXPOrb, atualizarXpOrbs, atualizarAmbientTriggers,
+  spawnArrow, atualizarArrows,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
 import { setupInput, setupTouchControls, setActions } from './input.js';
+import { atualizarClima } from './weather.js';
 
 // Vetor temporário pra raycast
 const _tmpVecAux = new THREE.Vector3();
@@ -43,11 +45,21 @@ function ganharXP(pts) {
 }
 
 // === Atacar mob ===
+// Se item ativo é ARCO e player tem flechas, dispara projétil em vez
+// de atacar corpo-a-corpo. Caso contrário, melee normal.
 function atacarMob() {
   if (state.player.morto) return;
+  const sel = state.inv.itemSelecionado();
+  const usandoArco = sel && sel.i === ITEM.ARCO && state.inv.contar(undefined, ITEM.FLECHA) > 0;
+  if (usandoArco) {
+    // Consome 1 flecha e dispara projétil
+    state.inv.consumir(undefined, ITEM.FLECHA, 1);
+    const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+    spawnArrow(state.renderer.camera.position, dirCam, 5);
+    return;
+  }
   const m = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
   if (!m) return;
-  // Critical hit — atacar enquanto cai (paridade Minecraft)
   const isCrit = !state.player.noChao && state.player.vel.y < -0.3 && state.player.modo === 'survival';
   Audio.atacar();
   if (isCrit) Audio.critical();
@@ -57,6 +69,10 @@ function atacarMob() {
   m.hp -= dano;
   if (m.tipo === 'zumbi') Audio.zumbiHit();
   else Audio.hit();
+  // Damage number flutuante na tela
+  if (state.ui?.spawnDamageNumber) {
+    state.ui.spawnDamageNumber(m.x, m.y + 1.5, m.z, dano, isCrit);
+  }
   // Knockback no mob
   const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux);
   m.x += dirCam.x * 0.8;
@@ -427,15 +443,22 @@ function loop(now) {
   if (state.ui.f3Ativo) state.ui.atualizarF3({ targetBlock: ray ? ray.hit : null });
   atualizarItemDrops(dt);
   atualizarXpOrbs(dt, ganharXP);
+  atualizarArrows(dt);
   atualizarAmbientTriggers(dt);
+  atualizarClima(dt);
+  // Atualiza damage numbers (projeção de coords 3D → 2D + fade)
+  if (state.ui?.atualizarDamageNumbers) state.ui.atualizarDamageNumbers(dt);
 
-  // Camera shake
+  // Camera bobbing + shake
+  const isMoving = state.player && state.player.noChao &&
+    (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0 &&
+    !state.player.terceiraPessoa;
+  const isRunning = isMoving && !!state.player.input.sprint;
+  const bob = state.renderer.atualizarBobbing(dt, isMoving, isRunning);
   const shake = state.renderer.atualizarShake(dt);
-  if (shake.x || shake.y || shake.z) {
-    state.renderer.camera.position.x += shake.x;
-    state.renderer.camera.position.y += shake.y;
-    state.renderer.camera.position.z += shake.z;
-  }
+  state.renderer.camera.position.x += bob.x + shake.x;
+  state.renderer.camera.position.y += bob.y + shake.y;
+  state.renderer.camera.position.z += shake.z;
 
   state.renderer.render();
   requestAnimationFrame(loop);

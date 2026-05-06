@@ -55,6 +55,12 @@ export function setupInput() {
       return;
     }
     const p = state.player, inv = state.inv;
+    // Double-tap W = sprint (paridade Minecraft)
+    if (e.code === 'KeyW') {
+      const agora = performance.now();
+      if (p._lastWTime && agora - p._lastWTime < 300) p.input.sprint = true;
+      p._lastWTime = agora;
+    }
     switch (e.code) {
       case 'KeyW': p.input.fwd = 1; break;
       case 'KeyS': p.input.fwd = -1; break;

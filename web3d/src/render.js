@@ -11,12 +11,13 @@ import {
   CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO, VIEW_RADIUS,
 } from './constants.js';
 import { AO_OFFSETS, vertexAOValor, uvCelula } from './utils.js';
+import { corCeuComClima } from './weather.js';
 
 // === Atlas procedural ===
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 4, CELL = 32;
+  const COLS = 8, ROWS = 5, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -113,6 +114,7 @@ function criarAtlas() {
   pintar(25, '#6E6E6E', '#424242');       // fornalha
   pintar(26, '#E53935', '#C62828');       // cama
   pintar(27, '#555555', '#4a4a4a', 0.35); // bedrock
+  // Novos blocos decorativos
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -207,14 +209,19 @@ export class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     // Cor inicial — atualizada por atualizarCeu.
     this.scene.background = new THREE.Color(0x87CEEB);
-    this.scene.fog = new THREE.Fog(0x87CEEB, 30, CHUNK_SIZE * (VIEW_RADIUS + 1));
+    this.scene.fog = new THREE.Fog(0x87CEEB, 40, CHUNK_SIZE * (VIEW_RADIUS + 0.5));
 
-    // Luzes
-    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.7);
+    // === Luzes globais ===
+    // Intensidades reduzidas em relação ao default Lambert para EVITAR
+    // overbright em blocos claros (neve/diamante/vidro/lã) — combinado
+    // com vertex color próximo a 1.0 isso fazia o chão parecer espelhado.
+    // A iluminação 15 níveis (sky+block) já está baked no vertex color,
+    // então as luzes globais só precisam dar um leve "preenchimento".
+    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.35);
     this.scene.add(this.hemi);
-    this.ambient = new THREE.AmbientLight(0xffffff, 0.30);
+    this.ambient = new THREE.AmbientLight(0xffffff, 0.18);
     this.scene.add(this.ambient);
-    this.sol = new THREE.DirectionalLight(0xffffff, 0.6);
+    this.sol = new THREE.DirectionalLight(0xffffff, 0.35);
     this.sol.position.set(40, 80, 30);
     this.scene.add(this.sol);
     this.luaLuz = new THREE.DirectionalLight(0xc0d0ff, 0.0);
@@ -280,6 +287,9 @@ export class Renderer {
     // Camera shake
     this.shakeAmount = 0;
     this.shakePhase = 0;
+    // Camera bobbing (paridade Minecraft real ao andar)
+    this.bobPhase = 0;
+    this.bobActive = false;
     // Swing animation da mão
     this.swingProgress = 0;
   }
@@ -377,9 +387,11 @@ export class Renderer {
 
     const faceVisivel = (x, y, z, blocoAtual) => {
       const v = world.get(x, y, z);
-      // Como todos os blocos são opacos, qualquer vizinho sólido oculta a face.
-      // Só não oculta se o vizinho é AR.
-      return v === BLOCO.AR;
+      // Face visível se vizinho é ar OU bloco não-sólido (flores, grama alta)
+      if (v === BLOCO.AR) return true;
+      const vi = BLOCO_INFO[v];
+      if (!vi) return true;
+      return !vi.solido;
     };
 
     const addFace = (faceShade, uvIdx, faceIdx, sx, sy, sz,
@@ -400,7 +412,10 @@ export class Renderer {
       else if (faceIdx === 5) lvz -= 1;
       const luz = world.getLightAt(lvx, lvy, lvz);
       const luzNorm = Math.max(luz.sky, luz.block) / 15;
-      const luzFator = 0.10 + 0.90 * luzNorm;
+      // Cap em 0.85 para evitar saturação visual quando texture clara +
+      // luz alta. Combinado com a redução das luzes globais, blocos
+      // claros (neve, vidro, diamante) deixam de parecer espelhados.
+      const luzFator = 0.10 + 0.75 * luzNorm;
       // AO por vértice
       const tab = AO_OFFSETS[faceIdx];
       const ao0 = vertexAOValor(world, sx, sy, sz, tab[0]);
@@ -522,6 +537,30 @@ export class Renderer {
     this.maoGroup.position.y = -0.32 + a * 0.06;
   }
 
+  // === Camera bobbing ao andar (paridade Minecraft) ===
+  atualizarBobbing(dt, movendo, correndo) {
+    if (movendo) {
+      const freq = correndo ? 14.0 : 10.0;
+      this.bobPhase += dt * freq;
+      this.bobActive = true;
+    } else if (this.bobActive) {
+      // Desacelera suavemente até 0
+      const target = Math.round(this.bobPhase / (Math.PI * 2)) * Math.PI * 2;
+      this.bobPhase += (target - this.bobPhase) * Math.min(1, 8 * dt);
+      if (Math.abs(this.bobPhase - target) < 0.05) {
+        this.bobPhase = target;
+        this.bobActive = false;
+      }
+    }
+    const ampY = movendo ? (correndo ? 0.07 : 0.045) : 0;
+    const ampX = movendo ? (correndo ? 0.035 : 0.022) : 0;
+    const decay = this.bobActive ? 1 : 0;
+    return {
+      y: Math.sin(this.bobPhase) * ampY * decay,
+      x: Math.cos(this.bobPhase * 0.5) * ampX * decay,
+    };
+  }
+
   // === FOV pulse ao sprintar ===
   atualizarFOV(dt, correndo) {
     const alvo = 70 + (correndo ? 8 : 0);
@@ -532,6 +571,21 @@ export class Renderer {
     this.camera.updateProjectionMatrix();
   }
 
+  // === Camera bobbing (paridade Minecraft real) ===
+  // Pequeno balanço vertical e horizontal ao andar/correr.
+  // Retorna {x, y} pra aplicar como offset à camera.position.
+  atualizarBobbing(dt, andando, sprintando) {
+    if (!andando) {
+      this.bobPhase = 0;
+      return { x: 0, y: 0 };
+    }
+    const taxa = sprintando ? 11 : 7;
+    const amp  = sprintando ? 0.045 : 0.030;
+    this.bobPhase += dt * taxa;
+    const y = Math.abs(Math.sin(this.bobPhase)) * amp;
+    const x = Math.cos(this.bobPhase) * amp * 0.6;
+    return { x, y: -y };
+  }
   // === Camera shake ===
   aplicarShake(intensidade) {
     this.shakeAmount = Math.min(0.45, this.shakeAmount + intensidade);
@@ -550,10 +604,12 @@ export class Renderer {
   // === Sky / sol / lua / nuvens / estrelas ===
   atualizarCeu(tempoDia, playerPos) {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    this.hemi.intensity    = 0.40 + 0.30 * sun;
-    this.ambient.intensity = 0.22 + 0.15 * sun;
-    this.sol.intensity     = 0.10 + 0.50 * sun;
-    this.luaLuz.intensity  = 0.25 * (1 - sun);
+    // Intensidades reduzidas (paridade com Minecraft: visual sem brilho
+    // metálico). A iluminação 15 níveis no vertex color cobre o grosso.
+    this.hemi.intensity    = 0.20 + 0.20 * sun;
+    this.ambient.intensity = 0.10 + 0.12 * sun;
+    this.sol.intensity     = 0.05 + 0.30 * sun;
+    this.luaLuz.intensity  = 0.10 * (1 - sun);
     if (sun < 0.4) {
       this.hemi.color.setHex(0x4a6ba8);
       this.hemi.groundColor.setHex(0x2e2820);
@@ -568,6 +624,8 @@ export class Renderer {
     let bg;
     if (sun < 0.35) bg = c1.clone().lerp(c2, sun / 0.35);
     else            bg = c2.clone().lerp(c3, (sun - 0.35) / 0.65);
+    // Aplica tinte do clima (cinza durante chuva, sem efeito quando clear)
+    bg = corCeuComClima(bg, sun);
     this.renderer.setClearColor(bg);
     if (this.scene.background) this.scene.background.copy(bg);
     if (this.scene.fog) this.scene.fog.color.copy(bg);
