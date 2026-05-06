@@ -96,6 +96,49 @@ grupo('Atlas de texturas 100% opaco');
 t('canvas do atlas é forçado a alpha=255 antes de virar textura',
   /dataAll\.data\[i\]\s*=\s*255/.test(game),
   'Sem isso, padrões com strokeStyle rgba(...,0.5) vazam alpha < 255.');
+t('células não-pintadas recebem fill cinza neutro (não preto)',
+  /for \(let idx = next; idx < cols \* rows; idx\+\+\)[\s\S]*?bg\(idx, 128, 128, 128\)/.test(game),
+  'Sem isso, cells vazias viram preto após alpha=255 → bleed escurece bordas.');
+
+// ---------------------------------------------------------------------
+// UV inset + mipmaps off (fix da transparência vista de cima)
+// ---------------------------------------------------------------------
+grupo('Atlas: inset + sem mipmap (anti-bleed)');
+t('uvCelula aplica inset > 0 nas bordas das células',
+  /const inset = 0\.[1-9]\d*/.test(game),
+  'Sem inset, sample oblíquo de longe puxa pixel da célula vizinha — vista de cima fica "transparente".');
+t('atlas usa minFilter NearestFilter (sem mipmaps)',
+  /tex\.minFilter\s*=\s*THREE\.NearestFilter/.test(game),
+  'NearestMipmapLinear pré-mistura células no downsample — mesmo com inset, conteúdo dos mips vem corrompido.');
+t('atlas com generateMipmaps = false',
+  /tex\.generateMipmaps\s*=\s*false/.test(game));
+
+// ---------------------------------------------------------------------
+// AO por vértice (smooth lighting estilo Minecraft)
+// ---------------------------------------------------------------------
+grupo('Ambient Occlusion por vértice');
+t('AO_OFFSETS definido com 6 faces',
+  /const AO_OFFSETS\s*=\s*\[/.test(game) &&
+  /\/\/\s*0:\s*TOP/.test(game) &&
+  /\/\/\s*5:\s*-Z/.test(game),
+  'Sem tabela completa, AO falha em alguma face e vira face plana.');
+t('vertexAOValor implementa formula padrão (s1 && s2 → 0)',
+  /function vertexAOValor[\s\S]*?if \(s1 && s2\) return 0;[\s\S]*?return 3 - \(s1 \+ s2 \+ cn\)/.test(game));
+t('addFace recebe faceIdx + sx,sy,sz (self block) e usa AO_OFFSETS',
+  /addFace\s*=\s*\(transp,\s*faceShade,\s*uvIdx,\s*faceIdx,\s*sx,\s*sy,\s*sz/.test(game) &&
+  /const tab = AO_OFFSETS\[faceIdx\]/.test(game));
+t('AO flip de diagonal aplicado (anti split visual)',
+  /if \(ao0 \+ ao2 < ao1 \+ ao3\)/.test(game),
+  'Sem flip, AO em quads aparece como rasgo diagonal visível.');
+t('AO_FACTOR mapeia [0..3] em range razoável (0.5..1.0)', (() => {
+  const m = game.match(/const AO_FACTOR = \[([^\]]+)\]/);
+  if (!m) return false;
+  const vals = m[1].split(',').map(s => parseFloat(s.trim()));
+  if (vals.length !== 4) return false;
+  return vals[0] >= 0.45 && vals[0] <= 0.75 &&
+         vals[3] === 1.00 &&
+         vals[0] < vals[1] && vals[1] < vals[2] && vals[2] < vals[3];
+}), 'Range muito agressivo escurece cantos a preto; muito suave torna AO invisível.');
 
 // ---------------------------------------------------------------------
 // Tone mapping ACES Filmic (correto pro pipeline sRGB).

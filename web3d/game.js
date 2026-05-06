@@ -712,6 +712,18 @@ function criarAtlasTexturas() {
   M[BLOCO.FORNALHA]  = cell(26, 25, 26);  // topo limpo, lateral com fogo
   M[BLOCO.CAMA]      = cell(27, 28, 28);
 
+  // === Pinta células ainda não usadas com cinza neutro ===
+  // O canvas começa transparente-preto. O alpha-fix abaixo força
+  // alpha=255 em todos os pixels, o que faria células não pintadas
+  // virarem PRETAS (rgba 0,0,0,255). Isso é problema porque (a) se
+  // qualquer índice errado apontar pra cell vazia, vê-se preto absoluto,
+  // e (b) com mipmaps ligados, bleed das bordas das cells pintadas
+  // misturava com preto e escurecia faces no topo. Pintamos cinza
+  // 0x808080 em todas as cells de `next` em diante.
+  for (let idx = next; idx < cols * rows; idx++) {
+    bg(idx, 128, 128, 128);
+  }
+
   // === Força o atlas a ser 100% opaco ===
   // Vários padrões usam strokeStyle com rgba(...,0.5..0.9), o que deixa
   // alpha < 255 em alguns pixels do canvas. Quando essa textura
@@ -729,9 +741,16 @@ function criarAtlasTexturas() {
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.magFilter = THREE.NearestFilter;
-  tex.minFilter = THREE.NearestMipmapLinearFilter;
+  // === Mipmaps desligados ===
+  // Atlas pixel-perfect estilo Minecraft. Mipmaps com NearestMipmapLinear
+  // pré-misturam células vizinhas no downsample (a média é feita pelo
+  // GPU sobre pares de pixels que cruzam fronteira de cell), e o blend
+  // linear entre mips espalha esse erro. Mesmo com inset de 0.5 px
+  // nas UVs, o conteúdo INTERNO dos mips já vem corrompido. Sem mipmaps
+  // o tradeoff é leve shimmer em blocos distantes — mas o fog cobre.
+  tex.minFilter = THREE.NearestFilter;
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.generateMipmaps = true;
+  tex.generateMipmaps = false;
   return { texture: tex, mapa: M, cols, rows, cellSize };
 }
 
@@ -786,15 +805,93 @@ function criarTexturaCracks() {
 
 // Retorna os 4 UVs (em CCW) para a célula [idx] do atlas, no plano
 // (u: 0→u_max, v: 0→v_max). Coordenadas v invertidas (canvas top→bot).
+//
+// === Inset de 0.5 px ===
+// Sem inset, sample em ângulos oblíquos (vista de cima a longa
+// distância) puxava pixels da célula vizinha do atlas — efeito
+// "blocos transparentes / faixa estranha no topo". O inset puxa as
+// UVs 0.5 px pra dentro de cada célula, garantindo que o sample
+// nunca cruze a borda. Combinado com mipmaps desligados (atlas é
+// pixel-perfect Minecraft-style), elimina o bleed.
 function uvCelula(atlas, idx) {
   const col = idx % atlas.cols, row = Math.floor(idx / atlas.cols);
-  const u0 = col * atlas.cellSize / (atlas.cols * atlas.cellSize);
-  const u1 = (col + 1) * atlas.cellSize / (atlas.cols * atlas.cellSize);
+  const inset = 0.5;
+  const totalU = atlas.cols * atlas.cellSize;
+  const totalV = atlas.rows * atlas.cellSize;
+  const u0 = (col * atlas.cellSize + inset) / totalU;
+  const u1 = ((col + 1) * atlas.cellSize - inset) / totalU;
   // canvas: y=0 no topo; texture UV: v=1 no topo. Inverter:
-  const v0 = 1 - (row + 1) * atlas.cellSize / (atlas.rows * atlas.cellSize);
-  const v1 = 1 - row * atlas.cellSize / (atlas.rows * atlas.cellSize);
+  const v0 = 1 - ((row + 1) * atlas.cellSize - inset) / totalV;
+  const v1 = 1 - (row * atlas.cellSize + inset) / totalV;
   // 4 cantos: (u0,v0)(u1,v0)(u1,v1)(u0,v1) — mesmo CCW usado em addFace
   return [u0, v0, u1, v0, u1, v1, u0, v1];
+}
+
+// ===================================================================
+// Ambient Occlusion por vértice (smooth-lighting estilo Minecraft)
+// ===================================================================
+// Para cada uma das 6 direções de face e cada um dos 4 vértices em
+// ordem CCW (mesma ordem de addFace), guardamos os 3 offsets (s1, s2, c)
+// dos blocos que ocluem o vértice. Offsets são RELATIVOS ao bloco self
+// (sx, sy, sz). Verificados como sólidos via BLOCO_INFO[t].solido.
+//
+// Índice de face:
+//   0 = +Y top, 1 = -Y bottom, 2 = +X, 3 = -X, 4 = +Z, 5 = -Z
+const AO_OFFSETS = [
+  // 0: TOP (+Y) — vértices: v0=(x,y+1,z) v1=(x+1,y+1,z) v2=(x+1,y+1,z+1) v3=(x,y+1,z+1)
+  [
+    [[-1, 1, 0], [0, 1, -1], [-1, 1, -1]],
+    [[ 1, 1, 0], [0, 1, -1], [ 1, 1, -1]],
+    [[ 1, 1, 0], [0, 1,  1], [ 1, 1,  1]],
+    [[-1, 1, 0], [0, 1,  1], [-1, 1,  1]],
+  ],
+  // 1: BOTTOM (-Y) — vértices: (x,y,z+1) (x+1,y,z+1) (x+1,y,z) (x,y,z)
+  [
+    [[-1, -1, 0], [0, -1,  1], [-1, -1,  1]],
+    [[ 1, -1, 0], [0, -1,  1], [ 1, -1,  1]],
+    [[ 1, -1, 0], [0, -1, -1], [ 1, -1, -1]],
+    [[-1, -1, 0], [0, -1, -1], [-1, -1, -1]],
+  ],
+  // 2: +X — vértices: (x+1,y,z) (x+1,y,z+1) (x+1,y+1,z+1) (x+1,y+1,z)
+  [
+    [[1, 0, -1], [1, -1, 0], [1, -1, -1]],
+    [[1, 0,  1], [1, -1, 0], [1, -1,  1]],
+    [[1, 0,  1], [1,  1, 0], [1,  1,  1]],
+    [[1, 0, -1], [1,  1, 0], [1,  1, -1]],
+  ],
+  // 3: -X — vértices: (x,y,z+1) (x,y,z) (x,y+1,z) (x,y+1,z+1)
+  [
+    [[-1, 0,  1], [-1, -1, 0], [-1, -1,  1]],
+    [[-1, 0, -1], [-1, -1, 0], [-1, -1, -1]],
+    [[-1, 0, -1], [-1,  1, 0], [-1,  1, -1]],
+    [[-1, 0,  1], [-1,  1, 0], [-1,  1,  1]],
+  ],
+  // 4: +Z — vértices: (x+1,y,z+1) (x,y,z+1) (x,y+1,z+1) (x+1,y+1,z+1)
+  [
+    [[ 1, 0, 1], [0, -1, 1], [ 1, -1, 1]],
+    [[-1, 0, 1], [0, -1, 1], [-1, -1, 1]],
+    [[-1, 0, 1], [0,  1, 1], [-1,  1, 1]],
+    [[ 1, 0, 1], [0,  1, 1], [ 1,  1, 1]],
+  ],
+  // 5: -Z — vértices: (x,y,z) (x+1,y,z) (x+1,y+1,z) (x,y+1,z)
+  [
+    [[-1, 0, -1], [0, -1, -1], [-1, -1, -1]],
+    [[ 1, 0, -1], [0, -1, -1], [ 1, -1, -1]],
+    [[ 1, 0, -1], [0,  1, -1], [ 1,  1, -1]],
+    [[-1, 0, -1], [0,  1, -1], [-1,  1, -1]],
+  ],
+];
+
+// Computa AO 0..3 para um vértice (3 = sem oclusão, 0 = canto fechado).
+// Algoritmo padrão de voxel AO: se ambos os lados são sólidos, força 0
+// (canto interno). Caso contrário, 3 - soma dos 3 sólidos.
+function vertexAOValor(world, sx, sy, sz, offs) {
+  const o0 = offs[0], o1 = offs[1], o2 = offs[2];
+  const s1 = BLOCO_INFO[world.get(sx + o0[0], sy + o0[1], sz + o0[2])].solido ? 1 : 0;
+  const s2 = BLOCO_INFO[world.get(sx + o1[0], sy + o1[1], sz + o1[2])].solido ? 1 : 0;
+  const cn = BLOCO_INFO[world.get(sx + o2[0], sy + o2[1], sz + o2[2])].solido ? 1 : 0;
+  if (s1 && s2) return 0;
+  return 3 - (s1 + s2 + cn);
 }
 
 class Renderer {
@@ -1008,7 +1105,15 @@ class Renderer {
       bottom: 0.70,
     };
 
-    const addFace = (transp, faceShade, uvIdx, x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
+    // === AO: força do escurecimento por vértice ===
+    // ao=3 (sem oclusão) → fator 1.00. ao=0 (canto fechado) → fator
+    // 0.62. Range 0.62..1.0 — escurecimento perceptível em cantos
+    // sem afundar pra preto. Calibrado pra casar com piso emissive
+    // (0.20) + ambient/hemi/sol existentes.
+    const AO_FACTOR = [0.62, 0.78, 0.90, 1.00];
+
+    const addFace = (transp, faceShade, uvIdx, faceIdx, sx, sy, sz,
+                     x, y, z, nx, ny, nz, ux, uy, uz, vx, vy, vz) => {
       const arrP = transp ? positionsT : positions;
       const arrN = transp ? normalsT  : normals;
       const arrC = transp ? colorsT   : colors;
@@ -1020,12 +1125,33 @@ class Renderer {
       arrP.push(x + ux + vx, y + uy + vy, z + uz + vz);
       arrP.push(x + vx,      y + vy,      z + vz);
       for (let i = 0; i < 4; i++) arrN.push(nx, ny, nz);
-      // Vertex color = shading fake (mesmo valor para os 4 cantos)
-      for (let i = 0; i < 4; i++) arrC.push(faceShade, faceShade, faceShade);
+      // === Vertex color = SHADE × AO_FACTOR(per vertex) ===
+      const tab = AO_OFFSETS[faceIdx];
+      const ao0 = vertexAOValor(world, sx, sy, sz, tab[0]);
+      const ao1 = vertexAOValor(world, sx, sy, sz, tab[1]);
+      const ao2 = vertexAOValor(world, sx, sy, sz, tab[2]);
+      const ao3 = vertexAOValor(world, sx, sy, sz, tab[3]);
+      const s0 = faceShade * AO_FACTOR[ao0];
+      const s1 = faceShade * AO_FACTOR[ao1];
+      const s2 = faceShade * AO_FACTOR[ao2];
+      const s3 = faceShade * AO_FACTOR[ao3];
+      arrC.push(s0, s0, s0);
+      arrC.push(s1, s1, s1);
+      arrC.push(s2, s2, s2);
+      arrC.push(s3, s3, s3);
       // UVs do atlas
       const cellUV = uvCelula(this.atlas, uvIdx);
       for (let i = 0; i < 8; i++) arrU.push(cellUV[i]);
-      arrI.push(i0, i0 + 1, i0 + 2, i0, i0 + 2, i0 + 3);
+      // === AO flip: alterna diagonal pra evitar split de luz ===
+      // Se a soma dos AOs nas duas diagonais difere, escolhemos a
+      // diagonal cujo split é mais sutil. Sem isso, faces grandes
+      // mostram um "rasgo" diagonal visível (anisotropia clássica
+      // do AO em quads).
+      if (ao0 + ao2 < ao1 + ao3) {
+        arrI.push(i0 + 1, i0 + 2, i0 + 3, i0 + 1, i0 + 3, i0);
+      } else {
+        arrI.push(i0, i0 + 1, i0 + 2, i0, i0 + 2, i0 + 3);
+      }
     };
 
     for (let lx = 0; lx < cs; lx++) {
@@ -1049,22 +1175,22 @@ class Renderer {
           const idxTop = cellMap.top, idxSide = cellMap.side, idxBot = cellMap.bottom;
           // +Y top
           if (this.faceVisivel(world, x, y + 1, z, t))
-            addFace(transp, SHADE.top, idxTop, x, y+1, z, 0,1,0, 1,0,0, 0,0,1);
+            addFace(transp, SHADE.top, idxTop, 0, x, y, z, x, y+1, z, 0,1,0, 1,0,0, 0,0,1);
           // -Y bottom
           if (this.faceVisivel(world, x, y - 1, z, t))
-            addFace(transp, SHADE.bottom, idxBot, x, y, z+1, 0,-1,0, 1,0,0, 0,0,-1);
+            addFace(transp, SHADE.bottom, idxBot, 1, x, y, z, x, y, z+1, 0,-1,0, 1,0,0, 0,0,-1);
           // +X east
           if (this.faceVisivel(world, x + 1, y, z, t))
-            addFace(transp, SHADE.sideX, idxSide, x+1, y, z, 1,0,0, 0,0,1, 0,1,0);
+            addFace(transp, SHADE.sideX, idxSide, 2, x, y, z, x+1, y, z, 1,0,0, 0,0,1, 0,1,0);
           // -X west
           if (this.faceVisivel(world, x - 1, y, z, t))
-            addFace(transp, SHADE.sideX, idxSide, x, y, z+1, -1,0,0, 0,0,-1, 0,1,0);
+            addFace(transp, SHADE.sideX, idxSide, 3, x, y, z, x, y, z+1, -1,0,0, 0,0,-1, 0,1,0);
           // +Z south
           if (this.faceVisivel(world, x, y, z + 1, t))
-            addFace(transp, SHADE.sideZ, idxSide, x+1, y, z+1, 0,0,1, -1,0,0, 0,1,0);
+            addFace(transp, SHADE.sideZ, idxSide, 4, x, y, z, x+1, y, z+1, 0,0,1, -1,0,0, 0,1,0);
           // -Z north
           if (this.faceVisivel(world, x, y, z - 1, t))
-            addFace(transp, SHADE.sideZ, idxSide, x, y, z, 0,0,-1, 1,0,0, 0,1,0);
+            addFace(transp, SHADE.sideZ, idxSide, 5, x, y, z, x, y, z, 0,0,-1, 1,0,0, 0,1,0);
         }
       }
     }
