@@ -81,8 +81,8 @@ Aperte `G` no Criativo para entrar em Sobrevivência — agora a gravidade volta
 - A barra **🍗 fome** começa em 20 e cai com sprint/pulo. Saturação esvazia primeiro.
 - Quando fome ≥ 18 + sem dano há 4s + HP < 20: **regen automático**.
 
-### 6. Mobs hostis (à noite)
-Quando o sol abaixa (`F3` mostra "sun" decrescendo abaixo de 0.3):
+### 6. Mobs hostis (em luz baixa)
+Hostis spawnam onde a luz combinada (skylight + blocklight) é ≤ 7. À noite na superfície, em cavernas escuras, ou em qualquer canto sem tochas.
 
 | Mob | HP | Dano | Drops | Estratégia |
 |-----|----|------|-------|------------|
@@ -90,8 +90,12 @@ Quando o sol abaixa (`F3` mostra "sun" decrescendo abaixo de 0.3):
 | 💀 Esqueleto | 14 | 2 | Pau | Tem alcance 6m — feche distância rápido |
 | 🕷 Aranha | 12 | 3 | Lã | Mais rápida — fuja se HP baixo |
 | 💥 Creeper | 10 | 8 (explosão) | Carvão | **Mate de longe ou fuja** — explode em proximidade |
+| 🟢 Slime | 8 | 2 | Lã | Pula em arcos — atinja entre os pulos |
+| 🟣 Enderman | 20 | 3 | Diamante (50%) | Teleporta quando atacado — persistente, evite |
 
 **Lobo** (🐺) é amigável e ataca hostis automaticamente. Útil de aliado.
+
+**Dica:** ilumine cavernas com tochas (luz ≥ 13) ou blocos de luz (luz 14) para impedir spawn de hostis. A iluminação 15 níveis funciona como em Minecraft real.
 
 ### 7. Armadura
 No workbench:
@@ -136,9 +140,13 @@ Coloque várias **tochas** (🕯) ou blocos de **luz** (💡) no escuro — eles
 
 - **Hotbar swap**: scroll do mouse rola entre os 9 slots sem tirar a mão.
 - **Sneak (`Ctrl`)**: agacha + impede cair de borda — pra construir em pontes finas.
-- **F3 + bloco mirado**: descobre o tipo exato do bloco em frente.
+- **F3 + bloco mirado**: descobre o tipo exato do bloco em frente, light level (sky/block), bioma e chunk.
+- **F1**: esconde o HUD para tirar screenshots limpas.
 - **Quebrar segurando**: clique esquerdo segurado quebra com animação de 5 estágios (rachaduras crescentes).
 - **`Q`**: come o item ativo da hotbar sem abrir inventário.
+- **Critical hit**: ataque enquanto cai (vy negativo) → 1.5× dano + som especial.
+- **XP orbs**: ao matar mob/minerar, esferas verdes brilhantes voam para você quando se aproxima.
+- **Tochas para impedir spawn**: posicione tocha (luz nível 13) a cada 7 blocos para manter cavernas seguras.
 
 ---
 

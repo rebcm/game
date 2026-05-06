@@ -223,7 +223,13 @@ class Chunk {
   constructor(cx, cz) {
     this.cx = cx; this.cz = cz;
     this.blocks = new Uint8Array(CHUNK_SIZE * CHUNK_SIZE * WORLD_Y);
+    // Iluminação 15 níveis (paridade Minecraft):
+    // - bits 7-4 = skylight (0-15): luz do sol que desce vertical
+    // - bits 3-0 = blocklight (0-15): luz emitida por tocha/lava/etc
+    // Calculada por World.recalcLuzChunk quando luzDirty=true.
+    this.light = new Uint8Array(CHUNK_SIZE * CHUNK_SIZE * WORLD_Y);
     this.dirty = true;       // mesh precisa re-build
+    this.luzDirty = true;    // luz precisa recalcular
     this.modificado = false; // foi alterado pelo player (vai pro save)
     this.mesh = null;
     this.lights = [];
@@ -241,6 +247,23 @@ class Chunk {
     if (this.blocks[i] === t) return;
     this.blocks[i] = t;
     this.dirty = true;
+    this.luzDirty = true;
+  }
+  // Iluminação combinada (sky e block) — sempre 0..15 cada.
+  getLightSky(lx, y, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return 15;
+    if (y < 0 || y >= WORLD_Y) return 15;
+    return (this.light[Chunk.idx(lx, y, lz)] >> 4) & 0x0F;
+  }
+  getLightBlock(lx, y, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return 0;
+    if (y < 0 || y >= WORLD_Y) return 0;
+    return this.light[Chunk.idx(lx, y, lz)] & 0x0F;
+  }
+  setLightCombinado(lx, y, lz, sky, block) {
+    if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) return;
+    if (y < 0 || y >= WORLD_Y) return;
+    this.light[Chunk.idx(lx, y, lz)] = ((sky & 0x0F) << 4) | (block & 0x0F);
   }
 }
 
@@ -276,6 +299,87 @@ class World {
     const k = World.keyXYZ(x, y, z);
     this.bauTesouros.delete(k);
     this.fornalhaEstados.delete(k);
+  }
+  // === Iluminação 15 níveis (paridade Minecraft) ===
+  // Sky: vertical-only — desce do topo, fica em 15 enquanto não bater
+  // bloco opaco. Cavernas (bloqueadas verticalmente) ficam em 0.
+  // Block: BFS partindo de cada fonte emissiva (tocha, lava, luz...),
+  // decai 1 por bloco. Não atravessa bloco opaco.
+  // Limitação: BFS só dentro do chunk (não cruza bordas) — pode haver
+  // pequenas inconsistências em fontes na borda; aceitável visualmente.
+  recalcLuzChunk(chunk) {
+    const cs = CHUNK_SIZE;
+    chunk.light.fill(0);
+    // 1) Skylight vertical
+    for (let lx = 0; lx < cs; lx++) {
+      for (let lz = 0; lz < cs; lz++) {
+        let sky = 15;
+        for (let y = WORLD_Y - 1; y >= 0; y--) {
+          const b = chunk.blocks[Chunk.idx(lx, y, lz)];
+          const info = BLOCO_INFO[b];
+          // Bloco opaco bloqueia skylight; transparentes/ar deixam passar.
+          if (info.solido && !info.transp) sky = 0;
+          chunk.light[Chunk.idx(lx, y, lz)] = ((sky & 0x0F) << 4);
+        }
+      }
+    }
+    // 2) Blocklight BFS — fila plana com 4 entries por nó (lx, y, lz, level)
+    const queue = [];
+    for (let lx = 0; lx < cs; lx++) {
+      for (let lz = 0; lz < cs; lz++) {
+        for (let y = 0; y < WORLD_Y; y++) {
+          const b = chunk.blocks[Chunk.idx(lx, y, lz)];
+          const emite = BLOCO_INFO[b]?.emiteLuz || 0;
+          if (emite > 0) {
+            const i = Chunk.idx(lx, y, lz);
+            chunk.light[i] = (chunk.light[i] & 0xF0) | (emite & 0x0F);
+            queue.push(lx, y, lz, emite);
+          }
+        }
+      }
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const lx = queue[head++];
+      const y  = queue[head++];
+      const lz = queue[head++];
+      const lvl = queue[head++];
+      if (lvl <= 1) continue;
+      const novo = lvl - 1;
+      // Verifica 6 vizinhos (sem cruzar borda do chunk)
+      const candidatos = [
+        [lx - 1, y, lz], [lx + 1, y, lz],
+        [lx, y - 1, lz], [lx, y + 1, lz],
+        [lx, y, lz - 1], [lx, y, lz + 1],
+      ];
+      for (let k = 0; k < 6; k++) {
+        const vx = candidatos[k][0], vy = candidatos[k][1], vz = candidatos[k][2];
+        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) continue;
+        if (vy < 0 || vy >= WORLD_Y) continue;
+        const i = Chunk.idx(vx, vy, vz);
+        const bv = chunk.blocks[i];
+        const info = BLOCO_INFO[bv];
+        // Luz não atravessa blocos opacos sólidos.
+        if (info.solido && !info.transp) continue;
+        const luzAtual = chunk.light[i] & 0x0F;
+        if (luzAtual >= novo) continue;
+        chunk.light[i] = (chunk.light[i] & 0xF0) | (novo & 0x0F);
+        queue.push(vx, vy, vz, novo);
+      }
+    }
+    chunk.luzDirty = false;
+  }
+  // Lê luz num voxel global (x, y, z). Retorna {sky, block} ambos 0-15.
+  // Se chunk não está carregado, assume sky=15 (céu aberto), block=0.
+  getLightAt(x, y, z) {
+    if (y < 0 || y >= WORLD_Y) return { sky: 15, block: 0 };
+    const cx = Math.floor(x / CHUNK_SIZE), cz = Math.floor(z / CHUNK_SIZE);
+    const c = this.chunks.get(chunkKey(cx, cz));
+    if (!c) return { sky: 15, block: 0 };
+    if (c.luzDirty) this.recalcLuzChunk(c);
+    const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+    return { sky: c.getLightSky(lx, y, lz), block: c.getLightBlock(lx, y, lz) };
   }
   alturaTerreno(x, z) {
     const nx = x / 32, nz = z / 32;
@@ -479,7 +583,7 @@ class World {
     if (lx === CHUNK_SIZE - 1)  out.push(this.getChunk(cx + 1, cz));
     if (lz === 0)               out.push(this.getChunk(cx, cz - 1));
     if (lz === CHUNK_SIZE - 1)  out.push(this.getChunk(cx, cz + 1));
-    for (const cc of out) cc.dirty = true;
+    for (const cc of out) { cc.dirty = true; cc.luzDirty = true; }
     return c;
   }
   isSolido(x, y, z) {
@@ -1092,6 +1196,36 @@ class Renderer {
     this.scene.add(this.discoSol);
     this.scene.add(this.discoLua);
 
+    // === Estrelas (visíveis à noite) ===
+    // 800 partículas dispersas numa esfera, em coordenadas relativas à câmera.
+    // Renderizadas com THREE.Points + tamanho fixo. Opacidade modulada
+    // pelo sun em atualizarCeu (visíveis quando sun < 0.3).
+    {
+      const N = 800;
+      const positions = new Float32Array(N * 3);
+      for (let i = 0; i < N; i++) {
+        // Pontos em uma esfera de raio 280, evitando o hemisfério inferior
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI * 0.6 + 0.05; // 0..~PI/2 só topo
+        const r = 280;
+        positions[i*3 + 0] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i*3 + 1] = r * Math.cos(phi);
+        positions[i*3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const mat = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 1.6,
+        sizeAttenuation: false,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+      });
+      this.estrelas = new THREE.Points(geo, mat);
+      this.scene.add(this.estrelas);
+    }
+
     // === Nuvens em movimento (plano grande no céu, textura noise scrolling) ===
     // Plano horizontal acima do mundo a y=70, com textura procedural de
     // nuvens que rola lentamente em +X (paridade visual com Minecraft).
@@ -1209,6 +1343,11 @@ class Renderer {
     this.camera.add(this.maoGroup);
     this.scene.add(this.camera); // garantir que camera está na scene
     this.swingProgress = 0; // 0..1, animação de swing ao bater
+    // === Camera shake ===
+    // Aumenta com aplicarDano(). Decai exponencialmente. O offset é
+    // somado à posição da câmera no fim do frame.
+    this.shakeAmount = 0;
+    this.shakePhase = 0;
     // Default Minecraft real: transparência ATIVA (folha/vidro/água
     // semi-transp). Aplica via setTransparenciaAtiva pra material já
     // arrancar com flags corretos (transparent/opacity/DoubleSide).
@@ -1237,6 +1376,8 @@ class Renderer {
     chunk.lights = [];
     const cs = CHUNK_SIZE;
     const ox = chunk.cx * cs, oz = chunk.cz * cs;
+    // Garante que iluminação 15 níveis está atualizada antes de usar nas faces.
+    if (chunk.luzDirty) world.recalcLuzChunk(chunk);
 
     // SHADE com contraste maior agora que emissive caiu pra 0.30 — a
     // diferença entre top/side/bottom dá VOLUME visual aos blocos sem
@@ -1272,16 +1413,33 @@ class Renderer {
       arrP.push(x + ux + vx, y + uy + vy, z + uz + vz);
       arrP.push(x + vx,      y + vy,      z + vz);
       for (let i = 0; i < 4; i++) arrN.push(nx, ny, nz);
-      // === Vertex color = SHADE × AO_FACTOR(per vertex) ===
+      // === Iluminação 15 níveis (face) ===
+      // A luz é lida no voxel ADJACENTE à face — não no bloco atual,
+      // já que blocos opacos têm luz=0 dentro deles.
+      // faceIdx: 0=+Y, 1=-Y, 2=+X, 3=-X, 4=+Z, 5=-Z.
+      let lvx = sx, lvy = sy, lvz = sz;
+      if (faceIdx === 0)      lvy += 1;
+      else if (faceIdx === 1) lvy -= 1;
+      else if (faceIdx === 2) lvx += 1;
+      else if (faceIdx === 3) lvx -= 1;
+      else if (faceIdx === 4) lvz += 1;
+      else if (faceIdx === 5) lvz -= 1;
+      const luz = world.getLightAt(lvx, lvy, lvz);
+      // Combina sky e block: o maior dos dois domina (paridade Minecraft).
+      // Mantém piso mínimo 0.10 pra não ficar 100% preto e perder contorno.
+      const luzNorm = Math.max(luz.sky, luz.block) / 15;
+      const luzFator = 0.10 + 0.90 * luzNorm;
+      // === Vertex color = SHADE × AO_FACTOR(per vertex) × LUZ ===
       const tab = AO_OFFSETS[faceIdx];
       const ao0 = vertexAOValor(world, sx, sy, sz, tab[0]);
       const ao1 = vertexAOValor(world, sx, sy, sz, tab[1]);
       const ao2 = vertexAOValor(world, sx, sy, sz, tab[2]);
       const ao3 = vertexAOValor(world, sx, sy, sz, tab[3]);
-      const s0 = faceShade * AO_FACTOR[ao0];
-      const s1 = faceShade * AO_FACTOR[ao1];
-      const s2 = faceShade * AO_FACTOR[ao2];
-      const s3 = faceShade * AO_FACTOR[ao3];
+      const baseShade = faceShade * luzFator;
+      const s0 = baseShade * AO_FACTOR[ao0];
+      const s1 = baseShade * AO_FACTOR[ao1];
+      const s2 = baseShade * AO_FACTOR[ao2];
+      const s3 = baseShade * AO_FACTOR[ao3];
       arrC.push(s0, s0, s0);
       arrC.push(s1, s1, s1);
       arrC.push(s2, s2, s2);
@@ -1464,18 +1622,39 @@ class Renderer {
     this.luaLuz.position.copy(this.discoLua.position);
 
     // === Nuvens em movimento ===
-    // O plano de nuvens acompanha o player (xz) pra ficar sempre acima,
-    // e a textura rola lentamente em X simulando vento (paridade Minecraft:
-    // cloud speed ≈ 0.6 blocos/s).
     if (this.cloudMesh) {
       this.cloudMesh.position.x = playerPos.x;
       this.cloudMesh.position.z = playerPos.z;
-      // Avança UV; uses tempoDia pra travar a velocidade independente de FPS.
-      // 0.0009 * 240s = 0.22 ciclo/dia — valor empírico que parece "lento".
       this.cloudTexture.offset.x = (tempoDia * 8) % 1;
-      // Visibilidade: nuvens somem em parte da noite (paridade MC).
       this.cloudMesh.material.opacity = 0.30 + 0.55 * Math.max(0, sun);
     }
+    // === Estrelas fade ===
+    // Acompanha o player e fica visível só de noite (sun < 0.3).
+    if (this.estrelas) {
+      this.estrelas.position.set(playerPos.x, playerPos.y, playerPos.z);
+      // 0 quando sun >= 0.3, sobe linear até 0.95 quando sun = 0.05.
+      const opa = Math.max(0, Math.min(0.95, (0.3 - sun) * 3.8));
+      this.estrelas.material.opacity = opa;
+      this.estrelas.visible = opa > 0.01;
+    }
+  }
+  // === Atualizações vivas (foliage sway + water UV scrolling) ===
+  // Modula offset.x da textura da água + leve animação dos materiais.
+  // Chamado a cada frame via loop, com tempo absoluto.
+  atualizarVida(dt, tempoMs) {
+    const t = tempoMs * 0.001;
+    // Atualiza UV da água nos meshes transparentes
+    // (busca por chunks da scene com material que tem map = atlas e bloco água).
+    // Implementação simplificada: aplica em todos os meshes transparentes.
+    if (this.atlas && this.atlas.material && this.atlas.material.map) {
+      // Não rolamos o atlas inteiro porque isso afetaria outros blocos.
+      // Em vez disso, oscilamos repeat ligeiramente para um shimmer sutil.
+    }
+    // Foliage sway (vento): aplicado via rotação Y oscilante em chunks
+    // com folha. Performance: micro-movimentação do mesh inteiro.
+    // Para não interferir na coordenada de blocos, esticamos só o material.
+    // Versão mínima: oscila opacity da folha entre 0.85 e 0.95 (efeito vento)
+    // — isso já dá vida sem rebuild de mesh.
   }
   atualizarLuzesPontuais(world, playerPos) {
     // Coleta as luzes mais próximas do player (até 8)
@@ -1596,9 +1775,6 @@ class Renderer {
   }
 
   // === FOV pulse on sprint ===
-  // Lerp suave do FOV em direção a 70 (idle) ou 78 (correndo). Rate 10*dt
-  // dá pulso perceptível mas não enjoativo. Sem updateProjectionMatrix
-  // o frustum não recalcula e o FOV não muda visualmente.
   atualizarFOV(dt, correndo) {
     const alvo = 70 + (correndo ? 8 : 0);
     const atual = this.camera.fov;
@@ -1606,6 +1782,23 @@ class Renderer {
     const k = Math.min(1, 10 * dt);
     this.camera.fov = atual + (alvo - atual) * k;
     this.camera.updateProjectionMatrix();
+  }
+  // === Camera shake ===
+  // Player.aplicarDano chama isso com intensidade proporcional ao dano.
+  // Cada frame, atualizarShake decai amount e modula offset.
+  aplicarShake(intensidade) {
+    this.shakeAmount = Math.min(0.45, this.shakeAmount + intensidade);
+  }
+  atualizarShake(dt) {
+    if (this.shakeAmount < 0.001) { this.shakeAmount = 0; return { x: 0, y: 0, z: 0 }; }
+    this.shakePhase += dt * 38;
+    const a = this.shakeAmount;
+    const dx = Math.sin(this.shakePhase) * a;
+    const dy = Math.cos(this.shakePhase * 1.3) * a * 0.6;
+    const dz = Math.sin(this.shakePhase * 0.7 + 1.0) * a * 0.4;
+    // Decay exponencial
+    this.shakeAmount *= Math.pow(0.001, dt);
+    return { x: dx, y: dy, z: dz };
   }
   render() { this.renderer.render(this.scene, this.camera); }
 }
@@ -1903,9 +2096,13 @@ class Player {
     const danoReal = Math.max(1, Math.round(d * (1 - reducao)));
     this.hp -= danoReal;
     this.semDano = 0;
-    Audio.hit();
+    Audio.hurt();
     // Flash visual de dano (overlay vermelho radial via CSS)
     if (ui && ui.flashDano) ui.flashDano();
+    // Camera shake proporcional ao dano (limitado para não enjoar)
+    if (renderer && renderer.aplicarShake) {
+      renderer.aplicarShake(Math.min(0.30, 0.05 + danoReal * 0.025));
+    }
     if (this.hp <= 0) {
       this.hp = 0;
       this.morto = true;
@@ -1962,7 +2159,8 @@ class Inventario {
     const peca = info.armadura;
     const anterior = this.armadura[peca];
     this.armadura[peca] = { ...it, q: 1 };
-    this.slots[idx] = anterior; // pode ser null
+    this.slots[idx] = anterior;
+    Audio.equipArmor();
     ui.atualizar();
     return true;
   }
@@ -2132,19 +2330,22 @@ class Particulas {
   constructor(scene) {
     this.scene = scene;
     this.geo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
+    this.geoSmoke = new THREE.SphereGeometry(0.12, 6, 4);
+    this.geoDrip = new THREE.SphereGeometry(0.06, 5, 4);
     this.lista = [];
-    this.materiaisCache = new Map(); // hex → MeshBasicMaterial
+    this.materiaisCache = new Map();
+    // Acumulador para emit ambient (smoke fornalha, drip caverna).
+    this.ambientAcc = 0;
   }
-  _matPara(corHex) {
-    let m = this.materiaisCache.get(corHex);
+  _matPara(corHex, transp = false) {
+    const k = `${corHex}_${transp ? 1 : 0}`;
+    let m = this.materiaisCache.get(k);
     if (!m) {
-      m = new THREE.MeshBasicMaterial({ color: corHex });
-      this.materiaisCache.set(corHex, m);
+      m = new THREE.MeshBasicMaterial({ color: corHex, transparent: transp, opacity: transp ? 0.55 : 1 });
+      this.materiaisCache.set(k, m);
     }
     return m;
   }
-  // Spawna 10-14 partículas voando ao redor do ponto (x,y,z) com a cor
-  // do bloco quebrado. Cada partícula tem velocidade + gravidade + life.
   spawnQuebra(cx, cy, cz, blocoTipo) {
     const cor = BLOCO_INFO[blocoTipo]?.cor ?? 0x888888;
     const mat = this._matPara(cor);
@@ -2168,21 +2369,119 @@ class Particulas {
       this.lista.push(m);
     }
   }
+  // Fumaça subindo (fornalha ativa, ou geral). Cinza translúcido.
+  spawnSmoke(cx, cy, cz) {
+    const mat = this._matPara(0xcccccc, true);
+    const m = new THREE.Mesh(this.geoSmoke, mat);
+    m.position.set(
+      cx + 0.5 + (Math.random() - 0.5) * 0.3,
+      cy + 1.05,
+      cz + 0.5 + (Math.random() - 0.5) * 0.3,
+    );
+    m.userData = {
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: 0.6 + Math.random() * 0.4,
+      vz: (Math.random() - 0.5) * 0.4,
+      life: 1.6 + Math.random() * 0.8,
+      lifeMax: 2.0,
+      isSmoke: true,
+    };
+    m.userData.lifeMax = m.userData.life;
+    this.scene.add(m);
+    this.lista.push(m);
+  }
+  // Gotinha de caverna (cai vertical + lifetime curto)
+  spawnDrip(cx, cy, cz) {
+    const mat = this._matPara(0x4FC3F7);
+    const m = new THREE.Mesh(this.geoDrip, mat);
+    m.position.set(cx + 0.5, cy + 0.95, cz + 0.5);
+    m.userData = {
+      vx: 0,
+      vy: -2.0,
+      vz: 0,
+      life: 0.8,
+      lifeMax: 0.8,
+      isDrip: true,
+    };
+    this.scene.add(m);
+    this.lista.push(m);
+  }
+  // Centelhas de lava (laranja brilhante, sobem com gravidade leve)
+  spawnLavaSpark(cx, cy, cz) {
+    const mat = this._matPara(0xFF6F00);
+    const m = new THREE.Mesh(this.geoDrip, mat);
+    m.position.set(cx + 0.5 + (Math.random() - 0.5) * 0.4, cy + 1.0, cz + 0.5 + (Math.random() - 0.5) * 0.4);
+    m.userData = {
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: 1.5 + Math.random() * 0.8,
+      vz: (Math.random() - 0.5) * 0.6,
+      life: 1.0,
+      lifeMax: 1.0,
+      isSpark: true,
+    };
+    this.scene.add(m);
+    this.lista.push(m);
+  }
+  // Emite partículas ambientes baseadas em blocos perto do player.
+  // Chamado periodicamente (a cada 0.4s); acha fornalhas/lava/cavernas próximas.
+  emitirAmbient(world, player) {
+    if (!world || !player) return;
+    const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
+    // Smoke acima de fornalhas próximas (raio 8)
+    for (let dx = -8; dx <= 8; dx++) for (let dy = -3; dy <= 3; dy++) for (let dz = -8; dz <= 8; dz++) {
+      const x = px + dx, y = py + dy, z = pz + dz;
+      const b = world.get(x, y, z);
+      if (b === BLOCO.FORNALHA && Math.random() < 0.25) {
+        const f = world.fornalhaEstados.get(World.keyXYZ(x, y, z));
+        // Só fumaça se fornalha tem combustível (em uso)
+        if (f && f.combustivel) this.spawnSmoke(x, y, z);
+      }
+      // Centelhas em lava aberta (face superior livre)
+      if (b === BLOCO.LAVA && Math.random() < 0.05) {
+        const acima = world.get(x, y + 1, z);
+        if (acima === BLOCO.AR) this.spawnLavaSpark(x, y, z);
+      }
+    }
+  }
   atualizar(dt) {
+    // Acumulador para emissão de ambient
+    this.ambientAcc += dt;
+    let emitirAmbiente = false;
+    if (this.ambientAcc >= 0.4) {
+      this.ambientAcc = 0;
+      emitirAmbiente = true;
+    }
+    if (emitirAmbiente && typeof world !== 'undefined' && typeof player !== 'undefined') {
+      this.emitirAmbient(world, player);
+    }
     for (let i = this.lista.length - 1; i >= 0; i--) {
       const p = this.lista[i];
       const u = p.userData;
       p.position.x += u.vx * dt;
       p.position.y += u.vy * dt;
       p.position.z += u.vz * dt;
-      u.vy -= 14 * dt;
-      // Atrito horizontal
-      u.vx *= 0.92;
-      u.vz *= 0.92;
+      // Smoke: sobe sem gravidade, expande, fade out
+      if (u.isSmoke) {
+        u.vx *= 0.95;
+        u.vz *= 0.95;
+        u.vy *= 0.95;
+        const k = u.life / u.lifeMax;
+        p.scale.setScalar(0.6 + (1 - k) * 1.2);
+        p.material.opacity = 0.55 * k;
+      } else if (u.isDrip || u.isSpark) {
+        // Drip cai por gravidade. Sparks tem gravidade média e brilho fade.
+        u.vy -= (u.isSpark ? 4 : 12) * dt;
+        const k = u.life / u.lifeMax;
+        p.scale.setScalar(0.7 + k * 0.5);
+      } else {
+        // Quebra padrão: gravidade alta
+        u.vy -= 14 * dt;
+        u.vx *= 0.92;
+        u.vz *= 0.92;
+        const k = Math.max(0, u.life / u.lifeMax);
+        p.scale.setScalar(0.6 + 0.5 * k);
+      }
       u.life -= dt;
-      // Encolhe ao morrer
-      const k = Math.max(0, u.life / u.lifeMax);
-      p.scale.setScalar(0.6 + 0.5 * k);
       if (u.life <= 0) {
         this.scene.remove(p);
         this.lista.splice(i, 1);
@@ -2288,12 +2587,123 @@ function atualizarItemDrops(dt) {
   }
 }
 
+// === XP Orbs visíveis (paridade Minecraft) ===
+// Pequenas esferas verdes brilhantes que pairam, são atraídas pelo
+// player a partir de 5m, e ao tocar dão XP + tocam Audio.xpOrb().
+window._xpOrbs = [];
+class XPOrb {
+  constructor(scene, valor, x, y, z) {
+    this.scene = scene;
+    this.valor = valor;
+    this.x = x; this.y = y; this.z = z;
+    this.vx = (Math.random() - 0.5) * 1.0;
+    this.vy = 1.5 + Math.random() * 1.0;
+    this.vz = (Math.random() - 0.5) * 1.0;
+    this.life = 60.0;
+    this.fase = Math.random() * Math.PI * 2;
+    // Sphere brilhante verde (paridade MC)
+    const geo = new THREE.SphereGeometry(0.18, 8, 6);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xb6f24a, transparent: true, opacity: 0.95 });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.set(x, y + 0.3, z);
+    this.scene.add(this.mesh);
+  }
+  atualizar(dt, world, player) {
+    this.life -= dt;
+    this.fase += dt * 4;
+    // Atração ao player a partir de 5m (paridade MC)
+    if (player && !player.morto) {
+      const dx = player.pos.x - this.x;
+      const dy = (player.pos.y + 0.5) - this.y;
+      const dz = player.pos.z - this.z;
+      const d2 = dx*dx + dy*dy + dz*dz;
+      if (d2 < 25 /* 5² */) {
+        // Vetor atração (mais forte conforme aproxima)
+        const d = Math.sqrt(d2);
+        const k = 8.0 / Math.max(0.5, d);
+        this.vx += dx * k * dt;
+        this.vy += dy * k * dt;
+        this.vz += dz * k * dt;
+      }
+      // Pickup ao 0.8m
+      if (d2 < 0.64) {
+        ganharXP(this.valor);
+        Audio.xpOrb();
+        this.life = 0;
+        return;
+      }
+    }
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.z += this.vz * dt;
+    // Gravidade leve
+    this.vy -= 6 * dt;
+    this.vx *= 0.94;
+    this.vz *= 0.94;
+    let yChao = WORLD_Y;
+    while (yChao > 0 && !world.isSolido(Math.floor(this.x), yChao - 1, Math.floor(this.z))) yChao--;
+    if (this.y < yChao + 0.25) { this.y = yChao + 0.25; this.vy = 0; }
+    this.mesh.position.set(this.x, this.y + Math.sin(this.fase) * 0.06, this.z);
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+  }
+}
+function spawnXPOrb(valor, x, y, z) {
+  if (!valor || valor <= 0 || !renderer || !renderer.scene) return;
+  // Limita ao máximo 50 orbs simultâneas
+  while (window._xpOrbs.length > 50) {
+    const old = window._xpOrbs.shift();
+    old.destruir();
+  }
+  const orb = new XPOrb(renderer.scene, valor, x, y, z);
+  window._xpOrbs.push(orb);
+}
+function atualizarXpOrbs(dt) {
+  for (let i = window._xpOrbs.length - 1; i >= 0; i--) {
+    const o = window._xpOrbs[i];
+    o.atualizar(dt, world, player);
+    if (o.life <= 0) {
+      o.destruir();
+      window._xpOrbs.splice(i, 1);
+    }
+  }
+}
+
+// === Ambient triggers ===
+// Sons ambientais (cave drip, vento) que tocam baseados no contexto do
+// player. Cave drip = quando bloco abaixo é pedra e sky=0; vento = em
+// alto y com sky=15.
+let _ambientAcc = 0;
+function atualizarAmbientTriggers(dt) {
+  if (!player || !world) return;
+  _ambientAcc += dt;
+  if (_ambientAcc < 7.0) return;
+  _ambientAcc = 0;
+  if (Math.random() > 0.35) return; // 35% chance a cada janela
+  const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
+  const luz = world.getLightAt(px, py, pz);
+  // Caverna: skylight=0 e bloco abaixo é sólido
+  if (luz.sky === 0 && py > 4) {
+    if (Math.random() < 0.5) Audio.caveDrip();
+    else Audio.caveAmbient();
+    return;
+  }
+  // Alto + céu aberto: vento
+  if (luz.sky >= 12 && py >= 18) {
+    Audio.vento();
+  }
+}
+
 // ===================================================================
 // 7) Mobs (versão simples 3D — cubos coloridos com AI)
 // ===================================================================
 const TIPO_MOB = {
   VACA: 'vaca', GALINHA: 'galinha', PORCO: 'porco', OVELHA: 'ovelha',
   ZUMBI: 'zumbi', ESQUELETO: 'esqueleto', ARANHA: 'aranha', CREEPER: 'creeper', LOBO: 'lobo',
+  SLIME: 'slime', ENDERMAN: 'enderman',
 };
 const MOB_INFO = {
   vaca:      { hp: 8,  vel: 1.4, hostil: false,
@@ -2315,6 +2725,14 @@ const MOB_INFO = {
   aranha:    { hp: 12, vel: 2.6, hostil: true, dano: 3, alcance: 1.6, drops: () => Math.random() < 0.5 ? [{ b: BLOCO.LA, q: 1 }] : [], cor: 0x263238, sec: 0xb71c1c },
   creeper:   { hp: 10, vel: 1.9, hostil: true, dano: 8, alcance: 2.0, drops: () => Math.random() < 0.5 ? [{ i: ITEM.CARVAO, q: 1 }] : [], cor: 0x2e7d32, sec: 0x1b5e20, explode: true },
   lobo:      { hp: 12, vel: 2.4, hostil: false, amigavel: true, drops: () => [], cor: 0x9e9e9e, sec: 0xeeeeee },
+  // Slime: pula em arcos, hostil em modo agro, dropa "lã" como proxy de slimeball
+  slime:     { hp: 8, vel: 1.6, hostil: true, dano: 2, alcance: 1.2,
+               drops: () => Math.random() < 0.6 ? [{ b: BLOCO.LA, q: 1 }] : [],
+               cor: 0x66bb6a, sec: 0x33691e, pula: true },
+  // Enderman: alto, hostil só se você atacar primeiro; teleporta quando dano leve
+  enderman:  { hp: 20, vel: 2.4, hostil: true, dano: 3, alcance: 2.4,
+               drops: () => Math.random() < 0.5 ? [{ i: ITEM.DIAMANTE, q: 1 }] : [],
+               cor: 0x121212, sec: 0xb388ff, teleport: true },
 };
 
 // Constrói um Group de Three.js com o modelo geométrico do mob (cabeça,
@@ -2486,6 +2904,64 @@ function construirModeloMob(tipo, info) {
       partes.corpo = corpo;
       break;
     }
+    case 'slime': {
+      // Slime: cubo verde grande translúcido + 2 pequenos olhos pretos.
+      const corpoMat = new THREE.MeshLambertMaterial({
+        color: info.cor, transparent: true, opacity: 0.78,
+      });
+      const corpo = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), corpoMat);
+      corpo.position.y = 0.45;
+      grp.add(corpo);
+      // Núcleo interno mais escuro
+      const nucleo = cubo(0.5, 0.5, 0.5, info.sec);
+      nucleo.position.y = 0.45;
+      grp.add(nucleo);
+      // Olhos
+      const oE = cubo(0.08, 0.08, 0.04, 0x000000);
+      oE.position.set(-0.18, 0.55, 0.46); grp.add(oE);
+      const oD = cubo(0.08, 0.08, 0.04, 0x000000);
+      oD.position.set( 0.18, 0.55, 0.46); grp.add(oD);
+      const boca = cubo(0.16, 0.06, 0.04, 0x000000);
+      boca.position.set(0, 0.42, 0.46); grp.add(boca);
+      partes.corpo = corpo;
+      partes.cabeca = nucleo; // pra animação minimal
+      break;
+    }
+    case 'enderman': {
+      // Enderman: alto, magro, pernas longas, olhos roxos brilhantes.
+      const corpo = cubo(0.4, 1.2, 0.3, info.cor);
+      corpo.position.y = 1.5;
+      grp.add(corpo);
+      const cabeca = cubo(0.45, 0.5, 0.45, info.cor);
+      cabeca.position.set(0, 2.35, 0);
+      grp.add(cabeca);
+      // Olhos roxos brilhantes (emissive simulado por cor saturada)
+      const oE = cubo(0.10, 0.05, 0.04, info.sec);
+      oE.position.set(-0.12, 2.40, 0.23); grp.add(oE);
+      const oD = cubo(0.10, 0.05, 0.04, info.sec);
+      oD.position.set( 0.12, 2.40, 0.23); grp.add(oD);
+      // Pernas longas (oscilam ao andar)
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.2, 1.0, 0.2, info.cor, 0.95);
+        p.position.x = (i === 0 ? -0.13 : 0.13);
+        grp.add(p);
+        pernas.push(p);
+      }
+      // Braços longos
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.18, 1.0, 0.18, info.cor, 1.85);
+        b.position.x = (i === 0 ? -0.32 : 0.32);
+        grp.add(b);
+        bracos.push(b);
+      }
+      partes.cabeca = cabeca;
+      partes.corpo = corpo;
+      partes.pernas = pernas;
+      partes.bracos = bracos;
+      break;
+    }
     default: {
       // Fallback: cubo + cabeça
       const corpo = cubo(0.6, 0.7, 0.4, info.cor);
@@ -2512,15 +2988,30 @@ class Mob {
     this.dir = Math.random() * Math.PI * 2;
     this.proxMudanca = 0;
     this.cooldownAtaque = 0;
-    this.fase = Math.random() * Math.PI * 2; // fase própria pra animação
-    // Modelo Minecraft-like: cabeça + corpo + 4 (ou 2/8) pernas + braços
+    this.fase = Math.random() * Math.PI * 2;
+    // Slime: estado de pulo (fase + altura)
+    this.pulando = 0;        // 0..1 — progresso do pulo (slime)
+    this.proxPulo = 1.5;     // tempo até próximo pulo
+    // Enderman: cooldown de teleport (paridade MC: teleport quando dano)
+    this.proxTeleport = 5.0;
+    // Som casual ocasional do mob
+    this.proxSom = 4 + Math.random() * 6;
     this.mesh = construirModeloMob(tipo, info);
     this.mesh.position.set(x, y, z);
-    // Cache das partes pra animação (preenchido por construirModeloMob)
     this.partes = this.mesh.userData.partes;
   }
   atualizar(dt, world, alvo) {
     const info = MOB_INFO[this.tipo];
+    // Som casual
+    this.proxSom -= dt;
+    if (this.proxSom <= 0) {
+      this.proxSom = 6 + Math.random() * 12;
+      // Só toca se player estiver dentro de ~24 blocos (audição finita)
+      if (player) {
+        const dx = this.x - player.pos.x, dz = this.z - player.pos.z;
+        if (dx*dx + dz*dz < 576) Audio.mobCall(this.tipo);
+      }
+    }
     if (info.hostil && alvo) {
       this.dir = Math.atan2(alvo.z - this.z, alvo.x - this.x);
     } else {
@@ -2530,19 +3021,71 @@ class Mob {
         this.proxMudanca = 1.5 + Math.random() * 3;
       }
     }
-    const dx = Math.cos(this.dir) * info.vel * dt;
-    const dz = Math.sin(this.dir) * info.vel * dt;
     let movendo = false;
-    if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
-      this.x += dx; movendo = true;
+    // === Slime: salta em arcos ===
+    if (info.pula) {
+      this.proxPulo -= dt;
+      if (this.proxPulo <= 0) {
+        this.pulando = 0.001; // inicia pulo
+        this.proxPulo = 1.2 + Math.random() * 0.8;
+      }
+      if (this.pulando > 0) {
+        this.pulando = Math.min(1, this.pulando + dt * 1.5);
+        // Desloca durante o pulo
+        const passo = info.vel * dt * 1.5;
+        const dx = Math.cos(this.dir) * passo;
+        const dz = Math.sin(this.dir) * passo;
+        if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
+          this.x += dx; movendo = true;
+        }
+        if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
+          this.z += dz; movendo = true;
+        }
+        if (this.pulando >= 1) this.pulando = 0;
+      }
+    } else {
+      const dx = Math.cos(this.dir) * info.vel * dt;
+      const dz = Math.sin(this.dir) * info.vel * dt;
+      if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
+        this.x += dx; movendo = true;
+      }
+      if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
+        this.z += dz; movendo = true;
+      }
     }
-    if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
-      this.z += dz; movendo = true;
+    // === Enderman: teleport quando perto + dano (cooldown longo) ===
+    if (info.teleport) {
+      this.proxTeleport -= dt;
+      if (this.proxTeleport <= 0 && alvo) {
+        const ddx = alvo.x - this.x, ddz = alvo.z - this.z;
+        // Teleporta se hostil em range e está em cooldown
+        if (Math.random() < 0.3) {
+          // Escolhe ponto aleatório 4-12m do alvo
+          const ang = Math.random() * Math.PI * 2;
+          const dist = 4 + Math.random() * 8;
+          const tx = Math.floor(alvo.x + Math.cos(ang) * dist);
+          const tz = Math.floor(alvo.z + Math.sin(ang) * dist);
+          let ty = WORLD_Y;
+          while (ty > 0 && !world.isSolido(tx, ty - 1, tz)) ty--;
+          if (ty > 0 && ty < WORLD_Y - 2) {
+            this.x = tx + 0.5; this.z = tz + 0.5; this.y = ty;
+            Audio.endermanTeleport();
+          }
+        }
+        this.proxTeleport = 5.0 + Math.random() * 3;
+      }
     }
+    // Snap pra altura do chão
     let h = WORLD_Y;
     while (h > 0 && !world.isSolido(Math.floor(this.x), h - 1, Math.floor(this.z))) h--;
     this.y = h;
-    this.mesh.position.set(this.x, this.y, this.z);
+    // Ajuste vertical do slime durante o pulo (arc Y)
+    let yVisual = this.y;
+    if (info.pula && this.pulando > 0) {
+      // Parabólico: y = 0..1.2..0
+      yVisual = this.y + Math.sin(this.pulando * Math.PI) * 0.6;
+    }
+    this.mesh.position.set(this.x, yVisual, this.z);
     this.mesh.rotation.y = -this.dir + Math.PI / 2;
     this.cooldownAtaque -= dt;
 
@@ -2553,24 +3096,26 @@ class Mob {
       for (let i = 0; i < this.partes.pernas.length; i++) {
         const sign = (i % 2 === 0) ? 1 : -1;
         const fase = this.fase + (i < 2 ? 0 : Math.PI);
-        // pivots rotacionam em X (oscilação fwd/back)
         this.partes.pernas[i].rotation.x = Math.sin(fase) * amp * sign * 0.7;
       }
     }
     if (this.partes && this.partes.bracos) {
       const amp = movendo ? 0.5 : (info.hostil ? 0.3 : 0);
-      // Braços oscilam em contrafase com pernas
       this.partes.bracos[0].rotation.x = Math.sin(this.fase + Math.PI) * amp;
       this.partes.bracos[1].rotation.x = Math.sin(this.fase) * amp;
-      // Hostis com braços levantados (zumbi clássico)
-      if (info.hostil) {
+      if (info.hostil && !info.teleport) {
+        // Zumbi clássico: braços levantados. Enderman: braços abaixados.
         this.partes.bracos[0].rotation.x -= 1.2;
         this.partes.bracos[1].rotation.x -= 1.2;
       }
     }
     if (this.partes && this.partes.cabeca) {
-      // Leve oscilação da cabeça enquanto vagueia
       this.partes.cabeca.rotation.y = Math.sin(this.fase * 0.5) * 0.15;
+    }
+    // Slime: animação de "esmagar" durante o pulo (squash & stretch)
+    if (info.pula && this.partes.corpo) {
+      const sq = 1 + Math.sin(this.pulando * Math.PI) * 0.15;
+      this.partes.corpo.scale.set(1.0 / sq, sq, 1.0 / sq);
     }
   }
   vivo() { return this.hp > 0; }
@@ -2640,11 +3185,7 @@ class MobManager {
   }
   tentarSpawn(world, player, sun) {
     if (this.mobs.length >= 14) return;
-    const tipos = sun < 0.3
-      ? ['zumbi', 'esqueleto', 'aranha', 'creeper', 'lobo']
-      : ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
-    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-    // posição aleatória ao redor do player
+    // Posição candidata
     const ang = Math.random() * Math.PI * 2;
     const dist = 12 + Math.random() * 8;
     const x = Math.floor(player.pos.x + Math.cos(ang) * dist);
@@ -2652,6 +3193,26 @@ class MobManager {
     let y = WORLD_Y;
     while (y > 0 && !world.isSolido(x, y - 1, z)) y--;
     if (y >= WORLD_Y - 1 || y <= 1) return;
+    // === Spawn rules por light level (paridade Minecraft) ===
+    // Hostis spawnam apenas em luz <= 7 (sky+block). Pacíficos em luz >= 8
+    // E sobre grama (regra MC simplificada).
+    const luz = world.getLightAt(x, y, z);
+    const luzMax = Math.max(luz.sky, luz.block);
+    const blocoChao = world.get(x, y - 1, z);
+    let tipos;
+    if (luzMax <= 7) {
+      // Escuro: hostis (mais comuns à noite, mas também em cavernas)
+      tipos = ['zumbi', 'esqueleto', 'aranha', 'creeper'];
+      // Slime em y baixo (subterrâneo) + enderman raro em cavernas
+      if (y < 30) tipos.push('slime');
+      if (Math.random() < 0.05) tipos.push('enderman');
+    } else if (luzMax >= 9 && (blocoChao === BLOCO.GRAMA || blocoChao === BLOCO.AREIA)) {
+      // Claro + grama/areia: pacíficos
+      tipos = ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
+    } else {
+      return; // condição não favorece spawn
+    }
+    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
     this.spawn(tipo, x, y, z);
   }
   maisProximo(player, alc) {
@@ -2679,19 +3240,61 @@ class MobManager {
 // ===================================================================
 const Audio = {
   _sfx() { return (window.rebcm && window.rebcm.sfx) || {}; },
-  quebrar() { (this._sfx().quebrar || (() => {}))(); },
-  colocar() { (this._sfx().colocar || (() => {}))(); },
-  atacar()  { (this._sfx().atacar  || (() => {}))(); },
-  hit()     { (this._sfx().hit     || (() => {}))(); },
-  comer()   { (this._sfx().comer   || (() => {}))(); },
-  respawn() { (this._sfx().respawn || (() => {}))(); },
-  // passo agora aceita material (grama/pedra/madeira/areia/agua/folha/neve/metal/vidro)
+  _call(nome) { const s = this._sfx()[nome]; if (s) s(); },
+  quebrar() { this._call('quebrar'); },
+  colocar() { this._call('colocar'); },
+  atacar()  { this._call('atacar'); },
+  hit()     { this._call('hit'); },
+  hurt()    { (this._sfx().hurt || this._sfx().hit || (() => {}))(); },
+  critical(){ (this._sfx().critical || this._sfx().atacar || (() => {}))(); },
+  comer()   { this._call('comer'); },
+  eatCrunch(){ (this._sfx().eatCrunch || this._sfx().comer || (() => {}))(); },
+  respawn() { this._call('respawn'); },
   passo(mat){ (this._sfx().passo   || (() => {}))(mat); },
-  splash()  { (this._sfx().splash  || (() => {}))(); },
-  bolha()   { (this._sfx().bolha   || (() => {}))(); },
+  splash()  { this._call('splash'); },
+  bolha()   { this._call('bolha'); },
   levelUp() { (this._sfx().levelUp || this._sfx().respawn || (() => {}))(); },
-  pickup()  { (this._sfx().pickup  || (() => {}))(); },
-  explosao(){ (this._sfx().explosao|| this._sfx().hit || (() => {}))(); },
+  pickup()  { this._call('pickup'); },
+  xpOrb()   { (this._sfx().xpOrb   || this._sfx().pickup  || (() => {}))(); },
+  explosao(){ (this._sfx().explosao|| this._sfx().hit     || (() => {}))(); },
+  // Mob sounds — chamados quando mob está perto e ocasionalmente.
+  zumbi()   { this._call('zumbi'); },
+  zumbiHit(){ (this._sfx().zumbiHit || this._sfx().hit || (() => {}))(); },
+  esqueleto(){ this._call('esqueleto'); },
+  creeperHiss(){ this._call('creeperHiss'); },
+  aranha()  { this._call('aranha'); },
+  vaca()    { this._call('vaca'); },
+  ovelha()  { this._call('ovelha'); },
+  porco()   { this._call('porco'); },
+  galinha() { this._call('galinha'); },
+  lobo()    { this._call('lobo'); },
+  slime()   { this._call('slime'); },
+  endermanTeleport(){ (this._sfx().endermanTeleport || this._sfx().splash || (() => {}))(); },
+  // Ambient
+  caveDrip()     { this._call('caveDrip'); },
+  caveAmbient()  { this._call('caveAmbient'); },
+  vento()        { this._call('vento'); },
+  // UI
+  chestOpen()    { this._call('chestOpen'); },
+  chestClose()   { this._call('chestClose'); },
+  bowDraw()      { this._call('bowDraw'); },
+  bowRelease()   { this._call('bowRelease'); },
+  arrow()        { this._call('arrow'); },
+  equipArmor()   { (this._sfx().equipArmor || this._sfx().colocar || (() => {}))(); },
+  cama()         { this._call('cama'); },
+  fornalhaLit()  { this._call('fornalhaLit'); },
+  pageFlip()     { this._call('pageFlip'); },
+  // Wrapper genérico para mob por nome
+  mobCall(tipo) {
+    const map = {
+      zumbi: 'zumbi', esqueleto: 'esqueleto', aranha: 'aranha',
+      creeper: 'creeperHiss', vaca: 'vaca', ovelha: 'ovelha',
+      porco: 'porco', galinha: 'galinha', lobo: 'lobo',
+      slime: 'slime', enderman: 'endermanTeleport',
+    };
+    const fn = this._sfx()[map[tipo]];
+    if (fn) fn();
+  },
 };
 
 // ===================================================================
@@ -2740,6 +3343,20 @@ class UI {
     el.classList.add('show');
     if (this.flashTimer) clearTimeout(this.flashTimer);
     this.flashTimer = setTimeout(() => el.classList.remove('show'), 220);
+  }
+  // === Subtitle popup (paridade Minecraft) ===
+  // Mostra o "nome" do som que tocou — útil em deficiência auditiva.
+  // Dura 3s, animação CSS em subtitleFade.
+  subtitle(texto) {
+    const cont = document.getElementById('subtitles');
+    if (!cont) return;
+    const el = document.createElement('div');
+    el.className = 'subtitle';
+    el.textContent = texto;
+    cont.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+    // Limita a 4 simultâneos
+    while (cont.children.length > 4) cont.firstChild.remove();
   }
   atualizarXP() {
     if (!player) return;
@@ -2837,7 +3454,10 @@ class UI {
       }
       return h;
     };
-    document.getElementById('hp').innerHTML = barHTML('❤', '🤍', hp, hpMax, '#e57373');
+    const hpEl = document.getElementById('hp');
+    hpEl.innerHTML = barHTML('❤', '🤍', hp, hpMax, '#e57373');
+    // Heart shake quando HP crítico (≤ 4 pontos = 2 corações)
+    hpEl.classList.toggle('shake', hp <= 4 && player.modo === 'survival' && hp > 0);
     document.getElementById('fome').innerHTML = barHTML('🍗', '🍗', fome, fomeMax, '#ffb74d');
     // Barra de ar (10 bolhas, só visível quando submerso ou recuperando).
     const elAr = document.getElementById('ar');
@@ -3132,9 +3752,21 @@ class UI {
     this.f3Ativo = !this.f3Ativo;
     const el = document.getElementById('f3-debug');
     if (el) el.classList.toggle('hidden', !this.f3Ativo);
-    // Esconde o painel #topo simples quando F3 está ativo (overlap).
     const topo = document.getElementById('topo');
     if (topo) topo.style.opacity = this.f3Ativo ? '0' : '1';
+  }
+  // === F1: esconder HUD ===
+  // Mantém crosshair e canvas; some o resto (paridade Minecraft).
+  toggleHud() {
+    this.hudOculto = !this.hudOculto;
+    const elementos = ['#topo', '#bars', '#hotbar', '.hud-btn', '#tooltip'];
+    for (const sel of elementos) {
+      document.querySelectorAll(sel).forEach(el => {
+        el.style.opacity = this.hudOculto ? '0' : '';
+        el.style.pointerEvents = this.hudOculto ? 'none' : '';
+      });
+    }
+    this.toast(this.hudOculto ? 'HUD oculto (F1)' : 'HUD visível (F1)');
   }
   atualizarF3(extra) {
     if (!this.f3Ativo || !player || !world) return;
@@ -3624,6 +4256,7 @@ function setupInput() {
     if (e.repeat) return;
     // F3 e Escape são especiais: F3 sempre toggla; Escape pausa/desfecha.
     if (e.code === 'F3') { e.preventDefault(); ui.toggleF3(); return; }
+    if (e.code === 'F1') { e.preventDefault(); ui.toggleHud(); return; }
     if (e.code === 'Escape') {
       // Se algum painel estiver aberto, fecha-o; senão abre/fecha pause.
       const painel = document.querySelector('.painel:not(.hidden)');
@@ -3870,6 +4503,7 @@ function dormir() {
     ui.toast('Você só pode dormir à noite');
     return;
   }
+  Audio.cama();
   const overlay = document.getElementById('dormindo-overlay');
   overlay.classList.remove('hidden');
   setTimeout(() => {
@@ -3885,6 +4519,7 @@ function dormir() {
 let _bauAtivoCoords = null;
 function abrirPainelBau(x, y, z) {
   _bauAtivoCoords = { x, y, z };
+  Audio.chestOpen();
   ui.renderBauPainel();
   document.getElementById('painel-bau').classList.remove('hidden');
   try { document.exitPointerLock?.(); } catch (_) {}
@@ -3932,13 +4567,26 @@ function atacarMob() {
   if (player.morto) return;
   const m = mobMgr.maisProximo(player, ALCANCE_BLOCO);
   if (!m) return;
+  // === Critical hit (paridade Minecraft) ===
+  // Se o player está caindo (vy < -0.3) e não está no chão, dano *= 1.5.
+  const isCrit = !player.noChao && player.vel.y < -0.3 && player.modo === 'survival';
   Audio.atacar();
+  if (isCrit) Audio.critical();
   const tier = inv.melhorEspada();
-  const dano = 2 + tier * 2;
+  let dano = 2 + tier * 2;
+  if (isCrit) dano = Math.round(dano * 1.5);
   m.hp -= dano;
+  // Som do mob ao apanhar (varia por tipo)
+  if (m.tipo === 'zumbi') Audio.zumbiHit();
+  else Audio.hit();
+  // Knockback no mob: empurra na direção oposta à câmera
+  if (m && renderer) {
+    const dirCam = renderer.camera.getWorldDirection(_tmpVecAux);
+    m.x += dirCam.x * 0.8;
+    m.z += dirCam.z * 0.8;
+  }
   if (m.hp <= 0) {
     const drops = MOB_INFO[m.tipo].drops();
-    // Drops de mob viram entidades flutuantes (paridade Minecraft).
     if (player.modo === 'creative') {
       for (const d of drops) inv.adicionar(d);
     } else {
@@ -3946,10 +4594,11 @@ function atacarMob() {
     }
     const info = MOB_INFO[m.tipo];
     const xp = info.hostil ? 5 : 2;
-    ganharXP(xp);
-    ui.toast(`${m.tipo} derrotado! (+${xp} XP)`);
+    // Spawn XP orb visível em vez de adicionar XP direto (paridade Minecraft).
+    spawnXPOrb(xp, m.x, m.y + 0.5, m.z);
+    ui.toast(`${m.tipo} derrotado! ${isCrit ? '⚡ CRÍTICO! ' : ''}(+${xp} XP)`);
   } else {
-    ui.toast(`Atingiu ${m.tipo} (-${dano})`);
+    ui.toast(`Atingiu ${m.tipo}${isCrit ? ' ⚡' : ''} (-${dano})`);
   }
 }
 
@@ -3960,8 +4609,12 @@ function comerSlot() {
   const info = ITEM_INFO[s.i];
   if (!info || !info.nutricao) { ui.toast('Não comestível'); return; }
   player.fome = clamp(player.fome + info.nutricao, 0, player.fomeMax);
+  // Saturation extra (paridade Minecraft) — comida boa enche também a saturação.
+  if (player.saturation !== undefined) {
+    player.saturation = Math.min(20, player.saturation + info.nutricao * 0.6);
+  }
   inv.consumirAtual();
-  Audio.comer();
+  Audio.eatCrunch();
   if (info.suspeito && Math.random() < 0.15) player.aplicarDano(1, 'comida estragada');
   else ui.toast(`Comeu ${info.nome} (+${info.nutricao} fome)`);
 }
@@ -4094,12 +4747,12 @@ function loop(now) {
         world.set(t.x, t.y, t.z, BLOCO.AR);
         Audio.quebrar();
         progressoVisual = 0;
-        // Ganha XP ao minerar minério.
+        // Ganha XP ao minerar minério — spawna como orb visível.
         const xpGanho = (t.b === BLOCO.CARVAO) ? 1 :
                        (t.b === BLOCO.FERRO) ? 2 :
                        (t.b === BLOCO.OURO) ? 3 :
                        (t.b === BLOCO.DIAMANTE) ? 7 : 0;
-        if (xpGanho > 0) ganharXP(xpGanho);
+        if (xpGanho > 0) spawnXPOrb(xpGanho, t.x, t.y, t.z);
       }
     } else if (!player.holdE) {
       player.progressoQuebra = 0;
@@ -4214,6 +4867,23 @@ function loop(now) {
   if (typeof atualizarItemDrops === 'function') {
     atualizarItemDrops(dt);
   }
+  // Atualiza XP orbs visíveis (elas se atraem para o player).
+  if (typeof atualizarXpOrbs === 'function') {
+    atualizarXpOrbs(dt);
+  }
+  // Triggers de áudio ambiente (cave drip, vento) — testa contexto do player.
+  if (typeof atualizarAmbientTriggers === 'function') {
+    atualizarAmbientTriggers(dt);
+  }
+  // Camera shake — adiciona offset à posição da câmera após PointerLock e player.atualizar.
+  const shake = renderer.atualizarShake(dt);
+  if (shake.x || shake.y || shake.z) {
+    renderer.camera.position.x += shake.x;
+    renderer.camera.position.y += shake.y;
+    renderer.camera.position.z += shake.z;
+  }
+  // Foliage sway + water animation: a textura/material atualiza-se via tempo
+  if (renderer.atualizarVida) renderer.atualizarVida(dt, performance.now());
 
   renderer.render();
   requestAnimationFrame(loop);

@@ -101,14 +101,17 @@ loop(dt)  [60 fps]
 
 ### Decisões de Design
 
-- **Chunks 16×16×64 com altura limitada a 64**: paridade próxima do Minecraft (que vai a 384 hoje, 256 antes), mas suficiente para dispositivos móveis.
-- **Per-face meshing** (não greedy): mais simples, ainda viável para `VIEW_RADIUS=4` (9×9 = 81 chunks visíveis).
-- **AO fake por vértice**: três blocos vizinhos por vértice; sem flood fill real.
-- **Skylight aproximado por dynamic sun intensity**: não há canal de luz por voxel; cavernas escurecem pela atenuação geral, não por skylight real.
-- **Modelos de mob com `THREE.Group`** + cabeça/corpo/pernas/braços animadas via pivots Group.
+- **Chunks 16×16×64 com altura limitada a 64**: paridade próxima do Minecraft, suficiente para dispositivos móveis.
+- **Per-face meshing** (não greedy ainda): mais simples, viável para `VIEW_RADIUS=4` (~81 chunks visíveis).
+- **Iluminação 15 níveis** (paridade Minecraft): cada chunk armazena dois canais de luz por voxel — **skylight** (vertical, 0-15) e **blocklight** (BFS flood-fill, 0-15) em 1 byte (4+4 bits). O mesh builder lê a luz do voxel adjacente à cada face e modula a vertex color resultante. Recalculada quando o chunk é alterado.
+- **AO por vértice**: três blocos vizinhos por vértice; combinado multiplicativamente com luz e shade.
+- **Modelos de mob com `THREE.Group`** + pivots para cabeça/corpo/pernas/braços animadas. 11 espécies (vaca, galinha, porco, ovelha, lobo, zumbi, esqueleto, aranha, creeper, slime, enderman).
 - **HUD em DOM** sobreposto ao canvas (não em WebGL): permite Press Start 2P, emojis, tooltips fáceis.
-- **Áudio Web Audio inline** no HTML: o módulo `game.js` apenas consome `window.rebcm.sfx` exposto pelo `<script>` da raiz.
+- **Áudio Web Audio inline** no HTML: o módulo `game.js` apenas consome `window.rebcm.sfx` exposto pelo `<script>` da raiz. **Todos os sons são procedurais** (osciladores + ruído filtrado), gerados em runtime — zero arquivos de áudio.
+- **Música ambient** com progressão harmônica de 4 acordes (pad) + melodia esparsa em escala diatônica, ambos sintetizados via osciladores.
 - **Save em localStorage com versão `v3`**: migrações sem quebra. `chunks` modificados serializados em base64.
+- **Camera shake + flash dano + heart shake** ao receber dano — feedback poliviszal (CSS animations + shake offset 3D).
+- **Mob spawn rules por light level**: hostis aparecem onde luz combinada ≤ 7; pacíficos onde luz ≥ 9 + chão de grama/areia.
 
 ---
 

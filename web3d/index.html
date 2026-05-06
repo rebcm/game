@@ -95,6 +95,7 @@
     </div>
     <div id="hotbar"></div>
     <div id="tooltip" class="hidden"></div>
+    <div id="subtitles"></div>
     <div id="toast"></div>
     <button id="btn-bag" class="hud-btn" title="Inventário (E)">📦</button>
     <button id="btn-craft" class="hud-btn" title="Crafting (C)">⚒</button>
@@ -337,12 +338,40 @@
         src.connect(filt).connect(g).connect(c.destination);
         src.start();
       }
+      // Tom com envelope ADSR + glissando opcional (de freq → freqEnd).
+      // Usado pra sons orgânicos como rosnado, mugido, balido.
+      function glide({ freq, freqEnd, dur, type='sine', vol=0.12, attack=0.02 }) {
+        const c = ensureCtx(); if (!c) return;
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = type;
+        const t0 = c.currentTime;
+        o.frequency.setValueAtTime(freq, t0);
+        if (freqEnd !== undefined) o.frequency.linearRampToValueAtTime(freqEnd, t0 + dur);
+        g.gain.setValueAtTime(0, t0);
+        g.gain.linearRampToValueAtTime(vol, t0 + attack);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(c.destination);
+        o.start(t0); o.stop(t0 + dur);
+      }
+      // Acorde simples: lista de freqs tocadas em paralelo.
+      function acorde(freqs, { dur=0.6, type='sine', vol=0.06 } = {}) {
+        for (const f of freqs) glide({ freq: f, dur, type, vol, attack: 0.05 });
+      }
       window.rebcm = window.rebcm || {};
       window.rebcm.sfx = {
         quebrar: () => ruido({ dur: 0.18, cutoff: 800, vol: 0.18 }),
         colocar: () => tom({ freq: 280, dur: 0.08 }),
         atacar:  () => tom({ freq: 220, dur: 0.12, type: 'sawtooth', vol: 0.14 }),
         hit:     () => tom({ freq: 110, dur: 0.18, type: 'sawtooth', vol: 0.18 }),
+        // Hurt do player (mais grave/sustenido que o hit do mob)
+        hurt:    () => {
+          glide({ freq: 180, freqEnd: 90, dur: 0.30, type: 'sawtooth', vol: 0.20 });
+        },
+        // Critical hit (atacar caindo) — som alegre/sharper
+        critical: () => {
+          tom({ freq: 880, dur: 0.05, type: 'square', vol: 0.10 });
+          setTimeout(() => tom({ freq: 1320, dur: 0.08, type: 'square', vol: 0.10 }), 50);
+        },
         // === Passos por material (paridade com Minecraft) ===
         // Cada material usa frequência+cutoff diferente para o ruído filtrado.
         // 'mat' é uma string: 'grama', 'pedra', 'madeira', 'areia', 'agua',
@@ -394,18 +423,157 @@
           ruido({ dur: 0.6, cutoff: 200, vol: 0.30 });
           setTimeout(() => ruido({ dur: 0.4, cutoff: 80, vol: 0.25 }), 40);
         },
+        // === Mob sounds (paridade Minecraft) ===
+        // Cada mob tem timbre próprio. Sons curtos pra não cansar.
+        zumbi:    () => glide({ freq: 130, freqEnd: 100, dur: 0.55, type: 'sawtooth', vol: 0.16 }),
+        zumbiHit: () => glide({ freq: 180, freqEnd: 70,  dur: 0.40, type: 'sawtooth', vol: 0.20 }),
+        esqueleto: () => {
+          // Rattle: 4 cliques rápidos descendo
+          for (let i = 0; i < 4; i++) {
+            setTimeout(() => tom({ freq: 220 - i * 15, dur: 0.04, type: 'square', vol: 0.10 }), i * 60);
+          }
+        },
+        creeperHiss: () => {
+          // Sibilo do creeper antes de explodir — ruído filtrado longo
+          ruido({ dur: 1.4, cutoff: 4000, vol: 0.25 });
+        },
+        aranha: () => {
+          // Stridulação rápida
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => glide({ freq: 1800 + i * 200, freqEnd: 2400, dur: 0.06, type: 'sawtooth', vol: 0.06 }), i * 70);
+          }
+        },
+        vaca:    () => glide({ freq: 200, freqEnd: 140, dur: 0.80, type: 'triangle', vol: 0.14 }),
+        ovelha:  () => glide({ freq: 380, freqEnd: 320, dur: 0.50, type: 'square',   vol: 0.12 }),
+        porco:   () => {
+          glide({ freq: 240, freqEnd: 380, dur: 0.20, type: 'sawtooth', vol: 0.14 });
+          setTimeout(() => glide({ freq: 380, freqEnd: 220, dur: 0.18, type: 'sawtooth', vol: 0.12 }), 200);
+        },
+        galinha: () => {
+          // 3 cluques agudos
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => tom({ freq: 1200 + i * 80, dur: 0.05, type: 'triangle', vol: 0.10 }), i * 80);
+          }
+        },
+        lobo: () => {
+          // Latido: dois bursts rápidos
+          glide({ freq: 320, freqEnd: 220, dur: 0.10, type: 'square', vol: 0.14 });
+          setTimeout(() => glide({ freq: 280, freqEnd: 200, dur: 0.10, type: 'square', vol: 0.14 }), 110);
+        },
+        slime: () => {
+          // Plop molhado de slime
+          glide({ freq: 90, freqEnd: 50, dur: 0.30, type: 'sine', vol: 0.16 });
+          setTimeout(() => ruido({ dur: 0.10, cutoff: 200, vol: 0.05 }), 30);
+        },
+        endermanTeleport: () => {
+          // Whoosh agudo
+          glide({ freq: 800, freqEnd: 200, dur: 0.40, type: 'triangle', vol: 0.14 });
+          setTimeout(() => glide({ freq: 200, freqEnd: 800, dur: 0.30, type: 'triangle', vol: 0.10 }), 100);
+        },
+        // === Sons ambientais ===
+        // Drip de caverna
+        caveDrip: () => {
+          tom({ freq: 800, dur: 0.04, type: 'sine', vol: 0.06 });
+          setTimeout(() => tom({ freq: 600, dur: 0.10, type: 'sine', vol: 0.04 }), 50);
+        },
+        // Vento (em superfície aberta / altura)
+        vento: () => {
+          ruido({ dur: 1.2, cutoff: 350, vol: 0.04 });
+        },
+        // Ambient cave moan/rumble
+        caveAmbient: () => {
+          glide({ freq: 65, freqEnd: 48, dur: 2.2, type: 'sine', vol: 0.05 });
+        },
+        // === Sons de UI ===
+        // Abrir baú
+        chestOpen: () => {
+          tom({ freq: 180, dur: 0.08, type: 'square', vol: 0.10 });
+          setTimeout(() => tom({ freq: 240, dur: 0.06, type: 'square', vol: 0.08 }), 60);
+        },
+        chestClose: () => {
+          tom({ freq: 240, dur: 0.06, type: 'square', vol: 0.08 });
+          setTimeout(() => tom({ freq: 160, dur: 0.10, type: 'square', vol: 0.10 }), 50);
+        },
+        // Eat crunchy (mastigar)
+        eatCrunch: () => {
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => ruido({ dur: 0.06, cutoff: 800, vol: 0.10 }), i * 90);
+          }
+        },
+        // Bow draw (esticar)
+        bowDraw: () => {
+          glide({ freq: 200, freqEnd: 320, dur: 0.6, type: 'triangle', vol: 0.06 });
+        },
+        // Bow release (soltar flecha)
+        bowRelease: () => {
+          tom({ freq: 320, dur: 0.04, type: 'square', vol: 0.10 });
+        },
+        // Arrow whoosh
+        arrow: () => {
+          glide({ freq: 600, freqEnd: 200, dur: 0.30, type: 'sine', vol: 0.08 });
+        },
+        // XP orb pickup (jingle alegre)
+        xpOrb: () => {
+          tom({ freq: 520, dur: 0.04, type: 'sine', vol: 0.05 });
+          setTimeout(() => tom({ freq: 780, dur: 0.04, type: 'sine', vol: 0.05 }), 40);
+        },
+        // Equip armadura
+        equipArmor: () => {
+          ruido({ dur: 0.05, cutoff: 2000, vol: 0.08 });
+          setTimeout(() => tom({ freq: 220, dur: 0.10, type: 'square', vol: 0.10 }), 30);
+        },
+        // Cama deitar
+        cama: () => {
+          glide({ freq: 280, freqEnd: 200, dur: 0.80, type: 'sine', vol: 0.10 });
+        },
+        // Fornalha lit
+        fornalhaLit: () => {
+          ruido({ dur: 0.40, cutoff: 600, vol: 0.10 });
+        },
+        // Page flip (abrir inventário/pause)
+        pageFlip: () => {
+          ruido({ dur: 0.06, cutoff: 1200, vol: 0.06 });
+        },
       };
-      // Música ambient: notas pentatônica C-major em loop solto.
+      // === Música ambient melhorada ===
+      // Toca um pad harmônico (acorde sustenido) + melodia esparsa por
+      // cima. Inspirado nas trilhas do C418 (Minecraft) — frequências e
+      // intervalos são originais, não copiam nenhuma melodia específica.
       let musicaAtiva = false, musicaTimer = null;
-      const escala = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
-      function tocarNota() {
+      // Progressão simples de 4 acordes (Cmaj7, Am7, Fmaj7, G), em Hz.
+      const progressao = [
+        [261.63, 329.63, 392.00, 493.88], // Cmaj7
+        [220.00, 261.63, 329.63, 392.00], // Am7
+        [174.61, 220.00, 261.63, 329.63], // Fmaj7
+        [196.00, 246.94, 293.66, 369.99], // G
+      ];
+      const escala = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33];
+      let acordeIndex = 0;
+      function tocarAcorde() {
         const c = ensureCtx(); if (!c) return;
-        const freq = escala[Math.floor(Math.random() * escala.length)];
+        const acorde = progressao[acordeIndex % progressao.length];
+        acordeIndex++;
+        // Toca cada nota do acorde como pad longo sobreposto (sine, vol baixo)
+        for (const f of acorde) {
+          const o = c.createOscillator(), g = c.createGain();
+          o.type = 'sine'; o.frequency.value = f;
+          const t0 = c.currentTime, dur = 7.5;
+          g.gain.setValueAtTime(0, t0);
+          g.gain.linearRampToValueAtTime(0.012, t0 + 1.5);
+          g.gain.linearRampToValueAtTime(0.012, t0 + dur - 1.0);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+          o.connect(g).connect(c.destination);
+          o.start(t0); o.stop(t0 + dur);
+        }
+      }
+      function tocarMelodia() {
+        const c = ensureCtx(); if (!c) return;
+        const f = escala[Math.floor(Math.random() * escala.length)];
         const o = c.createOscillator(), g = c.createGain();
-        o.type = 'sine'; o.frequency.value = freq;
-        const t0 = c.currentTime, dur = 1.6 + Math.random() * 1.2;
+        o.type = 'triangle'; o.frequency.value = f;
+        const t0 = c.currentTime, dur = 1.2 + Math.random() * 0.8;
         g.gain.setValueAtTime(0, t0);
-        g.gain.linearRampToValueAtTime(0.04, t0 + 0.3);
+        g.gain.linearRampToValueAtTime(0.035, t0 + 0.15);
         g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
         o.connect(g).connect(c.destination);
         o.start(t0); o.stop(t0 + dur);
@@ -414,12 +582,20 @@
         iniciar: () => {
           if (musicaAtiva) return;
           musicaAtiva = true;
-          const tick = () => {
+          // Tick de acordes a cada ~7s (loop de 4 acordes ≈ 28s).
+          const tickAcorde = () => {
             if (!musicaAtiva) return;
-            tocarNota();
-            musicaTimer = setTimeout(tick, 1800 + Math.random() * 2400);
+            tocarAcorde();
+            musicaTimer = setTimeout(tickAcorde, 7000);
           };
-          tick();
+          // Tick de melodia esparsa, mais rápida.
+          const tickMelodia = () => {
+            if (!musicaAtiva) return;
+            if (Math.random() < 0.6) tocarMelodia();
+            setTimeout(tickMelodia, 1400 + Math.random() * 2000);
+          };
+          tickAcorde();
+          tickMelodia();
         },
         parar: () => { musicaAtiva = false; if (musicaTimer) clearTimeout(musicaTimer); },
       };

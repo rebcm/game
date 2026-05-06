@@ -57,11 +57,13 @@ Cada bloco tem **textura procedural pixelada** estilo Minecraft, gerada em tempo
 - **Animação de mão** com swing realista ao quebrar/colocar.
 - **FOV pulse** ao sprintar (paridade Minecraft).
 
-### ⚔ Mobs (9 tipos)
-- **Pacíficos**: 🐄 vaca, 🐔 galinha, 🐖 porco, 🐑 ovelha, 🐺 lobo (que ataca hostis).
-- **Hostis** (spawnam à noite): 🧟 zumbi, 💀 esqueleto, 🕷 aranha, 💥 creeper.
+### ⚔ Mobs (11 tipos)
+- **Pacíficos**: 🐄 vaca, 🐔 galinha, 🐖 porco, 🐑 ovelha, 🐺 lobo (ataca hostis automaticamente).
+- **Hostis** (spawnam onde a luz ≤ 7): 🧟 zumbi, 💀 esqueleto, 🕷 aranha, 💥 creeper, 🟢 slime (pula em arcos), 🟣 enderman (teleporta).
 - Modelos 3D com cabeça, corpo, braços, pernas animadas estilo Minecraft.
+- **Sons específicos** por espécie (rosnado, balido, mugido, sibilo do creeper, click do esqueleto).
 - **Drops realistas**: vaca solta carne crua + couro, galinha solta ovo, esqueleto solta paus, etc.
+- **IA com call ocasional** quando você está perto, e vocaliza ao apanhar.
 
 ### 🎒 Inventário e Crafting
 - **Hotbar de 9 slots** (paridade Minecraft).
@@ -87,6 +89,10 @@ Cada bloco tem **textura procedural pixelada** estilo Minecraft, gerada em tempo
 - **Sneak (Ctrl)** impede cair de borda.
 - **Swimming**: água reduz velocidade a 55%, gravidade a 12%; bracejar pra subir.
 - **Item drops voando**: blocos quebrados e drops de mobs viram entidades visíveis flutuantes que você coleta a 1.5m.
+- **XP orbs verdes brilhantes** ao matar mobs e minerar — voam até você quando chega a 5m.
+- **Critical hit** (golpe caindo): 1.5× dano com som especial, paridade Minecraft.
+- **Knockback** no mob ao ser atingido.
+- **Camera shake** proporcional ao dano recebido.
 
 ### 🖥️ HUD e UI
 - **Crosshair** estilo Minecraft (cruz pixelada com inverter).
@@ -99,8 +105,14 @@ Cada bloco tem **textura procedural pixelada** estilo Minecraft, gerada em tempo
 - **Highlight do bloco mirado** com outline preto+branco e cracks progressivos durante a quebra.
 
 ### 🎵 Áudio
-- **SFX procedurais** via Web Audio: passos por material (grama, pedra, madeira, areia, água, folha, neve, metal, vidro), quebrar, colocar, atacar, hit, comer, splash, bolha, level-up, pickup, explosão.
-- **Música ambiente** em escala pentatônica C-maior, em loop solto.
+- **SFX procedurais** via Web Audio API, gerados em runtime sem arquivos:
+  - **Passos por material** (grama, pedra, madeira, areia, água, folha, neve, metal, vidro).
+  - **Sons de mob** específicos: rosnado de zumbi, click de esqueleto, sibilo de creeper, mugido de vaca, balido de ovelha, oink de porco, cluck de galinha, latido de lobo, plop de slime, whoosh de teleport do enderman.
+  - **Sons ambiente** contextuais: drips de caverna (quando skylight=0 + subterrâneo), ventos em altitude, rumble de caverna profunda.
+  - **Sons de UI**: abrir/fechar baú, deitar na cama, equipar armadura, comer crunchy, page flip do inventário.
+  - **Combate**: hit do mob, hurt do player (mais grave), critical hit (agudo), bow draw/release, arrow whoosh.
+  - **Outros**: quebrar, colocar, splash, bolha, level-up, pickup, XP orb, explosão.
+- **Música ambiente** em loop com progressão harmônica de 4 acordes + melodia esparsa em escala diatônica, gerada proceduralmente em tempo real.
 
 ### 💾 Save / Load
 - **Autosave a cada 30 segundos** no `localStorage`.
@@ -130,7 +142,8 @@ Cada bloco tem **textura procedural pixelada** estilo Minecraft, gerada em tempo
 | `G` | Alternar Criativo / Sobrevivência |
 | `T` | Alternar transparência de blocos |
 | `F5` | Trocar 1ª / 3ª pessoa |
-| `F3` | Tela de debug |
+| `F3` | Tela de debug (XYZ, chunk, luz, bioma, FPS) |
+| `F1` | Esconder / mostrar HUD |
 | `Esc` | Pausar |
 
 ### 📱 Celular / Tablet (Touch)
