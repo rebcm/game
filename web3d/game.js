@@ -63,9 +63,9 @@ const BLOCO_INFO = {
   [BLOCO.PEDRA]:     { nome: 'Pedra',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x9E9E9E, lateral: 0x757575 },
   [BLOCO.AREIA]:     { nome: 'Areia',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xFFEB3B, lateral: 0xFDD835 },
   [BLOCO.MADEIRA]:   { nome: 'Madeira',   solido: true,  transp: false, emiteLuz: 0,  cor: 0xA1887F, lateral: 0x8D6E63 },
-  [BLOCO.FOLHA]:     { nome: 'Folha',     solido: true,  transp: true,  emiteLuz: 0,  cor: 0x66BB6A, lateral: 0x66BB6A },
+  [BLOCO.FOLHA]:     { nome: 'Folha',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x66BB6A, lateral: 0x66BB6A },
   [BLOCO.TIJOLO]:    { nome: 'Tijolo',    solido: true,  transp: false, emiteLuz: 0,  cor: 0xE57373, lateral: 0xC62828 },
-  [BLOCO.VIDRO]:     { nome: 'Vidro',     solido: true,  transp: true,  emiteLuz: 0,  cor: 0xB3E5FC, lateral: 0xB3E5FC },
+  [BLOCO.VIDRO]:     { nome: 'Vidro',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xB3E5FC, lateral: 0xB3E5FC },
   [BLOCO.OURO]:      { nome: 'Ouro',      solido: true,  transp: false, emiteLuz: 0,  cor: 0xFFD54F, lateral: 0xFBC02D },
   [BLOCO.DIAMANTE]:  { nome: 'Diamante',  solido: true,  transp: false, emiteLuz: 0,  cor: 0x80DEEA, lateral: 0x4DD0E1 },
   [BLOCO.LUZ]:       { nome: 'Luz',       solido: true,  transp: false, emiteLuz: 14, cor: 0xFFF9C4, lateral: 0xFFEE58 },
@@ -73,7 +73,7 @@ const BLOCO_INFO = {
   [BLOCO.CARVAO]:    { nome: 'Carvão',    solido: true,  transp: false, emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
   [BLOCO.FERRO]:     { nome: 'Ferro',     solido: true,  transp: false, emiteLuz: 0,  cor: 0xCFD8DC, lateral: 0xB0BEC5 },
   [BLOCO.CACTO]:     { nome: 'Cacto',     solido: true,  transp: false, emiteLuz: 0,  cor: 0x388E3C, lateral: 0x2E7D32 },
-  [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: true,  emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
+  [BLOCO.AGUA]:      { nome: 'Água',      solido: false, transp: false, emiteLuz: 0,  cor: 0x2196F3, lateral: 0x1976D2 },
   [BLOCO.LAVA]:      { nome: 'Lava',      solido: true,  transp: false, emiteLuz: 15, cor: 0xFF5722, lateral: 0xBF360C },
   [BLOCO.OBSIDIANA]: { nome: 'Obsidiana', solido: true,  transp: false, emiteLuz: 0,  cor: 0x4d3e5e, lateral: 0x3a2c4a },
   [BLOCO.WORKBENCH]: { nome: 'Workbench', solido: true,  transp: false, emiteLuz: 0,  cor: 0x6D4C41, lateral: 0x4E342E },
@@ -1422,27 +1422,21 @@ class Renderer {
     }
   }
   // === Alterna transparência global ===
-  // ativa=true (default): folhas/vidro/água/tocha são semitransparentes
-  // (mostram blocos atrás). ativa=false: tudo vira sólido (opaco), útil
-  // quando o usuário acha que está vendo "transparência demais" e quer
-  // o visual cheio Minecraft-style.
+  // Nesta fase a transparência está PERMANENTEMENTE desabilitada — o
+  // material fica sempre transparent:false/FrontSide/opacity 1.0. O
+  // toggle continua existindo na UI por requisito do usuário ("manter
+  // botão mas desabilitar efeito"); chamadas com ativa=true viram no-op
+  // e logam um aviso uma única vez.
   setTransparenciaAtiva(ativa) {
-    this.transparenciaAtiva = ativa;
-    if (ativa) {
-      this.materialTransp.transparent = true;
-      this.materialTransp.opacity = 0.78;
-      this.materialTransp.depthWrite = false;
-      // DoubleSide só faz sentido com translucidez — vê-se "atrás" da
-      // folha/vidro pelo outro lado da face também.
-      this.materialTransp.side = THREE.DoubleSide;
-    } else {
-      this.materialTransp.transparent = false;
-      this.materialTransp.opacity = 1.0;
-      this.materialTransp.depthWrite = true;
-      // Sólido: FrontSide, idêntico ao materialOpaco. Sem isto, o
-      // back-face de leaves/vidro vazava e parecia "transparente".
-      this.materialTransp.side = THREE.FrontSide;
+    if (ativa && !Renderer._transpDesabilitadaAvisada) {
+      Renderer._transpDesabilitadaAvisada = true;
+      console.warn('setTransparenciaAtiva(true) ignorado: transparência desabilitada nesta fase.');
     }
+    this.transparenciaAtiva = false;
+    this.materialTransp.transparent = false;
+    this.materialTransp.opacity = 1.0;
+    this.materialTransp.depthWrite = true;
+    this.materialTransp.side = THREE.FrontSide;
     this.materialTransp.needsUpdate = true;
   }
 
@@ -1598,8 +1592,11 @@ class Player {
 
     // === Câmera ===
     if (this.terceiraPessoa) {
-      // Coloca câmera atrás/acima do player
-      const back = new THREE.Vector3(-Math.sin(yaw), 0.5, -Math.cos(yaw)).multiplyScalar(-4);
+      // Yaw da câmera: PointerLockControls escreve em camera.rotation.y.
+      // Antes a variável `yaw` era usada solta — não declarada; cada
+      // tecla F5 derrubava o frame com ReferenceError silencioso.
+      const yawCam = this.camera.rotation.y;
+      const back = new THREE.Vector3(Math.sin(yawCam), 0.5, Math.cos(yawCam)).multiplyScalar(4);
       this.camera.position.copy(this.pos).add(back).add(new THREE.Vector3(0, PLAYER_HEIGHT * 0.85, 0));
     } else {
       this.camera.position.set(this.pos.x, this.pos.y + PLAYER_HEIGHT * 0.85, this.pos.z);
@@ -1817,6 +1814,7 @@ class Inventario {
 
 const Drops = {
   podeMinerar(b, tier) {
+    if (b === BLOCO.BEDROCK) return false; // indestrutível (Minecraft real)
     if ([BLOCO.DIAMANTE, BLOCO.OURO].includes(b)) return tier >= 3;
     if (b === BLOCO.FERRO) return tier >= 2;
     if ([BLOCO.PEDRA, BLOCO.CARVAO].includes(b)) return tier >= 1;
@@ -2319,7 +2317,7 @@ class MobManager {
       if (dx*dx + dy*dy + dz*dz > raio*raio) continue;
       const x = Math.floor(cx + dx), y = Math.floor(cy + dy), z = Math.floor(cz + dz);
       const b = world.get(x, y, z);
-      if (b === BLOCO.AR || b === BLOCO.OBSIDIANA) continue;
+      if (b === BLOCO.AR || b === BLOCO.BEDROCK) continue;
       world.set(x, y, z, BLOCO.AR);
     }
   }
@@ -3101,15 +3099,14 @@ function alternarModo() {
 }
 
 function alternarTransparencia() {
-  const novo = !renderer.transparenciaAtiva;
-  renderer.setTransparenciaAtiva(novo);
+  // Transparência desabilitada nesta fase: o toggle continua existindo
+  // na UI mas não muda o material — força o estado sólido sempre.
+  renderer.setTransparenciaAtiva(false);
   const btn = document.getElementById('btn-transp');
-  btn.textContent = novo ? '🪟' : '🧱';
-  btn.title = novo
-    ? 'Modo: transparente (folha/vidro/água semi-transp). Clique para sólido.'
-    : 'Modo: sólido (tudo opaco). Clique para transparente.';
-  btn.classList.toggle('solido', !novo);
-  ui.toast(novo ? 'Blocos: transparentes' : 'Blocos: sólidos');
+  btn.textContent = '🧱';
+  btn.title = 'Modo: sólido (transparência desabilitada nesta fase).';
+  btn.classList.add('solido');
+  ui.toast('Modo sólido — transparência desabilitada nesta fase');
 }
 
 // === Sistema de XP ===
@@ -3307,7 +3304,8 @@ function loop(now) {
       const tier = inv.melhorPicareta();
       const sel = inv.itemSelecionado();
       const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
-      const mult = Drops.velocidadeQuebra(t.b, tier, ferr);
+      // Bedrock indestrutível: nunca acumula progresso (Minecraft real).
+      const mult = (t.b === BLOCO.BEDROCK) ? 0 : Drops.velocidadeQuebra(t.b, tier, ferr);
       player.progressoQuebra += dt / TEMPO_QUEBRA_BASE * mult;
       progressoVisual = player.progressoQuebra;
       if (player.progressoQuebra >= 1) {

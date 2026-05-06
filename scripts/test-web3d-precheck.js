@@ -85,9 +85,27 @@ t('materialTransp inicia com transparent: false',
 t('materialTransp inicia com side: FrontSide (não DoubleSide)',
   /materialTransp\s*=[\s\S]*?side:\s*THREE\.FrontSide/.test(game),
   'DoubleSide com transparência off vaza back-faces — leitura de "transparência" pelo usuário.');
-t('setTransparenciaAtiva alterna side junto com transparent',
-  /setTransparenciaAtiva[\s\S]*?side\s*=\s*THREE\.DoubleSide[\s\S]*?side\s*=\s*THREE\.FrontSide/.test(game),
-  'Toggle precisa flippar side também — senão o modo "sólido" continua com DoubleSide herdado.');
+t('setTransparenciaAtiva força modo sólido (no-op para true) — transparência desabilitada nesta fase',
+  /setTransparenciaAtiva\([^)]*\)\s*\{[\s\S]*?this\.transparenciaAtiva\s*=\s*false[\s\S]*?this\.materialTransp\.transparent\s*=\s*false[\s\S]*?this\.materialTransp\.side\s*=\s*THREE\.FrontSide/.test(game),
+  'Nesta fase o toggle não pode ativar transparência — força sempre estado sólido.');
+t('setTransparenciaAtiva não tem mais branch DoubleSide ativo',
+  !/setTransparenciaAtiva[\s\S]*?side\s*=\s*THREE\.DoubleSide/.test(game),
+  'DoubleSide reintroduziria back-faces translúcidas — proibido nesta fase.');
+
+// ---------------------------------------------------------------------
+// Folha/Vidro/Água viram cubos opacos (transp=false). Air e Tocha
+// continuam transp=true (ar precisa pra face-culling; tocha é mesh
+// especial, não cubo).
+// ---------------------------------------------------------------------
+grupo('BLOCO_INFO: folha/vidro/água opacos nesta fase');
+t('BLOCO_INFO[BLOCO.FOLHA].transp === false',
+  /\[BLOCO\.FOLHA\][^}]*transp:\s*false/.test(game));
+t('BLOCO_INFO[BLOCO.VIDRO].transp === false',
+  /\[BLOCO\.VIDRO\][^}]*transp:\s*false/.test(game));
+t('BLOCO_INFO[BLOCO.AGUA].transp === false',
+  /\[BLOCO\.AGUA\][^}]*transp:\s*false/.test(game));
+t('BLOCO_INFO[BLOCO.AR].transp === true (necessário para face-culling)',
+  /\[BLOCO\.AR\][^}]*transp:\s*true/.test(game));
 
 // ---------------------------------------------------------------------
 // Atlas opaco
