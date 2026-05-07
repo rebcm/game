@@ -271,6 +271,24 @@ export function construirModeloMob(tipo, info) {
   return grp;
 }
 
+// Bounding box (raio horizontal + altura) por tipo de mob — usado pra
+// colisão AABB com blocos. Ajustado pelo tamanho do mesh visual de cada
+// mob em construirModeloMob.
+function _dimsMob(tipo) {
+  switch (tipo) {
+    case 'aranha':   return { raio: 0.45, altura: 0.55 };
+    case 'galinha':  return { raio: 0.20, altura: 0.70 };
+    case 'lobo':     return { raio: 0.30, altura: 0.85 };
+    case 'slime':    return { raio: 0.40, altura: 0.50 };
+    case 'vaca':
+    case 'porco':
+    case 'ovelha':   return { raio: 0.40, altura: 1.30 };
+    case 'enderman': return { raio: 0.30, altura: 2.50 };
+    // Humanóides hostis (zumbi/esqueleto/creeper)
+    default:         return { raio: 0.30, altura: 1.80 };
+  }
+}
+
 export class Mob {
   constructor(tipo, x, y, z, opts = {}) {
     this.tipo = tipo;
@@ -312,10 +330,46 @@ export class Mob {
     if (escala !== 1) this.mesh.scale.set(escala, escala, escala);
     this.mesh.position.set(x, y, z);
     this.partes = this.mesh.userData.partes;
+    // Dimensões pra colisão AABB
+    const dims = _dimsMob(tipo);
+    this.raio = dims.raio * escala;
+    this.altura = dims.altura * escala;
+    // Flag: spawn precisa ser desclipado no primeiro frame
+    this._descliparNoSpawn = true;
+  }
+
+  // Empurra mob pra cima se ele spawnou dentro de bloco (até 8 blocos
+  // pra cima). Usado uma vez por mob, no primeiro atualizar.
+  desclipar(world) {
+    if (!this._descliparNoSpawn) return;
+    this._descliparNoSpawn = false;
+    let safety = 8;
+    while (this.colideEm(world, this.x, this.y, this.z) && safety-- > 0) this.y += 1;
+  }
+
+  // AABB collision: verifica se a bounding box do mob na posição (x,y,z)
+  // intersecta algum bloco sólido. Igual ao player.colisaoBlocos. Ignora
+  // água (passável). Inclui cria (escala 0.6).
+  colideEm(world, x, y, z) {
+    const r = this.raio * (this._cria ? 0.6 : 1);
+    const h = this.altura * (this._cria ? 0.6 : 1);
+    const x0 = Math.floor(x - r), x1 = Math.floor(x + r);
+    const y0 = Math.floor(y),     y1 = Math.floor(y + h - 0.05);
+    const z0 = Math.floor(z - r), z1 = Math.floor(z + r);
+    for (let xi = x0; xi <= x1; xi++)
+      for (let yi = y0; yi <= y1; yi++)
+        for (let zi = z0; zi <= z1; zi++) {
+          const b = world.get(xi, yi, zi);
+          if (b === BLOCO.AGUA) continue;
+          if (BLOCO_INFO[b]?.solido) return true;
+        }
+    return false;
   }
 
   atualizar(dt, world, alvo) {
     const info = MOB_INFO[this.tipo];
+    // Garante que spawn não está dentro de bloco
+    this.desclipar(world);
     // Som casual
     this.proxSom -= dt;
     if (this.proxSom <= 0) {
@@ -348,10 +402,10 @@ export class Mob {
     // para que o knockback dure mesmo se o mob estiver parado.
     if (this.kbX !== 0 || this.kbZ !== 0) {
       const kdx = this.kbX * dt, kdz = this.kbZ * dt;
-      if (!world.isSolido(Math.floor(this.x + kdx), Math.floor(this.y), Math.floor(this.z))) {
+      if (!this.colideEm(world, this.x + kdx, this.y, this.z)) {
         this.x += kdx;
       }
-      if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + kdz))) {
+      if (!this.colideEm(world, this.x, this.y, this.z + kdz)) {
         this.z += kdz;
       }
       // Decai exponencialmente (≈80% restante por segundo)
@@ -373,10 +427,10 @@ export class Mob {
         const passo = info.vel * dt * 1.5;
         const dx = Math.cos(this.dir) * passo;
         const dz = Math.sin(this.dir) * passo;
-        if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
+        if (!this.colideEm(world, this.x + dx, this.y, this.z)) {
           this.x += dx; movendo = true;
         }
-        if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
+        if (!this.colideEm(world, this.x, this.y, this.z + dz)) {
           this.z += dz; movendo = true;
         }
         if (this.pulando >= 1) this.pulando = 0;
@@ -384,11 +438,16 @@ export class Mob {
     } else {
       const dx = Math.cos(this.dir) * info.vel * dt;
       const dz = Math.sin(this.dir) * info.vel * dt;
-      if (!world.isSolido(Math.floor(this.x + dx), Math.floor(this.y), Math.floor(this.z))) {
+      if (!this.colideEm(world, this.x + dx, this.y, this.z)) {
         this.x += dx; movendo = true;
+      } else if (!this.colideEm(world, this.x + dx, this.y + 1, this.z)) {
+        // Auto-step de 1 bloco quando bate em parede de 1 bloco de altura
+        this.x += dx; this.y += 1; movendo = true;
       }
-      if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + dz))) {
+      if (!this.colideEm(world, this.x, this.y, this.z + dz)) {
         this.z += dz; movendo = true;
+      } else if (!this.colideEm(world, this.x, this.y + 1, this.z + dz)) {
+        this.z += dz; this.y += 1; movendo = true;
       }
     }
     if (info.teleport) {
@@ -427,17 +486,18 @@ export class Mob {
         }
       }
     }
-    // Snap vertical: cai até o chão (gravidade) e sobe NO MÁXIMO 1 bloco
-    // (auto-step). NUNCA pula vários blocos pra topo da coluna — isso fazia
-    // mob "subir" em árvores quando passava por baixo.
-    const fx = Math.floor(this.x), fz = Math.floor(this.z);
+    // Snap vertical: cai por gravidade respeitando AABB (todos os blocos
+    // sob a base do mob, não só uma coluna XZ central). Auto-step de 1
+    // se preso dentro de bloco. Limite: 1 sobe (não escala árvore).
     let yp = Math.floor(this.y + 0.001);
-    if (world.isSolido(fx, yp, fz)) {
-      // Estamos dentro de um bloco (auto-step de 1). Sobe se houver ar acima.
-      if (!world.isSolido(fx, yp + 1, fz)) yp++;
+    if (this.colideEm(world, this.x, yp, this.z)) {
+      // Preso: tenta subir 1
+      if (!this.colideEm(world, this.x, yp + 1, this.z)) yp++;
     }
-    // Cai até o primeiro chão sólido abaixo.
-    while (yp > 0 && !world.isSolido(fx, yp - 1, fz)) yp--;
+    // Cai enquanto não houver suporte sob a base (qualquer bloco no
+    // footprint XZ do mob)
+    let safety = 64;
+    while (yp > 0 && !this.colideEm(world, this.x, yp - 0.05, this.z) && safety-- > 0) yp--;
     this.y = yp;
     let yVisual = this.y;
     if (info.pula && this.pulando > 0) {
