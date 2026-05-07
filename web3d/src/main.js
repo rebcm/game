@@ -15,6 +15,7 @@ import { World } from './world.js';
 import { Renderer } from './render.js';
 import { Player } from './player.js';
 import { Inventario, Drops, Crafting } from './inventory.js';
+import { Achievements } from './achievements.js';
 import { MobManager, MOB_INFO } from './mobs.js';
 import {
   Particulas, spawnItemDrop, atualizarItemDrops,
@@ -91,6 +92,7 @@ function atacarMob() {
     const xp = MOB_INFO[m.tipo].hostil ? 5 : 2;
     spawnXPOrb(xp, m.x, m.y + 0.5, m.z);
     state.ui.toast(`${m.tipo} derrotado! ${isCrit ? '⚡ CRÍTICO! ' : ''}(+${xp} XP)`);
+    if (MOB_INFO[m.tipo].hostil) Achievements.unlock('PRIMEIRO_MOB');
   } else {
     state.ui.toast(`Atingiu ${m.tipo}${isCrit ? ' ⚡' : ''} (-${dano})`);
   }
@@ -128,6 +130,7 @@ function comerSlot() {
   Audio.eatCrunch();
   if (info.suspeito && Math.random() < 0.15) state.player.aplicarDano(1, 'comida estragada');
   else state.ui.toast(`Comeu ${info.nome} (+${info.nutricao} fome)`);
+  if (s.i === ITEM.CARNE_COZIDA) Achievements.unlock('COMER_CARNE');
 }
 
 // === Dormir ===
@@ -365,6 +368,10 @@ function loop(now) {
           state.world.removerEstadoBloco(t.x, t.y, t.z);
         }
         const blocoQuebrado = t.b;
+        // Hooks de achievement (block mining)
+        if (blocoQuebrado === BLOCO.MADEIRA) Achievements.unlock('PRIMEIRA_MADEIRA');
+        else if (blocoQuebrado === BLOCO.PEDRA) Achievements.unlock('PRIMEIRA_PEDRA');
+        else if (blocoQuebrado === BLOCO.DIAMANTE) Achievements.unlock('PRIMEIRO_DIAMANTE');
         state.world.set(t.x, t.y, t.z, BLOCO.AR);
         // Cascateia areia que estava em cima do bloco removido (gravity)
         state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
@@ -396,6 +403,7 @@ function loop(now) {
         state.inv.consumirAtual();
         Audio.lobo();
         state.ui.toast('Lobo domesticado! 🐺');
+        Achievements.unlock('DOMESTICAR_LOBO');
         return;
       }
       // Reprodução: alimentar mob passivo com pranchas → love mode
@@ -420,7 +428,11 @@ function loop(now) {
       if (ray) {
         const t = ray.hit;
         const blocoAlvo = t.b;
-        if (blocoAlvo === BLOCO.BAU) abrirPainelBau(t.x, t.y, t.z);
+        if (blocoAlvo === BLOCO.BAU) {
+          abrirPainelBau(t.x, t.y, t.z);
+          // Achievement: descobriu uma dungeon (baú em y < 28 = subterrâneo)
+          if (t.y < 28) Achievements.unlock('TANTO_FAZ');
+        }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.CAMA) dormir();
         else if (blocoAlvo === BLOCO.WORKBENCH) {
@@ -457,6 +469,7 @@ function loop(now) {
               state.inv.consumirAtual();
               Audio.colocar();
               state.ui.toast('Muda plantada — vai crescer em ~20s');
+              Achievements.unlock('PLANTAR_MUDA');
             } else {
               state.ui.toast('Mudas só crescem em grama');
             }

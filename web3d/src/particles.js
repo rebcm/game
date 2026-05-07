@@ -3,7 +3,7 @@
 // =====================================================================
 
 import * as THREE from 'three';
-import { BLOCO, BLOCO_INFO, GRAVIDADE, WORLD_Y } from './constants.js';
+import { BLOCO, BLOCO_INFO, GRAVIDADE, WORLD_Y, ITEM } from './constants.js';
 import { World } from './world.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
@@ -141,8 +141,25 @@ export class Particulas {
             const f = world.fornalhaEstados.get(World.keyXYZ(x, y, z));
             if (f && f.combustivel) this.spawnSmoke(x, y, z);
           }
-          if (b === BLOCO.LAVA && Math.random() < 0.05) {
-            if (world.get(x, y + 1, z) === BLOCO.AR) this.spawnLavaSpark(x, y, z);
+          if (b === BLOCO.LAVA) {
+            if (Math.random() < 0.05 && world.get(x, y + 1, z) === BLOCO.AR) this.spawnLavaSpark(x, y, z);
+            // Lava queima MADEIRA/FOLHA adjacente: chance pequena por tick.
+            // Substitui por AR (drop de carvão se for madeira) e cria smoke.
+            if (Math.random() < 0.04) {
+              const dirs = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+              for (const [ax,ay,az] of dirs) {
+                const vx = x+ax, vy = y+ay, vz = z+az;
+                const vb = world.get(vx, vy, vz);
+                if (vb === BLOCO.MADEIRA || vb === BLOCO.FOLHA) {
+                  world.set(vx, vy, vz, BLOCO.AR);
+                  this.spawnSmoke(vx, vy, vz);
+                  if (vb === BLOCO.MADEIRA) {
+                    spawnItemDrop({ i: ITEM.CARVAO, q: 1 }, vx + 0.5, vy + 0.2, vz + 0.5);
+                  }
+                  break; // 1 queima por tick
+                }
+              }
+            }
           }
         }
   }

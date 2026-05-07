@@ -8,6 +8,7 @@ import {
 } from './constants.js';
 import { chunkKey } from './utils.js';
 import { Crafting } from './inventory.js';
+import { Achievements } from './achievements.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 
@@ -117,6 +118,21 @@ export class UI {
     el.classList.add('show');
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+  }
+
+  // Conquista (achievement) — toast maior e mais demorado, ícone à esquerda
+  toastConquista(ach) {
+    let el = document.getElementById('conquista-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'conquista-toast';
+      el.className = 'conquista-toast';
+      document.body.appendChild(el);
+    }
+    el.innerHTML = `<span class="ico">${ach.icone}</span><div><div class="t">Conquista desbloqueada</div><div class="d">${ach.titulo}</div></div>`;
+    el.classList.add('show');
+    if (this._conquistaTimer) clearTimeout(this._conquistaTimer);
+    this._conquistaTimer = setTimeout(() => el.classList.remove('show'), 4000);
   }
 
   atualizarXP() {
@@ -389,7 +405,17 @@ export class UI {
         return `${c.q}× ${n}`;
       }).join(' + ');
       div.innerHTML = `<div class="icone">${ic}</div><div class="info"><div class="nome">${nome}${qtd}</div><div class="custo">${custos}</div></div>`;
-      div.onclick = () => { Crafting.craftar(state.inv, r, perto); this.renderCraft(this.workbenchPerto()); };
+      div.onclick = () => {
+        const ok = Crafting.craftar(state.inv, r, perto);
+        if (ok && r.saida) {
+          // Achievements baseados no item produzido
+          if (r.saida.i === 110) Achievements.unlock('PRIMEIRA_PRANCHA'); // ITEM.PRANCHAS
+          else if (r.saida.i === 200) Achievements.unlock('PRIMEIRA_PICARETA'); // ITEM.PIC_MADEIRA
+          else if (r.saida.b === 23) Achievements.unlock('PRIMEIRO_FORNALHA'); // BLOCO.FORNALHA
+          else if (r.saida.b === 22) Achievements.unlock('CRIAR_BAU'); // BLOCO.BAU
+        }
+        this.renderCraft(this.workbenchPerto());
+      };
       this.elCraftLista.appendChild(div);
     }
   }

@@ -3,7 +3,7 @@
 // =====================================================================
 
 import {
-  CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO,
+  CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO, ITEM,
 } from './constants.js';
 import { hash2, hash3, clamp, chunkKey, perlin2, perlin3, fbm2 } from './utils.js';
 
@@ -96,12 +96,28 @@ export class World {
     const n = (v + 1) * 0.5;
     return clamp(20 + Math.floor(n * 22), 2, WORLD_Y - 8);
   }
-  // Bloco do topo dependendo da altura + zona (areia/grama/neve).
+  // === Biomas via Perlin 2D ===
+  // 4 biomas: deserto (areia + cactos), planicies (grama + árvores raras),
+  // floresta (grama + árvores densas), taiga (neve + grama). Selecionado
+  // por dois noises baixa-frequência (temperatura + umidade) — paridade
+  // Minecraft ("temperature/humidity climate model").
+  biomaEm(x, z) {
+    if (this.alturaTerreno(x, z) >= 38) return 'taiga'; // alta altitude = sempre frio
+    const temp = perlin2(x / 220, z / 220, this.seed ^ 0x7E11);
+    const umid = perlin2(x / 180, z / 180, this.seed ^ 0x9999);
+    // temp [-1,1], umid [-1,1]. Mapeia em 4 quadrantes:
+    if (temp > 0.25) {
+      return umid < -0.10 ? 'deserto' : 'planicies';
+    } else {
+      return umid > 0.10 ? 'floresta' : 'taiga';
+    }
+  }
+  // Bloco do topo do terreno dependendo do bioma.
   topoBioma(x, z, h) {
-    if (h >= 38) return BLOCO.NEVE;
-    if (((z + this.seed) % 256 + 256) % 256 > 200) return BLOCO.NEVE;
-    if (((z - this.seed) % 256 + 256) % 256 < 76)  return BLOCO.AREIA;
-    return BLOCO.GRAMA;
+    const b = this.biomaEm(x, z);
+    if (b === 'deserto')  return BLOCO.AREIA;
+    if (b === 'taiga')    return BLOCO.NEVE;
+    return BLOCO.GRAMA; // planicies + floresta
   }
   // Cavernas via Perlin 3D — paridade Minecraft real.
   // Threshold > 0.55 cria túneis/câmaras orgânicas. Concentra y em [5, 50].
@@ -150,15 +166,19 @@ export class World {
         }
       }
     }
-    // 2. Árvores
+    // 2. Árvores — densidade varia por bioma (floresta densa, planicies
+    // esparsa, deserto/taiga sem). Paridade Minecraft.
     for (let lx = 0; lx < CHUNK_SIZE; lx++) {
       for (let lz = 0; lz < CHUNK_SIZE; lz++) {
         const gx = cx * CHUNK_SIZE + lx;
         const gz = cz * CHUNK_SIZE + lz;
         const h = this.alturaTerreno(gx, gz);
         if (c.get(lx, h, lz) !== BLOCO.GRAMA) continue;
+        const bioma = this.biomaEm(gx, gz);
+        const limiar = bioma === 'floresta' ? 36 : (bioma === 'planicies' ? 8 : 0);
+        if (limiar === 0) continue;
         const hh = hash2(gx, gz, this.seed ^ 0xA75) & 0xFF;
-        if (hh > 8) continue; // ~3% chance
+        if (hh > limiar) continue;
         const altura = 4 + (hh & 0x3);
         for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.MADEIRA);
         // Copa esférica
@@ -190,7 +210,73 @@ export class World {
         for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.CACTO);
       }
     }
+    // 4. Dungeon subterrânea: 1 chance a cada ~30 chunks. Sala 5×5×4 com
+    // baú no centro e tochas nos cantos. Spawnada em y 8-25 (caverna level).
+    const dungHash = hash2(cx, cz, this.seed ^ 0xD6307) & 0xFFFF;
+    if (dungHash < 1500) { // ~2% por chunk
+      const cxLocal = 5 + (dungHash & 0x5); // 5..10 dentro do chunk
+      const czLocal = 5 + ((dungHash >> 4) & 0x5);
+      const cy = 8 + (dungHash >> 8) % 16; // 8..23
+      this._gerarDungeon(c, cx, cz, cxLocal, cy, czLocal);
+    }
     return c;
+  }
+
+  // Sala 5×5×4 oca com paredes de pedra e baú no centro com loot.
+  // Coordenadas locais ao chunk (lx, ly, lz). Não estende além do chunk
+  // pra evitar dependências cross-chunk.
+  _gerarDungeon(c, cx, cz, lx, ly, lz) {
+    const W = 5, H = 4, D = 5;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          // Paredes/teto/chão = pedra; interior = ar
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          c.set(x, y, z, naBorda ? BLOCO.PEDRA : BLOCO.AR);
+        }
+      }
+    }
+    // Baú no centro com loot (3-5 items aleatórios)
+    const cxC = lx + Math.floor(W / 2);
+    const cyC = ly + 1;
+    const czC = lz + Math.floor(D / 2);
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE && cyC < WORLD_Y) {
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      // Salva loot no Map de baús (será preenchido na primeira abertura)
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      const loot = this._gerarLootDungeon(cx, cz);
+      this.bauTesouros.set(k, loot);
+    }
+    // Tochas nos 4 cantos do teto pra iluminar
+    const tochas = [[lx+1, ly+H-2, lz+1], [lx+W-2, ly+H-2, lz+1],
+                    [lx+1, ly+H-2, lz+D-2], [lx+W-2, ly+H-2, lz+D-2]];
+    for (const [tx, ty, tz] of tochas) {
+      if (tx < CHUNK_SIZE && tz < CHUNK_SIZE) c.set(tx, ty, tz, BLOCO.TOCHA);
+    }
+  }
+
+  _gerarLootDungeon(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.PAU, q: 4 },
+      { i: ITEM.CARVAO, q: 3 },
+      { i: ITEM.FERRO, q: 2 },
+      { i: ITEM.OURO, q: 1 },
+      { b: BLOCO.PEDRA, q: 8 },
+    ];
+    // Loot raro: diamante 25%, esmeralda nada, comida cozida 30%
+    if ((hash2(cx, cz, this.seed ^ 0xD1A) & 0xFF) < 64) items.push({ i: ITEM.DIAMANTE, q: 1 });
+    if ((hash2(cx, cz, this.seed ^ 0xC02) & 0xFF) < 80) items.push({ i: ITEM.CARNE_COZIDA, q: 3 });
+    if ((hash2(cx, cz, this.seed ^ 0xA20) & 0xFF) < 40) items.push({ i: ITEM.ARCO, q: 1 });
+    // Distribui aleatoriamente nos primeiros slots
+    let s = (hash2(cx, cz, this.seed ^ 0x5705) >>> 0) % 7;
+    for (const it of items) {
+      loot[s % 27] = { ...it };
+      s = (s * 5 + 3) % 27;
+    }
+    return loot;
   }
 
   // Carrega chunk (gera se não existe).
