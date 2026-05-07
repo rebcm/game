@@ -3,7 +3,7 @@
 // =====================================================================
 
 import * as THREE from 'three';
-import { BLOCO, ITEM, WORLD_Y } from './constants.js';
+import { BLOCO, BLOCO_INFO, ITEM, WORLD_Y } from './constants.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 import { spawnArrow, spawnItemDrop } from './particles.js';

@@ -160,6 +160,13 @@ t('Spawn rules por light level',
   /getLightAt[\s\S]*luzMax\s*<=?\s*7/.test(mobs));
 t('11 espécies em MOB_INFO',
   (mobs.match(/^\s+[a-z]+\s*:\s*\{/gm) || []).length >= 11);
+// Anti-regressão: usos de BLOCO_INFO/colideEm exigem import correto.
+// Bug histórico: colideEm usava BLOCO_INFO sem importar e travava o
+// jogo (Uncaught ReferenceError) na primeira colisão de mob.
+t('mobs.js importa BLOCO_INFO se usa BLOCO_INFO',
+  !/\bBLOCO_INFO\b/.test(mobs) ||
+  /import\s*\{[^}]*BLOCO_INFO[^}]*\}\s*from\s*['"]\.\/constants\.js['"]/.test(mobs),
+  'colideEm e isSolido precisam de BLOCO_INFO importado.');
 
 grupo('particles.js');
 const particles = lerArquivo('src/particles.js') || '';
