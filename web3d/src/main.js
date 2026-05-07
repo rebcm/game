@@ -46,6 +46,35 @@ function ganharXP(pts) {
   state.ui.atualizarXP();
 }
 
+// === Memory watchdog ===
+// Roda 1×/s. Se o heap JS estourar 80% do limite, libera chunks BEM
+// distantes (mais agressivo que a limpeza padrão) e mostra warning.
+let _memWarnedAt = 0;
+function _checkMemory() {
+  const m = performance && performance.memory;
+  if (!m) return;
+  const usado = m.usedJSHeapSize, limite = m.jsHeapSizeLimit;
+  const rel = usado / limite;
+  if (rel > 0.85) {
+    // Pressão crítica: agressiva limpeza
+    const pcx = Math.floor(state.player.pos.x / CHUNK_SIZE);
+    const pcz = Math.floor(state.player.pos.z / CHUNK_SIZE);
+    const VR = state.quality?.viewRadius ?? VIEW_RADIUS;
+    let liberados = 0;
+    for (const [k, c] of state.world.chunks) {
+      const dx = c.cx - pcx, dz = c.cz - pcz;
+      if (Math.abs(dx) > VR || Math.abs(dz) > VR) {
+        if (c.mesh) state.renderer.liberarChunkMesh(c);
+        if (!c.modificado) { state.world.chunks.delete(k); liberados++; }
+      }
+    }
+    if (Date.now() - _memWarnedAt > 10000) {
+      _memWarnedAt = Date.now();
+      state.ui.toast(`⚠ Memória alta (${(rel * 100).toFixed(0)}%) — liberou ${liberados} chunks`);
+    }
+  }
+}
+
 // === Atacar mob ===
 // Se item ativo é ARCO e player tem flechas, dispara projétil em vez
 // de atacar corpo-a-corpo. Caso contrário, melee normal.
@@ -309,12 +338,19 @@ function loop(now) {
   const dt = Math.min(0.06, (now - ultimoT) / 1000);
   ultimoT = now;
 
+  // Frame watchdog: se último frame foi pesado (> 50ms = abaixo de 20fps)
+  // marca _heavyFrame=true pra pular trabalho não-essencial neste frame
+  // (weather snow accumulate, ambient particles, breeding scan).
+  state._heavyFrame = dt > 0.05;
+
   // FPS counter + adaptive quality monitor
   state.fpsAcc++;
   state.fpsTimer += dt;
   if (state.fpsTimer >= 1) {
     document.getElementById('fps').textContent = `${state.fpsAcc} FPS [${state.quality?.tier || '?'}]`;
     state.fpsAcc = 0; state.fpsTimer = 0;
+    // Memory monitor (Chrome): warn se ultrapassar 80% do limite
+    _checkMemory();
   }
   qualityTickFps(dt);
 
@@ -327,9 +363,11 @@ function loop(now) {
     state.player.atualizar(dt, state.world);
     // Tick do charge do arco
     if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
-    // Tick de mudas → cresce em árvore após ~15-25s
-    const cresc = state.world.atualizarMudas();
-    if (cresc > 0) state.ui.toast?.(`🌱 ${cresc > 1 ? cresc + ' mudas cresceram' : 'Muda cresceu em árvore'}`);
+    // Tick de mudas → cresce em árvore após ~15-25s (skip em heavy frame)
+    if (!state._heavyFrame) {
+      const cresc = state.world.atualizarMudas();
+      if (cresc > 0) state.ui.toast?.(`🌱 ${cresc > 1 ? cresc + ' mudas cresceram' : 'Muda cresceu em árvore'}`);
+    }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
@@ -523,37 +561,73 @@ function loop(now) {
     }
   }
 
-  // Carrega chunks faltantes — view radius adaptativo do quality tier
+  // === Chunk loading com priorização predictive ===
+  // Ordena chunks faltantes por: distância ao player + alinhamento com
+  // velocidade (chunks na direção que o player anda carregam primeiro).
   const pcx = Math.floor(state.player.pos.x / CHUNK_SIZE);
   const pcz = Math.floor(state.player.pos.z / CHUNK_SIZE);
   const VR = state.quality?.viewRadius ?? VIEW_RADIUS;
-  let orcamento = state.chunkLoadOrcamento;
-  for (let dx = -VR; dx <= VR && orcamento > 0; dx++) {
-    for (let dz = -VR; dz <= VR && orcamento > 0; dz++) {
+  const vx = state.player.vel?.x || 0, vz = state.player.vel?.z || 0;
+  const speed = Math.hypot(vx, vz);
+  const dirX = speed > 0.1 ? vx / speed : 0;
+  const dirZ = speed > 0.1 ? vz / speed : 0;
+  const faltantes = [];
+  for (let dx = -VR; dx <= VR; dx++) {
+    for (let dz = -VR; dz <= VR; dz++) {
       if (!state.world.hasChunk(pcx + dx, pcz + dz)) {
-        state.world.getChunk(pcx + dx, pcz + dz);
-        orcamento--;
+        // score: menor é mais prioritário. Distância + bônus pra direção
+        // do movimento (predictive — antecipa o que o player vai ver).
+        const dist = Math.hypot(dx, dz);
+        const align = -(dx * dirX + dz * dirZ); // negativo = pro lado do movimento
+        faltantes.push({ dx, dz, score: dist + align * 0.8 });
       }
     }
   }
-  // Build mesh dirty
+  faltantes.sort((a, b) => a.score - b.score);
+  let orcamento = state.chunkLoadOrcamento;
+  for (const f of faltantes) {
+    if (orcamento <= 0) break;
+    state.world.getChunk(pcx + f.dx, pcz + f.dz);
+    orcamento--;
+  }
+  // === Build mesh dirty (também priorizado por distância ao player) ===
   let buildOrc = state.quality?.chunkMeshBudget ?? 4;
+  const dirty = [];
   for (const c of state.world.chunks.values()) {
-    if (c.dirty && buildOrc > 0) {
-      const dx = c.cx - pcx, dz = c.cz - pcz;
-      if (Math.abs(dx) <= VR + 1 && Math.abs(dz) <= VR + 1) {
-        state.renderer.buildChunkMesh(state.world, c);
-        buildOrc--;
-      }
-    }
+    if (!c.dirty) continue;
+    const dx = c.cx - pcx, dz = c.cz - pcz;
+    if (Math.abs(dx) > VR + 1 || Math.abs(dz) > VR + 1) continue;
+    dirty.push({ c, score: Math.hypot(dx, dz) });
   }
-  // Libera chunks fora de view
+  dirty.sort((a, b) => a.score - b.score);
+  for (const d of dirty) {
+    if (buildOrc <= 0) break;
+    state.renderer.buildChunkMesh(state.world, d.c);
+    buildOrc--;
+  }
+  // === Libera chunks fora de view ===
   for (const [k, c] of state.world.chunks) {
     const dx = c.cx - pcx, dz = c.cz - pcz;
     if (Math.abs(dx) > VR + 2 || Math.abs(dz) > VR + 2) {
       if (c.mesh) state.renderer.liberarChunkMesh(c);
       if (!c.modificado) state.world.chunks.delete(k);
     }
+  }
+  // === Loading overlay quando há backlog ===
+  // Mostra "Carregando…" se >50% do view radius está faltando OU tem
+  // muito mesh-dirty pendente. Esconde quando backlog < 25%.
+  const totalView = (2 * VR + 1) ** 2;
+  const aindaFaltam = faltantes.length;
+  const aindaDirty = dirty.length;
+  const carga = aindaFaltam + aindaDirty;
+  const cargaRel = carga / totalView;
+  if (cargaRel > 0.5) {
+    state.ui.mostrarLoading('Carregando cenário…',
+      `chunks: ${aindaFaltam} a gerar · ${aindaDirty} a montar`);
+    state._busy = true;
+  } else if (cargaRel < 0.15 && state._busy) {
+    state.ui.esconderLoading();
+    state._busy = false;
   }
 
   state.renderer.atualizarCeu(state.tempoDia, state.player.pos);
@@ -575,8 +649,12 @@ function loop(now) {
   atualizarItemDrops(dt);
   atualizarXpOrbs(dt, ganharXP);
   atualizarArrows(dt);
-  atualizarAmbientTriggers(dt);
-  atualizarClima(dt);
+  // Skip ambient triggers + clima em heavy frames pra dar prioridade a
+  // chunk loading/mesh build (responsividade da movimentação).
+  if (!state._heavyFrame || !state._busy) {
+    atualizarAmbientTriggers(dt);
+    atualizarClima(dt);
+  }
   // Atualiza damage numbers (projeção de coords 3D → 2D + fade)
   if (state.ui?.atualizarDamageNumbers) state.ui.atualizarDamageNumbers(dt);
 

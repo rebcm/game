@@ -120,6 +120,18 @@ export class UI {
     this.toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
   }
 
+  // Loading overlay (backlog de chunks/mesh ou aviso de memória)
+  mostrarLoading(msg = 'Carregando…', detalhe = '') {
+    const ov = document.getElementById('loading-overlay');
+    if (!ov) return;
+    ov.classList.remove('hidden');
+    document.getElementById('loading-msg').textContent = msg;
+    document.getElementById('loading-detail').textContent = detalhe;
+  }
+  esconderLoading() {
+    document.getElementById('loading-overlay')?.classList.add('hidden');
+  }
+
   // Conquista (achievement) — toast maior e mais demorado, ícone à esquerda
   toastConquista(ach) {
     let el = document.getElementById('conquista-toast');

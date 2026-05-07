@@ -986,8 +986,18 @@ export class Renderer {
   liberarChunkMesh(chunk) {
     if (chunk.mesh) {
       this.scene.remove(chunk.mesh);
-      chunk.mesh.geometry?.dispose();
+      // Dispose explícito de geometry (BufferAttribute em GPU + arrays JS).
+      // Material é compartilhado (atlas global) — NÃO disposar.
+      const g = chunk.mesh.geometry;
+      if (g) {
+        if (g.index) g.index.array = null;
+        for (const k of Object.keys(g.attributes)) {
+          g.attributes[k].array = null;
+        }
+        g.dispose();
+      }
       chunk.mesh = null;
+      chunk.lights = []; // libera lista de luzes do chunk
     }
   }
 
