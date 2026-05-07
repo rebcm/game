@@ -584,6 +584,25 @@ export class Mob {
     while (this.colideEm(world, this.x, this.y, this.z) && safety-- > 0) this.y += 1;
   }
 
+  // Line-of-sight: testa se há linha reta até (tx,ty,tz) sem bloco
+  // sólido no caminho. Usado pra hostis NÃO agredirem player através
+  // de paredes (paridade Minecraft real). Step ~0.4 bloco, max 24m.
+  podeVer(world, tx, ty, tz) {
+    const sx = this.x, sy = this.y + this.altura * 0.7, sz = this.z;
+    const dx = tx - sx, dy = ty - sy, dz = tz - sz;
+    const dist = Math.hypot(dx, dy, dz);
+    if (dist > 24) return false;
+    const steps = Math.max(2, Math.ceil(dist / 0.4));
+    const px = dx / steps, py = dy / steps, pz = dz / steps;
+    for (let i = 1; i < steps; i++) {
+      const cx = sx + px * i, cy = sy + py * i, cz = sz + pz * i;
+      const b = world.get(Math.floor(cx), Math.floor(cy), Math.floor(cz));
+      if (b === BLOCO.AR || b === BLOCO.AGUA) continue;
+      if (BLOCO_INFO[b]?.solido) return false;
+    }
+    return true;
+  }
+
   // AABB collision: verifica se a bounding box do mob na posição (x,y,z)
   // intersecta algum bloco sólido. Igual ao player.colisaoBlocos. Ignora
   // água (passável). Inclui cria (escala 0.6).
@@ -925,14 +944,22 @@ export class MobManager {
           m.cooldownAtaque = 1.0;
         }
       } else if (info.hostil) {
-        m.atualizar(dt, world, { x: player.pos.x, z: player.pos.z });
+        // Hostis SÓ perseguem se virem o player (line-of-sight). Senão,
+        // wander aleatório (paridade Minecraft real). LOS é cacheada por
+        // ~0.5s pra evitar raycast em todo frame.
+        m._losTimer = (m._losTimer || 0) - dt;
+        if (m._losTimer <= 0) {
+          m._losTimer = 0.4 + Math.random() * 0.3;
+          m._vePlayer = m.podeVer(world, player.pos.x, player.pos.y + 0.8, player.pos.z);
+        }
+        m.atualizar(dt, world, m._vePlayer ? { x: player.pos.x, z: player.pos.z } : null);
       } else {
         m.atualizar(dt, world, null);
       }
       if (info.hostil) {
         const ddy = m.y - player.pos.y;
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
-        const naAlcance = d2 < info.alcance ** 2;
+        const naAlcance = d2 < info.alcance ** 2 && m._vePlayer; // só ataca se vê
         m.cooldownFlecha -= dt;
         // Esqueleto: ataque ranged com flecha (cooldown 2.5s)
         if (m.tipo === 'esqueleto' && naAlcance && m.cooldownFlecha <= 0) {

@@ -1071,7 +1071,8 @@ export class Renderer {
 
   // === FOV pulse ao sprintar ===
   atualizarFOV(dt, correndo) {
-    const alvo = 70 + (correndo ? 8 : 0);
+    const base = this.fovBase || 70;
+    const alvo = base + (correndo ? 8 : 0);
     const atual = this.camera.fov;
     if (Math.abs(atual - alvo) < 0.01) return;
     const k = Math.min(1, 10 * dt);
@@ -1125,13 +1126,28 @@ export class Renderer {
       this.hemi.color.setHex(0xbcd8ff);
       this.hemi.groundColor.setHex(0x6b5a3f);
     }
-    // Cor do céu interpola entre noite/crepúsculo/dia
-    const c1 = new THREE.Color(0x4a5878);
-    const c2 = new THREE.Color(0xFF8A65);
-    const c3 = new THREE.Color(0x87CEEB);
-    let bg;
-    if (sun < 0.35) bg = c1.clone().lerp(c2, sun / 0.35);
-    else            bg = c2.clone().lerp(c3, (sun - 0.35) / 0.65);
+    // === Sky gradient multi-stop ===
+    // 6 keypoints — produz transições ricas: noite escura (azul-violeta),
+    // crepúsculo púrpura, sunrise/sunset laranja saturado, golden hour
+    // dourado, dia azul claro, meio-dia ciano vibrante.
+    const stops = [
+      [0.00, 0x0a0a2a], // deep night
+      [0.12, 0x2a1d56], // twilight violet
+      [0.30, 0xff5a2f], // sunrise/sunset rich orange
+      [0.45, 0xffc873], // golden hour
+      [0.70, 0x87CEEB], // mid day sky
+      [1.00, 0x9adcff], // noon vibrant
+    ];
+    let bg = new THREE.Color(stops[0][1]);
+    for (let i = 0; i < stops.length - 1; i++) {
+      const [t0, c0] = stops[i];
+      const [t1, c1] = stops[i + 1];
+      if (sun >= t0 && sun <= t1) {
+        const t = (sun - t0) / (t1 - t0);
+        bg = new THREE.Color(c0).lerp(new THREE.Color(c1), t);
+        break;
+      }
+    }
     // Aplica tinte do clima (cinza durante chuva, sem efeito quando clear)
     bg = corCeuComClima(bg, sun);
     this.renderer.setClearColor(bg);
@@ -1161,12 +1177,23 @@ export class Renderer {
       this.cloudTexture.offset.x = (tempoDia * 8) % 1;
       this.cloudMesh.material.opacity = 0.30 + 0.55 * Math.max(0, sun);
     }
-    // Estrelas fade noturno
+    // Estrelas: fade noturno + twinkle leve (pulso aleatório do campo)
     if (this.estrelas) {
       this.estrelas.position.set(playerPos.x, playerPos.y, playerPos.z);
-      const opa = Math.max(0, Math.min(0.95, (0.3 - sun) * 3.8));
-      this.estrelas.material.opacity = opa;
-      this.estrelas.visible = opa > 0.01;
+      const opaBase = Math.max(0, Math.min(0.95, (0.3 - sun) * 3.8));
+      // Twinkle: pulso 4Hz com 15% de amplitude
+      const t = (typeof performance !== 'undefined' ? performance.now() : Date.now()) * 0.001;
+      const twinkle = 0.85 + 0.15 * Math.sin(t * 4);
+      this.estrelas.material.opacity = opaBase * twinkle;
+      this.estrelas.visible = opaBase > 0.01;
+      // Slow rotation pra dar movimento celeste
+      this.estrelas.rotation.y = t * 0.005;
+    }
+    // Lua: glow halo emissivo durante a noite
+    if (this.discoLua && this.discoLua.material) {
+      const noite = 1 - sun;
+      this.discoLua.material.opacity = Math.max(0.4, noite);
+      this.discoLua.material.transparent = true;
     }
   }
 

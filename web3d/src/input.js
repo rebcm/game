@@ -227,6 +227,59 @@ export function setupInput() {
   if (pauseEl) observer.observe(pauseEl, { attributes: true, attributeFilter: ['class'] });
   refreshQualityUI();
 
+  // === Settings sliders (FOV, mouse sens, volume) ===
+  // Persistidos em localStorage. Aplicados em runtime na movimentação.
+  const settings = (() => {
+    try { return JSON.parse(localStorage.getItem('rebcm3d_settings_v1') || '{}'); }
+    catch (_) { return {}; }
+  })();
+  const saveSettings = () => {
+    try { localStorage.setItem('rebcm3d_settings_v1', JSON.stringify(settings)); } catch (_) {}
+  };
+  const fovEl = document.getElementById('set-fov');
+  const fovVal = document.getElementById('set-fov-val');
+  const sensEl = document.getElementById('set-sens');
+  const sensVal = document.getElementById('set-sens-val');
+  const volEl = document.getElementById('set-vol');
+  const volVal = document.getElementById('set-vol-val');
+  // Aplica estado salvo
+  if (settings.fov)  { fovEl.value = settings.fov; }
+  if (settings.sens) { sensEl.value = settings.sens; }
+  if (settings.vol !== undefined) { volEl.value = settings.vol; }
+  const applyFov = () => {
+    const fov = parseInt(fovEl.value);
+    fovVal.textContent = fov;
+    settings.fov = fov;
+    if (state.renderer?.camera) {
+      state.renderer.camera.fov = fov;
+      state.renderer.camera.updateProjectionMatrix();
+      state.renderer.fovBase = fov; // pra atualizarFOV não sobrescrever
+    }
+    saveSettings();
+  };
+  const applySens = () => {
+    const v = parseInt(sensEl.value);
+    sensVal.textContent = (v / 10).toFixed(1);
+    settings.sens = v;
+    // PointerLockControls usa pointerSpeed (default 1). Mapeia 5..60 → 0.3..3.5
+    if (state.player?.controls) {
+      state.player.controls.pointerSpeed = v / 18;
+    }
+    saveSettings();
+  };
+  const applyVol = () => {
+    const v = parseInt(volEl.value);
+    volVal.textContent = `${v}%`;
+    settings.vol = v;
+    if (window.rebcm?.setMasterVolume) window.rebcm.setMasterVolume(v / 100);
+    saveSettings();
+  };
+  fovEl.addEventListener('input', applyFov);
+  sensEl.addEventListener('input', applySens);
+  volEl.addEventListener('input', applyVol);
+  // Aplica os valores iniciais
+  setTimeout(() => { applyFov(); applySens(); applyVol(); }, 100);
+
   // Abas + busca do criativo
   document.querySelectorAll('.criativo-aba').forEach(aba => {
     aba.onclick = () => {
