@@ -64,7 +64,10 @@ function atacarMob() {
   if (!m) return;
   const isCrit = !state.player.noChao && state.player.vel.y < -0.3 && state.player.modo === 'survival';
   Audio.atacar();
-  if (isCrit) Audio.critical();
+  if (isCrit) {
+    Audio.critical();
+    state.particulas?.spawnCritStars?.(m.x, m.y + 1.5, m.z);
+  }
   const tier = state.inv.melhorEspada();
   let dano = 2 + tier * 2;
   if (isCrit) dano = Math.round(dano * 1.5);
@@ -395,6 +398,16 @@ function loop(now) {
         state.ui.toast('Lobo domesticado! 🐺');
         return;
       }
+      // Reprodução: alimentar mob passivo com pranchas → love mode
+      if (mAlvo && sel?.i === ITEM.PRANCHAS &&
+          ['vaca','porco','ovelha','galinha'].includes(mAlvo.tipo) &&
+          mAlvo.loveTimer <= 0 && mAlvo.breedCooldown <= 0 && !mAlvo._cria) {
+        mAlvo.loveTimer = 30;
+        state.inv.consumirAtual();
+        Audio.eatCrunch();
+        state.ui.toast(`💕 ${mAlvo.tipo} foi alimentada (love mode 30s)`);
+        return;
+      }
       if (mAlvo && mAlvo.tipo === 'ovelha' && (!mAlvo._tosquiada || mAlvo._tosquiada < Date.now())) {
         // Tosquiar ovelha (sem tesoura — simplificado): pega 1-2 lã, ovelha fica "pelada" por 30s
         const q = 1 + (Math.random() < 0.5 ? 1 : 0);
@@ -419,8 +432,26 @@ function loop(now) {
           }
         } else {
           const sel = state.inv.itemSelecionado();
+          // === Baldes (BUCKET) ===
+          // Vazio em água/lava: pega o fluido. Cheio: deposita o fluido.
+          if (sel && sel.i === ITEM.BUCKET && (t.b === BLOCO.AGUA || t.b === BLOCO.LAVA)) {
+            const fluido = t.b;
+            state.world.set(t.x, t.y, t.z, BLOCO.AR);
+            state.inv.consumirAtual();
+            state.inv.adicionar({ i: fluido === BLOCO.AGUA ? ITEM.BUCKET_AGUA : ITEM.BUCKET_LAVA, q: 1 });
+            Audio.splash();
+            state.ui.toast(`Balde cheio de ${fluido === BLOCO.AGUA ? 'água' : 'lava'}`);
+          } else if (sel && (sel.i === ITEM.BUCKET_AGUA || sel.i === ITEM.BUCKET_LAVA)) {
+            const a = ray.adj;
+            const fluidoBloco = sel.i === ITEM.BUCKET_AGUA ? BLOCO.AGUA : BLOCO.LAVA;
+            state.world.set(a.x, a.y, a.z, fluidoBloco);
+            state.inv.consumirAtual();
+            state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
+            Audio.splash();
+            state.ui.toast(`${fluidoBloco === BLOCO.AGUA ? 'Água' : 'Lava'} despejada`);
+          }
           // Plantar muda: requer ground = GRAMA, posição AR
-          if (sel && sel.i === ITEM.MUDA) {
+          else if (sel && sel.i === ITEM.MUDA) {
             const a = ray.adj;
             if (state.world.plantarMuda(a.x, a.y, a.z)) {
               state.inv.consumirAtual();
@@ -526,6 +557,14 @@ function loop(now) {
     (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0 &&
     !state.player.terceiraPessoa;
   const isRunning = isMoving && !!state.player.input.sprint;
+  // Sprint dust: spawnar partículas a cada ~0.12s ao correr
+  if (isRunning && state.player.noChao) {
+    state._sprintDustAcc = (state._sprintDustAcc || 0) + dt;
+    if (state._sprintDustAcc > 0.12) {
+      state._sprintDustAcc = 0;
+      state.particulas?.spawnSprintDust?.(state.player.pos.x, state.player.pos.y - 1.0, state.player.pos.z);
+    }
+  } else state._sprintDustAcc = 0;
   const bob = state.renderer.atualizarBobbing(dt, isMoving, isRunning);
   const shake = state.renderer.atualizarShake(dt);
   state.renderer.camera.position.x += bob.x + shake.x;

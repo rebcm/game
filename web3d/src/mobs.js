@@ -304,6 +304,10 @@ export class Mob {
     // Galinha: timer pra próximo ovo (paridade Minecraft: 5-10 min,
     // aqui 60-120s pra ser jogável).
     this.proxOvo = 60 + Math.random() * 60;
+    // Reprodução: loveTimer > 0 = em "love mode" pronto pra acasalar.
+    // breedCooldown bloqueia novo acasalamento por 60s pós-spawn de cria.
+    this.loveTimer = 0;
+    this.breedCooldown = 0;
     this.mesh = construirModeloMob(tipo, info);
     if (escala !== 1) this.mesh.scale.set(escala, escala, escala);
     this.mesh.position.set(x, y, z);
@@ -505,6 +509,9 @@ export class Mob {
         Audio.galinha();
       }
     }
+    // Reprodução: decrementa timers
+    if (this.loveTimer > 0) this.loveTimer -= dt;
+    if (this.breedCooldown > 0) this.breedCooldown -= dt;
   }
   vivo() { return this.hp > 0; }
 
@@ -537,11 +544,50 @@ export class MobManager {
     const i = this.mobs.indexOf(m);
     if (i >= 0) this.mobs.splice(i, 1);
   }
+  // Procura pares de mobs do mesmo tipo em love mode próximos e spawna cria.
+  tentarReproducao() {
+    for (let i = 0; i < this.mobs.length; i++) {
+      const a = this.mobs[i];
+      if (!a.vivo() || a.loveTimer <= 0 || a.breedCooldown > 0) continue;
+      for (let j = i + 1; j < this.mobs.length; j++) {
+        const b = this.mobs[j];
+        if (b.tipo !== a.tipo) continue;
+        if (!b.vivo() || b.loveTimer <= 0 || b.breedCooldown > 0) continue;
+        const dx = a.x - b.x, dz = a.z - b.z;
+        if (dx*dx + dz*dz > 9) continue; // 3 blocos
+        // Spawn cria entre os dois (visualmente menor via tamanho=cria)
+        const cx = (a.x + b.x) / 2, cz = (a.z + b.z) / 2;
+        const cy = Math.max(a.y, b.y);
+        const cria = this.spawn(a.tipo, cx, cy, cz);
+        if (cria) {
+          cria.mesh.scale.setScalar(0.6);
+          cria._cria = true;
+          cria._criaUntil = Date.now() + 60000; // 60s pra crescer
+        }
+        a.loveTimer = 0; b.loveTimer = 0;
+        a.breedCooldown = 60; b.breedCooldown = 60;
+        if (state.ui) state.ui.toast(`💕 ${a.tipo} reproduziu!`);
+        return; // 1 par por frame
+      }
+    }
+  }
+  // Faz cria virar adulto após 60s
+  atualizarCrias() {
+    const agora = Date.now();
+    for (const m of this.mobs) {
+      if (m._cria && m._criaUntil && agora >= m._criaUntil) {
+        m.mesh.scale.setScalar(1);
+        m._cria = false;
+      }
+    }
+  }
   atualizar(dt, world, player, sun) {
     this.acc += dt;
     if (this.acc >= this.intervalo) {
       this.acc = 0;
       this.tentarSpawn(world, player, sun);
+      this.tentarReproducao();
+      this.atualizarCrias();
     }
     for (let i = this.mobs.length - 1; i >= 0; i--) {
       const m = this.mobs[i];

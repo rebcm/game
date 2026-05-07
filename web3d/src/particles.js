@@ -73,6 +73,43 @@ export class Particulas {
     this.scene.add(m);
     this.lista.push(m);
   }
+  // Poeira de sprint: pequenas partículas marrons atrás dos pés ao correr.
+  // Spawnadas em batch pelo main loop.
+  spawnSprintDust(x, y, z) {
+    const mat = this._matPara(0xa07442);
+    const m = new THREE.Mesh(this.geoDrip, mat);
+    m.position.set(x + (Math.random()-0.5)*0.3, y + 0.05, z + (Math.random()-0.5)*0.3);
+    m.userData = {
+      vx: (Math.random()-0.5) * 0.6,
+      vy: 0.4 + Math.random() * 0.5,
+      vz: (Math.random()-0.5) * 0.6,
+      life: 0.45,
+      lifeMax: 0.45,
+      isSpark: true,
+    };
+    this.scene.add(m);
+    this.lista.push(m);
+  }
+  // Estrelas de crítico: 5-7 partículas amarelas explosivas em mob hit.
+  spawnCritStars(cx, cy, cz) {
+    for (let i = 0; i < 7; i++) {
+      const ang = (i / 7) * Math.PI * 2;
+      const mat = this._matPara(0xFFEB3B);
+      const m = new THREE.Mesh(this.geoDrip, mat);
+      m.position.set(cx, cy, cz);
+      m.scale.setScalar(1.4);
+      m.userData = {
+        vx: Math.cos(ang) * (1.5 + Math.random()),
+        vy: 0.8 + Math.random() * 1.2,
+        vz: Math.sin(ang) * (1.5 + Math.random()),
+        life: 0.7,
+        lifeMax: 0.7,
+        isSpark: true,
+      };
+      this.scene.add(m);
+      this.lista.push(m);
+    }
+  }
   spawnLavaSpark(cx, cy, cz) {
     const mat = this._matPara(0xFF6F00);
     const m = new THREE.Mesh(this.geoDrip, mat);
