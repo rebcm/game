@@ -115,6 +115,19 @@ export class Particulas {
       this.ambientAcc = 0;
       if (state.world && state.player) this.emitirAmbient(state.world, state.player);
     }
+    // Cave drip ambient: subterrâneo (sem skylight) toca som esporádico
+    // de gota d'água. Paridade Minecraft "cave ambience".
+    this._caveAmbAcc = (this._caveAmbAcc || 0) + dt;
+    if (this._caveAmbAcc > 6 + Math.random() * 14) {
+      this._caveAmbAcc = 0;
+      if (state.world && state.player) {
+        const luz = state.world.getLightAt(
+          Math.floor(state.player.pos.x),
+          Math.floor(state.player.pos.y),
+          Math.floor(state.player.pos.z));
+        if (luz.sky < 4 && state.player.pos.y < 32) Audio.caveDrip();
+      }
+    }
     for (let i = this.lista.length - 1; i >= 0; i--) {
       const p = this.lista[i];
       const u = p.userData;
@@ -336,12 +349,11 @@ class Arrow {
         const ddy = (m.y + 0.8) - this.y;
         const ddz = m.z - this.z;
         if (ddx*ddx + ddy*ddy + ddz*ddz < 0.5) {
-          m.hp -= this.dano;
           Audio.flechaImpacto();
           if (m.tipo === 'zumbi') Audio.zumbiHit(); else Audio.hit();
-          // Knockback
-          m.x += this.vx * 0.05;
-          m.z += this.vz * 0.05;
+          // Knockback velocity = direção da flecha × fator
+          const len = Math.hypot(this.vx, this.vz) || 1;
+          m.tomarDano(this.dano, (this.vx/len) * 5, (this.vz/len) * 5);
           if (state.ui) state.ui.toast(`Acertou ${m.tipo} -${this.dano} 🏹`);
           return false;
         }

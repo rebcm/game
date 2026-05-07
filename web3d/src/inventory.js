@@ -151,7 +151,7 @@ export const Drops = {
       case BLOCO.CARVAO:   return [{ i: ITEM.CARVAO, q: 1 }];
       case BLOCO.FERRO:    return [{ i: ITEM.FERRO, q: 1 }];
       case BLOCO.FOLHA:    return Math.random() < 0.05 ? [{ i: ITEM.PAU, q: 1 }] : [];
-      case BLOCO.VIDRO:    return [];
+      case BLOCO.VIDRO:    return [{ b: BLOCO.VIDRO, q: 1 }];
       case BLOCO.AGUA: case BLOCO.LAVA: return [];
       case BLOCO.BAU: case BLOCO.FORNALHA: case BLOCO.CAMA:
         return [{ b, q: 1 }];

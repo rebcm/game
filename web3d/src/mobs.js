@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { BLOCO, ITEM, WORLD_Y } from './constants.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
+import { spawnArrow } from './particles.js';
 
 export const TIPO_MOB = {
   VACA: 'vaca', GALINHA: 'galinha', PORCO: 'porco', OVELHA: 'ovelha',
@@ -278,6 +279,14 @@ export class Mob {
     // Creeper fuse: armado quando player entra no alcance, dispara em fuseSegundos.
     // Volta a 0 se player sair do alcance — você pode "fugir" de creeper.
     this.creeperFuse = 0;
+    // Knockback velocity (decai por frame). Setada por damage source.
+    this.kbX = 0; this.kbZ = 0;
+    // Pânico: timer de fuga após levar dano (passivos fogem em zigzag rápido).
+    this.panico = 0;
+    // Sunburn (zumbi/esqueleto): timer entre damage ticks de sol.
+    this.sunburn = 0;
+    // Esqueleto: cooldown entre flechadas.
+    this.cooldownFlecha = 1.5 + Math.random();
     this.mesh = construirModeloMob(tipo, info);
     this.mesh.position.set(x, y, z);
     this.partes = this.mesh.userData.partes;
@@ -295,13 +304,39 @@ export class Mob {
         if (dx*dx + dz*dz < 576) Audio.mobCall(this.tipo);
       }
     }
-    if (info.hostil && alvo) {
+    // Pânico: passivo fugindo do player em zigzag (paridade Minecraft)
+    if (this.panico > 0) {
+      this.panico -= dt;
+      const p = state.player;
+      if (p) {
+        // Direção: oposta ao player + ruído pra não ir reto
+        const ang = Math.atan2(this.z - p.pos.z, this.x - p.pos.x);
+        this.dir = ang + (Math.sin(this.fase * 6) * 0.6);
+      }
+    } else if (info.hostil && alvo) {
       this.dir = Math.atan2(alvo.z - this.z, alvo.x - this.x);
     } else {
       this.proxMudanca -= dt;
       if (this.proxMudanca <= 0) {
         this.dir = Math.random() * Math.PI * 2;
         this.proxMudanca = 1.5 + Math.random() * 3;
+      }
+    }
+    // Aplica knockback (velocidade que decai). Move ANTES da locomoção
+    // para que o knockback dure mesmo se o mob estiver parado.
+    if (this.kbX !== 0 || this.kbZ !== 0) {
+      const kdx = this.kbX * dt, kdz = this.kbZ * dt;
+      if (!world.isSolido(Math.floor(this.x + kdx), Math.floor(this.y), Math.floor(this.z))) {
+        this.x += kdx;
+      }
+      if (!world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z + kdz))) {
+        this.z += kdz;
+      }
+      // Decai exponencialmente (≈80% restante por segundo)
+      const decay = Math.exp(-5 * dt);
+      this.kbX *= decay; this.kbZ *= decay;
+      if (Math.abs(this.kbX) < 0.05 && Math.abs(this.kbZ) < 0.05) {
+        this.kbX = 0; this.kbZ = 0;
       }
     }
     let movendo = false;
@@ -352,6 +387,24 @@ export class Mob {
         this.proxTeleport = 5.0 + Math.random() * 3;
       }
     }
+    // Sunburn: zumbi/esqueleto pegam fogo em luz solar plena durante o dia.
+    // Toma 1 dano a cada 1.5s. Paridade Minecraft.
+    if ((this.tipo === 'zumbi' || this.tipo === 'esqueleto') && state.tempoDia !== undefined) {
+      const sun = Math.max(0, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
+      if (sun > 0.5) {
+        const luz = world.getLightAt(Math.floor(this.x), Math.floor(this.y) + 1, Math.floor(this.z));
+        if (luz.sky >= 14) {
+          this.sunburn -= dt;
+          if (this.sunburn <= 0) {
+            this.hp -= 1;
+            this.sunburn = 1.5;
+            Audio.hurt();
+          }
+        } else {
+          this.sunburn = 0.5; // delay pra reentrar no sol
+        }
+      }
+    }
     // Snap vertical: cai até o chão (gravidade) e sobe NO MÁXIMO 1 bloco
     // (auto-step). NUNCA pula vários blocos pra topo da coluna — isso fazia
     // mob "subir" em árvores quando passava por baixo.
@@ -392,7 +445,32 @@ export class Mob {
       }
     }
     if (this.partes && this.partes.cabeca) {
-      this.partes.cabeca.rotation.y = Math.sin(this.fase * 0.5) * 0.15;
+      // Head tracking: cabeça olha pro player se estiver perto. Senão, idle.
+      const p = state.player;
+      let trackY = Math.sin(this.fase * 0.5) * 0.15;
+      let trackX = 0;
+      if (p) {
+        const dx = p.pos.x - this.x, dz = p.pos.z - this.z;
+        const dist2 = dx*dx + dz*dz;
+        if (dist2 < 144) {
+          // World Y angle to face player (three.js conv: 0 = +Z, atan2(x,z))
+          const angWorld = Math.atan2(dx, dz);
+          // Body's world Y rotation (já aplicada no mesh):
+          const bodyYWorld = -this.dir + Math.PI / 2;
+          // Head é filho do mesh → rotation local = world - body
+          let rel = angWorld - bodyYWorld;
+          while (rel > Math.PI)  rel -= 2 * Math.PI;
+          while (rel < -Math.PI) rel += 2 * Math.PI;
+          // Limita pra não virar 180° (pescoço quebrado)
+          rel = Math.max(-1.2, Math.min(1.2, rel));
+          trackY = rel;
+          // Pitch: olha pra cima/baixo se player em altura diferente
+          const dy = (p.pos.y + 1.5) - (this.y + 1.0);
+          trackX = -Math.max(-0.7, Math.min(0.7, Math.atan2(dy, Math.sqrt(dist2))));
+        }
+      }
+      this.partes.cabeca.rotation.y = trackY;
+      this.partes.cabeca.rotation.x = trackX;
     }
     if (info.pula && this.partes.corpo) {
       const sq = 1 + Math.sin(this.pulando * Math.PI) * 0.15;
@@ -400,6 +478,16 @@ export class Mob {
     }
   }
   vivo() { return this.hp > 0; }
+
+  // Aplica dano + knockback (vx, vz são velocidade do empurrão em m/s).
+  // Mobs passivos entram em pânico (fogem em zigzag por 5s).
+  tomarDano(dano, kbX = 0, kbZ = 0) {
+    this.hp -= dano;
+    this.kbX = kbX;
+    this.kbZ = kbZ;
+    const info = MOB_INFO[this.tipo];
+    if (!info.hostil && !info.amigavel) this.panico = 5;
+  }
 }
 
 export class MobManager {
@@ -451,6 +539,20 @@ export class MobManager {
         const ddy = m.y - player.pos.y;
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
         const naAlcance = d2 < info.alcance ** 2;
+        m.cooldownFlecha -= dt;
+        // Esqueleto: ataque ranged com flecha (cooldown 2.5s)
+        if (m.tipo === 'esqueleto' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, Math.max(1, info.dano - 1));
+            m.cooldownFlecha = 2.5;
+          }
+          continue;
+        }
         if (info.explode) {
           // Creeper: arma o fuse quando player entra no alcance.
           // Se player sair antes do fuse acabar, desarma e foge da explosão.

@@ -66,17 +66,16 @@ function atacarMob() {
   const tier = state.inv.melhorEspada();
   let dano = 2 + tier * 2;
   if (isCrit) dano = Math.round(dano * 1.5);
-  m.hp -= dano;
   if (m.tipo === 'zumbi') Audio.zumbiHit();
   else Audio.hit();
   // Damage number flutuante na tela
   if (state.ui?.spawnDamageNumber) {
     state.ui.spawnDamageNumber(m.x, m.y + 1.5, m.z, dano, isCrit);
   }
-  // Knockback no mob
+  // Knockback velocity (smooth) — força ~6 m/s na direção do golpe
   const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux);
-  m.x += dirCam.x * 0.8;
-  m.z += dirCam.z * 0.8;
+  const kbForca = isCrit ? 8.5 : 6.0;
+  m.tomarDano(dano, dirCam.x * kbForca, dirCam.z * kbForca);
   if (m.hp <= 0) {
     const drops = MOB_INFO[m.tipo].drops();
     if (state.player.modo === 'creative') {
@@ -336,9 +335,14 @@ function loop(now) {
           }
           state.world.removerEstadoBloco(t.x, t.y, t.z);
         }
+        const blocoQuebrado = t.b;
         state.world.set(t.x, t.y, t.z, BLOCO.AR);
         // Cascateia areia que estava em cima do bloco removido (gravity)
         state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
+        // Se foi madeira, agenda decay das folhas órfãs em volta
+        if (blocoQuebrado === BLOCO.MADEIRA) {
+          state.world.iniciarDecayFolhas(t.x, t.y, t.z);
+        }
         Audio.quebrar();
         progressoVisual = 0;
         const xpGanho = (t.b === BLOCO.CARVAO) ? 1 :
@@ -396,6 +400,14 @@ function loop(now) {
     const sel = state.inv.itemSelecionado();
     const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
     state.renderer.atualizarMao(dt, state.player.holdE && !!ray, ferr);
+    // Crosshair muda de cor: vermelho se mira mob alcançável, amarelo se
+    // mira bloco quebrável, branco padrão. Feedback de "tem como atacar".
+    const cross = document.getElementById('crosshair');
+    if (cross) {
+      const mobMira = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
+      cross.classList.toggle('alvo-mob', !!mobMira);
+      cross.classList.toggle('alvo-bloco', !mobMira && !!ray);
+    }
   }
 
   // Carrega chunks faltantes

@@ -162,6 +162,19 @@ kbd {
   position: absolute;
   background: #fff;
   mix-blend-mode: difference;
+  transition: background 80ms;
+}
+/* Alvo: crosshair fica vermelho saturado quando mira está num mob/bloco
+   válido (paridade Minecraft real, feedback de "vou acertar"). */
+#crosshair.alvo-mob::before,
+#crosshair.alvo-mob::after {
+  background: #ff5252;
+  mix-blend-mode: normal;
+}
+#crosshair.alvo-bloco::before,
+#crosshair.alvo-bloco::after {
+  background: #ffeb3b;
+  mix-blend-mode: normal;
 }
 #crosshair::before {
   /* barra horizontal */

@@ -233,6 +233,43 @@ export class World {
     return BLOCO_INFO[this.get(x, y, z)].solido;
   }
 
+  // Folha decay: depois que MADEIRA é cortada, FOLHAS num raio R que
+  // não tenham madeira por perto somem (cai item raro). Paridade
+  // Minecraft "leaves decay". BFS limitado pra não escanear mundo todo.
+  iniciarDecayFolhas(x, y, z, raio = 4) {
+    const candidatos = [];
+    for (let dy = -raio; dy <= raio; dy++) {
+      for (let dx = -raio; dx <= raio; dx++) {
+        for (let dz = -raio; dz <= raio; dz++) {
+          if (dx*dx + dy*dy + dz*dz > raio * raio) continue;
+          const fx = x + dx, fy = y + dy, fz = z + dz;
+          if (this.get(fx, fy, fz) !== BLOCO.FOLHA) continue;
+          // Procura madeira em raio menor (R=4) ao redor desta folha
+          let temMadeira = false;
+          for (let ay = -4; ay <= 4 && !temMadeira; ay++) {
+            for (let ax = -4; ax <= 4 && !temMadeira; ax++) {
+              for (let az = -4; az <= 4 && !temMadeira; az++) {
+                if (ax*ax + ay*ay + az*az > 16) continue;
+                if (this.get(fx + ax, fy + ay, fz + az) === BLOCO.MADEIRA) temMadeira = true;
+              }
+            }
+          }
+          if (!temMadeira) candidatos.push({ x: fx, y: fy, z: fz });
+        }
+      }
+    }
+    // Agenda remoção escalonada (visual de decay gradual ao longo de ~3s)
+    for (const c of candidatos) {
+      const delay = 200 + Math.random() * 2800;
+      setTimeout(() => {
+        if (this.get(c.x, c.y, c.z) === BLOCO.FOLHA) {
+          this.set(c.x, c.y, c.z, BLOCO.AR);
+        }
+      }, delay);
+    }
+    return candidatos.length;
+  }
+
   // Aplica gravidade a blocos como AREIA: se há areia logo acima de
   // (x, y, z), cascateia para baixo até encontrar suporte sólido (ou
   // bedrock). Chamado após um bloco ser removido — a coluna inteira
