@@ -16,6 +16,7 @@ import { Renderer } from './render.js';
 import { Player } from './player.js';
 import { Inventario, Drops, Crafting } from './inventory.js';
 import { Achievements } from './achievements.js';
+import { inicializar as initQuality, tickFps as qualityTickFps, aplicarTier, salvarPreferencia, PRESETS } from './quality.js';
 import { MobManager, MOB_INFO } from './mobs.js';
 import {
   Particulas, spawnItemDrop, atualizarItemDrops,
@@ -203,6 +204,12 @@ let ultimoT = 0;
 function init() {
   state.ui = new UI();
   state.inv = new Inventario();
+  // Detecta capacidade do dispositivo e aplica preset adequado.
+  // Roda ANTES do renderer pra que pixelRatio + AA sejam aplicados na
+  // construção. Resultado disponível em state.quality.
+  const q = initQuality();
+  console.log(`[quality] tier=${q.tier} (auto=${q.detectado}, mode=${q.modo})`,
+              `score: mem=${q.info.mem}GB cpu=${q.info.cpu} mob=${q.info.isMobile} gpu=${q.info.gpuInfo}`);
   // Hotbar inicial
   state.inv.adicionar({ b: BLOCO.GRAMA, q: 64 });
   state.inv.adicionar({ b: BLOCO.TERRA, q: 64 });
@@ -302,13 +309,14 @@ function loop(now) {
   const dt = Math.min(0.06, (now - ultimoT) / 1000);
   ultimoT = now;
 
-  // FPS counter
+  // FPS counter + adaptive quality monitor
   state.fpsAcc++;
   state.fpsTimer += dt;
   if (state.fpsTimer >= 1) {
-    document.getElementById('fps').textContent = `${state.fpsAcc} FPS`;
+    document.getElementById('fps').textContent = `${state.fpsAcc} FPS [${state.quality?.tier || '?'}]`;
     state.fpsAcc = 0; state.fpsTimer = 0;
   }
+  qualityTickFps(dt);
 
   const algumPainelAberto = document.querySelector('.painel:not(.hidden)') !== null;
   const pausado = !document.getElementById('pause-menu').classList.contains('hidden');
@@ -515,12 +523,13 @@ function loop(now) {
     }
   }
 
-  // Carrega chunks faltantes
+  // Carrega chunks faltantes — view radius adaptativo do quality tier
   const pcx = Math.floor(state.player.pos.x / CHUNK_SIZE);
   const pcz = Math.floor(state.player.pos.z / CHUNK_SIZE);
+  const VR = state.quality?.viewRadius ?? VIEW_RADIUS;
   let orcamento = state.chunkLoadOrcamento;
-  for (let dx = -VIEW_RADIUS; dx <= VIEW_RADIUS && orcamento > 0; dx++) {
-    for (let dz = -VIEW_RADIUS; dz <= VIEW_RADIUS && orcamento > 0; dz++) {
+  for (let dx = -VR; dx <= VR && orcamento > 0; dx++) {
+    for (let dz = -VR; dz <= VR && orcamento > 0; dz++) {
       if (!state.world.hasChunk(pcx + dx, pcz + dz)) {
         state.world.getChunk(pcx + dx, pcz + dz);
         orcamento--;
@@ -528,11 +537,11 @@ function loop(now) {
     }
   }
   // Build mesh dirty
-  let buildOrc = 4;
+  let buildOrc = state.quality?.chunkMeshBudget ?? 4;
   for (const c of state.world.chunks.values()) {
     if (c.dirty && buildOrc > 0) {
       const dx = c.cx - pcx, dz = c.cz - pcz;
-      if (Math.abs(dx) <= VIEW_RADIUS + 1 && Math.abs(dz) <= VIEW_RADIUS + 1) {
+      if (Math.abs(dx) <= VR + 1 && Math.abs(dz) <= VR + 1) {
         state.renderer.buildChunkMesh(state.world, c);
         buildOrc--;
       }
@@ -541,7 +550,7 @@ function loop(now) {
   // Libera chunks fora de view
   for (const [k, c] of state.world.chunks) {
     const dx = c.cx - pcx, dz = c.cz - pcz;
-    if (Math.abs(dx) > VIEW_RADIUS + 2 || Math.abs(dz) > VIEW_RADIUS + 2) {
+    if (Math.abs(dx) > VR + 2 || Math.abs(dz) > VR + 2) {
       if (c.mesh) state.renderer.liberarChunkMesh(c);
       if (!c.modificado) state.world.chunks.delete(k);
     }

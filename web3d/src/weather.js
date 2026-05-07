@@ -127,10 +127,12 @@ export function atualizarClima(dt) {
     // chance pequena de cobrir o topo de um bloco sólido com NEVE.
     // Tickado a cada 2s — antes era 0.2s e marcava muitos chunks como
     // dirty causando lag de mesh rebuild.
-    state.snowAccAcc = (state.snowAccAcc || 0) + dt;
-    if (state.snowAccAcc >= 2 && state.world && state.player) {
-      state.snowAccAcc = 0;
-      _tentarAcumularNeve();
+    if (state.quality?.enableSnow !== false) {
+      state.snowAccAcc = (state.snowAccAcc || 0) + dt;
+      if (state.snowAccAcc >= 2 && state.world && state.player) {
+        state.snowAccAcc = 0;
+        _tentarAcumularNeve();
+      }
     }
   } else {
     _esconderChuva();

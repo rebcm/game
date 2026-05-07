@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 import { Save } from './save.js';
+import { aplicarTier, salvarPreferencia, carregarPreferencia, detectarTier, PRESETS } from './quality.js';
 
 export const isTouchDevice = (typeof window !== 'undefined') &&
   (('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0);
@@ -195,6 +196,36 @@ export function setupInput() {
       }
     };
   });
+  // Quality selector
+  const refreshQualityUI = () => {
+    const pref = carregarPreferencia();
+    const cur = state.quality?.tier;
+    document.querySelectorAll('.quality-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.quality === pref);
+    });
+    const info = document.getElementById('pause-quality-info');
+    if (info) {
+      const det = detectarTier();
+      info.textContent = pref === 'auto'
+        ? `Auto: ${cur} (detectado: ${det.tier}, ${det.info.gpuInfo.slice(0, 32)})`
+        : `Fixo em ${cur}`;
+    }
+  };
+  document.querySelectorAll('.quality-btn').forEach(btn => {
+    btn.onclick = () => {
+      const q = btn.dataset.quality;
+      salvarPreferencia(q);
+      const tier = q === 'auto' ? detectarTier().tier : q;
+      aplicarTier(tier);
+      state.ui.toast(`Qualidade: ${q === 'auto' ? `auto (${tier})` : tier}`);
+      refreshQualityUI();
+    };
+  });
+  // Atualiza UI sempre que pause é mostrado
+  const observer = new MutationObserver(refreshQualityUI);
+  const pauseEl = document.getElementById('pause-menu');
+  if (pauseEl) observer.observe(pauseEl, { attributes: true, attributeFilter: ['class'] });
+  refreshQualityUI();
 
   // Abas + busca do criativo
   document.querySelectorAll('.criativo-aba').forEach(aba => {

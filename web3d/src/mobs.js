@@ -978,7 +978,7 @@ export class MobManager {
   }
   // Spawn rules por light level (paridade Minecraft).
   tentarSpawn(world, player, sun) {
-    if (this.mobs.length >= 14) return;
+    if (this.mobs.length >= (state.quality?.maxMobs ?? 14)) return;
     const ang = Math.random() * Math.PI * 2;
     const dist = 12 + Math.random() * 8;
     const x = Math.floor(player.pos.x + Math.cos(ang) * dist);

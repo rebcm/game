@@ -12,6 +12,7 @@ import {
 } from './constants.js';
 import { AO_OFFSETS, vertexAOValor, uvCelula } from './utils.js';
 import { corCeuComClima } from './weather.js';
+import { state } from './state.js';
 
 // === Atlas procedural ===
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
@@ -682,16 +683,16 @@ export class Renderer {
     this.canvas = canvas;
     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
     this.scene = new THREE.Scene();
-    // antialias: true + powerPreference high-performance — visual liso
-    // mesmo em 4K/8K. Pixel ratio até 4 (cobre Retina 5K + Ultra HD).
-    // ACES tonemap dá range dinâmico estilo PBR — cor mais rica.
+    // Settings são lidos de state.quality (sistema adaptativo). Default
+    // conservador (medium) se quality.js ainda não rodou.
+    const q = state.quality || { antialias: true, pixelRatio: 2 };
     this.renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      antialias: q.antialias,
       powerPreference: 'high-performance',
       stencil: false,
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatio));
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
