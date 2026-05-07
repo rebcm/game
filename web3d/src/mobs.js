@@ -56,9 +56,9 @@ export const MOB_INFO = {
     cor: 0x263238, sec: 0xb71c1c,
   },
   creeper: {
-    hp: 10, vel: 1.9, hostil: true, dano: 8, alcance: 2.0,
+    hp: 10, vel: 1.9, hostil: true, dano: 8, alcance: 2.5,
     drops: () => Math.random() < 0.5 ? [{ i: ITEM.CARVAO, q: 1 }] : [],
-    cor: 0x2e7d32, sec: 0x1b5e20, explode: true,
+    cor: 0x2e7d32, sec: 0x1b5e20, explode: true, fuseSegundos: 1.5,
   },
   lobo: {
     hp: 12, vel: 2.4, hostil: false, amigavel: true,
@@ -275,6 +275,9 @@ export class Mob {
     this.proxPulo = 1.5;
     this.proxTeleport = 5.0;
     this.proxSom = 4 + Math.random() * 6;
+    // Creeper fuse: armado quando player entra no alcance, dispara em fuseSegundos.
+    // Volta a 0 se player sair do alcance — você pode "fugir" de creeper.
+    this.creeperFuse = 0;
     this.mesh = construirModeloMob(tipo, info);
     this.mesh.position.set(x, y, z);
     this.partes = this.mesh.userData.partes;
@@ -444,17 +447,34 @@ export class MobManager {
       } else {
         m.atualizar(dt, world, null);
       }
-      if (info.hostil && m.cooldownAtaque <= 0) {
+      if (info.hostil) {
         const ddy = m.y - player.pos.y;
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
-        if (d2 < info.alcance ** 2) {
-          if (info.explode) {
-            this.explosao(world, m.x, m.y, m.z, 2);
-            player.aplicarDano(info.dano, 'creeper');
-            m.hp = 0;
-          } else {
-            player.aplicarDano(info.dano, m.tipo);
+        const naAlcance = d2 < info.alcance ** 2;
+        if (info.explode) {
+          // Creeper: arma o fuse quando player entra no alcance.
+          // Se player sair antes do fuse acabar, desarma e foge da explosão.
+          if (naAlcance) {
+            if (m.creeperFuse <= 0) {
+              m.creeperFuse = info.fuseSegundos || 1.5;
+              Audio.creeperHiss();
+            } else {
+              m.creeperFuse -= dt;
+              if (m.creeperFuse <= 0) {
+                this.explosao(world, m.x, m.y, m.z, 2);
+                // Dano cai com a distância (linear até alcance + 1)
+                const dist = Math.sqrt(d2);
+                const fator = Math.max(0, 1 - dist / (info.alcance + 1));
+                if (fator > 0) player.aplicarDano(Math.ceil(info.dano * fator), 'creeper');
+                m.hp = 0;
+              }
+            }
+          } else if (m.creeperFuse > 0) {
+            // Player escapou — desarma silenciosamente
+            m.creeperFuse = 0;
           }
+        } else if (naAlcance && m.cooldownAtaque <= 0) {
+          player.aplicarDano(info.dano, m.tipo);
           m.cooldownAtaque = 1.2;
         }
       }

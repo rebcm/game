@@ -10,6 +10,7 @@ import {
 import { clamp, materialDeBloco } from './utils.js';
 import { Audio } from './audio.js';
 import { state } from './state.js';
+import { spawnItemDrop } from './particles.js';
 
 const _tmpVecFwd   = new THREE.Vector3();
 const _tmpVecRight = new THREE.Vector3();
@@ -318,6 +319,23 @@ export class Player {
       this.hp = 0;
       this.morto = true;
       this.causaMorte = fonte;
+      // Drop do inventário no chão (paridade Minecraft survival).
+      // Skip em creative — você não perde itens em creative.
+      if (this.modo !== 'creative' && state.inv) {
+        let dropped = 0;
+        for (let k = 0; k < state.inv.slots.length; k++) {
+          const it = state.inv.slots[k];
+          if (it && it.q > 0) {
+            // Espalha em 1 bloco de raio pra não empilharem todos no mesmo ponto
+            const ox = (Math.random() - 0.5) * 1.2;
+            const oz = (Math.random() - 0.5) * 1.2;
+            spawnItemDrop({ ...it }, this.pos.x + ox, this.pos.y, this.pos.z + oz);
+            state.inv.slots[k] = null;
+            dropped++;
+          }
+        }
+        if (dropped > 0) state.ui.renderHotbar?.();
+      }
       state.ui.toast(`Você morreu (${fonte})`);
       state.ui.mostrarMorte(fonte);
     } else {

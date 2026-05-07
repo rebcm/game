@@ -233,6 +233,27 @@ export class World {
     return BLOCO_INFO[this.get(x, y, z)].solido;
   }
 
+  // Aplica gravidade a blocos como AREIA: se há areia logo acima de
+  // (x, y, z), cascateia para baixo até encontrar suporte sólido (ou
+  // bedrock). Chamado após um bloco ser removido — a coluna inteira
+  // de areia em cima desce. Paridade Minecraft.
+  aplicarGravidadeBlocos(x, y, z) {
+    let topo = y + 1;
+    let movimentos = 0;
+    while (topo < WORLD_Y && this.get(x, topo, z) === BLOCO.AREIA) {
+      // Acha o destino mais baixo (1 acima do primeiro sólido abaixo)
+      let dest = topo - 1;
+      while (dest >= 0 && this.get(x, dest, z) === BLOCO.AR) dest--;
+      dest += 1;
+      if (dest === topo) break; // areia já está apoiada
+      this.set(x, topo, z, BLOCO.AR);
+      this.set(x, dest, z, BLOCO.AREIA);
+      movimentos++;
+      topo++;
+    }
+    return movimentos;
+  }
+
   // === Iluminação 15 níveis (skylight + blocklight) ===
   // Skylight vertical: desce do topo, fica em 15 enquanto não bater opaco.
   // Blocklight: BFS partindo de fontes emissivas, decaindo 1 por bloco.

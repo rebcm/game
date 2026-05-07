@@ -337,6 +337,8 @@ function loop(now) {
           state.world.removerEstadoBloco(t.x, t.y, t.z);
         }
         state.world.set(t.x, t.y, t.z, BLOCO.AR);
+        // Cascateia areia que estava em cima do bloco removido (gravity)
+        state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
         Audio.quebrar();
         progressoVisual = 0;
         const xpGanho = (t.b === BLOCO.CARVAO) ? 1 :
@@ -376,6 +378,10 @@ function loop(now) {
             // Não coloca bloco onde o player está (paridade Minecraft real)
             if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
               state.world.set(a.x, a.y, a.z, sel.b);
+              // Areia colocada no ar cai na hora (gravidade)
+              if (sel.b === BLOCO.AREIA) {
+                state.world.aplicarGravidadeBlocos(a.x, a.y - 1, a.z);
+              }
               state.inv.consumirAtual();
               Audio.colocar();
               state.particulas.spawnQuebra(a.x, a.y, a.z, sel.b);
