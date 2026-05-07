@@ -112,6 +112,7 @@ export const ITEM = {
   PIC_MADEIRA: 200, PIC_PEDRA: 201, PIC_FERRO: 202, PIC_DIAMANTE: 203,
   ESP_MADEIRA: 210, ESP_PEDRA: 211, ESP_FERRO: 212,
   ARCO: 220, FLECHA: 221,
+  OSSO: 230, MUDA: 231,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -139,6 +140,8 @@ export const ITEM_INFO = {
   [ITEM.ESP_FERRO]:    { nome: 'Espada ferro',     icone: '⚔', tier: 3, ferramenta: 'esp' },
   [ITEM.ARCO]:         { nome: 'Arco',             icone: '🏹', ferramenta: 'arco' },
   [ITEM.FLECHA]:       { nome: 'Flecha',           icone: '➹' },
+  [ITEM.OSSO]:         { nome: 'Osso',             icone: '🦴', ferramenta: 'osso' },
+  [ITEM.MUDA]:         { nome: 'Muda de Carvalho', icone: '🌱', plantavel: true },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },

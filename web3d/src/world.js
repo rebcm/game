@@ -60,6 +60,7 @@ export class World {
     this.chunks = new Map();
     this.bauTesouros = new Map();    // "x,y,z" -> array de 27 slots
     this.fornalhaEstados = new Map(); // "x,y,z" -> {input, combustivel, output, progresso, ativa}
+    this.mudas = new Map();          // "x,y,z" -> {plantadaEm: ms timestamp}
   }
   static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
 
@@ -231,6 +232,53 @@ export class World {
   }
   isSolido(x, y, z) {
     return BLOCO_INFO[this.get(x, y, z)].solido;
+  }
+
+  // === Mudas / crescimento de árvore ===
+  // Planta uma muda na célula (x, y, z). Requer que esteja em AR e o
+  // bloco abaixo seja GRAMA. Retorna true se plantou.
+  plantarMuda(x, y, z) {
+    if (this.get(x, y, z) !== BLOCO.AR) return false;
+    if (this.get(x, y - 1, z) !== BLOCO.GRAMA) return false;
+    this.mudas.set(World.keyXYZ(x, y, z), { plantadaEm: Date.now() });
+    return true;
+  }
+  // Itera mudas pendentes e converte em árvore após 15-25s. Chamado
+  // do main loop. Retorna número de árvores que cresceram nesse tick.
+  atualizarMudas() {
+    const agora = Date.now();
+    let cresceram = 0;
+    for (const [k, m] of this.mudas) {
+      const idade = (agora - m.plantadaEm) / 1000;
+      // tempo varia 15-25s pra não nascerem todas no mesmo frame
+      const tempoNec = m._tempoNec ?? (m._tempoNec = 15 + Math.random() * 10);
+      if (idade < tempoNec) continue;
+      // Decompõe a key
+      const [x, y, z] = k.split(',').map(Number);
+      // Verifica se o lugar ainda é válido (player pode ter quebrado a grama)
+      if (this.get(x - 1 + 1, y - 1, z) !== BLOCO.GRAMA && this.get(x, y - 1, z) !== BLOCO.GRAMA) {
+        this.mudas.delete(k); continue;
+      }
+      // Cresce a árvore (mesma lógica do gerarChunk: tronco + copa)
+      const altura = 4 + (Math.floor(Math.random() * 4));
+      for (let dy = 0; dy < altura; dy++) {
+        if (this.get(x, y + dy, z) === BLOCO.AR) this.set(x, y + dy, z, BLOCO.MADEIRA);
+      }
+      // Copa esférica
+      for (let dx = -2; dx <= 2; dx++) {
+        for (let dz = -2; dz <= 2; dz++) {
+          for (let dy = 0; dy <= 2; dy++) {
+            if (dx*dx + dz*dz + dy*dy <= 5) {
+              const fx = x + dx, fy = y + altura - 1 + dy, fz = z + dz;
+              if (this.get(fx, fy, fz) === BLOCO.AR) this.set(fx, fy, fz, BLOCO.FOLHA);
+            }
+          }
+        }
+      }
+      this.mudas.delete(k);
+      cresceram++;
+    }
+    return cresceram;
   }
 
   // Folha decay: depois que MADEIRA é cortada, FOLHAS num raio R que

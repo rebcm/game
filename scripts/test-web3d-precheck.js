@@ -271,8 +271,11 @@ t('main.js importa atualizarClima',
   /import\s+\{\s*atualizarClima/.test(main));
 t('main.js chama atualizarArrows no loop',
   /atualizarArrows\s*\(\s*dt\s*\)/.test(main));
-t('atacarMob detecta ITEM.ARCO + spawnArrow',
-  /usandoArco[\s\S]{0,400}spawnArrow/.test(main));
+t('atacarMob detecta ITEM.ARCO (entra em charge mode)',
+  /usandoArco[\s\S]{0,400}bowCharging/.test(main),
+  'O arco agora carrega: atacarMob arma bowCharging e soltarArco dispara via spawnArrow.');
+t('soltarArco dispara projétil com spawnArrow',
+  /function soltarArco[\s\S]{0,800}spawnArrow/.test(main));
 t('atacarMob spawn damage number',
   /spawnDamageNumber/.test(main));
 

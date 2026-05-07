@@ -52,10 +52,12 @@ function atacarMob() {
   const sel = state.inv.itemSelecionado();
   const usandoArco = sel && sel.i === ITEM.ARCO && state.inv.contar(undefined, ITEM.FLECHA) > 0;
   if (usandoArco) {
-    // Consome 1 flecha e dispara projétil
-    state.inv.consumir(undefined, ITEM.FLECHA, 1);
-    const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
-    spawnArrow(state.renderer.camera.position, dirCam, 5);
+    // Inicia o charge do arco; quem dispara é o release (F keyup).
+    if (!state.player.bowCharging) {
+      state.player.bowCharging = true;
+      state.player.bowCharge = 0;
+      Audio.bowDraw();
+    }
     return;
   }
   const m = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
@@ -89,6 +91,25 @@ function atacarMob() {
   } else {
     state.ui.toast(`Atingiu ${m.tipo}${isCrit ? ' ⚡' : ''} (-${dano})`);
   }
+}
+
+// === Solta o arco (chamado em F keyup) — dispara flecha com força
+// proporcional ao tempo de charge. Hold máx ~1.2s = full power.
+function soltarArco() {
+  const p = state.player;
+  if (!p.bowCharging) return;
+  const charge = Math.min(1, (p.bowCharge || 0) / 1.2);
+  p.bowCharging = false;
+  p.bowCharge = 0;
+  // Charge mínimo de 0.15s pra evitar tap-spam
+  if (charge < 0.12) return;
+  if (state.inv.contar(undefined, ITEM.FLECHA) <= 0) return;
+  state.inv.consumir(undefined, ITEM.FLECHA, 1);
+  const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+  const dano = Math.round(2 + charge * 8);   // 2 (tap) → 10 (full)
+  const vel  = 18 + charge * 22;             // 18 → 40 m/s
+  spawnArrow(state.renderer.camera.position, dirCam, dano, vel);
+  Audio.bowRelease();
 }
 
 // === Comer item da hotbar ===
@@ -250,7 +271,7 @@ function init() {
   }
   state.player.spawnY = state.player.pos.y;
 
-  setActions({ atacarMob, comerSlot, abrirPainelBau, abrirPainelFornalha, dormir });
+  setActions({ atacarMob, soltarArco, comerSlot, abrirPainelBau, abrirPainelFornalha, dormir });
   setupInput();
   setupTouchControls();
   state.ui.atualizar();
@@ -284,6 +305,11 @@ function loop(now) {
     // Pausa lógica
   } else {
     state.player.atualizar(dt, state.world);
+    // Tick do charge do arco
+    if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
+    // Tick de mudas → cresce em árvore após ~15-25s
+    const cresc = state.world.atualizarMudas();
+    if (cresc > 0) state.ui.toast?.(`🌱 ${cresc > 1 ? cresc + ' mudas cresceram' : 'Muda cresceu em árvore'}`);
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
@@ -359,6 +385,25 @@ function loop(now) {
     // Click direito: interação ou colocar bloco
     if (state.player.cliqueD) {
       state.player.cliqueD = false;
+      // Antes do raycast de bloco, tenta interação com mob mais próximo
+      const mAlvo = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
+      const sel = state.inv.itemSelecionado();
+      if (mAlvo && sel?.i === ITEM.OSSO && mAlvo.tipo === 'lobo' && !mAlvo.domesticado) {
+        mAlvo.domesticado = true;
+        state.inv.consumirAtual();
+        Audio.lobo();
+        state.ui.toast('Lobo domesticado! 🐺');
+        return;
+      }
+      if (mAlvo && mAlvo.tipo === 'ovelha' && (!mAlvo._tosquiada || mAlvo._tosquiada < Date.now())) {
+        // Tosquiar ovelha (sem tesoura — simplificado): pega 1-2 lã, ovelha fica "pelada" por 30s
+        const q = 1 + (Math.random() < 0.5 ? 1 : 0);
+        spawnItemDrop({ b: BLOCO.LA, q }, mAlvo.x, mAlvo.y + 0.5, mAlvo.z);
+        mAlvo._tosquiada = Date.now() + 30000;
+        Audio.ovelha();
+        state.ui.toast(`Ovelha tosquiada (+${q} lã)`);
+        return;
+      }
       if (ray) {
         const t = ray.hit;
         const blocoAlvo = t.b;
@@ -374,7 +419,17 @@ function loop(now) {
           }
         } else {
           const sel = state.inv.itemSelecionado();
-          if (sel && sel.b !== undefined) {
+          // Plantar muda: requer ground = GRAMA, posição AR
+          if (sel && sel.i === ITEM.MUDA) {
+            const a = ray.adj;
+            if (state.world.plantarMuda(a.x, a.y, a.z)) {
+              state.inv.consumirAtual();
+              Audio.colocar();
+              state.ui.toast('Muda plantada — vai crescer em ~20s');
+            } else {
+              state.ui.toast('Mudas só crescem em grama');
+            }
+          } else if (sel && sel.b !== undefined) {
             const a = ray.adj;
             const px = Math.floor(state.player.pos.x);
             const py = Math.floor(state.player.pos.y);

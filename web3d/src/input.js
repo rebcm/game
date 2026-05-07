@@ -112,6 +112,8 @@ export function setupInput() {
         else p.input.sprint = false;
         break;
       case 'ControlLeft': case 'ControlRight': p.sneak = false; break;
+      // Soltar F = libera flecha (se estava carregando o arco)
+      case 'KeyF': _actions?.soltarArco?.(); break;
     }
   });
   // Mouse

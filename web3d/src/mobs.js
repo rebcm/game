@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { BLOCO, ITEM, WORLD_Y } from './constants.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
-import { spawnArrow } from './particles.js';
+import { spawnArrow, spawnItemDrop } from './particles.js';
 
 export const TIPO_MOB = {
   VACA: 'vaca', GALINHA: 'galinha', PORCO: 'porco', OVELHA: 'ovelha',
@@ -48,7 +48,10 @@ export const MOB_INFO = {
   },
   esqueleto: {
     hp: 14, vel: 1.8, hostil: true, dano: 2, alcance: 6.0,
-    drops: () => [{ i: ITEM.PAU, q: 1 }],
+    drops: () => [
+      ...(Math.random() < 0.6 ? [{ i: ITEM.OSSO, q: 1 + (Math.random() < 0.3 ? 1 : 0) }] : []),
+      ...(Math.random() < 0.4 ? [{ i: ITEM.FLECHA, q: 1 + Math.floor(Math.random() * 2) }] : []),
+    ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
   aranha: {
@@ -117,6 +120,12 @@ export function construirModeloMob(tipo, info) {
         p.position.x = dx; p.position.z = dz;
         grp.add(p); pernas.push(p);
       }
+      // Colar (indicador visual de domesticado) — começa escondido.
+      const colar = cubo(0.55, 0.10, 0.55, 0xc62828);
+      colar.position.set(0, 0.50, 0.40);
+      colar.visible = false;
+      grp.add(colar);
+      partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
@@ -263,11 +272,14 @@ export function construirModeloMob(tipo, info) {
 }
 
 export class Mob {
-  constructor(tipo, x, y, z) {
+  constructor(tipo, x, y, z, opts = {}) {
     this.tipo = tipo;
     this.x = x; this.y = y; this.z = z;
     const info = MOB_INFO[tipo];
-    this.hp = info.hp;
+    // Slime tamanho 1-3 (3 = grande, 1 = pequeno). Outros mobs: tamanho 1.
+    this.tamanho = opts.tamanho ?? (tipo === 'slime' ? 3 : 1);
+    const escala = tipo === 'slime' ? this.tamanho / 3 : 1;
+    this.hp = Math.max(1, Math.round(info.hp * (tipo === 'slime' ? this.tamanho / 3 : 1)));
     this.dir = Math.random() * Math.PI * 2;
     this.proxMudanca = 0;
     this.cooldownAtaque = 0;
@@ -287,7 +299,13 @@ export class Mob {
     this.sunburn = 0;
     // Esqueleto: cooldown entre flechadas.
     this.cooldownFlecha = 1.5 + Math.random();
+    // Lobo: domesticado segue o player e ataca mobs hostis.
+    this.domesticado = false;
+    // Galinha: timer pra próximo ovo (paridade Minecraft: 5-10 min,
+    // aqui 60-120s pra ser jogável).
+    this.proxOvo = 60 + Math.random() * 60;
     this.mesh = construirModeloMob(tipo, info);
+    if (escala !== 1) this.mesh.scale.set(escala, escala, escala);
     this.mesh.position.set(x, y, z);
     this.partes = this.mesh.userData.partes;
   }
@@ -476,6 +494,17 @@ export class Mob {
       const sq = 1 + Math.sin(this.pulando * Math.PI) * 0.15;
       this.partes.corpo.scale.set(1.0 / sq, sq, 1.0 / sq);
     }
+    // Mostra colar se lobo foi domesticado
+    if (this.partes.colar) this.partes.colar.visible = !!this.domesticado;
+    // Galinha: solta ovo periodicamente (paridade MC)
+    if (this.tipo === 'galinha') {
+      this.proxOvo -= dt;
+      if (this.proxOvo <= 0) {
+        this.proxOvo = 60 + Math.random() * 60;
+        spawnItemDrop({ i: ITEM.OVO, q: 1 }, this.x, this.y + 0.2, this.z);
+        Audio.galinha();
+      }
+    }
   }
   vivo() { return this.hp > 0; }
 
@@ -497,10 +526,11 @@ export class MobManager {
     this.acc = 0;
     this.intervalo = 2.0;
   }
-  spawn(tipo, x, y, z) {
-    const m = new Mob(tipo, x, y, z);
+  spawn(tipo, x, y, z, opts) {
+    const m = new Mob(tipo, x, y, z, opts);
     this.scene.add(m.mesh);
     this.mobs.push(m);
+    return m;
   }
   remover(m) {
     this.scene.remove(m.mesh);
@@ -515,20 +545,41 @@ export class MobManager {
     }
     for (let i = this.mobs.length - 1; i >= 0; i--) {
       const m = this.mobs[i];
-      if (!m.vivo()) { this.remover(m); continue; }
+      if (!m.vivo()) {
+        // Slime split: ao morrer, slime maior gera 2-3 menores ao redor
+        if (m.tipo === 'slime' && m.tamanho > 1) {
+          const n = 2 + Math.floor(Math.random() * 2);
+          for (let k = 0; k < n; k++) {
+            const ang = (k / n) * Math.PI * 2 + Math.random() * 0.5;
+            const ox = Math.cos(ang) * 0.6, oz = Math.sin(ang) * 0.6;
+            this.spawn('slime', m.x + ox, m.y, m.z + oz, { tamanho: m.tamanho - 1 });
+          }
+        }
+        this.remover(m); continue;
+      }
       const ddx = m.x - player.pos.x, ddz = m.z - player.pos.z;
       if (ddx*ddx + ddz*ddz > 900) { this.remover(m); continue; }
       const info = MOB_INFO[m.tipo];
       if (info.amigavel) {
-        let hostil = null, melhor = 64;
+        // Domesticado vê hostis mais longe (16 blocos vs 8 sem domesticar)
+        let hostil = null, melhor = m.domesticado ? 256 : 64;
         for (const o of this.mobs) {
           if (!MOB_INFO[o.tipo].hostil) continue;
           const d2 = (o.x - m.x)**2 + (o.z - m.z)**2;
           if (d2 < melhor) { melhor = d2; hostil = o; }
         }
-        m.atualizar(dt, world, hostil ? { x: hostil.x, z: hostil.z } : null);
+        let alvoMov = hostil ? { x: hostil.x, z: hostil.z } : null;
+        // Domesticado sem hostil → segue o player se distante (>2 blocos)
+        if (m.domesticado && !hostil) {
+          const dx = player.pos.x - m.x, dz = player.pos.z - m.z;
+          if (dx*dx + dz*dz > 4) alvoMov = { x: player.pos.x, z: player.pos.z };
+        }
+        m.atualizar(dt, world, alvoMov);
         if (hostil && melhor < 2.25 && m.cooldownAtaque <= 0) {
-          hostil.hp -= 4; m.cooldownAtaque = 1.0;
+          const fx = hostil.x - m.x, fz = hostil.z - m.z;
+          const len = Math.hypot(fx, fz) || 1;
+          hostil.tomarDano(4, (fx/len) * 5, (fz/len) * 5);
+          m.cooldownAtaque = 1.0;
         }
       } else if (info.hostil) {
         m.atualizar(dt, world, { x: player.pos.x, z: player.pos.z });

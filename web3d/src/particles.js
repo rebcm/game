@@ -370,10 +370,8 @@ class Arrow {
 
 if (typeof window !== 'undefined') window._arrows = window._arrows || [];
 
-export function spawnArrow(origem, dir, dano = 4) {
+export function spawnArrow(origem, dir, dano = 4, vel = 28) {
   if (!state.renderer) return;
-  // Velocidade base 28 blocos/s na direção da câmera
-  const vel = 28;
   const vx = dir.x * vel, vy = dir.y * vel, vz = dir.z * vel;
   // Spawn um pouco à frente da câmera para não atingir o player
   const a = new Arrow(state.renderer.scene,
