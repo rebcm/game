@@ -47,74 +47,548 @@ function criarAtlas() {
     }
   }
 
-  // Pinta padrão de tijolos.
+  // Pinta padrão de tijolos: mortar cinza + tijolos vermelhos staggered + highlight.
   function pintarTijolo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#7a2828'; ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#cc6e6e';
+    ctx.fillStyle = '#7E7E7E'; ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#B05B36';
     for (let r = 0; r < 4; r++) {
       const offset = (r % 2) * 8;
       for (let c = 0; c < 4; c++) {
         ctx.fillRect(x0 + c * 8 + offset, y0 + r * 8 + 1, 7, 6);
       }
     }
+    ctx.fillStyle = '#C77548';
+    for (let r = 0; r < 4; r++) {
+      const offset = (r % 2) * 8;
+      for (let c = 0; c < 4; c++) {
+        ctx.fillRect(x0 + c * 8 + offset, y0 + r * 8 + 1, 7, 1);
+      }
+    }
   }
 
-  // Pinta padrão de madeira (anéis).
-  function pintarMadeira(idx, lateral = false) {
+  // Pedra com 2 tons de noise (escuro + claro) — paridade Minecraft.
+  function pintarPedra(idx, base, dark, light, intensity = 0.30) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    if (lateral) {
-      ctx.fillStyle = '#8d6e63'; ctx.fillRect(x0, y0, CELL, CELL);
-      ctx.fillStyle = '#5d4037';
-      for (let py = 0; py < CELL; py += 4) {
-        ctx.fillRect(x0, y0 + py, CELL, 1);
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const r = seed / 233280;
+        if (r < intensity / 2)        ctx.fillStyle = dark;
+        else if (r < intensity)       ctx.fillStyle = light;
+        else                          continue;
+        ctx.fillRect(x0 + px, y0 + py, 2, 2);
       }
-    } else {
-      // Topo: anéis concêntricos
-      ctx.fillStyle = '#a1887f'; ctx.fillRect(x0, y0, CELL, CELL);
-      ctx.strokeStyle = '#5d4037'; ctx.lineWidth = 1;
-      for (let r = 4; r < 16; r += 4) {
-        ctx.beginPath(); ctx.arc(x0 + 16, y0 + 16, r, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+
+  // Minério: pedra base + manchas/clusters do veio (paridade Minecraft).
+  // Carvão usa veio escuro, ferro tan, ouro amarelo, diamante ciano.
+  function pintarMinerio(idx, corVeio, corVeioBrilho) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base de pedra
+    ctx.fillStyle = '#7E7E7E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#6E6E6E';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // 3-5 clusters de veio
+    let s = idx * 7919 + 1234;
+    const clusters = 3 + (s % 3);
+    for (let c = 0; c < clusters; c++) {
+      s = (s * 9301 + 49297) % 233280;
+      const cx = (s % 22) + 4;
+      s = (s * 9301 + 49297) % 233280;
+      const cy = (s % 22) + 4;
+      s = (s * 9301 + 49297) % 233280;
+      const tam = 4 + (s % 3);
+      ctx.fillStyle = corVeio;
+      ctx.fillRect(x0 + cx, y0 + cy, tam, tam);
+      ctx.fillStyle = corVeioBrilho;
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, Math.max(1, tam - 2), Math.max(1, tam - 2));
+      // Chips em volta
+      for (let i = 0; i < 2; i++) {
+        s = (s * 9301 + 49297) % 233280;
+        const ox = cx + ((s % 6) - 3);
+        s = (s * 9301 + 49297) % 233280;
+        const oy = cy + ((s % 6) - 3);
+        if (ox >= 0 && ox < CELL - 2 && oy >= 0 && oy < CELL - 2) {
+          ctx.fillStyle = corVeio;
+          ctx.fillRect(x0 + ox, y0 + oy, 2, 2);
+        }
+      }
+    }
+  }
+
+  // Madeira topo: anéis concêntricos de log (paridade Minecraft oak).
+  function pintarMadeiraTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9E7C5C';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.strokeStyle = '#6E5235';
+    ctx.lineWidth = 1;
+    for (let r = 4; r < 16; r += 4) {
+      ctx.beginPath();
+      ctx.arc(x0 + 16, y0 + 16, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = '#4D3A24';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+  }
+
+  // Madeira lateral: bark com grain VERTICAL (não horizontal — corrigido).
+  function pintarMadeiraLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6E5235';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Linhas verticais escuras (grain do bark)
+    ctx.fillStyle = '#4D3A24';
+    for (let px = 2; px < CELL; px += 4) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Variação tonal em pequenos blocos
+    ctx.fillStyle = '#5D4426';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.15) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Folhas: verde escuro com chaos de tons (paridade oak leaves).
+  function pintarFolha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3F7029';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#5C9B45';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#2E5520';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Vidro: claro com moldura escura (frame).
+  function pintarVidro(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#D6F0FF';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#FFFFFF';
+    for (let i = 0; i < CELL; i += 2) {
+      if ((i % 8) < 2) ctx.fillRect(x0 + i, y0 + i, 1, 1);
+    }
+    ctx.fillStyle = '#7AB8D9';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Cacto: verde com cannelura vertical + bordas escuras + espinhos.
+  function pintarCacto(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#37782D';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#4DA03B';
+    ctx.fillRect(x0 + 4,  y0, 1, CELL);
+    ctx.fillRect(x0 + 12, y0, 1, CELL);
+    ctx.fillRect(x0 + 20, y0, 1, CELL);
+    ctx.fillRect(x0 + 28, y0, 1, CELL);
+    ctx.fillStyle = '#E8C39E';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 4) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const positions = [4, 12, 20, 28];
+      const x = positions[seed % 4];
+      ctx.fillRect(x0 + x, y0 + py + 1, 1, 1);
+    }
+    ctx.fillStyle = '#2E5E26';
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Água: azul com ondas horizontais.
+  function pintarAgua(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#2C8FCF';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#1B6EA8';
+    for (let py = 2; py < CELL; py += 4) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    ctx.fillStyle = '#7AC0E5';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+  }
+
+  // Lava: laranja-amarelo caótico com bolhas brilhantes.
+  function pintarLava(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#D44515';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#FFA830';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#FFEB47';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Obsidiana: muito escuro com toques violeta (paridade MC).
+  function pintarObsidiana(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1A1126';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#3D2950';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#0E0815';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Glowstone (luz): amarelo brilhante com células granuladas.
+  function pintarGlowstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#E8B547';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#FFE680';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#A07A28';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Lã: branco com leve granulação cinza.
+  function pintarLa(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#F0F0F0';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#E0E0E0';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Tocha: pau marrom centrado com chama no topo.
+  function pintarTocha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#2A1F12';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#9C7848';
+    ctx.fillRect(x0 + 14, y0 + 12, 4, 16);
+    ctx.fillStyle = '#6E5232';
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 14);
+    ctx.fillRect(x0 + 17, y0 + 14, 1, 14);
+    ctx.fillStyle = '#FFCB47';
+    ctx.fillRect(x0 + 13, y0 + 6, 6, 6);
+    ctx.fillStyle = '#FF8A2A';
+    ctx.fillRect(x0 + 14, y0 + 4, 4, 6);
+    ctx.fillStyle = '#FFEB80';
+    ctx.fillRect(x0 + 15, y0 + 8, 2, 4);
+  }
+
+  // Baú: planks de madeira com dobradiças metálicas e fechadura dourada.
+  function pintarBau(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#A07242';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#7C5630';
+    ctx.fillRect(x0, y0 + 12, CELL, 1);
+    ctx.fillRect(x0 + 8, y0, 1, CELL);
+    ctx.fillRect(x0 + 24, y0, 1, CELL);
+    ctx.fillStyle = '#3A3A3A';
+    ctx.fillRect(x0 + 4,  y0 + 2, 4, 6);
+    ctx.fillRect(x0 + 24, y0 + 2, 4, 6);
+    ctx.fillRect(x0 + 14, y0 + 13, 4, 6);
+    ctx.fillStyle = '#FFD54F';
+    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+    ctx.fillStyle = '#7C5630';
+    let seed = idx * 9301 + 49297;
+    for (let py = 14; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        if (px === 8 || px === 24) continue;
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Fornalha: pedra com abertura preta + brasa laranja.
+  function pintarFornalha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6E6E6E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#5E5E5E';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 8, y0 + 14, 16, 14);
+    ctx.fillStyle = '#FF6F00';
+    ctx.fillRect(x0 + 10, y0 + 24, 12, 4);
+    ctx.fillStyle = '#FFAB40';
+    ctx.fillRect(x0 + 12, y0 + 25, 8, 2);
+    ctx.fillStyle = '#909090';
+    ctx.fillRect(x0 + 7, y0 + 13, 18, 1);
+    ctx.fillRect(x0 + 7, y0 + 13, 1, 16);
+    ctx.fillRect(x0 + 24, y0 + 13, 1, 16);
+  }
+
+  // Cama: travesseiro branco no topo, manta vermelha, frame de madeira.
+  function pintarCama(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#D32F2F';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#F0F0F0';
+    ctx.fillRect(x0 + 4, y0 + 4, 24, 8);
+    ctx.fillStyle = '#D0D0D0';
+    ctx.fillRect(x0 + 4, y0 + 11, 24, 1);
+    ctx.fillStyle = '#6E4F2E';
+    ctx.fillRect(x0,             y0,             2, CELL);
+    ctx.fillRect(x0 + CELL - 2,  y0,             2, CELL);
+    ctx.fillRect(x0,             y0 + CELL - 4, CELL, 4);
+    ctx.fillStyle = '#A02525';
+    let seed = idx * 9301 + 49297;
+    for (let py = 14; py < CELL - 4; py += 2) {
+      for (let px = 2; px < CELL - 2; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.15) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Workbench topo: grid 3x3 de crafting.
+  function pintarWorkbenchTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8B5E2F';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#5D3F1E';
+    ctx.fillRect(x0 + 10, y0,      1, CELL);
+    ctx.fillRect(x0 + 21, y0,      1, CELL);
+    ctx.fillRect(x0,      y0 + 10, CELL, 1);
+    ctx.fillRect(x0,      y0 + 21, CELL, 1);
+    ctx.fillStyle = '#4A3018';
+    ctx.fillRect(x0,            y0,            CELL, 2);
+    ctx.fillRect(x0,            y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0,            y0,            2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0,            2, CELL);
+  }
+
+  // Workbench lado: planks com serra estilizada no centro.
+  function pintarWorkbenchLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8B5E2F';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#5D3F1E';
+    ctx.fillRect(x0, y0 + 10, CELL, 1);
+    ctx.fillRect(x0, y0 + 21, CELL, 1);
+    // Serra (corpo cinza)
+    ctx.fillStyle = '#B0BEC5';
+    ctx.fillRect(x0 + 10, y0 + 14, 16, 4);
+    // Cabo da serra
+    ctx.fillStyle = '#4A3018';
+    ctx.fillRect(x0 + 6, y0 + 14, 4, 4);
+  }
+
+  // Bedrock: chunky 4-pixel blocks com pattern escuro caótico.
+  function pintarBedrock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#525252';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 4) {
+      for (let px = 0; px < CELL; px += 4) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const r = seed / 233280;
+        let cor = null;
+        if (r < 0.30)      cor = '#3a3a3a';
+        else if (r < 0.55) cor = '#666666';
+        if (cor) {
+          ctx.fillStyle = cor;
+          ctx.fillRect(x0 + px, y0 + py, 4, 4);
+        }
+      }
+    }
+    ctx.fillStyle = '#2a2a2a';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
+  // Pinta lateral de grass block: marrom embaixo com faixa verde no topo
+  // (paridade Minecraft — grama "desce" 8px pelos lados antes de virar terra).
+  function pintarGramaLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    const FAIXA = 8; // px de grama no topo da lateral
+    // Base marrom (igual ao lado de terra) cobrindo toda célula
+    ctx.fillStyle = '#8D6E63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído marrom escuro no corpo (terra)
+    ctx.fillStyle = '#6D4C41';
+    let seed = idx * 9301 + 49297;
+    for (let py = FAIXA; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.18) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Faixa verde sólida no topo (a "grama" descendo pela lateral)
+    ctx.fillStyle = '#4CAF50';
+    ctx.fillRect(x0, y0, CELL, FAIXA);
+    // Borda recortada entre verde e marrom (efeito Minecraft "irregular")
+    ctx.fillStyle = '#388E3C';
+    for (let px = 0; px < CELL; px += 2) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const extra = (seed / 233280) < 0.5 ? 0 : 2;
+      ctx.fillRect(x0 + px, y0 + FAIXA - 2 + extra, 2, 2);
+    }
+    // Ruído verde escuro na faixa de grama
+    for (let py = 0; py < FAIXA; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
       }
     }
   }
 
   // === Pinta cada bloco ===
-  // Convenção de índices: top=N, side=N+1, bottom=N+2 (quando precisa de 3 faces)
-  // ou index único quando todos os lados são iguais.
-  pintar(0,  '#4CAF50', '#388E3C'); // grama topo
-  pintar(1,  '#8D6E63', '#6D4C41'); // grama lado (terra com pouca grama)
-  pintar(2,  '#6D4C41', '#5D4037'); // terra
-  pintar(3,  '#9E9E9E', '#757575', 0.30); // pedra
-  pintar(4,  '#FFEB3B', '#FDD835', 0.20); // areia
-  pintarMadeira(5, false);                // madeira topo
-  pintarMadeira(6, true);                 // madeira lado
-  pintar(7,  '#66BB6A', '#388E3C', 0.30); // folha
-  pintarTijolo(8);                        // tijolo
-  pintar(9,  '#B3E5FC', '#81D4FA', 0.18); // vidro (com brilho azulado)
-  pintar(10, '#FFD54F', '#FBC02D');       // ouro
-  pintar(11, '#80DEEA', '#4DD0E1');       // diamante
-  pintar(12, '#FFF9C4', '#FFEE58');       // luz
-  pintar(13, '#ECEFF1', '#CFD8DC', 0.10); // neve
-  pintar(14, '#424242', '#212121', 0.40); // carvão
-  pintar(15, '#CFD8DC', '#B0BEC5', 0.25); // ferro
-  pintar(16, '#388E3C', '#2E7D32');       // cacto
-  pintar(17, '#2196F3', '#1976D2', 0.20); // água
-  pintar(18, '#FF5722', '#FFAB40', 0.40); // lava
-  pintar(19, '#4d3e5e', '#5d4e6e', 0.30); // obsidiana
-  pintar(20, '#6D4C41', '#4E342E');       // workbench topo
-  pintar(21, '#8D6E63', '#5D4037');       // workbench lado
-  pintar(22, '#FAFAFA', '#EEEEEE', 0.10); // lã
-  pintar(23, '#FFB300', '#FF6F00');       // tocha (cor de chama)
-  pintar(24, '#8B5A2B', '#6D4C41');       // baú
-  pintar(25, '#6E6E6E', '#424242');       // fornalha
-  pintar(26, '#E53935', '#C62828');       // cama
-  pintar(27, '#555555', '#4a4a4a', 0.35); // bedrock
-  // Novos blocos decorativos
+  // Convenção: cada índice é uma célula 32×32 do atlas. Mapeamento de
+  // top/side/bottom é feito em `mapa[]` abaixo. Paleta calibrada pra
+  // paridade Minecraft (oak, stone, sand, ores, etc).
+  pintar(0,  '#5DAB54', '#3D8C32', 0.30); // grama topo (mais saturado)
+  pintarGramaLado(1);                     // grama lado (terra + faixa verde)
+  pintar(2,  '#866043', '#6B4A2D', 0.18); // terra (warm brown MC)
+  pintarPedra(3, '#7E7E7E', '#5E5E5E', '#9C9C9C', 0.30); // pedra 2-tone
+  pintar(4,  '#DBC380', '#C7AF6B', 0.18); // areia (BEGE — não amarelo neon)
+  pintarMadeiraTopo(5);                   // madeira topo (anéis)
+  pintarMadeiraLado(6);                   // madeira lado (grain VERTICAL)
+  pintarFolha(7);                         // folha (verde escuro caótico)
+  pintarTijolo(8);                        // tijolo (mortar + bricks)
+  pintarVidro(9);                         // vidro (claro com moldura)
+  pintarMinerio(10, '#F0CB44', '#FFE680'); // ouro (pedra + manchas dourado)
+  pintarMinerio(11, '#3FBFC2', '#7DDDE0'); // diamante (pedra + ciano)
+  pintarGlowstone(12);                    // luz/glowstone (amarelo brilhante)
+  pintar(13, '#F5F5F5', '#E0E0E0', 0.10); // neve (branco)
+  pintarMinerio(14, '#202020', '#404040'); // carvão (pedra + manchas pretas)
+  pintarMinerio(15, '#C5A28A', '#E0C09F'); // ferro (pedra + tan)
+  pintarCacto(16);                        // cacto (cannelura vertical)
+  pintarAgua(17);                         // água (azul com ondas)
+  pintarLava(18);                         // lava (laranja com bolhas)
+  pintarObsidiana(19);                    // obsidiana (escuro + violeta)
+  pintarWorkbenchTopo(20);                // workbench topo (grid)
+  pintarWorkbenchLado(21);                // workbench lado (planks + serra)
+  pintarLa(22);                           // lã (branco granulado)
+  pintarTocha(23);                        // tocha (pau + chama)
+  pintarBau(24);                          // baú (planks + dobradiças)
+  pintarFornalha(25);                     // fornalha (pedra + abertura)
+  pintarCama(26);                         // cama (travesseiro + manta)
+  pintarBedrock(27);                      // bedrock (chunky escuro)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -151,9 +625,13 @@ function criarAtlas() {
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
   texture.colorSpace = THREE.SRGBColorSpace;
+  // side: DoubleSide garante que a face seja visível dos 2 lados — elimina
+  // qualquer chance de "ver através" do bloco devido a backface culling
+  // quando winding está oposta à normal declarada (caso da nossa addFace).
   const material = new THREE.MeshLambertMaterial({
     map: texture,
     vertexColors: true,
+    side: THREE.DoubleSide,
   });
   return { texture, material, mapa, cols: COLS, rows: ROWS };
 }
@@ -387,11 +865,16 @@ export class Renderer {
 
     const faceVisivel = (x, y, z, blocoAtual) => {
       const v = world.get(x, y, z);
-      // Face visível se vizinho é ar OU bloco não-sólido (flores, grama alta)
+      // Face visível se vizinho é ar OU bloco não-sólido (flores, grama alta).
       if (v === BLOCO.AR) return true;
       const vi = BLOCO_INFO[v];
       if (!vi) return true;
-      return !vi.solido;
+      if (!vi.solido) return true;
+      // Folhas precisam renderizar todas as faces mesmo entre folhas vizinhas
+      // (paridade Minecraft "fast graphics") — a copa esférica tem buracos
+      // internos, sem isso dava pra ver através do bloco até o vão atrás.
+      if (blocoAtual === BLOCO.FOLHA && v === BLOCO.FOLHA) return true;
+      return false;
     };
 
     const addFace = (faceShade, uvIdx, faceIdx, sx, sy, sz,
@@ -480,7 +963,10 @@ export class Renderer {
     geo.setIndex(indices);
     geo.computeBoundingSphere();
     chunk.mesh = new THREE.Mesh(geo, this.atlas.material);
-    chunk.mesh.frustumCulled = true;
+    // frustumCulled=false: bounding sphere por vez calcula errado em chunks
+    // muito esparsos e a Three some com o chunk inteiro, deixando o céu/fog
+    // aparecer no lugar dele. Custo aceitável: 169 chunks de view radius.
+    chunk.mesh.frustumCulled = false;
     this.scene.add(chunk.mesh);
     chunk.dirty = false;
   }

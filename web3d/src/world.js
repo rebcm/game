@@ -93,12 +93,11 @@ export class World {
     const v = fbm2(x / 64, z / 64, 4, 2.0, 0.5, this.seed);
     // v vem em ~[-1, 1]. Normaliza para [0, 1] e mapeia para altura.
     const n = (v + 1) * 0.5;
-    return clamp(6 + Math.floor(n * 22), 2, WORLD_Y - 8);
+    return clamp(20 + Math.floor(n * 22), 2, WORLD_Y - 8);
   }
   // Bloco do topo dependendo da altura + zona (areia/grama/neve).
   topoBioma(x, z, h) {
-    if (h <= 4) return BLOCO.AREIA;
-    if (h >= 22) return BLOCO.NEVE;
+    if (h >= 38) return BLOCO.NEVE;
     if (((z + this.seed) % 256 + 256) % 256 > 200) return BLOCO.NEVE;
     if (((z - this.seed) % 256 + 256) % 256 < 76)  return BLOCO.AREIA;
     return BLOCO.GRAMA;
@@ -108,7 +107,7 @@ export class World {
   caverna(x, y, z) {
     if (y <= 4 || y >= WORLD_Y - 4) return false;
     const v = perlin3(x / 18, y / 14, z / 18, this.seed ^ 0xCAFE);
-    return v > 0.42;
+    return v > 0.58;
   }
 
   // Gera (uma única vez) o conteúdo do chunk.

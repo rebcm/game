@@ -4,8 +4,9 @@
 
 import * as THREE from 'three';
 import {
-  BLOCO, BLOCO_INFO, ITEM, ITEM_INFO, ICONE, RECEITAS, CHUNK_SIZE,
+  BLOCO, BLOCO_INFO, ITEM, ITEM_INFO, ICONE, RECEITAS, CHUNK_SIZE, WORLD_Y,
 } from './constants.js';
+import { chunkKey } from './utils.js';
 import { Crafting } from './inventory.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
@@ -573,12 +574,59 @@ export class UI {
     document.getElementById('f3-light').textContent =
       `Sky / Block light: ${luzPlayer.sky} / ${luzPlayer.block}`;
     const tEl = document.getElementById('f3-target');
+    const tMesh  = document.getElementById('f3-target-mesh');
+    const tNeigh = document.getElementById('f3-target-neigh');
+    const tAtlas = document.getElementById('f3-target-atlas');
     if (extra && extra.targetBlock) {
       const t = extra.targetBlock;
-      const nome = BLOCO_INFO[t.b]?.nome || '?';
-      tEl.textContent = `Targeted: ${nome} @ ${t.x},${t.y},${t.z}`;
+      const info = BLOCO_INFO[t.b];
+      const nome = info?.nome || '?';
+      const flags = [
+        info?.solido ? 'solid' : 'non-solid',
+        info?.emiteLuz ? `light=${info.emiteLuz}` : null,
+      ].filter(Boolean).join(',');
+      tEl.textContent = `Targeted: ${nome} [ID ${t.b}, ${flags}] @ ${t.x},${t.y},${t.z}`;
+
+      // Estado do mesh do chunk que contém o bloco-alvo (a transparência
+      // mais comum vem de chunk gerado-mas-sem-mesh ou mesh-dirty).
+      const tcx = Math.floor(t.x / CHUNK_SIZE), tcz = Math.floor(t.z / CHUNK_SIZE);
+      const tchunk = state.world.chunks.get(chunkKey(tcx, tcz));
+      let meshStatus;
+      if (!tchunk)              meshStatus = '⚠ no-chunk';
+      else if (!tchunk.mesh)    meshStatus = '⚠ mesh-null (não construído)';
+      else if (tchunk.dirty)    meshStatus = '⚠ dirty (rebuild pendente)';
+      else                      meshStatus = `built (${tchunk.mesh.geometry?.attributes?.position?.count || 0} verts)`;
+      tMesh.textContent = `Mesh chunk ${tcx},${tcz}: ${meshStatus}`;
+
+      // Vizinhos: face é renderizada se vizinho é AR ou não-sólido.
+      // Marca com ⚠ os lados onde o vizinho é sólido (= face culled).
+      const dirs = [
+        { dx: 0,  dy: 1,  dz: 0,  label: 'TOP' },
+        { dx: 0,  dy: -1, dz: 0,  label: 'BOT' },
+        { dx: 1,  dy: 0,  dz: 0,  label: 'E' },
+        { dx: -1, dy: 0,  dz: 0,  label: 'W' },
+        { dx: 0,  dy: 0,  dz: 1,  label: 'S' },
+        { dx: 0,  dy: 0,  dz: -1, label: 'N' },
+      ];
+      const parts = dirs.map(d => {
+        const nb = state.world.get(t.x + d.dx, t.y + d.dy, t.z + d.dz);
+        const ni = BLOCO_INFO[nb];
+        const culled = ni?.solido && nb !== BLOCO.AR;
+        const tag = culled ? '✗' : '✓'; // ✗ = face culada, ✓ = face renderizada
+        return `${d.label}${tag}${ni?.nome || `?[${nb}]`}`;
+      });
+      tNeigh.textContent = `Neighbors: ${parts.join('  ')}`;
+
+      // Quais células do atlas estão sendo usadas pra esse bloco
+      const am = state.renderer?.atlas?.mapa?.[t.b];
+      tAtlas.textContent = am
+        ? `Atlas: top=${am.top} side=${am.side} bot=${am.bottom}`
+        : `Atlas: ⚠ não-mapeado (BLOCO ${t.b})`;
     } else {
-      tEl.textContent = 'Targeted: --';
+      tEl.textContent  = 'Targeted: --';
+      tMesh.textContent  = 'Mesh: --';
+      tNeigh.textContent = 'Neighbors: --';
+      tAtlas.textContent = 'Atlas: --';
     }
     const memEl = document.getElementById('f3-mem');
     const mem = performance && performance.memory;

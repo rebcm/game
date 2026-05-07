@@ -193,7 +193,6 @@ function init() {
   state.world = new World(42);
   state.player = new Player(state.renderer.camera);
   state.player.controls = new PointerLockControls(state.renderer.camera, document.body);
-  state.renderer.scene.add(state.player.controls.object);
   state.mobMgr = new MobManager(state.renderer.scene);
   state.particulas = new Particulas(state.renderer.scene);
 
