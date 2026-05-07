@@ -82,9 +82,16 @@ export const MOB_INFO = {
 };
 
 // Constrói modelo 3D de um mob com pivots para animação.
+// Cada mob tem detalhes faciais (olhos brancos+pupila preta), focinhos,
+// orelhas, caudas, asas — visual estilo MC mas mais detalhado.
 export function construirModeloMob(tipo, info) {
   const matCor = (c) => new THREE.MeshLambertMaterial({ color: c });
+  const matEmissivo = (c, e = 0.8) => {
+    const m = new THREE.MeshLambertMaterial({ color: c, emissive: c, emissiveIntensity: e });
+    return m;
+  };
   const cubo = (w, h, d, c) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), matCor(c));
+  const cuboEm = (w, h, d, c, e) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), matEmissivo(c, e));
   const grp = new THREE.Group();
   const partes = {};
   // Pivot trick para pernas/braços oscilarem
@@ -96,33 +103,171 @@ export function construirModeloMob(tipo, info) {
     pivot.add(m);
     return pivot;
   };
+  // Helper: par de olhos (esclera branca + pupila preta) na cabeça-alvo,
+  // posicionados em coords LOCAIS à cabeça. Reutilizado por 11 mobs.
+  const olhosPretos = (cabecaMesh, sep, cy, cz, escleraSize = 0.08, pupSize = 0.04) => {
+    const escleraMat = matCor(0xffffff);
+    const pupMat = matCor(0x000000);
+    for (const sx of [-sep, sep]) {
+      const escl = new THREE.Mesh(new THREE.BoxGeometry(escleraSize, escleraSize, 0.02), escleraMat);
+      escl.position.set(sx, cy, cz);
+      cabecaMesh.add(escl);
+      const pup = new THREE.Mesh(new THREE.BoxGeometry(pupSize, pupSize, 0.025), pupMat);
+      pup.position.set(sx, cy, cz + 0.005);
+      cabecaMesh.add(pup);
+    }
+  };
+  // Helper: olho emissivo (zumbi/esqueleto/enderman/aranha — brilham)
+  const olhosBrilhantes = (cabecaMesh, sep, cy, cz, cor, size = 0.08) => {
+    for (const sx of [-sep, sep]) {
+      const o = new THREE.Mesh(new THREE.BoxGeometry(size, size, 0.04), matEmissivo(cor, 1.2));
+      o.position.set(sx, cy, cz);
+      cabecaMesh.add(o);
+    }
+  };
 
   switch (tipo) {
-    case 'vaca':
-    case 'porco':
-    case 'ovelha':
-    case 'lobo': {
-      const corpo = cubo(0.5, 0.5, 0.85, info.cor);
+    case 'vaca': {
+      // Corpo branco com manchas marrons (sec=0x424242)
+      const corpo = cubo(0.65, 0.55, 0.95, info.cor);
       corpo.position.y = 0.65; grp.add(corpo);
-      const cabeca = cubo(0.4, 0.4, 0.4, info.cor);
-      cabeca.position.set(0, 0.7, 0.55); grp.add(cabeca);
-      if (tipo === 'vaca') {
-        const m1 = cubo(0.52, 0.05, 0.2, info.sec);
-        m1.position.set(0, 0.92, 0.05); grp.add(m1);
-        const m2 = cubo(0.52, 0.05, 0.18, info.sec);
-        m2.position.set(0, 0.92, -0.25); grp.add(m2);
+      // Manchas (decorativas)
+      const m1 = cubo(0.66, 0.06, 0.22, info.sec); m1.position.set(0, 0.92, 0.05); grp.add(m1);
+      const m2 = cubo(0.66, 0.06, 0.20, info.sec); m2.position.set(0, 0.92, -0.30); grp.add(m2);
+      const cabeca = cubo(0.42, 0.42, 0.45, info.cor);
+      cabeca.position.set(0, 0.78, 0.62); grp.add(cabeca);
+      olhosPretos(cabeca, 0.11, 0.05, 0.23);
+      // Focinho rosa
+      const focinho = cubo(0.28, 0.22, 0.06, 0xff8a80);
+      focinho.position.set(0, -0.08, 0.24); cabeca.add(focinho);
+      // Narinas
+      for (const sx of [-0.06, 0.06]) {
+        const n = cubo(0.04, 0.04, 0.02, 0x424242);
+        n.position.set(sx, -0.03, 0.27); cabeca.add(n);
       }
+      // Chifres brancos
+      for (const sx of [-0.18, 0.18]) {
+        const c = cubo(0.06, 0.18, 0.06, 0xfafafa);
+        c.position.set(sx, 0.27, -0.05); cabeca.add(c);
+      }
+      // Orelhas
+      for (const sx of [-0.27, 0.27]) {
+        const o = cubo(0.10, 0.08, 0.18, info.cor);
+        o.position.set(sx, 0.10, 0.0); cabeca.add(o);
+      }
+      // Cauda fininha pendurada
+      const cauda = cubo(0.06, 0.40, 0.06, info.cor);
+      cauda.position.set(0, 0.55, -0.5); grp.add(cauda);
+      const caudaTuf = cubo(0.10, 0.08, 0.10, info.sec);
+      caudaTuf.position.set(0, 0.32, -0.5); grp.add(caudaTuf);
+      // Úbere rosado
+      const uber = cubo(0.18, 0.08, 0.20, 0xff80ab);
+      uber.position.set(0, 0.34, -0.20); grp.add(uber);
       const pernas = [];
       for (let i = 0; i < 4; i++) {
-        const dx = (i % 2 === 0 ? -0.15 : 0.15);
-        const dz = (i < 2 ? 0.28 : -0.28);
-        const p = pernaComPivot(0.16, 0.4, 0.16, info.sec, 0.4);
+        const dx = (i % 2 === 0 ? -0.20 : 0.20);
+        const dz = (i < 2 ? 0.32 : -0.32);
+        const p = pernaComPivot(0.18, 0.42, 0.18, info.sec, 0.42);
         p.position.x = dx; p.position.z = dz;
         grp.add(p); pernas.push(p);
       }
-      // Colar (indicador visual de domesticado) — começa escondido.
-      const colar = cubo(0.55, 0.10, 0.55, 0xc62828);
-      colar.position.set(0, 0.50, 0.40);
+      partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'porco': {
+      const corpo = cubo(0.55, 0.50, 0.90, info.cor);
+      corpo.position.y = 0.55; grp.add(corpo);
+      const cabeca = cubo(0.42, 0.40, 0.40, info.cor);
+      cabeca.position.set(0, 0.65, 0.60); grp.add(cabeca);
+      olhosPretos(cabeca, 0.10, 0.04, 0.22);
+      // Focinho rosa escuro com narinas
+      const focinho = cubo(0.22, 0.18, 0.10, info.sec);
+      focinho.position.set(0, -0.06, 0.22); cabeca.add(focinho);
+      for (const sx of [-0.05, 0.05]) {
+        const n = cubo(0.04, 0.04, 0.02, 0x000000);
+        n.position.set(sx, 0.0, 0.27); cabeca.add(n);
+      }
+      // Orelhas triangulares (cubinho inclinado)
+      for (const sx of [-0.16, 0.16]) {
+        const o = cubo(0.10, 0.10, 0.05, info.sec);
+        o.position.set(sx, 0.22, -0.05); cabeca.add(o);
+        o.rotation.z = sx > 0 ? -0.3 : 0.3;
+      }
+      // Cauda enroladinha (cubo pequeno)
+      const cauda = cubo(0.08, 0.16, 0.08, info.cor);
+      cauda.position.set(0, 0.65, -0.50); grp.add(cauda);
+      cauda.rotation.x = 0.5;
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.16 : 0.16);
+        const dz = (i < 2 ? 0.30 : -0.30);
+        const p = pernaComPivot(0.14, 0.30, 0.14, info.sec, 0.30);
+        p.position.x = dx; p.position.z = dz;
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'ovelha': {
+      // Corpo lanudo (escala maior pra parecer fluffy)
+      const corpo = cubo(0.70, 0.65, 1.00, info.cor);
+      corpo.position.y = 0.72; grp.add(corpo);
+      // Cabeça preta (paridade MC)
+      const cabeca = cubo(0.32, 0.34, 0.40, 0x424242);
+      cabeca.position.set(0, 0.85, 0.60); grp.add(cabeca);
+      olhosPretos(cabeca, 0.09, 0.04, 0.22, 0.06, 0.03);
+      // Focinho preto (mesma cor da cabeça, só silhueta)
+      // Orelhas
+      for (const sx of [-0.20, 0.20]) {
+        const o = cubo(0.08, 0.06, 0.12, 0x424242);
+        o.position.set(sx, 0.10, 0.0); cabeca.add(o);
+      }
+      // Cauda fofa pequena
+      const cauda = cubo(0.18, 0.18, 0.14, info.cor);
+      cauda.position.set(0, 0.78, -0.55); grp.add(cauda);
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.20 : 0.20);
+        const dz = (i < 2 ? 0.32 : -0.32);
+        const p = pernaComPivot(0.16, 0.40, 0.16, 0x424242, 0.40);
+        p.position.x = dx; p.position.z = dz;
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'lobo': {
+      const corpo = cubo(0.45, 0.45, 0.85, info.cor);
+      corpo.position.y = 0.55; grp.add(corpo);
+      const cabeca = cubo(0.40, 0.36, 0.40, info.cor);
+      cabeca.position.set(0, 0.62, 0.55); grp.add(cabeca);
+      olhosBrilhantes(cabeca, 0.10, 0.05, 0.22, 0xfff176, 0.06);
+      // Focinho preto
+      const focinho = cubo(0.22, 0.16, 0.18, 0x424242);
+      focinho.position.set(0, -0.06, 0.20); cabeca.add(focinho);
+      // Nariz preto pontudo
+      const nariz = cubo(0.08, 0.06, 0.04, 0x000000);
+      nariz.position.set(0, 0.0, 0.31); cabeca.add(nariz);
+      // Orelhas pontudas (triangular look via cubinho)
+      for (const sx of [-0.15, 0.15]) {
+        const o = cubo(0.08, 0.14, 0.06, info.cor);
+        o.position.set(sx, 0.22, -0.05); cabeca.add(o);
+      }
+      // Cauda longa pendurada
+      const cauda = cubo(0.10, 0.10, 0.36, info.cor);
+      cauda.position.set(0, 0.55, -0.55); grp.add(cauda);
+      cauda.rotation.x = -0.5;
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.13 : 0.13);
+        const dz = (i < 2 ? 0.28 : -0.28);
+        const p = pernaComPivot(0.13, 0.32, 0.13, info.sec, 0.32);
+        p.position.x = dx; p.position.z = dz;
+        grp.add(p); pernas.push(p);
+      }
+      // Colar (visível só quando domesticado)
+      const colar = cubo(0.45, 0.10, 0.45, 0xc62828);
+      colar.position.set(0, 0.42, 0.36);
       colar.visible = false;
       grp.add(colar);
       partes.colar = colar;
@@ -130,43 +275,104 @@ export function construirModeloMob(tipo, info) {
       break;
     }
     case 'galinha': {
-      const corpo = cubo(0.3, 0.35, 0.45, info.cor);
+      const corpo = cubo(0.32, 0.38, 0.45, info.cor);
       corpo.position.y = 0.5; grp.add(corpo);
-      const cabeca = cubo(0.22, 0.25, 0.22, info.cor);
-      cabeca.position.set(0, 0.78, 0.22); grp.add(cabeca);
-      const crista = cubo(0.08, 0.08, 0.18, 0xC62828);
-      crista.position.set(0, 0.95, 0.22); grp.add(crista);
-      const bico = cubo(0.1, 0.08, 0.12, info.sec);
-      bico.position.set(0, 0.76, 0.4); grp.add(bico);
+      const cabeca = cubo(0.24, 0.26, 0.24, info.cor);
+      cabeca.position.set(0, 0.80, 0.22); grp.add(cabeca);
+      olhosPretos(cabeca, 0.08, 0.02, 0.13, 0.05, 0.025);
+      // Crista vermelha tripla (em cima da cabeça)
+      const crista1 = cubo(0.06, 0.10, 0.04, 0xC62828);
+      crista1.position.set(0, 0.18, 0.05); cabeca.add(crista1);
+      const crista2 = cubo(0.06, 0.08, 0.04, 0xC62828);
+      crista2.position.set(0, 0.18, -0.05); cabeca.add(crista2);
+      // Bico amarelo
+      const bico = cubo(0.10, 0.08, 0.14, info.sec);
+      bico.position.set(0, -0.04, 0.18); cabeca.add(bico);
+      // Barbela vermelha sob bico
+      const barbela = cubo(0.06, 0.06, 0.04, 0xC62828);
+      barbela.position.set(0, -0.14, 0.10); cabeca.add(barbela);
+      // Asas (2 cubinhos finos nos lados do corpo)
+      const asaE = cubo(0.05, 0.30, 0.36, info.cor);
+      asaE.position.set(-0.18, 0.50, 0); grp.add(asaE);
+      const asaD = cubo(0.05, 0.30, 0.36, info.cor);
+      asaD.position.set( 0.18, 0.50, 0); grp.add(asaD);
+      // Cauda (penas)
+      const caudaP = cubo(0.20, 0.26, 0.10, info.cor);
+      caudaP.position.set(0, 0.62, -0.28); grp.add(caudaP);
+      caudaP.rotation.x = -0.4;
       const pernas = [];
       for (let i = 0; i < 2; i++) {
-        const p = pernaComPivot(0.07, 0.28, 0.07, info.sec, 0.28);
-        p.position.x = (i === 0 ? -0.1 : 0.1);
+        const p = pernaComPivot(0.06, 0.28, 0.06, info.sec, 0.28);
+        p.position.x = (i === 0 ? -0.10 : 0.10);
         grp.add(p); pernas.push(p);
       }
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
-    case 'zumbi':
-    case 'esqueleto': {
-      const corpo = cubo(0.5, 0.7, 0.25, info.cor);
-      corpo.position.y = 1.0; grp.add(corpo);
-      const cabeca = cubo(0.45, 0.45, 0.45, info.sec);
-      cabeca.position.set(0, 1.6, 0); grp.add(cabeca);
-      const oR = cubo(0.07, 0.07, 0.04, 0xff2222);
-      oR.position.set(-0.1, 1.62, 0.23); grp.add(oR);
-      const oL = cubo(0.07, 0.07, 0.04, 0xff2222);
-      oL.position.set( 0.1, 1.62, 0.23); grp.add(oL);
+    case 'zumbi': {
+      const corpo = cubo(0.55, 0.75, 0.30, info.cor);
+      corpo.position.y = 1.05; grp.add(corpo);
+      const cabeca = cubo(0.48, 0.48, 0.48, info.cor);
+      cabeca.position.set(0, 1.65, 0); grp.add(cabeca);
+      // Olhos vermelho-zumbi (afundados, brilhantes)
+      olhosBrilhantes(cabeca, 0.11, 0.02, 0.245, 0xff3d00, 0.07);
+      // Boca aberta com dentes
+      const boca = cubo(0.20, 0.06, 0.02, 0x1a1a1a);
+      boca.position.set(0, -0.13, 0.245); cabeca.add(boca);
+      // Cabelo bagunçado em cima
+      const cabelo = cubo(0.50, 0.06, 0.50, 0x2e7d32);
+      cabelo.position.set(0, 0.27, 0); cabeca.add(cabelo);
+      // Braços ESTENDIDOS (zumbi clássico)
       const bracos = [];
       for (let i = 0; i < 2; i++) {
-        const b = pernaComPivot(0.18, 0.65, 0.18, info.cor, 1.3);
-        b.position.x = (i === 0 ? -0.34 : 0.34);
+        const b = pernaComPivot(0.18, 0.65, 0.18, info.cor, 1.35);
+        b.position.x = (i === 0 ? -0.36 : 0.36);
+        b.rotation.x = -1.4; // estendido pra frente
         grp.add(b); bracos.push(b);
       }
       const pernas = [];
       for (let i = 0; i < 2; i++) {
-        const p = pernaComPivot(0.2, 0.65, 0.2, info.sec, 0.65);
-        p.position.x = (i === 0 ? -0.12 : 0.12);
+        const p = pernaComPivot(0.20, 0.66, 0.20, info.sec, 0.66);
+        p.position.x = (i === 0 ? -0.13 : 0.13);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
+    case 'esqueleto': {
+      // Corpo magro com costelas
+      const corpo = cubo(0.42, 0.72, 0.18, info.cor);
+      corpo.position.y = 1.04; grp.add(corpo);
+      // Costelas (3 listras horizontais)
+      for (let r = 0; r < 3; r++) {
+        const rib = cubo(0.44, 0.04, 0.20, 0xb0bec5);
+        rib.position.set(0, 1.20 - r * 0.18, 0); grp.add(rib);
+      }
+      // Crânio
+      const cabeca = cubo(0.46, 0.46, 0.46, info.cor);
+      cabeca.position.set(0, 1.65, 0); grp.add(cabeca);
+      // Olhos vazios pretos (cavernosos)
+      for (const sx of [-0.10, 0.10]) {
+        const o = cubo(0.10, 0.12, 0.04, 0x000000);
+        o.position.set(sx, 0.04, 0.235); cabeca.add(o);
+      }
+      // Mandíbula fixa abaixo
+      const mand = cubo(0.34, 0.06, 0.44, info.cor);
+      mand.position.set(0, -0.20, 0); cabeca.add(mand);
+      const dentes = cubo(0.30, 0.04, 0.02, 0xfafafa);
+      dentes.position.set(0, -0.18, 0.20); cabeca.add(dentes);
+      // Braços ossudos finos
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.10, 0.65, 0.10, info.cor, 1.35);
+        b.position.x = (i === 0 ? -0.30 : 0.30);
+        grp.add(b); bracos.push(b);
+      }
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.12, 0.65, 0.12, info.cor, 0.65);
+        p.position.x = (i === 0 ? -0.10 : 0.10);
         grp.add(p); pernas.push(p);
       }
       partes.cabeca = cabeca; partes.corpo = corpo;
@@ -174,44 +380,66 @@ export function construirModeloMob(tipo, info) {
       break;
     }
     case 'aranha': {
-      const corpoTras = cubo(0.7, 0.45, 0.55, info.cor);
-      corpoTras.position.set(0, 0.4, -0.15); grp.add(corpoTras);
-      const cabeca = cubo(0.4, 0.35, 0.4, info.sec);
-      cabeca.position.set(0, 0.4, 0.35); grp.add(cabeca);
-      for (let i = 0; i < 4; i++) {
-        const o = cubo(0.06, 0.06, 0.04, 0xff0000);
-        const x = (i % 2 === 0 ? -0.12 : 0.12);
-        const y = (i < 2 ? 0.5 : 0.4);
-        o.position.set(x, y, 0.55); grp.add(o);
+      const corpoTras = cubo(0.80, 0.50, 0.65, info.cor);
+      corpoTras.position.set(0, 0.45, -0.20); grp.add(corpoTras);
+      // Padrão de hourglass vermelho no traseiro
+      const hg = cubo(0.30, 0.20, 0.04, info.sec);
+      hg.position.set(0, 0.45, -0.50); grp.add(hg);
+      const cabeca = cubo(0.45, 0.40, 0.45, info.sec);
+      cabeca.position.set(0, 0.45, 0.40); grp.add(cabeca);
+      // 8 olhos vermelhos brilhantes em padrão 4×2
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 4; col++) {
+          const o = cuboEm(0.05, 0.05, 0.03, 0xff1744, 1.0);
+          o.position.set(-0.18 + col * 0.12, 0.05 - row * 0.10, 0.235);
+          cabeca.add(o);
+        }
+      }
+      // Presas
+      for (const sx of [-0.08, 0.08]) {
+        const pr = cubo(0.04, 0.10, 0.04, 0xfafafa);
+        pr.position.set(sx, -0.20, 0.20); cabeca.add(pr);
       }
       const pernas = [];
       for (let i = 0; i < 8; i++) {
         const lado = i < 4 ? -1 : 1;
-        const p = pernaComPivot(0.07, 0.5, 0.07, 0x000000, 0.45);
-        p.position.set(lado * 0.3, 0.45,
+        const p = pernaComPivot(0.07, 0.55, 0.07, 0x000000, 0.45);
+        p.position.set(lado * 0.32, 0.45,
           (i < 4 ? i - 1.5 : (i - 5.5)) * 0.16);
-        p.rotation.z = lado * (0.4 + (i % 4) * 0.05);
+        p.rotation.z = lado * (0.5 + (i % 4) * 0.05);
         grp.add(p); pernas.push(p);
       }
       partes.cabeca = cabeca; partes.pernas = pernas;
       break;
     }
     case 'creeper': {
-      const corpo = cubo(0.4, 1.3, 0.4, info.cor);
+      const corpo = cubo(0.45, 1.30, 0.45, info.cor);
       corpo.position.y = 0.95; grp.add(corpo);
-      const cabeca = cubo(0.42, 0.42, 0.42, info.sec);
-      cabeca.position.set(0, 1.7, 0); grp.add(cabeca);
-      const olhoE = cubo(0.1, 0.1, 0.04, 0x000000);
-      olhoE.position.set(-0.1, 1.74, 0.22); grp.add(olhoE);
-      const olhoD = cubo(0.1, 0.1, 0.04, 0x000000);
-      olhoD.position.set(0.1, 1.74, 0.22); grp.add(olhoD);
-      const boca = cubo(0.14, 0.18, 0.04, 0x000000);
-      boca.position.set(0, 1.62, 0.22); grp.add(boca);
+      // Padrão "vine" no corpo (manchas escuras)
+      for (let i = 0; i < 4; i++) {
+        const v = cubo(0.46, 0.12, 0.02, info.sec);
+        v.position.set((i % 2 ? 0.10 : -0.10), 1.30 - i * 0.30, 0.225); grp.add(v);
+      }
+      const cabeca = cubo(0.46, 0.46, 0.46, info.sec);
+      cabeca.position.set(0, 1.72, 0); grp.add(cabeca);
+      // Face clássica creeper: 2 olhos pretos quadrados + boca em cruz
+      for (const sx of [-0.12, 0.12]) {
+        const o = cubo(0.12, 0.12, 0.04, 0x000000);
+        o.position.set(sx, 0.05, 0.235); cabeca.add(o);
+      }
+      // Boca: cubo central + 2 cubinhos descendo (formato MC)
+      const bocaC = cubo(0.10, 0.12, 0.04, 0x000000);
+      bocaC.position.set(0, -0.10, 0.235); cabeca.add(bocaC);
+      for (const sx of [-0.12, 0.12]) {
+        const b = cubo(0.10, 0.10, 0.04, 0x000000);
+        b.position.set(sx, -0.18, 0.235); cabeca.add(b);
+      }
+      // 4 patas curtas (paridade MC creeper)
       const pernas = [];
       for (let i = 0; i < 4; i++) {
-        const dx = (i % 2 === 0 ? -0.1 : 0.1);
-        const dz = (i < 2 ? 0.1 : -0.1);
-        const p = pernaComPivot(0.18, 0.3, 0.18, info.cor, 0.3);
+        const dx = (i % 2 === 0 ? -0.13 : 0.13);
+        const dz = (i < 2 ? 0.13 : -0.13);
+        const p = pernaComPivot(0.18, 0.30, 0.18, info.cor, 0.30);
         p.position.x = dx; p.position.z = dz;
         grp.add(p); pernas.push(p);
       }
@@ -219,39 +447,48 @@ export function construirModeloMob(tipo, info) {
       break;
     }
     case 'slime': {
-      const corpoMat = new THREE.MeshLambertMaterial({ color: info.cor });
-      const corpo = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), corpoMat);
-      corpo.position.y = 0.45; grp.add(corpo);
-      const nucleo = cubo(0.5, 0.5, 0.5, info.sec);
-      nucleo.position.y = 0.45; grp.add(nucleo);
-      const oE = cubo(0.08, 0.08, 0.04, 0x000000);
-      oE.position.set(-0.18, 0.55, 0.46); grp.add(oE);
-      const oD = cubo(0.08, 0.08, 0.04, 0x000000);
-      oD.position.set( 0.18, 0.55, 0.46); grp.add(oD);
-      const boca = cubo(0.16, 0.06, 0.04, 0x000000);
-      boca.position.set(0, 0.42, 0.46); grp.add(boca);
+      // Corpo gelatinoso semi-transparente
+      const corpoMat = new THREE.MeshLambertMaterial({
+        color: info.cor, transparent: true, opacity: 0.78,
+      });
+      const corpo = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.95, 0.95), corpoMat);
+      corpo.position.y = 0.48; grp.add(corpo);
+      // Núcleo interno (visível pela transparência)
+      const nucleo = cubo(0.55, 0.55, 0.55, info.sec);
+      nucleo.position.y = 0.48; grp.add(nucleo);
+      // Cara feliz no núcleo
+      olhosPretos(nucleo, 0.18, 0.10, 0.30, 0.10, 0.05);
+      // Sorriso (curva via 3 cubinhos)
+      const s1 = cubo(0.05, 0.05, 0.04, 0x000000);
+      s1.position.set(-0.14, -0.10, 0.30); nucleo.add(s1);
+      const s2 = cubo(0.18, 0.04, 0.04, 0x000000);
+      s2.position.set(0, -0.14, 0.30); nucleo.add(s2);
+      const s3 = cubo(0.05, 0.05, 0.04, 0x000000);
+      s3.position.set( 0.14, -0.10, 0.30); nucleo.add(s3);
       partes.corpo = corpo; partes.cabeca = nucleo;
       break;
     }
     case 'enderman': {
-      const corpo = cubo(0.4, 1.2, 0.3, info.cor);
-      corpo.position.y = 1.5; grp.add(corpo);
-      const cabeca = cubo(0.45, 0.5, 0.45, info.cor);
-      cabeca.position.set(0, 2.35, 0); grp.add(cabeca);
-      const oE = cubo(0.10, 0.05, 0.04, info.sec);
-      oE.position.set(-0.12, 2.40, 0.23); grp.add(oE);
-      const oD = cubo(0.10, 0.05, 0.04, info.sec);
-      oD.position.set( 0.12, 2.40, 0.23); grp.add(oD);
+      const corpo = cubo(0.40, 1.20, 0.30, info.cor);
+      corpo.position.y = 1.50; grp.add(corpo);
+      const cabeca = cubo(0.48, 0.55, 0.48, info.cor);
+      cabeca.position.set(0, 2.40, 0); grp.add(cabeca);
+      // Olhos magenta brilhantes (paridade MC enderman)
+      olhosBrilhantes(cabeca, 0.13, 0.05, 0.245, info.sec, 0.10);
+      // Boca pequena fechada
+      const boca = cubo(0.10, 0.04, 0.02, 0x000000);
+      boca.position.set(0, -0.12, 0.245); cabeca.add(boca);
       const pernas = [];
       for (let i = 0; i < 2; i++) {
-        const p = pernaComPivot(0.2, 1.0, 0.2, info.cor, 0.95);
+        const p = pernaComPivot(0.20, 1.05, 0.20, info.cor, 0.95);
         p.position.x = (i === 0 ? -0.13 : 0.13);
         grp.add(p); pernas.push(p);
       }
+      // Braços extra-longos (enderman característico)
       const bracos = [];
       for (let i = 0; i < 2; i++) {
-        const b = pernaComPivot(0.18, 1.0, 0.18, info.cor, 1.85);
-        b.position.x = (i === 0 ? -0.32 : 0.32);
+        const b = pernaComPivot(0.18, 1.10, 0.18, info.cor, 1.95);
+        b.position.x = (i === 0 ? -0.30 : 0.30);
         grp.add(b); bracos.push(b);
       }
       partes.cabeca = cabeca; partes.corpo = corpo;

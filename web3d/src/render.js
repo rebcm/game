@@ -682,9 +682,20 @@ export class Renderer {
     this.canvas = canvas;
     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
     this.scene = new THREE.Scene();
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+    // antialias: true + powerPreference high-performance — visual liso
+    // mesmo em 4K/8K. Pixel ratio até 4 (cobre Retina 5K + Ultra HD).
+    // ACES tonemap dá range dinâmico estilo PBR — cor mais rica.
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      powerPreference: 'high-performance',
+      stencil: false,
+    });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
     // Cor inicial — atualizada por atualizarCeu.
     this.scene.background = new THREE.Color(0x87CEEB);
     this.scene.fog = new THREE.Fog(0x87CEEB, 40, CHUNK_SIZE * (VIEW_RADIUS + 0.5));
