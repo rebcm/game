@@ -275,6 +275,12 @@ function init() {
     state.player.spawn.copy(state.player.pos);
     state.ui.toast('Bem-vinda ao mundo 3D!');
   }
+  // Safe-spawn: se posição inicial colide com bloco (dungeon, caverna,
+  // chunk não meshado), sobe até liberar (limite 40 blocos).
+  let safety = 40;
+  while (safety-- > 0 && state.player.colisaoBlocos(state.world, state.player.pos.x, state.player.pos.y, state.player.pos.z)) {
+    state.player.pos.y += 1;
+  }
   state.player.spawnY = state.player.pos.y;
 
   setActions({ atacarMob, soltarArco, comerSlot, abrirPainelBau, abrirPainelFornalha, dormir });
@@ -522,7 +528,7 @@ function loop(now) {
     }
   }
   // Build mesh dirty
-  let buildOrc = 2;
+  let buildOrc = 4;
   for (const c of state.world.chunks.values()) {
     if (c.dirty && buildOrc > 0) {
       const dx = c.cx - pcx, dz = c.cz - pcz;

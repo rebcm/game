@@ -21,7 +21,7 @@ export const state = {
 
   // Estado do mundo / runtime
   tempoDia: 0.25,    // 0..1, ciclo de 4 minutos
-  chunkLoadOrcamento: 2,
+  chunkLoadOrcamento: 3,
   fpsAcc: 0,
   fpsTimer: 0,
 

@@ -132,10 +132,14 @@ export class Particulas {
   emitirAmbient(world, player) {
     if (!world || !player) return;
     const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
-    for (let dx = -8; dx <= 8; dx++)
+    // _temChunk evita auto-gerar chunks só pra ambient — economia de
+    // performance enorme em explorações de longa distância.
+    const _temChunk = (x, z) => world.hasChunk(Math.floor(x / 16), Math.floor(z / 16));
+    for (let dx = -6; dx <= 6; dx++)
       for (let dy = -3; dy <= 3; dy++)
-        for (let dz = -8; dz <= 8; dz++) {
+        for (let dz = -6; dz <= 6; dz++) {
           const x = px + dx, y = py + dy, z = pz + dz;
+          if (!_temChunk(x, z)) continue;
           const b = world.get(x, y, z);
           if (b === BLOCO.FORNALHA && Math.random() < 0.25) {
             const f = world.fornalhaEstados.get(World.keyXYZ(x, y, z));
@@ -143,9 +147,9 @@ export class Particulas {
           }
           if (b === BLOCO.LAVA) {
             if (Math.random() < 0.05 && world.get(x, y + 1, z) === BLOCO.AR) this.spawnLavaSpark(x, y, z);
-            // Lava queima MADEIRA/FOLHA adjacente: chance pequena por tick.
-            // Substitui por AR (drop de carvão se for madeira) e cria smoke.
-            if (Math.random() < 0.04) {
+            // Queima madeira/folha: chance reduzida pra evitar chunk thrashing.
+            // Era 4% por bloco LAVA por tick = mesh rebuild constante.
+            if (Math.random() < 0.008) {
               const dirs = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
               for (const [ax,ay,az] of dirs) {
                 const vx = x+ax, vy = y+ay, vz = z+az;
@@ -156,7 +160,7 @@ export class Particulas {
                   if (vb === BLOCO.MADEIRA) {
                     spawnItemDrop({ i: ITEM.CARVAO, q: 1 }, vx + 0.5, vy + 0.2, vz + 0.5);
                   }
-                  break; // 1 queima por tick
+                  break;
                 }
               }
             }

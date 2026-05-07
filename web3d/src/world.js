@@ -210,10 +210,11 @@ export class World {
         for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.CACTO);
       }
     }
-    // 4. Dungeon subterrânea: 1 chance a cada ~30 chunks. Sala 5×5×4 com
+    // 4. Dungeon subterrânea: 1 chance a cada ~50 chunks. Sala 5×5×4 com
     // baú no centro e tochas nos cantos. Spawnada em y 8-25 (caverna level).
+    // Skip no chunk (0,0) pra não engolir o spawn do player.
     const dungHash = hash2(cx, cz, this.seed ^ 0xD6307) & 0xFFFF;
-    if (dungHash < 1500) { // ~2% por chunk
+    if (dungHash < 1300 && !(cx === 0 && cz === 0)) { // ~2% por chunk
       const cxLocal = 5 + (dungHash & 0x5); // 5..10 dentro do chunk
       const czLocal = 5 + ((dungHash >> 4) & 0x5);
       const cy = 8 + (dungHash >> 8) % 16; // 8..23

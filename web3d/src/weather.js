@@ -125,9 +125,10 @@ export function atualizarClima(dt) {
     }
     // Acúmulo de neve: durante chuva em terreno alto (Y >= 30), há
     // chance pequena de cobrir o topo de um bloco sólido com NEVE.
-    // Spawna ~5 acumulações por segundo num raio de 16 blocos do player.
+    // Tickado a cada 2s — antes era 0.2s e marcava muitos chunks como
+    // dirty causando lag de mesh rebuild.
     state.snowAccAcc = (state.snowAccAcc || 0) + dt;
-    if (state.snowAccAcc >= 0.2 && state.world && state.player) {
+    if (state.snowAccAcc >= 2 && state.world && state.player) {
       state.snowAccAcc = 0;
       _tentarAcumularNeve();
     }
@@ -137,21 +138,20 @@ export function atualizarClima(dt) {
 }
 
 function _tentarAcumularNeve() {
-  // Pega 5 posições aleatórias num raio 16 ao redor do player. Se o topo
-  // for sólido (não AR/AGUA/LAVA/NEVE) E altura >= 30 E o bloco acima
-  // for AR, planta NEVE em cima.
+  // 2 tentativas a cada 2s (era 5 a cada 0.2s = 25× mais carga).
+  // Skip se o chunk-alvo não está loaded — evita force-gen desnecessário.
   const px = Math.floor(state.player.pos.x);
   const pz = Math.floor(state.player.pos.z);
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 2; i++) {
     const dx = Math.floor((Math.random() - 0.5) * 32);
     const dz = Math.floor((Math.random() - 0.5) * 32);
     const x = px + dx, z = pz + dz;
+    if (!state.world.hasChunk(Math.floor(x / 16), Math.floor(z / 16))) continue;
     // Acha o topo sólido (varre de cima pra baixo até 64)
     let y = 50;
     while (y > 0 && state.world.get(x, y, z) === 0) y--; // BLOCO.AR = 0
     if (y < 30) continue; // só em altitude >= 30 (frio)
     const topo = state.world.get(x, y, z);
-    // Não sobrepor água/lava/neve já existente
     if (topo === 0 || topo === 12 /* NEVE */ || topo === 16 /* AGUA */ || topo === 17 /* LAVA */) continue;
     if (state.world.get(x, y + 1, z) !== 0) continue;
     state.world.set(x, y + 1, z, 12 /* BLOCO.NEVE */);
