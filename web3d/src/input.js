@@ -43,6 +43,14 @@ export function setupInput() {
     if (e.repeat) return;
     if (e.code === 'F3') { e.preventDefault(); state.ui.toggleF3(); return; }
     if (e.code === 'F1') { e.preventDefault(); state.ui.toggleHud(); return; }
+    // Tab: solta o mouse SEM abrir menu/pause. Útil pra inspecionar HUD,
+    // mover janela, ou sair do tela cheia sem perder o estado do jogo.
+    if (e.code === 'Tab') {
+      e.preventDefault();
+      try { state.player.controls.unlock(); } catch (_) {}
+      state.ui.toast?.('Mouse liberado — clique no jogo pra travar de novo');
+      return;
+    }
     if (e.code === 'Escape') {
       const painel = document.querySelector('.painel:not(.hidden)');
       if (painel) {

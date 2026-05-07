@@ -349,9 +349,18 @@ export class Mob {
         this.proxTeleport = 5.0 + Math.random() * 3;
       }
     }
-    let h = WORLD_Y;
-    while (h > 0 && !world.isSolido(Math.floor(this.x), h - 1, Math.floor(this.z))) h--;
-    this.y = h;
+    // Snap vertical: cai até o chão (gravidade) e sobe NO MÁXIMO 1 bloco
+    // (auto-step). NUNCA pula vários blocos pra topo da coluna — isso fazia
+    // mob "subir" em árvores quando passava por baixo.
+    const fx = Math.floor(this.x), fz = Math.floor(this.z);
+    let yp = Math.floor(this.y + 0.001);
+    if (world.isSolido(fx, yp, fz)) {
+      // Estamos dentro de um bloco (auto-step de 1). Sobe se houver ar acima.
+      if (!world.isSolido(fx, yp + 1, fz)) yp++;
+    }
+    // Cai até o primeiro chão sólido abaixo.
+    while (yp > 0 && !world.isSolido(fx, yp - 1, fz)) yp--;
+    this.y = yp;
     let yVisual = this.y;
     if (info.pula && this.pulando > 0) {
       yVisual = this.y + Math.sin(this.pulando * Math.PI) * 0.6;
@@ -464,6 +473,9 @@ export class MobManager {
     const luz = world.getLightAt(x, y, z);
     const luzMax = Math.max(luz.sky, luz.block);
     const blocoChao = world.get(x, y - 1, z);
+    // Rejeita spawn em cima de árvore (madeira/folha) — mob não pode
+    // nascer no topo de copa, fica preso e parece "voando".
+    if (blocoChao === BLOCO.MADEIRA || blocoChao === BLOCO.FOLHA) return;
     let tipos;
     if (luzMax <= 7) {
       tipos = ['zumbi', 'esqueleto', 'aranha', 'creeper'];
