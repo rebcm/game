@@ -8,7 +8,7 @@
 
 import * as THREE from 'three';
 import {
-  CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO, VIEW_RADIUS,
+  CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO, VIEW_RADIUS, N_BLOCOS,
 } from './constants.js';
 import { AO_OFFSETS, vertexAOValor, uvCelula } from './utils.js';
 import { corCeuComClima } from './weather.js';
@@ -917,16 +917,29 @@ export class Renderer {
     const SHADE = { top: 1.00, sideX: 0.88, sideZ: 0.78, bottom: 0.70 };
     const AO_FACTOR = [0.72, 0.84, 0.93, 1.00];
 
+    // === OTIMIZAÇÃO 1: pre-cache solid lookup (Uint8 por block ID) ===
+    // BLOCO_INFO[t].solido é hash lookup; cache local Uint8Array é
+    // bem mais rápido (acessado milhares de vezes por chunk).
+    const solidArr = (this._solidCache ||= (() => {
+      const arr = new Uint8Array(N_BLOCOS);
+      for (let i = 0; i < N_BLOCOS; i++) arr[i] = BLOCO_INFO[i]?.solido ? 1 : 0;
+      return arr;
+    })());
+    // Shapes não-cubo (slab, fence etc) também não devem culling normal —
+    // tabela auxiliar.
+    const customShapeArr = (this._shapeCache ||= (() => {
+      const arr = new Uint8Array(N_BLOCOS);
+      for (let i = 0; i < N_BLOCOS; i++) arr[i] = BLOCO_INFO[i]?.shape ? 1 : 0;
+      return arr;
+    })());
+
     const faceVisivel = (x, y, z, blocoAtual) => {
       const v = world.get(x, y, z);
-      // Face visível se vizinho é ar OU bloco não-sólido (flores, grama alta).
       if (v === BLOCO.AR) return true;
-      const vi = BLOCO_INFO[v];
-      if (!vi) return true;
-      if (!vi.solido) return true;
-      // Folhas precisam renderizar todas as faces mesmo entre folhas vizinhas
-      // (paridade Minecraft "fast graphics") — a copa esférica tem buracos
-      // internos, sem isso dava pra ver através do bloco até o vão atrás.
+      if (!solidArr[v]) return true;
+      // Custom shapes não cobrem face inteira — sempre renderiza vizinho
+      if (customShapeArr[v]) return true;
+      // Folhas-folha: paridade MC fast graphics
       if (blocoAtual === BLOCO.FOLHA && v === BLOCO.FOLHA) return true;
       return false;
     };
@@ -960,10 +973,12 @@ export class Renderer {
       const ao2 = vertexAOValor(world, sx, sy, sz, tab[2]);
       const ao3 = vertexAOValor(world, sx, sy, sz, tab[3]);
       const baseShade = faceShade * luzFator;
-      const s0 = baseShade * AO_FACTOR[ao0];
-      const s1 = baseShade * AO_FACTOR[ao1];
-      const s2 = baseShade * AO_FACTOR[ao2];
-      const s3 = baseShade * AO_FACTOR[ao3];
+      // OTIMIZAÇÃO 3: vertex color em Uint8 (0-255 normalizado em vez de
+      // Float32 0-1). 4× menos memória GPU + upload mais rápido.
+      const s0 = (baseShade * AO_FACTOR[ao0] * 255) | 0;
+      const s1 = (baseShade * AO_FACTOR[ao1] * 255) | 0;
+      const s2 = (baseShade * AO_FACTOR[ao2] * 255) | 0;
+      const s3 = (baseShade * AO_FACTOR[ao3] * 255) | 0;
       colors.push(s0, s0, s0, s1, s1, s1, s2, s2, s2, s3, s3, s3);
       // UVs do atlas
       const cellUV = uvCelula(this.atlas, uvIdx);
@@ -988,6 +1003,22 @@ export class Renderer {
           const x = ox + lx, z = oz + lz;
           const cellMap = this.atlas.mapa[t];
           if (!cellMap) continue;
+          // === OTIMIZAÇÃO 2: skip fully-buried blocks ===
+          // Se TODOS 6 vizinhos são sólidos cubos normais (não FOLHA, não
+          // custom shape), bloco está enterrado — nenhuma face visível.
+          // Pula iteração inteira pra economizar 6 lookups + 6 addFace skip.
+          if (t !== BLOCO.FOLHA && !customShapeArr[t]) {
+            const u = world.get(x, y+1, z);
+            const d = world.get(x, y-1, z);
+            const ee = world.get(x+1, y, z);
+            const ww = world.get(x-1, y, z);
+            const ss = world.get(x, y, z+1);
+            const nn = world.get(x, y, z-1);
+            if (solidArr[u] && solidArr[d] && solidArr[ee] && solidArr[ww] && solidArr[ss] && solidArr[nn]
+                && !customShapeArr[u] && !customShapeArr[d] && !customShapeArr[ee] && !customShapeArr[ww] && !customShapeArr[ss] && !customShapeArr[nn]) {
+              continue; // bloco enterrado, skip
+            }
+          }
           const idxTop = cellMap.top, idxSide = cellMap.side, idxBot = cellMap.bottom;
           // === Shapes customizadas (slab, fence, ladder, door) ===
           if (info.shape === 'slab') {
@@ -1064,17 +1095,26 @@ export class Renderer {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
     geo.setAttribute('normal',   new THREE.BufferAttribute(new Float32Array(normals), 3));
-    geo.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors), 3));
+    // Color em Uint8 + normalized=true: GPU lê 0-255 como 0-1 (sem
+    // alocação extra), 4× menor que Float32 mas mesmo fidelity visual.
+    geo.setAttribute('color',    new THREE.BufferAttribute(new Uint8Array(colors), 3, true));
     geo.setAttribute('uv',       new THREE.BufferAttribute(new Float32Array(uvs), 2));
     geo.setIndex(indices);
     geo.computeBoundingSphere();
     chunk.mesh = new THREE.Mesh(geo, this.atlas.material);
-    // frustumCulled=false: bounding sphere por vez calcula errado em chunks
-    // muito esparsos e a Three some com o chunk inteiro, deixando o céu/fog
-    // aparecer no lugar dele. Custo aceitável: 169 chunks de view radius.
     chunk.mesh.frustumCulled = false;
+    chunk.facesCount = positions.length / 12; // 4 verts × 3 = 12 floats por face
     this.scene.add(chunk.mesh);
     chunk.dirty = false;
+  }
+  // Total de faces renderizadas em todos os chunks loaded — F3 perf.
+  contagemFacesTotal() {
+    let total = 0, chunks = 0;
+    if (!state.world) return { total: 0, chunks: 0 };
+    for (const c of state.world.chunks.values()) {
+      if (c.mesh && c.facesCount) { total += c.facesCount; chunks++; }
+    }
+    return { total, chunks };
   }
 
   liberarChunkMesh(chunk) {

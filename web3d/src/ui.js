@@ -753,13 +753,15 @@ export class UI {
     } else memEl.textContent = `Mem: --`;
     const horas = Math.floor((state.tempoDia * 24 + 6) % 24);
     const mins = Math.floor(((state.tempoDia * 24 + 6) % 1) * 60);
-    // Stats globais persistidas (todas as sessões)
+    // Stats globais persistidas (todas as sessões) + perf
     const statsEl = document.getElementById('f3-stats');
     if (statsEl) {
       const s = Save.getStats();
       const min = Math.floor(s.secondsPlayed / 60);
       const online = Multiplayer.jogadoresOnline?.() || 0;
-      statsEl.textContent = `Stats: ${s.mobsKilled} mobs · ${s.blocksBroken} quebrados · ${s.deaths} mortes · ${min} min · 👥 ${online} online`;
+      const fc = state.renderer?.contagemFacesTotal?.() || { total: 0, chunks: 0 };
+      const facesK = (fc.total / 1000).toFixed(1);
+      statsEl.textContent = `Stats: ${s.mobsKilled} mobs · ${s.blocksBroken} quebrados · ${s.deaths}† · ${min}min · 👥${online} · ${facesK}k faces em ${fc.chunks} chunks`;
     }
     document.getElementById('f3-time').textContent =
       `Day time: ${String(horas).padStart(2,'0')}:${String(mins).padStart(2,'0')} (sun ${sun.toFixed(2)})`;
