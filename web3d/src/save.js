@@ -93,7 +93,7 @@ export const Save = {
       for (let k = 0; k < state.inv.slots.length; k++) {
         const s = state.inv.slots[k];
         if (!s) continue;
-        invSerializado.push({ sx: k, b: s.b, i: s.i, q: s.q });
+        invSerializado.push({ sx: k, b: s.b, i: s.i, q: s.q, encant: s.encant, nomeCustom: s.nomeCustom });
       }
       const armSerializada = {};
       for (const peca of Object.keys(state.inv.armadura)) {

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 5, CELL = 32;
+  const COLS = 8, ROWS = 6, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -903,6 +903,55 @@ function criarAtlas() {
     ctx.fillStyle = '#d4a574';
     ctx.fillRect(x0, y0 + 8, CELL, 1);
   }
+  // Bigorna: preto metálico com riscos verticais (estilo MC anvil)
+  function pintarBigornaTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base cinza escuro
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda preta espessa (forma da bigorna no topo)
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 4, y0 + 6, CELL - 8, CELL - 12);
+    // Plataforma de trabalho (mais clara, brilho de aço)
+    ctx.fillStyle = '#5a5a5a';
+    ctx.fillRect(x0 + 8, y0 + 10, CELL - 16, CELL - 20);
+    // Riscos brancos (highlight de aço)
+    ctx.fillStyle = '#888888';
+    ctx.fillRect(x0 + 9,  y0 + 11, CELL - 18, 1);
+    ctx.fillRect(x0 + 9,  y0 + 13, 4, 1);
+    ctx.fillRect(x0 + 19, y0 + 13, 4, 1);
+    // Marcas de uso (riscos diagonais)
+    ctx.fillStyle = '#202020';
+    ctx.fillRect(x0 + 12, y0 + 16, 8, 1);
+    ctx.fillRect(x0 + 14, y0 + 18, 4, 1);
+  }
+  function pintarBigornaLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Forma de bigorna: base larga embaixo + cintura estreita + topo médio
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Base (parte de baixo, ampla)
+    ctx.fillStyle = '#2a2a2a';
+    ctx.fillRect(x0 + 2, y0 + 22, CELL - 4, 8);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0,     y0 + 28, CELL,    4);
+    // Cintura (meio fino)
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 10, y0 + 14, CELL - 20, 8);
+    // Topo (yunque estendido)
+    ctx.fillStyle = '#2a2a2a';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 10);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 2, y0,     CELL - 4, 4);
+    // Highlights laterais (aço polido)
+    ctx.fillStyle = '#666666';
+    ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
+    ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
+  }
   // Lateral abóbora (ridges verticais sem face)
   function pintarPumpkinLado(idx) {
     const col = idx % COLS;
@@ -1098,6 +1147,8 @@ function criarAtlas() {
   pintarPumpkinLado(36);                                   // lateral abóbora (ridges verticais)
   pintarBoloTopo(37);                                      // bolo topo (creme + cereja)
   pintarBoloLado(38);                                      // bolo lado (massa + recheio + glace)
+  pintarBigornaTopo(39);                                   // bigorna topo (yunque)
+  pintarBigornaLado(40);                                   // bigorna lateral (forma da bigorna)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1145,6 +1196,7 @@ function criarAtlas() {
   mapa[BLOCO.PUMPKIN]        = { top: 34, side: 36, bottom: 36 }; // talo cima, ridges lado
   mapa[BLOCO.CARVED_PUMPKIN] = { top: 34, side: 35, bottom: 36 }; // face na frente (lado)
   mapa[BLOCO.BOLO]           = { top: 37, side: 38, bottom: 38 }; // creme cima, lateral em camadas
+  mapa[BLOCO.BIGORNA]        = { top: 39, side: 40, bottom: 40 }; // yunque cima, forma lateral
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

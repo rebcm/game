@@ -542,6 +542,125 @@ export class FishingBobber {
   }
 }
 
+// =====================================================================
+// Firework — foguete que sobe ~10 blocos e explode em estrelas coloridas.
+// Estados: 'subindo' (mesh + trail) → 'explodindo' (N partículas radiais).
+// =====================================================================
+const _CORES_FOGOS = [
+  0xff5252, 0xffeb3b, 0x69f0ae, 0x40c4ff, 0xe040fb, 0xff9100, 0xfff176,
+];
+class Firework {
+  constructor(scene, x, y, z, dirX, dirY, dirZ) {
+    this.scene = scene;
+    this.x = x; this.y = y; this.z = z;
+    // Velocidade: principalmente vertical com leve direção da câmera
+    this.vx = dirX * 2;
+    this.vy = 18 + dirY * 4;
+    this.vz = dirZ * 2;
+    this.estado = 'subindo';
+    this.timer = 1.0 + Math.random() * 0.4; // explode após ~1.0-1.4s
+    this.cor = _CORES_FOGOS[Math.floor(Math.random() * _CORES_FOGOS.length)];
+    this.cor2 = _CORES_FOGOS[Math.floor(Math.random() * _CORES_FOGOS.length)];
+    // Foguete corpo (cilindro pequeno colorido)
+    this.mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(0.10, 0.32, 0.10),
+      new THREE.MeshBasicMaterial({ color: this.cor }),
+    );
+    this.mesh.position.set(x, y, z);
+    this.scene.add(this.mesh);
+    // Partículas da explosão (criadas só no boom)
+    this.bits = [];
+    this.bitsLife = 0;
+  }
+  atualizar(dt) {
+    if (this.estado === 'subindo') {
+      this.x += this.vx * dt;
+      this.y += this.vy * dt;
+      this.z += this.vz * dt;
+      this.vy -= 6 * dt; // arrasto leve
+      this.mesh.position.set(this.x, this.y, this.z);
+      // Spark trail (fumaça atrás)
+      if (Math.random() < 0.5 && state.particulas?.spawnSmoke) {
+        state.particulas.spawnSmoke(this.x, this.y - 0.2, this.z);
+      }
+      this.timer -= dt;
+      if (this.timer <= 0) {
+        this._explodir();
+        Audio.flechaImpacto?.();
+      }
+    } else if (this.estado === 'explodindo') {
+      this.bitsLife += dt;
+      // Atualiza posição das estrelas
+      for (const b of this.bits) {
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        b.z += b.vz * dt;
+        b.vy -= 4 * dt; // gravidade leve
+        b.mesh.position.set(b.x, b.y, b.z);
+        b.mesh.material.opacity = Math.max(0, 1 - this.bitsLife / 1.6);
+      }
+      if (this.bitsLife > 1.6) return false;
+    }
+    return true;
+  }
+  _explodir() {
+    this.estado = 'explodindo';
+    // Remove o foguete corpo
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+    // Spawn 24 estrelas coloridas em direções esféricas
+    const N = 24;
+    const geo = new THREE.SphereGeometry(0.14, 5, 4);
+    for (let i = 0; i < N; i++) {
+      const ang = (i / N) * Math.PI * 2;
+      const phi = (Math.random() - 0.5) * Math.PI;
+      const vel = 5 + Math.random() * 3;
+      const vx = Math.cos(ang) * Math.cos(phi) * vel;
+      const vy = Math.sin(phi) * vel + 0.5;
+      const vz = Math.sin(ang) * Math.cos(phi) * vel;
+      const cor = i % 2 === 0 ? this.cor : this.cor2;
+      const mat = new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: 1 });
+      const m = new THREE.Mesh(geo, mat);
+      m.position.set(this.x, this.y, this.z);
+      this.scene.add(m);
+      this.bits.push({ x: this.x, y: this.y, z: this.z, vx, vy, vz, mesh: m });
+    }
+  }
+  destruir() {
+    if (this.estado === 'subindo') {
+      this.scene.remove(this.mesh);
+      this.mesh.geometry.dispose();
+      this.mesh.material.dispose();
+    }
+    for (const b of this.bits) {
+      this.scene.remove(b.mesh);
+      b.mesh.material.dispose();
+    }
+  }
+}
+
+if (typeof window !== 'undefined') window._fireworks = window._fireworks || [];
+
+export function lancarFoguete(origem, dir) {
+  if (!state.renderer) return;
+  const f = new Firework(state.renderer.scene,
+    origem.x + dir.x * 0.4, origem.y - 0.2, origem.z + dir.z * 0.4,
+    dir.x, dir.y, dir.z);
+  window._fireworks.push(f);
+  Audio.colocar?.();
+}
+
+export function atualizarFireworks(dt) {
+  for (let i = window._fireworks.length - 1; i >= 0; i--) {
+    const f = window._fireworks[i];
+    if (!f.atualizar(dt)) {
+      f.destruir();
+      window._fireworks.splice(i, 1);
+    }
+  }
+}
+
 // Spawna ou recolhe bobber. Estado global em state._fishingBobber.
 export function castFishingLine(origem, dir) {
   if (!state.renderer) return;

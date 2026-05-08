@@ -1208,6 +1208,44 @@ kbd {
   #minimap { width: 80px; height: 80px; }
 }
 
+/* Painel Bigorna — renomeia/repara item ativo */
+#painel-bigorna #bigorna-corpo {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px; min-width: 280px;
+}
+.bigorna-info { display: flex; flex-direction: column; gap: 4px; }
+.bigorna-label { color: #FFD700; font-size: 9px; }
+#bigorna-item {
+  background: rgba(0,0,0,0.4);
+  padding: 8px;
+  border: 2px inset rgba(255,255,255,0.2);
+  font-size: 10px;
+  color: #fff;
+  min-height: 18px;
+}
+#bigorna-nome {
+  background: #222; color: #fff;
+  border: 2px inset rgba(255,255,255,0.2);
+  padding: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+.bigorna-custo {
+  font-size: 9px;
+  color: #80CBC4;
+}
+#bigorna-aplicar {
+  background: #4CAF50;
+  color: #fff;
+  border: 2px outset rgba(255,255,255,0.3);
+  padding: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+#bigorna-aplicar:hover { background: #66BB6A; }
+#bigorna-aplicar:active { border-style: inset; }
+
 /* Bússola HUD — aparece quando ITEM.BUSSOLA está selecionado.
    Anel circular com seta giratória apontando pro spawn + distância. */
 #bussola-hud {

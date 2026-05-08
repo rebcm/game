@@ -243,6 +243,24 @@
     <div id="fornalha-hotbar"></div>
   </div>
 
+  <!-- Painel bigorna: renomeia + repara o item ativo -->
+  <div id="painel-bigorna" class="painel hidden">
+    <div class="painel-header">
+      <span>⚒ Bigorna</span>
+      <button class="fechar" data-painel="painel-bigorna">✕</button>
+    </div>
+    <div id="bigorna-corpo">
+      <div class="bigorna-info">
+        <div class="bigorna-label">Item ativo:</div>
+        <div id="bigorna-item">— nada selecionado —</div>
+      </div>
+      <input id="bigorna-nome" type="text" maxlength="24" placeholder="Novo nome…" />
+      <div class="bigorna-custo">Custo: <span id="bigorna-xp">3</span> XP</div>
+      <button id="bigorna-aplicar">Aplicar</button>
+      <div class="dica">Selecione o item na hotbar antes de abrir. Renomear funciona em qualquer item.</div>
+    </div>
+  </div>
+
   <!-- Tela "dormindo" (efeito de transição) -->
   <div id="dormindo-overlay" class="hidden">
     <div class="dormindo-icone">💤</div>

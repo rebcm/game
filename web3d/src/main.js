@@ -24,6 +24,7 @@ import {
   spawnXPOrb, atualizarXpOrbs, atualizarAmbientTriggers,
   spawnArrow, atualizarArrows,
   castFishingLine, atualizarFishingBobber,
+  lancarFoguete, atualizarFireworks,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
@@ -327,6 +328,53 @@ function abrirPainelBau(x, y, z) {
   try { document.exitPointerLock?.(); } catch (_) {}
 }
 
+// === Painel da bigorna ===
+// Renomeia o item ativo da hotbar. Custo 3 XP por rename. O nome custom
+// fica em sel.nomeCustom e é exibido no tooltip + hotbar.
+function abrirPainelBigorna() {
+  const sel = state.inv.itemSelecionado();
+  const itemEl = document.getElementById('bigorna-item');
+  const nomeInput = document.getElementById('bigorna-nome');
+  const aplicarBtn = document.getElementById('bigorna-aplicar');
+  const xpEl = document.getElementById('bigorna-xp');
+  const custoXP = 3;
+  if (xpEl) xpEl.textContent = custoXP;
+  if (sel && (sel.i !== undefined || sel.b !== undefined)) {
+    const info = sel.i !== undefined ? ITEM_INFO[sel.i] : BLOCO_INFO[sel.b];
+    const ico = sel.i !== undefined ? (ITEM_INFO[sel.i]?.icone || '') : '';
+    const nome = sel.nomeCustom || info?.nome || '?';
+    if (itemEl) itemEl.textContent = `${ico} ${nome} ×${sel.q}`;
+    if (nomeInput) nomeInput.value = sel.nomeCustom || '';
+  } else {
+    if (itemEl) itemEl.textContent = '— nada selecionado —';
+    if (nomeInput) nomeInput.value = '';
+  }
+  if (aplicarBtn) {
+    aplicarBtn.onclick = () => {
+      const sel2 = state.inv.itemSelecionado();
+      if (!sel2 || (sel2.i === undefined && sel2.b === undefined)) {
+        state.ui.toast('Selecione um item na hotbar primeiro');
+        return;
+      }
+      const novo = (nomeInput?.value || '').trim();
+      if (!novo) { state.ui.toast('Digite um nome'); return; }
+      if ((state.player.xp || 0) < custoXP) {
+        state.ui.toast(`Precisa de ${custoXP} XP (você tem ${state.player.xp})`);
+        return;
+      }
+      state.player.xp -= custoXP;
+      sel2.nomeCustom = novo.slice(0, 24);
+      Audio.colocar?.();
+      state.ui.toast(`✏ Renomeado: "${sel2.nomeCustom}"`);
+      state.ui.atualizarXP?.();
+      state.ui.renderHotbar?.();
+      document.getElementById('painel-bigorna').classList.add('hidden');
+    };
+  }
+  document.getElementById('painel-bigorna').classList.remove('hidden');
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
 // === Painel da fornalha ===
 function abrirPainelFornalha(x, y, z) {
   state.fornalhaAtivaCoords = { x, y, z };
@@ -391,6 +439,8 @@ function init() {
   state.inv.adicionar({ i: ITEM.VARA_PESCA, q: 1 });
   state.inv.adicionar({ i: ITEM.BUSSOLA, q: 1 });
   state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
+  state.inv.adicionar({ b: BLOCO.BIGORNA, q: 1 });
+  state.inv.adicionar({ i: ITEM.FOGUETE, q: 8 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -431,7 +481,7 @@ function init() {
     if (save.inv) {
       for (const s of save.inv) {
         if (s.sx === undefined) continue;
-        state.inv.slots[s.sx] = { b: s.b, i: s.i, q: s.q };
+        state.inv.slots[s.sx] = { b: s.b, i: s.i, q: s.q, encant: s.encant, nomeCustom: s.nomeCustom };
       }
     }
     state.inv.armadura = { cabeca: null, torso: null, pernas: null, botas: null };
@@ -686,6 +736,15 @@ function loop(now) {
         castFishingLine(state.renderer.camera.position, dirCam);
         return;
       }
+      // Foguete: lança projétil que sobe e explode — consome 1 unidade
+      const selFog = state.inv.itemSelecionado();
+      if (selFog?.i === ITEM.FOGUETE) {
+        const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+        lancarFoguete(state.renderer.camera.position, dirCam);
+        state.inv.consumirAtual();
+        state.ui.toast('🎆 Foguete!');
+        return;
+      }
       // Pérola do Ender: teleporta player ~6 blocos na direção da câmera
       // (paridade Minecraft real). Funciona em qualquer contexto.
       const selPearl = state.inv.itemSelecionado();
@@ -805,6 +864,7 @@ function loop(now) {
           Audio.colocar?.();
         }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
+        else if (blocoAlvo === BLOCO.BIGORNA) abrirPainelBigorna();
         else if (blocoAlvo === BLOCO.CAMA) dormir();
         else if (blocoAlvo === BLOCO.BOLO) {
           // Comer bolo: restaura fome (4) + 1 hp em survival, consome bloco.
@@ -1062,6 +1122,7 @@ function loop(now) {
   atualizarXpOrbs(dt, ganharXP);
   atualizarArrows(dt);
   atualizarFishingBobber(dt);
+  atualizarFireworks(dt);
   // Skip ambient triggers + clima em heavy frames pra dar prioridade a
   // chunk loading/mesh build (responsividade da movimentação).
   if (!state._heavyFrame || !state._busy) {

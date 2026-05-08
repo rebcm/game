@@ -81,8 +81,9 @@ export const BLOCO = {
   PUMPKIN:       40, // abóbora natural (decoração)
   CARVED_PUMPKIN:41, // abóbora talhada (cabeça do snow golem + helmet)
   BOLO:          42, // bolo: comestível ao right-click (restaura fome, consome bloco)
+  BIGORNA:       43, // bigorna: renomeia item ativo (right-click → painel)
 };
-export const N_BLOCOS = 43;
+export const N_BLOCOS = 44;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -134,6 +135,7 @@ export const BLOCO_INFO = {
   [BLOCO.PUMPKIN]:       { nome: 'Abóbora',          solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
   [BLOCO.CARVED_PUMPKIN]:{ nome: 'Abóbora Talhada',  solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
   [BLOCO.BOLO]:          { nome: 'Bolo',             solido: true,  emiteLuz: 0,  cor: 0xfaf3e0, lateral: 0xb98860 },
+  [BLOCO.BIGORNA]:       { nome: 'Bigorna',          solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
 };
 
 export const ICONE = {
@@ -172,6 +174,7 @@ export const ITEM = {
   VARA_PESCA:   298, // vara de pesca: cast em água, espera bite, reel pra peixe
   BUCKET_LEITE: 243, // balde de leite: ordenha vaca + cura debuffs ao beber
   BUSSOLA:      299, // bússola: aponta pro spawn (HUD com seta)
+  FOGUETE:      244, // foguete: right-click lança, sobe, explode em cores
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -223,6 +226,7 @@ export const ITEM_INFO = {
   [ITEM.VARA_PESCA]:    { nome: 'Vara de Pesca',     icone: '🎣', ferramenta: 'vara' },
   [ITEM.BUCKET_LEITE]:  { nome: 'Balde de Leite',    icone: '🥛' },
   [ITEM.BUSSOLA]:       { nome: 'Bússola',           icone: '🧭' },
+  [ITEM.FOGUETE]:       { nome: 'Foguete',           icone: '🎆' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -294,6 +298,10 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PAU, q: 3}, {b: BLOCO.LA, q: 2}], saida: {i: ITEM.VARA_PESCA, q: 1}, wb: true },
   // Bússola: 4 ferro + 1 ouro (proxy de redstone) — aponta pro spawn
   { custos: [{i: ITEM.FERRO, q: 4}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.BUSSOLA, q: 1}, wb: true },
+  // Bigorna: 8 ferro (proxy de bloco de ferro × 3 + 4 lingotes — simplificado)
+  { custos: [{i: ITEM.FERRO, q: 8}], saida: {b: BLOCO.BIGORNA, q: 1}, wb: true },
+  // Foguete: 1 lã (proxy de papel) + 1 carvão (proxy de pólvora) → 4 foguetes
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.FOGUETE, q: 4}, wb: false },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

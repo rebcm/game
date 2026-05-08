@@ -326,14 +326,18 @@ export class UI {
     const el = this.elTooltip;
     if (!el || !slot) { this._tooltipEsconder(); return; }
     const linhas = [];
+    // Nome custom da bigorna sobrescreve o nome padrão (com estilo itálico)
+    const renderNome = (padrao) => slot.nomeCustom
+      ? `<div class="tt-nome" style="font-style:italic;color:#FFD54F">"${slot.nomeCustom}"</div><div class="tt-tipo" style="font-size:7px;opacity:0.7">${padrao}</div>`
+      : `<div class="tt-nome">${padrao}</div>`;
     if (slot.b !== undefined) {
       const info = BLOCO_INFO[slot.b];
-      linhas.push(`<div class="tt-nome">${info?.nome ?? 'Bloco'}</div>`);
+      linhas.push(renderNome(info?.nome ?? 'Bloco'));
       linhas.push(`<div class="tt-tipo">Bloco · ${slot.q} un.</div>`);
       if (info?.emiteLuz) linhas.push(`<div class="tt-tier">Emite luz: ${info.emiteLuz}</div>`);
     } else if (slot.i !== undefined) {
       const info = ITEM_INFO[slot.i];
-      linhas.push(`<div class="tt-nome">${info?.nome ?? 'Item'}</div>`);
+      linhas.push(renderNome(info?.nome ?? 'Item'));
       const tipo = info?.armadura ? `Armadura (${info.armadura})`
                 : info?.ferramenta ? `Ferramenta (${info.ferramenta})`
                 : info?.nutricao ? 'Comida' : 'Item';
