@@ -952,6 +952,37 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Beacon: vidro azul cristalino com núcleo brilhante + frame escuro
+  function pintarBeacon(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Frame externo (obsidiana escura)
+    ctx.fillStyle = '#311b92';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cristal interno azul/ciano
+    ctx.fillStyle = '#00bcd4';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    // Brilho central (núcleo radiante)
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
+    ctx.fillStyle = '#e0f7fa';
+    ctx.fillRect(x0 + 12, y0 + 12, CELL - 24, CELL - 24);
+    // Núcleo branco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Reflexos diagonais (efeito cristal)
+    ctx.fillStyle = '#b2ebf2';
+    ctx.fillRect(x0 + 6,  y0 + 6,  2, 2);
+    ctx.fillRect(x0 + 24, y0 + 6,  2, 2);
+    ctx.fillRect(x0 + 6,  y0 + 24, 2, 2);
+    ctx.fillRect(x0 + 24, y0 + 24, 2, 2);
+    // Linhas conectando ao núcleo (energia)
+    ctx.fillStyle = '#26c6da';
+    ctx.fillRect(x0 + 8,  y0 + 16, CELL - 16, 1);
+    ctx.fillRect(x0 + 16, y0 + 8,  1, CELL - 16);
+  }
+
   // Lateral abóbora (ridges verticais sem face)
   function pintarPumpkinLado(idx) {
     const col = idx % COLS;
@@ -1149,6 +1180,7 @@ function criarAtlas() {
   pintarBoloLado(38);                                      // bolo lado (massa + recheio + glace)
   pintarBigornaTopo(39);                                   // bigorna topo (yunque)
   pintarBigornaLado(40);                                   // bigorna lateral (forma da bigorna)
+  pintarBeacon(41);                                        // beacon (cristal azul brilhante)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1197,6 +1229,7 @@ function criarAtlas() {
   mapa[BLOCO.CARVED_PUMPKIN] = { top: 34, side: 35, bottom: 36 }; // face na frente (lado)
   mapa[BLOCO.BOLO]           = { top: 37, side: 38, bottom: 38 }; // creme cima, lateral em camadas
   mapa[BLOCO.BIGORNA]        = { top: 39, side: 40, bottom: 40 }; // yunque cima, forma lateral
+  mapa[BLOCO.BEACON]         = { top: 41, side: 41, bottom: 41 }; // cristal em todas as faces
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -1820,12 +1853,13 @@ export class Renderer {
     this.atlas.atualizarAnimacao?.(this._animFrame);
   }
 
-  atualizarFOV(dt, correndo) {
+  atualizarFOV(dt, correndo, zooming) {
     const base = this.fovBase || 70;
-    const alvo = base + (correndo ? 8 : 0);
+    // Zoom da luneta tem prioridade sobre sprint FOV
+    const alvo = zooming ? 18 : (base + (correndo ? 8 : 0));
     const atual = this.camera.fov;
     if (Math.abs(atual - alvo) < 0.01) return;
-    const k = Math.min(1, 10 * dt);
+    const k = zooming ? Math.min(1, 18 * dt) : Math.min(1, 10 * dt);
     this.camera.fov = atual + (alvo - atual) * k;
     this.camera.updateProjectionMatrix();
   }
@@ -1975,6 +2009,43 @@ export class Renderer {
         l.visible = false;
       }
     }
+  }
+
+  // === Beacon beams ===
+  // Cilindro azul transparente alto subindo do bloco do beacon até o céu.
+  // _beamMeshes: Map<key, Mesh>. Recurso global mantido pelo renderer.
+  criarBeaconBeam(x, y, z) {
+    if (!this._beamMeshes) this._beamMeshes = new Map();
+    const k = `${x}_${y}_${z}`;
+    if (this._beamMeshes.has(k)) return;
+    const altura = 80;
+    const geo = new THREE.CylinderGeometry(0.3, 0.3, altura, 8, 1, true);
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0x80deea,
+      transparent: true,
+      opacity: 0.55,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x + 0.5, y + 0.5 + altura / 2, z + 0.5);
+    this.scene.add(mesh);
+    // Halo interno mais brilhante (cilindro menor opaco)
+    const geoCore = new THREE.CylinderGeometry(0.10, 0.10, altura, 6, 1, false);
+    const matCore = new THREE.MeshBasicMaterial({ color: 0xe0f7fa, transparent: true, opacity: 0.85, depthWrite: false });
+    const core = new THREE.Mesh(geoCore, matCore);
+    core.position.copy(mesh.position);
+    this.scene.add(core);
+    this._beamMeshes.set(k, { mesh, core });
+  }
+  removerBeaconBeam(x, y, z) {
+    if (!this._beamMeshes) return;
+    const k = `${x}_${y}_${z}`;
+    const e = this._beamMeshes.get(k);
+    if (!e) return;
+    this.scene.remove(e.mesh); e.mesh.geometry.dispose(); e.mesh.material.dispose();
+    this.scene.remove(e.core); e.core.geometry.dispose(); e.core.material.dispose();
+    this._beamMeshes.delete(k);
   }
 
   render() { this.renderer.render(this.scene, this.camera); }

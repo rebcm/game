@@ -82,8 +82,9 @@ export const BLOCO = {
   CARVED_PUMPKIN:41, // abóbora talhada (cabeça do snow golem + helmet)
   BOLO:          42, // bolo: comestível ao right-click (restaura fome, consome bloco)
   BIGORNA:       43, // bigorna: renomeia item ativo (right-click → painel)
+  BEACON:        44, // farol: emite feixe vertical + buffs sobre pirâmide
 };
-export const N_BLOCOS = 44;
+export const N_BLOCOS = 45;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -136,6 +137,7 @@ export const BLOCO_INFO = {
   [BLOCO.CARVED_PUMPKIN]:{ nome: 'Abóbora Talhada',  solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
   [BLOCO.BOLO]:          { nome: 'Bolo',             solido: true,  emiteLuz: 0,  cor: 0xfaf3e0, lateral: 0xb98860 },
   [BLOCO.BIGORNA]:       { nome: 'Bigorna',          solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.BEACON]:        { nome: 'Farol',            solido: true,  emiteLuz: 15, cor: 0x80deea, lateral: 0x4dd0e1 },
 };
 
 export const ICONE = {
@@ -175,6 +177,7 @@ export const ITEM = {
   BUCKET_LEITE: 243, // balde de leite: ordenha vaca + cura debuffs ao beber
   BUSSOLA:      299, // bússola: aponta pro spawn (HUD com seta)
   FOGUETE:      244, // foguete: right-click lança, sobe, explode em cores
+  LUNETA:       245, // luneta: right-click toggle zoom (FOV reduzido)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -227,6 +230,7 @@ export const ITEM_INFO = {
   [ITEM.BUCKET_LEITE]:  { nome: 'Balde de Leite',    icone: '🥛' },
   [ITEM.BUSSOLA]:       { nome: 'Bússola',           icone: '🧭' },
   [ITEM.FOGUETE]:       { nome: 'Foguete',           icone: '🎆' },
+  [ITEM.LUNETA]:        { nome: 'Luneta',            icone: '🔭', ferramenta: 'luneta' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -302,6 +306,10 @@ export const RECEITAS = [
   { custos: [{i: ITEM.FERRO, q: 8}], saida: {b: BLOCO.BIGORNA, q: 1}, wb: true },
   // Foguete: 1 lã (proxy de papel) + 1 carvão (proxy de pólvora) → 4 foguetes
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.FOGUETE, q: 4}, wb: false },
+  // Beacon (Farol): 5 vidro + 3 obsidiana + 1 diamante (proxy de Nether Star)
+  { custos: [{b: BLOCO.VIDRO, q: 5}, {b: BLOCO.OBSIDIANA, q: 3}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.BEACON, q: 1}, wb: true },
+  // Luneta: 2 ferro + 1 diamante (proxy de copper+amethyst) — zoom 4×
+  { custos: [{i: ITEM.FERRO, q: 2}, {i: ITEM.DIAMANTE, q: 1}], saida: {i: ITEM.LUNETA, q: 1}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

@@ -441,6 +441,8 @@ function init() {
   state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
   state.inv.adicionar({ b: BLOCO.BIGORNA, q: 1 });
   state.inv.adicionar({ i: ITEM.FOGUETE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.BEACON, q: 1 });
+  state.inv.adicionar({ i: ITEM.LUNETA, q: 1 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -620,6 +622,39 @@ function loop(now) {
     }
     // Tick do charge do arco
     if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
+    // === Beacon: aplica buff se player a ≤16 blocos de algum beacon com
+    // pirâmide debaixo. Rodar 1×/s pra economia. Pirâmide = 3×3 (Y-1) de
+    // blocos preciosos (FERRO/OURO/DIAMANTE/ESMERALDA/EMERALDA proxy).
+    state._beaconAcc = (state._beaconAcc || 0) + dt;
+    if (state._beaconAcc >= 1.0) {
+      state._beaconAcc = 0;
+      if (state.beacons && state.beacons.size) {
+        const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        for (const k of state.beacons) {
+          const [sx, y, sz] = k.split(',').map(Number);
+          const dx = sx - px, dy = y - py, dz = sz - pz;
+          if (dx*dx + dy*dy + dz*dz > 16 * 16) continue;
+          if (state.world.get(sx, y, sz) !== BLOCO.BEACON) {
+            state.beacons.delete(k);
+            state.renderer.removerBeaconBeam(sx, y, sz);
+            continue;
+          }
+          let preciosos = 0;
+          for (let ddx = -1; ddx <= 1; ddx++) for (let ddz = -1; ddz <= 1; ddz++) {
+            const b = state.world.get(sx + ddx, y - 1, sz + ddz);
+            if (b === BLOCO.FERRO || b === BLOCO.OURO || b === BLOCO.DIAMANTE) preciosos++;
+          }
+          if (preciosos >= 9) {
+            state.player.efeitos = state.player.efeitos || {};
+            state.player.efeitos.speed = Date.now() + 2200;
+            state.player.efeitos.haste = Date.now() + 2200;
+          } else if (preciosos >= 4) {
+            state.player.efeitos = state.player.efeitos || {};
+            state.player.efeitos.speed = Date.now() + 2200;
+          }
+        }
+      }
+    }
     // Tick de mudas → cresce em árvore após ~15-25s (skip em heavy frame)
     if (!state._heavyFrame) {
       const cresc = state.world.atualizarMudas();
@@ -664,6 +699,9 @@ function loop(now) {
       let mult = (t.b === BLOCO.BEDROCK) ? 0 : Drops.velocidadeQuebra(t.b, tier, ferr);
       // Efficiency: +20%/+40%/+60% velocidade por nível
       if (sel?.encant?.efficiency) mult *= 1 + sel.encant.efficiency * 0.20;
+      // Haste do beacon: +40% velocidade de quebra enquanto efeito ativo
+      if (state.player.efeitos?.haste && Date.now() < state.player.efeitos.haste) mult *= 1.4;
+      else if (state.player.efeitos?.haste) delete state.player.efeitos.haste;
       state.player.progressoQuebra += dt / TEMPO_QUEBRA_BASE * mult;
       progressoVisual = state.player.progressoQuebra;
       if (state.player.progressoQuebra >= 1) {
@@ -681,6 +719,11 @@ function loop(now) {
           for (const d of drops) spawnItemDrop(d, t.x, t.y, t.z);
         }
         state.particulas.spawnQuebra(t.x, t.y, t.z, t.b);
+        // Beacon quebrado: remove do tracking + mesh do beam
+        if (t.b === BLOCO.BEACON) {
+          state.beacons?.delete(World.keyXYZ(t.x, t.y, t.z));
+          state.renderer.removerBeaconBeam(t.x, t.y, t.z);
+        }
         if (t.b === BLOCO.BAU) {
           const bau = state.world.bauTesouros.get(World.keyXYZ(t.x, t.y, t.z));
           if (bau) for (const it of bau) if (it) {
@@ -734,6 +777,13 @@ function loop(now) {
       if (selVara?.i === ITEM.VARA_PESCA) {
         const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
         castFishingLine(state.renderer.camera.position, dirCam);
+        return;
+      }
+      // Luneta: toggle zoom (FOV reduz pra 18° → ampliação ~4×)
+      const selLun = state.inv.itemSelecionado();
+      if (selLun?.i === ITEM.LUNETA) {
+        state._zoomLuneta = !state._zoomLuneta;
+        state.ui.toast(state._zoomLuneta ? '🔭 Zoom ativado' : '🔭 Zoom desativado');
         return;
       }
       // Foguete: lança projétil que sobe e explode — consome 1 unidade
@@ -939,6 +989,13 @@ function loop(now) {
             // Não coloca bloco onde o player está (paridade Minecraft real)
             if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
               state.world.setPeloPlayer(a.x, a.y, a.z, sel.b);
+              // Beacon: ao colocar, registra no set ativo e cria beam visual
+              if (sel.b === BLOCO.BEACON) {
+                state.beacons = state.beacons || new Set();
+                state.beacons.add(World.keyXYZ(a.x, a.y, a.z));
+                state.renderer.criarBeaconBeam(a.x, a.y, a.z);
+                state.ui.toast('🌟 Beacon ativo! Construa pirâmide debaixo pra buff.');
+              }
               // Build Snow Golem: CARVED_PUMPKIN colocada sobre 2 NEVE
               // empilhadas → remove os 3 blocos + spawn snow_golem.
               if (sel.b === BLOCO.CARVED_PUMPKIN &&
@@ -1074,8 +1131,11 @@ function loop(now) {
     }
   }
   state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
+  // Zoom: ativo se ITEM.LUNETA estiver selecionado E state._zoomLuneta=true
+  const _selZoom = state.inv?.itemSelecionado?.();
+  const zooming = !!state._zoomLuneta && _selZoom?.i === ITEM.LUNETA;
   state.renderer.atualizarFOV(dt, !!state.player.input.sprint &&
-    (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0);
+    (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0, zooming);
 
   // HUD
   const t = state.tempoDia * 24;
