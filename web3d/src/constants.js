@@ -101,8 +101,11 @@ export const BLOCO = {
   COBRE:          60, // cobre novo (laranja-avermelhado)
   COBRE_GASTO:    61, // cobre exposto (rosa-marrom)
   COBRE_OXIDADO:  62, // cobre oxidado (verde-azulado, MC verdigris)
+  VELA:           63, // vela branca (luz 8, decoração)
+  VELA_VERMELHA:  64,
+  VELA_AZUL:      65,
 };
-export const N_BLOCOS = 63;
+export const N_BLOCOS = 66;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -174,6 +177,9 @@ export const BLOCO_INFO = {
   [BLOCO.COBRE]:         { nome: 'Cobre',            solido: true,  emiteLuz: 0,  cor: 0xe07a3b, lateral: 0xc56226 },
   [BLOCO.COBRE_GASTO]:   { nome: 'Cobre Gasto',      solido: true,  emiteLuz: 0,  cor: 0xb47366, lateral: 0x8d5e54 },
   [BLOCO.COBRE_OXIDADO]: { nome: 'Cobre Oxidado',    solido: true,  emiteLuz: 0,  cor: 0x5fb89e, lateral: 0x4a9b82 },
+  [BLOCO.VELA]:          { nome: 'Vela',             solido: true,  emiteLuz: 8,  cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.VELA_VERMELHA]: { nome: 'Vela Vermelha',    solido: true,  emiteLuz: 8,  cor: 0xef5350, lateral: 0xc62828 },
+  [BLOCO.VELA_AZUL]:     { nome: 'Vela Azul',        solido: true,  emiteLuz: 8,  cor: 0x4fc3f7, lateral: 0x1565c0 },
 };
 
 export const ICONE = {
@@ -391,6 +397,10 @@ export const RECEITAS = [
   { custos: [{i: ITEM.COGUMELO_R, q: 1}, {i: ITEM.COGUMELO_M, q: 1}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_COGUMELO, q: 1}, wb: false },
   // Cobre: 9 lingotes → 1 bloco (paridade MC)
   { custos: [{i: ITEM.COBRE_LINGOTE, q: 9}], saida: {b: BLOCO.COBRE, q: 1}, wb: true },
+  // Velas: lã + carvão → vela. Lã colorida → vela colorida.
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA, q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA_VERMELHA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA_VERMELHA, q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA_AZUL, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA_AZUL, q: 1}, wb: false },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

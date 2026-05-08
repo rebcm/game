@@ -97,6 +97,16 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Sapo: anfíbio passivo, salta, vive em grama perto da água
+  sapo: {
+    hp: 5, vel: 1.6, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.40 ? [{ i: ITEM.SLIMEBALL, q: 1 }] : []),
+      ...(Math.random() < 0.10 ? [{ i: ITEM.PE_COELHO, q: 1 }] : []), // proxy de "rana foot"
+    ],
+    cor: 0x66bb6a, sec: 0x2e7d32, // verde claro + verde escuro
+    pula: true,
+  },
   // Allay: fada azul fofa que voa próxima do player, drops raros, raríssima
   allay: {
     hp: 6, vel: 2.0, hostil: false,
@@ -472,6 +482,40 @@ export function construirModeloMob(tipo, info) {
       grp.add(colar);
       partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'sapo': {
+      // Corpo redondo verde + cabeça larga + 2 olhos esbugalhados em cima
+      const corpo = cubo(0.40, 0.20, 0.40, info.cor);
+      corpo.position.y = 0.20; grp.add(corpo);
+      // Manchas escuras no dorso
+      for (const sx of [-0.10, 0.10]) {
+        const mancha = cubo(0.10, 0.04, 0.12, info.sec);
+        mancha.position.set(sx, 0.31, -0.05); grp.add(mancha);
+      }
+      const cabeca = cubo(0.36, 0.18, 0.20, info.cor);
+      cabeca.position.set(0, 0.30, 0.20); grp.add(cabeca);
+      // Olhos protuberantes (cubinhos altos com pupila preta)
+      for (const sx of [-0.11, 0.11]) {
+        const sclera = cubo(0.10, 0.10, 0.10, 0xfafafa);
+        sclera.position.set(sx, 0.10, 0.03); cabeca.add(sclera);
+        const pupila = cubo(0.05, 0.05, 0.03, 0x000000);
+        pupila.position.set(sx, 0.10, 0.08); cabeca.add(pupila);
+      }
+      // Boca larga (faixa escura)
+      const boca = cubo(0.30, 0.02, 0.02, 0x1a1a1a);
+      boca.position.set(0, -0.06, 0.105); cabeca.add(boca);
+      // 2 patas dianteiras pequenas + 2 traseiras grandes (pra pular)
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const traseira = i >= 2;
+        const altPerna = traseira ? 0.16 : 0.10;
+        const p = pernaComPivot(0.06, altPerna, 0.06, info.sec, 0.12);
+        p.position.x = (i % 2 === 0 ? -0.13 : 0.13);
+        p.position.z = traseira ? -0.10 : 0.13;
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
       break;
     }
     case 'allay': {
@@ -1213,6 +1257,7 @@ function _dimsMob(tipo) {
     case 'urso_polar': return { raio: 0.55, altura: 1.50 };
     case 'tartaruga': return { raio: 0.32, altura: 0.45 };
     case 'allay':    return { raio: 0.15, altura: 0.50 };
+    case 'sapo':     return { raio: 0.20, altura: 0.30 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
@@ -1953,6 +1998,14 @@ export class MobManager {
         if (Math.random() < 0.03) tipos.push('mooshroom');
         // Allay: raríssimo (1%), spawna em qualquer grama
         if (Math.random() < 0.01) tipos.push('allay');
+        // Sapo: spawn em grama com água perto (proxy de pântano)
+        let _aguaPerto = false;
+        for (let dx = -3; dx <= 3 && !_aguaPerto; dx++) {
+          for (let dz = -3; dz <= 3 && !_aguaPerto; dz++) {
+            if (world.get(x + dx, y, z + dz) === BLOCO.AGUA) _aguaPerto = true;
+          }
+        }
+        if (_aguaPerto && Math.random() < 0.25) tipos.push('sapo');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
         // Tartaruga: spawn em areia próxima da água (1 bloco de água em raio 3)

@@ -952,6 +952,41 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Vela: cera colorida vertical + chama amarela no topo + pavio escuro
+  function pintarVela(idx, corCera, corCeraEscura) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro (espaço ao redor da vela)
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cera (cilindro vertical centrado, ocupando 8px de largura)
+    ctx.fillStyle = corCera;
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 18);
+    // Borda escura da cera (lateral)
+    ctx.fillStyle = corCeraEscura;
+    ctx.fillRect(x0 + 12, y0 + 12, 1, 18);
+    ctx.fillRect(x0 + 19, y0 + 12, 1, 18);
+    // Pingo de cera derretida no topo (round)
+    ctx.fillStyle = corCera;
+    ctx.fillRect(x0 + 13, y0 + 11, 6, 1);
+    // Pavio preto
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 15, y0 + 6,  2, 6);
+    // Chama: 3 layers (vermelho-laranja-amarelo-branco)
+    ctx.fillStyle = '#ef5350';
+    ctx.fillRect(x0 + 14, y0 + 2, 4, 5);
+    ctx.fillStyle = '#ffa726';
+    ctx.fillRect(x0 + 14, y0 + 3, 4, 3);
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 15, y0 + 3, 2, 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 4, 1, 1);
+    // Glow ao redor da chama (tom amarelo translúcido)
+    ctx.fillStyle = 'rgba(255, 235, 100, 0.18)';
+    ctx.fillRect(x0 + 11, y0 + 1, 10, 8);
+  }
+
   // Cobre (3 estados): metálico com padrão de placas + manchas de oxidação
   function pintarCobre(idx, base, claro, escuro, manchaOx) {
     const col = idx % COLS;
@@ -1500,6 +1535,9 @@ function criarAtlas() {
   pintarCobre(58, '#e07a3b', '#ff9d5e', '#a04e1c', 0);     // cobre novo
   pintarCobre(59, '#b47366', '#d6968b', '#7a4a40', 0.4);   // cobre gasto
   pintarCobre(60, '#5fb89e', '#85d6bc', '#3d8470', 0.9);   // cobre oxidado
+  pintarVela(61, '#fafafa', '#bdbdbd');                    // vela branca
+  pintarVela(62, '#ef5350', '#b71c1c');                    // vela vermelha
+  pintarVela(63, '#4fc3f7', '#0d47a1');                    // vela azul
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1567,6 +1605,9 @@ function criarAtlas() {
   mapa[BLOCO.COBRE]          = { top: 58, side: 58, bottom: 58 };
   mapa[BLOCO.COBRE_GASTO]    = { top: 59, side: 59, bottom: 59 };
   mapa[BLOCO.COBRE_OXIDADO]  = { top: 60, side: 60, bottom: 60 };
+  mapa[BLOCO.VELA]           = { top: 61, side: 61, bottom: 61 };
+  mapa[BLOCO.VELA_VERMELHA]  = { top: 62, side: 62, bottom: 62 };
+  mapa[BLOCO.VELA_AZUL]      = { top: 63, side: 63, bottom: 63 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
