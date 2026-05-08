@@ -28,7 +28,25 @@
     <h1>Construção Criativa</h1>
     <h2>da Rebeca — 3D</h2>
     <div class="sub">Mundo voxel infinito · Mouse para olhar · WASD para mover</div>
-    <button id="play">JOGAR EM TELA CHEIA</button>
+
+    <!-- Identidade do jogador -->
+    <div class="boot-card" id="boot-form">
+      <div class="boot-row">
+        <label class="boot-label">Seu nome</label>
+        <input id="boot-player" type="text" maxlength="16" placeholder="Aventureiro">
+      </div>
+      <div class="boot-section-label">Mundos salvos</div>
+      <div id="boot-worlds-list" class="boot-worlds"></div>
+      <div class="boot-row">
+        <label class="boot-label">Novo mundo</label>
+        <input id="boot-world-name" type="text" maxlength="20" placeholder="Meu Mundo">
+      </div>
+      <div class="boot-actions">
+        <button id="play" class="boot-btn primary">▶ Jogar</button>
+        <button id="boot-multi" class="boot-btn secondary">👥 Multiplayer</button>
+      </div>
+    </div>
+
     <div class="creditos">por Rebeca Alves Moreira</div>
     <div class="controles-help">
       <table>
@@ -77,6 +95,7 @@
       <div id="f3-block">Block: 0 0 0</div>
       <div id="f3-chunk">Chunk: 0,0</div>
       <div id="f3-facing">Facing: north (-Z)</div>
+      <div id="f3-player">Player: --  ·  Mundo: --</div>
       <div id="f3-light">Sky / Block light: 15 / 0</div>
       <div id="f3-biome">Biome: planicies</div>
       <div id="f3-target">Targeted: --</div>
@@ -218,6 +237,22 @@
     <h2>Você morreu</h2>
     <p id="morte-causa">Toque para reviver no spawn</p>
     <button id="morte-respawn">Respawn</button>
+  </div>
+
+  <!-- Multiplayer modal (em desenvolvimento — UI pronta, transport futuro) -->
+  <div id="multi-modal" class="hidden">
+    <div class="multi-box">
+      <h2>👥 Multiplayer</h2>
+      <p>Mode peer-to-peer entre navegadores via WebRTC está em desenvolvimento.</p>
+      <p>Por enquanto, você pode <strong>compartilhar seu mundo</strong> exportando o save:</p>
+      <div class="multi-actions">
+        <button class="boot-btn primary" id="multi-export">⬇ Exportar mundo</button>
+        <button class="boot-btn secondary" id="multi-import">⬆ Importar mundo</button>
+        <button class="boot-btn secondary" id="multi-close">Voltar</button>
+      </div>
+      <input type="file" id="multi-import-file" accept="application/json" style="display:none">
+      <div class="multi-hint">Arquivo JSON pode ser enviado via Discord/Whatsapp pra outro jogador.</div>
+    </div>
   </div>
 
   <!-- Loading overlay: aparece quando backlog de chunks/mesh é grande -->

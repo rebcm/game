@@ -214,13 +214,21 @@ t('main.js cria todas as instâncias em init()',
 t('Loop chama atualizarItemDrops + atualizarXpOrbs + atualizarAmbientTriggers',
   /atualizarItemDrops/.test(main) && /atualizarXpOrbs/.test(main) && /atualizarAmbientTriggers/.test(main));
 t('Botão JOGAR liga init e pointer lock',
-  /play.{0,30}addEventListener.{0,40}click/.test(main) &&
-  /controls\.lock/.test(main));
+  /play.{0,30}(addEventListener|onclick)/.test(main) &&
+  /controls\.lock/.test(main),
+  'Boot screen agora usa onclick do play (handler renderBoot) + _entrarNoJogo.');
 
 grupo('save.js');
 const save = lerArquivo('src/save.js') || '';
-t('Save versão v: 4',
-  /v\s*:\s*4/.test(save));
+t('Save versão v: 5 (multi-mundo)',
+  /v\s*:\s*5/.test(save),
+  'Schema v5 inclui name + playerName + savedAt pra multi-mundo.');
+t('Save tem listarMundos + carregarPorNome (multi-save)',
+  /listarMundos/.test(save) && /carregarPorNome/.test(save));
+t('Save expõe identidade do player (getPlayer/setPlayer)',
+  /getPlayer/.test(save) && /setPlayer/.test(save));
+t('Save tem export/import pra compartilhamento de mundo',
+  /exportarMundoAtual/.test(save) && /importarMundo/.test(save));
 t('Save serializa chunks modificados em base64',
   /btoa\(String\.fromCharCode/.test(save));
 

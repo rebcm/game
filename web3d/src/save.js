@@ -1,14 +1,62 @@
 // =====================================================================
-// save.js — Persistência em localStorage (versão v4)
+// save.js — Persistência multi-mundo em localStorage.
+//
+// Layout:
+//   rebcm3d_player        → { name } (persistido entre sessões)
+//   rebcm3d_worlds_index  → [ { name, seed, lastPlayed, modo } ]
+//   rebcm3d_world_<name>  → snapshot completo do mundo (v5)
+//   rebcm3d_save_v4       → save legado (auto-migrado pra "Mundo 1")
 // =====================================================================
 
-import { SAVE_KEY } from './constants.js';
-import { World } from './world.js';
 import { state } from './state.js';
 
+const PLAYER_KEY = 'rebcm3d_player';
+const INDEX_KEY  = 'rebcm3d_worlds_index';
+const WORLD_PREFIX = 'rebcm3d_world_';
+const LEGACY_KEY = 'rebcm3d_save_v4';
+
+function _safeJSON(s, fb) { try { return JSON.parse(s); } catch (_) { return fb; } }
+
 export const Save = {
+  // === Identidade do jogador ===
+  getPlayer() {
+    return _safeJSON(localStorage.getItem(PLAYER_KEY), { name: '' });
+  },
+  setPlayer(name) {
+    localStorage.setItem(PLAYER_KEY, JSON.stringify({ name }));
+  },
+
+  // === Index de mundos ===
+  listarMundos() {
+    const idx = _safeJSON(localStorage.getItem(INDEX_KEY), []);
+    // Migração: se há save legado e não está no index, vira "Mundo Antigo"
+    if (localStorage.getItem(LEGACY_KEY) && !idx.find(w => w.name === 'Mundo Antigo')) {
+      idx.unshift({ name: 'Mundo Antigo', seed: 42, lastPlayed: 0, modo: 'survival', _legacy: true });
+      localStorage.setItem(INDEX_KEY, JSON.stringify(idx));
+    }
+    return idx;
+  },
+  registrarMundo(name, seed, modo) {
+    const idx = this.listarMundos().filter(w => w.name !== name);
+    idx.unshift({ name, seed, lastPlayed: Date.now(), modo: modo || 'survival' });
+    if (idx.length > 12) idx.length = 12;
+    localStorage.setItem(INDEX_KEY, JSON.stringify(idx));
+  },
+  apagarMundo(name) {
+    const idx = this.listarMundos().filter(w => w.name !== name);
+    localStorage.setItem(INDEX_KEY, JSON.stringify(idx));
+    localStorage.removeItem(WORLD_PREFIX + name);
+  },
+
+  // === Salvar / carregar mundo ===
+  _keyDoMundo(name) {
+    if (name === 'Mundo Antigo') return LEGACY_KEY; // compat
+    return WORLD_PREFIX + name;
+  },
+
   salvar() {
     try {
+      const name = state.worldName || 'Mundo 1';
       const chunksMod = [];
       for (const [, c] of state.world.chunks) {
         if (c.modificado) {
@@ -40,7 +88,8 @@ export const Save = {
         }
       }
       const data = {
-        v: 4, seed: state.world.seed,
+        v: 5, name, seed: state.world.seed,
+        playerName: state.playerName || '',
         p: { x: state.player.pos.x, y: state.player.pos.y, z: state.player.pos.z },
         slot: state.inv.slotSel, hp: state.player.hp, fome: state.player.fome,
         xp: state.player.xp, nivel: state.player.nivel,
@@ -50,25 +99,60 @@ export const Save = {
         baus: bausSerializados,
         forn: fornsSerializadas,
         chunks: chunksMod,
+        savedAt: Date.now(),
       };
-      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-      state.ui.toast('Salvo!');
+      localStorage.setItem(this._keyDoMundo(name), JSON.stringify(data));
+      this.registrarMundo(name, state.world.seed, state.player.modo);
+      state.ui?.toast?.('Salvo!');
       return true;
     } catch (e) {
-      state.ui.toast('Erro ao salvar');
+      state.ui?.toast?.('Erro ao salvar');
       console.error(e);
       return false;
     }
   },
-  carregar() {
-    try {
-      const raw = localStorage.getItem(SAVE_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch (_) { return null; }
+
+  carregarPorNome(name) {
+    return _safeJSON(localStorage.getItem(this._keyDoMundo(name)), null);
   },
+
+  // Compat com chamadas antigas Save.carregar() — pega o último mundo
+  // jogado (1º do index).
+  carregar() {
+    const idx = this.listarMundos();
+    if (!idx.length) return null;
+    return this.carregarPorNome(idx[0].name);
+  },
+
   apagar() {
-    localStorage.removeItem(SAVE_KEY);
-    state.ui.toast('Save apagado');
+    const name = state.worldName;
+    if (name) this.apagarMundo(name);
+    state.ui?.toast?.('Save apagado');
+  },
+
+  // === Export/Import (compartilhamento entre jogadores) ===
+  exportarMundoAtual() {
+    const name = state.worldName || 'Mundo 1';
+    const data = this.carregarPorNome(name);
+    if (!data) return null;
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name.replace(/[^a-z0-9]/gi, '_')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    return true;
+  },
+  importarMundo(json) {
+    try {
+      const data = typeof json === 'string' ? JSON.parse(json) : json;
+      if (!data || !data.seed) return null;
+      const name = data.name || `Importado ${Date.now() % 1000}`;
+      data.name = name;
+      localStorage.setItem(WORLD_PREFIX + name, JSON.stringify(data));
+      this.registrarMundo(name, data.seed, data.modo);
+      return name;
+    } catch (e) { console.error(e); return null; }
   },
 };

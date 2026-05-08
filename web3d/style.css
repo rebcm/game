@@ -98,6 +98,89 @@ html, body {
   color: #ffffff44;
   font-size: 11px;
 }
+/* === Boot card: nome + lista de mundos + actions === */
+.boot-card {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 18px 22px;
+  width: min(520px, 92vw);
+  margin: 8px auto 16px;
+}
+.boot-row { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+.boot-label { color: #FFD700; font-size: 11px; letter-spacing: 0.5px; text-align: left; }
+.boot-card input[type="text"] {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  border-radius: 6px;
+  outline: none;
+}
+.boot-card input[type="text"]:focus { border-color: #4CAF50; }
+.boot-section-label {
+  color: #a5d6a7;
+  font-size: 10px;
+  margin: 14px 0 6px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: left;
+}
+.boot-worlds { display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
+.boot-world-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.boot-world-item:hover { background: rgba(76,175,80,0.18); border-color: #4CAF50; }
+.boot-world-item.empty {
+  cursor: default; color: rgba(255,255,255,0.45); font-style: italic; justify-content: center;
+}
+.boot-world-name { color: #fff; font-weight: bold; font-size: 13px; }
+.boot-world-meta { color: rgba(255,255,255,0.50); font-size: 10px; }
+.boot-world-del {
+  background: transparent; border: none; color: #ef5350;
+  cursor: pointer; font-size: 14px; padding: 0 6px;
+}
+.boot-world-del:hover { color: #ff8a80; }
+.boot-actions { display: flex; gap: 8px; margin-top: 14px; }
+.boot-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none; border-radius: 8px;
+  font-family: inherit; font-size: 14px; font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.boot-btn.primary { background: linear-gradient(135deg, #4CAF50, #2E7D32); color: #fff; box-shadow: 0 2px 12px #4CAF5066; }
+.boot-btn.secondary { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+.boot-btn:hover { transform: scale(1.03); }
+.boot-btn:active { transform: scale(0.98); }
+
+/* Multiplayer modal */
+#multi-modal {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 8000;
+}
+.multi-box {
+  background: linear-gradient(180deg, #1a1a2e, #0d0d18);
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  padding: 28px 36px;
+  max-width: 480px; text-align: center;
+}
+.multi-box h2 { color: #FFD700; margin: 0 0 12px; font-size: 20px; }
+.multi-box p { color: #e0e0e0; line-height: 1.5; margin: 8px 0; font-size: 14px; }
+.multi-actions { display: flex; flex-direction: column; gap: 8px; margin: 20px 0 12px; }
+.multi-hint { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 8px; }
 #boot .controles-help {
   margin-top: 26px;
   background: rgba(0, 0, 0, 0.35);

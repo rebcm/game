@@ -251,15 +251,31 @@ function init() {
   state.inv.adicionar({ i: ITEM.PIC_MADEIRA, q: 1 });
 
   const canvas = document.getElementById('game');
+  // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
+  // Fallback (dev/auto-init): primeiro mundo do index ou novo "Mundo 1".
+  const choice = window._bootChoice || {};
+  const playerName = choice.playerName || Save.getPlayer().name || 'Aventureiro';
+  Save.setPlayer(playerName);
+  state.playerName = playerName;
+  let worldName = choice.worldName;
+  let isNewWorld = choice.isNew;
+  if (!worldName) {
+    const idx = Save.listarMundos();
+    if (idx.length) { worldName = idx[0].name; isNewWorld = false; }
+    else { worldName = 'Meu Mundo'; isNewWorld = true; }
+  }
+  state.worldName = worldName;
+  // Seed: se mundo novo, gera; se existente, virá do save
+  const seed = isNewWorld ? (Math.floor(Math.random() * 1e9)) : 42;
   state.renderer = new Renderer(canvas);
-  state.world = new World(42);
+  state.world = new World(seed);
   state.player = new Player(state.renderer.camera);
   state.player.controls = new PointerLockControls(state.renderer.camera, document.body);
   state.mobMgr = new MobManager(state.renderer.scene);
   state.particulas = new Particulas(state.renderer.scene);
 
-  // Tenta carregar save
-  const save = Save.carregar();
+  // Tenta carregar save (do mundo selecionado)
+  const save = isNewWorld ? null : Save.carregarPorNome(worldName);
   if (save) {
     state.world.seed = save.seed;
     state.player.pos.set(save.p.x, save.p.y, save.p.z);
@@ -304,13 +320,17 @@ function init() {
         c.modificado = true; c.dirty = true; c.luzDirty = true;
       }
     }
-    state.ui.toast('Mundo carregado');
+    state.ui.toast(`Mundo "${worldName}" carregado`);
   } else {
     const h = state.world.alturaTerreno(8, 8);
     state.player.pos.set(8.5, h + 2, 8.5);
     state.player.spawn.copy(state.player.pos);
-    state.ui.toast('Bem-vinda ao mundo 3D!');
+    state.ui.toast(`Bem-vindo, ${playerName}! Mundo "${worldName}"`);
+    Save.registrarMundo(worldName, seed, 'survival');
   }
+  // Atualiza HUD com identidade
+  const hudPid = document.getElementById('f3-player');
+  if (hudPid) hudPid.textContent = `Player: ${playerName}  ·  Mundo: ${worldName}`;
   // Safe-spawn: se posição inicial colide com bloco (dungeon, caverna,
   // chunk não meshado), sobe até liberar (limite 40 blocos).
   let safety = 40;
@@ -681,8 +701,98 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-// === Boot — handler do botão JOGAR ===
-document.getElementById('play').addEventListener('click', async () => {
+// === Boot screen: nome do player + lista de mundos + handlers ===
+function _renderBoot() {
+  const playerInput = document.getElementById('boot-player');
+  const worldNameInput = document.getElementById('boot-world-name');
+  const lista = document.getElementById('boot-worlds-list');
+  if (!playerInput || !lista) return;
+
+  // Restaura nome salvo do player
+  const savedPlayer = Save.getPlayer();
+  if (savedPlayer.name) playerInput.value = savedPlayer.name;
+  playerInput.addEventListener('input', () => Save.setPlayer(playerInput.value.trim()));
+
+  // Renderiza lista de mundos
+  function refresh() {
+    const mundos = Save.listarMundos();
+    lista.innerHTML = '';
+    if (!mundos.length) {
+      const empty = document.createElement('div');
+      empty.className = 'boot-world-item empty';
+      empty.textContent = 'Nenhum mundo salvo — crie um novo abaixo';
+      lista.appendChild(empty);
+      return;
+    }
+    for (const w of mundos) {
+      const div = document.createElement('div');
+      div.className = 'boot-world-item';
+      const data = w.lastPlayed ? new Date(w.lastPlayed).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'nunca';
+      div.innerHTML = `<div><div class="boot-world-name">${w.name}</div><div class="boot-world-meta">modo: ${w.modo} · jogado: ${data}</div></div><button class="boot-world-del" title="Excluir">✕</button>`;
+      div.onclick = (e) => {
+        if (e.target.classList.contains('boot-world-del')) {
+          if (confirm(`Excluir "${w.name}"? Não pode desfazer.`)) {
+            Save.apagarMundo(w.name);
+            refresh();
+          }
+          return;
+        }
+        // Carrega mundo existente
+        _entrarNoJogo({ playerName: playerInput.value.trim() || 'Aventureiro', worldName: w.name, isNew: false });
+      };
+      lista.appendChild(div);
+    }
+  }
+  refresh();
+
+  // Botão Jogar (mundo novo)
+  document.getElementById('play').onclick = () => {
+    const playerName = playerInput.value.trim() || 'Aventureiro';
+    const worldName = worldNameInput.value.trim() || `Mundo ${Save.listarMundos().length + 1}`;
+    _entrarNoJogo({ playerName, worldName, isNew: true });
+  };
+
+  // Botão Multiplayer → modal
+  document.getElementById('boot-multi').onclick = () => {
+    document.getElementById('multi-modal').classList.remove('hidden');
+  };
+  document.getElementById('multi-close').onclick = () => {
+    document.getElementById('multi-modal').classList.add('hidden');
+  };
+  document.getElementById('multi-export').onclick = () => {
+    if (!state.world) {
+      // Exporta o último mundo do index sem precisar carregar
+      const mundos = Save.listarMundos();
+      if (!mundos.length) { alert('Nenhum mundo pra exportar.'); return; }
+      const data = Save.carregarPorNome(mundos[0].name);
+      if (!data) { alert('Mundo vazio.'); return; }
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${mundos[0].name.replace(/[^a-z0-9]/gi, '_')}.json`;
+      a.click(); URL.revokeObjectURL(url);
+    } else {
+      Save.exportarMundoAtual();
+    }
+  };
+  document.getElementById('multi-import').onclick = () => {
+    document.getElementById('multi-import-file').click();
+  };
+  document.getElementById('multi-import-file').onchange = async (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const txt = await f.text();
+    const name = Save.importarMundo(txt);
+    if (name) {
+      alert(`Mundo "${name}" importado!`);
+      document.getElementById('multi-modal').classList.add('hidden');
+      refresh();
+    } else alert('Arquivo inválido.');
+  };
+}
+
+async function _entrarNoJogo(choice) {
+  window._bootChoice = choice;
   try { window.rebcm?.desbloquearAudio?.(); } catch (_) {}
   try {
     await document.documentElement.requestFullscreen?.();
@@ -694,4 +804,11 @@ document.getElementById('play').addEventListener('click', async () => {
   document.getElementById('hud').classList.remove('hidden');
   if (!state.renderer) init();
   try { state.player.controls.lock(); } catch (_) {}
-});
+}
+
+// Inicializa boot screen ao carregar
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _renderBoot);
+} else {
+  _renderBoot();
+}
