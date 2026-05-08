@@ -117,25 +117,33 @@ export function construirModeloMob(tipo, info) {
       cabecaMesh.add(pup);
     }
   };
-  // Helper: olho emissivo (zumbi/esqueleto/enderman/aranha — brilham)
+  // Helper: olho com sclera BRANCA + pupila colorida (emissive opcional).
+  // Antes era 100% emissive na cor, dando aspecto fluorescente irreal.
+  // Agora todos os mobs têm sclera branca convencional, pupila pequena
+  // colorida (emissive pra mobs hostis brilharem à noite).
   const olhosBrilhantes = (cabecaMesh, sep, cy, cz, cor, size = 0.08) => {
+    const escleraMat = matCor(0xffffff);
+    const pupMat = matEmissivo(cor, 1.0);
     for (const sx of [-sep, sep]) {
-      const o = new THREE.Mesh(new THREE.BoxGeometry(size, size, 0.04), matEmissivo(cor, 1.2));
-      o.position.set(sx, cy, cz);
-      cabecaMesh.add(o);
+      const escl = new THREE.Mesh(new THREE.BoxGeometry(size, size, 0.02), escleraMat);
+      escl.position.set(sx, cy, cz);
+      cabecaMesh.add(escl);
+      const pup = new THREE.Mesh(new THREE.BoxGeometry(size * 0.55, size * 0.55, 0.025), pupMat);
+      pup.position.set(sx, cy, cz + 0.005);
+      cabecaMesh.add(pup);
     }
   };
 
   switch (tipo) {
     case 'vaca': {
-      // Corpo branco com manchas marrons (sec=0x424242)
-      const corpo = cubo(0.65, 0.55, 0.95, info.cor);
-      corpo.position.y = 0.65; grp.add(corpo);
-      // Manchas (decorativas)
-      const m1 = cubo(0.66, 0.06, 0.22, info.sec); m1.position.set(0, 0.92, 0.05); grp.add(m1);
-      const m2 = cubo(0.66, 0.06, 0.20, info.sec); m2.position.set(0, 0.92, -0.30); grp.add(m2);
-      const cabeca = cubo(0.42, 0.42, 0.45, info.cor);
-      cabeca.position.set(0, 0.78, 0.62); grp.add(cabeca);
+      // Corpo branco com manchas marrons (sec=0x424242). Maior dos animais
+      // passivos pra refletir hierarquia visual: vaca > ovelha > porco > galinha.
+      const corpo = cubo(0.78, 0.62, 1.10, info.cor);
+      corpo.position.y = 0.72; grp.add(corpo);
+      const m1 = cubo(0.79, 0.06, 0.25, info.sec); m1.position.set(0, 1.04, 0.10); grp.add(m1);
+      const m2 = cubo(0.79, 0.06, 0.22, info.sec); m2.position.set(0, 1.04, -0.32); grp.add(m2);
+      const cabeca = cubo(0.46, 0.46, 0.50, info.cor);
+      cabeca.position.set(0, 0.86, 0.72); grp.add(cabeca);
       olhosPretos(cabeca, 0.11, 0.05, 0.23);
       // Focinho rosa
       const focinho = cubo(0.28, 0.22, 0.06, 0xff8a80);
@@ -156,18 +164,18 @@ export function construirModeloMob(tipo, info) {
         o.position.set(sx, 0.10, 0.0); cabeca.add(o);
       }
       // Cauda fininha pendurada
-      const cauda = cubo(0.06, 0.40, 0.06, info.cor);
-      cauda.position.set(0, 0.55, -0.5); grp.add(cauda);
-      const caudaTuf = cubo(0.10, 0.08, 0.10, info.sec);
-      caudaTuf.position.set(0, 0.32, -0.5); grp.add(caudaTuf);
+      const cauda = cubo(0.06, 0.45, 0.06, info.cor);
+      cauda.position.set(0, 0.62, -0.58); grp.add(cauda);
+      const caudaTuf = cubo(0.10, 0.10, 0.10, info.sec);
+      caudaTuf.position.set(0, 0.36, -0.58); grp.add(caudaTuf);
       // Úbere rosado
-      const uber = cubo(0.18, 0.08, 0.20, 0xff80ab);
-      uber.position.set(0, 0.34, -0.20); grp.add(uber);
+      const uber = cubo(0.20, 0.10, 0.22, 0xff80ab);
+      uber.position.set(0, 0.36, -0.24); grp.add(uber);
       const pernas = [];
       for (let i = 0; i < 4; i++) {
-        const dx = (i % 2 === 0 ? -0.20 : 0.20);
-        const dz = (i < 2 ? 0.32 : -0.32);
-        const p = pernaComPivot(0.18, 0.42, 0.18, info.sec, 0.42);
+        const dx = (i % 2 === 0 ? -0.24 : 0.24);
+        const dz = (i < 2 ? 0.38 : -0.38);
+        const p = pernaComPivot(0.20, 0.48, 0.20, info.sec, 0.48);
         p.position.x = dx; p.position.z = dz;
         grp.add(p); pernas.push(p);
       }
@@ -175,10 +183,11 @@ export function construirModeloMob(tipo, info) {
       break;
     }
     case 'porco': {
-      const corpo = cubo(0.55, 0.50, 0.90, info.cor);
-      corpo.position.y = 0.55; grp.add(corpo);
-      const cabeca = cubo(0.42, 0.40, 0.40, info.cor);
-      cabeca.position.set(0, 0.65, 0.60); grp.add(cabeca);
+      // Médio. Mais baixo que vaca, mais comprido que ovelha.
+      const corpo = cubo(0.50, 0.46, 0.82, info.cor);
+      corpo.position.y = 0.52; grp.add(corpo);
+      const cabeca = cubo(0.40, 0.38, 0.38, info.cor);
+      cabeca.position.set(0, 0.62, 0.55); grp.add(cabeca);
       olhosPretos(cabeca, 0.10, 0.04, 0.22);
       // Focinho rosa escuro com narinas
       const focinho = cubo(0.22, 0.18, 0.10, info.sec);
@@ -209,12 +218,12 @@ export function construirModeloMob(tipo, info) {
       break;
     }
     case 'ovelha': {
-      // Corpo lanudo (escala maior pra parecer fluffy)
-      const corpo = cubo(0.70, 0.65, 1.00, info.cor);
-      corpo.position.y = 0.72; grp.add(corpo);
-      // Cabeça preta (paridade MC)
-      const cabeca = cubo(0.32, 0.34, 0.40, 0x424242);
-      cabeca.position.set(0, 0.85, 0.60); grp.add(cabeca);
+      // Menor que vaca, mais alta proporcionalmente (fluffy).
+      const corpo = cubo(0.58, 0.58, 0.85, info.cor);
+      corpo.position.y = 0.65; grp.add(corpo);
+      // Cabeça preta (paridade MC) menor
+      const cabeca = cubo(0.30, 0.32, 0.36, 0x424242);
+      cabeca.position.set(0, 0.78, 0.52); grp.add(cabeca);
       olhosPretos(cabeca, 0.09, 0.04, 0.22, 0.06, 0.03);
       // Focinho preto (mesma cor da cabeça, só silhueta)
       // Orelhas
@@ -387,12 +396,18 @@ export function construirModeloMob(tipo, info) {
       hg.position.set(0, 0.45, -0.50); grp.add(hg);
       const cabeca = cubo(0.45, 0.40, 0.45, info.sec);
       cabeca.position.set(0, 0.45, 0.40); grp.add(cabeca);
-      // 8 olhos vermelhos brilhantes em padrão 4×2
+      // 8 olhos: sclera branca + pupila vermelha emissiva (4×2)
+      const escleraMat = matCor(0xffffff);
       for (let row = 0; row < 2; row++) {
         for (let col = 0; col < 4; col++) {
-          const o = cuboEm(0.05, 0.05, 0.03, 0xff1744, 1.0);
-          o.position.set(-0.18 + col * 0.12, 0.05 - row * 0.10, 0.235);
-          cabeca.add(o);
+          const x = -0.18 + col * 0.12;
+          const y = 0.05 - row * 0.10;
+          const escl = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.02), escleraMat);
+          escl.position.set(x, y, 0.235);
+          cabeca.add(escl);
+          const pup = cuboEm(0.025, 0.025, 0.025, 0xff1744, 1.0);
+          pup.position.set(x, y, 0.241);
+          cabeca.add(pup);
         }
       }
       // Presas
@@ -516,10 +531,10 @@ function _dimsMob(tipo) {
     case 'aranha':   return { raio: 0.45, altura: 0.55 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
-    case 'slime':    return { raio: 0.40, altura: 0.50 };
-    case 'vaca':
-    case 'porco':
-    case 'ovelha':   return { raio: 0.40, altura: 1.30 };
+    case 'slime':    return { raio: 0.42, altura: 0.55 };
+    case 'vaca':     return { raio: 0.45, altura: 1.40 };
+    case 'porco':    return { raio: 0.32, altura: 1.05 };
+    case 'ovelha':   return { raio: 0.34, altura: 1.20 };
     case 'enderman': return { raio: 0.30, altura: 2.50 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
     default:         return { raio: 0.30, altura: 1.80 };

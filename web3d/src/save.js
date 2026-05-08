@@ -15,7 +15,15 @@ const INDEX_KEY  = 'rebcm3d_worlds_index';
 const WORLD_PREFIX = 'rebcm3d_world_';
 const LEGACY_KEY = 'rebcm3d_save_v4';
 
-function _safeJSON(s, fb) { try { return JSON.parse(s); } catch (_) { return fb; } }
+function _safeJSON(s, fb) {
+  // BUG-fix: JSON.parse(null) retorna null sem throw — precisa de check
+  // explícito ou _renderBoot quebra na 1ª inicialização sem localStorage.
+  if (s === null || s === undefined) return fb;
+  try {
+    const v = JSON.parse(s);
+    return (v === null || v === undefined) ? fb : v;
+  } catch (_) { return fb; }
+}
 
 export const Save = {
   // === Identidade do jogador ===

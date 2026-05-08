@@ -806,9 +806,23 @@ async function _entrarNoJogo(choice) {
   try { state.player.controls.lock(); } catch (_) {}
 }
 
-// Inicializa boot screen ao carregar
+// Inicializa boot screen ao carregar — com fallback hard-attached pro
+// botão Jogar caso _renderBoot quebre (ex: localStorage corrompido).
+function _renderBootSafe() {
+  try { _renderBoot(); }
+  catch (e) {
+    console.error('[boot] erro renderizando boot screen:', e);
+    // Fallback mínimo: botão Jogar funciona com defaults
+    const playBtn = document.getElementById('play');
+    if (playBtn) playBtn.onclick = () => _entrarNoJogo({
+      playerName: document.getElementById('boot-player')?.value?.trim() || 'Aventureiro',
+      worldName: document.getElementById('boot-world-name')?.value?.trim() || 'Mundo 1',
+      isNew: true,
+    });
+  }
+}
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', _renderBoot);
+  document.addEventListener('DOMContentLoaded', _renderBootSafe);
 } else {
-  _renderBoot();
+  _renderBootSafe();
 }

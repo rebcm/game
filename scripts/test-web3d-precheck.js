@@ -227,6 +227,12 @@ t('Save tem listarMundos + carregarPorNome (multi-save)',
   /listarMundos/.test(save) && /carregarPorNome/.test(save));
 t('Save expõe identidade do player (getPlayer/setPlayer)',
   /getPlayer/.test(save) && /setPlayer/.test(save));
+// BUG-fix: JSON.parse(null) retorna null silently. _safeJSON precisa
+// checar isso ou todos os getters retornam null e o boot quebra.
+t('_safeJSON trata null/undefined sem retornar null',
+  /s\s*===\s*null\s*\|\|\s*s\s*===\s*undefined/.test(save) ||
+  /v\s*===\s*null\s*\|\|\s*v\s*===\s*undefined/.test(save),
+  'Boot screen não pode quebrar se localStorage está vazio.');
 t('Save tem export/import pra compartilhamento de mundo',
   /exportarMundoAtual/.test(save) && /importarMundo/.test(save));
 t('Save serializa chunks modificados em base64',
