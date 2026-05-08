@@ -929,6 +929,19 @@ function loop(now) {
 
   state.renderer.atualizarTexturasAnimadas(dt);
   state.renderer.atualizarCeu(state.tempoDia, state.player.pos);
+  // Boss HP bar (Ender Dragon)
+  const boss = state.mobMgr.mobs.find(m => MOB_INFO[m.tipo]?.boss);
+  const bossBar = document.getElementById('boss-bar');
+  if (bossBar) {
+    if (boss) {
+      bossBar.classList.remove('hidden');
+      const pct = Math.max(0, Math.min(1, boss.hp / MOB_INFO[boss.tipo].hp));
+      const fill = document.getElementById('boss-bar-fill');
+      if (fill) fill.style.width = `${pct * 100}%`;
+    } else {
+      bossBar.classList.add('hidden');
+    }
+  }
   state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
   state.renderer.atualizarFOV(dt, !!state.player.input.sprint &&
     (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0);

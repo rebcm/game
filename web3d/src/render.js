@@ -792,6 +792,29 @@ function criarAtlas() {
     }
   }
 
+  // Dragon Egg: preto com pontos roxos/magenta brilhantes (cristal raro)
+  function pintarDragonEgg(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    // Pontos magenta brilhantes
+    for (let i = 0; i < 30; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillStyle = i % 4 === 0 ? '#e040fb' : (i % 2 === 0 ? '#9c27b0' : '#7b1fa2');
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Sombra arredondada (canto superior + inferior)
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0, 2, 2); ctx.fillRect(x0 + CELL - 2, y0, 2, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, 2, 2); ctx.fillRect(x0 + CELL - 2, y0 + CELL - 2, 2, 2);
+  }
+
   // Portal End: verde escuro com pontos verde-claro/branco (estrelas)
   function pintarPortalEnd(idx) {
     const col = idx % COLS;
@@ -920,6 +943,7 @@ function criarAtlas() {
   // Sprint End
   pintarPedra(30, '#e8d886', '#c0a866', '#f5e8a0', 0.30); // end stone amarelo
   pintarPortalEnd(31);                                     // portal End verde escuro
+  pintarDragonEgg(32);                                     // ovo do dragon (preto + roxo brilho)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -962,6 +986,7 @@ function criarAtlas() {
   mapa[BLOCO.PORTAL_NETHER] = { top: 29, side: 29, bottom: 29 };
   mapa[BLOCO.END_STONE]     = { top: 30, side: 30, bottom: 30 };
   mapa[BLOCO.PORTAL_END]    = { top: 31, side: 31, bottom: 31 };
+  mapa[BLOCO.DRAGON_EGG]    = { top: 32, side: 32, bottom: 32 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -1000,6 +1025,29 @@ function criarAtlas() {
         if ((s / 233280) < 0.10) ctx.fillRect(xA + px, yA + py, 1, 1);
       }
     }
+    // Tocha: chama amarela/laranja pulsante (flicker)
+    const idxT = 23, colT = idxT % COLS, rowT = Math.floor(idxT / COLS);
+    const xT = colT * CELL, yT = rowT * CELL;
+    ctx.fillStyle = '#2A1F12'; ctx.fillRect(xT, yT, CELL, CELL); // fundo
+    // Pau central marrom
+    ctx.fillStyle = '#9C7848'; ctx.fillRect(xT + 14, yT + 12, 4, 16);
+    ctx.fillStyle = '#6E5232';
+    ctx.fillRect(xT + 14, yT + 14, 1, 14);
+    ctx.fillRect(xT + 17, yT + 14, 1, 14);
+    // Chama animada (varia tamanho + posição por frame)
+    const flicker = Math.sin(frame * 0.7) * 1.5;
+    ctx.fillStyle = '#FFCB47';
+    ctx.fillRect(xT + 13 + Math.floor(flicker * 0.3), yT + 6, 6, 6);
+    ctx.fillStyle = '#FF8A2A';
+    ctx.fillRect(xT + 14, yT + 4 - Math.floor(flicker * 0.5), 4, 6);
+    ctx.fillStyle = '#FFEB80';
+    ctx.fillRect(xT + 15, yT + 8, 2, 4);
+    // Sparkle ocasional acima
+    if (frame % 3 === 0) {
+      ctx.fillStyle = '#FFEB80';
+      ctx.fillRect(xT + 15, yT + 2, 2, 1);
+    }
+
     // Lava: bolhas que pulsam
     const idxL = 18, colL = idxL % COLS, rowL = Math.floor(idxL / COLS);
     const xL = colL * CELL, yL = rowL * CELL;

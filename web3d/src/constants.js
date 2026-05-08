@@ -76,8 +76,9 @@ export const BLOCO = {
   // === Sprint End ===
   END_STONE:     36, // pedra amarelo claro da dimensão End
   PORTAL_END:    37, // portal verde escuro (emissive)
+  DRAGON_EGG:    38, // ovo do dragon (drop boss, decoração emissive)
 };
-export const N_BLOCOS = 38;
+export const N_BLOCOS = 39;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -124,6 +125,7 @@ export const BLOCO_INFO = {
   [BLOCO.PORTAL_NETHER]: { nome: 'Portal do Nether', solido: false, emiteLuz: 11, cor: 0x6a1b9a, lateral: 0x6a1b9a },
   [BLOCO.END_STONE]:     { nome: 'Pedra do End',     solido: true,  emiteLuz: 0,  cor: 0xe8d886, lateral: 0xc0a866 },
   [BLOCO.PORTAL_END]:    { nome: 'Portal do End',    solido: false, emiteLuz: 9,  cor: 0x004d40, lateral: 0x004d40 },
+  [BLOCO.DRAGON_EGG]:    { nome: 'Ovo do Dragon',    solido: true,  emiteLuz: 8,  cor: 0x1a1a1a, lateral: 0x000000 },
 };
 
 export const ICONE = {

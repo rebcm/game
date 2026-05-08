@@ -17,6 +17,8 @@ export const TIPO_MOB = {
   CAT: 'cat', VILLAGER: 'villager', IRON_GOLEM: 'iron_golem', WITCH: 'witch',
   // Sprint 9
   GHAST: 'ghast',
+  // Sprint End
+  ENDER_DRAGON: 'ender_dragon',
 };
 
 export const MOB_INFO = {
@@ -115,8 +117,19 @@ export const MOB_INFO = {
   ghast: {
     hp: 14, vel: 1.0, hostil: true, dano: 5, alcance: 6.0,
     drops: () => [{ i: ITEM.OURO, q: 1 + Math.floor(Math.random() * 2) }],
-    cor: 0xfafafa, sec: 0xb71c1c, // branco + olhos vermelhos
-    flutua: true, // sem gravidade
+    cor: 0xfafafa, sec: 0xb71c1c,
+    flutua: true,
+  },
+  // Boss do End — gigante, 100 HP, atira fireball, voa em órbita
+  ender_dragon: {
+    hp: 100, vel: 1.5, hostil: true, dano: 8, alcance: 12.0,
+    drops: () => [
+      { b: 38 /* DRAGON_EGG */, q: 1 },
+      { i: ITEM.DIAMANTE, q: 5 + Math.floor(Math.random() * 5) },
+      { i: ITEM.ENDER_PEARL, q: 5 + Math.floor(Math.random() * 5) },
+    ],
+    cor: 0x121212, sec: 0xb388ff,
+    flutua: true, boss: true, // boss = HP bar na HUD
   },
 };
 
@@ -679,6 +692,40 @@ export function construirModeloMob(tipo, info) {
       partes.bracos = bracos; partes.pernas = pernas;
       break;
     }
+    case 'ender_dragon': {
+      // Boss gigante: corpo alongado + cabeça com mandíbula + asas grandes + cauda
+      const corpo = cubo(1.6, 1.0, 2.4, info.cor);
+      corpo.position.y = 1.8; grp.add(corpo);
+      // Cabeça (à frente do corpo)
+      const cabeca = cubo(1.0, 0.9, 1.4, info.cor);
+      cabeca.position.set(0, 1.9, 1.8); grp.add(cabeca);
+      // Olhos magenta brilhantes (grandes)
+      olhosBrilhantes(cabeca, 0.30, 0.10, 0.71, info.sec, 0.18);
+      // Mandíbula inferior (com dentes brancos)
+      const mand = cubo(0.9, 0.20, 1.0, info.cor);
+      mand.position.set(0, -0.40, 0); cabeca.add(mand);
+      const dentes = cubo(0.85, 0.05, 0.05, 0xfafafa);
+      dentes.position.set(0, -0.30, 0.50); cabeca.add(dentes);
+      // Cauda (segmentos cônicos atrás)
+      for (let i = 0; i < 4; i++) {
+        const tam = 0.6 - i * 0.1;
+        const seg = cubo(tam, tam, 0.6, info.cor);
+        seg.position.set(0, 1.8, -1.4 - i * 0.6);
+        grp.add(seg);
+      }
+      // Asas grandes (chapinhas roxas estendidas)
+      const asaMat = new THREE.MeshLambertMaterial({
+        color: info.sec, transparent: true, opacity: 0.85, side: THREE.DoubleSide,
+      });
+      for (const sx of [-1, 1]) {
+        const asa = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.10, 1.6), asaMat);
+        asa.position.set(sx * 1.6, 2.0, 0.2);
+        asa.rotation.z = sx * 0.3;
+        grp.add(asa);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      break;
+    }
     case 'ghast': {
       // Cubo branco grande com 9 tentáculos pendurados
       const corpo = cubo(1.4, 1.0, 1.4, info.cor);
@@ -726,6 +773,7 @@ function _dimsMob(tipo) {
     case 'porco':    return { raio: 0.32, altura: 1.05 };
     case 'ovelha':   return { raio: 0.34, altura: 1.20 };
     case 'enderman':   return { raio: 0.30, altura: 2.50 };
+    case 'ender_dragon': return { raio: 1.20, altura: 1.80 };
     case 'cat':        return { raio: 0.20, altura: 0.55 };
     case 'villager':   return { raio: 0.30, altura: 1.85 };
     case 'iron_golem': return { raio: 0.55, altura: 2.40 };
@@ -1338,6 +1386,16 @@ export class MobManager {
     // nascer no topo de copa, fica preso e parece "voando".
     if (blocoChao === BLOCO.MADEIRA || blocoChao === BLOCO.FOLHA) return;
     let tipos;
+    // End: só spawna 1 ender_dragon (boss único). Player vê dragon imediatamente.
+    if (state.world?.dimensao === 'end') {
+      const jaTemDragon = this.mobs.some(m => m.tipo === 'ender_dragon');
+      if (!jaTemDragon) {
+        // Spawna dragon perto da plataforma central, voando alto
+        this.spawn('ender_dragon', 5, 50, 5);
+        state.ui?.toast?.('🐉 ENDER DRAGON apareceu!');
+      }
+      return;
+    }
     // Nether: só spawna ghast (e só lá). Skip restante das regras.
     if (state.world?.dimensao === 'nether') {
       if (this.mobs.length >= 4) return;

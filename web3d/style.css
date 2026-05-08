@@ -1153,6 +1153,36 @@ kbd {
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.5px;
 }
+/* Boss HP bar — aparece quando há boss vivo (Ender Dragon) */
+#boss-bar {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 6000;
+  pointer-events: none;
+}
+.boss-name {
+  font-family: "Press Start 2P", monospace;
+  font-size: 11px;
+  color: #FFD700;
+  text-shadow: 1px 1px 0 #000;
+  margin-bottom: 4px;
+}
+.boss-bar-bg {
+  width: 360px;
+  height: 14px;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+}
+.boss-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #b388ff, #6a1b9a);
+  transition: width 0.2s ease-out;
+}
+
 /* Minimap 2D top-down — canto superior direito, deslocado pra ESQUERDA
    dos action buttons (bag/craft/modo/save em right:14 top:14..164 = 220px
    de altura ocupados). Largura do minimap+wrap ≈ 132px, então right=70
