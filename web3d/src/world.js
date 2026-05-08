@@ -211,6 +211,66 @@ export class World {
         for (let y = 1; y <= altura; y++) c.set(lx, h + y, lz, BLOCO.CACTO);
       }
     }
+    // 3.5 Iceberg: em chunks de TAIGA com água ao nível do mar, agrupa
+    // blocos de NEVE em pilha pequena (cluster). 4% chance.
+    {
+      const igHash = hash2(cx, cz, this.seed ^ 0x1CEB) & 0xFFFF;
+      const cxC = (igHash & 0x7) + 4, czC = ((igHash >> 4) & 0x7) + 4;
+      const gxC = cx * CHUNK_SIZE + cxC, gzC = cz * CHUNK_SIZE + czC;
+      if (igHash < 2600 && this.biomaEm(gxC, gzC) === 'taiga' &&
+          this.alturaTerreno(gxC, gzC) < 10) {
+        const baseY = 9; // logo acima do nível d'água
+        for (let dy = 0; dy < 4; dy++) {
+          for (let dx = -2; dx <= 2; dx++) {
+            for (let dz = -2; dz <= 2; dz++) {
+              if (dx*dx + dz*dz + dy*dy > 6) continue;
+              const lx = cxC + dx, lz = czC + dz;
+              if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) continue;
+              c.set(lx, baseY + dy, lz, BLOCO.NEVE);
+            }
+          }
+        }
+      }
+    }
+    // 3.6 Ravina: canyon vertical no terreno. 1.5% chance.
+    {
+      const rvHash = hash2(cx, cz, this.seed ^ 0x4A71) & 0xFFFF;
+      if (rvHash < 1000) {
+        const cxC = 5 + (rvHash & 0x5);
+        const czC = 5 + ((rvHash >> 4) & 0x5);
+        const len = 8 + (rvHash >> 8) % 5;
+        const wid = 2;
+        for (let l = 0; l < len; l++) {
+          for (let w = -wid; w <= wid; w++) {
+            const lx = cxC + w, lz = czC + l;
+            if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) continue;
+            // Cava de y=4 (não bedrock) até superfície
+            for (let y = 4; y < WORLD_Y - 4; y++) {
+              const b = c.get(lx, y, lz);
+              if (b === BLOCO.AR || b === BLOCO.AGUA) continue;
+              if (b === BLOCO.BEDROCK) continue;
+              c.set(lx, y, lz, BLOCO.AR);
+            }
+          }
+        }
+      }
+    }
+    // 3.7 Vila: 1% chance, em planicies/floresta. 3 casas 5×5 com porta
+    // + 1 villager por casa.
+    {
+      const vlHash = hash2(cx, cz, this.seed ^ 0x71114) & 0xFFFF;
+      const cxV = 2, czV = 2;
+      const gxV = cx * CHUNK_SIZE + cxV, gzV = cz * CHUNK_SIZE + czV;
+      const bioma = this.biomaEm(gxV, gzV);
+      if (vlHash < 650 && (bioma === 'planicies' || bioma === 'floresta') &&
+          !(cx === 0 && cz === 0)) {
+        // Encontra superfície
+        const baseY = this.alturaTerreno(gxV, gzV);
+        if (baseY >= 14 && baseY < WORLD_Y - 8) {
+          this._gerarVila(c, cx, cz, baseY);
+        }
+      }
+    }
     // 4. Dungeon subterrânea: 1 chance a cada ~50 chunks. Sala 5×5×4 com
     // baú no centro e tochas nos cantos. Spawnada em y 8-25 (caverna level).
     // Skip no chunk (0,0) pra não engolir o spawn do player.
@@ -222,6 +282,47 @@ export class World {
       this._gerarDungeon(c, cx, cz, cxLocal, cy, czLocal);
     }
     return c;
+  }
+
+  // Vila: 3 casas 5×5×4 com porta + tocha. Posicionadas em forma de L.
+  // Spawna 1 villager por casa via state.mobMgr (deferred — não bloqueia gen).
+  _gerarVila(c, cx, cz, baseY) {
+    const casas = [{ lx: 2, lz: 2 }, { lx: 9, lz: 2 }, { lx: 2, lz: 9 }];
+    for (const casa of casas) {
+      const W = 5, H = 4, D = 5;
+      for (let dx = 0; dx < W; dx++) {
+        for (let dy = 0; dy < H; dy++) {
+          for (let dz = 0; dz < D; dz++) {
+            const lx = casa.lx + dx, ly = baseY + dy, lz = casa.lz + dz;
+            if (lx >= CHUNK_SIZE || lz >= CHUNK_SIZE || ly >= WORLD_Y) continue;
+            const naBorda = dx === 0 || dx === W-1 || dz === 0 || dz === D-1 || dy === H-1;
+            const naBase = dy === 0;
+            if (naBase) c.set(lx, ly, lz, BLOCO.MADEIRA);
+            else if (naBorda) c.set(lx, ly, lz, BLOCO.PRANCHAS !== undefined ? BLOCO.MADEIRA : BLOCO.MADEIRA);
+            else c.set(lx, ly, lz, BLOCO.AR);
+          }
+        }
+      }
+      // Porta na parede frontal (sul, dz=D-1), no centro
+      const portaLx = casa.lx + Math.floor(W / 2);
+      const portaLz = casa.lz + D - 1;
+      if (portaLx < CHUNK_SIZE && portaLz < CHUNK_SIZE) {
+        c.set(portaLx, baseY + 1, portaLz, BLOCO.DOOR_MADEIRA);
+        c.set(portaLx, baseY + 2, portaLz, BLOCO.AR); // headroom
+      }
+      // Tocha no centro do teto
+      const tx = casa.lx + 2, tz = casa.lz + 2;
+      if (tx < CHUNK_SIZE && tz < CHUNK_SIZE) {
+        c.set(tx, baseY + H - 2, tz, BLOCO.TOCHA);
+      }
+      // Marca pra spawnar villager (spawn deferido — main.js processa)
+      if (!this._vilasParaSpawnar) this._vilasParaSpawnar = [];
+      this._vilasParaSpawnar.push({
+        x: cx * CHUNK_SIZE + casa.lx + 2.5,
+        y: baseY + 1,
+        z: cz * CHUNK_SIZE + casa.lz + 2.5,
+      });
+    }
   }
 
   // Sala 5×5×4 oca com paredes de pedra e baú no centro com loot.

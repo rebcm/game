@@ -813,6 +813,13 @@ function loop(now) {
       if (!c.modificado) state.world.chunks.delete(k);
     }
   }
+  // === Spawn villagers de vilas geradas (deferido — após chunk loaded) ===
+  if (state.world._vilasParaSpawnar?.length) {
+    while (state.world._vilasParaSpawnar.length) {
+      const v = state.world._vilasParaSpawnar.shift();
+      state.mobMgr.spawn('villager', v.x, v.y, v.z);
+    }
+  }
   // === Loading overlay quando há backlog ===
   // Mostra "Carregando…" se >50% do view radius está faltando OU tem
   // muito mesh-dirty pendente. Esconde quando backlog < 25%.
