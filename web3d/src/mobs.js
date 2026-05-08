@@ -7,6 +7,7 @@ import { BLOCO, BLOCO_INFO, ITEM, WORLD_Y } from './constants.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 import { spawnArrow, spawnItemDrop } from './particles.js';
+import { aStarMob } from './utils.js';
 
 export const TIPO_MOB = {
   VACA: 'vaca', GALINHA: 'galinha', PORCO: 'porco', OVELHA: 'ovelha',
@@ -729,6 +730,9 @@ export class Mob {
     this.sunburn = 0;
     // Esqueleto: cooldown entre flechadas.
     this.cooldownFlecha = 1.5 + Math.random();
+    // Stuck detection: monitora posição últimos N seconds. Se variou
+    // < 0.3 bloco em 3s, força repath + leve teleport pra cima.
+    this._stuckLastX = x; this._stuckLastZ = z; this._stuckTimer = 0;
     // Lobo: domesticado segue o player e ataca mobs hostis.
     this.domesticado = false;
     // Galinha: timer pra próximo ovo (paridade Minecraft: 5-10 min,
@@ -937,18 +941,22 @@ export class Mob {
         }
       }
     }
-    // Snap vertical: cai por gravidade respeitando AABB (todos os blocos
-    // sob a base do mob, não só uma coluna XZ central). Auto-step de 1
-    // se preso dentro de bloco. Limite: 1 sobe (não escala árvore).
+    // Snap vertical: cai por gravidade respeitando AABB. Auto-step 1.
     let yp = Math.floor(this.y + 0.001);
     if (this.colideEm(world, this.x, yp, this.z)) {
-      // Preso: tenta subir 1
       if (!this.colideEm(world, this.x, yp + 1, this.z)) yp++;
     }
-    // Cai enquanto não houver suporte sob a base (qualquer bloco no
-    // footprint XZ do mob)
-    let safety = 64;
-    while (yp > 0 && !this.colideEm(world, this.x, yp - 0.05, this.z) && safety-- > 0) yp--;
+    // Mob FLUTUA na água: se há água no bloco do mob, sobe lentamente
+    // até a superfície (não cai pro fundo). Igual MC.
+    const blocoMob = world.get(Math.floor(this.x), yp, Math.floor(this.z));
+    if (blocoMob === BLOCO.AGUA) {
+      // Sobe se ainda há água acima, senão fica na superfície
+      if (world.get(Math.floor(this.x), yp + 1, Math.floor(this.z)) === BLOCO.AGUA) yp++;
+    } else {
+      // Cai normalmente
+      let safety = 64;
+      while (yp > 0 && !this.colideEm(world, this.x, yp - 0.05, this.z) && safety-- > 0) yp--;
+    }
     this.y = yp;
     let yVisual = this.y;
     if (info.pula && this.pulando > 0) {
@@ -1023,6 +1031,22 @@ export class Mob {
     // Reprodução: decrementa timers
     if (this.loveTimer > 0) this.loveTimer -= dt;
     if (this.breedCooldown > 0) this.breedCooldown -= dt;
+    // Stuck detection: força repath + minor teleport se mob não mexeu
+    // o suficiente em 3s. Previne mobs travados em quinas/buracos.
+    this._stuckTimer += dt;
+    if (this._stuckTimer >= 3) {
+      const dx = this.x - this._stuckLastX;
+      const dz = this.z - this._stuckLastZ;
+      if (dx*dx + dz*dz < 0.09) {
+        // Stuck — invalida path + tenta pular
+        this._path = null;
+        this._pathTimer = 0;
+        if (this.colideEm(world, this.x, this.y + 1, this.z) === false) {
+          this.y += 0.6; // pequeno hop
+        }
+      }
+      this._stuckLastX = this.x; this._stuckLastZ = this.z; this._stuckTimer = 0;
+    }
   }
   vivo() { return this.hp > 0; }
 
@@ -1139,15 +1163,37 @@ export class MobManager {
           m.cooldownAtaque = 1.0;
         }
       } else if (info.hostil) {
-        // Hostis SÓ perseguem se virem o player (line-of-sight). Senão,
-        // wander aleatório (paridade Minecraft real). LOS é cacheada por
-        // ~0.5s pra evitar raycast em todo frame.
+        // Hostis SÓ perseguem se virem o player (LOS), cacheada por ~0.5s.
         m._losTimer = (m._losTimer || 0) - dt;
         if (m._losTimer <= 0) {
           m._losTimer = 0.4 + Math.random() * 0.3;
           m._vePlayer = m.podeVer(world, player.pos.x, player.pos.y + 0.8, player.pos.z);
         }
-        m.atualizar(dt, world, m._vePlayer ? { x: player.pos.x, z: player.pos.z } : null);
+        // A* pathfinding pra hostis melee (skip esqueleto/witch — ranged).
+        // Computa path 1×/1.2s. Se path existe, segue waypoint; senão
+        // fallback pra movimento direto (vePlayer).
+        let alvoMov = m._vePlayer ? { x: player.pos.x, z: player.pos.z } : null;
+        if (m._vePlayer && m.tipo !== 'esqueleto' && m.tipo !== 'witch' && m.tipo !== 'creeper') {
+          m._pathTimer = (m._pathTimer || 0) - dt;
+          if (m._pathTimer <= 0) {
+            m._pathTimer = 1.2;
+            const dist2 = (player.pos.x - m.x) ** 2 + (player.pos.z - m.z) ** 2;
+            if (dist2 < 256) { // só path se < 16 blocos
+              m._path = aStarMob(world, m.x, Math.floor(m.y), m.z,
+                                 player.pos.x, player.pos.z, 80);
+              m._pathIdx = 0;
+            }
+          }
+          if (m._path && m._pathIdx < m._path.length) {
+            const wp = m._path[m._pathIdx];
+            const dx = wp.x + 0.5 - m.x;
+            const dz = wp.z + 0.5 - m.z;
+            const d = Math.hypot(dx, dz);
+            if (d < 0.3) m._pathIdx++;
+            else alvoMov = { x: wp.x + 0.5, z: wp.z + 0.5 };
+          }
+        }
+        m.atualizar(dt, world, alvoMov);
       } else {
         m.atualizar(dt, world, null);
       }

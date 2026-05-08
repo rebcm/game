@@ -227,6 +227,66 @@ export function vertexAOValor(world, sx, sy, sz, off3) {
   return 3 - (a + b + c);
 }
 
+// === A* pathfinding 2D (top-down) ===
+// Acha caminho de (sx, sz) até (gx, gz) num grid horizontal mantendo y
+// constante, considerando bloco walkable se há ar em y + ar em y+1 +
+// suporte sólido em y-1 (ou y-2 se step-up natural). Limite maxNodes
+// pra cap de CPU. Retorna array de {x, z} (path), [] se já no goal,
+// null se sem caminho.
+export function aStarMob(world, sx, sy, sz, gx, gz, maxNodes = 100) {
+  const start = { x: Math.floor(sx), z: Math.floor(sz) };
+  const goal  = { x: Math.floor(gx), z: Math.floor(gz) };
+  if (start.x === goal.x && start.z === goal.z) return [];
+  const startNode = { x: start.x, z: start.z, g: 0, h: 0, parent: null };
+  const open = [startNode];
+  const closed = new Set();
+  const best = new Map();
+  best.set(`${start.x},${start.z}`, startNode);
+  let nodes = 0;
+  const walkable = (nx, nz) => {
+    // Suporte sólido em y-1 (ou y-2 = jump-down 1 bloco), ar em y e y+1
+    if (world.isSolido(nx, sy + 1, nz)) return false; // cabeça obstruída
+    if (world.isSolido(nx, sy, nz)) {
+      // step up de 1: ok se ar em sy+1 e sy+2
+      if (world.isSolido(nx, sy + 2, nz)) return false;
+      return true;
+    }
+    if (world.isSolido(nx, sy - 1, nz)) return true;        // mesmo nível
+    if (world.isSolido(nx, sy - 2, nz)) return true;        // jump-down 1
+    return false;
+  };
+  while (open.length > 0 && nodes < maxNodes) {
+    // Pega menor f = g + h (sort caro mas nodes é pequeno)
+    let bestIdx = 0;
+    for (let i = 1; i < open.length; i++) {
+      if ((open[i].g + open[i].h) < (open[bestIdx].g + open[bestIdx].h)) bestIdx = i;
+    }
+    const cur = open.splice(bestIdx, 1)[0];
+    nodes++;
+    if (cur.x === goal.x && cur.z === goal.z) {
+      const path = [];
+      let n = cur;
+      while (n.parent) { path.unshift({ x: n.x, z: n.z }); n = n.parent; }
+      return path;
+    }
+    closed.add(`${cur.x},${cur.z}`);
+    for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const nx = cur.x + dx, nz = cur.z + dz;
+      const k = `${nx},${nz}`;
+      if (closed.has(k)) continue;
+      if (!walkable(nx, nz)) continue;
+      const g = cur.g + 1;
+      const h = Math.abs(nx - goal.x) + Math.abs(nz - goal.z);
+      const ex = best.get(k);
+      if (ex && ex.g <= g) continue;
+      const node = { x: nx, z: nz, g, h, parent: cur };
+      best.set(k, node);
+      open.push(node);
+    }
+  }
+  return null;
+}
+
 // UV de uma célula no atlas 32×16 (8 colunas × 4 linhas de células).
 // O atlas tem 32 células totais (linhas 4 × cols 8).
 // Aplica inset de 0.5 pixel para evitar bleed entre células adjacentes.
