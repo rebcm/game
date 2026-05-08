@@ -430,6 +430,160 @@ class Arrow {
 
 if (typeof window !== 'undefined') window._arrows = window._arrows || [];
 
+// =====================================================================
+// FishingBobber — bóia de pesca lançada pela vara.
+// Voa em arco, cai por gravidade até pousar em água ou bloco sólido.
+// Estados: 'voando' → 'na_agua' (espera bite) → 'mordeu' (janela curta).
+// =====================================================================
+export class FishingBobber {
+  constructor(scene, x, y, z, vx, vy, vz) {
+    this.scene = scene;
+    this.x = x; this.y = y; this.z = z;
+    this.vx = vx; this.vy = vy; this.vz = vz;
+    this.estado = 'voando';
+    this.timerBite = 4 + Math.random() * 8; // 4-12s pra peixe morder
+    this.janelaBite = 0; // segundos restantes na janela "mordeu"
+    this.life = 60;
+    this.naoEhAgua = false; // pousou em chão sólido (sem peixe possível)
+    // Visual: bóia branca/vermelha (estilo MC)
+    const grupo = new THREE.Group();
+    const top = new THREE.Mesh(
+      new THREE.BoxGeometry(0.18, 0.10, 0.18),
+      new THREE.MeshBasicMaterial({ color: 0xe53935 }),
+    );
+    top.position.y = 0.05;
+    const bot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.18, 0.10, 0.18),
+      new THREE.MeshBasicMaterial({ color: 0xfafafa }),
+    );
+    bot.position.y = -0.05;
+    grupo.add(top); grupo.add(bot);
+    grupo.position.set(x, y, z);
+    this.mesh = grupo;
+    this.scene.add(grupo);
+  }
+  atualizar(dt, world) {
+    this.life -= dt;
+    if (this.life <= 0) return false;
+    if (this.estado === 'voando') {
+      this.x += this.vx * dt;
+      this.y += this.vy * dt;
+      this.z += this.vz * dt;
+      this.vy -= 12 * dt; // gravidade
+      // Pousou em água?
+      const fxi = Math.floor(this.x), fyi = Math.floor(this.y), fzi = Math.floor(this.z);
+      const b = world.get(fxi, fyi, fzi);
+      if (b === BLOCO.AGUA) {
+        // Snap pra superfície (bóia flutua)
+        this.estado = 'na_agua';
+        this.vx = 0; this.vy = 0; this.vz = 0;
+        this.y = fyi + 0.95;
+        Audio.splash?.();
+      } else if (BLOCO_INFO[b]?.solido && b !== BLOCO.AR) {
+        // Pousou em chão sólido — sem peixe, fica parado e fade
+        this.estado = 'na_agua'; // reusa estado pra render igual
+        this.naoEhAgua = true;
+        this.vx = 0; this.vy = 0; this.vz = 0;
+        this.timerBite = 999;
+      }
+    } else if (this.estado === 'na_agua') {
+      // Bobbing visual (sobe/desce levemente sobre a água)
+      const t = (60 - this.life) * 2;
+      this.mesh.position.y = this.y + Math.sin(t) * 0.05;
+      if (this.naoEhAgua) return true;
+      this.timerBite -= dt;
+      if (this.timerBite <= 0) {
+        this.estado = 'mordeu';
+        this.janelaBite = 1.4; // 1.4s pra reagir
+        Audio.splash?.();
+        if (state.ui?.toast) state.ui.toast('🐟 Algo mordeu! Clique pra puxar!');
+        // Anima bobber afundando
+        this.mesh.position.y = this.y - 0.25;
+      }
+    } else if (this.estado === 'mordeu') {
+      this.janelaBite -= dt;
+      // Bobbing rápido (algo puxando)
+      const t = (60 - this.life) * 12;
+      this.mesh.position.y = this.y - 0.25 + Math.sin(t) * 0.10;
+      if (this.janelaBite <= 0) {
+        // Fugiu — bobber volta a flutuar, novo timer
+        this.estado = 'na_agua';
+        this.timerBite = 4 + Math.random() * 6;
+        this.mesh.position.y = this.y;
+        if (state.ui?.toast) state.ui.toast('Peixe escapou…');
+      }
+    }
+    if (this.estado === 'voando') {
+      this.mesh.position.set(this.x, this.y, this.z);
+    } else {
+      this.mesh.position.x = this.x;
+      this.mesh.position.z = this.z;
+    }
+    return true;
+  }
+  reel() {
+    // Chamado quando player clica de novo. Retorna o item pescado ou null.
+    if (this.naoEhAgua) return null;
+    if (this.estado !== 'mordeu') return null;
+    const r = Math.random();
+    // Pesos: 65% PEIXE, 15% OSSO, 12% PAU, 5% MUDA, 3% ESMERALDA
+    if (r < 0.65) return { i: ITEM.PEIXE, q: 1 };
+    if (r < 0.80) return { i: ITEM.OSSO, q: 1 };
+    if (r < 0.92) return { i: ITEM.PAU, q: 1 };
+    if (r < 0.97) return { i: ITEM.MUDA, q: 1 };
+    return { i: ITEM.ESMERALDA, q: 1 };
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    for (const c of this.mesh.children) {
+      c.geometry.dispose();
+      c.material.dispose();
+    }
+  }
+}
+
+// Spawna ou recolhe bobber. Estado global em state._fishingBobber.
+export function castFishingLine(origem, dir) {
+  if (!state.renderer) return;
+  // Se já existe bobber, click recolhe (reel ou cancela)
+  if (state._fishingBobber) {
+    const b = state._fishingBobber;
+    const pescado = b.reel();
+    b.destruir();
+    state._fishingBobber = null;
+    if (pescado) {
+      state.inv?.adicionar?.(pescado);
+      Audio.colocar?.();
+      const nome = pescado.i === ITEM.PEIXE ? 'Peixe 🐟'
+        : pescado.i === ITEM.OSSO ? 'Osso 🦴'
+        : pescado.i === ITEM.PAU ? 'Pau'
+        : pescado.i === ITEM.MUDA ? 'Muda 🌱'
+        : pescado.i === ITEM.ESMERALDA ? 'Esmeralda 💚'
+        : 'Item';
+      state.ui?.toast?.(`🎣 Pescou ${nome}!`);
+    } else {
+      state.ui?.toast?.('Linha recolhida');
+    }
+    return;
+  }
+  // Lança nova bóia: arco de ~3 blocos à frente
+  const vel = 14;
+  const vx = dir.x * vel, vy = dir.y * vel + 4, vz = dir.z * vel;
+  const b = new FishingBobber(state.renderer.scene,
+    origem.x + dir.x * 0.6, origem.y - 0.1, origem.z + dir.z * 0.6,
+    vx, vy, vz);
+  state._fishingBobber = b;
+  Audio.splash?.();
+}
+
+export function atualizarFishingBobber(dt) {
+  if (!state._fishingBobber || !state.world) return;
+  if (!state._fishingBobber.atualizar(dt, state.world)) {
+    state._fishingBobber.destruir();
+    state._fishingBobber = null;
+  }
+}
+
 export function spawnArrow(origem, dir, dano = 4, vel = 28) {
   if (!state.renderer) return;
   const vx = dir.x * vel, vy = dir.y * vel, vz = dir.z * vel;

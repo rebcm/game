@@ -80,8 +80,9 @@ export const BLOCO = {
   END_CRYSTAL:   39, // cristal no End que cura o dragon (destruir antes!)
   PUMPKIN:       40, // abóbora natural (decoração)
   CARVED_PUMPKIN:41, // abóbora talhada (cabeça do snow golem + helmet)
+  BOLO:          42, // bolo: comestível ao right-click (restaura fome, consome bloco)
 };
-export const N_BLOCOS = 42;
+export const N_BLOCOS = 43;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -132,6 +133,7 @@ export const BLOCO_INFO = {
   [BLOCO.END_CRYSTAL]:   { nome: 'Cristal do End',   solido: true,  emiteLuz: 13, cor: 0xfff59d, lateral: 0xfff176 },
   [BLOCO.PUMPKIN]:       { nome: 'Abóbora',          solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
   [BLOCO.CARVED_PUMPKIN]:{ nome: 'Abóbora Talhada',  solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.BOLO]:          { nome: 'Bolo',             solido: true,  emiteLuz: 0,  cor: 0xfaf3e0, lateral: 0xb98860 },
 };
 
 export const ICONE = {
@@ -167,6 +169,7 @@ export const ITEM = {
   ENDER_PEARL: 295, // teleport on right-click (drop de enderman)
   EYE_OF_ENDER: 296, // ativa portal End (ender_pearl + carvao)
   SLIMEBALL:    297, // drop de slime (futuro: pistão/grude)
+  VARA_PESCA:   298, // vara de pesca: cast em água, espera bite, reel pra peixe
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -215,6 +218,7 @@ export const ITEM_INFO = {
   [ITEM.ENDER_PEARL]:   { nome: 'Pérola do Ender',   icone: '🔮' },
   [ITEM.EYE_OF_ENDER]:  { nome: 'Olho do Ender',     icone: '👁' },
   [ITEM.SLIMEBALL]:     { nome: 'Bola de Slime',     icone: '🟢' },
+  [ITEM.VARA_PESCA]:    { nome: 'Vara de Pesca',     icone: '🎣', ferramenta: 'vara' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -282,4 +286,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.ENDER_PEARL, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.EYE_OF_ENDER, q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
+  // Vara de pesca: 3 paus + 2 lã (proxy de cordel/string)
+  { custos: [{i: ITEM.PAU, q: 3}, {b: BLOCO.LA, q: 2}], saida: {i: ITEM.VARA_PESCA, q: 1}, wb: true },
+  // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
+  { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

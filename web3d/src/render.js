@@ -834,6 +834,75 @@ function criarAtlas() {
       ctx.fillRect(x0 + 18, y0 + 14, 1, 4);
     }
   }
+  // Bolo: topo creme com cereja vermelha + decoração
+  function pintarBoloTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base creme (cobertura)
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda dourada (massa do bolo aparecendo)
+    ctx.fillStyle = '#d4a574';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    // Glacê branco
+    ctx.fillStyle = '#ffffff';
+    let seed = idx * 9301 + 49297;
+    for (let py = 4; py < CELL - 4; py += 3) {
+      for (let px = 4; px < CELL - 4; px += 3) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.45) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Cereja no centro
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    ctx.fillStyle = '#e53935';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ff8a80';
+    ctx.fillRect(x0 + 14, y0 + 14, 2, 2);
+    // Talo verde da cereja
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 16, y0 + 11, 1, 3);
+  }
+  // Bolo lado: 1/3 creme em cima + 2/3 massa marrom (camadas)
+  function pintarBoloLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base massa marrom
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Pontos de chocolate/textura
+    ctx.fillStyle = '#5d4037';
+    let seed = idx * 9301 + 49297;
+    for (let py = 10; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Recheio rosa (camada do meio)
+    ctx.fillStyle = '#f8bbd0';
+    ctx.fillRect(x0, y0 + 18, CELL, 3);
+    ctx.fillStyle = '#f48fb1';
+    ctx.fillRect(x0, y0 + 19, CELL, 1);
+    // Cobertura creme em cima (8px)
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0, y0, CELL, 9);
+    // Drips brancos descendo (efeito glace pingando)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 4,  y0 + 9, 2, 2);
+    ctx.fillRect(x0 + 12, y0 + 9, 1, 4);
+    ctx.fillRect(x0 + 20, y0 + 9, 2, 3);
+    ctx.fillRect(x0 + 27, y0 + 9, 1, 2);
+    // Borda escura no topo
+    ctx.fillStyle = '#d4a574';
+    ctx.fillRect(x0, y0 + 8, CELL, 1);
+  }
   // Lateral abóbora (ridges verticais sem face)
   function pintarPumpkinLado(idx) {
     const col = idx % COLS;
@@ -1027,6 +1096,8 @@ function criarAtlas() {
   pintarPumpkin(34, false);                                // abóbora natural (top com talo)
   pintarPumpkin(35, true);                                 // abóbora talhada (face jack-o-lantern)
   pintarPumpkinLado(36);                                   // lateral abóbora (ridges verticais)
+  pintarBoloTopo(37);                                      // bolo topo (creme + cereja)
+  pintarBoloLado(38);                                      // bolo lado (massa + recheio + glace)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1073,6 +1144,7 @@ function criarAtlas() {
   mapa[BLOCO.END_CRYSTAL]   = { top: 33, side: 33, bottom: 33 };
   mapa[BLOCO.PUMPKIN]        = { top: 34, side: 36, bottom: 36 }; // talo cima, ridges lado
   mapa[BLOCO.CARVED_PUMPKIN] = { top: 34, side: 35, bottom: 36 }; // face na frente (lado)
+  mapa[BLOCO.BOLO]           = { top: 37, side: 38, bottom: 38 }; // creme cima, lateral em camadas
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

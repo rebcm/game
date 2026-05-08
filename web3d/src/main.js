@@ -23,6 +23,7 @@ import {
   Particulas, spawnItemDrop, atualizarItemDrops,
   spawnXPOrb, atualizarXpOrbs, atualizarAmbientTriggers,
   spawnArrow, atualizarArrows,
+  castFishingLine, atualizarFishingBobber,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
@@ -376,6 +377,7 @@ function init() {
   state.inv.adicionar({ b: BLOCO.LUZ, q: 4 });
   state.inv.adicionar({ b: BLOCO.TOCHA, q: 16 });
   state.inv.adicionar({ i: ITEM.PIC_MADEIRA, q: 1 });
+  state.inv.adicionar({ i: ITEM.VARA_PESCA, q: 1 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -664,6 +666,13 @@ function loop(now) {
     // Click direito: interação ou colocar bloco
     if (state.player.cliqueD) {
       state.player.cliqueD = false;
+      // Vara de Pesca: cast/reel — funciona em qualquer contexto.
+      const selVara = state.inv.itemSelecionado();
+      if (selVara?.i === ITEM.VARA_PESCA) {
+        const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+        castFishingLine(state.renderer.camera.position, dirCam);
+        return;
+      }
       // Pérola do Ender: teleporta player ~6 blocos na direção da câmera
       // (paridade Minecraft real). Funciona em qualquer contexto.
       const selPearl = state.inv.itemSelecionado();
@@ -776,6 +785,21 @@ function loop(now) {
         }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.CAMA) dormir();
+        else if (blocoAlvo === BLOCO.BOLO) {
+          // Comer bolo: restaura fome (4) + 1 hp em survival, consome bloco.
+          if (state.player.fome >= state.player.fomeMax && state.player.modo === 'survival') {
+            state.ui.toast('Você está cheio');
+          } else {
+            state.player.fome = clamp(state.player.fome + 4, 0, state.player.fomeMax);
+            state.player.saturation = Math.min(20, (state.player.saturation || 0) + 2);
+            if (state.player.modo === 'survival') {
+              state.player.hp = Math.min(state.player.hpMax, state.player.hp + 1);
+            }
+            state.world.set(t.x, t.y, t.z, BLOCO.AR);
+            Audio.eatCrunch();
+            state.ui.toast('🍰 Bolo delicioso! (+4 fome)');
+          }
+        }
         else if (blocoAlvo === BLOCO.WORKBENCH) {
           const el = document.getElementById('painel-craft');
           if (el.classList.contains('hidden')) {
@@ -987,6 +1011,7 @@ function loop(now) {
   atualizarItemDrops(dt);
   atualizarXpOrbs(dt, ganharXP);
   atualizarArrows(dt);
+  atualizarFishingBobber(dt);
   // Skip ambient triggers + clima em heavy frames pra dar prioridade a
   // chunk loading/mesh build (responsividade da movimentação).
   if (!state._heavyFrame || !state._busy) {
