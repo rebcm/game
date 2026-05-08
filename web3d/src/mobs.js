@@ -85,6 +85,16 @@ export const MOB_INFO = {
     ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
+  // Coelho: passivo pequeno, salta, drop carne + raro pé-de-coelho
+  coelho: {
+    hp: 4, vel: 2.5, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.6 ? [{ i: ITEM.CARNE_COELHO, q: 1 }] : []),
+      ...(Math.random() < 0.10 ? [{ i: ITEM.PE_COELHO, q: 1 }] : []),
+    ],
+    cor: 0xefebe9, sec: 0xbcaaa4, // bege claro + bege médio
+    pula: true,
+  },
   // Stray: esqueleto da taiga, atira flechas de slowness, mais HP
   stray: {
     hp: 16, vel: 1.7, hostil: true, dano: 2, alcance: 7.0,
@@ -396,6 +406,41 @@ export function construirModeloMob(tipo, info) {
       grp.add(colar);
       partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'coelho': {
+      // Corpo bege oval pequeno + cabeça com 2 orelhas longas + pernas traseiras grandes
+      const corpo = cubo(0.30, 0.22, 0.40, info.cor);
+      corpo.position.y = 0.30; grp.add(corpo);
+      const cabeca = cubo(0.22, 0.20, 0.22, info.cor);
+      cabeca.position.set(0, 0.48, 0.20); grp.add(cabeca);
+      // Olhos pretos pequenos
+      olhosPretos(cabeca, 0.07, 0.02, 0.115, 0.04, 0.025);
+      // Nariz rosa
+      const nariz = cubo(0.04, 0.03, 0.03, 0xf48fb1);
+      nariz.position.set(0, -0.05, 0.115); cabeca.add(nariz);
+      // 2 orelhas verticais longas (caracteristica do coelho)
+      for (const sx of [-0.06, 0.06]) {
+        const orelha = cubo(0.05, 0.20, 0.04, info.cor);
+        orelha.position.set(sx, 0.18, -0.04); cabeca.add(orelha);
+        // Interior rosa da orelha
+        const orInt = cubo(0.03, 0.16, 0.02, 0xf48fb1);
+        orInt.position.set(0, 0, 0.025); orelha.add(orInt);
+      }
+      // Cauda branca pequena (pompom traseiro)
+      const cauda = cubo(0.10, 0.10, 0.08, 0xfafafa);
+      cauda.position.set(0, 0.30, -0.22); grp.add(cauda);
+      // 2 pernas dianteiras curtas + 2 traseiras maiores (pra pular)
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const traseira = i >= 2;
+        const altPerna = traseira ? 0.20 : 0.16;
+        const p = pernaComPivot(0.07, altPerna, 0.07, info.sec, 0.20);
+        p.position.x = (i % 2 === 0 ? -0.10 : 0.10);
+        p.position.z = traseira ? -0.13 : 0.13;
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
       break;
     }
     case 'galinha': {
@@ -969,6 +1014,7 @@ function _dimsMob(tipo) {
     case 'husk':     return { raio: 0.30, altura: 1.85 };
     case 'stray':    return { raio: 0.30, altura: 1.85 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
+    case 'coelho':   return { raio: 0.18, altura: 0.50 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
@@ -1687,6 +1733,12 @@ export class MobManager {
     } else if (luzMax >= 9 && (blocoChao === BLOCO.GRAMA || blocoChao === BLOCO.AREIA)) {
       tipos = ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
       if (Math.random() < 0.06) tipos.push('cat');      // raro
+      // Coelho: comum em planicies/floresta, mais raro no deserto
+      if (blocoChao === BLOCO.GRAMA) {
+        if (Math.random() < 0.30) tipos.push('coelho');
+      } else if (blocoChao === BLOCO.AREIA) {
+        if (Math.random() < 0.10) tipos.push('coelho');
+      }
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
       if (Math.random() < 0.008) tipos.push('wandering_trader'); // muito raro

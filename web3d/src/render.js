@@ -952,6 +952,31 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Vidro colorido (genérico): cor saturada com molduras escuras + reflexo
+  function pintarVidroColorido(idx, corBase, corBorda) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Cor preenchida (translúcida visualmente, mas opaca)
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda externa (moldura escura tipo metal)
+    ctx.fillStyle = corBorda;
+    ctx.fillRect(x0,            y0,            CELL, 2);
+    ctx.fillRect(x0,            y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0,            y0,            2,    CELL);
+    ctx.fillRect(x0 + CELL - 2, y0,            2,    CELL);
+    // Cruz central (caixilho)
+    ctx.fillRect(x0 + CELL / 2 - 1, y0, 2, CELL);
+    ctx.fillRect(x0, y0 + CELL / 2 - 1, CELL, 2);
+    // Reflexo branco diagonal (efeito vidro)
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillRect(x0 + 4,  y0 + 4,  4, 1);
+    ctx.fillRect(x0 + 5,  y0 + 5,  3, 1);
+    ctx.fillRect(x0 + 18, y0 + 18, 4, 1);
+    ctx.fillRect(x0 + 19, y0 + 19, 3, 1);
+  }
+
   // Lã colorida (genérica): aplica padrão de fios curtos sobre cor base
   function pintarLaColorida(idx, corBase, corClaro, corEscuro) {
     const col = idx % COLS;
@@ -1328,6 +1353,10 @@ function criarAtlas() {
   pintarLaColorida(47, '#1565c0', '#4fc3f7', '#0d47a1'); // lã azul
   pintarLaColorida(48, '#2e7d32', '#66bb6a', '#1b5e20'); // lã verde
   pintarLaColorida(49, '#f9a825', '#ffd54f', '#f57f17'); // lã amarela
+  pintarVidroColorido(50, '#ef5350', '#8b0000');         // vidro vermelho
+  pintarVidroColorido(51, '#4fc3f7', '#0d47a1');         // vidro azul
+  pintarVidroColorido(52, '#66bb6a', '#1b5e20');         // vidro verde
+  pintarVidroColorido(53, '#ffeb3b', '#f9a825');         // vidro amarelo
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1384,6 +1413,10 @@ function criarAtlas() {
   mapa[BLOCO.LA_AZUL]        = { top: 47, side: 47, bottom: 47 };
   mapa[BLOCO.LA_VERDE]       = { top: 48, side: 48, bottom: 48 };
   mapa[BLOCO.LA_AMARELA]     = { top: 49, side: 49, bottom: 49 };
+  mapa[BLOCO.VIDRO_VERMELHO] = { top: 50, side: 50, bottom: 50 };
+  mapa[BLOCO.VIDRO_AZUL]     = { top: 51, side: 51, bottom: 51 };
+  mapa[BLOCO.VIDRO_VERDE]    = { top: 52, side: 52, bottom: 52 };
+  mapa[BLOCO.VIDRO_AMARELO]  = { top: 53, side: 53, bottom: 53 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

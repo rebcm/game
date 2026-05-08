@@ -90,8 +90,12 @@ export const BLOCO = {
   LA_AZUL:       49,
   LA_VERDE:      50,
   LA_AMARELA:    51,
+  VIDRO_VERMELHO: 52,
+  VIDRO_AZUL:     53,
+  VIDRO_VERDE:    54,
+  VIDRO_AMARELO:  55,
 };
-export const N_BLOCOS = 52;
+export const N_BLOCOS = 56;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -152,6 +156,10 @@ export const BLOCO_INFO = {
   [BLOCO.LA_AZUL]:       { nome: 'Lã Azul',          solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
   [BLOCO.LA_VERDE]:      { nome: 'Lã Verde',         solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
   [BLOCO.LA_AMARELA]:    { nome: 'Lã Amarela',       solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.VIDRO_VERMELHO]:{ nome: 'Vidro Vermelho',   solido: true,  emiteLuz: 0,  cor: 0xef5350, lateral: 0xef5350 },
+  [BLOCO.VIDRO_AZUL]:    { nome: 'Vidro Azul',       solido: true,  emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x4fc3f7 },
+  [BLOCO.VIDRO_VERDE]:   { nome: 'Vidro Verde',      solido: true,  emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x66bb6a },
+  [BLOCO.VIDRO_AMARELO]: { nome: 'Vidro Amarelo',    solido: true,  emiteLuz: 0,  cor: 0xffeb3b, lateral: 0xffeb3b },
 };
 
 export const ICONE = {
@@ -193,6 +201,8 @@ export const ITEM = {
   FOGUETE:      244, // foguete: right-click lança, sobe, explode em cores
   LUNETA:       245, // luneta: right-click toggle zoom (FOV reduzido)
   TRIDENTE:     246, // tridente: arremessa, atinge mob, volta ao player
+  CARNE_COELHO: 247, // drop do coelho, comestível
+  PE_COELHO:    248, // raro drop do coelho, ingrediente de poção (futuro)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -247,6 +257,8 @@ export const ITEM_INFO = {
   [ITEM.FOGUETE]:       { nome: 'Foguete',           icone: '🎆' },
   [ITEM.LUNETA]:        { nome: 'Luneta',            icone: '🔭', ferramenta: 'luneta' },
   [ITEM.TRIDENTE]:      { nome: 'Tridente',          icone: '🔱', ferramenta: 'tridente' },
+  [ITEM.CARNE_COELHO]:  { nome: 'Carne de Coelho',   icone: '🍗', nutricao: 3 },
+  [ITEM.PE_COELHO]:     { nome: 'Pé de Coelho',      icone: '🐾' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -337,6 +349,11 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.LAPIS,    q: 1}], saida: {b: BLOCO.LA_AZUL,     q: 1}, wb: false },
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.MUDA,     q: 1}], saida: {b: BLOCO.LA_VERDE,    q: 1}, wb: false },
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.TRIGO,    q: 1}], saida: {b: BLOCO.LA_AMARELA,  q: 1}, wb: false },
+  // Vidros coloridos (mesmo padrão de corante)
+  { custos: [{b: BLOCO.VIDRO, q: 1}, {b: BLOCO.TIJOLO, q: 1}], saida: {b: BLOCO.VIDRO_VERMELHO, q: 1}, wb: false },
+  { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.LAPIS,    q: 1}], saida: {b: BLOCO.VIDRO_AZUL,     q: 1}, wb: false },
+  { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.MUDA,     q: 1}], saida: {b: BLOCO.VIDRO_VERDE,    q: 1}, wb: false },
+  { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.TRIGO,    q: 1}], saida: {b: BLOCO.VIDRO_AMARELO,  q: 1}, wb: false },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];
