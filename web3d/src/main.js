@@ -510,6 +510,36 @@ function loop(now) {
     // Pausa lógica
   } else {
     state.player.atualizar(dt, state.world);
+    // Portal Nether: pisar dentro 1.5s → toggle dimensão
+    const blockEm = state.world.get(
+      Math.floor(state.player.pos.x),
+      Math.floor(state.player.pos.y),
+      Math.floor(state.player.pos.z)
+    );
+    if (blockEm === BLOCO.PORTAL_NETHER) {
+      state._portalAcc = (state._portalAcc || 0) + dt;
+      if (state._portalAcc >= 1.5) {
+        state._portalAcc = 0;
+        const novaDim = state.world.dimensao === 'nether' ? 'overworld' : 'nether';
+        state.world.trocarDimensao(novaDim);
+        // Limpa todos os meshes (vão re-mesh na nova dim)
+        for (const c of state.world._chunksOverworld.values()) {
+          if (c.mesh) state.renderer.liberarChunkMesh(c);
+        }
+        for (const c of state.world._chunksNether.values()) {
+          if (c.mesh) state.renderer.liberarChunkMesh(c);
+        }
+        for (const c of state.world.chunks.values()) c.dirty = true;
+        // Despawna mobs (vão re-spawnar na nova dim)
+        for (const m of [...state.mobMgr.mobs]) state.mobMgr.remover(m);
+        // Reposição: spawn em altura segura
+        state.player.pos.y = 32;
+        state.player.vel.set(0, 0, 0);
+        state.ui.toast(novaDim === 'nether' ? '🔥 Bem-vindo ao Nether!' : '🌍 De volta ao Overworld');
+      }
+    } else {
+      state._portalAcc = 0;
+    }
     // Tick do charge do arco
     if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
     // Tick de mudas → cresce em árvore após ~15-25s (skip em heavy frame)
@@ -670,6 +700,12 @@ function loop(now) {
         else if (blocoAlvo === BLOCO.DOOR_MADEIRA) {
           state.world.set(t.x, t.y, t.z, BLOCO.DOOR_ABERTA);
           Audio.colocar?.();
+        }
+        // Acende portal: flint+obsidiana → PORTAL_NETHER
+        else if (blocoAlvo === BLOCO.OBSIDIANA && state.inv.itemSelecionado()?.i === ITEM.FLINT_STEEL) {
+          state.world.set(t.x, t.y, t.z, BLOCO.PORTAL_NETHER);
+          Audio.fornalhaLit?.();
+          state.ui.toast('🔥 Portal aceso! Pise dentro pra viajar.');
         }
         else if (blocoAlvo === BLOCO.DOOR_ABERTA) {
           state.world.set(t.x, t.y, t.z, BLOCO.DOOR_MADEIRA);

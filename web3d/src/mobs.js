@@ -15,6 +15,8 @@ export const TIPO_MOB = {
   LOBO: 'lobo', SLIME: 'slime', ENDERMAN: 'enderman',
   // Sprint 4
   CAT: 'cat', VILLAGER: 'villager', IRON_GOLEM: 'iron_golem', WITCH: 'witch',
+  // Sprint 9
+  GHAST: 'ghast',
 };
 
 export const MOB_INFO = {
@@ -105,6 +107,13 @@ export const MOB_INFO = {
       ...(Math.random() < 0.3 ? [{ i: ITEM.POCAO_HEAL, q: 1 }] : []),
     ],
     cor: 0x6a1b9a, sec: 0x000000, // robe roxo + chapéu preto
+  },
+  // Sprint 9: Nether boss-like
+  ghast: {
+    hp: 14, vel: 1.0, hostil: true, dano: 5, alcance: 6.0,
+    drops: () => [{ i: ITEM.OURO, q: 1 + Math.floor(Math.random() * 2) }],
+    cor: 0xfafafa, sec: 0xb71c1c, // branco + olhos vermelhos
+    flutua: true, // sem gravidade
   },
 };
 
@@ -667,6 +676,27 @@ export function construirModeloMob(tipo, info) {
       partes.bracos = bracos; partes.pernas = pernas;
       break;
     }
+    case 'ghast': {
+      // Cubo branco grande com 9 tentáculos pendurados
+      const corpo = cubo(1.4, 1.0, 1.4, info.cor);
+      corpo.position.y = 1.30; grp.add(corpo);
+      // Olhos vermelhos brilhantes (apertados, característicos)
+      olhosBrilhantes(corpo, 0.25, 0.10, 0.71, info.sec, 0.18);
+      // Boca pequena fechada (linha vermelha)
+      const boca = cubo(0.30, 0.06, 0.04, info.sec);
+      boca.position.set(0, -0.20, 0.71); corpo.add(boca);
+      // 9 tentáculos pendurados (pivots animáveis)
+      const pernas = [];
+      for (let i = 0; i < 9; i++) {
+        const dx = ((i % 3) - 1) * 0.40;
+        const dz = (Math.floor(i / 3) - 1) * 0.40;
+        const t = pernaComPivot(0.16, 0.50, 0.16, info.cor, 0.80);
+        t.position.x = dx; t.position.z = dz;
+        grp.add(t); pernas.push(t);
+      }
+      partes.corpo = corpo; partes.cabeca = corpo; partes.pernas = pernas;
+      break;
+    }
     default: {
       const corpo = cubo(0.6, 0.7, 0.4, info.cor);
       corpo.position.y = 0.45; grp.add(corpo);
@@ -697,6 +727,7 @@ function _dimsMob(tipo) {
     case 'villager':   return { raio: 0.30, altura: 1.85 };
     case 'iron_golem': return { raio: 0.55, altura: 2.40 };
     case 'witch':      return { raio: 0.30, altura: 1.85 };
+    case 'ghast':      return { raio: 0.85, altura: 1.40 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
     default:           return { raio: 0.30, altura: 1.80 };
   }
@@ -940,6 +971,15 @@ export class Mob {
           this.sunburn = 0.5; // delay pra reentrar no sol
         }
       }
+    }
+    // Mob que flutua (ghast): mantém altura via leve oscilação. Sem
+    // snap pro chão. Sai cedo do bloco de física vertical.
+    if (info.flutua) {
+      const t = (typeof performance !== 'undefined' ? performance.now() : Date.now()) * 0.001;
+      this.y = (this._yBase = this._yBase ?? this.y) + Math.sin(t * 0.6) * 0.4;
+      this.mesh.position.set(this.x, this.y, this.z);
+      this.mesh.rotation.y = -this.dir + Math.PI / 2;
+      return; // skip resto
     }
     // Snap vertical: cai por gravidade respeitando AABB. Auto-step 1.
     let yp = Math.floor(this.y + 0.001);
@@ -1273,6 +1313,12 @@ export class MobManager {
     // nascer no topo de copa, fica preso e parece "voando".
     if (blocoChao === BLOCO.MADEIRA || blocoChao === BLOCO.FOLHA) return;
     let tipos;
+    // Nether: só spawna ghast (e só lá). Skip restante das regras.
+    if (state.world?.dimensao === 'nether') {
+      if (this.mobs.length >= 4) return;
+      this.spawn('ghast', x, y + 8, z); // alto no ar
+      return;
+    }
     if (luzMax <= 7) {
       // Torch detection extra: hostis NÃO spawnam se luz block (artificial)
       // de qualquer voxel adjacente é >= 8. Permite o player iluminar área

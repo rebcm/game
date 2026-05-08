@@ -62,6 +62,21 @@ export class World {
     this.fornalhaEstados = new Map(); // "x,y,z" -> {input, combustivel, output, progresso, ativa}
     this.mudas = new Map();          // "x,y,z" -> {plantadaEm: ms timestamp}
     this.crops = new Map();          // "x,y,z" -> {plantadaEm, tipo: 'trigo'}
+    // Sprint 9: dimensões. chunks atual aponta pra overworld OU nether.
+    this.dimensao = 'overworld';
+    this._chunksOverworld = this.chunks;
+    this._chunksNether = new Map();
+  }
+  trocarDimensao(novaDim) {
+    if (novaDim === this.dimensao) return;
+    if (novaDim === 'nether') {
+      this._chunksOverworld = this.chunks;
+      this.chunks = this._chunksNether;
+    } else {
+      this._chunksNether = this.chunks;
+      this.chunks = this._chunksOverworld;
+    }
+    this.dimensao = novaDim;
   }
   static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
 
@@ -382,11 +397,52 @@ export class World {
     return loot;
   }
 
-  // Carrega chunk (gera se não existe).
+  // Carrega chunk (gera se não existe). Em Nether usa _gerarChunkNether.
   getChunk(cx, cz) {
     const k = chunkKey(cx, cz);
     let c = this.chunks.get(k);
-    if (!c) { c = this.gerarChunk(cx, cz); this.chunks.set(k, c); }
+    if (!c) {
+      c = this.dimensao === 'nether'
+        ? this._gerarChunkNether(cx, cz)
+        : this.gerarChunk(cx, cz);
+      this.chunks.set(k, c);
+    }
+    return c;
+  }
+
+  // Geração do Nether: terreno todo de NETHERRACK com cavernas grandes
+  // (Perlin 3D agressivo) + lava lakes + glowstone (LUZ) clusters no teto.
+  // Sem dia/noite, sem grama, hostil.
+  _gerarChunkNether(cx, cz) {
+    const c = new Chunk(cx, cz);
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      for (let lz = 0; lz < CHUNK_SIZE; lz++) {
+        const gx = cx * CHUNK_SIZE + lx;
+        const gz = cz * CHUNK_SIZE + lz;
+        // Camada 0-3 = bedrock, 3-50 = netherrack com caverna, 50-58 = ar,
+        // 58-62 = teto netherrack
+        for (let y = 0; y < WORLD_Y; y++) {
+          let b = BLOCO.AR;
+          if (y < 3) b = BLOCO.BEDROCK;
+          else if (y < 50) {
+            const v = perlin3(gx / 14, y / 10, gz / 14, this.seed ^ 0xBA1A);
+            if (v > 0.45) b = BLOCO.AR; // caverna
+            else b = BLOCO.NETHERRACK;
+            // Lava lake em y baixo
+            if (y < 10 && b === BLOCO.AR && Math.random() < 0.3) b = BLOCO.LAVA;
+          } else if (y < 58) {
+            b = BLOCO.AR;
+          } else if (y < 62) {
+            b = BLOCO.NETHERRACK;
+            // Glowstone clusters no teto
+            if (y === 58 && (hash2(gx, gz, this.seed ^ 0x6105) & 0xFF) < 8) b = BLOCO.LUZ;
+          } else {
+            b = BLOCO.BEDROCK;
+          }
+          if (b !== BLOCO.AR) c.set(lx, y, lz, b);
+        }
+      }
+    }
     return c;
   }
   hasChunk(cx, cz) { return this.chunks.has(chunkKey(cx, cz)); }

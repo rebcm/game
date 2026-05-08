@@ -520,6 +520,33 @@ function criarAtlas() {
     }
   }
 
+  // Portal Nether: swirl roxo/violeta com pontos brancos (efeito etéreo)
+  function pintarPortalNether(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#4a148c';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Espiral via lerp de pontos com seed
+    let seed = idx * 9301 + 49297;
+    for (let i = 0; i < 60; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = seed / 233280;
+      const ang = r * Math.PI * 2;
+      const dist = (i / 60) * 14;
+      const px = Math.floor(16 + Math.cos(ang) * dist);
+      const py = Math.floor(16 + Math.sin(ang) * dist);
+      ctx.fillStyle = i % 3 === 0 ? '#e1bee7' : '#ce93d8';
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Borda escura
+    ctx.fillStyle = '#311b92';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
   // Pinta lateral de grass block: marrom embaixo com faixa verde no topo
   // (paridade Minecraft — grama "desce" 8px pelos lados antes de virar terra).
   function pintarGramaLado(idx) {
@@ -590,6 +617,9 @@ function criarAtlas() {
   pintarFornalha(25);                     // fornalha (pedra + abertura)
   pintarCama(26);                         // cama (travesseiro + manta)
   pintarBedrock(27);                      // bedrock (chunky escuro)
+  // Sprint 9: Nether
+  pintarPedra(28, '#5e2218', '#3a130c', '#7a3024', 0.35); // netherrack vermelho
+  pintarPortalNether(29);                                  // portal swirl roxo
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -628,6 +658,8 @@ function criarAtlas() {
   mapa[BLOCO.DOOR_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
   mapa[BLOCO.MESA_ENCANT]   = { top: 19, side: 19, bottom: 3  }; // obsidiana top + side, pedra bottom
   mapa[BLOCO.DOOR_ABERTA]   = { top: 5,  side: 6,  bottom: 5  }; // mesma textura da fechada
+  mapa[BLOCO.NETHERRACK]    = { top: 28, side: 28, bottom: 28 }; // nova célula
+  mapa[BLOCO.PORTAL_NETHER] = { top: 29, side: 29, bottom: 29 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

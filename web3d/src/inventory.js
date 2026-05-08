@@ -153,6 +153,7 @@ export const Drops = {
       case BLOCO.PEDRA: {
         const out = [{ b: BLOCO.PEDRA, q: 1 }];
         if (Math.random() < 0.02) out.push({ i: ITEM.LAPIS, q: 1 });
+        if (Math.random() < 0.10) out.push({ i: ITEM.SILEX, q: 1 });
         return out;
       }
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
