@@ -226,7 +226,7 @@ class ItemDrop {
     this.vy = 2.0 + Math.random() * 1.5;
     this.vz = (Math.random() - 0.5) * 1.5;
     this.life = 60.0;
-    this.tempoColeta = 0.5;
+    this.tempoColeta = 0.25; // antes 0.5s — coleta mais responsiva
     const cor = drop.b !== undefined ? (BLOCO_INFO[drop.b]?.cor ?? 0xcccccc) : 0xeeeeee;
     const geo = new THREE.BoxGeometry(0.28, 0.28, 0.28);
     const mat = new THREE.MeshLambertMaterial({ color: cor });
@@ -255,7 +255,9 @@ class ItemDrop {
       const dx = this.x - player.pos.x;
       const dy = this.y - (player.pos.y + 0.5);
       const dz = this.z - player.pos.z;
-      if (dx*dx + dy*dy + dz*dz < 2.25) {
+      // Raio 2.5 (antes 1.5) — pickup mais generoso, evita perder
+      // drops por causa de movimento ou drop caindo em buraco vizinho.
+      if (dx*dx + dy*dy + dz*dz < 6.25) {
         if (state.inv.adicionar({ ...this.drop })) {
           Audio.pickup();
           this.life = 0;

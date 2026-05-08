@@ -603,7 +603,13 @@ function loop(now) {
       progressoVisual = state.player.progressoQuebra;
       if (state.player.progressoQuebra >= 1) {
         state.player.progressoQuebra = 0;
-        const drops = Drops.dropDeBloco(t.b, tier);
+        // Se bloco foi colocado pelo player, força drop do bloco original
+        // (sem requisito de tier) — UX: jogador não perde o que colocou.
+        const foiPlayer = state.world.foiColocadoPeloPlayer(t.x, t.y, t.z);
+        const drops = foiPlayer
+          ? [{ b: t.b, q: 1 }]
+          : Drops.dropDeBloco(t.b, tier);
+        if (foiPlayer) state.world.desmarcarColocadoPeloPlayer(t.x, t.y, t.z);
         if (state.player.modo === 'creative') {
           for (const d of drops) state.inv.adicionar(d);
         } else {
@@ -683,8 +689,8 @@ function loop(now) {
       // Antes do raycast de bloco, tenta interação com mob mais próximo
       const mAlvo = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
       const sel = state.inv.itemSelecionado();
-      // Villager: abre painel de trades (qualquer item ou mão vazia)
-      if (mAlvo && mAlvo.tipo === 'villager') {
+      // Villager OU Wandering Trader: abre painel de trades
+      if (mAlvo && (mAlvo.tipo === 'villager' || mAlvo.tipo === 'wandering_trader')) {
         abrirTradeVillager(mAlvo);
         return;
       }
@@ -821,7 +827,7 @@ function loop(now) {
             const pz = Math.floor(state.player.pos.z);
             // Não coloca bloco onde o player está (paridade Minecraft real)
             if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
-              state.world.set(a.x, a.y, a.z, sel.b);
+              state.world.setPeloPlayer(a.x, a.y, a.z, sel.b);
               // Areia colocada no ar cai na hora (gravidade)
               if (sel.b === BLOCO.AREIA) {
                 state.world.aplicarGravidadeBlocos(a.x, a.y - 1, a.z);

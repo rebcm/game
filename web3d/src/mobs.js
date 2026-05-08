@@ -19,6 +19,8 @@ export const TIPO_MOB = {
   GHAST: 'ghast',
   // Sprint End
   ENDER_DRAGON: 'ender_dragon',
+  // Bonus
+  WANDERING_TRADER: 'wandering_trader',
 };
 
 export const MOB_INFO = {
@@ -121,6 +123,15 @@ export const MOB_INFO = {
     drops: () => [{ i: ITEM.OURO, q: 1 + Math.floor(Math.random() * 2) }],
     cor: 0xfafafa, sec: 0xb71c1c,
     flutua: true,
+  },
+  // Wandering Trader — passivo nômade, trades raras + drops bonus
+  wandering_trader: {
+    hp: 14, vel: 1.4, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.6 ? [{ i: ITEM.ESMERALDA, q: 1 + Math.floor(Math.random() * 2) }] : []),
+      ...(Math.random() < 0.3 ? [{ i: ITEM.ENDER_PEARL, q: 1 }] : []),
+    ],
+    cor: 0x4a148c, sec: 0xe1bee7, // robe roxo + nariz claro
   },
   // Boss do End — gigante, 100 HP, atira fireball, voa em órbita
   ender_dragon: {
@@ -694,6 +705,39 @@ export function construirModeloMob(tipo, info) {
       partes.bracos = bracos; partes.pernas = pernas;
       break;
     }
+    case 'wandering_trader': {
+      // Humanoid robe roxo escuro, nariz grande tipo villager
+      const corpo = cubo(0.50, 0.80, 0.30, info.cor);
+      corpo.position.y = 1.05; grp.add(corpo);
+      const cabeca = cubo(0.46, 0.46, 0.46, info.sec);
+      cabeca.position.set(0, 1.70, 0); grp.add(cabeca);
+      olhosPretos(cabeca, 0.12, 0.02, 0.235);
+      const nariz = cubo(0.10, 0.16, 0.18, info.sec);
+      nariz.position.set(0, -0.05, 0.30); cabeca.add(nariz);
+      // Chapéu pontudo roxo escuro (caracteristico)
+      const chapeuBase = cubo(0.55, 0.10, 0.55, info.cor);
+      chapeuBase.position.set(0, 0.27, 0); cabeca.add(chapeuBase);
+      const chapeuPonta = cubo(0.20, 0.30, 0.20, info.cor);
+      chapeuPonta.position.set(0, 0.45, 0); cabeca.add(chapeuPonta);
+      // Cabelo branco/cinza embaixo do chapéu
+      const cabelo = cubo(0.48, 0.06, 0.48, 0xb39ddb);
+      cabelo.position.set(0, 0.22, 0); cabeca.add(cabelo);
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.16, 0.70, 0.16, info.cor, 1.40);
+        b.position.x = (i === 0 ? -0.33 : 0.33);
+        grp.add(b); bracos.push(b);
+      }
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.18, 0.65, 0.18, info.cor, 0.65);
+        p.position.x = (i === 0 ? -0.11 : 0.11);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
     case 'ender_dragon': {
       // Boss gigante: corpo alongado + cabeça com mandíbula + asas grandes + cauda
       const corpo = cubo(1.6, 1.0, 2.4, info.cor);
@@ -780,6 +824,7 @@ function _dimsMob(tipo) {
     case 'villager':   return { raio: 0.30, altura: 1.85 };
     case 'iron_golem': return { raio: 0.55, altura: 2.40 };
     case 'witch':      return { raio: 0.30, altura: 1.85 };
+    case 'wandering_trader': return { raio: 0.30, altura: 1.85 };
     case 'ghast':      return { raio: 0.85, altura: 1.40 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
     default:           return { raio: 0.30, altura: 1.80 };
@@ -1450,6 +1495,7 @@ export class MobManager {
       if (Math.random() < 0.06) tipos.push('cat');      // raro
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
+      if (Math.random() < 0.008) tipos.push('wandering_trader'); // muito raro
     } else {
       return;
     }

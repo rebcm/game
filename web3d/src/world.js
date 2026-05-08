@@ -62,6 +62,10 @@ export class World {
     this.fornalhaEstados = new Map(); // "x,y,z" -> {input, combustivel, output, progresso, ativa}
     this.mudas = new Map();          // "x,y,z" -> {plantadaEm: ms timestamp}
     this.crops = new Map();          // "x,y,z" -> {plantadaEm, tipo: 'trigo'}
+    // Blocos colocados pelo player. Ao quebrar, SEMPRE dropam o bloco
+    // original (independente do tier de ferramenta) — paridade UX:
+    // jogador não pode "perder" blocos que ele mesmo colocou.
+    this.blocosColocadosPeloPlayer = new Set(); // "x,y,z" strings
     // Sprint 9: dimensões. chunks atual aponta pra overworld OU nether.
     this.dimensao = 'overworld';
     this._chunksOverworld = this.chunks;
@@ -610,6 +614,23 @@ export class World {
   }
   isSolido(x, y, z) {
     return BLOCO_INFO[this.get(x, y, z)].solido;
+  }
+
+  // Player colocou bloco. Marca pra sempre dropar ao quebrar.
+  setPeloPlayer(x, y, z, t) {
+    const c = this.set(x, y, z, t);
+    if (t !== BLOCO.AR) {
+      this.blocosColocadosPeloPlayer.add(`${x},${y},${z}`);
+    }
+    return c;
+  }
+  // Verifica se bloco foi colocado pelo player (drop garantido).
+  foiColocadoPeloPlayer(x, y, z) {
+    return this.blocosColocadosPeloPlayer.has(`${x},${y},${z}`);
+  }
+  // Limpa flag (após break consumido).
+  desmarcarColocadoPeloPlayer(x, y, z) {
+    this.blocosColocadosPeloPlayer.delete(`${x},${y},${z}`);
   }
 
   // === Fluxo de fluido (água/lava) ===
