@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 7, CELL = 32;
+  const COLS = 8, ROWS = 8, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -952,6 +952,56 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Cogumelo gigante: chapéu colorido com bolinhas brancas (vermelho) ou liso (marrom)
+  function pintarCogumelo(idx, vermelho) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    const corBase = vermelho ? '#c62828' : '#6d4c41';
+    const corEscura = vermelho ? '#8b0000' : '#4e342e';
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído escuro (textura orgânica)
+    let seed = idx * 9301 + 49297;
+    ctx.fillStyle = corEscura;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.18) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    if (vermelho) {
+      // Bolinhas brancas (caracteristica do amanita / cogumelo gigante MC)
+      ctx.fillStyle = '#fafafa';
+      const dots = [
+        { x: 6,  y: 8,  r: 4 },
+        { x: 18, y: 6,  r: 3 },
+        { x: 24, y: 14, r: 5 },
+        { x: 8,  y: 20, r: 4 },
+        { x: 16, y: 22, r: 3 },
+        { x: 22, y: 24, r: 3 },
+      ];
+      for (const d of dots) {
+        ctx.fillRect(x0 + d.x, y0 + d.y, d.r, d.r);
+      }
+      // Sombra leve nas bolinhas (3D)
+      ctx.fillStyle = '#e0e0e0';
+      for (const d of dots) {
+        ctx.fillRect(x0 + d.x + d.r, y0 + d.y + d.r - 1, 1, 1);
+      }
+    } else {
+      // Marrom liso: só highlights claros pra dar volume
+      ctx.fillStyle = '#8d6e63';
+      for (let i = 0; i < 12; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = (seed % CELL);
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = (seed % CELL);
+        ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+  }
+
   // Quartzo: branco com grão sutil + manchas mais claras (cristalino)
   function pintarQuartzo(idx, polido) {
     const col = idx % COLS;
@@ -1402,6 +1452,8 @@ function criarAtlas() {
   pintarVidroColorido(53, '#ffeb3b', '#f9a825');         // vidro amarelo
   pintarQuartzo(54, false);                               // quartzo natural
   pintarQuartzo(55, true);                                // quartzo polido
+  pintarCogumelo(56, true);                               // cogumelo vermelho gigante
+  pintarCogumelo(57, false);                              // cogumelo marrom gigante
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1464,6 +1516,8 @@ function criarAtlas() {
   mapa[BLOCO.VIDRO_AMARELO]  = { top: 53, side: 53, bottom: 53 };
   mapa[BLOCO.QUARTZO]        = { top: 54, side: 54, bottom: 54 };
   mapa[BLOCO.QUARTZO_POLIDO] = { top: 55, side: 55, bottom: 55 };
+  mapa[BLOCO.COGUMELO_VERM]  = { top: 56, side: 56, bottom: 56 };
+  mapa[BLOCO.COGUMELO_MARROM]= { top: 57, side: 57, bottom: 57 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

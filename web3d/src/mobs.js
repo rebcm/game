@@ -85,6 +85,18 @@ export const MOB_INFO = {
     ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
+  // Mooshroom: vaca rosa coberta de cogumelos vermelhos. Drop carne + cogumelos.
+  // Right-click com tigela vazia → sopa de cogumelo (paridade MC).
+  mooshroom: {
+    hp: 12, vel: 1.0, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.7 ? [{ i: ITEM.CARNE_CRUA, q: 1 }] : []),
+      ...(Math.random() < 0.5 ? [{ i: ITEM.COURO, q: 1 }] : []),
+      ...(Math.random() < 0.4 ? [{ i: ITEM.COGUMELO_R, q: 1 + Math.floor(Math.random()*2) }] : []),
+    ],
+    cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
+    mooshroom: true, // permite right-click com tigela
+  },
   // Tartaruga: passiva, lenta, drop raro casco. Spawn em areia perto da água.
   tartaruga: {
     hp: 10, vel: 0.6, hostil: false,
@@ -285,6 +297,7 @@ export function construirModeloMob(tipo, info) {
   };
 
   switch (tipo) {
+    case 'mooshroom':
     case 'vaca': {
       // Corpo branco com manchas marrons (sec=0x424242). Maior dos animais
       // passivos pra refletir hierarquia visual: vaca > ovelha > porco > galinha.
@@ -292,6 +305,26 @@ export function construirModeloMob(tipo, info) {
       corpo.position.y = 0.72; grp.add(corpo);
       const m1 = cubo(0.79, 0.06, 0.25, info.sec); m1.position.set(0, 1.04, 0.10); grp.add(m1);
       const m2 = cubo(0.79, 0.06, 0.22, info.sec); m2.position.set(0, 1.04, -0.32); grp.add(m2);
+      // Mooshroom: 4 cogumelos vermelhos com bolinhas brancas no dorso
+      if (tipo === 'mooshroom') {
+        const posCog = [
+          { x: -0.20, z:  0.30 },
+          { x:  0.20, z:  0.10 },
+          { x: -0.15, z: -0.20 },
+          { x:  0.20, z: -0.40 },
+        ];
+        for (const p of posCog) {
+          // Caule branco
+          const caule = cubo(0.06, 0.10, 0.06, 0xfafafa);
+          caule.position.set(p.x, 1.10, p.z); grp.add(caule);
+          // Chapéu vermelho
+          const chapeu = cubo(0.18, 0.10, 0.18, 0xc62828);
+          chapeu.position.set(p.x, 1.20, p.z); grp.add(chapeu);
+          // Bolinha branca pequena no chapéu
+          const bola = cubo(0.04, 0.02, 0.04, 0xfafafa);
+          bola.position.set(p.x + 0.04, 1.26, p.z + 0.04); grp.add(bola);
+        }
+      }
       const cabeca = cubo(0.46, 0.46, 0.50, info.cor);
       cabeca.position.set(0, 0.86, 0.72); grp.add(cabeca);
       olhosPretos(cabeca, 0.11, 0.05, 0.23);
@@ -1139,6 +1172,7 @@ function _dimsMob(tipo) {
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
+    case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
     case 'ovelha':   return { raio: 0.34, altura: 1.20 };
     case 'enderman':   return { raio: 0.30, altura: 2.50 };
@@ -1871,6 +1905,8 @@ export class MobManager {
         if (Math.random() < 0.30) tipos.push('coelho');
         // Papagaio: 8% chance em grama (proxy de floresta tropical)
         if (Math.random() < 0.08) tipos.push('papagaio');
+        // Mooshroom: bem raro (3%) em grama, biome cogumelo proxy
+        if (Math.random() < 0.03) tipos.push('mooshroom');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
         // Tartaruga: spawn em areia próxima da água (1 bloco de água em raio 3)

@@ -96,8 +96,10 @@ export const BLOCO = {
   VIDRO_AMARELO:  55,
   QUARTZO:        56, // bloco branco elegante (drop do Nether ou crafting)
   QUARTZO_POLIDO: 57, // versão polida (mais clara, sem grão)
+  COGUMELO_VERM:  58, // bloco gigante de cogumelo vermelho com bolinhas brancas
+  COGUMELO_MARROM:59, // bloco gigante de cogumelo marrom (chapéu liso)
 };
-export const N_BLOCOS = 58;
+export const N_BLOCOS = 60;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -164,6 +166,8 @@ export const BLOCO_INFO = {
   [BLOCO.VIDRO_AMARELO]: { nome: 'Vidro Amarelo',    solido: true,  emiteLuz: 0,  cor: 0xffeb3b, lateral: 0xffeb3b },
   [BLOCO.QUARTZO]:       { nome: 'Quartzo',          solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
   [BLOCO.QUARTZO_POLIDO]:{ nome: 'Quartzo Polido',   solido: true,  emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xfff8e1 },
+  [BLOCO.COGUMELO_VERM]: { nome: 'Cogumelo Vermelho',solido: true,  emiteLuz: 1,  cor: 0xc62828, lateral: 0xc62828 },
+  [BLOCO.COGUMELO_MARROM]:{nome: 'Cogumelo Marrom', solido: true,  emiteLuz: 1,  cor: 0x6d4c41, lateral: 0x6d4c41 },
 };
 
 export const ICONE = {
@@ -209,6 +213,10 @@ export const ITEM = {
   PE_COELHO:    248, // raro drop do coelho, ingrediente de poção (futuro)
   QUARTZO_BRUTO:249, // shard de quartzo (drop de netherrack ou crafting)
   CASCO_TARTARUGA:250, // drop raro da tartaruga, futuro: capacete
+  COGUMELO_R:    251, // cogumelo vermelho coletável
+  COGUMELO_M:    252, // cogumelo marrom coletável
+  SOPA_COGUMELO: 253, // sopa: cura 6 fome (paridade MC)
+  TIGELA:        254, // bowl/cup vazia, deixada após comer sopa
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -267,6 +275,10 @@ export const ITEM_INFO = {
   [ITEM.PE_COELHO]:     { nome: 'Pé de Coelho',      icone: '🐾' },
   [ITEM.QUARTZO_BRUTO]: { nome: 'Quartzo Bruto',     icone: '✨' },
   [ITEM.CASCO_TARTARUGA]:{ nome: 'Casco de Tartaruga', icone: '🛡' },
+  [ITEM.COGUMELO_R]:    { nome: 'Cogumelo Vermelho', icone: '🍄' },
+  [ITEM.COGUMELO_M]:    { nome: 'Cogumelo Marrom',   icone: '🍄' },
+  [ITEM.SOPA_COGUMELO]: { nome: 'Sopa de Cogumelo',  icone: '🍲', nutricao: 6 },
+  [ITEM.TIGELA]:        { nome: 'Tigela',            icone: '🥣' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -365,6 +377,10 @@ export const RECEITAS = [
   // Quartzo: 4 shards = 1 bloco. Polido = 4 quartzo = 4 polido.
   { custos: [{i: ITEM.QUARTZO_BRUTO, q: 4}],     saida: {b: BLOCO.QUARTZO,        q: 1}, wb: true },
   { custos: [{b: BLOCO.QUARTZO, q: 4}],          saida: {b: BLOCO.QUARTZO_POLIDO, q: 4}, wb: true },
+  // Tigela: 3 pranchas → 4 tigelas (paridade MC)
+  { custos: [{i: ITEM.PRANCHAS, q: 3}], saida: {i: ITEM.TIGELA, q: 4}, wb: false },
+  // Sopa de Cogumelo: 1 vermelho + 1 marrom + 1 tigela (paridade MC)
+  { custos: [{i: ITEM.COGUMELO_R, q: 1}, {i: ITEM.COGUMELO_M, q: 1}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_COGUMELO, q: 1}, wb: false },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

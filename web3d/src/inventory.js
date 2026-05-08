@@ -162,6 +162,18 @@ export const Drops = {
         if (Math.random() < 0.08) out.push({ i: ITEM.QUARTZO_BRUTO, q: 1 });
         return out;
       }
+      case BLOCO.COGUMELO_VERM: {
+        const out = [];
+        const n = Math.floor(Math.random() * 3); // 0-2
+        for (let i = 0; i < n; i++) out.push({ i: ITEM.COGUMELO_R, q: 1 });
+        return out;
+      }
+      case BLOCO.COGUMELO_MARROM: {
+        const out = [];
+        const n = Math.floor(Math.random() * 3);
+        for (let i = 0; i < n; i++) out.push({ i: ITEM.COGUMELO_M, q: 1 });
+        return out;
+      }
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
       case BLOCO.DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];
       case BLOCO.CARVAO:   return [{ i: ITEM.CARVAO, q: 1 }];

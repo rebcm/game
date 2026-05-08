@@ -330,6 +330,16 @@ function comerSlot() {
     state.ui.toast(`🧪 Poção de ${info.pocao}`);
     return;
   }
+  // Sopa de Cogumelo: nutrição 6 + devolve tigela vazia (paridade MC)
+  if (s.i === ITEM.SOPA_COGUMELO) {
+    state.player.fome = clamp(state.player.fome + 6, 0, state.player.fomeMax);
+    state.player.saturation = Math.min(20, (state.player.saturation || 0) + 7.2);
+    state.inv.consumirAtual();
+    state.inv.adicionar({ i: ITEM.TIGELA, q: 1 });
+    Audio.eatCrunch();
+    state.ui.toast('🍲 Sopa deliciosa! (+6 fome)');
+    return;
+  }
   // Balde de Leite: remove TODOS os efeitos ativos (paridade Minecraft) +
   // restaura saturação. Devolve balde vazio.
   if (s.i === ITEM.BUCKET_LEITE) {
@@ -515,6 +525,9 @@ function init() {
   state.inv.adicionar({ b: BLOCO.VIDRO_AMARELO, q: 16 });
   state.inv.adicionar({ b: BLOCO.QUARTZO, q: 32 });
   state.inv.adicionar({ b: BLOCO.QUARTZO_POLIDO, q: 32 });
+  state.inv.adicionar({ b: BLOCO.COGUMELO_VERM, q: 8 });
+  state.inv.adicionar({ b: BLOCO.COGUMELO_MARROM, q: 8 });
+  state.inv.adicionar({ i: ITEM.TIGELA, q: 4 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -988,6 +1001,14 @@ function loop(now) {
         state.inv.adicionar({ i: ITEM.BUCKET_LEITE, q: 1 });
         Audio.colocar?.();
         state.ui.toast('🥛 Balde de leite!');
+        return;
+      }
+      // Mooshroom: TIGELA vazia + mooshroom → SOPA_COGUMELO direto
+      if (mAlvo && sel?.i === ITEM.TIGELA && mAlvo.tipo === 'mooshroom') {
+        state.inv.consumirAtual();
+        state.inv.adicionar({ i: ITEM.SOPA_COGUMELO, q: 1 });
+        Audio.colocar?.();
+        state.ui.toast('🍲 Sopa de cogumelo direto da Mooshroom!');
         return;
       }
       // Cat: alimenta com peixe → fica domesticado e segue
