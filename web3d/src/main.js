@@ -1016,6 +1016,26 @@ function _renderBoot() {
       refresh();
     } else alert('Arquivo inválido.');
   };
+  // Online room handlers
+  const roomInput = document.getElementById('multi-room');
+  const status = document.getElementById('multi-status');
+  const refreshStatus = () => {
+    if (Multiplayer.isOnline()) status.textContent = `🌐 Online — sala "${Multiplayer.roomAtual()}"`;
+    else status.textContent = 'Status: desconectado';
+  };
+  try { roomInput.value = localStorage.getItem('rebcm3d_mp_room') || ''; } catch (_) {}
+  document.getElementById('multi-conectar').onclick = () => {
+    const r = roomInput.value.trim();
+    if (!r) { alert('Digite um nome de sala'); return; }
+    Multiplayer.iniciar();
+    Multiplayer.conectarOnline(r);
+    setTimeout(refreshStatus, 800);
+  };
+  document.getElementById('multi-desconectar').onclick = () => {
+    Multiplayer.desconectarOnline();
+    setTimeout(refreshStatus, 200);
+  };
+  refreshStatus();
 }
 
 async function _entrarNoJogo(choice) {

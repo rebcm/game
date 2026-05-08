@@ -18,7 +18,13 @@ const CANAL = 'rebcm3d-multiplayer-v1';
 const TICK_MS = 200;        // broadcast a cada 200ms (5 Hz)
 const TIMEOUT_MS = 5000;    // ghost some se não receber por 5s
 
-let ch = null;
+// Worker URL pra modo online (cross-device). null = só local.
+const WS_URL_DEFAULT = 'wss://construcao-criativa-mp.rebcm-mp.workers.dev/ws';
+const WS_STORAGE_KEY = 'rebcm3d_mp_room';
+
+let ch = null;          // BroadcastChannel (local — mesmo browser)
+let ws = null;          // WebSocket (online — cross-device)
+let wsRoom = null;
 let meuId = null;
 const ghosts = new Map(); // playerId -> { mesh, label, name, lastSeen, x, y, z, rot }
 
@@ -94,10 +100,15 @@ export const Multiplayer = {
     // Cleanup periódico de ghosts inativos
     setInterval(() => this._cleanup(), 1000);
     console.log(`[mp] iniciado id=${meuId}`);
+    // Auto-reconnect se havia room online salva
+    try {
+      const saved = localStorage.getItem(WS_STORAGE_KEY);
+      if (saved) setTimeout(() => this.conectarOnline(saved), 1500);
+    } catch (_) {}
   },
   _broadcast() {
-    if (!ch || !state.player) return;
-    ch.postMessage({
+    if (!state.player) return;
+    const msg = {
       tipo: 'pos',
       id: meuId,
       name: state.playerName || 'Aventureiro',
@@ -107,8 +118,49 @@ export const Multiplayer = {
       z: state.player.pos.z,
       rot: state.renderer?.camera?.rotation?.y || 0,
       ts: Date.now(),
-    });
+    };
+    // Local (BroadcastChannel — mesmo browser)
+    if (ch) ch.postMessage(msg);
+    // Online (WebSocket — cross-device)
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      try { ws.send(JSON.stringify(msg)); } catch (_) {}
+    }
   },
+
+  // Conecta a uma room online (WebSocket Worker). Persiste em localStorage.
+  conectarOnline(roomName, urlBase) {
+    if (!roomName) return false;
+    if (ws) try { ws.close(); } catch (_) {}
+    const url = (urlBase || WS_URL_DEFAULT) + '?room=' + encodeURIComponent(roomName);
+    try {
+      ws = new WebSocket(url);
+    } catch (e) {
+      console.error('[mp] WS error', e);
+      return false;
+    }
+    wsRoom = roomName;
+    try { localStorage.setItem(WS_STORAGE_KEY, roomName); } catch (_) {}
+    ws.onopen = () => {
+      state.ui?.toast?.(`🌐 Conectado à sala "${roomName}"`);
+    };
+    ws.onmessage = (ev) => {
+      try { this._onMsg(JSON.parse(ev.data)); } catch (_) {}
+    };
+    ws.onclose = () => {
+      ws = null; wsRoom = null;
+      state.ui?.toast?.('🌐 Desconectado da sala');
+    };
+    ws.onerror = () => {
+      state.ui?.toast?.('⚠ Erro ao conectar à sala (servidor pode estar inativo)');
+    };
+    return true;
+  },
+  desconectarOnline() {
+    if (ws) try { ws.close(); } catch (_) {}
+    try { localStorage.removeItem(WS_STORAGE_KEY); } catch (_) {}
+  },
+  isOnline() { return ws && ws.readyState === WebSocket.OPEN; },
+  roomAtual() { return wsRoom; },
   _onMsg(msg) {
     if (!msg || !msg.id || msg.id === meuId) return;
     if (msg.tipo === 'pos') {
