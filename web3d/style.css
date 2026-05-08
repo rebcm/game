@@ -1124,6 +1124,21 @@ kbd {
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.5px;
 }
+/* Minimap 2D top-down — canto superior direito, mostra chunks ao redor */
+#minimap-wrap {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  padding: 2px;
+}
+#minimap {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 /* Loading overlay — aparece sem bloquear input quando há backlog de
    chunks/mesh. Translúcido pra não esconder o jogo, só comunicar. */
 #loading-overlay {

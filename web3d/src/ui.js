@@ -9,6 +9,7 @@ import {
 import { chunkKey } from './utils.js';
 import { Crafting } from './inventory.js';
 import { Achievements } from './achievements.js';
+import { Save } from './save.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 
@@ -118,6 +119,82 @@ export class UI {
     el.classList.add('show');
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+  }
+
+  // === Minimap 2D top-down ===
+  // Pinta cor representativa do bioma/topo a 4px por bloco num raio de
+  // 20 blocos ao redor do player. Player no centro (seta indica facing).
+  // Roda 1×/200ms pra não custar GPU.
+  atualizarMinimap() {
+    const cnv = document.getElementById('minimap');
+    if (!cnv || !state.world || !state.player) return;
+    const now = Date.now();
+    if (now - (this._mmLast || 0) < 200) return;
+    this._mmLast = now;
+    const ctx = cnv.getContext('2d');
+    const W = cnv.width, H = cnv.height;
+    const px = Math.floor(state.player.pos.x);
+    const pz = Math.floor(state.player.pos.z);
+    const RAIO = 20; // blocos visíveis em cada lado
+    const ESC = W / (RAIO * 2);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+    // Cor por tipo de bloco (top)
+    const COR = {
+      1: '#5DAB54',  // GRAMA
+      2: '#866043',  // TERRA
+      3: '#7E7E7E',  // PEDRA
+      4: '#DBC380',  // AREIA
+      5: '#9E7C5C',  // MADEIRA
+      6: '#3F7029',  // FOLHA
+      12: '#F5F5F5', // NEVE
+      16: '#2C8FCF', // AGUA
+      17: '#D44515', // LAVA
+      25: '#525252', // BEDROCK
+    };
+    for (let dz = -RAIO; dz < RAIO; dz++) {
+      for (let dx = -RAIO; dx < RAIO; dx++) {
+        const wx = px + dx, wz = pz + dz;
+        // Skip se chunk não loaded (não force-gen)
+        if (!state.world.hasChunk(Math.floor(wx / 16), Math.floor(wz / 16))) continue;
+        // Acha topo sólido
+        let y = 50, b = 0;
+        while (y > 0) {
+          b = state.world.get(wx, y, wz);
+          if (b !== 0) break;
+          y--;
+        }
+        const cor = COR[b] || '#444';
+        ctx.fillStyle = cor;
+        ctx.fillRect((dx + RAIO) * ESC, (dz + RAIO) * ESC, Math.ceil(ESC), Math.ceil(ESC));
+      }
+    }
+    // Mobs como dots
+    if (state.mobMgr) {
+      for (const m of state.mobMgr.mobs) {
+        const dx = m.x - px, dz = m.z - pz;
+        if (Math.abs(dx) > RAIO || Math.abs(dz) > RAIO) continue;
+        ctx.fillStyle = m.tipo === 'creeper' || m.tipo === 'zumbi' || m.tipo === 'esqueleto' || m.tipo === 'aranha' ? '#ff5252' : '#80d8ff';
+        ctx.fillRect((dx + RAIO) * ESC - 1, (dz + RAIO) * ESC - 1, 3, 3);
+      }
+    }
+    // Player no centro (seta apontando pro facing)
+    const cx = W / 2, cy = H / 2;
+    const yaw = state.renderer?.camera?.rotation?.y || 0;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-yaw);
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(0, -6);
+    ctx.lineTo(-4, 4);
+    ctx.lineTo(4, 4);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
   }
 
   // Loading overlay (backlog de chunks/mesh ou aviso de memória)
@@ -675,6 +752,13 @@ export class UI {
     } else memEl.textContent = `Mem: --`;
     const horas = Math.floor((state.tempoDia * 24 + 6) % 24);
     const mins = Math.floor(((state.tempoDia * 24 + 6) % 1) * 60);
+    // Stats globais persistidas (todas as sessões)
+    const statsEl = document.getElementById('f3-stats');
+    if (statsEl) {
+      const s = Save.getStats();
+      const min = Math.floor(s.secondsPlayed / 60);
+      statsEl.textContent = `Stats: ${s.mobsKilled} mobs · ${s.blocksBroken} quebrados · ${s.deaths} mortes · ${min} min jogados`;
+    }
     document.getElementById('f3-time').textContent =
       `Day time: ${String(horas).padStart(2,'0')}:${String(mins).padStart(2,'0')} (sun ${sun.toFixed(2)})`;
     document.getElementById('f3-mobs').textContent =

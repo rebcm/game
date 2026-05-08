@@ -11,6 +11,7 @@ import { clamp, materialDeBloco } from './utils.js';
 import { Audio } from './audio.js';
 import { state } from './state.js';
 import { spawnItemDrop } from './particles.js';
+import { Save } from './save.js';
 
 const _tmpVecFwd   = new THREE.Vector3();
 const _tmpVecRight = new THREE.Vector3();
@@ -193,22 +194,46 @@ export class Player {
       }
     }
 
-    // Fome / saturation / regen (paridade Minecraft simplificada)
-    const consumoSat = this.input.sprint ? 0.05 * dt : (distH > 0 ? 0.005 * dt : 0);
+    // === Hunger system (paridade Minecraft real, simplificada) ===
+    // - Exhaustion acumula por ações (sprintar=0.10/s, andar=0.01/s,
+    //   pular=0.05, levar dano=0.30, regenerar=6.0).
+    // - Quando exhaustion >= 4, consome 1 saturation; se sat=0, consome 1 fome.
+    // - Regen só ocorre se fome >= 18 (Saturated Regen) E semDano >= 4s,
+    //   gastando 1 saturation/HP. Tick rápido: a cada 0.5s.
+    // - Fome 0: dano 1 a cada 4s (até HP 1 em survival, até morte em hard).
     if (this.modo === 'survival') {
-      this.saturation = Math.max(0, this.saturation - consumoSat);
-      if (this.saturation <= 0) {
-        this.accFome += dt;
-        if (this.accFome >= 30 && this.fome > 0) { this.accFome = 0; this.fome -= 1; }
+      // Acumula exhaustion por movimento
+      let exh = 0;
+      if (this.input.sprint && distH > 0) exh += 0.10 * dt;
+      else if (distH > 0) exh += 0.010 * dt;
+      this.exhaustion = (this.exhaustion || 0) + exh;
+      // Drena saturation/fome quando exhaustion estoura
+      while (this.exhaustion >= 4) {
+        this.exhaustion -= 4;
+        if (this.saturation > 0) this.saturation = Math.max(0, this.saturation - 1);
+        else if (this.fome > 0) this.fome -= 1;
       }
+      // Regeneração: 2 modos (paridade MC)
+      this.accRegen = (this.accRegen || 0) + dt;
       if (this.fome <= 0) {
-        if (this.accRegen >= 4) { this.accRegen = 0; this.aplicarDano(1, 'fome'); }
-        this.accRegen += dt;
-      } else if (this.fome >= 18 && this.semDano >= 4 && this.hp < this.hpMax && this.accRegen >= 4) {
-        this.accRegen = 0; this.hp += 1;
-        if (this.saturation > 1) this.saturation -= 1; else this.fome = Math.max(0, this.fome - 1);
-      } else {
-        this.accRegen += dt;
+        // Sem comida — toma dano lento
+        if (this.accRegen >= 4 && this.hp > 1) {
+          this.accRegen = 0; this.aplicarDano(1, 'fome');
+        }
+      } else if (this.fome >= 18 && this.saturation > 0 && this.hp < this.hpMax) {
+        // Saturated Regen: rápido, gasta saturation
+        if (this.accRegen >= 0.5) {
+          this.accRegen = 0;
+          this.hp = Math.min(this.hpMax, this.hp + 1);
+          this.exhaustion += 6;
+        }
+      } else if (this.fome >= 18 && this.semDano >= 4 && this.hp < this.hpMax) {
+        // Slow Regen: lento, gasta fome
+        if (this.accRegen >= 4) {
+          this.accRegen = 0;
+          this.hp = Math.min(this.hpMax, this.hp + 1);
+          this.exhaustion += 6;
+        }
       }
     }
   }
@@ -319,6 +344,7 @@ export class Player {
       this.hp = 0;
       this.morto = true;
       this.causaMorte = fonte;
+      Save.incrementarStat('deaths');
       // Drop do inventário no chão (paridade Minecraft survival).
       // Skip em creative — você não perde itens em creative.
       if (this.modo !== 'creative' && state.inv) {

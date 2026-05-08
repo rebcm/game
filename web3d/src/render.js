@@ -691,6 +691,7 @@ export class Renderer {
       antialias: q.antialias,
       powerPreference: 'high-performance',
       stencil: false,
+      preserveDrawingBuffer: true, // necessário pra F2 screenshot via toDataURL
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatio));
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);

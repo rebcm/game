@@ -114,6 +114,7 @@ export const ITEM = {
   ARCO: 220, FLECHA: 221,
   OSSO: 230, MUDA: 231,
   BUCKET: 240, BUCKET_AGUA: 241, BUCKET_LAVA: 242,
+  SEMENTE: 250, TRIGO: 251, PAO: 252,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -146,6 +147,9 @@ export const ITEM_INFO = {
   [ITEM.BUCKET]:       { nome: 'Balde',            icone: '🪣' },
   [ITEM.BUCKET_AGUA]:  { nome: 'Balde de Água',    icone: '💧' },
   [ITEM.BUCKET_LAVA]:  { nome: 'Balde de Lava',    icone: '🔥' },
+  [ITEM.SEMENTE]:      { nome: 'Sementes',         icone: '🌾', plantavel: true },
+  [ITEM.TRIGO]:        { nome: 'Trigo',            icone: '🌾' },
+  [ITEM.PAO]:          { nome: 'Pão',              icone: '🍞', nutricao: 5 },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -191,6 +195,7 @@ export const RECEITAS = [
   { custos: [{i: ITEM.DIAMANTE, q: 4}], saida: {i: ITEM.BOT_DIAMANTE, q: 1}, wb: true },
   { custos: [{i: ITEM.PRANCHAS, q: 8}], saida: {b: BLOCO.BAU, q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 3}], saida: {i: ITEM.BUCKET, q: 1}, wb: true },
+  { custos: [{i: ITEM.TRIGO, q: 3}], saida: {i: ITEM.PAO, q: 1}, wb: false },
   { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
 ];

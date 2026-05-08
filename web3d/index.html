@@ -64,6 +64,7 @@
         <tr><td><kbd>Q</kbd></td><td>Comer item da hotbar</td></tr>
         <tr><td><kbd>G</kbd></td><td>Alternar Criativo / Sobrevivência</td></tr>
         <tr><td><kbd>F5</kbd></td><td>Trocar 1ª / 3ª pessoa</td></tr>
+        <tr><td><kbd>F2</kbd></td><td>Screenshot (photo mode, baixa PNG)</td></tr>
         <tr><td><kbd>F3</kbd></td><td>Tela de debug (chunk, luz, bioma)</td></tr>
         <tr><td><kbd>F1</kbd></td><td>Esconder / mostrar HUD</td></tr>
         <tr><td><kbd>Ctrl</kbd></td><td>Agachar (sneak)</td></tr>
@@ -88,6 +89,10 @@
       <div id="relogio">06:00</div>
       <div id="fps">60 FPS</div>
     </div>
+    <!-- Minimap 2D top-down: pinta superfície dos chunks ao redor + player -->
+    <div id="minimap-wrap">
+      <canvas id="minimap" width="160" height="160"></canvas>
+    </div>
     <!-- F3 debug overlay (toggle por F3) -->
     <div id="f3-debug" class="hidden">
       <div class="f3-titulo">Construção Criativa 3D — debug</div>
@@ -96,6 +101,7 @@
       <div id="f3-chunk">Chunk: 0,0</div>
       <div id="f3-facing">Facing: north (-Z)</div>
       <div id="f3-player">Player: --  ·  Mundo: --</div>
+      <div id="f3-stats">Stats: --</div>
       <div id="f3-light">Sky / Block light: 15 / 0</div>
       <div id="f3-biome">Biome: planicies</div>
       <div id="f3-target">Targeted: --</div>

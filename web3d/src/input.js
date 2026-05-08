@@ -44,6 +44,26 @@ export function setupInput() {
     if (e.repeat) return;
     if (e.code === 'F3') { e.preventDefault(); state.ui.toggleF3(); return; }
     if (e.code === 'F1') { e.preventDefault(); state.ui.toggleHud(); return; }
+    // F2: photo mode. Esconde HUD, renderiza 1 frame, baixa PNG, mostra HUD.
+    if (e.code === 'F2') {
+      e.preventDefault();
+      const hud = document.getElementById('hud');
+      const wasHidden = hud.classList.contains('hidden');
+      hud.classList.add('hidden');
+      // Espera 1 frame pra HUD sumir
+      requestAnimationFrame(() => {
+        try { state.renderer.render(); } catch (_) {}
+        const dataURL = state.renderer.renderer.domElement.toDataURL('image/png');
+        const a = document.createElement('a');
+        const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        a.href = dataURL;
+        a.download = `construcao-criativa-${ts}.png`;
+        a.click();
+        if (!wasHidden) hud.classList.remove('hidden');
+        state.ui.toast('📸 Screenshot salvo');
+      });
+      return;
+    }
     // Tab: solta o mouse SEM abrir menu/pause. Útil pra inspecionar HUD,
     // mover janela, ou sair do tela cheia sem perder o estado do jogo.
     if (e.code === 'Tab') {

@@ -144,7 +144,12 @@ export const Drops = {
   dropDeBloco(b, tier) {
     if (!Drops.podeMinerar(b, tier)) return [];
     switch (b) {
-      case BLOCO.GRAMA:    return [{ b: BLOCO.TERRA, q: 1 }];
+      case BLOCO.GRAMA: {
+        const out = [{ b: BLOCO.TERRA, q: 1 }];
+        // Chance de soltar sementes (paridade Minecraft)
+        if (Math.random() < 0.15) out.push({ i: ITEM.SEMENTE, q: 1 });
+        return out;
+      }
       case BLOCO.PEDRA:    return [{ b: BLOCO.PEDRA, q: 1 }];
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
       case BLOCO.DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];

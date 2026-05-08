@@ -61,6 +61,7 @@ export class World {
     this.bauTesouros = new Map();    // "x,y,z" -> array de 27 slots
     this.fornalhaEstados = new Map(); // "x,y,z" -> {input, combustivel, output, progresso, ativa}
     this.mudas = new Map();          // "x,y,z" -> {plantadaEm: ms timestamp}
+    this.crops = new Map();          // "x,y,z" -> {plantadaEm, tipo: 'trigo'}
   }
   static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
 
@@ -319,6 +320,42 @@ export class World {
   }
   isSolido(x, y, z) {
     return BLOCO_INFO[this.get(x, y, z)].solido;
+  }
+
+  // === Crops / farming ===
+  // Planta semente em (x, y, z): requer AR no local + TERRA logo abaixo.
+  plantarSemente(x, y, z, tipo = 'trigo') {
+    if (this.get(x, y, z) !== BLOCO.AR) return false;
+    const abaixo = this.get(x, y - 1, z);
+    if (abaixo !== BLOCO.TERRA && abaixo !== BLOCO.GRAMA) return false;
+    this.crops.set(World.keyXYZ(x, y, z), { plantadaEm: Date.now(), tipo });
+    return true;
+  }
+  // Tickado a cada frame. Quando crop atinge 30s, vira "maduro" (não muda
+  // bloco visível ainda — quebra direto pela coleta dropa trigo+sementes).
+  // Retorna lista de crops maduros [{x,y,z,tipo}].
+  atualizarCrops() {
+    const agora = Date.now();
+    const maduros = [];
+    for (const [k, c] of this.crops) {
+      if (c.maduro) continue;
+      if (agora - c.plantadaEm < 30000) continue;
+      c.maduro = true;
+      const [x, y, z] = k.split(',').map(Number);
+      maduros.push({ x, y, z, tipo: c.tipo });
+    }
+    return maduros;
+  }
+  // Colhe um crop em (x,y,z). Retorna drops ou null se não há crop maduro.
+  colherCrop(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    const c = this.crops.get(k);
+    if (!c || !c.maduro) return null;
+    this.crops.delete(k);
+    return [
+      { i: ITEM.TRIGO, q: 1 },
+      { i: ITEM.SEMENTE, q: 1 + Math.floor(Math.random() * 3) },
+    ];
   }
 
   // === Mudas / crescimento de árvore ===

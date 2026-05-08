@@ -123,6 +123,7 @@ function atacarMob() {
     spawnXPOrb(xp, m.x, m.y + 0.5, m.z);
     state.ui.toast(`${m.tipo} derrotado! ${isCrit ? '⚡ CRÍTICO! ' : ''}(+${xp} XP)`);
     if (MOB_INFO[m.tipo].hostil) Achievements.unlock('PRIMEIRO_MOB');
+    Save.incrementarStat('mobsKilled');
   } else {
     state.ui.toast(`Atingiu ${m.tipo}${isCrit ? ' ⚡' : ''} (-${dano})`);
   }
@@ -371,6 +372,8 @@ function loop(now) {
     state.fpsAcc = 0; state.fpsTimer = 0;
     // Memory monitor (Chrome): warn se ultrapassar 80% do limite
     _checkMemory();
+    // Stat de tempo jogado (1 sec por tick)
+    if (!state.player?.morto) Save.incrementarStat('secondsPlayed');
   }
   qualityTickFps(dt);
 
@@ -387,6 +390,15 @@ function loop(now) {
     if (!state._heavyFrame) {
       const cresc = state.world.atualizarMudas();
       if (cresc > 0) state.ui.toast?.(`🌱 ${cresc > 1 ? cresc + ' mudas cresceram' : 'Muda cresceu em árvore'}`);
+      // Tick de crops: maduros viram drops automaticamente no chão
+      const maduros = state.world.atualizarCrops();
+      for (const c of maduros) {
+        const drops = state.world.colherCrop(c.x, c.y, c.z);
+        if (drops) {
+          for (const d of drops) spawnItemDrop(d, c.x + 0.5, c.y + 0.4, c.z + 0.5);
+        }
+      }
+      if (maduros.length > 0) state.ui.toast?.(`🌾 ${maduros.length} planta(s) madura(s)!`);
     }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
@@ -444,6 +456,7 @@ function loop(now) {
         if (blocoQuebrado === BLOCO.MADEIRA) Achievements.unlock('PRIMEIRA_MADEIRA');
         else if (blocoQuebrado === BLOCO.PEDRA) Achievements.unlock('PRIMEIRA_PEDRA');
         else if (blocoQuebrado === BLOCO.DIAMANTE) Achievements.unlock('PRIMEIRO_DIAMANTE');
+        Save.incrementarStat('blocksBroken');
         state.world.set(t.x, t.y, t.z, BLOCO.AR);
         // Cascateia areia que estava em cima do bloco removido (gravity)
         state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
@@ -535,6 +548,16 @@ function loop(now) {
             state.ui.toast(`${fluidoBloco === BLOCO.AGUA ? 'Água' : 'Lava'} despejada`);
           }
           // Plantar muda: requer ground = GRAMA, posição AR
+          else if (sel && sel.i === ITEM.SEMENTE) {
+            const a = ray.adj;
+            if (state.world.plantarSemente(a.x, a.y, a.z, 'trigo')) {
+              state.inv.consumirAtual();
+              Audio.colocar();
+              state.ui.toast('Semente plantada — colha em ~30s');
+            } else {
+              state.ui.toast('Sementes só germinam em terra/grama');
+            }
+          }
           else if (sel && sel.i === ITEM.MUDA) {
             const a = ray.adj;
             if (state.world.plantarMuda(a.x, a.y, a.z)) {
@@ -561,6 +584,7 @@ function loop(now) {
               Audio.colocar();
               state.particulas.spawnQuebra(a.x, a.y, a.z, sel.b);
               state.renderer.swingProgress = 0.01;
+              Save.incrementarStat('blocksPlaced');
             }
           }
         }
@@ -666,6 +690,7 @@ function loop(now) {
   state.ui.renderBars();
   state.ui.atualizarOverlays();
   if (state.ui.f3Ativo) state.ui.atualizarF3({ targetBlock: ray ? ray.hit : null });
+  state.ui.atualizarMinimap?.();
   atualizarItemDrops(dt);
   atualizarXpOrbs(dt, ganharXP);
   atualizarArrows(dt);

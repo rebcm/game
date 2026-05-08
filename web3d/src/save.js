@@ -14,6 +14,7 @@ const PLAYER_KEY = 'rebcm3d_player';
 const INDEX_KEY  = 'rebcm3d_worlds_index';
 const WORLD_PREFIX = 'rebcm3d_world_';
 const LEGACY_KEY = 'rebcm3d_save_v4';
+const STATS_KEY  = 'rebcm3d_stats_v1';
 
 function _safeJSON(s, fb) {
   // BUG-fix: JSON.parse(null) retorna null sem throw — precisa de check
@@ -32,6 +33,20 @@ export const Save = {
   },
   setPlayer(name) {
     localStorage.setItem(PLAYER_KEY, JSON.stringify({ name }));
+  },
+
+  // === Stats globais persistidas (todas as sessões) ===
+  getStats() {
+    return _safeJSON(localStorage.getItem(STATS_KEY), {
+      mobsKilled: 0, blocksBroken: 0, blocksPlaced: 0,
+      distanceWalked: 0, deaths: 0, secondsPlayed: 0,
+      itemsCrafted: 0, levelsGained: 0,
+    });
+  },
+  incrementarStat(key, by = 1) {
+    const s = this.getStats();
+    s[key] = (s[key] || 0) + by;
+    try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch (_) {}
   },
 
   // === Index de mundos ===
