@@ -152,6 +152,55 @@ export class World {
       const cy = 8 + (dungHash >> 8) % 16;
       this._gerarDungeon(c, cx, cz, cxD, cy, czD);
     }
+    // Mineshaft (corredor longo subterrâneo com rails + tochas + baús +
+    // teias). Mais raro que dungeon: ~3% chance por chunk.
+    const msHash = hash2(cx, cz, this.seed ^ 0xA1130) & 0xFFFF;
+    if (msHash < 1900) {
+      const cy = 14 + (msHash >> 8) % 14; // y entre 14-28
+      const dirEixo = (msHash & 0x1) === 0 ? 'x' : 'z'; // direção do tunel
+      this._gerarMineshaft(c, cx, cz, cy, dirEixo);
+    }
+  }
+  // Mineshaft: corredor 3-larg × 3-alto cortado em pedra/terra com rails
+  // no chão e tochas a cada 4 blocos. Eventualmente, baú no fim.
+  _gerarMineshaft(c, cx, cz, cy, eixo) {
+    for (let l = 0; l < CHUNK_SIZE; l++) {
+      const lx = eixo === 'x' ? l : 7;
+      const lz = eixo === 'z' ? l : 7;
+      // Cava 3×3 (y, y+1, y+2) ao longo do eixo, larg ±1 transversal
+      for (let dx = -1; dx <= 1; dx++) for (let dy = 0; dy <= 2; dy++) {
+        const llx = eixo === 'z' ? lx + dx : lx;
+        const llz = eixo === 'x' ? lz + dx : lz;
+        if (llx < 0 || llx >= CHUNK_SIZE || llz < 0 || llz >= CHUNK_SIZE) continue;
+        c.set(llx, cy + dy, llz, BLOCO.AR);
+      }
+      // Trilho no centro do chão
+      c.set(lx, cy, lz, BLOCO.RAIL);
+      // Tocha a cada 4 blocos no teto
+      if (l % 4 === 2) {
+        const llx = eixo === 'z' ? lx + 1 : lx;
+        const llz = eixo === 'x' ? lz + 1 : lz;
+        if (llx >= 0 && llx < CHUNK_SIZE && llz >= 0 && llz < CHUNK_SIZE) {
+          c.set(llx, cy + 2, llz, BLOCO.TOCHA);
+        }
+      }
+      // Teia ocasional (10% chance por bloco)
+      if (((hash2(cx * CHUNK_SIZE + lx, cz * CHUNK_SIZE + lz, this.seed ^ 0xC0BE) >>> 0) % 100) < 10) {
+        c.set(lx, cy + 1, lz, BLOCO.TEIA);
+      }
+    }
+    // Baú no centro com loot bom
+    const bx = 7, bz = 7;
+    c.set(bx, cy, bz, BLOCO.BAU);
+    if (!this.bauTesouros) this.bauTesouros = new Map();
+    const key = `${cx * CHUNK_SIZE + bx},${cy},${cz * CHUNK_SIZE + bz}`;
+    const slots = new Array(27).fill(null);
+    slots[0] = { i: ITEM.FERRO, q: 3 };
+    slots[1] = { i: ITEM.OURO, q: 1 };
+    slots[2] = { i: ITEM.PAO, q: 2 };
+    slots[3] = { i: ITEM.LAPIS, q: 2 };
+    slots[5] = { b: BLOCO.RAIL, q: 8 };
+    this.bauTesouros.set(key, slots);
   }
   // Pede pro worker gerar chunk (assíncrono). Se chunk já existe ou
   // já está pendente, no-op.
@@ -392,6 +441,13 @@ export class World {
       const czLocal = 5 + ((dungHash >> 4) & 0x5);
       const cy = 8 + (dungHash >> 8) % 16; // 8..23
       this._gerarDungeon(c, cx, cz, cxLocal, cy, czLocal);
+    }
+    // 5. Mineshaft: corredor longo subterrâneo com rails. ~3% chance.
+    const msHash = hash2(cx, cz, this.seed ^ 0xA1130) & 0xFFFF;
+    if (msHash < 1900 && !(cx === 0 && cz === 0)) {
+      const cy = 14 + (msHash >> 8) % 14;
+      const dirEixo = (msHash & 0x1) === 0 ? 'x' : 'z';
+      this._gerarMineshaft(c, cx, cz, cy, dirEixo);
     }
     return c;
   }

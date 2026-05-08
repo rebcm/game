@@ -83,8 +83,10 @@ export const BLOCO = {
   BOLO:          42, // bolo: comestível ao right-click (restaura fome, consome bloco)
   BIGORNA:       43, // bigorna: renomeia item ativo (right-click → painel)
   BEACON:        44, // farol: emite feixe vertical + buffs sobre pirâmide
+  RAIL:          45, // trilho: chapinha fina decorativa no chão (shape slab)
+  TEIA:          46, // teia de aranha: bloco macio em mineshafts (lenta player)
 };
-export const N_BLOCOS = 45;
+export const N_BLOCOS = 47;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -138,6 +140,8 @@ export const BLOCO_INFO = {
   [BLOCO.BOLO]:          { nome: 'Bolo',             solido: true,  emiteLuz: 0,  cor: 0xfaf3e0, lateral: 0xb98860 },
   [BLOCO.BIGORNA]:       { nome: 'Bigorna',          solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
   [BLOCO.BEACON]:        { nome: 'Farol',            solido: true,  emiteLuz: 15, cor: 0x80deea, lateral: 0x4dd0e1 },
+  [BLOCO.RAIL]:          { nome: 'Trilho',           solido: true,  emiteLuz: 0,  cor: 0x9E9E9E, lateral: 0x757575, shape: 'slab' },
+  [BLOCO.TEIA]:          { nome: 'Teia de Aranha',   solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
 };
 
 export const ICONE = {
@@ -314,6 +318,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.FERRO, q: 2}, {i: ITEM.DIAMANTE, q: 1}], saida: {i: ITEM.LUNETA, q: 1}, wb: true },
   // Tridente: 4 ferro + 2 diamante (proxy de prismarine — endgame)
   { custos: [{i: ITEM.FERRO, q: 4}, {i: ITEM.DIAMANTE, q: 2}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.TRIDENTE, q: 1}, wb: true },
+  // Trilho: 6 ferro + 1 pau → 16 trilhos (paridade Minecraft)
+  { custos: [{i: ITEM.FERRO, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.RAIL, q: 16}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

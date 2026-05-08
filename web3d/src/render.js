@@ -952,6 +952,61 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Trilho: dormentes marrom + 2 rails de aço paralelos
+  function pintarRail(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base escura (sombra abaixo do trilho — fica embaixo da slab)
+    ctx.fillStyle = '#3a2818';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Dormentes (ties) — barras horizontais marrom
+    ctx.fillStyle = '#6d4c41';
+    for (let py = 4; py < CELL; py += 8) {
+      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 4);
+    }
+    // Detalhe escuro entre dormentes
+    ctx.fillStyle = '#4e342e';
+    for (let py = 0; py < CELL; py += 8) {
+      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 1);
+    }
+    // 2 trilhos verticais de aço cinza
+    ctx.fillStyle = '#cfd8dc';
+    ctx.fillRect(x0 + 8,  y0, 3, CELL);
+    ctx.fillRect(x0 + 21, y0, 3, CELL);
+    // Highlight superior dos trilhos (brilho)
+    ctx.fillStyle = '#eceff1';
+    ctx.fillRect(x0 + 9,  y0, 1, CELL);
+    ctx.fillRect(x0 + 22, y0, 1, CELL);
+  }
+
+  // Teia de aranha: branco com fios em X + pontos central + cantos
+  function pintarTeia(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base preta semi-vazia (efeito teia translúcida visualmente)
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Fios brancos cruzados (vertical, horizontal, 2 diagonais)
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 15, y0,      2, CELL); // vertical
+    ctx.fillRect(x0,      y0 + 15, CELL, 2); // horizontal
+    // Diagonais (linha por linha)
+    for (let i = 0; i < CELL; i++) {
+      ctx.fillRect(x0 + i,        y0 + i,        1, 1);
+      ctx.fillRect(x0 + (CELL - 1 - i), y0 + i,  1, 1);
+    }
+    // Anéis concêntricos da teia (pequenos quadrados nas diagonais)
+    ctx.fillStyle = '#e0e0e0';
+    for (const r of [4, 9, 14]) {
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 2, 2);
+      ctx.fillRect(x0 + 16 + r, y0 + 16 - r, 2, 2);
+      ctx.fillRect(x0 + 16 - r, y0 + 16 + r, 2, 2);
+      ctx.fillRect(x0 + 16 + r, y0 + 16 + r, 2, 2);
+    }
+  }
+
   // Beacon: vidro azul cristalino com núcleo brilhante + frame escuro
   function pintarBeacon(idx) {
     const col = idx % COLS;
@@ -1181,6 +1236,8 @@ function criarAtlas() {
   pintarBigornaTopo(39);                                   // bigorna topo (yunque)
   pintarBigornaLado(40);                                   // bigorna lateral (forma da bigorna)
   pintarBeacon(41);                                        // beacon (cristal azul brilhante)
+  pintarRail(42);                                          // trilho (dormentes + 2 rails)
+  pintarTeia(43);                                          // teia de aranha (cordas em X)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1230,6 +1287,8 @@ function criarAtlas() {
   mapa[BLOCO.BOLO]           = { top: 37, side: 38, bottom: 38 }; // creme cima, lateral em camadas
   mapa[BLOCO.BIGORNA]        = { top: 39, side: 40, bottom: 40 }; // yunque cima, forma lateral
   mapa[BLOCO.BEACON]         = { top: 41, side: 41, bottom: 41 }; // cristal em todas as faces
+  mapa[BLOCO.RAIL]           = { top: 42, side: 42, bottom: 42 }; // trilho (slab fina)
+  mapa[BLOCO.TEIA]           = { top: 43, side: 43, bottom: 43 }; // teia em todas as faces
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

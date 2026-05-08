@@ -88,6 +88,12 @@ export class Player {
               : this.sneak ? VEL_SNEAK
               : VEL_ANDAR;
     if (naAgua) speed *= 0.55;
+    // Teia de aranha: reduz drasticamente a velocidade (como Minecraft)
+    const blocoEm = world.get(Math.floor(this.pos.x), Math.floor(this.pos.y), Math.floor(this.pos.z));
+    if (blocoEm === BLOCO.TEIA) speed *= 0.20;
+    // Trilho debaixo do player: pequeno boost (1.15×) — proxy de minecart
+    const blocoBaixo = world.get(Math.floor(this.pos.x), Math.floor(this.pos.y - 0.6), Math.floor(this.pos.z));
+    if (blocoBaixo === BLOCO.RAIL) speed *= 1.15;
     // Poção de speed: +30% velocidade (decremento natural ao expirar)
     if (this.efeitos?.speed && Date.now() < this.efeitos.speed) speed *= 1.30;
     else if (this.efeitos?.speed) delete this.efeitos.speed;
