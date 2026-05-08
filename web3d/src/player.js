@@ -106,13 +106,23 @@ export class Player {
       this.vel.y = clamp(this.vel.y, -3.0, 5.0);
       vy = this.vel.y;
     } else {
-      this.vel.y += GRAVIDADE * dt;
-      if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
-      vy = this.vel.y;
-      if (this.input.jump && this.noChao) {
-        this.vel.y = PULO_VEL;
-        vy = PULO_VEL;
-        this.noChao = false;
+      // Detecta ladder no bloco do player (ou logo abaixo) — climb mode
+      const naLadder = this._tocaLadder(world);
+      if (naLadder) {
+        // Subir/parar/descer baseado em input vertical
+        if (this.input.up > 0 || this.input.jump) this.vel.y = 2.6;
+        else if (this.input.fwd === 0 && this.input.side === 0) this.vel.y = 0;
+        else this.vel.y = Math.max(-1.5, this.vel.y - 4 * dt);
+        vy = this.vel.y;
+      } else {
+        this.vel.y += GRAVIDADE * dt;
+        if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
+        vy = this.vel.y;
+        if (this.input.jump && this.noChao) {
+          this.vel.y = PULO_VEL;
+          vy = PULO_VEL;
+          this.noChao = false;
+        }
       }
     }
     this.input.jump = false;
@@ -311,6 +321,18 @@ export class Player {
     }
   }
 
+  // Verifica se o player está tocando uma escada (ladder) — usado pra
+  // ativar o climb mode (subir/descer continuamente sem gravidade).
+  _tocaLadder(world) {
+    const x = Math.floor(this.pos.x);
+    const z = Math.floor(this.pos.z);
+    for (let dy = 0; dy <= 1; dy++) {
+      const y = Math.floor(this.pos.y) + dy;
+      if (BLOCO_INFO[world.get(x, y, z)]?.shape === 'ladder') return true;
+    }
+    return false;
+  }
+
   colisaoBlocos(world, px, py, pz) {
     const r = PLAYER_RADIUS;
     const x0 = Math.floor(px - r), x1 = Math.floor(px + r);
@@ -320,9 +342,27 @@ export class Player {
       for (let y = y0; y <= y1; y++)
         for (let z = z0; z <= z1; z++) {
           const b = world.get(x, y, z);
-          // Água é passável (swim physics trata drag/buoyancy separado)
           if (b === BLOCO.AGUA) continue;
-          if (BLOCO_INFO[b].solido) return true;
+          const info = BLOCO_INFO[b];
+          if (!info?.solido) continue;
+          // Slab: só colide se player intersecta meia altura inferior (y..y+0.5)
+          if (info.shape === 'slab') {
+            if (py >= y + 0.5) continue;
+            if (py + PLAYER_HEIGHT - 0.05 <= y) continue;
+            // Player também precisa estar horizontalmente dentro
+            if (px + r <= x || px - r >= x + 1) continue;
+            if (pz + r <= z || pz - r >= z + 1) continue;
+            return true;
+          }
+          // Fence: pillar central 0.4 de raio (de 0.3 a 0.7 em x e z)
+          if (info.shape === 'fence') {
+            if (px + r <= x + 0.3 || px - r >= x + 0.7) continue;
+            if (pz + r <= z + 0.3 || pz - r >= z + 0.7) continue;
+            return true;
+          }
+          // Ladder: chapinha em -Z (climb tratado fora; colisão só no slab z=0..0.1)
+          if (info.shape === 'ladder') continue;
+          return true;
         }
     return false;
   }

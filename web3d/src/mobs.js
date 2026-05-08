@@ -632,7 +632,22 @@ export class Mob {
         for (let zi = z0; zi <= z1; zi++) {
           const b = world.get(xi, yi, zi);
           if (b === BLOCO.AGUA) continue;
-          if (BLOCO_INFO[b]?.solido) return true;
+          const info = BLOCO_INFO[b];
+          if (!info?.solido) continue;
+          if (info.shape === 'slab') {
+            if (y >= yi + 0.5) continue;
+            if (y + h - 0.05 <= yi) continue;
+            if (x + r <= xi || x - r >= xi + 1) continue;
+            if (z + r <= zi || z - r >= zi + 1) continue;
+            return true;
+          }
+          if (info.shape === 'fence') {
+            if (x + r <= xi + 0.3 || x - r >= xi + 0.7) continue;
+            if (z + r <= zi + 0.3 || z - r >= zi + 0.7) continue;
+            return true;
+          }
+          if (info.shape === 'ladder') continue;
+          return true;
         }
     return false;
   }

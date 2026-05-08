@@ -57,8 +57,17 @@ export const BLOCO = {
   FORNALHA:  23,
   CAMA:      24,
   BEDROCK:   25,
+  // === Sprint 2: building vocabulary ===
+  // Blocos com forma customizada (não-cubo). Renderização especial no
+  // mesh builder + colisão modificada no player/mob.
+  SLAB_PEDRA:    26, // meia altura
+  SLAB_MADEIRA:  27,
+  SLAB_TIJOLO:   28,
+  FENCE_MADEIRA: 29, // pillar fino + braços
+  LADDER:        30, // escada (climb)
+  DOOR_MADEIRA:  31, // porta (open/close por right-click)
 };
-export const N_BLOCOS = 26;
+export const N_BLOCOS = 32;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -90,6 +99,14 @@ export const BLOCO_INFO = {
   [BLOCO.FORNALHA]:  { nome: 'Fornalha',  solido: true,  emiteLuz: 0,  cor: 0x6E6E6E, lateral: 0x424242 },
   [BLOCO.CAMA]:      { nome: 'Cama',      solido: true,  emiteLuz: 0,  cor: 0xE53935, lateral: 0xC62828 },
   [BLOCO.BEDROCK]:   { nome: 'Bedrock',   solido: true,  emiteLuz: 0,  cor: 0x555555, lateral: 0x4a4a4a },
+  // shape='slab' = meia altura inferior; 'fence' = pillar central; 'ladder'
+  // = chapinha vertical (não-bloqueante); 'door' = chapinha vertical (toggle).
+  [BLOCO.SLAB_PEDRA]:    { nome: 'Laje de Pedra',     solido: true,  emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'slab' },
+  [BLOCO.SLAB_MADEIRA]:  { nome: 'Laje de Madeira',   solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO]:   { nome: 'Laje de Tijolo',    solido: true,  emiteLuz: 0, cor: 0xE57373, lateral: 0xC62828, shape: 'slab' },
+  [BLOCO.FENCE_MADEIRA]: { nome: 'Cerca de Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'fence' },
+  [BLOCO.LADDER]:        { nome: 'Escada (ladder)',   solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'ladder' },
+  [BLOCO.DOOR_MADEIRA]:  { nome: 'Porta de Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'door' },
 };
 
 export const ICONE = {
@@ -196,6 +213,13 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 8}], saida: {b: BLOCO.BAU, q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 3}], saida: {i: ITEM.BUCKET, q: 1}, wb: true },
   { custos: [{i: ITEM.TRIGO, q: 3}], saida: {i: ITEM.PAO, q: 1}, wb: false },
+  // Building vocabulary (Sprint 2)
+  { custos: [{b: BLOCO.PEDRA, q: 3}],    saida: {b: BLOCO.SLAB_PEDRA,    q: 6}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 3}],  saida: {b: BLOCO.SLAB_MADEIRA,  q: 6}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO, q: 3}],   saida: {b: BLOCO.SLAB_TIJOLO,   q: 6}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_MADEIRA, q: 3}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 7}],       saida: {b: BLOCO.LADDER,        q: 3}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 6}],  saida: {b: BLOCO.DOOR_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
 ];

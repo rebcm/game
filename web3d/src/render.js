@@ -619,6 +619,13 @@ function criarAtlas() {
   mapa[BLOCO.FORNALHA]  = { top: 25, side: 25, bottom: 25 };
   mapa[BLOCO.CAMA]      = { top: 26, side: 26, bottom: 26 };
   mapa[BLOCO.BEDROCK]   = { top: 27, side: 27, bottom: 27 };
+  // Sprint 2: building blocks reaproveitam texturas existentes
+  mapa[BLOCO.SLAB_PEDRA]    = { top: 3,  side: 3,  bottom: 3  };
+  mapa[BLOCO.SLAB_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
+  mapa[BLOCO.SLAB_TIJOLO]   = { top: 8,  side: 8,  bottom: 8  };
+  mapa[BLOCO.FENCE_MADEIRA] = { top: 6,  side: 6,  bottom: 6  };
+  mapa[BLOCO.LADDER]        = { top: 6,  side: 6,  bottom: 6  };
+  mapa[BLOCO.DOOR_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -948,6 +955,40 @@ export class Renderer {
           const cellMap = this.atlas.mapa[t];
           if (!cellMap) continue;
           const idxTop = cellMap.top, idxSide = cellMap.side, idxBot = cellMap.bottom;
+          // === Shapes customizadas (slab, fence, ladder, door) ===
+          if (info.shape === 'slab') {
+            // Meia altura inferior (y a y+0.5). Sempre emite top/bottom.
+            addFace(SHADE.top, idxTop, 0, x, y, z, x, y+0.5, z, 0,1,0, 1,0,0, 0,0,1);
+            addFace(SHADE.bottom, idxBot, 1, x, y, z, x, y, z+1, 0,-1,0, 1,0,0, 0,0,-1);
+            addFace(SHADE.sideX, idxSide, 2, x, y, z, x+1, y, z,    1,0,0,  0,0,1,  0,0.5,0);
+            addFace(SHADE.sideX, idxSide, 3, x, y, z, x,   y, z+1, -1,0,0,  0,0,-1, 0,0.5,0);
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z, x+1, y, z+1,  0,0,1, -1,0,0,  0,0.5,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z, x,   y, z,    0,0,-1, 1,0,0,  0,0.5,0);
+            continue;
+          }
+          if (info.shape === 'fence') {
+            // Pillar central 0.4×1.0×0.4 (centrado em 0.3..0.7 ambos)
+            const a = 0.3, b = 0.7, w = b - a;
+            // top/bottom (quad central)
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x+a, y+1, z+a, 0,1,0,  w,0,0, 0,0,w);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x+a, y,   z+b, 0,-1,0, w,0,0, 0,0,-w);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+b, y,   z+a, 1,0,0,  0,0,w, 0,1,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x+a, y,   z+b,-1,0,0,  0,0,-w,0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+b, y,   z+b, 0,0,1, -w,0,0, 0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x+a, y,   z+a, 0,0,-1, w,0,0, 0,1,0);
+            continue;
+          }
+          if (info.shape === 'ladder') {
+            // Chapinha vertical 1×1×0.1 colada na face -Z (frente). MVP: sempre orientada.
+            const d = 0.10;
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z, x+1, y, z+d, 0,0,1, -1,0,0, 0,1,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z, x,   y, z,   0,0,-1, 1,0,0, 0,1,0);
+            continue;
+          }
+          if (info.shape === 'door') {
+            // MVP: cubo cheio com cor de madeira (toggle aberto/fechado vira pra próximo sprint)
+            // Renderiza como bloco normal por enquanto.
+          }
           if (faceVisivel(x, y + 1, z, t))
             addFace(SHADE.top, idxTop, 0, x, y, z, x, y+1, z, 0,1,0, 1,0,0, 0,0,1);
           if (faceVisivel(x, y - 1, z, t))
