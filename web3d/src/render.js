@@ -1467,14 +1467,26 @@ function criarTexturaCracks() {
 // === Disco de sol/lua ===
 function criarDisco(cor, raio) {
   const cnv = document.createElement('canvas');
-  cnv.width = 64; cnv.height = 64;
+  cnv.width = 128; cnv.height = 128;
   const ctx = cnv.getContext('2d');
-  ctx.fillStyle = '#' + cor.toString(16).padStart(6, '0');
-  ctx.beginPath(); ctx.arc(32, 32, raio * 5, 0, Math.PI * 2); ctx.fill();
+  // Halo radial gradient (suave, vai pra transparente nas bordas)
+  const grad = ctx.createRadialGradient(64, 64, raio * 3, 64, 64, 56);
+  const corHex = '#' + cor.toString(16).padStart(6, '0');
+  grad.addColorStop(0,    corHex + 'ff'); // núcleo opaco
+  grad.addColorStop(0.35, corHex + '66'); // halo médio
+  grad.addColorStop(0.75, corHex + '15'); // halo fraco
+  grad.addColorStop(1,    corHex + '00'); // borda transparente
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 128, 128);
+  // Disco sólido central (mais brilhante)
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath(); ctx.arc(64, 64, raio * 3.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = corHex;
+  ctx.beginPath(); ctx.arc(64, 64, raio * 2.6, 0, Math.PI * 2); ctx.fill();
   const tex = new THREE.CanvasTexture(cnv);
   const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false });
   const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(20, 20, 1);
+  sprite.scale.set(40, 40, 1); // halo maior pra glow visível
   return sprite;
 }
 

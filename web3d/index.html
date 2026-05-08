@@ -83,6 +83,17 @@
     <!-- Overlay de underwater (azul translúcido quando submerso) -->
     <div id="overlay-underwater"></div>
     <div id="crosshair"></div>
+    <!-- Underwater tint: azul translúcido quando player submerso. Adiciona
+         tb bolhas animadas via CSS pra reforçar o feedback. -->
+    <div id="underwater-tint" class="hidden">
+      <div class="bubble" style="--x:15%;--d:6s"></div>
+      <div class="bubble" style="--x:35%;--d:8s;--s:8px"></div>
+      <div class="bubble" style="--x:60%;--d:5s;--s:14px"></div>
+      <div class="bubble" style="--x:80%;--d:7s;--s:10px"></div>
+      <div class="bubble" style="--x:90%;--d:9s;--s:6px"></div>
+    </div>
+    <!-- Color grading overlay: tint dinâmico (amber/red dawn/dusk, blue night) -->
+    <div id="color-grade"></div>
     <!-- Boss HP bar (aparece quando há boss alive — Ender Dragon) -->
     <div id="boss-bar" class="hidden">
       <div class="boss-name">🐉 Ender Dragon</div>

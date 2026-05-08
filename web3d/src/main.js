@@ -1255,6 +1255,21 @@ function loop(now) {
 
   state.renderer.atualizarTexturasAnimadas(dt);
   state.renderer.atualizarCeu(state.tempoDia, state.player.pos);
+  // === Overlays visuais (premium look) ===
+  // Underwater tint: aparece quando player.naAgua
+  const _under = document.getElementById('underwater-tint');
+  if (_under) _under.classList.toggle('show', !!state.player.naAgua);
+  // Color grading: tint baseado na hora do dia
+  const _grade = document.getElementById('color-grade');
+  if (_grade) {
+    const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
+    let cor = 'rgba(0,0,0,0)';
+    if (sun < 0.20) cor = 'rgba(80, 100, 180, 0.18)';      // noite: azul frio
+    else if (sun < 0.42) cor = 'rgba(255, 140, 80, 0.20)'; // dawn/dusk: amber
+    else if (sun < 0.55) cor = 'rgba(255, 200, 130, 0.10)'; // golden hour
+    // Dia (sun >= 0.55): sem tint
+    _grade.style.backgroundColor = cor;
+  }
   // Boss HP bar (Ender Dragon)
   const boss = state.mobMgr.mobs.find(m => MOB_INFO[m.tipo]?.boss);
   const bossBar = document.getElementById('boss-bar');
@@ -1494,8 +1509,40 @@ function _renderBootSafe() {
     });
   }
 }
+// === Cross-browser feature detection ===
+// Verifica WebGL antes de renderizar boot. Se ausente, mostra tela
+// amigável em vez de erro críptico no console.
+function _checkBrowserSupport() {
+  // WebGL
+  let webgl = false;
+  try {
+    const cnv = document.createElement('canvas');
+    webgl = !!(cnv.getContext('webgl2') || cnv.getContext('webgl') || cnv.getContext('experimental-webgl'));
+  } catch (_) {}
+  if (!webgl) {
+    document.body.innerHTML =
+      '<div style="padding:32px;color:#fff;font-family:sans-serif;text-align:center;max-width:600px;margin:80px auto">' +
+      '<h1 style="color:#FFD700">⚠ WebGL não disponível</h1>' +
+      '<p>Seu navegador não suporta WebGL — o jogo precisa dele pra renderizar 3D.</p>' +
+      '<p>Tente:</p><ul style="text-align:left;display:inline-block">' +
+      '<li>Chrome, Firefox, Safari ou Edge atualizados</li>' +
+      '<li>Habilitar "Aceleração por hardware" nas configurações do navegador</li>' +
+      '<li>Atualizar drivers da placa de vídeo</li>' +
+      '</ul></div>';
+    return false;
+  }
+  // localStorage (alguns browsers em modo privado bloqueiam)
+  try { localStorage.setItem('_t', '1'); localStorage.removeItem('_t'); }
+  catch (_) {
+    console.warn('[boot] localStorage indisponível — saves não persistirão');
+  }
+  return true;
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', _renderBootSafe);
+  document.addEventListener('DOMContentLoaded', () => {
+    if (_checkBrowserSupport()) _renderBootSafe();
+  });
 } else {
-  _renderBootSafe();
+  if (_checkBrowserSupport()) _renderBootSafe();
 }

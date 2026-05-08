@@ -1066,6 +1066,53 @@ kbd {
 }
 #flash-dano.show { opacity: 1; transition: opacity 0.05s ease-in; }
 
+/* === Underwater tint: overlay azul + bolhas subindo ===
+   Aparece quando player.naAgua (toggle .show via JS no loop). */
+#underwater-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+  background: linear-gradient(180deg,
+    rgba(20,80,160,0.30) 0%,
+    rgba(10,60,140,0.45) 50%,
+    rgba(5,40,100,0.55) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+  overflow: hidden;
+}
+#underwater-tint.show { opacity: 1; }
+/* Bolhas: pequenas elipses brancas que sobem do fundo até o topo */
+#underwater-tint .bubble {
+  position: absolute;
+  bottom: -20px;
+  left: var(--x);
+  width: var(--s, 10px); height: var(--s, 10px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+  animation: bubble-rise var(--d, 7s) linear infinite;
+}
+@keyframes bubble-rise {
+  0%   { transform: translateY(0)      scale(0.7); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+}
+
+/* === Color grading overlay (dawn/dusk amber, dusk red, night cool blue) ===
+   JS atualiza background-color e opacity baseado em sun (hora do dia). */
+#color-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+  background: rgba(0,0,0,0);
+  mix-blend-mode: multiply;
+  transition: background-color 1.2s ease;
+}
+
 /* HP <= 4 (2 corações): pulse vermelho lento na vinheta. */
 #vinheta.low-hp {
   animation: lowHpPulse 1.2s ease-in-out infinite;

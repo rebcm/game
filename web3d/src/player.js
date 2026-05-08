@@ -80,6 +80,7 @@ export class Player {
       Math.floor(this.pos.z),
     );
     const naAgua = (bCorpo === BLOCO.AGUA || bCabeca === BLOCO.AGUA);
+    this.naAgua = naAgua; // expõe pra UI/render usar (underwater overlay)
 
     // Velocidade: sneak < andar < sprint, modulado por água.
     // Sneak agora reduz vel em qualquer modo (criativo OU sobrevivência).
