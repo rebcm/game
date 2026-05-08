@@ -81,7 +81,10 @@ export const MOB_INFO = {
   },
   enderman: {
     hp: 20, vel: 2.4, hostil: true, dano: 3, alcance: 2.4,
-    drops: () => Math.random() < 0.5 ? [{ i: ITEM.DIAMANTE, q: 1 }] : [],
+    drops: () => [
+      ...(Math.random() < 0.6 ? [{ i: ITEM.ENDER_PEARL, q: 1 }] : []),
+      ...(Math.random() < 0.2 ? [{ i: ITEM.DIAMANTE, q: 1 }] : []),
+    ],
     cor: 0x121212, sec: 0xb388ff, teleport: true,
   },
   // === Sprint 4: population ===
@@ -1068,8 +1071,30 @@ export class Mob {
         Audio.galinha();
       }
     }
-    // Reprodução: decrementa timers
-    if (this.loveTimer > 0) this.loveTimer -= dt;
+    // Reprodução: decrementa timers + spawna/remove corações flutuantes
+    if (this.loveTimer > 0) {
+      this.loveTimer -= dt;
+      // Cria coração visual se não existe (mostra que mob tá em love mode)
+      if (!this._heart) {
+        const heartMat = new THREE.MeshLambertMaterial({
+          color: 0xff5252, emissive: 0xff5252, emissiveIntensity: 0.6,
+        });
+        const heart = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.05), heartMat);
+        heart.position.y = this.altura + 0.4;
+        this.mesh.add(heart);
+        this._heart = heart;
+      }
+      // Animação: pulsa + sobe levemente
+      const t = (typeof performance !== 'undefined' ? performance.now() : Date.now()) * 0.001;
+      this._heart.scale.setScalar(1 + Math.sin(t * 4) * 0.2);
+      this._heart.position.y = this.altura + 0.4 + Math.sin(t * 2) * 0.1;
+    } else if (this._heart) {
+      // Remove coração quando love mode acaba
+      this.mesh.remove(this._heart);
+      this._heart.geometry.dispose();
+      this._heart.material.dispose();
+      this._heart = null;
+    }
     if (this.breedCooldown > 0) this.breedCooldown -= dt;
     // Stuck detection: força repath + minor teleport se mob não mexeu
     // o suficiente em 3s. Previne mobs travados em quinas/buracos.

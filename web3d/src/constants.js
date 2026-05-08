@@ -151,6 +151,7 @@ export const ITEM = {
   ESMERALDA: 280, PEIXE: 281,
   // Sprint 9: acende portal
   SILEX: 290, FLINT_STEEL: 291,
+  ENDER_PEARL: 295, // teleport on right-click (drop de enderman)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -196,6 +197,7 @@ export const ITEM_INFO = {
   [ITEM.PEIXE]:         { nome: 'Peixe',             icone: '🐟', nutricao: 4 },
   [ITEM.SILEX]:         { nome: 'Sílex',             icone: '🪨' },
   [ITEM.FLINT_STEEL]:   { nome: 'Isqueiro',          icone: '🔥', ferramenta: 'isqueiro' },
+  [ITEM.ENDER_PEARL]:   { nome: 'Pérola do Ender',   icone: '🔮' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },

@@ -645,6 +645,28 @@ function loop(now) {
     // Click direito: interação ou colocar bloco
     if (state.player.cliqueD) {
       state.player.cliqueD = false;
+      // Pérola do Ender: teleporta player ~6 blocos na direção da câmera
+      // (paridade Minecraft real). Funciona em qualquer contexto.
+      const selPearl = state.inv.itemSelecionado();
+      if (selPearl?.i === ITEM.ENDER_PEARL) {
+        const dirP = state.renderer.camera.getWorldDirection(_tmpVecAux);
+        const dist = 6;
+        const novoX = state.player.pos.x + dirP.x * dist;
+        const novoY = state.player.pos.y + dirP.y * dist;
+        const novoZ = state.player.pos.z + dirP.z * dist;
+        // Verifica se destino é seguro (não dentro de bloco sólido)
+        if (!state.player.colisaoBlocos(state.world, novoX, novoY, novoZ)) {
+          state.player.pos.set(novoX, novoY, novoZ);
+          state.player.vel.set(0, 0, 0);
+          state.inv.consumirAtual();
+          state.player.aplicarDano(2, 'teleport'); // self-damage MC
+          Audio.endermanTeleport?.();
+          state.ui.toast('🔮 Teleportado!');
+        } else {
+          state.ui.toast('⚠ Destino bloqueado');
+        }
+        return;
+      }
       // Antes do raycast de bloco, tenta interação com mob mais próximo
       const mAlvo = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
       const sel = state.inv.itemSelecionado();
