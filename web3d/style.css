@@ -1124,10 +1124,13 @@ kbd {
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.5px;
 }
-/* Minimap 2D top-down — canto superior direito, mostra chunks ao redor */
+/* Minimap 2D top-down — canto superior direito, deslocado pra ESQUERDA
+   dos action buttons (bag/craft/modo/save em right:14 top:14..164 = 220px
+   de altura ocupados). Largura do minimap+wrap ≈ 132px, então right=70
+   coloca-o à esquerda dos botões sem sobrepor. */
 #minimap-wrap {
   position: absolute;
-  top: 8px; right: 8px;
+  top: 8px; right: 70px;
   background: rgba(0, 0, 0, 0.55);
   border: 2px solid;
   border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
@@ -1135,8 +1138,15 @@ kbd {
 }
 #minimap {
   display: block;
+  width: 128px; height: 128px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+}
+/* Em telas estreitas (mobile portrait), colapsa pra menor e fica embaixo
+   dos botões que viram horizontal */
+@media (max-width: 600px) {
+  #minimap-wrap { top: auto; bottom: 100px; right: 8px; }
+  #minimap { width: 80px; height: 80px; }
 }
 
 /* Loading overlay — aparece sem bloquear input quando há backlog de

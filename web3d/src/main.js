@@ -102,6 +102,13 @@ function atacarMob() {
   const tier = state.inv.melhorEspada();
   let dano = 2 + tier * 2;
   if (isCrit) dano = Math.round(dano * 1.5);
+  // Sharpness enchantment do item ativo (sel.encant.sharpness 1-3 = +1/+2/+3 dano)
+  const selAtual = state.inv.itemSelecionado();
+  if (selAtual?.encant?.sharpness) dano += selAtual.encant.sharpness;
+  // Poção de Strength: +50% dano enquanto ativa
+  if (state.player.efeitos?.strength && Date.now() < state.player.efeitos.strength) {
+    dano = Math.round(dano * 1.5);
+  } else if (state.player.efeitos?.strength) delete state.player.efeitos.strength;
   if (m.tipo === 'zumbi') Audio.zumbiHit();
   else Audio.hit();
   // Damage number flutuante na tela
@@ -129,6 +136,49 @@ function atacarMob() {
   }
 }
 
+// === Encantar item ativo na mesa de encantamento ===
+// Custa 10/20/30 XP por nível 1/2/3. Tipo do enchant é determinado
+// pelo item (espada=sharpness, picareta=efficiency, armadura=protection).
+// Requer ITEM.LAPIS na hotbar (consume 1 por enchant).
+function encantarItemAtual() {
+  const sel = state.inv.itemSelecionado();
+  if (!sel || sel.i === undefined) {
+    state.ui.toast('Selecione um item pra encantar');
+    return;
+  }
+  const info = ITEM_INFO[sel.i];
+  let tipoEnch = null;
+  if (info?.ferramenta === 'esp') tipoEnch = 'sharpness';
+  else if (info?.ferramenta === 'pic') tipoEnch = 'efficiency';
+  else if (info?.armadura) tipoEnch = 'protection';
+  if (!tipoEnch) {
+    state.ui.toast('Item não encantável (use espada/picareta/armadura)');
+    return;
+  }
+  if (sel.encant?.[tipoEnch] >= 3) {
+    state.ui.toast('Item já no nível máximo');
+    return;
+  }
+  if (state.inv.contar(undefined, ITEM.LAPIS) <= 0) {
+    state.ui.toast('Precisa de Lápis Lazuli (drop raro de pedra)');
+    return;
+  }
+  const proxNivel = (sel.encant?.[tipoEnch] || 0) + 1;
+  const custoXP = proxNivel * 10;
+  if ((state.player.xp || 0) < custoXP) {
+    state.ui.toast(`Precisa de ${custoXP} XP (você tem ${state.player.xp})`);
+    return;
+  }
+  state.player.xp -= custoXP;
+  state.inv.consumir(undefined, ITEM.LAPIS, 1);
+  sel.encant = sel.encant || {};
+  sel.encant[tipoEnch] = proxNivel;
+  Audio.levelUp?.();
+  state.ui.toast(`✨ ${info.nome} +${tipoEnch} ${proxNivel}!`);
+  state.ui.atualizarXP?.();
+  state.ui.renderHotbar?.();
+}
+
 // === Solta o arco (chamado em F keyup) — dispara flecha com força
 // proporcional ao tempo de charge. Hold máx ~1.2s = full power.
 function soltarArco() {
@@ -154,6 +204,14 @@ function comerSlot() {
   const s = state.inv.itemSelecionado();
   if (!s || s.i === undefined) { state.ui.toast('Nada comestível selecionado'); return; }
   const info = ITEM_INFO[s.i];
+  // Poções: efeitos imediatos ou timer
+  if (info?.pocao) {
+    aplicarPocao(info.pocao);
+    state.inv.consumirAtual();
+    Audio.eatCrunch();
+    state.ui.toast(`🧪 Poção de ${info.pocao}`);
+    return;
+  }
   if (!info || !info.nutricao) { state.ui.toast('Não comestível'); return; }
   state.player.fome = clamp(state.player.fome + info.nutricao, 0, state.player.fomeMax);
   state.player.saturation = Math.min(20, state.player.saturation + info.nutricao * 0.6);
@@ -162,6 +220,18 @@ function comerSlot() {
   if (info.suspeito && Math.random() < 0.15) state.player.aplicarDano(1, 'comida estragada');
   else state.ui.toast(`Comeu ${info.nome} (+${info.nutricao} fome)`);
   if (s.i === ITEM.CARNE_COZIDA) Achievements.unlock('COMER_CARNE');
+}
+
+// Aplica efeito de poção. Heal é instantâneo; speed/strength/regen têm
+// timer (state.player.efeitos[tipo] = msAteAcabar).
+function aplicarPocao(tipo) {
+  const p = state.player;
+  p.efeitos = p.efeitos || {};
+  if (tipo === 'heal') {
+    p.hp = Math.min(p.hpMax, p.hp + 5);
+  } else {
+    p.efeitos[tipo] = Date.now() + 30000; // 30s
+  }
 }
 
 // === Dormir ===
@@ -420,7 +490,9 @@ function loop(now) {
       const tier = state.inv.melhorPicareta();
       const sel = state.inv.itemSelecionado();
       const ferr = sel && sel.i !== undefined && ITEM_INFO[sel.i]?.ferramenta;
-      const mult = (t.b === BLOCO.BEDROCK) ? 0 : Drops.velocidadeQuebra(t.b, tier, ferr);
+      let mult = (t.b === BLOCO.BEDROCK) ? 0 : Drops.velocidadeQuebra(t.b, tier, ferr);
+      // Efficiency: +20%/+40%/+60% velocidade por nível
+      if (sel?.encant?.efficiency) mult *= 1 + sel.encant.efficiency * 0.20;
       state.player.progressoQuebra += dt / TEMPO_QUEBRA_BASE * mult;
       progressoVisual = state.player.progressoQuebra;
       if (state.player.progressoQuebra >= 1) {
@@ -515,8 +587,10 @@ function loop(now) {
         const blocoAlvo = t.b;
         if (blocoAlvo === BLOCO.BAU) {
           abrirPainelBau(t.x, t.y, t.z);
-          // Achievement: descobriu uma dungeon (baú em y < 28 = subterrâneo)
           if (t.y < 28) Achievements.unlock('TANTO_FAZ');
+        }
+        else if (blocoAlvo === BLOCO.MESA_ENCANT) {
+          encantarItemAtual();
         }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.CAMA) dormir();

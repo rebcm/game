@@ -626,6 +626,7 @@ function criarAtlas() {
   mapa[BLOCO.FENCE_MADEIRA] = { top: 6,  side: 6,  bottom: 6  };
   mapa[BLOCO.LADDER]        = { top: 6,  side: 6,  bottom: 6  };
   mapa[BLOCO.DOOR_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
+  mapa[BLOCO.MESA_ENCANT]   = { top: 19, side: 19, bottom: 3  }; // obsidiana top + side, pedra bottom
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

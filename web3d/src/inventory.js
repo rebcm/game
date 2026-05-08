@@ -150,7 +150,11 @@ export const Drops = {
         if (Math.random() < 0.15) out.push({ i: ITEM.SEMENTE, q: 1 });
         return out;
       }
-      case BLOCO.PEDRA:    return [{ b: BLOCO.PEDRA, q: 1 }];
+      case BLOCO.PEDRA: {
+        const out = [{ b: BLOCO.PEDRA, q: 1 }];
+        if (Math.random() < 0.02) out.push({ i: ITEM.LAPIS, q: 1 });
+        return out;
+      }
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
       case BLOCO.DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];
       case BLOCO.CARVAO:   return [{ i: ITEM.CARVAO, q: 1 }];

@@ -66,8 +66,10 @@ export const BLOCO = {
   FENCE_MADEIRA: 29, // pillar fino + braços
   LADDER:        30, // escada (climb)
   DOOR_MADEIRA:  31, // porta (open/close por right-click)
+  // === Sprint 3 ===
+  MESA_ENCANT:   32, // mesa de encantamento (right-click pra spend XP)
 };
-export const N_BLOCOS = 32;
+export const N_BLOCOS = 33;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -107,6 +109,7 @@ export const BLOCO_INFO = {
   [BLOCO.FENCE_MADEIRA]: { nome: 'Cerca de Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'fence' },
   [BLOCO.LADDER]:        { nome: 'Escada (ladder)',   solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'ladder' },
   [BLOCO.DOOR_MADEIRA]:  { nome: 'Porta de Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'door' },
+  [BLOCO.MESA_ENCANT]:   { nome: 'Mesa de Encantamento', solido: true, emiteLuz: 7, cor: 0x4527A0, lateral: 0x311B92 },
 };
 
 export const ICONE = {
@@ -132,6 +135,9 @@ export const ITEM = {
   OSSO: 230, MUDA: 231,
   BUCKET: 240, BUCKET_AGUA: 241, BUCKET_LAVA: 242,
   SEMENTE: 250, TRIGO: 251, PAO: 252,
+  // === Sprint 3: progressão endgame ===
+  LIVRO: 260, LAPIS: 261,
+  POCAO_HEAL: 270, POCAO_SPEED: 271, POCAO_STRENGTH: 272, POCAO_REGEN: 273,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -167,6 +173,12 @@ export const ITEM_INFO = {
   [ITEM.SEMENTE]:      { nome: 'Sementes',         icone: '🌾', plantavel: true },
   [ITEM.TRIGO]:        { nome: 'Trigo',            icone: '🌾' },
   [ITEM.PAO]:          { nome: 'Pão',              icone: '🍞', nutricao: 5 },
+  [ITEM.LIVRO]:        { nome: 'Livro',            icone: '📕' },
+  [ITEM.LAPIS]:        { nome: 'Lápis Lazuli',     icone: '🔷' },
+  [ITEM.POCAO_HEAL]:    { nome: 'Poção de Cura',     icone: '🧪', pocao: 'heal' },
+  [ITEM.POCAO_SPEED]:   { nome: 'Poção de Velocidade', icone: '🧪', pocao: 'speed' },
+  [ITEM.POCAO_STRENGTH]:{ nome: 'Poção de Força',   icone: '🧪', pocao: 'strength' },
+  [ITEM.POCAO_REGEN]:   { nome: 'Poção de Regen.',  icone: '🧪', pocao: 'regen' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -220,6 +232,14 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_MADEIRA, q: 3}, wb: true },
   { custos: [{i: ITEM.PAU, q: 7}],       saida: {b: BLOCO.LADDER,        q: 3}, wb: true },
   { custos: [{i: ITEM.PRANCHAS, q: 6}],  saida: {b: BLOCO.DOOR_MADEIRA,  q: 1}, wb: true },
+  // Sprint 3: items de progressão (lapis dropa de PEDRA com 2% chance — fix em inventory)
+  { custos: [{i: ITEM.PRANCHAS, q: 3}, {b: BLOCO.LA, q: 1}], saida: {i: ITEM.LIVRO, q: 1}, wb: true },
+  { custos: [{i: ITEM.LIVRO, q: 1}, {i: ITEM.DIAMANTE, q: 2}, {b: BLOCO.OBSIDIANA, q: 4}], saida: {b: BLOCO.MESA_ENCANT, q: 1}, wb: true },
+  // Poções via crafting direto (simplificação — sem brewing stand)
+  { custos: [{b: BLOCO.AGUA, q: 1}, {i: ITEM.LAPIS, q: 1}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.POCAO_HEAL, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 1}, {i: ITEM.LAPIS, q: 1}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.POCAO_SPEED, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 1}, {i: ITEM.LAPIS, q: 1}, {i: ITEM.FERRO, q: 2}], saida: {i: ITEM.POCAO_STRENGTH, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 1}, {i: ITEM.LAPIS, q: 1}, {i: ITEM.TRIGO, q: 2}], saida: {i: ITEM.POCAO_REGEN, q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
 ];

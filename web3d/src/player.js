@@ -88,6 +88,20 @@ export class Player {
               : this.sneak ? VEL_SNEAK
               : VEL_ANDAR;
     if (naAgua) speed *= 0.55;
+    // Poção de speed: +30% velocidade (decremento natural ao expirar)
+    if (this.efeitos?.speed && Date.now() < this.efeitos.speed) speed *= 1.30;
+    else if (this.efeitos?.speed) delete this.efeitos.speed;
+    // Regen: tick HP gain a cada 1s (gerenciado em hunger block, mas aqui só checa expiração)
+    if (this.efeitos?.regen) {
+      if (Date.now() >= this.efeitos.regen) delete this.efeitos.regen;
+      else {
+        this._accRegenPocao = (this._accRegenPocao || 0) + dt;
+        if (this._accRegenPocao >= 1.5 && this.hp < this.hpMax) {
+          this._accRegenPocao = 0;
+          this.hp = Math.min(this.hpMax, this.hp + 1);
+        }
+      }
+    }
 
     let dx = fwd.x * this.input.fwd + right.x * this.input.side;
     let dz = fwd.z * this.input.fwd + right.z * this.input.side;
@@ -371,7 +385,15 @@ export class Player {
     if (this.morto) return;
     if (this.modo === 'creative' && fonte !== 'void') return;
     const defesa = state.inv ? state.inv.defesaTotal() : 0;
-    const reducao = Math.min(0.8, defesa * 0.04);
+    let reducao = Math.min(0.8, defesa * 0.04);
+    // Protection enchantment em armaduras: -5%/-10%/-15% por peça com Protection N
+    if (state.inv?.armadura) {
+      let protBonus = 0;
+      for (const peca of Object.values(state.inv.armadura)) {
+        if (peca?.encant?.protection) protBonus += peca.encant.protection * 0.05;
+      }
+      reducao = Math.min(0.85, reducao + protBonus);
+    }
     const danoReal = Math.max(1, Math.round(d * (1 - reducao)));
     this.hp -= danoReal;
     this.semDano = 0;
