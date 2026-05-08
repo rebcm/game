@@ -189,6 +189,18 @@ export class World {
         c.set(lx, cy + 1, lz, BLOCO.TEIA);
       }
     }
+    // Marca 2 spawns de cave_spider pra serem invocados pelo main após chunk pronto
+    if (!this._mineshaftSpawns) this._mineshaftSpawns = [];
+    for (let i = 0; i < 2; i++) {
+      const lx = 4 + i * 6, lz = 4 + i * 6;
+      if (lx < CHUNK_SIZE && lz < CHUNK_SIZE) {
+        this._mineshaftSpawns.push({
+          x: cx * CHUNK_SIZE + lx + 0.5,
+          y: cy + 0.5,
+          z: cz * CHUNK_SIZE + lz + 0.5,
+        });
+      }
+    }
     // Baú no centro com loot bom
     const bx = 7, bz = 7;
     c.set(bx, cy, bz, BLOCO.BAU);

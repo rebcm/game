@@ -97,6 +97,19 @@ export class Player {
     // Poção de speed: +30% velocidade (decremento natural ao expirar)
     if (this.efeitos?.speed && Date.now() < this.efeitos.speed) speed *= 1.30;
     else if (this.efeitos?.speed) delete this.efeitos.speed;
+    // Veneno: dreno HP a cada 1.5s enquanto efeito ativo. Mínimo 1 HP
+    // (paridade Minecraft real — poison não mata, só debilita).
+    if (this.efeitos?.poison) {
+      if (Date.now() >= this.efeitos.poison) delete this.efeitos.poison;
+      else {
+        this._accPoison = (this._accPoison || 0) + dt;
+        if (this._accPoison >= 1.5 && this.hp > 1) {
+          this._accPoison = 0;
+          this.hp = Math.max(1, this.hp - 1);
+          state.ui?.toast?.('☠ Envenenado!');
+        }
+      }
+    }
     // Regen: tick HP gain a cada 1s (gerenciado em hunger block, mas aqui só checa expiração)
     if (this.efeitos?.regen) {
       if (Date.now() >= this.efeitos.regen) delete this.efeitos.regen;

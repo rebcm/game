@@ -1170,6 +1170,13 @@ function loop(now) {
       state.mobMgr.spawn('villager', v.x, v.y, v.z);
     }
   }
+  // === Spawn cave_spiders em mineshafts (deferido — só após chunk gen) ===
+  if (state.world._mineshaftSpawns?.length) {
+    while (state.world._mineshaftSpawns.length) {
+      const s = state.world._mineshaftSpawns.shift();
+      state.mobMgr.spawn('cave_spider', s.x, s.y, s.z);
+    }
+  }
   // === Loading overlay quando há backlog ===
   // Mostra "Carregando…" se >50% do view radius está faltando OU tem
   // muito mesh-dirty pendente. Esconde quando backlog < 25%.

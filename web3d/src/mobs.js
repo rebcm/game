@@ -69,6 +69,16 @@ export const MOB_INFO = {
     drops: () => Math.random() < 0.5 ? [{ b: BLOCO.LA, q: 1 }] : [],
     cor: 0x263238, sec: 0xb71c1c,
   },
+  // Cave Spider: aranha menor azul, spawn em mineshafts, ataca com veneno
+  cave_spider: {
+    hp: 8, vel: 3.0, hostil: true, dano: 2, alcance: 1.4,
+    drops: () => [
+      ...(Math.random() < 0.5 ? [{ b: BLOCO.LA, q: 1 }] : []),
+      ...(Math.random() < 0.3 ? [{ i: ITEM.SLIMEBALL, q: 1 }] : []),
+    ],
+    cor: 0x1565c0, sec: 0x0d47a1, // azul escuro + azul ainda mais escuro
+    poison: true, // ataque envenena player (dreno HP por tempo)
+  },
   creeper: {
     hp: 10, vel: 1.9, hostil: true, dano: 8, alcance: 2.5,
     drops: () => Math.random() < 0.5 ? [{ i: ITEM.CARVAO, q: 1 }] : [],
@@ -458,6 +468,45 @@ export function construirModeloMob(tipo, info) {
       }
       partes.cabeca = cabeca; partes.corpo = corpo;
       partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
+    case 'cave_spider': {
+      // Cave spider = aranha menor (escala 0.7) azul escura, com pernas
+      // mais longas. Reusa estrutura da aranha mas com paleta diferente.
+      const corpoTras = cubo(0.55, 0.35, 0.45, info.cor);
+      corpoTras.position.set(0, 0.40, -0.15); grp.add(corpoTras);
+      const cabeca = cubo(0.32, 0.28, 0.32, info.sec);
+      cabeca.position.set(0, 0.40, 0.28); grp.add(cabeca);
+      // 6 olhos vermelhos brilhantes (2 fileiras × 3)
+      const escleraMatCS = matCor(0xffffff);
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 3; col++) {
+          const x = -0.10 + col * 0.10;
+          const y = 0.04 - row * 0.08;
+          const escl = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.02), escleraMatCS);
+          escl.position.set(x, y, 0.165);
+          cabeca.add(escl);
+          const pup = cuboEm(0.020, 0.020, 0.020, 0xff1744, 1.2);
+          pup.position.set(x, y, 0.171);
+          cabeca.add(pup);
+        }
+      }
+      // Presas envenenadoras (verde)
+      for (const sx of [-0.07, 0.07]) {
+        const pr = cubo(0.04, 0.10, 0.04, 0x76ff03);
+        pr.position.set(sx, -0.15, 0.16); cabeca.add(pr);
+      }
+      const pernasCS = [];
+      for (let i = 0; i < 8; i++) {
+        const lado = i < 4 ? -1 : 1;
+        // Pernas mais finas e mais longas que aranha normal
+        const p = pernaComPivot(0.05, 0.50, 0.05, 0x0d47a1, 0.40);
+        p.position.set(lado * 0.25, 0.40,
+          (i < 4 ? i - 1.5 : (i - 5.5)) * 0.12);
+        p.rotation.z = lado * (0.55 + (i % 4) * 0.05);
+        grp.add(p); pernasCS.push(p);
+      }
+      partes.cabeca = cabeca; partes.pernas = pernasCS;
       break;
     }
     case 'aranha': {
@@ -854,6 +903,7 @@ export function construirModeloMob(tipo, info) {
 function _dimsMob(tipo) {
   switch (tipo) {
     case 'aranha':   return { raio: 0.45, altura: 0.55 };
+    case 'cave_spider': return { raio: 0.30, altura: 0.45 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
@@ -1493,6 +1543,11 @@ export class MobManager {
           }
         } else if (naAlcance && m.cooldownAtaque <= 0) {
           player.aplicarDano(info.dano, m.tipo);
+          // Veneno: cave spider envenena player por 8s (1 dano cada 1.5s)
+          if (info.poison) {
+            player.efeitos = player.efeitos || {};
+            player.efeitos.poison = Date.now() + 8000;
+          }
           m.cooldownAtaque = 1.2;
         }
       }
