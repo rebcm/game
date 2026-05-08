@@ -98,6 +98,9 @@ export class Player {
     // Poção de speed: +30% velocidade (decremento natural ao expirar)
     if (this.efeitos?.speed && Date.now() < this.efeitos.speed) speed *= 1.30;
     else if (this.efeitos?.speed) delete this.efeitos.speed;
+    // Slowness (flecha do stray): -50% velocidade
+    if (this.efeitos?.slowness && Date.now() < this.efeitos.slowness) speed *= 0.50;
+    else if (this.efeitos?.slowness) delete this.efeitos.slowness;
     // Veneno: dreno HP a cada 1.5s enquanto efeito ativo. Mínimo 1 HP
     // (paridade Minecraft real — poison não mata, só debilita).
     if (this.efeitos?.poison) {

@@ -86,8 +86,12 @@ export const BLOCO = {
   RAIL:          45, // trilho: chapinha fina decorativa no chão (shape slab)
   TEIA:          46, // teia de aranha: bloco macio em mineshafts (lenta player)
   ESTANTE:       47, // estante de livros: dá bônus de XP em mesa de encantamento
+  LA_VERMELHA:   48,
+  LA_AZUL:       49,
+  LA_VERDE:      50,
+  LA_AMARELA:    51,
 };
-export const N_BLOCOS = 48;
+export const N_BLOCOS = 52;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -144,6 +148,10 @@ export const BLOCO_INFO = {
   [BLOCO.RAIL]:          { nome: 'Trilho',           solido: true,  emiteLuz: 0,  cor: 0x9E9E9E, lateral: 0x757575, shape: 'slab' },
   [BLOCO.TEIA]:          { nome: 'Teia de Aranha',   solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
   [BLOCO.ESTANTE]:       { nome: 'Estante de Livros',solido: true,  emiteLuz: 0,  cor: 0xa1887f, lateral: 0xa1887f },
+  [BLOCO.LA_VERMELHA]:   { nome: 'Lã Vermelha',      solido: true,  emiteLuz: 0,  cor: 0xc62828, lateral: 0xb71c1c },
+  [BLOCO.LA_AZUL]:       { nome: 'Lã Azul',          solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.LA_VERDE]:      { nome: 'Lã Verde',         solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.LA_AMARELA]:    { nome: 'Lã Amarela',       solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
 };
 
 export const ICONE = {
@@ -324,6 +332,11 @@ export const RECEITAS = [
   { custos: [{i: ITEM.FERRO, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.RAIL, q: 16}, wb: true },
   // Estante: 6 pranchas + 3 livros (paridade MC)
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.LIVRO, q: 3}], saida: {b: BLOCO.ESTANTE, q: 1}, wb: true },
+  // Lãs coloridas: 1 lã + 1 corante proxy (tijolo/lapis/muda/trigo)
+  { custos: [{b: BLOCO.LA, q: 1}, {b: BLOCO.TIJOLO, q: 1}], saida: {b: BLOCO.LA_VERMELHA, q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.LAPIS,    q: 1}], saida: {b: BLOCO.LA_AZUL,     q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.MUDA,     q: 1}], saida: {b: BLOCO.LA_VERDE,    q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.TRIGO,    q: 1}], saida: {b: BLOCO.LA_AMARELA,  q: 1}, wb: false },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

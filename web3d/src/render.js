@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 6, CELL = 32;
+  const COLS = 8, ROWS = 7, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -952,6 +952,32 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Lã colorida (genérica): aplica padrão de fios curtos sobre cor base
+  function pintarLaColorida(idx, corBase, corClaro, corEscuro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Fios escuros (textura de lã)
+    let seed = idx * 9301 + 49297;
+    ctx.fillStyle = corEscuro;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.18) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Highlights claros
+    ctx.fillStyle = corClaro;
+    for (let py = 0; py < CELL; py += 3) {
+      for (let px = 0; px < CELL; px += 3) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+  }
+
   // Estante de Livros: faces laterais com fileira de livros coloridos
   function pintarEstanteLado(idx) {
     const col = idx % COLS;
@@ -1298,6 +1324,10 @@ function criarAtlas() {
   pintarTeia(43);                                          // teia de aranha (cordas em X)
   pintarEstanteTopo(44);                                   // topo da estante (madeira)
   pintarEstanteLado(45);                                   // lateral com livros coloridos
+  pintarLaColorida(46, '#c62828', '#ef5350', '#8b0000'); // lã vermelha
+  pintarLaColorida(47, '#1565c0', '#4fc3f7', '#0d47a1'); // lã azul
+  pintarLaColorida(48, '#2e7d32', '#66bb6a', '#1b5e20'); // lã verde
+  pintarLaColorida(49, '#f9a825', '#ffd54f', '#f57f17'); // lã amarela
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1350,6 +1380,10 @@ function criarAtlas() {
   mapa[BLOCO.RAIL]           = { top: 42, side: 42, bottom: 42 }; // trilho (slab fina)
   mapa[BLOCO.TEIA]           = { top: 43, side: 43, bottom: 43 }; // teia em todas as faces
   mapa[BLOCO.ESTANTE]        = { top: 44, side: 45, bottom: 44 }; // madeira topo, livros lateral
+  mapa[BLOCO.LA_VERMELHA]    = { top: 46, side: 46, bottom: 46 };
+  mapa[BLOCO.LA_AZUL]        = { top: 47, side: 47, bottom: 47 };
+  mapa[BLOCO.LA_VERDE]       = { top: 48, side: 48, bottom: 48 };
+  mapa[BLOCO.LA_AMARELA]     = { top: 49, side: 49, bottom: 49 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

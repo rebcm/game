@@ -85,6 +85,18 @@ export const MOB_INFO = {
     ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
+  // Stray: esqueleto da taiga, atira flechas de slowness, mais HP
+  stray: {
+    hp: 16, vel: 1.7, hostil: true, dano: 2, alcance: 7.0,
+    drops: () => [
+      ...(Math.random() < 0.6 ? [{ i: ITEM.OSSO, q: 1 + (Math.random() < 0.3 ? 1 : 0) }] : []),
+      ...(Math.random() < 0.5 ? [{ i: ITEM.FLECHA, q: 1 + Math.floor(Math.random() * 2) }] : []),
+      ...(Math.random() < 0.10 ? [{ b: BLOCO.NEVE, q: 1 }] : []),
+    ],
+    cor: 0xb3e5fc, sec: 0x4fc3f7, // azul-claro (gelado) + azul médio
+    slowness: true, // ataque aplica slowness 5s
+    resistenteSol: true, // não queima
+  },
   aranha: {
     hp: 12, vel: 2.6, hostil: true, dano: 3, alcance: 1.6,
     drops: () => Math.random() < 0.5 ? [{ b: BLOCO.LA, q: 1 }] : [],
@@ -472,10 +484,18 @@ export function construirModeloMob(tipo, info) {
       partes.bracos = bracos; partes.pernas = pernas;
       break;
     }
+    case 'stray':
     case 'esqueleto': {
       // Corpo magro com costelas
       const corpo = cubo(0.42, 0.72, 0.18, info.cor);
       corpo.position.y = 1.04; grp.add(corpo);
+      // Stray: faixas de tecido frio azuladas penduradas (decoração)
+      if (tipo === 'stray') {
+        for (const sx of [-0.20, 0, 0.20]) {
+          const faixa = cubo(0.12, 0.16, 0.04, 0x4fc3f7);
+          faixa.position.set(sx, 0.65, 0.10); grp.add(faixa);
+        }
+      }
       // Costelas (3 listras horizontais)
       for (let r = 0; r < 3; r++) {
         const rib = cubo(0.44, 0.04, 0.20, 0xb0bec5);
@@ -947,6 +967,7 @@ function _dimsMob(tipo) {
     case 'cave_spider': return { raio: 0.30, altura: 0.45 };
     case 'drowned':  return { raio: 0.30, altura: 1.85 };
     case 'husk':     return { raio: 0.30, altura: 1.85 };
+    case 'stray':    return { raio: 0.30, altura: 1.85 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
@@ -1538,8 +1559,8 @@ export class MobManager {
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
         const naAlcance = d2 < info.alcance ** 2 && m._vePlayer; // só ataca se vê
         m.cooldownFlecha -= dt;
-        // Esqueleto + Witch: ataque ranged (flecha / poção). Cooldown 2.5s.
-        if ((m.tipo === 'esqueleto' || m.tipo === 'witch') && naAlcance && m.cooldownFlecha <= 0) {
+        // Esqueleto + Stray + Witch: ataque ranged (flecha / poção). Cooldown 2.5s.
+        if ((m.tipo === 'esqueleto' || m.tipo === 'stray' || m.tipo === 'witch') && naAlcance && m.cooldownFlecha <= 0) {
           const dx = player.pos.x - m.x;
           const dy = (player.pos.y + 1.4) - (m.y + 1.5);
           const dz = player.pos.z - m.z;
@@ -1547,6 +1568,13 @@ export class MobManager {
           if (len > 0.5) {
             const dir = { x: dx/len, y: dy/len, z: dz/len };
             spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, Math.max(1, info.dano - 1));
+            // Stray: aplica slowness 5s no player se a flecha o atingir
+            // (proxy: aplica imediatamente já que o tracking de hit está em
+            // particles.js sem callback. Custo: aplica mesmo se errar)
+            if (m.tipo === 'stray' && len < 8) {
+              player.efeitos = player.efeitos || {};
+              player.efeitos.slowness = Date.now() + 5000;
+            }
             m.cooldownFlecha = m.tipo === 'witch' ? 3.0 : 2.5;
           }
           continue;
@@ -1651,6 +1679,10 @@ export class MobManager {
       // Drowned: spawn em (ou sobre) AGUA, durante a noite
       if (blocoChao === BLOCO.AGUA || world.get(x, y, z) === BLOCO.AGUA) {
         tipos.push('drowned'); tipos.push('drowned'); // peso 2× pra dominar em água
+      }
+      // Stray: substitui esqueleto em chão de NEVE (taiga/montanhas)
+      if (blocoChao === BLOCO.NEVE) {
+        tipos.push('stray'); tipos.push('stray'); tipos.push('stray');
       }
     } else if (luzMax >= 9 && (blocoChao === BLOCO.GRAMA || blocoChao === BLOCO.AREIA)) {
       tipos = ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
