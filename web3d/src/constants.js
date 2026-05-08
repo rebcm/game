@@ -178,6 +178,7 @@ export const ITEM = {
   BUSSOLA:      299, // bússola: aponta pro spawn (HUD com seta)
   FOGUETE:      244, // foguete: right-click lança, sobe, explode em cores
   LUNETA:       245, // luneta: right-click toggle zoom (FOV reduzido)
+  TRIDENTE:     246, // tridente: arremessa, atinge mob, volta ao player
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -231,6 +232,7 @@ export const ITEM_INFO = {
   [ITEM.BUSSOLA]:       { nome: 'Bússola',           icone: '🧭' },
   [ITEM.FOGUETE]:       { nome: 'Foguete',           icone: '🎆' },
   [ITEM.LUNETA]:        { nome: 'Luneta',            icone: '🔭', ferramenta: 'luneta' },
+  [ITEM.TRIDENTE]:      { nome: 'Tridente',          icone: '🔱', ferramenta: 'tridente' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -310,6 +312,8 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.VIDRO, q: 5}, {b: BLOCO.OBSIDIANA, q: 3}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.BEACON, q: 1}, wb: true },
   // Luneta: 2 ferro + 1 diamante (proxy de copper+amethyst) — zoom 4×
   { custos: [{i: ITEM.FERRO, q: 2}, {i: ITEM.DIAMANTE, q: 1}], saida: {i: ITEM.LUNETA, q: 1}, wb: true },
+  // Tridente: 4 ferro + 2 diamante (proxy de prismarine — endgame)
+  { custos: [{i: ITEM.FERRO, q: 4}, {i: ITEM.DIAMANTE, q: 2}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.TRIDENTE, q: 1}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

@@ -8,7 +8,7 @@ import {
 } from './constants.js';
 import { chunkKey } from './utils.js';
 import { Crafting } from './inventory.js';
-import { Achievements } from './achievements.js';
+import { Achievements, ACHIEVEMENTS } from './achievements.js';
 import { Save } from './save.js';
 import { Multiplayer } from './multiplayer.js';
 import { state } from './state.js';
@@ -512,6 +512,32 @@ export class UI {
       };
       this.elCraftLista.appendChild(div);
     }
+  }
+
+  // === Painel de Conquistas (tecla L) ===
+  renderConquistas() {
+    const lista = document.getElementById('conquistas-lista');
+    const resumo = document.getElementById('conquistas-resumo');
+    if (!lista) return;
+    lista.innerHTML = '';
+    const ids = Object.keys(ACHIEVEMENTS);
+    let unlocked = 0;
+    for (const id of ids) {
+      const a = ACHIEVEMENTS[id];
+      const has = Achievements.desbloqueada(id);
+      if (has) unlocked++;
+      const row = document.createElement('div');
+      row.className = `conquista-row ${has ? 'unlocked' : 'locked'}`;
+      row.innerHTML = `
+        <div class="conq-icone">${a.icone}</div>
+        <div class="conq-corpo">
+          <div class="conq-titulo">${a.titulo}</div>
+          <div class="conq-desc">${has ? a.desc : '???'}</div>
+        </div>
+        <div class="conq-status">${has ? '✅' : '🔒'}</div>`;
+      lista.appendChild(row);
+    }
+    if (resumo) resumo.textContent = `${unlocked} / ${ids.length} desbloqueadas`;
   }
 
   // === Painel do baú ===

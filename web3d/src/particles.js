@@ -640,6 +640,139 @@ class Firework {
   }
 }
 
+// =====================================================================
+// Trident — projétil arremessável que volta automaticamente ao player.
+// Estados: 'lancado' (voa em arco) → 'cravado' (parado em mob/bloco) → 'voltando'.
+// Quando alcança o player (raio 1.5), reabsorve no inventário.
+// =====================================================================
+class Trident {
+  constructor(scene, x, y, z, vx, vy, vz, dano = 8) {
+    this.scene = scene;
+    this.x = x; this.y = y; this.z = z;
+    this.vx = vx; this.vy = vy; this.vz = vz;
+    this.dano = dano;
+    this.estado = 'lancado';
+    this.life = 4.5;
+    this.cooldownVolta = 0;
+    // Visual: 3 pontas cinza-claro + cabo dourado
+    const grupo = new THREE.Group();
+    const matAco  = new THREE.MeshLambertMaterial({ color: 0xb0bec5 });
+    const matCabo = new THREE.MeshLambertMaterial({ color: 0xffb300 });
+    // Cabo (longa barra dourada)
+    const cabo = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.55), matCabo);
+    cabo.position.z = -0.15;
+    grupo.add(cabo);
+    // Base do tridente (transversal)
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.06, 0.06), matAco);
+    base.position.z = 0.18;
+    grupo.add(base);
+    // 3 pontas paralelas (esquerda, centro, direita)
+    for (const dx of [-0.12, 0, 0.12]) {
+      const ponta = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.20), matAco);
+      ponta.position.set(dx, 0, 0.32);
+      grupo.add(ponta);
+    }
+    grupo.position.set(x, y, z);
+    grupo.lookAt(x + vx, y + vy, z + vz);
+    this.mesh = grupo;
+    this.scene.add(grupo);
+  }
+  atualizar(dt, world, mobMgr, player) {
+    this.life -= dt;
+    if (this.life <= 0) return false;
+    if (this.estado === 'lancado') {
+      this.x += this.vx * dt;
+      this.y += this.vy * dt;
+      this.z += this.vz * dt;
+      this.vy -= 6 * dt; // gravidade leve
+      this.mesh.position.set(this.x, this.y, this.z);
+      this.mesh.lookAt(this.x + this.vx, this.y + this.vy, this.z + this.vz);
+      // Bloco sólido?
+      if (world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z))) {
+        this._cravar();
+        return true;
+      }
+      // Mob?
+      if (mobMgr) {
+        for (const m of mobMgr.mobs) {
+          const ddx = m.x - this.x;
+          const ddy = (m.y + 0.8) - this.y;
+          const ddz = m.z - this.z;
+          if (ddx*ddx + ddy*ddy + ddz*ddz < 0.6) {
+            Audio.flechaImpacto?.();
+            const len = Math.hypot(this.vx, this.vz) || 1;
+            m.tomarDano(this.dano, (this.vx/len) * 7, (this.vz/len) * 7);
+            if (state.ui) state.ui.toast(`🔱 Tridente em ${m.tipo} -${this.dano}`);
+            this._cravar();
+            return true;
+          }
+        }
+      }
+    } else if (this.estado === 'cravado') {
+      this.cooldownVolta -= dt;
+      if (this.cooldownVolta <= 0) this.estado = 'voltando';
+    } else if (this.estado === 'voltando') {
+      // Voa direto ao player (loyalty enchantment)
+      const dx = player.pos.x - this.x;
+      const dy = (player.pos.y + 0.5) - this.y;
+      const dz = player.pos.z - this.z;
+      const dist = Math.hypot(dx, dy, dz) || 1;
+      const VEL = 28;
+      this.vx = (dx / dist) * VEL;
+      this.vy = (dy / dist) * VEL;
+      this.vz = (dz / dist) * VEL;
+      this.x += this.vx * dt;
+      this.y += this.vy * dt;
+      this.z += this.vz * dt;
+      this.mesh.position.set(this.x, this.y, this.z);
+      this.mesh.lookAt(this.x + this.vx, this.y + this.vy, this.z + this.vz);
+      if (dist < 1.5) {
+        // Reabsorvido: volta ao inventário
+        state.inv?.adicionar?.({ i: ITEM.TRIDENTE, q: 1 });
+        Audio.colocar?.();
+        if (state.ui) state.ui.toast('🔱 Tridente recuperado');
+        return false;
+      }
+    }
+    return true;
+  }
+  _cravar() {
+    this.estado = 'cravado';
+    this.cooldownVolta = 0.4; // breve pausa antes de voltar
+    this.vx = this.vy = this.vz = 0;
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    for (const c of this.mesh.children) {
+      c.geometry.dispose();
+      c.material.dispose();
+    }
+  }
+}
+
+if (typeof window !== 'undefined') window._tridents = window._tridents || [];
+
+export function lancarTridente(origem, dir) {
+  if (!state.renderer) return;
+  const vel = 32;
+  const t = new Trident(state.renderer.scene,
+    origem.x + dir.x * 0.5, origem.y - 0.1, origem.z + dir.z * 0.5,
+    dir.x * vel, dir.y * vel, dir.z * vel);
+  window._tridents.push(t);
+  Audio.flechaSolta?.();
+}
+
+export function atualizarTridents(dt) {
+  if (!state.world || !state.mobMgr || !state.player) return;
+  for (let i = window._tridents.length - 1; i >= 0; i--) {
+    const t = window._tridents[i];
+    if (!t.atualizar(dt, state.world, state.mobMgr, state.player)) {
+      t.destruir();
+      window._tridents.splice(i, 1);
+    }
+  }
+}
+
 if (typeof window !== 'undefined') window._fireworks = window._fireworks || [];
 
 export function lancarFoguete(origem, dir) {

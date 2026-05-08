@@ -25,6 +25,7 @@ import {
   spawnArrow, atualizarArrows,
   castFishingLine, atualizarFishingBobber,
   lancarFoguete, atualizarFireworks,
+  lancarTridente, atualizarTridents,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
@@ -443,6 +444,7 @@ function init() {
   state.inv.adicionar({ i: ITEM.FOGUETE, q: 8 });
   state.inv.adicionar({ b: BLOCO.BEACON, q: 1 });
   state.inv.adicionar({ i: ITEM.LUNETA, q: 1 });
+  state.inv.adicionar({ i: ITEM.TRIDENTE, q: 1 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -777,6 +779,15 @@ function loop(now) {
       if (selVara?.i === ITEM.VARA_PESCA) {
         const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
         castFishingLine(state.renderer.camera.position, dirCam);
+        return;
+      }
+      // Tridente: arremessa projétil que volta — consome 1 do inv (volta ao bater/voltar)
+      const selTri = state.inv.itemSelecionado();
+      if (selTri?.i === ITEM.TRIDENTE) {
+        const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+        lancarTridente(state.renderer.camera.position, dirCam);
+        state.inv.consumirAtual();
+        state.ui.toast('🔱 Tridente arremessado!');
         return;
       }
       // Luneta: toggle zoom (FOV reduz pra 18° → ampliação ~4×)
@@ -1183,6 +1194,7 @@ function loop(now) {
   atualizarArrows(dt);
   atualizarFishingBobber(dt);
   atualizarFireworks(dt);
+  atualizarTridents(dt);
   // Skip ambient triggers + clima em heavy frames pra dar prioridade a
   // chunk loading/mesh build (responsividade da movimentação).
   if (!state._heavyFrame || !state._busy) {
