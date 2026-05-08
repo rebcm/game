@@ -85,8 +85,9 @@ export const BLOCO = {
   BEACON:        44, // farol: emite feixe vertical + buffs sobre pirâmide
   RAIL:          45, // trilho: chapinha fina decorativa no chão (shape slab)
   TEIA:          46, // teia de aranha: bloco macio em mineshafts (lenta player)
+  ESTANTE:       47, // estante de livros: dá bônus de XP em mesa de encantamento
 };
-export const N_BLOCOS = 47;
+export const N_BLOCOS = 48;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -142,6 +143,7 @@ export const BLOCO_INFO = {
   [BLOCO.BEACON]:        { nome: 'Farol',            solido: true,  emiteLuz: 15, cor: 0x80deea, lateral: 0x4dd0e1 },
   [BLOCO.RAIL]:          { nome: 'Trilho',           solido: true,  emiteLuz: 0,  cor: 0x9E9E9E, lateral: 0x757575, shape: 'slab' },
   [BLOCO.TEIA]:          { nome: 'Teia de Aranha',   solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.ESTANTE]:       { nome: 'Estante de Livros',solido: true,  emiteLuz: 0,  cor: 0xa1887f, lateral: 0xa1887f },
 };
 
 export const ICONE = {
@@ -320,6 +322,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.FERRO, q: 4}, {i: ITEM.DIAMANTE, q: 2}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.TRIDENTE, q: 1}, wb: true },
   // Trilho: 6 ferro + 1 pau → 16 trilhos (paridade Minecraft)
   { custos: [{i: ITEM.FERRO, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.RAIL, q: 16}, wb: true },
+  // Estante: 6 pranchas + 3 livros (paridade MC)
+  { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.LIVRO, q: 3}], saida: {b: BLOCO.ESTANTE, q: 1}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

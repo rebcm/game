@@ -238,14 +238,33 @@ function encantarItemAtual() {
   const opcoesEl = document.getElementById('enchant-opcoes');
   const ico = info?.icone || '';
   const nomeBase = sel.nomeCustom ? `"${sel.nomeCustom}" (${info.nome})` : info.nome;
-  if (itemEl) itemEl.textContent = `${ico} ${nomeBase}`;
+  // Conta estantes pra mostrar selo de bônus no header
+  const _px = Math.floor(state.player.pos.x);
+  const _py = Math.floor(state.player.pos.y);
+  const _pz = Math.floor(state.player.pos.z);
+  let _est = 0;
+  for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) for (let dy = -1; dy <= 1; dy++) {
+    if (state.world.get(_px + dx, _py + dy, _pz + dz) === BLOCO.ESTANTE) _est++;
+  }
+  const bonus = _est >= 4 ? ' · 📚 -30% XP (4+ estantes)' : '';
+  if (itemEl) itemEl.textContent = `${ico} ${nomeBase}${bonus}`;
   if (opcoesEl) {
     opcoesEl.innerHTML = '';
     for (const op of opcoes) {
       const nivelAtual = sel.encant?.[op.id] || 0;
       const proxNivel = nivelAtual + 1;
       const max = nivelAtual >= 3;
-      const custoXP = proxNivel * 10;
+      // Bônus: conta estantes ao redor do player (raio 2 blocos, qualquer Y).
+      // 4+ estantes = -30% custo XP (paridade Minecraft real).
+      const px = Math.floor(state.player.pos.x);
+      const py = Math.floor(state.player.pos.y);
+      const pz = Math.floor(state.player.pos.z);
+      let estantes = 0;
+      for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) for (let dy = -1; dy <= 1; dy++) {
+        if (state.world.get(px + dx, py + dy, pz + dz) === BLOCO.ESTANTE) estantes++;
+      }
+      const desconto = estantes >= 4 ? 0.3 : 0;
+      const custoXP = Math.max(1, Math.round(proxNivel * 10 * (1 - desconto)));
       const temXP = (state.player.xp || 0) >= custoXP;
       const temLapis = state.inv.contar(undefined, ITEM.LAPIS) > 0;
       const enabled = !max && temXP && temLapis;
@@ -484,6 +503,7 @@ function init() {
   state.inv.adicionar({ b: BLOCO.BEACON, q: 1 });
   state.inv.adicionar({ i: ITEM.LUNETA, q: 1 });
   state.inv.adicionar({ i: ITEM.TRIDENTE, q: 1 });
+  state.inv.adicionar({ b: BLOCO.ESTANTE, q: 8 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -578,6 +598,23 @@ function init() {
   setupInput();
   setupTouchControls();
   state.ui.atualizar();
+  // Inicializa visual do botão de modo baseado no estado carregado
+  // (alternar duas vezes restaura ao original mas dispara a estilização)
+  const _btn = document.getElementById('btn-modo');
+  if (_btn) {
+    const eh = state.player.modo === 'creative';
+    _btn.classList.toggle('modo-creative', eh);
+    _btn.classList.toggle('modo-survival', !eh);
+    _btn.textContent = eh ? '🦅' : '⚔';
+    let lbl = document.getElementById('btn-modo-label');
+    if (!lbl) {
+      lbl = document.createElement('div');
+      lbl.id = 'btn-modo-label';
+      _btn.parentElement.appendChild(lbl);
+    }
+    lbl.textContent = eh ? 'CRIATIVO' : 'SOBREVIV.';
+    lbl.style.color = eh ? '#FFD700' : '#FF5252';
+  }
   Audio.musicaIniciar();
   Multiplayer.iniciar();
 

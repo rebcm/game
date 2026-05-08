@@ -952,6 +952,64 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Estante de Livros: faces laterais com fileira de livros coloridos
+  function pintarEstanteLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Frame de madeira (topo + base + laterais)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Espaço interno onde ficam os livros (cor escura — fundo da estante)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 4, y0 + 5, CELL - 8, 22);
+    // Livros: 6 livros verticais com cores variadas
+    const cores = ['#c62828', '#2e7d32', '#1565c0', '#f9a825', '#6a1b9a', '#00838f'];
+    let seed = idx * 9301 + 49297;
+    let bx = x0 + 4;
+    while (bx < x0 + CELL - 4) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const lw = 3 + (seed % 3); // largura 3-5
+      const cor = cores[seed % cores.length];
+      // Livro
+      ctx.fillStyle = cor;
+      ctx.fillRect(bx, y0 + 5, lw, 22);
+      // Faixa dourada no meio (lombada)
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(bx, y0 + 13, lw, 1);
+      ctx.fillRect(bx, y0 + 18, lw, 1);
+      // Highlight superior (3D)
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(bx, y0 + 5, 1, 22);
+      bx += lw + 1;
+    }
+  }
+  function pintarEstanteTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Madeira (igual à madeira lado mas sem livros — só topo)
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de grão (linhas horizontais escuras)
+    ctx.fillStyle = '#5d4037';
+    for (let py = 4; py < CELL; py += 7) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    ctx.fillStyle = '#6d4c41';
+    for (let py = 2; py < CELL; py += 5) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    // Borda escura (frame)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
   // Trilho: dormentes marrom + 2 rails de aço paralelos
   function pintarRail(idx) {
     const col = idx % COLS;
@@ -1238,6 +1296,8 @@ function criarAtlas() {
   pintarBeacon(41);                                        // beacon (cristal azul brilhante)
   pintarRail(42);                                          // trilho (dormentes + 2 rails)
   pintarTeia(43);                                          // teia de aranha (cordas em X)
+  pintarEstanteTopo(44);                                   // topo da estante (madeira)
+  pintarEstanteLado(45);                                   // lateral com livros coloridos
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1289,6 +1349,7 @@ function criarAtlas() {
   mapa[BLOCO.BEACON]         = { top: 41, side: 41, bottom: 41 }; // cristal em todas as faces
   mapa[BLOCO.RAIL]           = { top: 42, side: 42, bottom: 42 }; // trilho (slab fina)
   mapa[BLOCO.TEIA]           = { top: 43, side: 43, bottom: 43 }; // teia em todas as faces
+  mapa[BLOCO.ESTANTE]        = { top: 44, side: 45, bottom: 44 }; // madeira topo, livros lateral
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

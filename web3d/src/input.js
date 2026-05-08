@@ -36,9 +36,25 @@ function alternarModo() {
   state.player.modo = state.player.modo === 'creative' ? 'survival' : 'creative';
   state.player.vel.y = 0;
   state.player.spawnY = state.player.pos.y;
-  document.getElementById('btn-modo').textContent = state.player.modo === 'creative' ? '🦅' : '⚔';
-  document.getElementById('modo').textContent = state.player.modo === 'creative' ? 'Criativo' : 'Sobrevivência';
-  state.ui.toast(state.player.modo === 'creative' ? 'Modo Criativo (voo livre)' : 'Modo Sobrevivência (gravidade)');
+  const ehCreative = state.player.modo === 'creative';
+  const btn = document.getElementById('btn-modo');
+  btn.textContent = ehCreative ? '🦅' : '⚔';
+  // Visual feedback claro: classe distinta + cor de borda + animação pulse
+  btn.classList.toggle('modo-creative', ehCreative);
+  btn.classList.toggle('modo-survival', !ehCreative);
+  btn.classList.add('mode-flash');
+  setTimeout(() => btn.classList.remove('mode-flash'), 600);
+  // Label persistente sob o botão (visível em mobile)
+  let label = document.getElementById('btn-modo-label');
+  if (!label) {
+    label = document.createElement('div');
+    label.id = 'btn-modo-label';
+    btn.parentElement.appendChild(label);
+  }
+  label.textContent = ehCreative ? 'CRIATIVO' : 'SOBREVIV.';
+  label.style.color = ehCreative ? '#FFD700' : '#FF5252';
+  document.getElementById('modo').textContent = ehCreative ? 'Criativo' : 'Sobrevivência';
+  state.ui.toast(ehCreative ? '🦅 Modo Criativo (voo livre)' : '⚔ Modo Sobrevivência (HP/fome)');
 }
 
 export function setupInput() {

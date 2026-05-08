@@ -471,6 +471,40 @@ kbd {
 #btn-transp { right: 14px; top: 214px; }
 /* Botão fullscreen aparece só em mobile/touch (override em @media abaixo) */
 #btn-fullscreen { display: none; }
+
+/* Label sob o botão de modo: persistente, mostra "CRIATIVO" ou "SOBREVIV." */
+#btn-modo-label {
+  position: absolute;
+  top: 50px; right: 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;
+  text-align: center;
+  width: 38px;
+  letter-spacing: -1px;
+  z-index: 6;
+}
+
+/* Estado visual distinto por modo (borda + glow) */
+#btn-modo.modo-creative {
+  background: rgba(255, 215, 0, 0.25);
+  border-color: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.45);
+}
+#btn-modo.modo-survival {
+  background: rgba(255, 82, 82, 0.25);
+  border-color: #FF5252;
+  box-shadow: 0 0 8px rgba(255, 82, 82, 0.45);
+}
+
+/* Animação pulse ao alternar (feedback claro de toque) */
+@keyframes mode-pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+#btn-modo.mode-flash { animation: mode-pulse 0.5s ease-out; }
 #btn-transp.solido {
   background: rgba(255, 200, 60, 0.85);
   border-color: rgba(255, 200, 60, 0.95);
@@ -844,6 +878,13 @@ kbd {
   #btn-modo   { top: calc(6px + env(safe-area-inset-top)); right: calc(86px + env(safe-area-inset-right)); }
   #btn-save   { top: calc(6px + env(safe-area-inset-top)); right: calc(126px + env(safe-area-inset-right)); }
   #btn-fullscreen { top: calc(6px + env(safe-area-inset-top)); right: calc(166px + env(safe-area-inset-right)); display: flex; }
+  /* Label do modo posicionado sob o btn-modo em mobile */
+  #btn-modo-label {
+    top: calc(42px + env(safe-area-inset-top));
+    right: calc(86px + env(safe-area-inset-right));
+    width: 34px;
+    font-size: 6px;
+  }
   /* HUD topo esquerdo: compacto, fonte menor, respeita notch */
   #topo {
     top: calc(6px + env(safe-area-inset-top));
