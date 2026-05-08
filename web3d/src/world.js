@@ -66,6 +66,97 @@ export class World {
     this.dimensao = 'overworld';
     this._chunksOverworld = this.chunks;
     this._chunksNether = new Map();
+    // Web Worker pra geração de chunks fora do main thread (anti-stutter)
+    this._initWorker();
+  }
+  _initWorker() {
+    this._worker = null;
+    this._workerPending = new Set(); // "cx,cz" strings
+    try {
+      this._worker = new Worker(new URL('./chunkgen-worker.js', import.meta.url), { type: 'module' });
+      this._worker.onmessage = (e) => this._onWorkerMessage(e);
+      this._worker.onerror = (err) => {
+        console.warn('[world] worker error, fallback sync', err);
+        this._worker = null;
+      };
+    } catch (err) {
+      console.warn('[world] worker indisponível, fallback sync', err);
+      this._worker = null;
+    }
+  }
+  _onWorkerMessage(e) {
+    const { cx, cz, blocks } = e.data;
+    const key = `${cx},${cz}`;
+    this._workerPending.delete(key);
+    // Se chunk já existe (race), descarta worker result
+    const k = chunkKey(cx, cz);
+    if (this.chunks.has(k)) return;
+    // Cria Chunk com blocks recebidos do worker (Uint8Array transferred)
+    const c = new Chunk(cx, cz);
+    c.blocks.set(new Uint8Array(blocks));
+    // Post-processing main-thread (estruturas que mexem em estado global:
+    // baús, spawn deferido de villagers — não cabem no worker).
+    this._postProcessChunk(c, cx, cz);
+    this.chunks.set(k, c);
+  }
+  // Aplica geração de estruturas (dungeons/vilas/icebergs/ravinas) que
+  // dependem de estado main-thread (bauTesouros, _vilasParaSpawnar).
+  _postProcessChunk(c, cx, cz) {
+    if (cx === 0 && cz === 0) return; // skip vila/dungeon no spawn
+    // Iceberg
+    const igHash = hash2(cx, cz, this.seed ^ 0x1CEB) & 0xFFFF;
+    const cxC = (igHash & 0x7) + 4, czC = ((igHash >> 4) & 0x7) + 4;
+    const gxC = cx * CHUNK_SIZE + cxC, gzC = cz * CHUNK_SIZE + czC;
+    if (igHash < 2600 && this.biomaEm(gxC, gzC) === 'taiga' && this.alturaTerreno(gxC, gzC) < 10) {
+      const baseY = 9;
+      for (let dy = 0; dy < 4; dy++) for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) {
+        if (dx*dx + dz*dz + dy*dy > 6) continue;
+        const lx = cxC + dx, lz = czC + dz;
+        if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) continue;
+        c.set(lx, baseY + dy, lz, BLOCO.NEVE);
+      }
+    }
+    // Ravina
+    const rvHash = hash2(cx, cz, this.seed ^ 0x4A71) & 0xFFFF;
+    if (rvHash < 1000) {
+      const cxR = 5 + (rvHash & 0x5), czR = 5 + ((rvHash >> 4) & 0x5);
+      const len = 8 + (rvHash >> 8) % 5;
+      for (let l = 0; l < len; l++) for (let w = -2; w <= 2; w++) {
+        const lx = cxR + w, lz = czR + l;
+        if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) continue;
+        for (let y = 4; y < WORLD_Y - 4; y++) {
+          const b = c.get(lx, y, lz);
+          if (b === BLOCO.AR || b === BLOCO.AGUA || b === BLOCO.BEDROCK) continue;
+          c.set(lx, y, lz, BLOCO.AR);
+        }
+      }
+    }
+    // Vila
+    const vlHash = hash2(cx, cz, this.seed ^ 0x71114) & 0xFFFF;
+    const gxV = cx * CHUNK_SIZE + 2, gzV = cz * CHUNK_SIZE + 2;
+    const bioma = this.biomaEm(gxV, gzV);
+    if (vlHash < 650 && (bioma === 'planicies' || bioma === 'floresta')) {
+      const baseY = this.alturaTerreno(gxV, gzV);
+      if (baseY >= 14 && baseY < WORLD_Y - 8) this._gerarVila(c, cx, cz, baseY);
+    }
+    // Dungeon
+    const dungHash = hash2(cx, cz, this.seed ^ 0xD6307) & 0xFFFF;
+    if (dungHash < 1300) {
+      const cxD = 5 + (dungHash & 0x5);
+      const czD = 5 + ((dungHash >> 4) & 0x5);
+      const cy = 8 + (dungHash >> 8) % 16;
+      this._gerarDungeon(c, cx, cz, cxD, cy, czD);
+    }
+  }
+  // Pede pro worker gerar chunk (assíncrono). Se chunk já existe ou
+  // já está pendente, no-op.
+  preloadChunk(cx, cz) {
+    if (!this._worker || this.dimensao !== 'overworld') return;
+    if (this.hasChunk(cx, cz)) return;
+    const key = `${cx},${cz}`;
+    if (this._workerPending.has(key)) return;
+    this._workerPending.add(key);
+    this._worker.postMessage({ cx, cz, seed: this.seed });
   }
   trocarDimensao(novaDim) {
     if (novaDim === this.dimensao) return;

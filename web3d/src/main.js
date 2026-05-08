@@ -826,7 +826,10 @@ function loop(now) {
   let orcamento = state.chunkLoadOrcamento;
   for (const f of faltantes) {
     if (orcamento <= 0) break;
-    state.world.getChunk(pcx + f.dx, pcz + f.dz);
+    // preloadChunk delega ao Worker (assíncrono, sem stutter). Se worker
+    // indisponível, no-op silencioso e o sync fallback acontece na
+    // primeira query (world.get → getChunk → gerarChunk sync).
+    state.world.preloadChunk(pcx + f.dx, pcz + f.dz);
     orcamento--;
   }
   // === Build mesh dirty (também priorizado por distância ao player) ===

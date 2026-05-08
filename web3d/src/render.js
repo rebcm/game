@@ -70,7 +70,8 @@ function criarAtlas() {
     }
   }
 
-  // Pedra com 2 tons de noise (escuro + claro) — paridade Minecraft.
+  // Pedra com 3 tons + linhas de fissura sutis (cracks) pra parecer
+  // pedra natural texturizada, não plástica.
   function pintarPedra(idx, base, dark, light, intensity = 0.30) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
@@ -86,6 +87,26 @@ function criarAtlas() {
         else if (r < intensity)       ctx.fillStyle = light;
         else                          continue;
         ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Cracks: 2-3 linhas finas escuras zigue-zague (fissuras naturais)
+    ctx.fillStyle = dark;
+    for (let i = 0; i < 2; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      let cx = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      let cy = (seed % CELL);
+      const len = 6 + (seed % 8);
+      for (let j = 0; j < len; j++) {
+        if (cx >= 0 && cx < CELL && cy >= 0 && cy < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
+        }
+        seed = (seed * 9301 + 49297) % 233280;
+        const dir = seed % 4;
+        if (dir === 0) cx++;
+        else if (dir === 1) cy++;
+        else if (dir === 2) { cx++; cy++; }
+        else { cx--; cy++; }
       }
     }
   }
@@ -135,6 +156,129 @@ function criarAtlas() {
     }
   }
 
+  // Grama topo: 4 tons de verde clusterizados + ocasionais "flores"
+  // (pixel amarelo/branco sub-pixel) pra dar variação visual rica.
+  function pintarGramaTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base verde médio
+    ctx.fillStyle = '#5DAB54';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Clusters de verde-claro (ilhas brilhantes)
+    let seed = idx * 9301 + 49297;
+    const tons = ['#6FBE61', '#3D8C32', '#7BC971', '#458F39'];
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const r = seed / 233280;
+        if (r < 0.35) {
+          const tom = tons[Math.floor(r * 4) % 4];
+          ctx.fillStyle = tom;
+          ctx.fillRect(x0 + px, y0 + py, 2, 2);
+        }
+      }
+    }
+    // Flores ocasionais (1-2 por célula): amarelo ou branco
+    for (let i = 0; i < 2; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      if ((seed / 233280) < 0.4) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const fx = (seed % (CELL - 4)) + 1;
+        seed = (seed * 9301 + 49297) % 233280;
+        const fy = (seed % (CELL - 4)) + 1;
+        ctx.fillStyle = i === 0 ? '#FFEB3B' : '#FAFAFA';
+        ctx.fillRect(x0 + fx, y0 + fy, 1, 1);
+        ctx.fillStyle = '#5DAB54';
+        ctx.fillRect(x0 + fx + 1, y0 + fy + 1, 1, 1); // sombra
+      }
+    }
+    // Pontos escuros esparsos (grama densa)
+    ctx.fillStyle = '#2E5520';
+    for (let py = 0; py < CELL; py += 4) {
+      for (let px = 0; px < CELL; px += 4) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.12) ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+  }
+
+  // Diamante: cristais ciano com sparkles brilhantes (não só manchas)
+  function pintarDiamante(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base de pedra
+    ctx.fillStyle = '#7E7E7E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#6E6E6E';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // 4-5 cristais de diamante (formato losango)
+    let s = idx * 7919 + 1234;
+    const ncristais = 4 + (s % 2);
+    for (let c = 0; c < ncristais; c++) {
+      s = (s * 9301 + 49297) % 233280;
+      const cx = (s % 22) + 5;
+      s = (s * 9301 + 49297) % 233280;
+      const cy = (s % 22) + 5;
+      // Losango ciano (3×3 com cantos cortados)
+      ctx.fillStyle = '#3FBFC2';
+      ctx.fillRect(x0 + cx - 1, y0 + cy, 3, 1);     // linha h
+      ctx.fillRect(x0 + cx, y0 + cy - 1, 1, 3);     // linha v
+      ctx.fillStyle = '#7DDDE0';
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);         // centro brilhante
+      // Sparkle aleatório
+      s = (s * 9301 + 49297) % 233280;
+      if ((s % 4) === 0) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x0 + cx - 1, y0 + cy - 1, 1, 1); // sparkle canto
+      }
+    }
+  }
+
+  // Ouro: clusters dourados maiores com brilho metálico
+  function pintarOuro(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#7E7E7E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#6E6E6E';
+    let seed = idx * 9301 + 49297;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // 3 clusters dourados grandes
+    let s = idx * 7919 + 1234;
+    for (let c = 0; c < 3; c++) {
+      s = (s * 9301 + 49297) % 233280;
+      const cx = (s % 20) + 6;
+      s = (s * 9301 + 49297) % 233280;
+      const cy = (s % 20) + 6;
+      // Cluster 4×4 dourado
+      ctx.fillStyle = '#D4A017';
+      ctx.fillRect(x0 + cx, y0 + cy, 4, 4);
+      // Highlight superior
+      ctx.fillStyle = '#FFE680';
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 2, 1);
+      // Sombra inferior
+      ctx.fillStyle = '#9C7A0A';
+      ctx.fillRect(x0 + cx, y0 + cy + 3, 4, 1);
+      // Highlight diagonal
+      ctx.fillStyle = '#FFF59D';
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 1, 1);
+    }
+  }
+
   // Madeira topo: anéis concêntricos de log (paridade Minecraft oak).
   function pintarMadeiraTopo(idx) {
     const col = idx % COLS;
@@ -153,27 +297,48 @@ function criarAtlas() {
     ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
   }
 
-  // Madeira lateral: bark com grain VERTICAL (não horizontal — corrigido).
+  // Madeira lateral: bark com grain VERTICAL realista — múltiplas
+  // camadas de variação, knots ocasionais, highlight superior.
   function pintarMadeiraLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
+    // Base
     ctx.fillStyle = '#6E5235';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Linhas verticais escuras (grain do bark)
+    // Linhas verticais escuras (bark grain principal)
     ctx.fillStyle = '#4D3A24';
     for (let px = 2; px < CELL; px += 4) {
       ctx.fillRect(x0 + px, y0, 1, CELL);
     }
-    // Variação tonal em pequenos blocos
-    ctx.fillStyle = '#5D4426';
+    // Linhas verticais claras intercaladas (highlight)
+    ctx.fillStyle = '#9E7C5C';
+    for (let px = 4; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Variação tonal em pequenos blocos (grain irregular)
     let seed = idx * 9301 + 49297;
     for (let py = 0; py < CELL; py += 2) {
       for (let px = 0; px < CELL; px += 2) {
         seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.15) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+        const r = seed / 233280;
+        if (r < 0.10)       ctx.fillStyle = '#3D2A18'; // sombra profunda
+        else if (r < 0.20)  ctx.fillStyle = '#7A5C3A'; // tom médio
+        else                continue;
+        ctx.fillRect(x0 + px, y0 + py, 2, 2);
       }
     }
+    // 1 knot (nó da madeira) — círculo escuro com centro mais escuro
+    seed = (seed * 9301 + 49297) % 233280;
+    const knotX = (seed % (CELL - 8)) + 4;
+    seed = (seed * 9301 + 49297) % 233280;
+    const knotY = (seed % (CELL - 8)) + 4;
+    ctx.fillStyle = '#3D2A18';
+    ctx.fillRect(x0 + knotX, y0 + knotY, 4, 3);
+    ctx.fillRect(x0 + knotX + 1, y0 + knotY - 1, 2, 1);
+    ctx.fillRect(x0 + knotX + 1, y0 + knotY + 3, 2, 1);
+    ctx.fillStyle = '#1F1308';
+    ctx.fillRect(x0 + knotX + 1, y0 + knotY + 1, 2, 1);
   }
 
   // Folhas: verde escuro com chaos de tons (paridade oak leaves).
@@ -589,7 +754,7 @@ function criarAtlas() {
   // Convenção: cada índice é uma célula 32×32 do atlas. Mapeamento de
   // top/side/bottom é feito em `mapa[]` abaixo. Paleta calibrada pra
   // paridade Minecraft (oak, stone, sand, ores, etc).
-  pintar(0,  '#5DAB54', '#3D8C32', 0.30); // grama topo (mais saturado)
+  pintarGramaTopo(0);                     // grama topo (4 tons + flores ocasionais)
   pintarGramaLado(1);                     // grama lado (terra + faixa verde)
   pintar(2,  '#866043', '#6B4A2D', 0.18); // terra (warm brown MC)
   pintarPedra(3, '#7E7E7E', '#5E5E5E', '#9C9C9C', 0.30); // pedra 2-tone
@@ -599,8 +764,8 @@ function criarAtlas() {
   pintarFolha(7);                         // folha (verde escuro caótico)
   pintarTijolo(8);                        // tijolo (mortar + bricks)
   pintarVidro(9);                         // vidro (claro com moldura)
-  pintarMinerio(10, '#F0CB44', '#FFE680'); // ouro (pedra + manchas dourado)
-  pintarMinerio(11, '#3FBFC2', '#7DDDE0'); // diamante (pedra + ciano)
+  pintarOuro(10);                          // ouro (clusters metálicos)
+  pintarDiamante(11);                      // diamante (cristais losango + sparkles)
   pintarGlowstone(12);                    // luz/glowstone (amarelo brilhante)
   pintar(13, '#F5F5F5', '#E0E0E0', 0.10); // neve (branco)
   pintarMinerio(14, '#202020', '#404040'); // carvão (pedra + manchas pretas)

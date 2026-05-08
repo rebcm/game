@@ -7,7 +7,7 @@
 <br>
 
 <a href="https://construcao-criativa.pages.dev">
-  <img src="https://img.shields.io/badge/▶%20%20JOGAR%20AGORA%20%20—%20%20100%25%20FREE-4CAF50?style=for-the-badge&logoColor=white&labelColor=2E7D32&color=43A047" alt="JOGAR AGORA" height="80">
+  <img src="https://img.shields.io/badge/▶%20%20JOGAR%20AGORA%20%20—%20%20100%25%20FREE-4CAF50?style=for-the-badge&logoColor=white&labelColor=2E7D32&color=43A047" alt="JOGAR AGORA" height="120">
 </a>
 
 <br><br>
