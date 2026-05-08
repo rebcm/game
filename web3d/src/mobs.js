@@ -1228,6 +1228,19 @@ export class MobManager {
     if (blocoChao === BLOCO.MADEIRA || blocoChao === BLOCO.FOLHA) return;
     let tipos;
     if (luzMax <= 7) {
+      // Torch detection extra: hostis NÃO spawnam se luz block (artificial)
+      // de qualquer voxel adjacente é >= 8. Permite o player iluminar área
+      // segura com tochas (paridade Minecraft real).
+      let luzArtPerto = 0;
+      for (let dy = 0; dy <= 1 && luzArtPerto < 8; dy++) {
+        for (let dx = -1; dx <= 1 && luzArtPerto < 8; dx++) {
+          for (let dz = -1; dz <= 1 && luzArtPerto < 8; dz++) {
+            const lz = world.getLightAt(x + dx, y + dy, z + dz);
+            if (lz.block > luzArtPerto) luzArtPerto = lz.block;
+          }
+        }
+      }
+      if (luzArtPerto >= 8) return;
       tipos = ['zumbi', 'esqueleto', 'aranha', 'creeper'];
       if (y < 30) tipos.push('slime');
       if (Math.random() < 0.05) tipos.push('enderman');

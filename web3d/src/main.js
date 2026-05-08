@@ -523,6 +523,12 @@ function loop(now) {
         }
       }
       if (maduros.length > 0) state.ui.toast?.(`🌾 ${maduros.length} planta(s) madura(s)!`);
+      // Spread de grama: 1×/5s, ambient
+      state._gramaAcc = (state._gramaAcc || 0) + dt;
+      if (state._gramaAcc >= 5) {
+        state._gramaAcc = 0;
+        state.world.spreadGrama(state.player.pos.x, state.player.pos.z, 6);
+      }
     }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
@@ -690,6 +696,8 @@ function loop(now) {
             const a = ray.adj;
             const fluidoBloco = sel.i === ITEM.BUCKET_AGUA ? BLOCO.AGUA : BLOCO.LAVA;
             state.world.set(a.x, a.y, a.z, fluidoBloco);
+            // Fluxo BFS: espalha 4 blocos (água) ou 2 (lava) + cai vertical
+            state.world.espalharFluido(a.x, a.y, a.z, fluidoBloco);
             state.inv.consumirAtual();
             state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
             Audio.splash();

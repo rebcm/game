@@ -322,6 +322,73 @@ export class World {
     return BLOCO_INFO[this.get(x, y, z)].solido;
   }
 
+  // === Fluxo de fluido (água/lava) ===
+  // BFS event-driven: chama-se ao colocar água/lava (bucket) ou ao
+  // expor uma fonte. Espalha até max blocos horizontal + cai vertical.
+  // Limita processamento a 100 blocos pra evitar runaway.
+  espalharFluido(x, y, z, tipo) {
+    if (tipo !== BLOCO.AGUA && tipo !== BLOCO.LAVA) return;
+    const maxDist = tipo === BLOCO.AGUA ? 4 : 2;
+    const queue = [{ x, y, z, dist: 0 }];
+    const visitados = new Set();
+    visitados.add(`${x},${y},${z}`);
+    let processed = 0;
+    while (queue.length && processed < 100) {
+      const { x: cx, y: cy, z: cz, dist } = queue.shift();
+      processed++;
+      // Tenta cair primeiro
+      if (cy > 0 && this.get(cx, cy - 1, cz) === BLOCO.AR) {
+        this.set(cx, cy - 1, cz, tipo);
+        const k = `${cx},${cy-1},${cz}`;
+        if (!visitados.has(k)) {
+          visitados.add(k);
+          queue.push({ x: cx, y: cy - 1, z: cz, dist });
+        }
+        continue; // se caiu, não espalha horizontal nesse nível
+      }
+      if (dist >= maxDist) continue;
+      for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+        const nx = cx + dx, nz = cz + dz;
+        if (this.get(nx, cy, nz) !== BLOCO.AR) continue;
+        const k = `${nx},${cy},${nz}`;
+        if (visitados.has(k)) continue;
+        visitados.add(k);
+        this.set(nx, cy, nz, tipo);
+        queue.push({ x: nx, y: cy, z: nz, dist: dist + 1 });
+      }
+    }
+  }
+
+  // === Dirt → Grass spread ===
+  // Tick periódico: pega N tentativas random de converter TERRA exposta
+  // (com céu acima) num raio do player em GRAMA. Requer GRAMA adjacente.
+  // Chamado do main loop a cada ~5s.
+  spreadGrama(playerX, playerZ, tentativas = 6) {
+    const px = Math.floor(playerX), pz = Math.floor(playerZ);
+    let convertidas = 0;
+    for (let i = 0; i < tentativas; i++) {
+      const dx = Math.floor((Math.random() - 0.5) * 32);
+      const dz = Math.floor((Math.random() - 0.5) * 32);
+      const x = px + dx, z = pz + dz;
+      if (!this.hasChunk(Math.floor(x / CHUNK_SIZE), Math.floor(z / CHUNK_SIZE))) continue;
+      // Acha topo
+      let y = 50;
+      while (y > 0 && this.get(x, y, z) === BLOCO.AR) y--;
+      if (this.get(x, y, z) !== BLOCO.TERRA) continue;
+      // Precisa AR acima (exposto)
+      if (this.get(x, y + 1, z) !== BLOCO.AR) continue;
+      // Precisa GRAMA num vizinho 4-direcional + topo
+      let temGrama = false;
+      for (const [vx, vy, vz] of [[1,0,0],[-1,0,0],[0,0,1],[0,0,-1],[0,1,0],[1,1,0],[-1,1,0],[0,1,1],[0,1,-1]]) {
+        if (this.get(x + vx, y + vy, z + vz) === BLOCO.GRAMA) { temGrama = true; break; }
+      }
+      if (!temGrama) continue;
+      this.set(x, y, z, BLOCO.GRAMA);
+      convertidas++;
+    }
+    return convertidas;
+  }
+
   // === Crops / farming ===
   // Planta semente em (x, y, z): requer AR no local + TERRA logo abaixo.
   plantarSemente(x, y, z, tipo = 'trigo') {
