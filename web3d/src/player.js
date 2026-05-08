@@ -374,8 +374,14 @@ export class Player {
             if (pz + r <= z + 0.3 || pz - r >= z + 0.7) continue;
             return true;
           }
-          // Ladder: chapinha em -Z (climb tratado fora; colisão só no slab z=0..0.1)
+          // Ladder: chapinha em -Z (climb tratado fora; passável)
           if (info.shape === 'ladder') continue;
+          if (info.shape === 'door_open') continue; // porta aberta passa
+          // Porta fechada: chapinha frontal — colisão só na faixa z..z+0.18
+          if (info.shape === 'door') {
+            if (pz + r <= z || pz - r >= z + 0.18) continue;
+            return true;
+          }
           return true;
         }
     return false;

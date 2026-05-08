@@ -12,6 +12,8 @@ export const TIPO_MOB = {
   VACA: 'vaca', GALINHA: 'galinha', PORCO: 'porco', OVELHA: 'ovelha',
   ZUMBI: 'zumbi', ESQUELETO: 'esqueleto', ARANHA: 'aranha', CREEPER: 'creeper',
   LOBO: 'lobo', SLIME: 'slime', ENDERMAN: 'enderman',
+  // Sprint 4
+  CAT: 'cat', VILLAGER: 'villager', IRON_GOLEM: 'iron_golem', WITCH: 'witch',
 };
 
 export const MOB_INFO = {
@@ -78,6 +80,30 @@ export const MOB_INFO = {
     hp: 20, vel: 2.4, hostil: true, dano: 3, alcance: 2.4,
     drops: () => Math.random() < 0.5 ? [{ i: ITEM.DIAMANTE, q: 1 }] : [],
     cor: 0x121212, sec: 0xb388ff, teleport: true,
+  },
+  // === Sprint 4: population ===
+  cat: {
+    hp: 6, vel: 2.0, hostil: false, amigavel: false,
+    drops: () => Math.random() < 0.4 ? [{ i: ITEM.PEIXE, q: 1 }] : [],
+    cor: 0xe0a050, sec: 0x4a2c10, // laranja + bigode escuro
+  },
+  villager: {
+    hp: 14, vel: 1.0, hostil: false,
+    drops: () => Math.random() < 0.3 ? [{ i: ITEM.ESMERALDA, q: 1 }] : [],
+    cor: 0x6d4c41, sec: 0xd7ccc8, // robe marrom + nariz claro
+  },
+  iron_golem: {
+    hp: 60, vel: 0.9, hostil: false, amigavel: true, // amigavel = ataca hostis (igual lobo)
+    drops: () => [{ i: ITEM.FERRO, q: 3 + Math.floor(Math.random() * 3) }],
+    cor: 0xb0a896, sec: 0x607d3a, // ferro + folha verde no peito
+  },
+  witch: {
+    hp: 18, vel: 1.5, hostil: true, dano: 3, alcance: 8.0,
+    drops: () => [
+      ...(Math.random() < 0.5 ? [{ i: ITEM.LAPIS, q: 1 }] : []),
+      ...(Math.random() < 0.3 ? [{ i: ITEM.POCAO_HEAL, q: 1 }] : []),
+    ],
+    cor: 0x6a1b9a, sec: 0x000000, // robe roxo + chapéu preto
   },
 };
 
@@ -510,6 +536,136 @@ export function construirModeloMob(tipo, info) {
       partes.pernas = pernas; partes.bracos = bracos;
       break;
     }
+    case 'cat': {
+      // Gato pequeno, baixinho, cauda longa
+      const corpo = cubo(0.32, 0.30, 0.55, info.cor);
+      corpo.position.y = 0.32; grp.add(corpo);
+      const cabeca = cubo(0.30, 0.28, 0.30, info.cor);
+      cabeca.position.set(0, 0.46, 0.36); grp.add(cabeca);
+      olhosPretos(cabeca, 0.08, 0.04, 0.16, 0.06, 0.03);
+      // Orelhas triangulares
+      for (const sx of [-0.10, 0.10]) {
+        const o = cubo(0.07, 0.10, 0.05, info.cor);
+        o.position.set(sx, 0.20, -0.08); cabeca.add(o);
+      }
+      // Bigode (sec=preto)
+      const bigode = cubo(0.18, 0.04, 0.04, info.sec);
+      bigode.position.set(0, -0.05, 0.16); cabeca.add(bigode);
+      // Cauda longa erguida
+      const cauda = cubo(0.06, 0.08, 0.32, info.cor);
+      cauda.position.set(0, 0.40, -0.42); grp.add(cauda);
+      cauda.rotation.x = 0.6;
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const dx = (i % 2 === 0 ? -0.10 : 0.10);
+        const dz = (i < 2 ? 0.18 : -0.18);
+        const p = pernaComPivot(0.08, 0.20, 0.08, info.cor, 0.20);
+        p.position.x = dx; p.position.z = dz;
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'villager': {
+      // Humanóide com nariz grande característico
+      const corpo = cubo(0.50, 0.80, 0.30, info.cor);
+      corpo.position.y = 1.05; grp.add(corpo);
+      const cabeca = cubo(0.46, 0.46, 0.46, info.sec);
+      cabeca.position.set(0, 1.70, 0); grp.add(cabeca);
+      olhosPretos(cabeca, 0.12, 0.02, 0.235);
+      // Nariz grande pra frente
+      const nariz = cubo(0.10, 0.16, 0.18, info.sec);
+      nariz.position.set(0, -0.05, 0.30); cabeca.add(nariz);
+      // Cabelo cinza no topo
+      const cabelo = cubo(0.48, 0.06, 0.48, 0x424242);
+      cabelo.position.set(0, 0.26, 0); cabeca.add(cabelo);
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.16, 0.70, 0.16, info.cor, 1.40);
+        b.position.x = (i === 0 ? -0.33 : 0.33);
+        // Braços cruzados na frente do corpo (típico villager)
+        b.rotation.x = -1.2;
+        grp.add(b); bracos.push(b);
+      }
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.18, 0.65, 0.18, info.cor, 0.65);
+        p.position.x = (i === 0 ? -0.11 : 0.11);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
+    case 'iron_golem': {
+      // Tank grande, peito largo, braços enormes
+      const corpo = cubo(0.85, 1.10, 0.55, info.cor);
+      corpo.position.y = 1.20; grp.add(corpo);
+      // Detalhe verde no peito (vine — paridade MC)
+      const peito = cubo(0.30, 0.35, 0.04, info.sec);
+      peito.position.set(0, 1.30, 0.28); grp.add(peito);
+      const cabeca = cubo(0.40, 0.55, 0.45, info.cor);
+      cabeca.position.set(0, 2.00, 0); grp.add(cabeca);
+      // Olhos vermelhos pequenos
+      olhosBrilhantes(cabeca, 0.10, 0.05, 0.225, 0xff5252, 0.06);
+      // Nariz protuberante
+      const nariz = cubo(0.10, 0.20, 0.15, info.cor);
+      nariz.position.set(0, -0.10, 0.28); cabeca.add(nariz);
+      // Braços enormes pendurados até o chão
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.30, 1.40, 0.30, info.cor, 1.85);
+        b.position.x = (i === 0 ? -0.55 : 0.55);
+        grp.add(b); bracos.push(b);
+      }
+      // Pernas curtas e largas
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.32, 0.65, 0.32, info.cor, 0.65);
+        p.position.x = (i === 0 ? -0.20 : 0.20);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
+    case 'witch': {
+      // Robe roxo + chapéu pontudo preto
+      const corpo = cubo(0.50, 0.80, 0.30, info.cor);
+      corpo.position.y = 1.05; grp.add(corpo);
+      const cabeca = cubo(0.42, 0.42, 0.42, 0xa1887f); // pele clara
+      cabeca.position.set(0, 1.66, 0); grp.add(cabeca);
+      olhosBrilhantes(cabeca, 0.11, 0.04, 0.225, 0x69f0ae, 0.07); // olhos verdes
+      // Nariz pontudo
+      const nariz = cubo(0.08, 0.12, 0.20, 0xa1887f);
+      nariz.position.set(0, -0.04, 0.32); cabeca.add(nariz);
+      // Verruga
+      const verruga = cubo(0.04, 0.04, 0.04, 0x424242);
+      verruga.position.set(0.04, 0.10, 0.32); cabeca.add(verruga);
+      // Chapéu pontudo (cone via cubo + pequeno topo)
+      const chapeuBase = cubo(0.55, 0.08, 0.55, info.sec);
+      chapeuBase.position.set(0, 0.27, 0); cabeca.add(chapeuBase);
+      const chapeuMeio = cubo(0.30, 0.20, 0.30, info.sec);
+      chapeuMeio.position.set(0, 0.40, 0); cabeca.add(chapeuMeio);
+      const chapeuPonta = cubo(0.10, 0.20, 0.10, info.sec);
+      chapeuPonta.position.set(0.06, 0.55, 0); cabeca.add(chapeuPonta);
+      chapeuPonta.rotation.z = -0.4;
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.16, 0.70, 0.16, info.cor, 1.40);
+        b.position.x = (i === 0 ? -0.33 : 0.33);
+        grp.add(b); bracos.push(b);
+      }
+      const pernas = [];
+      for (let i = 0; i < 2; i++) {
+        const p = pernaComPivot(0.18, 0.65, 0.18, info.cor, 0.65);
+        p.position.x = (i === 0 ? -0.11 : 0.11);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracos = bracos; partes.pernas = pernas;
+      break;
+    }
     default: {
       const corpo = cubo(0.6, 0.7, 0.4, info.cor);
       corpo.position.y = 0.45; grp.add(corpo);
@@ -535,9 +691,13 @@ function _dimsMob(tipo) {
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
     case 'ovelha':   return { raio: 0.34, altura: 1.20 };
-    case 'enderman': return { raio: 0.30, altura: 2.50 };
+    case 'enderman':   return { raio: 0.30, altura: 2.50 };
+    case 'cat':        return { raio: 0.20, altura: 0.55 };
+    case 'villager':   return { raio: 0.30, altura: 1.85 };
+    case 'iron_golem': return { raio: 0.55, altura: 2.40 };
+    case 'witch':      return { raio: 0.30, altura: 1.85 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
-    default:         return { raio: 0.30, altura: 1.80 };
+    default:           return { raio: 0.30, altura: 1.80 };
   }
 }
 
@@ -647,6 +807,11 @@ export class Mob {
             return true;
           }
           if (info.shape === 'ladder') continue;
+          if (info.shape === 'door_open') continue;
+          if (info.shape === 'door') {
+            if (z + r <= zi || z - r >= zi + 0.18) continue;
+            return true;
+          }
           return true;
         }
     return false;
@@ -991,8 +1156,8 @@ export class MobManager {
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
         const naAlcance = d2 < info.alcance ** 2 && m._vePlayer; // só ataca se vê
         m.cooldownFlecha -= dt;
-        // Esqueleto: ataque ranged com flecha (cooldown 2.5s)
-        if (m.tipo === 'esqueleto' && naAlcance && m.cooldownFlecha <= 0) {
+        // Esqueleto + Witch: ataque ranged (flecha / poção). Cooldown 2.5s.
+        if ((m.tipo === 'esqueleto' || m.tipo === 'witch') && naAlcance && m.cooldownFlecha <= 0) {
           const dx = player.pos.x - m.x;
           const dy = (player.pos.y + 1.4) - (m.y + 1.5);
           const dz = player.pos.z - m.z;
@@ -1000,11 +1165,23 @@ export class MobManager {
           if (len > 0.5) {
             const dir = { x: dx/len, y: dy/len, z: dz/len };
             spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, Math.max(1, info.dano - 1));
-            m.cooldownFlecha = 2.5;
+            m.cooldownFlecha = m.tipo === 'witch' ? 3.0 : 2.5;
           }
           continue;
         }
         if (info.explode) {
+          // Creeper foge se há um cat dentro de 6 blocos (paridade MC).
+          let catPerto = false;
+          for (const o of this.mobs) {
+            if (o.tipo !== 'cat') continue;
+            const dx = o.x - m.x, dz = o.z - m.z;
+            if (dx*dx + dz*dz < 36) { catPerto = true; break; }
+          }
+          if (catPerto) {
+            m.panico = 2;        // entra em pânico (foge zigzag)
+            m.creeperFuse = 0;   // desarma fuse
+            continue;            // skip explosão
+          }
           // Creeper: arma o fuse quando player entra no alcance.
           // Se player sair antes do fuse acabar, desarma e foge da explosão.
           if (naAlcance) {
@@ -1054,8 +1231,12 @@ export class MobManager {
       tipos = ['zumbi', 'esqueleto', 'aranha', 'creeper'];
       if (y < 30) tipos.push('slime');
       if (Math.random() < 0.05) tipos.push('enderman');
+      if (Math.random() < 0.04) tipos.push('witch'); // raro à noite
     } else if (luzMax >= 9 && (blocoChao === BLOCO.GRAMA || blocoChao === BLOCO.AREIA)) {
       tipos = ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
+      if (Math.random() < 0.06) tipos.push('cat');      // raro
+      if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
+      if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
     } else {
       return;
     }

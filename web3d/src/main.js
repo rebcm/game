@@ -136,6 +136,60 @@ function atacarMob() {
   }
 }
 
+// === Trades de villager ===
+// Cada villager tem 4 trades fixos baseados em seed (não mudam por sessão).
+// Player paga ITEM.X * Q1 → recebe ITEM.Y * Q2.
+const _TRADES_BASE = [
+  { paga: { i: ITEM.TRIGO, q: 5 },        recebe: { i: ITEM.ESMERALDA, q: 1 } },
+  { paga: { i: ITEM.CARNE_COZIDA, q: 3 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+  { paga: { i: ITEM.PAU, q: 8 },          recebe: { i: ITEM.ESMERALDA, q: 1 } },
+  { paga: { i: ITEM.CARVAO, q: 4 },       recebe: { i: ITEM.ESMERALDA, q: 1 } },
+  { paga: { i: ITEM.ESMERALDA, q: 1 },    recebe: { i: ITEM.PAO, q: 5 } },
+  { paga: { i: ITEM.ESMERALDA, q: 1 },    recebe: { i: ITEM.LIVRO, q: 1 } },
+  { paga: { i: ITEM.ESMERALDA, q: 2 },    recebe: { i: ITEM.LAPIS, q: 3 } },
+  { paga: { i: ITEM.ESMERALDA, q: 5 },    recebe: { i: ITEM.DIAMANTE, q: 1 } },
+];
+
+function abrirTradeVillager(mob) {
+  const modal = document.getElementById('trade-modal');
+  const lista = document.getElementById('trade-list');
+  // Seleciona 4 trades aleatórios (seed = posição do mob, estável entre right-clicks)
+  const seed = (Math.floor(mob.x * 100) ^ Math.floor(mob.z * 100)) >>> 0;
+  const trades = [];
+  let s = seed;
+  for (let i = 0; i < 4; i++) {
+    s = (s * 9301 + 49297) % 233280;
+    trades.push(_TRADES_BASE[s % _TRADES_BASE.length]);
+  }
+  lista.innerHTML = '';
+  for (const t of trades) {
+    const div = document.createElement('div');
+    div.className = 'trade-row';
+    const tem = state.inv.contar(undefined, t.paga.i) >= t.paga.q;
+    if (!tem) div.classList.add('disabled');
+    const nomePaga = ITEM_INFO[t.paga.i]?.nome || '?';
+    const nomeRec = ITEM_INFO[t.recebe.i]?.nome || '?';
+    const icoPaga = ITEM_INFO[t.paga.i]?.icone || '';
+    const icoRec  = ITEM_INFO[t.recebe.i]?.icone || '';
+    div.innerHTML = `<span>${icoPaga} ${t.paga.q} ${nomePaga}</span><span class="arrow">→</span><span>${icoRec} ${t.recebe.q} ${nomeRec}</span>`;
+    div.onclick = () => {
+      if (state.inv.contar(undefined, t.paga.i) < t.paga.q) {
+        state.ui.toast(`Falta ${t.paga.q - state.inv.contar(undefined, t.paga.i)}× ${nomePaga}`);
+        return;
+      }
+      state.inv.consumir(undefined, t.paga.i, t.paga.q);
+      state.inv.adicionar({ i: t.recebe.i, q: t.recebe.q });
+      Audio.colocar?.();
+      state.ui.toast(`Trocou por ${t.recebe.q}× ${nomeRec}`);
+      abrirTradeVillager(mob); // reabre pra refresh dos disabled
+    };
+    lista.appendChild(div);
+  }
+  modal.classList.remove('hidden');
+  try { state.player.controls.unlock(); } catch (_) {}
+  document.getElementById('trade-close').onclick = () => modal.classList.add('hidden');
+}
+
 // === Encantar item ativo na mesa de encantamento ===
 // Custa 10/20/30 XP por nível 1/2/3. Tipo do enchant é determinado
 // pelo item (espada=sharpness, picareta=efficiency, armadura=protection).
@@ -555,6 +609,18 @@ function loop(now) {
       // Antes do raycast de bloco, tenta interação com mob mais próximo
       const mAlvo = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
       const sel = state.inv.itemSelecionado();
+      // Villager: abre painel de trades (qualquer item ou mão vazia)
+      if (mAlvo && mAlvo.tipo === 'villager') {
+        abrirTradeVillager(mAlvo);
+        return;
+      }
+      // Cat: alimenta com peixe → fica domesticado e segue
+      if (mAlvo && sel?.i === ITEM.PEIXE && mAlvo.tipo === 'cat' && !mAlvo.domesticado) {
+        mAlvo.domesticado = true;
+        state.inv.consumirAtual();
+        state.ui.toast('Gato domesticado! 🐈');
+        return;
+      }
       if (mAlvo && sel?.i === ITEM.OSSO && mAlvo.tipo === 'lobo' && !mAlvo.domesticado) {
         mAlvo.domesticado = true;
         state.inv.consumirAtual();
@@ -591,6 +657,14 @@ function loop(now) {
         }
         else if (blocoAlvo === BLOCO.MESA_ENCANT) {
           encantarItemAtual();
+        }
+        else if (blocoAlvo === BLOCO.DOOR_MADEIRA) {
+          state.world.set(t.x, t.y, t.z, BLOCO.DOOR_ABERTA);
+          Audio.colocar?.();
+        }
+        else if (blocoAlvo === BLOCO.DOOR_ABERTA) {
+          state.world.set(t.x, t.y, t.z, BLOCO.DOOR_MADEIRA);
+          Audio.colocar?.();
         }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.CAMA) dormir();

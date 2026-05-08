@@ -65,11 +65,13 @@ export const BLOCO = {
   SLAB_TIJOLO:   28,
   FENCE_MADEIRA: 29, // pillar fino + braços
   LADDER:        30, // escada (climb)
-  DOOR_MADEIRA:  31, // porta (open/close por right-click)
+  DOOR_MADEIRA:  31, // porta fechada (full cube com forma 'door')
   // === Sprint 3 ===
   MESA_ENCANT:   32, // mesa de encantamento (right-click pra spend XP)
+  // === Sprint 4 ===
+  DOOR_ABERTA:   33, // porta aberta (chapinha lateral, passável)
 };
-export const N_BLOCOS = 33;
+export const N_BLOCOS = 34;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -110,6 +112,8 @@ export const BLOCO_INFO = {
   [BLOCO.LADDER]:        { nome: 'Escada (ladder)',   solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'ladder' },
   [BLOCO.DOOR_MADEIRA]:  { nome: 'Porta de Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'door' },
   [BLOCO.MESA_ENCANT]:   { nome: 'Mesa de Encantamento', solido: true, emiteLuz: 7, cor: 0x4527A0, lateral: 0x311B92 },
+  // Porta aberta: solido false (passa por dentro), shape 'door_open'
+  [BLOCO.DOOR_ABERTA]:   { nome: 'Porta (Aberta)',   solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'door_open' },
 };
 
 export const ICONE = {
@@ -138,6 +142,8 @@ export const ITEM = {
   // === Sprint 3: progressão endgame ===
   LIVRO: 260, LAPIS: 261,
   POCAO_HEAL: 270, POCAO_SPEED: 271, POCAO_STRENGTH: 272, POCAO_REGEN: 273,
+  // Sprint 4: moeda dos villagers + comida pra domesticar cat
+  ESMERALDA: 280, PEIXE: 281,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -179,6 +185,8 @@ export const ITEM_INFO = {
   [ITEM.POCAO_SPEED]:   { nome: 'Poção de Velocidade', icone: '🧪', pocao: 'speed' },
   [ITEM.POCAO_STRENGTH]:{ nome: 'Poção de Força',   icone: '🧪', pocao: 'strength' },
   [ITEM.POCAO_REGEN]:   { nome: 'Poção de Regen.',  icone: '🧪', pocao: 'regen' },
+  [ITEM.ESMERALDA]:     { nome: 'Esmeralda',         icone: '💚' },
+  [ITEM.PEIXE]:         { nome: 'Peixe',             icone: '🐟', nutricao: 4 },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },

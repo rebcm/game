@@ -163,6 +163,35 @@ html, body {
 .boot-btn:hover { transform: scale(1.03); }
 .boot-btn:active { transform: scale(0.98); }
 
+/* Trade modal (right-click villager) */
+#trade-modal {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 8000;
+}
+.trade-box {
+  background: linear-gradient(180deg, #2e1d0a, #1a0f00);
+  border: 2px solid;
+  border-color: rgba(255,255,255,0.45) rgba(0,0,0,0.65) rgba(0,0,0,0.65) rgba(255,255,255,0.45);
+  padding: 24px 32px;
+  max-width: 420px; min-width: 320px;
+  font-family: "Press Start 2P", monospace;
+}
+.trade-box h2 { color: #FFD700; margin: 0 0 16px; font-size: 16px; text-align: center; }
+.trade-row {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06);
+  padding: 10px 12px; margin: 6px 0;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 11px; color: #fff;
+}
+.trade-row:hover { background: rgba(255,215,0,0.18); border-color: #FFD700; }
+.trade-row.disabled { opacity: 0.4; cursor: not-allowed; }
+.trade-row .arrow { color: #FFD700; font-size: 16px; }
+
 /* Multiplayer modal */
 #multi-modal {
   position: fixed; inset: 0;

@@ -627,6 +627,7 @@ function criarAtlas() {
   mapa[BLOCO.LADDER]        = { top: 6,  side: 6,  bottom: 6  };
   mapa[BLOCO.DOOR_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
   mapa[BLOCO.MESA_ENCANT]   = { top: 19, side: 19, bottom: 3  }; // obsidiana top + side, pedra bottom
+  mapa[BLOCO.DOOR_ABERTA]   = { top: 5,  side: 6,  bottom: 5  }; // mesma textura da fechada
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -987,8 +988,26 @@ export class Renderer {
             continue;
           }
           if (info.shape === 'door') {
-            // MVP: cubo cheio com cor de madeira (toggle aberto/fechado vira pra próximo sprint)
-            // Renderiza como bloco normal por enquanto.
+            // Porta fechada: chapinha 1×1×0.18 colada na face -Z (frente do bloco).
+            const d = 0.18;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x,   y+1, z,    0,1,0,  1,0,0, 0,0,d);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x,   y,   z+d,  0,-1,0, 1,0,0, 0,0,-d);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+1, y,   z,    1,0,0,  0,0,d, 0,1,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x,   y,   z+d, -1,0,0,  0,0,-d,0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+1, y,   z+d,  0,0,1, -1,0,0, 0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x,   y,   z,    0,0,-1, 1,0,0, 0,1,0);
+            continue;
+          }
+          if (info.shape === 'door_open') {
+            // Porta aberta: chapinha 0.18×1×1 colada na face -X (lateral esquerda).
+            const d = 0.18;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x,   y+1, z,   0,1,0,  d,0,0, 0,0,1);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x,   y,   z+1, 0,-1,0, d,0,0, 0,0,-1);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+d, y,   z,   1,0,0,  0,0,1, 0,1,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x,   y,   z+1,-1,0,0,  0,0,-1,0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+d, y,   z+1, 0,0,1, -d,0,0, 0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x,   y,   z,   0,0,-1, d,0,0, 0,1,0);
+            continue;
           }
           if (faceVisivel(x, y + 1, z, t))
             addFace(SHADE.top, idxTop, 0, x, y, z, x, y+1, z, 0,1,0, 1,0,0, 0,0,1);
