@@ -85,6 +85,22 @@ export const MOB_INFO = {
     ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
+  // Papagaio: passivo pequeno, voa baixo, 4 cores escolhidas no spawn
+  papagaio: {
+    hp: 6, vel: 1.8, hostil: false,
+    drops: () => Math.random() < 0.5 ? [{ i: ITEM.OSSO, q: 1 }] : [],
+    cor: 0xff5252, sec: 0xfff176, // padrão (override no spawn)
+    voa: true,
+  },
+  // Urso polar: neutro, ataca se provocado, alta HP (taiga/neve)
+  urso_polar: {
+    hp: 30, vel: 1.6, hostil: false, neutro: true, dano: 5, alcance: 1.8,
+    drops: () => [
+      ...(Math.random() < 0.7 ? [{ i: ITEM.PEIXE, q: 1 }] : []),
+      ...(Math.random() < 0.3 ? [{ i: ITEM.CARNE_CRUA, q: 1 }] : []),
+    ],
+    cor: 0xfafafa, sec: 0xeceff1, // branco neve
+  },
   // Coelho: passivo pequeno, salta, drop carne + raro pé-de-coelho
   coelho: {
     hp: 4, vel: 2.5, hostil: false,
@@ -406,6 +422,70 @@ export function construirModeloMob(tipo, info) {
       grp.add(colar);
       partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'papagaio': {
+      // Pássaro pequeno colorido com asas + cauda longa + bico curvo
+      const corpo = cubo(0.20, 0.30, 0.18, info.cor);
+      corpo.position.y = 0.45; grp.add(corpo);
+      const cabeca = cubo(0.18, 0.18, 0.16, info.cor);
+      cabeca.position.set(0, 0.70, 0.05); grp.add(cabeca);
+      // Olhos pretos pequenos
+      olhosPretos(cabeca, 0.06, 0.02, 0.085, 0.04, 0.025);
+      // Bico curvo amarelo
+      const bico = cubo(0.06, 0.06, 0.10, 0xffd54f);
+      bico.position.set(0, -0.04, 0.13); cabeca.add(bico);
+      // 2 asas com a cor secundária (contraste visual)
+      for (const sx of [-0.13, 0.13]) {
+        const asa = cubo(0.06, 0.22, 0.20, info.sec);
+        asa.position.set(sx, 0.45, 0); grp.add(asa);
+      }
+      // Cauda longa (3 segmentos colorindo do escuro pro claro)
+      for (let s = 0; s < 3; s++) {
+        const segCor = s === 0 ? info.sec : (s === 1 ? info.cor : info.sec);
+        const seg = cubo(0.10, 0.06, 0.08, segCor);
+        seg.position.set(0, 0.40 - s * 0.04, -0.16 - s * 0.08); grp.add(seg);
+      }
+      // 2 pés pequenos
+      for (const sx of [-0.05, 0.05]) {
+        const pe = cubo(0.04, 0.06, 0.04, 0xffc107);
+        pe.position.set(sx, 0.27, 0); grp.add(pe);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      break;
+    }
+    case 'urso_polar': {
+      // Urso branco grande, focinho, orelhas redondas, 4 patas robustas
+      const corpo = cubo(0.95, 0.65, 1.15, info.cor);
+      corpo.position.y = 0.85; grp.add(corpo);
+      // Pelos textura (grupos brancos sec)
+      for (const sx of [-0.30, 0, 0.30]) {
+        const pelo = cubo(0.22, 0.06, 0.05, info.sec);
+        pelo.position.set(sx, 1.18, 0.40); grp.add(pelo);
+      }
+      const cabeca = cubo(0.55, 0.50, 0.50, info.cor);
+      cabeca.position.set(0, 1.10, 0.65); grp.add(cabeca);
+      olhosPretos(cabeca, 0.13, 0.02, 0.255, 0.06, 0.04);
+      // Focinho cinza-claro
+      const focinho = cubo(0.30, 0.18, 0.20, info.sec);
+      focinho.position.set(0, -0.12, 0.18); cabeca.add(focinho);
+      // Nariz preto
+      const nariz = cubo(0.08, 0.06, 0.04, 0x1a1a1a);
+      nariz.position.set(0, 0.04, 0.10); focinho.add(nariz);
+      // 2 orelhas redondas (cubinhos pequenos)
+      for (const sx of [-0.20, 0.20]) {
+        const orelha = cubo(0.13, 0.13, 0.10, info.cor);
+        orelha.position.set(sx, 0.30, -0.05); cabeca.add(orelha);
+      }
+      // 4 patas robustas
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const p = pernaComPivot(0.25, 0.55, 0.25, info.sec, 0.55);
+        p.position.x = (i % 2 === 0 ? -0.30 : 0.30);
+        p.position.z = (i < 2 ? 0.40 : -0.40);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
       break;
     }
     case 'coelho': {
@@ -1015,6 +1095,8 @@ function _dimsMob(tipo) {
     case 'stray':    return { raio: 0.30, altura: 1.85 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
     case 'coelho':   return { raio: 0.18, altura: 0.50 };
+    case 'papagaio': return { raio: 0.15, altura: 0.50 };
+    case 'urso_polar': return { raio: 0.55, altura: 1.50 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
@@ -1074,7 +1156,11 @@ export class Mob {
     // breedCooldown bloqueia novo acasalamento por 60s pós-spawn de cria.
     this.loveTimer = 0;
     this.breedCooldown = 0;
-    this.mesh = construirModeloMob(tipo, info);
+    // Cor override (ex: papagaio escolhe cor aleatória no spawn)
+    const infoEfetivo = (opts.cor || opts.sec)
+      ? { ...info, cor: opts.cor || info.cor, sec: opts.sec || info.sec }
+      : info;
+    this.mesh = construirModeloMob(tipo, infoEfetivo);
     if (escala !== 1) this.mesh.scale.set(escala, escala, escala);
     this.mesh.position.set(x, y, z);
     this.partes = this.mesh.userData.partes;
@@ -1460,7 +1546,12 @@ export class Mob {
     this.kbX = kbX;
     this.kbZ = kbZ;
     const info = MOB_INFO[this.tipo];
-    if (!info.hostil && !info.amigavel) this.panico = 5;
+    // Neutro vira hostil quando atacado (urso polar, etc) por 30s
+    if (info.neutro) {
+      this._provocado = true;
+      this._provocadoAte = (typeof performance !== 'undefined' ? performance.now() : Date.now()) + 30000;
+    }
+    if (!info.hostil && !info.amigavel && !info.neutro) this.panico = 5;
   }
 }
 
@@ -1600,7 +1691,10 @@ export class MobManager {
       } else {
         m.atualizar(dt, world, null);
       }
-      if (info.hostil) {
+      // Neutro provocado age como hostil temporariamente (30s)
+      const provocadoAtivo = m._provocado && m._provocadoAte > (typeof performance !== 'undefined' ? performance.now() : Date.now());
+      if (provocadoAtivo === false && m._provocado) m._provocado = false;
+      if (info.hostil || provocadoAtivo) {
         const ddy = m.y - player.pos.y;
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
         const naAlcance = d2 < info.alcance ** 2 && m._vePlayer; // só ataca se vê
@@ -1736,8 +1830,13 @@ export class MobManager {
       // Coelho: comum em planicies/floresta, mais raro no deserto
       if (blocoChao === BLOCO.GRAMA) {
         if (Math.random() < 0.30) tipos.push('coelho');
+        // Papagaio: 8% chance em grama (proxy de floresta tropical)
+        if (Math.random() < 0.08) tipos.push('papagaio');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
+      } else if (blocoChao === BLOCO.NEVE) {
+        // Urso polar: passivo neutro em taiga (chão de NEVE)
+        if (Math.random() < 0.15) tipos.push('urso_polar');
       }
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
@@ -1750,7 +1849,19 @@ export class MobManager {
       return;
     }
     const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-    this.spawn(tipo, x, y, z);
+    // Papagaio: 4 paletas de cor (vermelho, azul, verde, amarelo)
+    if (tipo === 'papagaio') {
+      const paletas = [
+        { cor: 0xff5252, sec: 0xfff176 }, // vermelho/amarelo
+        { cor: 0x42a5f5, sec: 0xff5252 }, // azul/vermelho
+        { cor: 0x66bb6a, sec: 0xff9800 }, // verde/laranja
+        { cor: 0xffeb3b, sec: 0x42a5f5 }, // amarelo/azul
+      ];
+      const p = paletas[Math.floor(Math.random() * paletas.length)];
+      this.spawn(tipo, x, y, z, p);
+    } else {
+      this.spawn(tipo, x, y, z);
+    }
   }
   maisProximo(player, alc) {
     let melhor = null, melhorD = alc * alc;
