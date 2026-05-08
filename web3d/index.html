@@ -254,19 +254,22 @@
     </div>
   </div>
 
-  <!-- Multiplayer modal (em desenvolvimento — UI pronta, transport futuro) -->
+  <!-- Multiplayer modal -->
   <div id="multi-modal" class="hidden">
     <div class="multi-box">
       <h2>👥 Multiplayer</h2>
-      <p>Mode peer-to-peer entre navegadores via WebRTC está em desenvolvimento.</p>
-      <p>Por enquanto, você pode <strong>compartilhar seu mundo</strong> exportando o save:</p>
+      <p><strong>Local (mesma máquina):</strong> abra o jogo em <strong>2+ abas</strong> do
+        mesmo navegador — outros jogadores aparecem automaticamente!
+        Cada aba pode usar nome diferente.</p>
+      <p><strong>Cross-device:</strong> compartilhe seu mundo via JSON
+        com amigos (Discord/WhatsApp).</p>
       <div class="multi-actions">
         <button class="boot-btn primary" id="multi-export">⬇ Exportar mundo</button>
         <button class="boot-btn secondary" id="multi-import">⬆ Importar mundo</button>
         <button class="boot-btn secondary" id="multi-close">Voltar</button>
       </div>
       <input type="file" id="multi-import-file" accept="application/json" style="display:none">
-      <div class="multi-hint">Arquivo JSON pode ser enviado via Discord/Whatsapp pra outro jogador.</div>
+      <div class="multi-hint">P2P real via WebRTC + Cloudflare Worker em desenvolvimento.</div>
     </div>
   </div>
 

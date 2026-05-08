@@ -10,6 +10,7 @@ import { chunkKey } from './utils.js';
 import { Crafting } from './inventory.js';
 import { Achievements } from './achievements.js';
 import { Save } from './save.js';
+import { Multiplayer } from './multiplayer.js';
 import { state } from './state.js';
 import { Audio } from './audio.js';
 
@@ -757,7 +758,8 @@ export class UI {
     if (statsEl) {
       const s = Save.getStats();
       const min = Math.floor(s.secondsPlayed / 60);
-      statsEl.textContent = `Stats: ${s.mobsKilled} mobs · ${s.blocksBroken} quebrados · ${s.deaths} mortes · ${min} min jogados`;
+      const online = Multiplayer.jogadoresOnline?.() || 0;
+      statsEl.textContent = `Stats: ${s.mobsKilled} mobs · ${s.blocksBroken} quebrados · ${s.deaths} mortes · ${min} min · 👥 ${online} online`;
     }
     document.getElementById('f3-time').textContent =
       `Day time: ${String(horas).padStart(2,'0')}:${String(mins).padStart(2,'0')} (sun ${sun.toFixed(2)})`;

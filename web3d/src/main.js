@@ -16,6 +16,7 @@ import { Renderer } from './render.js';
 import { Player } from './player.js';
 import { Inventario, Drops, Crafting } from './inventory.js';
 import { Achievements } from './achievements.js';
+import { Multiplayer } from './multiplayer.js';
 import { inicializar as initQuality, tickFps as qualityTickFps, aplicarTier, salvarPreferencia, PRESETS } from './quality.js';
 import { MobManager, MOB_INFO } from './mobs.js';
 import {
@@ -469,6 +470,7 @@ function init() {
   setupTouchControls();
   state.ui.atualizar();
   Audio.musicaIniciar();
+  Multiplayer.iniciar();
 
   // Autosave a cada 30s
   setInterval(() => Save.salvar(), 30_000);
@@ -534,6 +536,7 @@ function loop(now) {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
     state.particulas.atualizar(dt);
+    Multiplayer.atualizar(dt);
 
     const dirCamera = state.renderer.camera.getWorldDirection(_tmpVecAux);
     ray = raycastBloco(state.world, state.renderer.camera.position, dirCamera, ALCANCE_BLOCO);
