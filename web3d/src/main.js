@@ -330,6 +330,22 @@ function comerSlot() {
     state.ui.toast(`🧪 Poção de ${info.pocao}`);
     return;
   }
+  // Maçã Dourada: nutrição 4 + Regen 30s + Absorption 5s extra HP
+  // (paridade Minecraft real — item endgame de cura)
+  if (s.i === ITEM.MACA_DOURADA) {
+    state.player.fome = clamp(state.player.fome + 4, 0, state.player.fomeMax);
+    state.player.saturation = Math.min(20, (state.player.saturation || 0) + 9.6);
+    state.player.efeitos = state.player.efeitos || {};
+    state.player.efeitos.regen = Date.now() + 30000;
+    // Absorption: HP extra temporário (acima do max). Decai naturalmente.
+    state.player.absorptionHP = (state.player.absorptionHP || 0) + 4;
+    state.player.absorptionExpira = Date.now() + 120000; // 2 min
+    state.inv.consumirAtual();
+    Audio.eatCrunch();
+    Audio.levelUp?.();
+    state.ui.toast('🍏 Maçã dourada! Regen + 4 HP extra');
+    return;
+  }
   // Sopa de Cogumelo: nutrição 6 + devolve tigela vazia (paridade MC)
   if (s.i === ITEM.SOPA_COGUMELO) {
     state.player.fome = clamp(state.player.fome + 6, 0, state.player.fomeMax);
@@ -534,6 +550,8 @@ function init() {
   state.inv.adicionar({ b: BLOCO.VELA, q: 4 });
   state.inv.adicionar({ b: BLOCO.VELA_VERMELHA, q: 4 });
   state.inv.adicionar({ b: BLOCO.VELA_AZUL, q: 4 });
+  state.inv.adicionar({ i: ITEM.MACA, q: 5 });
+  state.inv.adicionar({ i: ITEM.MACA_DOURADA, q: 1 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }

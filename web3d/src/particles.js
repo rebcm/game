@@ -526,10 +526,11 @@ export class FishingBobber {
     if (this.naoEhAgua) return null;
     if (this.estado !== 'mordeu') return null;
     const r = Math.random();
-    // Pesos: 65% PEIXE, 15% OSSO, 12% PAU, 5% MUDA, 3% ESMERALDA
-    if (r < 0.65) return { i: ITEM.PEIXE, q: 1 };
-    if (r < 0.80) return { i: ITEM.OSSO, q: 1 };
-    if (r < 0.92) return { i: ITEM.PAU, q: 1 };
+    // Pesos: 50% PEIXE, 20% SALMAO, 13% OSSO, 10% PAU, 4% MUDA, 3% ESMERALDA
+    if (r < 0.50) return { i: ITEM.PEIXE, q: 1 };
+    if (r < 0.70) return { i: ITEM.SALMAO, q: 1 };
+    if (r < 0.83) return { i: ITEM.OSSO, q: 1 };
+    if (r < 0.93) return { i: ITEM.PAU, q: 1 };
     if (r < 0.97) return { i: ITEM.MUDA, q: 1 };
     return { i: ITEM.ESMERALDA, q: 1 };
   }
@@ -806,7 +807,8 @@ export function castFishingLine(origem, dir) {
     if (pescado) {
       state.inv?.adicionar?.(pescado);
       Audio.colocar?.();
-      const nome = pescado.i === ITEM.PEIXE ? 'Peixe 🐟'
+      const nome = pescado.i === ITEM.SALMAO ? 'Salmão 🐟'
+        : pescado.i === ITEM.PEIXE ? 'Peixe 🐟'
         : pescado.i === ITEM.OSSO ? 'Osso 🦴'
         : pescado.i === ITEM.PAU ? 'Pau'
         : pescado.i === ITEM.MUDA ? 'Muda 🌱'

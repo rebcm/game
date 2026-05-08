@@ -182,6 +182,7 @@ export const Drops = {
         const out = [];
         if (Math.random() < 0.05) out.push({ i: ITEM.PAU, q: 1 });
         if (Math.random() < 0.06) out.push({ i: ITEM.MUDA, q: 1 });
+        if (Math.random() < 0.05) out.push({ i: ITEM.MACA, q: 1 });
         return out;
       }
       case BLOCO.VIDRO:    return [{ b: BLOCO.VIDRO, q: 1 }];

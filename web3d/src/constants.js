@@ -230,6 +230,9 @@ export const ITEM = {
   SOPA_COGUMELO: 253, // sopa: cura 6 fome (paridade MC)
   TIGELA:        254, // bowl/cup vazia, deixada após comer sopa
   COBRE_LINGOTE: 255, // lingote de cobre (smelt de minério)
+  MACA:          256, // maçã: comida normal + drop raro de folha
+  MACA_DOURADA:  257, // maçã dourada: regen + absorption (paridade MC real)
+  SALMAO:        258, // salmão: pesca alternativa, mais nutritivo que peixe
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -293,6 +296,9 @@ export const ITEM_INFO = {
   [ITEM.SOPA_COGUMELO]: { nome: 'Sopa de Cogumelo',  icone: '🍲', nutricao: 6 },
   [ITEM.TIGELA]:        { nome: 'Tigela',            icone: '🥣' },
   [ITEM.COBRE_LINGOTE]: { nome: 'Lingote de Cobre',  icone: '🟧' },
+  [ITEM.MACA]:          { nome: 'Maçã',              icone: '🍎', nutricao: 4 },
+  [ITEM.MACA_DOURADA]:  { nome: 'Maçã Dourada',      icone: '🍏', nutricao: 4, dourada: true },
+  [ITEM.SALMAO]:        { nome: 'Salmão',            icone: '🐟', nutricao: 5 },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -397,6 +403,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.COGUMELO_R, q: 1}, {i: ITEM.COGUMELO_M, q: 1}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_COGUMELO, q: 1}, wb: false },
   // Cobre: 9 lingotes → 1 bloco (paridade MC)
   { custos: [{i: ITEM.COBRE_LINGOTE, q: 9}], saida: {b: BLOCO.COBRE, q: 1}, wb: true },
+  // Maçã Dourada: 8 ouro + 1 maçã (paridade MC real, item endgame)
+  { custos: [{i: ITEM.OURO, q: 8}, {i: ITEM.MACA, q: 1}], saida: {i: ITEM.MACA_DOURADA, q: 1}, wb: true },
   // Velas: lã + carvão → vela. Lã colorida → vela colorida.
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA, q: 1}, wb: false },
   { custos: [{b: BLOCO.LA_VERMELHA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA_VERMELHA, q: 1}, wb: false },
