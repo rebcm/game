@@ -1285,6 +1285,7 @@ function loop(now) {
     }
   }
   state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
+  state.renderer.atualizarSombraPlayer(state.world, state.player.pos);
   // Zoom: ativo se ITEM.LUNETA estiver selecionado E state._zoomLuneta=true
   const _selZoom = state.inv?.itemSelecionado?.();
   const zooming = !!state._zoomLuneta && _selZoom?.i === ITEM.LUNETA;

@@ -1545,14 +1545,58 @@ export class Renderer {
     // Nuvens (paralelo no céu)
     this._criarNuvens();
 
-    // Pool de PointLights (tochas/lava perto do player)
+    // Pool de PointLights (tochas/lava perto do player) + glow sprites
+    // grudados (efeito bloom-like sem precisar de post-processing)
     this.poolLuzes = [];
+    this.poolGlow = [];
+    // Canvas pré-renderizado de halo radial (reusado por todos)
+    const glowCnv = document.createElement('canvas');
+    glowCnv.width = 64; glowCnv.height = 64;
+    const gctx = glowCnv.getContext('2d');
+    const grd = gctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0,    'rgba(255,255,255,0.95)');
+    grd.addColorStop(0.20, 'rgba(255,200,100,0.55)');
+    grd.addColorStop(0.55, 'rgba(255,160,60,0.20)');
+    grd.addColorStop(1,    'rgba(255,140,40,0)');
+    gctx.fillStyle = grd;
+    gctx.fillRect(0, 0, 64, 64);
+    const glowTex = new THREE.CanvasTexture(glowCnv);
     for (let i = 0; i < 8; i++) {
       const l = new THREE.PointLight(0xffaa44, 0.0, 12, 2);
       l.visible = false;
       this.scene.add(l);
       this.poolLuzes.push(l);
+      // Glow sprite pareado
+      const mat = new THREE.SpriteMaterial({
+        map: glowTex,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const s = new THREE.Sprite(mat);
+      s.scale.set(2.5, 2.5, 1);
+      s.visible = false;
+      this.scene.add(s);
+      this.poolGlow.push(s);
     }
+    // Sombra circular do player (decal escuro embaixo)
+    const shadowCnv = document.createElement('canvas');
+    shadowCnv.width = 64; shadowCnv.height = 64;
+    const sctx = shadowCnv.getContext('2d');
+    const sgrd = sctx.createRadialGradient(32, 32, 0, 32, 32, 28);
+    sgrd.addColorStop(0,    'rgba(0,0,0,0.55)');
+    sgrd.addColorStop(0.55, 'rgba(0,0,0,0.30)');
+    sgrd.addColorStop(1,    'rgba(0,0,0,0)');
+    sctx.fillStyle = sgrd;
+    sctx.fillRect(0, 0, 64, 64);
+    const shadowTex = new THREE.CanvasTexture(shadowCnv);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      map: shadowTex, transparent: true, depthWrite: false,
+    });
+    this.playerShadow = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), shadowMat);
+    this.playerShadow.rotation.x = -Math.PI / 2;
+    this.playerShadow.visible = false;
+    this.scene.add(this.playerShadow);
 
     // Atlas + materials
     this.atlas = criarAtlas();
@@ -2133,6 +2177,7 @@ export class Renderer {
     candidatas.sort((a, b) => a.d2 - b.d2);
     for (let i = 0; i < this.poolLuzes.length; i++) {
       const l = this.poolLuzes[i];
+      const g = this.poolGlow?.[i];
       const c = candidatas[i];
       if (c) {
         l.visible = true;
@@ -2140,10 +2185,48 @@ export class Renderer {
         l.intensity = c.nivel / 15 * 0.8;
         l.distance = c.nivel + 1;
         l.color.setHex(c.nivel >= 15 ? 0xff6622 : 0xffaa55);
+        // Glow sprite acompanha (escala proporcional à intensidade)
+        if (g) {
+          g.visible = true;
+          g.position.set(c.x, c.y, c.z);
+          const escala = 1.5 + (c.nivel / 15) * 2.5;
+          g.scale.set(escala, escala, 1);
+          g.material.color.setHex(c.nivel >= 15 ? 0xff8855 : 0xffcc77);
+        }
       } else {
         l.visible = false;
+        if (g) g.visible = false;
       }
     }
+  }
+  // Sombra circular do player projetada no chão (terceira pessoa ou
+  // visível pra outros multiplayer). Colocada 0.05 acima do bloco abaixo.
+  atualizarSombraPlayer(world, playerPos) {
+    if (!this.playerShadow) return;
+    // Encontra o primeiro bloco sólido abaixo
+    let y = Math.floor(playerPos.y) - 1;
+    let found = -1;
+    for (let i = 0; i < 20; i++) {
+      if (world.isSolido(Math.floor(playerPos.x), y, Math.floor(playerPos.z))) {
+        found = y; break;
+      }
+      y--;
+    }
+    if (found < 0) {
+      this.playerShadow.visible = false;
+      return;
+    }
+    const dist = playerPos.y - (found + 1);
+    // Esmaece + encolhe quanto mais alto o player estiver
+    if (dist > 6) {
+      this.playerShadow.visible = false;
+      return;
+    }
+    this.playerShadow.visible = true;
+    this.playerShadow.position.set(playerPos.x, found + 1.02, playerPos.z);
+    const escala = Math.max(0.4, 1.0 - dist * 0.12);
+    this.playerShadow.scale.set(escala, escala, 1);
+    this.playerShadow.material.opacity = Math.max(0.2, 1.0 - dist * 0.15);
   }
 
   // === Beacon beams ===
