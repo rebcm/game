@@ -56,6 +56,27 @@ export const MOB_INFO = {
     drops: () => Math.random() < 0.6 ? [{ i: ITEM.CARNE_PODRE, q: 1 }] : [],
     cor: 0x4caf50, sec: 0x2e7d32,
   },
+  // Drowned: zumbi aquático azul-esverdeado, ataca com tridente (chance)
+  drowned: {
+    hp: 14, vel: 1.7, hostil: true, dano: 3, alcance: 1.6,
+    drops: () => [
+      ...(Math.random() < 0.5 ? [{ i: ITEM.CARNE_PODRE, q: 1 }] : []),
+      ...(Math.random() < 0.06 ? [{ i: ITEM.TRIDENTE, q: 1 }] : []),
+      ...(Math.random() < 0.20 ? [{ i: ITEM.PEIXE, q: 1 }] : []),
+    ],
+    cor: 0x4dd0e1, sec: 0x00838f, // ciano + verde-escuro
+    aquatico: true, // não queima de dia, só spawna em água
+  },
+  // Husk: zumbi do deserto, mais HP, sem dano de dia (resistente ao sol)
+  husk: {
+    hp: 18, vel: 1.6, hostil: true, dano: 4, alcance: 1.6,
+    drops: () => [
+      ...(Math.random() < 0.7 ? [{ i: ITEM.CARNE_PODRE, q: 1 }] : []),
+      ...(Math.random() < 0.15 ? [{ b: BLOCO.AREIA, q: 1 }] : []),
+    ],
+    cor: 0xc6a45e, sec: 0x8d6e3f, // bege + marrom
+    resistenteSol: true, // não queima de dia (paridade Minecraft)
+  },
   esqueleto: {
     hp: 14, vel: 1.8, hostil: true, dano: 2, alcance: 6.0,
     drops: () => [
@@ -400,19 +421,39 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
+    case 'drowned':
+    case 'husk':
     case 'zumbi': {
       const corpo = cubo(0.55, 0.75, 0.30, info.cor);
       corpo.position.y = 1.05; grp.add(corpo);
       const cabeca = cubo(0.48, 0.48, 0.48, info.cor);
       cabeca.position.set(0, 1.65, 0); grp.add(cabeca);
-      // Olhos vermelho-zumbi (afundados, brilhantes)
-      olhosBrilhantes(cabeca, 0.11, 0.02, 0.245, 0xff3d00, 0.07);
+      // Olhos: drowned tem azul brilhante, husk tem amarelo, zumbi vermelho
+      const corOlho = tipo === 'drowned' ? 0x40c4ff : tipo === 'husk' ? 0xffc107 : 0xff3d00;
+      olhosBrilhantes(cabeca, 0.11, 0.02, 0.245, corOlho, 0.07);
       // Boca aberta com dentes
       const boca = cubo(0.20, 0.06, 0.02, 0x1a1a1a);
       boca.position.set(0, -0.13, 0.245); cabeca.add(boca);
-      // Cabelo bagunçado em cima
-      const cabelo = cubo(0.50, 0.06, 0.50, 0x2e7d32);
+      // Cabelo bagunçado em cima (drowned: algas; husk: faixa de areia)
+      const corCabelo = tipo === 'drowned' ? 0x33691e : tipo === 'husk' ? 0xfdd835 : 0x2e7d32;
+      const cabelo = cubo(0.50, 0.06, 0.50, corCabelo);
       cabelo.position.set(0, 0.27, 0); cabeca.add(cabelo);
+      // Drowned: algas penduradas dos braços (3 fitas verdes)
+      if (tipo === 'drowned') {
+        for (let s = -1; s <= 1; s++) {
+          const alga = cubo(0.10, 0.18, 0.04, 0x2e7d32);
+          alga.position.set(s * 0.18, 0.85, 0.18);
+          grp.add(alga);
+        }
+      }
+      // Husk: faixas de tecido bege descendo do corpo (esfarrapado)
+      if (tipo === 'husk') {
+        for (let s of [-0.18, 0.18]) {
+          const faixa = cubo(0.10, 0.20, 0.04, 0xa1887f);
+          faixa.position.set(s, 0.65, 0.18);
+          grp.add(faixa);
+        }
+      }
       // Braços ESTENDIDOS (zumbi clássico)
       const bracos = [];
       for (let i = 0; i < 2; i++) {
@@ -904,6 +945,8 @@ function _dimsMob(tipo) {
   switch (tipo) {
     case 'aranha':   return { raio: 0.45, altura: 0.55 };
     case 'cave_spider': return { raio: 0.30, altura: 0.45 };
+    case 'drowned':  return { raio: 0.30, altura: 1.85 };
+    case 'husk':     return { raio: 0.30, altura: 1.85 };
     case 'galinha':  return { raio: 0.20, altura: 0.70 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
@@ -1147,6 +1190,7 @@ export class Mob {
     }
     // Sunburn: zumbi/esqueleto pegam fogo em luz solar plena durante o dia.
     // Toma 1 dano a cada 1.5s. Paridade Minecraft.
+    // Drowned aquatico + Husk resistente NÃO queimam (paridade Minecraft real)
     if ((this.tipo === 'zumbi' || this.tipo === 'esqueleto') && state.tempoDia !== undefined) {
       const sun = Math.max(0, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
       if (sun > 0.5) {
@@ -1604,12 +1648,20 @@ export class MobManager {
       if (y < 30) tipos.push('slime');
       if (Math.random() < 0.05) tipos.push('enderman');
       if (Math.random() < 0.04) tipos.push('witch'); // raro à noite
+      // Drowned: spawn em (ou sobre) AGUA, durante a noite
+      if (blocoChao === BLOCO.AGUA || world.get(x, y, z) === BLOCO.AGUA) {
+        tipos.push('drowned'); tipos.push('drowned'); // peso 2× pra dominar em água
+      }
     } else if (luzMax >= 9 && (blocoChao === BLOCO.GRAMA || blocoChao === BLOCO.AREIA)) {
       tipos = ['vaca', 'galinha', 'porco', 'ovelha', 'lobo'];
       if (Math.random() < 0.06) tipos.push('cat');      // raro
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
       if (Math.random() < 0.008) tipos.push('wandering_trader'); // muito raro
+      // Husk: hostil que spawna de DIA em deserto (não queima no sol)
+      if (blocoChao === BLOCO.AREIA && Math.random() < 0.20) {
+        tipos.push('husk');
+      }
     } else {
       return;
     }

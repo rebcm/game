@@ -736,6 +736,21 @@ function loop(now) {
     }
     // Tick do charge do arco
     if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
+    // === Fumaça acima de fornalhas ativas (visual de "queimando") ===
+    state._fornAcc = (state._fornAcc || 0) + dt;
+    if (state._fornAcc >= 0.6 && !state._heavyFrame) {
+      state._fornAcc = 0;
+      const px = state.player.pos.x, pz = state.player.pos.z;
+      for (const [key, f] of state.world.fornalhaEstados) {
+        if (!f.ativa) continue;
+        const [fx, fy, fz] = key.split(',').map(Number);
+        const dx = fx - px, dz = fz - pz;
+        if (dx*dx + dz*dz > 24*24) continue; // só visíveis
+        if (state.particulas?.spawnSmoke) {
+          state.particulas.spawnSmoke(fx + 0.5, fy + 1.05, fz + 0.5);
+        }
+      }
+    }
     // === Beacon: aplica buff se player a ≤16 blocos de algum beacon com
     // pirâmide debaixo. Rodar 1×/s pra economia. Pirâmide = 3×3 (Y-1) de
     // blocos preciosos (FERRO/OURO/DIAMANTE/ESMERALDA/EMERALDA proxy).
