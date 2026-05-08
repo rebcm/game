@@ -372,7 +372,19 @@ export class UI {
       return h;
     };
     const hpEl = document.getElementById('hp');
-    hpEl.innerHTML = barHTML('❤', '🤍', p.hp, p.hpMax, '#e57373');
+    let hpHTML = barHTML('❤', '🤍', p.hp, p.hpMax, '#e57373');
+    // Absorption: corações dourados extras à direita do HP normal.
+    // Decai com dano antes do HP, expira automaticamente após 2min.
+    if (p.absorptionExpira && Date.now() > p.absorptionExpira) {
+      p.absorptionHP = 0; p.absorptionExpira = 0;
+    }
+    if (p.absorptionHP > 0) {
+      const absoluto = Math.ceil(p.absorptionHP / 2);
+      for (let i = 0; i < absoluto; i++) {
+        hpHTML += '<span style="color:#FFD700;text-shadow:1px 1px 0 #000">❤</span>';
+      }
+    }
+    hpEl.innerHTML = hpHTML;
     hpEl.classList.toggle('shake', p.hp <= 4 && p.modo === 'survival' && p.hp > 0);
     document.getElementById('fome').innerHTML = barHTML('🍗', '🍗', p.fome, p.fomeMax, '#ffb74d');
     const elAr = document.getElementById('ar');

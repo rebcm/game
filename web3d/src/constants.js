@@ -104,8 +104,10 @@ export const BLOCO = {
   VELA:           63, // vela branca (luz 8, decoração)
   VELA_VERMELHA:  64,
   VELA_AZUL:      65,
+  MAGMA:          66, // bloco de magma: dá dano ao pisar (não em sneak)
+  LANTERNA:       67, // lanterna: luz forte (15) brilhante
 };
-export const N_BLOCOS = 66;
+export const N_BLOCOS = 68;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -180,6 +182,8 @@ export const BLOCO_INFO = {
   [BLOCO.VELA]:          { nome: 'Vela',             solido: true,  emiteLuz: 8,  cor: 0xfafafa, lateral: 0xeeeeee },
   [BLOCO.VELA_VERMELHA]: { nome: 'Vela Vermelha',    solido: true,  emiteLuz: 8,  cor: 0xef5350, lateral: 0xc62828 },
   [BLOCO.VELA_AZUL]:     { nome: 'Vela Azul',        solido: true,  emiteLuz: 8,  cor: 0x4fc3f7, lateral: 0x1565c0 },
+  [BLOCO.MAGMA]:         { nome: 'Bloco de Magma',   solido: true,  emiteLuz: 3,  cor: 0xbf360c, lateral: 0x8b0000 },
+  [BLOCO.LANTERNA]:      { nome: 'Lanterna',         solido: true,  emiteLuz: 15, cor: 0xffd54f, lateral: 0x424242 },
 };
 
 export const ICONE = {
@@ -405,6 +409,10 @@ export const RECEITAS = [
   { custos: [{i: ITEM.COBRE_LINGOTE, q: 9}], saida: {b: BLOCO.COBRE, q: 1}, wb: true },
   // Maçã Dourada: 8 ouro + 1 maçã (paridade MC real, item endgame)
   { custos: [{i: ITEM.OURO, q: 8}, {i: ITEM.MACA, q: 1}], saida: {i: ITEM.MACA_DOURADA, q: 1}, wb: true },
+  // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
+  { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.MAGMA, q: 4}, wb: true },
+  // Lanterna: 8 ferro + 1 tocha → 1 lanterna (paridade MC: nuggets, simplificado)
+  { custos: [{i: ITEM.FERRO, q: 8}, {b: BLOCO.TOCHA, q: 1}], saida: {b: BLOCO.LANTERNA, q: 1}, wb: true },
   // Velas: lã + carvão → vela. Lã colorida → vela colorida.
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA, q: 1}, wb: false },
   { custos: [{b: BLOCO.LA_VERMELHA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA_VERMELHA, q: 1}, wb: false },

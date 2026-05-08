@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 8, CELL = 32;
+  const COLS = 8, ROWS = 9, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -952,6 +952,83 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Magma: superfície vermelha-escura com rachaduras laranja-brilhantes
+  function pintarMagma(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base preta-vermelha (rocha quente)
+    ctx.fillStyle = '#3e0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    // Rachaduras pseudo-aleatórias (linhas curtas)
+    ctx.fillStyle = '#ff6f00';
+    for (let i = 0; i < 12; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const horizontal = (seed % 2 === 0);
+      const tam = 3 + (seed % 4);
+      if (horizontal) ctx.fillRect(x0 + px, y0 + py, tam, 1);
+      else ctx.fillRect(x0 + px, y0 + py, 1, tam);
+    }
+    // Pontos brilhantes amarelos (carvões em brasa)
+    ctx.fillStyle = '#ffeb3b';
+    for (let i = 0; i < 6; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Manchas vermelho-escuras pra textura rugosa
+    ctx.fillStyle = '#1a0000';
+    for (let py = 0; py < CELL; py += 4) {
+      for (let px = 0; px < CELL; px += 4) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+  }
+
+  // Lanterna: estrutura escura de ferro com janela de vidro brilhante
+  function pintarLanterna(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Estrutura preta de ferro
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Janela amarela brilhante no centro (luz interna)
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(x0 + 6, y0 + 8, 20, 18);
+    // Glowing core (mais brilhante no meio)
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 10, y0 + 12, 12, 10);
+    // Núcleo branco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 6);
+    // Grades de ferro horizontais (3 barras)
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 6, y0 + 13, 20, 1);
+    ctx.fillRect(x0 + 6, y0 + 18, 20, 1);
+    ctx.fillRect(x0 + 6, y0 + 22, 20, 1);
+    // Grades verticais (suporte)
+    ctx.fillRect(x0 + 14, y0 + 8, 1, 18);
+    ctx.fillRect(x0 + 17, y0 + 8, 1, 18);
+    // Topo cônico de ferro (chapéu)
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 4,  y0 + 4, CELL - 8, 4);
+    ctx.fillStyle = '#616161';
+    ctx.fillRect(x0 + 8,  y0 + 2, CELL - 16, 2);
+    // Anel de pendurar (parte de cima)
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 14, y0,     4, 2);
+    ctx.fillRect(x0 + 13, y0 + 1, 6, 1);
+  }
+
   // Vela: cera colorida vertical + chama amarela no topo + pavio escuro
   function pintarVela(idx, corCera, corCeraEscura) {
     const col = idx % COLS;
@@ -1538,6 +1615,8 @@ function criarAtlas() {
   pintarVela(61, '#fafafa', '#bdbdbd');                    // vela branca
   pintarVela(62, '#ef5350', '#b71c1c');                    // vela vermelha
   pintarVela(63, '#4fc3f7', '#0d47a1');                    // vela azul
+  pintarMagma(64);                                         // bloco de magma
+  pintarLanterna(65);                                      // lanterna de ferro
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1608,6 +1687,8 @@ function criarAtlas() {
   mapa[BLOCO.VELA]           = { top: 61, side: 61, bottom: 61 };
   mapa[BLOCO.VELA_VERMELHA]  = { top: 62, side: 62, bottom: 62 };
   mapa[BLOCO.VELA_AZUL]      = { top: 63, side: 63, bottom: 63 };
+  mapa[BLOCO.MAGMA]          = { top: 64, side: 64, bottom: 64 };
+  mapa[BLOCO.LANTERNA]       = { top: 65, side: 65, bottom: 65 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

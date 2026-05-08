@@ -220,6 +220,8 @@ export class Player {
       const bPe = world.get(Math.floor(this.pos.x), Math.floor(this.pos.y - 0.1), Math.floor(this.pos.z));
       if (bDentro === BLOCO.LAVA || bPe === BLOCO.LAVA) this.aplicarDano(3, 'lava');
       else if (bDentro === BLOCO.CACTO || bPe === BLOCO.CACTO) this.aplicarDano(1, 'cacto');
+      // Magma: dano 1 ao pisar, mas evitado se sneaking (paridade MC)
+      else if (bPe === BLOCO.MAGMA && !this.sneak) this.aplicarDano(1, 'magma');
     }
 
     // Oxigênio submerso
@@ -423,7 +425,13 @@ export class Player {
       }
       reducao = Math.min(0.85, reducao + protBonus);
     }
-    const danoReal = Math.max(1, Math.round(d * (1 - reducao)));
+    let danoReal = Math.max(1, Math.round(d * (1 - reducao)));
+    // Absorption: corações dourados absorvem dano antes do HP normal
+    if (this.absorptionHP > 0) {
+      const absorvido = Math.min(this.absorptionHP, danoReal);
+      this.absorptionHP -= absorvido;
+      danoReal -= absorvido;
+    }
     this.hp -= danoReal;
     this.semDano = 0;
     Audio.hurt();
