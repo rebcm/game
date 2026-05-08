@@ -1512,7 +1512,10 @@ export class Renderer {
     this.renderer.toneMappingExposure = 1.0;
     // Cor inicial — atualizada por atualizarCeu.
     this.scene.background = new THREE.Color(0x87CEEB);
-    this.scene.fog = new THREE.Fog(0x87CEEB, 40, CHUNK_SIZE * (VIEW_RADIUS + 0.5));
+    // FogExp2: densidade exponencial (mais natural que linear). Densidade
+    // calculada pra dar transição suave dentro do view radius.
+    const fogDensidade = 0.018 * (8 / Math.max(4, q.viewRadius || 6));
+    this.scene.fog = new THREE.FogExp2(0x87CEEB, fogDensidade);
 
     // === Luzes globais ===
     // Intensidades reduzidas em relação ao default Lambert para EVITAR

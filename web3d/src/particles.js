@@ -858,6 +858,101 @@ export function atualizarArrows(dt) {
   }
 }
 
+// =====================================================================
+// Ambient bioma particles — folhas, neve, poeira, pólen
+// Spawnam ao redor do player conforme bioma + cair com gravidade leve.
+// =====================================================================
+const _AMBIENT_PARTICLES = [];
+function _spawnAmbientParticle(scene, x, y, z, cor, tamanho, dur, vy = -0.4) {
+  if (_AMBIENT_PARTICLES.length > 80) return; // cap pra não estourar
+  const geo = new THREE.PlaneGeometry(tamanho, tamanho);
+  const mat = new THREE.MeshBasicMaterial({
+    color: cor,
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z);
+  m.rotation.z = Math.random() * Math.PI;
+  scene.add(m);
+  _AMBIENT_PARTICLES.push({
+    mesh: m,
+    vx: (Math.random() - 0.5) * 0.6,
+    vy,
+    vz: (Math.random() - 0.5) * 0.6,
+    dur,
+    age: 0,
+    spin: (Math.random() - 0.5) * 1.2,
+  });
+}
+function _atualizarAmbientParticles(dt) {
+  if (!state.renderer) return;
+  for (let i = _AMBIENT_PARTICLES.length - 1; i >= 0; i--) {
+    const p = _AMBIENT_PARTICLES[i];
+    p.age += dt;
+    if (p.age >= p.dur) {
+      state.renderer.scene.remove(p.mesh);
+      p.mesh.geometry.dispose();
+      p.mesh.material.dispose();
+      _AMBIENT_PARTICLES.splice(i, 1);
+      continue;
+    }
+    p.mesh.position.x += p.vx * dt;
+    p.mesh.position.y += p.vy * dt;
+    p.mesh.position.z += p.vz * dt;
+    p.mesh.rotation.z += p.spin * dt;
+    // Fade no último 30% da vida
+    const r = p.age / p.dur;
+    p.mesh.material.opacity = r < 0.7 ? 0.85 : 0.85 * (1 - (r - 0.7) / 0.3);
+    // Faz a partícula sempre encarar a câmera (billboard)
+    if (state.renderer.camera) p.mesh.lookAt(state.renderer.camera.position);
+  }
+}
+let _biomaAcc = 0;
+export function atualizarAmbientBioma(dt) {
+  if (!state.player || !state.world || !state.renderer) return;
+  _atualizarAmbientParticles(dt);
+  _biomaAcc += dt;
+  if (_biomaAcc < 0.40) return;
+  _biomaAcc = 0;
+  // Skip em condições de baixa visibilidade ou frame pesado
+  if (state._heavyFrame) return;
+  // Só spawn se player está fora (céu visível) — não dentro de caverna
+  const px = Math.floor(state.player.pos.x);
+  const py = Math.floor(state.player.pos.y);
+  const pz = Math.floor(state.player.pos.z);
+  const luz = state.world.getLightAt(px, py, pz);
+  if (luz.sky < 8) return; // dentro/embaixo: skip
+  const bioma = state.world.biomaEm?.(px, pz);
+  if (!bioma) return;
+  // Posição aleatória ao redor do player (raio 12, altura 4-12 acima)
+  const ang = Math.random() * Math.PI * 2;
+  const dist = 4 + Math.random() * 8;
+  const x = state.player.pos.x + Math.cos(ang) * dist;
+  const z = state.player.pos.z + Math.sin(ang) * dist;
+  const y = state.player.pos.y + 4 + Math.random() * 8;
+  const scene = state.renderer.scene;
+  if (bioma === 'floresta') {
+    // Folhas verdes caindo (3 tons aleatórios)
+    const cores = [0x4caf50, 0x8bc34a, 0x66bb6a];
+    _spawnAmbientParticle(scene, x, y, z, cores[Math.floor(Math.random()*cores.length)],
+      0.18, 5.0, -0.6);
+  } else if (bioma === 'taiga') {
+    // Neve caindo (branco azulado, mais lenta)
+    _spawnAmbientParticle(scene, x, y, z, 0xeceff1, 0.10, 6.5, -0.45);
+  } else if (bioma === 'deserto') {
+    // Poeira amarela flutuante (sobe levemente, drift horizontal forte)
+    _spawnAmbientParticle(scene, x, y, z, 0xffd54f, 0.08, 3.5, -0.1);
+  } else if (bioma === 'planicies') {
+    // Pólen dourado flutuando (raro, dourado)
+    if (Math.random() < 0.35) {
+      _spawnAmbientParticle(scene, x, y, z, 0xffeb3b, 0.06, 7.0, -0.15);
+    }
+  }
+}
+
 // === Ambient triggers (cave drip, vento) ===
 export function atualizarAmbientTriggers(dt) {
   if (!state.player || !state.world) return;

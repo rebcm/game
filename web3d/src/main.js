@@ -22,6 +22,7 @@ import { MobManager, MOB_INFO } from './mobs.js';
 import {
   Particulas, spawnItemDrop, atualizarItemDrops,
   spawnXPOrb, atualizarXpOrbs, atualizarAmbientTriggers,
+  atualizarAmbientBioma,
   spawnArrow, atualizarArrows,
   castFishingLine, atualizarFishingBobber,
   lancarFoguete, atualizarFireworks,
@@ -1341,6 +1342,7 @@ function loop(now) {
   // chunk loading/mesh build (responsividade da movimentação).
   if (!state._heavyFrame || !state._busy) {
     atualizarAmbientTriggers(dt);
+    atualizarAmbientBioma(dt);
     atualizarClima(dt);
   }
   // Atualiza damage numbers (projeção de coords 3D → 2D + fade)
