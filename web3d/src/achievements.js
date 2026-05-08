@@ -23,6 +23,9 @@ export const ACHIEVEMENTS = {
   PLANTAR_MUDA:     { titulo: 'Reflorestador',        desc: 'Plante uma muda de árvore',           icone: '🌱' },
   DOMESTICAR_LOBO:  { titulo: 'Melhor Amigo do Homem', desc: 'Domestique um lobo',                  icone: '🐺' },
   TANTO_FAZ:        { titulo: 'Profundezas',          desc: 'Encontre uma dungeon',                icone: '🏚' },
+  PORTAL_NETHER:    { titulo: 'Portal Aceso',         desc: 'Entre no Nether pela primeira vez',   icone: '🔥' },
+  PORTAL_END:       { titulo: 'Voyager Espacial',     desc: 'Entre no End pela primeira vez',      icone: '🌌' },
+  SLAY_DRAGON:      { titulo: 'Matador de Dragões',   desc: 'Derrote o Ender Dragon!',             icone: '🐉' },
 };
 
 export const Achievements = {

@@ -77,8 +77,9 @@ export const BLOCO = {
   END_STONE:     36, // pedra amarelo claro da dimensão End
   PORTAL_END:    37, // portal verde escuro (emissive)
   DRAGON_EGG:    38, // ovo do dragon (drop boss, decoração emissive)
+  END_CRYSTAL:   39, // cristal no End que cura o dragon (destruir antes!)
 };
-export const N_BLOCOS = 39;
+export const N_BLOCOS = 40;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -126,6 +127,7 @@ export const BLOCO_INFO = {
   [BLOCO.END_STONE]:     { nome: 'Pedra do End',     solido: true,  emiteLuz: 0,  cor: 0xe8d886, lateral: 0xc0a866 },
   [BLOCO.PORTAL_END]:    { nome: 'Portal do End',    solido: false, emiteLuz: 9,  cor: 0x004d40, lateral: 0x004d40 },
   [BLOCO.DRAGON_EGG]:    { nome: 'Ovo do Dragon',    solido: true,  emiteLuz: 8,  cor: 0x1a1a1a, lateral: 0x000000 },
+  [BLOCO.END_CRYSTAL]:   { nome: 'Cristal do End',   solido: true,  emiteLuz: 13, cor: 0xfff59d, lateral: 0xfff176 },
 };
 
 export const ICONE = {
@@ -160,6 +162,7 @@ export const ITEM = {
   SILEX: 290, FLINT_STEEL: 291,
   ENDER_PEARL: 295, // teleport on right-click (drop de enderman)
   EYE_OF_ENDER: 296, // ativa portal End (ender_pearl + carvao)
+  SLIMEBALL:    297, // drop de slime (futuro: pistão/grude)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -207,6 +210,7 @@ export const ITEM_INFO = {
   [ITEM.FLINT_STEEL]:   { nome: 'Isqueiro',          icone: '🔥', ferramenta: 'isqueiro' },
   [ITEM.ENDER_PEARL]:   { nome: 'Pérola do Ender',   icone: '🔮' },
   [ITEM.EYE_OF_ENDER]:  { nome: 'Olho do Ender',     icone: '👁' },
+  [ITEM.SLIMEBALL]:     { nome: 'Bola de Slime',     icone: '🟢' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },

@@ -792,6 +792,26 @@ function criarAtlas() {
     }
   }
 
+  // End Crystal: amarelo brilhante com bordas magenta (cristal energético)
+  function pintarEndCrystal(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#fff59d';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão diagonal magenta (energia pulsante)
+    ctx.fillStyle = '#e040fb';
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+      ctx.fillRect(x0, y0 + i, CELL, 1);
+    }
+    // Centro super brilhante (núcleo)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+  }
+
   // Dragon Egg: preto com pontos roxos/magenta brilhantes (cristal raro)
   function pintarDragonEgg(idx) {
     const col = idx % COLS;
@@ -944,6 +964,7 @@ function criarAtlas() {
   pintarPedra(30, '#e8d886', '#c0a866', '#f5e8a0', 0.30); // end stone amarelo
   pintarPortalEnd(31);                                     // portal End verde escuro
   pintarDragonEgg(32);                                     // ovo do dragon (preto + roxo brilho)
+  pintarEndCrystal(33);                                    // cristal End amarelo brilhante
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -987,6 +1008,7 @@ function criarAtlas() {
   mapa[BLOCO.END_STONE]     = { top: 30, side: 30, bottom: 30 };
   mapa[BLOCO.PORTAL_END]    = { top: 31, side: 31, bottom: 31 };
   mapa[BLOCO.DRAGON_EGG]    = { top: 32, side: 32, bottom: 32 };
+  mapa[BLOCO.END_CRYSTAL]   = { top: 33, side: 33, bottom: 33 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

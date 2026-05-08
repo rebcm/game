@@ -529,6 +529,17 @@ export class World {
         }
       }
     }
+    // 4 pillars com END_CRYSTAL no topo (paridade Minecraft End — destruir
+    // os crystals antes do dragon, senão ele se cura)
+    const pillars = [{ x: 12, z: 0 }, { x: -12, z: 0 }, { x: 0, z: 12 }, { x: 0, z: -12 }];
+    for (const p of pillars) {
+      const lx = p.x - cx * CHUNK_SIZE, lz = p.z - cz * CHUNK_SIZE;
+      if (lx < 0 || lx >= CHUNK_SIZE || lz < 0 || lz >= CHUNK_SIZE) continue;
+      // Pillar de obsidiana 5 blocos altos
+      for (let dy = 0; dy < 5; dy++) c.set(lx, 30 + dy, lz, BLOCO.OBSIDIANA);
+      // Cristal no topo
+      c.set(lx, 36, lz, BLOCO.END_CRYSTAL);
+    }
     return c;
   }
 

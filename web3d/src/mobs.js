@@ -78,7 +78,9 @@ export const MOB_INFO = {
   },
   slime: {
     hp: 8, vel: 1.6, hostil: true, dano: 2, alcance: 1.2,
-    drops: () => Math.random() < 0.6 ? [{ b: BLOCO.LA, q: 1 }] : [],
+    drops: () => [
+      ...(Math.random() < 0.7 ? [{ i: ITEM.SLIMEBALL, q: 1 + Math.floor(Math.random() * 2) }] : []),
+    ],
     cor: 0x66bb6a, sec: 0x33691e, pula: true,
   },
   enderman: {
@@ -1027,7 +1029,30 @@ export class Mob {
     // snap pro chão. Sai cedo do bloco de física vertical.
     if (info.flutua) {
       const t = (typeof performance !== 'undefined' ? performance.now() : Date.now()) * 0.001;
-      this.y = (this._yBase = this._yBase ?? this.y) + Math.sin(t * 0.6) * 0.4;
+      // Boss ender_dragon: orbita plataforma + heal se há crystals vivos
+      if (this.tipo === 'ender_dragon') {
+        // Órbita ao redor de (0, 40, 0) — raio 14, velocidade angular 0.3 rad/s
+        const ang = t * 0.3;
+        this.x = Math.cos(ang) * 14;
+        this.z = Math.sin(ang) * 14;
+        this.y = 40 + Math.sin(t * 0.7) * 3;
+        this.dir = ang + Math.PI / 2; // aponta tangencial à órbita
+        // Heal de crystals próximos (4 pillars em ±12)
+        this._healAcc = (this._healAcc || 0) + dt;
+        if (this._healAcc >= 1) {
+          this._healAcc = 0;
+          let crystals = 0;
+          for (const [px, pz] of [[12, 0], [-12, 0], [0, 12], [0, -12]]) {
+            if (world.get(px, 36, pz) === BLOCO.END_CRYSTAL) crystals++;
+          }
+          if (crystals > 0 && this.hp < MOB_INFO.ender_dragon.hp) {
+            this.hp = Math.min(MOB_INFO.ender_dragon.hp, this.hp + crystals);
+            // TODO particle beam crystal → dragon (visual)
+          }
+        }
+      } else {
+        this.y = (this._yBase = this._yBase ?? this.y) + Math.sin(t * 0.6) * 0.4;
+      }
       this.mesh.position.set(this.x, this.y, this.z);
       this.mesh.rotation.y = -this.dir + Math.PI / 2;
       return; // skip resto

@@ -131,6 +131,7 @@ function atacarMob() {
     spawnXPOrb(xp, m.x, m.y + 0.5, m.z);
     state.ui.toast(`${m.tipo} derrotado! ${isCrit ? '⚡ CRÍTICO! ' : ''}(+${xp} XP)`);
     if (MOB_INFO[m.tipo].hostil) Achievements.unlock('PRIMEIRO_MOB');
+    if (m.tipo === 'ender_dragon') Achievements.unlock('SLAY_DRAGON');
     Save.incrementarStat('mobsKilled');
   } else {
     state.ui.toast(`Atingiu ${m.tipo}${isCrit ? ' ⚡' : ''} (-${dano})`);
@@ -546,6 +547,8 @@ function loop(now) {
           overworld: '🌍 De volta ao Overworld',
         };
         state.ui.toast(msgs[novaDim] || '✨ Dimensão trocada');
+        if (novaDim === 'nether') Achievements.unlock('PORTAL_NETHER');
+        if (novaDim === 'end') Achievements.unlock('PORTAL_END');
       }
     } else {
       state._portalAcc = 0;
