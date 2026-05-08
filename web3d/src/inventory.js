@@ -156,6 +156,12 @@ export const Drops = {
         if (Math.random() < 0.10) out.push({ i: ITEM.SILEX, q: 1 });
         return out;
       }
+      case BLOCO.NETHERRACK: {
+        // Quartzo bruto: 8% chance ao minerar netherrack (paridade MC nether quartz)
+        const out = [{ b: BLOCO.NETHERRACK, q: 1 }];
+        if (Math.random() < 0.08) out.push({ i: ITEM.QUARTZO_BRUTO, q: 1 });
+        return out;
+      }
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
       case BLOCO.DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];
       case BLOCO.CARVAO:   return [{ i: ITEM.CARVAO, q: 1 }];

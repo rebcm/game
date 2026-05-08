@@ -94,8 +94,10 @@ export const BLOCO = {
   VIDRO_AZUL:     53,
   VIDRO_VERDE:    54,
   VIDRO_AMARELO:  55,
+  QUARTZO:        56, // bloco branco elegante (drop do Nether ou crafting)
+  QUARTZO_POLIDO: 57, // versão polida (mais clara, sem grão)
 };
-export const N_BLOCOS = 56;
+export const N_BLOCOS = 58;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -160,6 +162,8 @@ export const BLOCO_INFO = {
   [BLOCO.VIDRO_AZUL]:    { nome: 'Vidro Azul',       solido: true,  emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x4fc3f7 },
   [BLOCO.VIDRO_VERDE]:   { nome: 'Vidro Verde',      solido: true,  emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x66bb6a },
   [BLOCO.VIDRO_AMARELO]: { nome: 'Vidro Amarelo',    solido: true,  emiteLuz: 0,  cor: 0xffeb3b, lateral: 0xffeb3b },
+  [BLOCO.QUARTZO]:       { nome: 'Quartzo',          solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.QUARTZO_POLIDO]:{ nome: 'Quartzo Polido',   solido: true,  emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xfff8e1 },
 };
 
 export const ICONE = {
@@ -203,6 +207,8 @@ export const ITEM = {
   TRIDENTE:     246, // tridente: arremessa, atinge mob, volta ao player
   CARNE_COELHO: 247, // drop do coelho, comestível
   PE_COELHO:    248, // raro drop do coelho, ingrediente de poção (futuro)
+  QUARTZO_BRUTO:249, // shard de quartzo (drop de netherrack ou crafting)
+  CASCO_TARTARUGA:250, // drop raro da tartaruga, futuro: capacete
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -259,6 +265,8 @@ export const ITEM_INFO = {
   [ITEM.TRIDENTE]:      { nome: 'Tridente',          icone: '🔱', ferramenta: 'tridente' },
   [ITEM.CARNE_COELHO]:  { nome: 'Carne de Coelho',   icone: '🍗', nutricao: 3 },
   [ITEM.PE_COELHO]:     { nome: 'Pé de Coelho',      icone: '🐾' },
+  [ITEM.QUARTZO_BRUTO]: { nome: 'Quartzo Bruto',     icone: '✨' },
+  [ITEM.CASCO_TARTARUGA]:{ nome: 'Casco de Tartaruga', icone: '🛡' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -354,6 +362,9 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.LAPIS,    q: 1}], saida: {b: BLOCO.VIDRO_AZUL,     q: 1}, wb: false },
   { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.MUDA,     q: 1}], saida: {b: BLOCO.VIDRO_VERDE,    q: 1}, wb: false },
   { custos: [{b: BLOCO.VIDRO, q: 1}, {i: ITEM.TRIGO,    q: 1}], saida: {b: BLOCO.VIDRO_AMARELO,  q: 1}, wb: false },
+  // Quartzo: 4 shards = 1 bloco. Polido = 4 quartzo = 4 polido.
+  { custos: [{i: ITEM.QUARTZO_BRUTO, q: 4}],     saida: {b: BLOCO.QUARTZO,        q: 1}, wb: true },
+  { custos: [{b: BLOCO.QUARTZO, q: 4}],          saida: {b: BLOCO.QUARTZO_POLIDO, q: 4}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

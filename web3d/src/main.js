@@ -513,6 +513,8 @@ function init() {
   state.inv.adicionar({ b: BLOCO.VIDRO_AZUL, q: 16 });
   state.inv.adicionar({ b: BLOCO.VIDRO_VERDE, q: 16 });
   state.inv.adicionar({ b: BLOCO.VIDRO_AMARELO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.QUARTZO, q: 32 });
+  state.inv.adicionar({ b: BLOCO.QUARTZO_POLIDO, q: 32 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }

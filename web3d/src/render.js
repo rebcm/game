@@ -952,6 +952,49 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Quartzo: branco com grão sutil + manchas mais claras (cristalino)
+  function pintarQuartzo(idx, polido) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = polido ? '#fff8e1' : '#fafafa';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    if (polido) {
+      // Polido: padrão de brilho diagonal (chevron)
+      ctx.fillStyle = '#ffffff';
+      for (let py = 0; py < CELL; py += 4) {
+        ctx.fillRect(x0, y0 + py, CELL, 1);
+      }
+      ctx.fillStyle = '#f5f5dc';
+      ctx.fillRect(x0, y0,            CELL, 1);
+      ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    } else {
+      // Quartzo natural: ruído sutil + manchas claras + brilho central
+      ctx.fillStyle = '#eeeeee';
+      for (let py = 0; py < CELL; py += 2) {
+        for (let px = 0; px < CELL; px += 2) {
+          seed = (seed * 9301 + 49297) % 233280;
+          if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+        }
+      }
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 8; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = (seed % CELL);
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = (seed % CELL);
+        ctx.fillRect(x0 + px, y0 + py, 3, 3);
+      }
+    }
+    // Borda escura sutil pra delimitar o bloco (todos)
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Vidro colorido (genérico): cor saturada com molduras escuras + reflexo
   function pintarVidroColorido(idx, corBase, corBorda) {
     const col = idx % COLS;
@@ -1357,6 +1400,8 @@ function criarAtlas() {
   pintarVidroColorido(51, '#4fc3f7', '#0d47a1');         // vidro azul
   pintarVidroColorido(52, '#66bb6a', '#1b5e20');         // vidro verde
   pintarVidroColorido(53, '#ffeb3b', '#f9a825');         // vidro amarelo
+  pintarQuartzo(54, false);                               // quartzo natural
+  pintarQuartzo(55, true);                                // quartzo polido
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1417,6 +1462,8 @@ function criarAtlas() {
   mapa[BLOCO.VIDRO_AZUL]     = { top: 51, side: 51, bottom: 51 };
   mapa[BLOCO.VIDRO_VERDE]    = { top: 52, side: 52, bottom: 52 };
   mapa[BLOCO.VIDRO_AMARELO]  = { top: 53, side: 53, bottom: 53 };
+  mapa[BLOCO.QUARTZO]        = { top: 54, side: 54, bottom: 54 };
+  mapa[BLOCO.QUARTZO_POLIDO] = { top: 55, side: 55, bottom: 55 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

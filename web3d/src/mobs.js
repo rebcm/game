@@ -85,6 +85,15 @@ export const MOB_INFO = {
     ],
     cor: 0xe0e0e0, sec: 0x9e9e9e,
   },
+  // Tartaruga: passiva, lenta, drop raro casco. Spawn em areia perto da água.
+  tartaruga: {
+    hp: 10, vel: 0.6, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.30 ? [{ i: ITEM.PEIXE, q: 1 }] : []),
+      ...(Math.random() < 0.05 ? [{ i: ITEM.CASCO_TARTARUGA, q: 1 }] : []),
+    ],
+    cor: 0x4caf50, sec: 0x2e7d32, // verde médio + verde escuro (casco)
+  },
   // Papagaio: passivo pequeno, voa baixo, 4 cores escolhidas no spawn
   papagaio: {
     hp: 6, vel: 1.8, hostil: false,
@@ -422,6 +431,35 @@ export function construirModeloMob(tipo, info) {
       grp.add(colar);
       partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'tartaruga': {
+      // Casco grande arredondado em cima + corpo embaixo + cabeça + 4 nadadeiras
+      // Casco verde escuro (info.sec)
+      const casco = cubo(0.65, 0.20, 0.55, info.sec);
+      casco.position.y = 0.30; grp.add(casco);
+      // Padrões hexagonais no casco (linhas mais escuras)
+      for (let s = -1; s <= 1; s++) {
+        const linha = cubo(0.60, 0.04, 0.06, 0x1b5e20);
+        linha.position.set(0, 0.40, s * 0.18); grp.add(linha);
+      }
+      // Corpo verde médio (mais largo que casco em baixo)
+      const corpo = cubo(0.55, 0.12, 0.45, info.cor);
+      corpo.position.y = 0.18; grp.add(corpo);
+      // Cabeça verde
+      const cabeca = cubo(0.20, 0.18, 0.20, info.cor);
+      cabeca.position.set(0, 0.24, 0.32); grp.add(cabeca);
+      olhosPretos(cabeca, 0.07, 0.02, 0.105, 0.04, 0.025);
+      // 4 nadadeiras planas (curtas mas largas)
+      const nadadeiras = [];
+      for (let i = 0; i < 4; i++) {
+        const n = cubo(0.18, 0.05, 0.08, info.sec);
+        n.position.x = (i % 2 === 0 ? -0.32 : 0.32);
+        n.position.y = 0.18;
+        n.position.z = (i < 2 ? 0.18 : -0.18);
+        grp.add(n); nadadeiras.push(n);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = nadadeiras;
       break;
     }
     case 'papagaio': {
@@ -1097,6 +1135,7 @@ function _dimsMob(tipo) {
     case 'coelho':   return { raio: 0.18, altura: 0.50 };
     case 'papagaio': return { raio: 0.15, altura: 0.50 };
     case 'urso_polar': return { raio: 0.55, altura: 1.50 };
+    case 'tartaruga': return { raio: 0.32, altura: 0.45 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
@@ -1834,6 +1873,14 @@ export class MobManager {
         if (Math.random() < 0.08) tipos.push('papagaio');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
+        // Tartaruga: spawn em areia próxima da água (1 bloco de água em raio 3)
+        let aguaPerto = false;
+        for (let dx = -3; dx <= 3 && !aguaPerto; dx++) {
+          for (let dz = -3; dz <= 3 && !aguaPerto; dz++) {
+            if (world.get(x + dx, y, z + dz) === BLOCO.AGUA) aguaPerto = true;
+          }
+        }
+        if (aguaPerto && Math.random() < 0.40) tipos.push('tartaruga');
       } else if (blocoChao === BLOCO.NEVE) {
         // Urso polar: passivo neutro em taiga (chão de NEVE)
         if (Math.random() < 0.15) tipos.push('urso_polar');
