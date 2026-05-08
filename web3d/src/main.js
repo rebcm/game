@@ -269,6 +269,17 @@ function comerSlot() {
     state.ui.toast(`🧪 Poção de ${info.pocao}`);
     return;
   }
+  // Balde de Leite: remove TODOS os efeitos ativos (paridade Minecraft) +
+  // restaura saturação. Devolve balde vazio.
+  if (s.i === ITEM.BUCKET_LEITE) {
+    state.player.efeitos = {};
+    state.player.saturation = Math.min(20, (state.player.saturation || 0) + 6);
+    state.inv.consumirAtual();
+    state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
+    Audio.eatCrunch();
+    state.ui.toast('🥛 Bebeu leite — efeitos removidos');
+    return;
+  }
   if (!info || !info.nutricao) { state.ui.toast('Não comestível'); return; }
   state.player.fome = clamp(state.player.fome + info.nutricao, 0, state.player.fomeMax);
   state.player.saturation = Math.min(20, state.player.saturation + info.nutricao * 0.6);
@@ -378,6 +389,8 @@ function init() {
   state.inv.adicionar({ b: BLOCO.TOCHA, q: 16 });
   state.inv.adicionar({ i: ITEM.PIC_MADEIRA, q: 1 });
   state.inv.adicionar({ i: ITEM.VARA_PESCA, q: 1 });
+  state.inv.adicionar({ i: ITEM.BUSSOLA, q: 1 });
+  state.inv.adicionar({ i: ITEM.BUCKET, q: 1 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -703,6 +716,14 @@ function loop(now) {
         abrirTradeVillager(mAlvo);
         return;
       }
+      // Ordenhar vaca: BUCKET vazio + vaca → BUCKET_LEITE
+      if (mAlvo && sel?.i === ITEM.BUCKET && mAlvo.tipo === 'vaca') {
+        state.inv.consumirAtual();
+        state.inv.adicionar({ i: ITEM.BUCKET_LEITE, q: 1 });
+        Audio.colocar?.();
+        state.ui.toast('🥛 Balde de leite!');
+        return;
+      }
       // Cat: alimenta com peixe → fica domesticado e segue
       if (mAlvo && sel?.i === ITEM.PEIXE && mAlvo.tipo === 'cat' && !mAlvo.domesticado) {
         mAlvo.domesticado = true;
@@ -1006,6 +1027,35 @@ function loop(now) {
     `X:${state.player.pos.x.toFixed(1)} Y:${state.player.pos.y.toFixed(1)} Z:${state.player.pos.z.toFixed(1)}`;
   state.ui.renderBars();
   state.ui.atualizarOverlays();
+  // Bússola HUD: aparece se ITEM.BUSSOLA está selecionado. Calcula direção
+  // do player até o spawn em ângulo relativo ao yaw da câmera (0° = frente).
+  {
+    const selB = state.inv.itemSelecionado();
+    const hud = document.getElementById('bussola-hud');
+    if (hud) {
+      if (selB?.i === ITEM.BUSSOLA) {
+        hud.classList.remove('hidden');
+        const sx = state.player.spawn?.x ?? state.player.pos.x;
+        const sz = state.player.spawn?.z ?? state.player.pos.z;
+        const dx = sx - state.player.pos.x;
+        const dz = sz - state.player.pos.z;
+        const dist = Math.hypot(dx, dz);
+        // Ângulo absoluto do spawn (radianos, 0 = +X)
+        const angSpawn = Math.atan2(-dz, dx);
+        // Yaw da câmera (Three.js: -Z é frente, então yaw = atan2(dirCam.x, -dirCam.z))
+        const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux);
+        const angCam = Math.atan2(dirCam.x, -dirCam.z);
+        // Rotação da seta = quanto girar pra apontar pro spawn em relação à frente
+        const rel = angSpawn - (Math.PI / 2 - angCam);
+        const seta = document.getElementById('bussola-seta');
+        const distEl = document.getElementById('bussola-dist');
+        if (seta) seta.style.transform = `rotate(${(-rel * 180 / Math.PI).toFixed(1)}deg)`;
+        if (distEl) distEl.textContent = `${dist.toFixed(0)}m`;
+      } else {
+        hud.classList.add('hidden');
+      }
+    }
+  }
   if (state.ui.f3Ativo) state.ui.atualizarF3({ targetBlock: ray ? ray.hit : null });
   state.ui.atualizarMinimap?.();
   atualizarItemDrops(dt);

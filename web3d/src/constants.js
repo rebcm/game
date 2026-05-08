@@ -170,6 +170,8 @@ export const ITEM = {
   EYE_OF_ENDER: 296, // ativa portal End (ender_pearl + carvao)
   SLIMEBALL:    297, // drop de slime (futuro: pistão/grude)
   VARA_PESCA:   298, // vara de pesca: cast em água, espera bite, reel pra peixe
+  BUCKET_LEITE: 243, // balde de leite: ordenha vaca + cura debuffs ao beber
+  BUSSOLA:      299, // bússola: aponta pro spawn (HUD com seta)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -219,6 +221,8 @@ export const ITEM_INFO = {
   [ITEM.EYE_OF_ENDER]:  { nome: 'Olho do Ender',     icone: '👁' },
   [ITEM.SLIMEBALL]:     { nome: 'Bola de Slime',     icone: '🟢' },
   [ITEM.VARA_PESCA]:    { nome: 'Vara de Pesca',     icone: '🎣', ferramenta: 'vara' },
+  [ITEM.BUCKET_LEITE]:  { nome: 'Balde de Leite',    icone: '🥛' },
+  [ITEM.BUSSOLA]:       { nome: 'Bússola',           icone: '🧭' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -288,6 +292,8 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
   // Vara de pesca: 3 paus + 2 lã (proxy de cordel/string)
   { custos: [{i: ITEM.PAU, q: 3}, {b: BLOCO.LA, q: 2}], saida: {i: ITEM.VARA_PESCA, q: 1}, wb: true },
+  // Bússola: 4 ferro + 1 ouro (proxy de redstone) — aponta pro spawn
+  { custos: [{i: ITEM.FERRO, q: 4}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.BUSSOLA, q: 1}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];

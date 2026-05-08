@@ -94,6 +94,13 @@
       <div id="relogio">06:00</div>
       <div id="fps">60 FPS</div>
     </div>
+    <!-- Bússola: aparece só quando ITEM.BUSSOLA está selecionado. Aponta pro spawn. -->
+    <div id="bussola-hud" class="hidden">
+      <div class="bussola-anel">
+        <div class="bussola-seta" id="bussola-seta">▲</div>
+      </div>
+      <div class="bussola-dist" id="bussola-dist">0m</div>
+    </div>
     <!-- Minimap 2D top-down: pinta superfície dos chunks ao redor + player -->
     <div id="minimap-wrap">
       <canvas id="minimap" width="160" height="160"></canvas>
