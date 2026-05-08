@@ -66,6 +66,7 @@ export class World {
     this.dimensao = 'overworld';
     this._chunksOverworld = this.chunks;
     this._chunksNether = new Map();
+    this._chunksEnd = new Map();
     // Web Worker pra geração de chunks fora do main thread (anti-stutter)
     this._initWorker();
   }
@@ -160,13 +161,14 @@ export class World {
   }
   trocarDimensao(novaDim) {
     if (novaDim === this.dimensao) return;
-    if (novaDim === 'nether') {
-      this._chunksOverworld = this.chunks;
-      this.chunks = this._chunksNether;
-    } else {
-      this._chunksNether = this.chunks;
-      this.chunks = this._chunksOverworld;
-    }
+    // Salva estado atual no Map correto
+    if (this.dimensao === 'overworld') this._chunksOverworld = this.chunks;
+    else if (this.dimensao === 'nether') this._chunksNether = this.chunks;
+    else if (this.dimensao === 'end') this._chunksEnd = this.chunks;
+    // Carrega novo
+    if (novaDim === 'overworld') this.chunks = this._chunksOverworld;
+    else if (novaDim === 'nether') this.chunks = this._chunksNether;
+    else if (novaDim === 'end') this.chunks = this._chunksEnd;
     this.dimensao = novaDim;
   }
   static keyXYZ(x, y, z) { return `${x},${y},${z}`; }
@@ -488,15 +490,44 @@ export class World {
     return loot;
   }
 
-  // Carrega chunk (gera se não existe). Em Nether usa _gerarChunkNether.
+  // Carrega chunk (gera se não existe). Cada dimensão tem seu generator.
   getChunk(cx, cz) {
     const k = chunkKey(cx, cz);
     let c = this.chunks.get(k);
     if (!c) {
-      c = this.dimensao === 'nether'
-        ? this._gerarChunkNether(cx, cz)
-        : this.gerarChunk(cx, cz);
+      if (this.dimensao === 'nether')   c = this._gerarChunkNether(cx, cz);
+      else if (this.dimensao === 'end') c = this._gerarChunkEnd(cx, cz);
+      else                              c = this.gerarChunk(cx, cz);
       this.chunks.set(k, c);
+    }
+    return c;
+  }
+
+  // Geração do End: ilhas flutuantes de END_STONE em void. Sem dia/noite,
+  // sem água, hostil aberto. Player nasce numa plataforma central.
+  _gerarChunkEnd(cx, cz) {
+    const c = new Chunk(cx, cz);
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      for (let lz = 0; lz < CHUNK_SIZE; lz++) {
+        const gx = cx * CHUNK_SIZE + lx;
+        const gz = cz * CHUNK_SIZE + lz;
+        // Ilha flutuante: Perlin 3D em y 25-40 com threshold alto
+        for (let y = 25; y < 42; y++) {
+          // Densidade decai pra cima/baixo (formato lentilha)
+          const distCentro = Math.abs(y - 33) / 8;
+          const densidade = perlin3(gx / 16, y / 12, gz / 16, this.seed ^ 0xE1D);
+          if (densidade > 0.25 + distCentro * 0.5) {
+            c.set(lx, y, lz, BLOCO.END_STONE);
+          }
+        }
+        // Plataforma central garantida (5×5 em torno do spawn 0,0)
+        if (Math.abs(gx) < 3 && Math.abs(gz) < 3) {
+          c.set(lx, 30, lz, BLOCO.END_STONE);
+          c.set(lx, 31, lz, BLOCO.AR);
+          c.set(lx, 32, lz, BLOCO.AR);
+          c.set(lx, 33, lz, BLOCO.AR);
+        }
+      }
     }
     return c;
   }

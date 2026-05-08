@@ -510,32 +510,42 @@ function loop(now) {
     // Pausa lógica
   } else {
     state.player.atualizar(dt, state.world);
-    // Portal Nether: pisar dentro 1.5s → toggle dimensão
+    // Portal: pisar dentro 1.5s → trocar dimensão
     const blockEm = state.world.get(
       Math.floor(state.player.pos.x),
       Math.floor(state.player.pos.y),
       Math.floor(state.player.pos.z)
     );
-    if (blockEm === BLOCO.PORTAL_NETHER) {
+    const ehPortal = blockEm === BLOCO.PORTAL_NETHER || blockEm === BLOCO.PORTAL_END;
+    if (ehPortal) {
       state._portalAcc = (state._portalAcc || 0) + dt;
       if (state._portalAcc >= 1.5) {
         state._portalAcc = 0;
-        const novaDim = state.world.dimensao === 'nether' ? 'overworld' : 'nether';
+        // Decide pra onde vai: nether → overworld; overworld via portal_nether → nether;
+        // overworld via portal_end → end; end → overworld;
+        let novaDim;
+        if (state.world.dimensao === 'nether') novaDim = 'overworld';
+        else if (state.world.dimensao === 'end') novaDim = 'overworld';
+        else if (blockEm === BLOCO.PORTAL_NETHER) novaDim = 'nether';
+        else if (blockEm === BLOCO.PORTAL_END) novaDim = 'end';
+        else novaDim = 'overworld';
         state.world.trocarDimensao(novaDim);
-        // Limpa todos os meshes (vão re-mesh na nova dim)
-        for (const c of state.world._chunksOverworld.values()) {
-          if (c.mesh) state.renderer.liberarChunkMesh(c);
-        }
-        for (const c of state.world._chunksNether.values()) {
-          if (c.mesh) state.renderer.liberarChunkMesh(c);
+        // Libera meshes de TODAS as dimensões
+        for (const m of [state.world._chunksOverworld, state.world._chunksNether, state.world._chunksEnd]) {
+          for (const c of m.values()) if (c.mesh) state.renderer.liberarChunkMesh(c);
         }
         for (const c of state.world.chunks.values()) c.dirty = true;
-        // Despawna mobs (vão re-spawnar na nova dim)
         for (const m of [...state.mobMgr.mobs]) state.mobMgr.remover(m);
-        // Reposição: spawn em altura segura
-        state.player.pos.y = 32;
+        // Reposição: End spawna em y=34 (acima da plataforma central);
+        // Nether y=32; Overworld y=32 (player escolhe local seguro depois)
+        state.player.pos.set(0.5, novaDim === 'end' ? 34 : 32, 0.5);
         state.player.vel.set(0, 0, 0);
-        state.ui.toast(novaDim === 'nether' ? '🔥 Bem-vindo ao Nether!' : '🌍 De volta ao Overworld');
+        const msgs = {
+          nether: '🔥 Bem-vindo ao Nether!',
+          end: '🌌 Bem-vindo ao End!',
+          overworld: '🌍 De volta ao Overworld',
+        };
+        state.ui.toast(msgs[novaDim] || '✨ Dimensão trocada');
       }
     } else {
       state._portalAcc = 0;
@@ -729,6 +739,22 @@ function loop(now) {
           Audio.fornalhaLit?.();
           state.ui.toast('🔥 Portal aceso! Pise dentro pra viajar.');
         }
+        // Ativa portal End: eye_of_ender em qualquer END_STONE → vira portal
+        else if (blocoAlvo === BLOCO.END_STONE && state.inv.itemSelecionado()?.i === ITEM.EYE_OF_ENDER) {
+          state.world.set(t.x, t.y, t.z, BLOCO.PORTAL_END);
+          state.inv.consumirAtual();
+          Audio.endermanTeleport?.();
+          state.ui.toast('👁 Portal do End ativado! Pise pra retornar.');
+        }
+        // Cria portal End no overworld: eye em qualquer ground → spawn 4 portals
+        else if (state.inv.itemSelecionado()?.i === ITEM.EYE_OF_ENDER && blocoAlvo !== BLOCO.AR) {
+          const a = ray.adj;
+          // Spawn 1 bloco PORTAL_END no chão acima do bloco clicado
+          state.world.set(a.x, a.y, a.z, BLOCO.PORTAL_END);
+          state.inv.consumirAtual();
+          Audio.endermanTeleport?.();
+          state.ui.toast('👁 Portal do End criado! Pise dentro.');
+        }
         else if (blocoAlvo === BLOCO.DOOR_ABERTA) {
           state.world.set(t.x, t.y, t.z, BLOCO.DOOR_MADEIRA);
           Audio.colocar?.();
@@ -901,6 +927,7 @@ function loop(now) {
     state._busy = false;
   }
 
+  state.renderer.atualizarTexturasAnimadas(dt);
   state.renderer.atualizarCeu(state.tempoDia, state.player.pos);
   state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
   state.renderer.atualizarFOV(dt, !!state.player.input.sprint &&

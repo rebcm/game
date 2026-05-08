@@ -73,8 +73,11 @@ export const BLOCO = {
   // === Sprint 9: Nether ===
   NETHERRACK:    34, // pedra vermelha do Nether
   PORTAL_NETHER: 35, // bloco de portal (emissive roxo)
+  // === Sprint End ===
+  END_STONE:     36, // pedra amarelo claro da dimensão End
+  PORTAL_END:    37, // portal verde escuro (emissive)
 };
-export const N_BLOCOS = 36;
+export const N_BLOCOS = 38;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -119,6 +122,8 @@ export const BLOCO_INFO = {
   [BLOCO.DOOR_ABERTA]:   { nome: 'Porta (Aberta)',   solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'door_open' },
   [BLOCO.NETHERRACK]:    { nome: 'Netherrack',       solido: true,  emiteLuz: 0,  cor: 0x6e2a1a, lateral: 0x4d1a10 },
   [BLOCO.PORTAL_NETHER]: { nome: 'Portal do Nether', solido: false, emiteLuz: 11, cor: 0x6a1b9a, lateral: 0x6a1b9a },
+  [BLOCO.END_STONE]:     { nome: 'Pedra do End',     solido: true,  emiteLuz: 0,  cor: 0xe8d886, lateral: 0xc0a866 },
+  [BLOCO.PORTAL_END]:    { nome: 'Portal do End',    solido: false, emiteLuz: 9,  cor: 0x004d40, lateral: 0x004d40 },
 };
 
 export const ICONE = {
@@ -152,6 +157,7 @@ export const ITEM = {
   // Sprint 9: acende portal
   SILEX: 290, FLINT_STEEL: 291,
   ENDER_PEARL: 295, // teleport on right-click (drop de enderman)
+  EYE_OF_ENDER: 296, // ativa portal End (ender_pearl + carvao)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -198,6 +204,7 @@ export const ITEM_INFO = {
   [ITEM.SILEX]:         { nome: 'Sílex',             icone: '🪨' },
   [ITEM.FLINT_STEEL]:   { nome: 'Isqueiro',          icone: '🔥', ferramenta: 'isqueiro' },
   [ITEM.ENDER_PEARL]:   { nome: 'Pérola do Ender',   icone: '🔮' },
+  [ITEM.EYE_OF_ENDER]:  { nome: 'Olho do Ender',     icone: '👁' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -261,6 +268,8 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.AGUA, q: 1}, {i: ITEM.LAPIS, q: 1}, {i: ITEM.TRIGO, q: 2}], saida: {i: ITEM.POCAO_REGEN, q: 1}, wb: true },
   // Sprint 9: isqueiro pra acender portal
   { custos: [{i: ITEM.FERRO, q: 1}, {i: ITEM.SILEX, q: 1}], saida: {i: ITEM.FLINT_STEEL, q: 1}, wb: true },
+  // Sprint End: olho do ender abre portal pra dimensão End
+  { custos: [{i: ITEM.ENDER_PEARL, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.EYE_OF_ENDER, q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 8}], saida: {b: BLOCO.FORNALHA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA, q: 1}, wb: true },
 ];

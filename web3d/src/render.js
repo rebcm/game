@@ -792,6 +792,31 @@ function criarAtlas() {
     }
   }
 
+  // Portal End: verde escuro com pontos verde-claro/branco (estrelas)
+  function pintarPortalEnd(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#004d40';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    // 80 estrelinhas espalhadas (verde-claro brilhante)
+    for (let i = 0; i < 80; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillStyle = i % 5 === 0 ? '#ffffff' : (i % 3 === 0 ? '#69f0ae' : '#26a69a');
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Borda verde escura
+    ctx.fillStyle = '#003228';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
   // Portal Nether: swirl roxo/violeta com pontos brancos (efeito etéreo)
   function pintarPortalNether(idx) {
     const col = idx % COLS;
@@ -892,6 +917,9 @@ function criarAtlas() {
   // Sprint 9: Nether
   pintarPedra(28, '#5e2218', '#3a130c', '#7a3024', 0.35); // netherrack vermelho
   pintarPortalNether(29);                                  // portal swirl roxo
+  // Sprint End
+  pintarPedra(30, '#e8d886', '#c0a866', '#f5e8a0', 0.30); // end stone amarelo
+  pintarPortalEnd(31);                                     // portal End verde escuro
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -932,6 +960,8 @@ function criarAtlas() {
   mapa[BLOCO.DOOR_ABERTA]   = { top: 5,  side: 6,  bottom: 5  }; // mesma textura da fechada
   mapa[BLOCO.NETHERRACK]    = { top: 28, side: 28, bottom: 28 }; // nova célula
   mapa[BLOCO.PORTAL_NETHER] = { top: 29, side: 29, bottom: 29 };
+  mapa[BLOCO.END_STONE]     = { top: 30, side: 30, bottom: 30 };
+  mapa[BLOCO.PORTAL_END]    = { top: 31, side: 31, bottom: 31 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -947,7 +977,53 @@ function criarAtlas() {
     vertexColors: true,
     side: THREE.DoubleSide,
   });
-  return { texture, material, mapa, cols: COLS, rows: ROWS };
+
+  // === Animação de água/lava (UV scroll fake via repaint) ===
+  // Cada frame, repinta as células 17 (água) e 18 (lava) com offset
+  // baseado no tempo. texture.needsUpdate=true atualiza GPU.
+  function atualizarAnimacao(frame) {
+    // Água: ondas horizontais que rolam
+    const idxA = 17, colA = idxA % COLS, rowA = Math.floor(idxA / COLS);
+    const xA = colA * CELL, yA = rowA * CELL;
+    ctx.fillStyle = '#2C8FCF'; ctx.fillRect(xA, yA, CELL, CELL);
+    ctx.fillStyle = '#1B6EA8';
+    for (let py = 2; py < CELL; py += 4) {
+      const off = (frame * 2) % CELL;
+      ctx.fillRect(xA + off, yA + py, CELL, 1);
+      if (off > 0) ctx.fillRect(xA, yA + py, off, 1); // wrap
+    }
+    ctx.fillStyle = '#7AC0E5';
+    let s = (frame * 137 + 1) % 233280;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        s = (s * 9301 + 49297) % 233280;
+        if ((s / 233280) < 0.10) ctx.fillRect(xA + px, yA + py, 1, 1);
+      }
+    }
+    // Lava: bolhas que pulsam
+    const idxL = 18, colL = idxL % COLS, rowL = Math.floor(idxL / COLS);
+    const xL = colL * CELL, yL = rowL * CELL;
+    ctx.fillStyle = '#D44515'; ctx.fillRect(xL, yL, CELL, CELL);
+    ctx.fillStyle = '#FFA830';
+    s = (frame * 211 + 7) % 233280;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        s = (s * 9301 + 49297) % 233280;
+        if ((s / 233280) < 0.30) ctx.fillRect(xL + px, yL + py, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#FFEB47';
+    s = (frame * 313 + 13) % 233280;
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        s = (s * 9301 + 49297) % 233280;
+        if ((s / 233280) < 0.10) ctx.fillRect(xL + px, yL + py, 2, 2);
+      }
+    }
+    texture.needsUpdate = true;
+  }
+
+  return { texture, material, mapa, cols: COLS, rows: ROWS, atualizarAnimacao };
 }
 
 // === Cracks textura ===
@@ -1476,6 +1552,16 @@ export class Renderer {
   }
 
   // === FOV pulse ao sprintar ===
+  // Tickado do main loop pra animar texturas dinâmicas (água/lava).
+  // Acumula dt e dispara repaint a cada 150ms (6.6Hz, suave + barato).
+  atualizarTexturasAnimadas(dt) {
+    this._animAcc = (this._animAcc || 0) + dt;
+    if (this._animAcc < 0.15) return;
+    this._animAcc = 0;
+    this._animFrame = ((this._animFrame || 0) + 1) % 16;
+    this.atlas.atualizarAnimacao?.(this._animFrame);
+  }
+
   atualizarFOV(dt, correndo) {
     const base = this.fovBase || 70;
     const alvo = base + (correndo ? 8 : 0);
