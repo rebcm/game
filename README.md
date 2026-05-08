@@ -18,10 +18,11 @@
 
 ![status](https://img.shields.io/badge/status-em%20produção-success?style=flat-square)
 ![tests](https://img.shields.io/badge/smoke%20tests-124%2F124-brightgreen?style=flat-square)
+![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 ![mobs](https://img.shields.io/badge/mobs-16-blue?style=flat-square)
 ![blocos](https://img.shields.io/badge/blocos-36-orange?style=flat-square)
 ![dimensões](https://img.shields.io/badge/dimensões-2-purple?style=flat-square)
-![multiplayer](https://img.shields.io/badge/multiplayer-WebRTC%20%2B%20WebSocket-magenta?style=flat-square)
+![multiplayer](https://img.shields.io/badge/multiplayer-WebSocket%20%2B%20BroadcastChannel-magenta?style=flat-square)
 
 <br>
 
@@ -427,6 +428,8 @@ Plus inúmeros fixes (BLOCO_INFO import bug, _safeJSON null bug, mob entrando em
 - Press Start 2P (Google Fonts) — tipografia pixel-perfect
 
 **Inspirado em** Minecraft (Mojang Studios). Projeto educacional independente, sem afiliação.
+
+**Licença:** [MIT](LICENSE) — livre pra usar, modificar, distribuir, comercializar. Mantenha o copyright original.
 
 ---
 
