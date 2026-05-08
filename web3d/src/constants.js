@@ -78,8 +78,10 @@ export const BLOCO = {
   PORTAL_END:    37, // portal verde escuro (emissive)
   DRAGON_EGG:    38, // ovo do dragon (drop boss, decoração emissive)
   END_CRYSTAL:   39, // cristal no End que cura o dragon (destruir antes!)
+  PUMPKIN:       40, // abóbora natural (decoração)
+  CARVED_PUMPKIN:41, // abóbora talhada (cabeça do snow golem + helmet)
 };
-export const N_BLOCOS = 40;
+export const N_BLOCOS = 42;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -128,6 +130,8 @@ export const BLOCO_INFO = {
   [BLOCO.PORTAL_END]:    { nome: 'Portal do End',    solido: false, emiteLuz: 9,  cor: 0x004d40, lateral: 0x004d40 },
   [BLOCO.DRAGON_EGG]:    { nome: 'Ovo do Dragon',    solido: true,  emiteLuz: 8,  cor: 0x1a1a1a, lateral: 0x000000 },
   [BLOCO.END_CRYSTAL]:   { nome: 'Cristal do End',   solido: true,  emiteLuz: 13, cor: 0xfff59d, lateral: 0xfff176 },
+  [BLOCO.PUMPKIN]:       { nome: 'Abóbora',          solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.CARVED_PUMPKIN]:{ nome: 'Abóbora Talhada',  solido: true,  emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
 };
 
 export const ICONE = {

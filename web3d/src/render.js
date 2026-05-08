@@ -792,6 +792,65 @@ function criarAtlas() {
     }
   }
 
+  // Pumpkin: laranja com ridges + talo verde no topo (cell 34) OU
+  // face jack-o-lantern (cell 35 — talhada).
+  function pintarPumpkin(idx, talhada) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ridges verticais (relevo da abóbora)
+    ctx.fillStyle = '#bf360c';
+    for (let px = 4; px < CELL; px += 8) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    ctx.fillStyle = '#ff9800';
+    for (let px = 1; px < CELL; px += 8) {
+      ctx.fillRect(x0 + px, y0, 2, CELL);
+    }
+    if (talhada) {
+      // Face jack-o-lantern: 2 olhos triangulares + boca dentada
+      ctx.fillStyle = '#fff59d'; // luz interna amarela
+      // Olho esquerdo
+      ctx.fillRect(x0 + 6, y0 + 10, 5, 4);
+      ctx.fillRect(x0 + 7, y0 + 9, 3, 1);
+      // Olho direito
+      ctx.fillRect(x0 + 21, y0 + 10, 5, 4);
+      ctx.fillRect(x0 + 22, y0 + 9, 3, 1);
+      // Boca dentada
+      ctx.fillRect(x0 + 8, y0 + 20, 16, 4);
+      ctx.fillStyle = '#e65100';
+      ctx.fillRect(x0 + 11, y0 + 20, 1, 2); // dente 1
+      ctx.fillRect(x0 + 14, y0 + 20, 1, 2); // dente 2
+      ctx.fillRect(x0 + 17, y0 + 20, 1, 2); // dente 3
+      ctx.fillRect(x0 + 20, y0 + 20, 1, 2); // dente 4
+    } else {
+      // Topo: talo verde
+      ctx.fillStyle = '#4caf50';
+      ctx.fillRect(x0 + 14, y0 + 12, 4, 8);
+      ctx.fillStyle = '#388e3c';
+      ctx.fillRect(x0 + 13, y0 + 14, 1, 4);
+      ctx.fillRect(x0 + 18, y0 + 14, 1, 4);
+    }
+  }
+  // Lateral abóbora (ridges verticais sem face)
+  function pintarPumpkinLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#bf360c';
+    for (let px = 4; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    ctx.fillStyle = '#ff9800';
+    for (let px = 1; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+  }
+
   // End Crystal: amarelo brilhante com bordas magenta (cristal energético)
   function pintarEndCrystal(idx) {
     const col = idx % COLS;
@@ -965,6 +1024,9 @@ function criarAtlas() {
   pintarPortalEnd(31);                                     // portal End verde escuro
   pintarDragonEgg(32);                                     // ovo do dragon (preto + roxo brilho)
   pintarEndCrystal(33);                                    // cristal End amarelo brilhante
+  pintarPumpkin(34, false);                                // abóbora natural (top com talo)
+  pintarPumpkin(35, true);                                 // abóbora talhada (face jack-o-lantern)
+  pintarPumpkinLado(36);                                   // lateral abóbora (ridges verticais)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1009,6 +1071,8 @@ function criarAtlas() {
   mapa[BLOCO.PORTAL_END]    = { top: 31, side: 31, bottom: 31 };
   mapa[BLOCO.DRAGON_EGG]    = { top: 32, side: 32, bottom: 32 };
   mapa[BLOCO.END_CRYSTAL]   = { top: 33, side: 33, bottom: 33 };
+  mapa[BLOCO.PUMPKIN]        = { top: 34, side: 36, bottom: 36 }; // talo cima, ridges lado
+  mapa[BLOCO.CARVED_PUMPKIN] = { top: 34, side: 35, bottom: 36 }; // face na frente (lado)
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

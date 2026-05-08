@@ -21,6 +21,7 @@ export const TIPO_MOB = {
   ENDER_DRAGON: 'ender_dragon',
   // Bonus
   WANDERING_TRADER: 'wandering_trader',
+  SNOW_GOLEM: 'snow_golem',
 };
 
 export const MOB_INFO = {
@@ -123,6 +124,12 @@ export const MOB_INFO = {
     drops: () => [{ i: ITEM.OURO, q: 1 + Math.floor(Math.random() * 2) }],
     cor: 0xfafafa, sec: 0xb71c1c,
     flutua: true,
+  },
+  // Snow Golem: friendly tank pequeno, atira snowball em hostis
+  snow_golem: {
+    hp: 8, vel: 1.6, hostil: false, amigavel: true,
+    drops: () => [{ b: BLOCO.NEVE, q: 1 + Math.floor(Math.random() * 3) }],
+    cor: 0xfafafa, sec: 0xff9800, // neve + pumpkin
   },
   // Wandering Trader — passivo nômade, trades raras + drops bonus
   wandering_trader: {
@@ -705,6 +712,41 @@ export function construirModeloMob(tipo, info) {
       partes.bracos = bracos; partes.pernas = pernas;
       break;
     }
+    case 'snow_golem': {
+      // Bola de neve grande (corpo) + bola média (peito) + cabeça pumpkin
+      const bolaBase = cubo(0.65, 0.65, 0.65, info.cor);
+      bolaBase.position.y = 0.40; grp.add(bolaBase);
+      const bolaPeito = cubo(0.55, 0.55, 0.55, info.cor);
+      bolaPeito.position.y = 1.05; grp.add(bolaPeito);
+      // Cabeça pumpkin laranja
+      const cabeca = cubo(0.50, 0.50, 0.50, info.sec);
+      cabeca.position.y = 1.65; grp.add(cabeca);
+      // Face talhada na pumpkin (olhos triangulares amarelos)
+      for (const sx of [-0.12, 0.12]) {
+        const olho = new THREE.Mesh(
+          new THREE.BoxGeometry(0.08, 0.08, 0.04),
+          new THREE.MeshLambertMaterial({ color: 0xfff59d, emissive: 0xfff59d, emissiveIntensity: 0.7 }),
+        );
+        olho.position.set(sx, 0.05, 0.255);
+        cabeca.add(olho);
+      }
+      // Boca jack-o-lantern
+      const boca = new THREE.Mesh(
+        new THREE.BoxGeometry(0.20, 0.06, 0.04),
+        new THREE.MeshLambertMaterial({ color: 0xfff59d, emissive: 0xfff59d, emissiveIntensity: 0.5 }),
+      );
+      boca.position.set(0, -0.10, 0.255); cabeca.add(boca);
+      // Braços de gravetos (pernas finas marrom)
+      const bracos = [];
+      for (let i = 0; i < 2; i++) {
+        const b = pernaComPivot(0.08, 0.55, 0.08, 0x6e5235, 1.20);
+        b.position.x = (i === 0 ? -0.40 : 0.40);
+        b.rotation.z = (i === 0 ? 0.4 : -0.4);
+        grp.add(b); bracos.push(b);
+      }
+      partes.cabeca = cabeca; partes.corpo = bolaBase; partes.bracos = bracos;
+      break;
+    }
     case 'wandering_trader': {
       // Humanoid robe roxo escuro, nariz grande tipo villager
       const corpo = cubo(0.50, 0.80, 0.30, info.cor);
@@ -825,6 +867,7 @@ function _dimsMob(tipo) {
     case 'iron_golem': return { raio: 0.55, altura: 2.40 };
     case 'witch':      return { raio: 0.30, altura: 1.85 };
     case 'wandering_trader': return { raio: 0.30, altura: 1.85 };
+    case 'snow_golem': return { raio: 0.30, altura: 1.85 };
     case 'ghast':      return { raio: 0.85, altura: 1.40 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
     default:           return { raio: 0.30, altura: 1.80 };
@@ -1187,6 +1230,22 @@ export class Mob {
         this.proxOvo = 60 + Math.random() * 60;
         spawnItemDrop({ i: ITEM.OVO, q: 1 }, this.x, this.y + 0.2, this.z);
         Audio.galinha();
+      }
+    }
+    // Snow Golem: dano em hostis adjacentes via "snowball" (efeito instantâneo)
+    if (this.tipo === 'snow_golem') {
+      this._snowAcc = (this._snowAcc || 0) + dt;
+      if (this._snowAcc >= 1.0) {
+        this._snowAcc = 0;
+        for (const o of state.mobMgr.mobs) {
+          if (!MOB_INFO[o.tipo]?.hostil) continue;
+          const dx = o.x - this.x, dz = o.z - this.z;
+          if (dx*dx + dz*dz < 36) { // raio 6
+            const len = Math.sqrt(dx*dx + dz*dz) || 1;
+            o.tomarDano(1, (dx/len) * 4, (dz/len) * 4);
+            break;
+          }
+        }
       }
     }
     // Reprodução: decrementa timers + spawna/remove corações flutuantes

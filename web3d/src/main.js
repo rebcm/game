@@ -748,6 +748,12 @@ function loop(now) {
           Audio.fornalhaLit?.();
           state.ui.toast('🔥 Portal aceso! Pise dentro pra viajar.');
         }
+        // Talhar pumpkin: flint em PUMPKIN → vira CARVED_PUMPKIN
+        else if (blocoAlvo === BLOCO.PUMPKIN && state.inv.itemSelecionado()?.i === ITEM.FLINT_STEEL) {
+          state.world.set(t.x, t.y, t.z, BLOCO.CARVED_PUMPKIN);
+          Audio.colocar?.();
+          state.ui.toast('🎃 Abóbora talhada!');
+        }
         // Ativa portal End: eye_of_ender em qualquer END_STONE → vira portal
         else if (blocoAlvo === BLOCO.END_STONE && state.inv.itemSelecionado()?.i === ITEM.EYE_OF_ENDER) {
           state.world.set(t.x, t.y, t.z, BLOCO.PORTAL_END);
@@ -828,6 +834,17 @@ function loop(now) {
             // Não coloca bloco onde o player está (paridade Minecraft real)
             if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
               state.world.setPeloPlayer(a.x, a.y, a.z, sel.b);
+              // Build Snow Golem: CARVED_PUMPKIN colocada sobre 2 NEVE
+              // empilhadas → remove os 3 blocos + spawn snow_golem.
+              if (sel.b === BLOCO.CARVED_PUMPKIN &&
+                  state.world.get(a.x, a.y - 1, a.z) === BLOCO.NEVE &&
+                  state.world.get(a.x, a.y - 2, a.z) === BLOCO.NEVE) {
+                state.world.set(a.x, a.y, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 1, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 2, a.z, BLOCO.AR);
+                state.mobMgr.spawn('snow_golem', a.x + 0.5, a.y - 1.5, a.z + 0.5);
+                state.ui.toast('☃ Snow Golem invocado!');
+              }
               // Areia colocada no ar cai na hora (gravidade)
               if (sel.b === BLOCO.AREIA) {
                 state.world.aplicarGravidadeBlocos(a.x, a.y - 1, a.z);
