@@ -1579,6 +1579,20 @@ export class Mob {
     this.mesh.rotation.y = -this.dir + Math.PI / 2;
     this.cooldownAtaque -= dt;
 
+    // === LOD distance-based ===
+    // Distância ao player; se > 32 blocos, pula animação inteira (mob fica
+    // estático mas continua existindo). Frustum culling implícito também:
+    // mesh fica fora do view → renderer pula naturalmente.
+    const _p = state.player;
+    let _dist2 = 0;
+    if (_p) {
+      const _ddx = _p.pos.x - this.x, _ddz = _p.pos.z - this.z;
+      _dist2 = _ddx * _ddx + _ddz * _ddz;
+      if (_dist2 > 32 * 32) {
+        // Skip animação visual (perf win em chunks lotados de mobs)
+        return;
+      }
+    }
     // Animação
     this.fase += dt * (movendo ? 8 : 0);
     if (this.partes && this.partes.pernas) {

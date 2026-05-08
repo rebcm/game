@@ -952,6 +952,45 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Bandeira: mastro preto à esquerda + pano colorido à direita com onda
+  function pintarBandeira(idx, corBase, corEscura, corClara) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro neutro (não-bandeira)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Mastro preto à esquerda (1/4 da largura)
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 4, y0 + 2, 3, CELL - 4);
+    // Topo dourado do mastro (ponta)
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + 3, y0,     5, 3);
+    // Pano colorido (parte direita, ondulada nas bordas)
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0 + 9, y0 + 4, 20, 22);
+    // Borda escura
+    ctx.fillStyle = corEscura;
+    ctx.fillRect(x0 + 9, y0 + 4, 20, 1);
+    ctx.fillRect(x0 + 9, y0 + 25, 20, 1);
+    ctx.fillRect(x0 + 9, y0 + 4, 1, 22);
+    ctx.fillRect(x0 + 28, y0 + 4, 1, 22);
+    // Padrão decorativo central (cruz simples)
+    ctx.fillStyle = corEscura;
+    ctx.fillRect(x0 + 18, y0 + 8, 2, 14);
+    ctx.fillRect(x0 + 12, y0 + 14, 14, 2);
+    // Highlights claros (efeito 3D do tecido)
+    ctx.fillStyle = corClara;
+    ctx.fillRect(x0 + 11, y0 + 6, 5, 1);
+    ctx.fillRect(x0 + 11, y0 + 7, 1, 4);
+    // Borda inferior ondulada (efeito vento)
+    ctx.fillStyle = corEscura;
+    ctx.fillRect(x0 + 9,  y0 + 26, 3, 1);
+    ctx.fillRect(x0 + 14, y0 + 27, 3, 1);
+    ctx.fillRect(x0 + 19, y0 + 26, 3, 1);
+    ctx.fillRect(x0 + 24, y0 + 27, 3, 1);
+  }
+
   // Magma: superfície vermelha-escura com rachaduras laranja-brilhantes
   function pintarMagma(idx) {
     const col = idx % COLS;
@@ -1617,6 +1656,10 @@ function criarAtlas() {
   pintarVela(63, '#4fc3f7', '#0d47a1');                    // vela azul
   pintarMagma(64);                                         // bloco de magma
   pintarLanterna(65);                                      // lanterna de ferro
+  pintarBandeira(66, '#c62828', '#8b0000', '#ef5350');     // bandeira vermelha
+  pintarBandeira(67, '#1565c0', '#0d47a1', '#4fc3f7');     // bandeira azul
+  pintarBandeira(68, '#2e7d32', '#1b5e20', '#66bb6a');     // bandeira verde
+  pintarBandeira(69, '#f9a825', '#f57f17', '#ffd54f');     // bandeira amarela
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1689,13 +1732,22 @@ function criarAtlas() {
   mapa[BLOCO.VELA_AZUL]      = { top: 63, side: 63, bottom: 63 };
   mapa[BLOCO.MAGMA]          = { top: 64, side: 64, bottom: 64 };
   mapa[BLOCO.LANTERNA]       = { top: 65, side: 65, bottom: 65 };
+  mapa[BLOCO.BANDEIRA_R]     = { top: 66, side: 66, bottom: 66 };
+  mapa[BLOCO.BANDEIRA_A]     = { top: 67, side: 67, bottom: 67 };
+  mapa[BLOCO.BANDEIRA_V]     = { top: 68, side: 68, bottom: 68 };
+  mapa[BLOCO.BANDEIRA_AM]    = { top: 69, side: 69, bottom: 69 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
-  texture.minFilter = THREE.NearestFilter;
+  // NearestMipmapLinear preserva pixel-art mas usa mipmap pra evitar
+  // shimmer/aliasing em distâncias longas. Combina nitidez com perf.
+  texture.minFilter = THREE.NearestMipmapLinearFilter;
+  texture.generateMipmaps = true;
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
   texture.colorSpace = THREE.SRGBColorSpace;
+  // Anisotropic filtering aplicado depois (ver Renderer constructor —
+  // precisa do this.renderer.capabilities)
   // side: DoubleSide garante que a face seja visível dos 2 lados — elimina
   // qualquer chance de "ver através" do bloco devido a backface culling
   // quando winding está oposta à normal declarada (caso da nossa addFace).
@@ -1939,6 +1991,13 @@ export class Renderer {
 
     // Atlas + materials
     this.atlas = criarAtlas();
+    // Anisotropic filtering: melhora nitidez em ângulos rasantes (paredes
+    // vistas de lado, longa distância). Tier low pula pra economizar.
+    if (this.atlas?.texture && this.renderer.capabilities) {
+      const maxAniso = this.renderer.capabilities.getMaxAnisotropy();
+      this.atlas.texture.anisotropy = Math.min(maxAniso, q.tier === 'low' ? 1 : 4);
+      this.atlas.texture.needsUpdate = true;
+    }
     // Highlight do bloco mirado: outline duplo (preto + branco)
     const eg1 = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.008, 1.008, 1.008));
     const matPreto = new THREE.LineBasicMaterial({

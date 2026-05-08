@@ -106,8 +106,12 @@ export const BLOCO = {
   VELA_AZUL:      65,
   MAGMA:          66, // bloco de magma: dá dano ao pisar (não em sneak)
   LANTERNA:       67, // lanterna: luz forte (15) brilhante
+  BANDEIRA_R:     68, // bandeira vermelha (decoração com mastro)
+  BANDEIRA_A:     69, // bandeira azul
+  BANDEIRA_V:     70, // bandeira verde
+  BANDEIRA_AM:    71, // bandeira amarela
 };
-export const N_BLOCOS = 68;
+export const N_BLOCOS = 72;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -184,6 +188,10 @@ export const BLOCO_INFO = {
   [BLOCO.VELA_AZUL]:     { nome: 'Vela Azul',        solido: true,  emiteLuz: 8,  cor: 0x4fc3f7, lateral: 0x1565c0 },
   [BLOCO.MAGMA]:         { nome: 'Bloco de Magma',   solido: true,  emiteLuz: 3,  cor: 0xbf360c, lateral: 0x8b0000 },
   [BLOCO.LANTERNA]:      { nome: 'Lanterna',         solido: true,  emiteLuz: 15, cor: 0xffd54f, lateral: 0x424242 },
+  [BLOCO.BANDEIRA_R]:    { nome: 'Bandeira Vermelha',solido: true,  emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.BANDEIRA_A]:    { nome: 'Bandeira Azul',    solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.BANDEIRA_V]:    { nome: 'Bandeira Verde',   solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.BANDEIRA_AM]:   { nome: 'Bandeira Amarela', solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
 };
 
 export const ICONE = {
@@ -413,6 +421,11 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.MAGMA, q: 4}, wb: true },
   // Lanterna: 8 ferro + 1 tocha → 1 lanterna (paridade MC: nuggets, simplificado)
   { custos: [{i: ITEM.FERRO, q: 8}, {b: BLOCO.TOCHA, q: 1}], saida: {b: BLOCO.LANTERNA, q: 1}, wb: true },
+  // Bandeiras: 6 lã colorida + 1 pau (paridade MC com banner)
+  { custos: [{b: BLOCO.LA_VERMELHA, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.BANDEIRA_R,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_AZUL,     q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.BANDEIRA_A,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_VERDE,    q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.BANDEIRA_V,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_AMARELA,  q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.BANDEIRA_AM, q: 1}, wb: true },
   // Velas: lã + carvão → vela. Lã colorida → vela colorida.
   { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA, q: 1}, wb: false },
   { custos: [{b: BLOCO.LA_VERMELHA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.VELA_VERMELHA, q: 1}, wb: false },

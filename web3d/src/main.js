@@ -554,6 +554,10 @@ function init() {
   state.inv.adicionar({ i: ITEM.MACA_DOURADA, q: 1 });
   state.inv.adicionar({ b: BLOCO.MAGMA, q: 8 });
   state.inv.adicionar({ b: BLOCO.LANTERNA, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BANDEIRA_AM, q: 4 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -1383,16 +1387,21 @@ function loop(now) {
   state.renderer.atualizarFOV(dt, !!state.player.input.sprint &&
     (Math.abs(state.player.input.fwd) + Math.abs(state.player.input.side)) > 0, zooming);
 
-  // HUD
-  const t = state.tempoDia * 24;
-  const h = Math.floor(t), m = Math.floor((t - h) * 60);
-  const glifo = (state.tempoDia >= 0.25 && state.tempoDia < 0.75) ? '☀' : '☾';
-  document.getElementById('relogio').textContent =
-    `${glifo} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-  document.getElementById('coords').textContent =
-    `X:${state.player.pos.x.toFixed(1)} Y:${state.player.pos.y.toFixed(1)} Z:${state.player.pos.z.toFixed(1)}`;
-  state.ui.renderBars();
-  state.ui.atualizarOverlays();
+  // HUD throttled (5Hz em vez de cada frame — economia significativa em
+  // mobile sem prejuízo perceptível visualmente)
+  state._hudAcc = (state._hudAcc || 0) + dt;
+  if (state._hudAcc >= 0.20) {
+    state._hudAcc = 0;
+    const t = state.tempoDia * 24;
+    const h = Math.floor(t), m = Math.floor((t - h) * 60);
+    const glifo = (state.tempoDia >= 0.25 && state.tempoDia < 0.75) ? '☀' : '☾';
+    document.getElementById('relogio').textContent =
+      `${glifo} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    document.getElementById('coords').textContent =
+      `X:${state.player.pos.x.toFixed(1)} Y:${state.player.pos.y.toFixed(1)} Z:${state.player.pos.z.toFixed(1)}`;
+    state.ui.renderBars();
+    state.ui.atualizarOverlays();
+  }
   // Bússola HUD: aparece se ITEM.BUSSOLA está selecionado. Calcula direção
   // do player até o spawn em ângulo relativo ao yaw da câmera (0° = frente).
   {
