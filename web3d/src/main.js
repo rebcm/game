@@ -584,7 +584,29 @@ function init() {
   // Autosave a cada 30s
   setInterval(() => Save.salvar(), 30_000);
 
-  window.addEventListener('resize', () => state.renderer.resize());
+  // Resize: dispara em mudança de janela E em orientação (mobile rotation).
+  // O orientationchange precisa de delay porque o viewport ainda está se
+  // ajustando quando o evento dispara — sem isso, o canvas fica com a
+  // dimensão antiga.
+  const resizeAll = () => {
+    state.renderer.resize();
+    // Reaplica fullscreen em mobile se saímos por algum motivo (gestos
+    // do iOS/Android tendem a desativar)
+    const isMobile = matchMedia('(pointer: coarse)').matches;
+    if (isMobile && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    }
+  };
+  window.addEventListener('resize', resizeAll);
+  window.addEventListener('orientationchange', () => {
+    // Espera 2 ticks: 1 pra browser ajustar viewport, outro pra renderer
+    setTimeout(resizeAll, 100);
+    setTimeout(resizeAll, 400);
+    // Re-tenta orientation lock landscape
+    if (screen.orientation?.lock) {
+      screen.orientation.lock('landscape').catch(() => {});
+    }
+  });
   ultimoT = performance.now();
   requestAnimationFrame(loop);
 }

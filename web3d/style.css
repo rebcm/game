@@ -12,6 +12,17 @@ html, body {
   touch-action: none;
   overscroll-behavior: none;
 }
+/* iOS Safari: usa height dinâmico (svh) que considera barra de URL
+   colapsando — sem isso, o canvas fica cortado embaixo. Fallback pra vh. */
+@supports (height: 100svh) {
+  html, body { height: 100svh; }
+}
+/* Canvas: força ocupar 100% sem deixar margem em torno */
+#game {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
 
 /* === Fonte pixelada estilo Minecraftia ===
    Usa "Press Start 2P" do Google Fonts quando disponível, com fallback
@@ -458,6 +469,8 @@ kbd {
 #btn-modo  { right: 14px; top: 114px; }
 #btn-save  { right: 14px; top: 164px; }
 #btn-transp { right: 14px; top: 214px; }
+/* Botão fullscreen aparece só em mobile/touch (override em @media abaixo) */
+#btn-fullscreen { display: none; }
 #btn-transp.solido {
   background: rgba(255, 200, 60, 0.85);
   border-color: rgba(255, 200, 60, 0.95);
@@ -821,15 +834,62 @@ kbd {
    inferior direita da tela). */
 @media (max-width: 700px), (pointer: coarse) {
   #boot .controles-help { display: none; }
-  .hud-btn { width: 38px; height: 38px; font-size: 18px; }
-  #btn-bag    { top: 8px; right: 8px; }
-  #btn-craft  { top: 8px; right: 54px; }
-  #btn-modo   { top: 8px; right: 100px; }
-  #btn-save   { top: 8px; right: 146px; }
-  #btn-transp { top: 8px; right: 192px; }
-  /* HUD topo desce um pouco pra não sobrepor a fileira de botões */
-  #topo { top: 52px; }
-  #bars { top: 90px; }
+  /* Botões topo direito: menores e respeitando safe-area do notch */
+  .hud-btn {
+    width: 34px; height: 34px; font-size: 15px;
+    border-radius: 6px;
+  }
+  #btn-bag    { top: calc(6px + env(safe-area-inset-top)); right: calc(6px + env(safe-area-inset-right)); }
+  #btn-craft  { top: calc(6px + env(safe-area-inset-top)); right: calc(46px + env(safe-area-inset-right)); }
+  #btn-modo   { top: calc(6px + env(safe-area-inset-top)); right: calc(86px + env(safe-area-inset-right)); }
+  #btn-save   { top: calc(6px + env(safe-area-inset-top)); right: calc(126px + env(safe-area-inset-right)); }
+  #btn-fullscreen { top: calc(6px + env(safe-area-inset-top)); right: calc(166px + env(safe-area-inset-right)); display: flex; }
+  /* HUD topo esquerdo: compacto, fonte menor, respeita notch */
+  #topo {
+    top: calc(6px + env(safe-area-inset-top));
+    left: calc(8px + env(safe-area-inset-left));
+    font-size: 9px;
+    padding: 3px 6px;
+    gap: 8px;
+  }
+  /* Esconde FPS no mobile pra economizar espaço */
+  #topo #fps { display: none; }
+  #bars {
+    top: calc(46px + env(safe-area-inset-top));
+    left: calc(6px + env(safe-area-inset-left));
+    padding: 3px 5px;
+  }
+  .bar { font-size: 10px; }
+  .bar span { width: 10px; }
+  /* Hotbar respeitando safe-area inferior */
+  #hotbar { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .slot { width: 38px; height: 38px; }
+  /* Coords mais curtos: a fonte cai pra 9px no #topo, e em telas
+     mais estreitas escondemos a label "X:" via abreviação CSS */
+}
+
+/* === Telas muito estreitas (smartphones em landscape) === */
+@media (max-width: 850px) and (pointer: coarse) {
+  /* Joystick e botões touch menores pra não dominar a tela */
+  #touch-joy {
+    left: calc(8px + env(safe-area-inset-left));
+    bottom: calc(60px + env(safe-area-inset-bottom));
+    width: 120px; height: 120px;
+  }
+  .joy-base { width: 100px; height: 100px; }
+  .joy-knob { width: 44px; height: 44px; }
+  #touch-buttons {
+    right: calc(8px + env(safe-area-inset-right));
+    bottom: calc(60px + env(safe-area-inset-bottom));
+    grid-template-columns: repeat(2, 50px);
+    gap: 6px;
+  }
+  .t-btn { width: 50px; height: 50px; font-size: 20px; border-radius: 12px; }
+  /* Touch-look: ajusta a zona pra coincidir com novo layout */
+  #touch-look { left: 140px; right: 120px; top: 50px; bottom: 60px; }
+  /* Hotbar mais compacta */
+  .slot { width: 34px; height: 34px; }
+  .qtd { font-size: 8px; }
 }
 
 /* === Controles touch === */
@@ -1201,11 +1261,22 @@ kbd {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
-/* Em telas estreitas (mobile portrait), colapsa pra menor e fica embaixo
-   dos botões que viram horizontal */
-@media (max-width: 600px) {
-  #minimap-wrap { top: auto; bottom: 100px; right: 8px; }
-  #minimap { width: 80px; height: 80px; }
+/* Em telas estreitas (mobile), reposiciona pra não conflitar com a
+   coluna de botões à direita. Vai pra esquerda inferior (acima do
+   joystick) e fica menor. */
+@media (max-width: 850px), (pointer: coarse) {
+  #minimap-wrap {
+    top: auto;
+    right: auto;
+    left: calc(8px + env(safe-area-inset-left));
+    bottom: calc(190px + env(safe-area-inset-bottom));
+    padding: 1px;
+  }
+  #minimap { width: 70px; height: 70px; }
+}
+/* Telas ainda menores: esconde o minimapa */
+@media (max-width: 500px) and (orientation: landscape) {
+  #minimap-wrap { display: none; }
 }
 
 /* Painel de Estatísticas */
@@ -1395,10 +1466,22 @@ kbd {
   color: #fff;
   text-shadow: 1px 1px 0 #000;
 }
-@media (max-width: 600px) {
-  #bussola-hud { top: 150px; width: 60px; }
-  .bussola-anel { width: 42px; height: 42px; }
-  .bussola-seta { font-size: 20px; }
+@media (max-width: 850px), (pointer: coarse) {
+  /* Em mobile vai pro topo-centro (linha entre coords e meio da tela)
+     pra não conflitar com botões touch direitos nem com minimap esquerdo */
+  #bussola-hud {
+    top: calc(8px + env(safe-area-inset-top));
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    flex-direction: row;
+    gap: 6px;
+    padding: 4px 8px;
+  }
+  .bussola-anel { width: 34px; height: 34px; }
+  .bussola-seta { font-size: 16px; }
+  .bussola-dist { margin-top: 0; }
 }
 
 /* Loading overlay — aparece sem bloquear input quando há backlog de

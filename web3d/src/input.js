@@ -175,6 +175,15 @@ export function setupInput() {
   document.getElementById('btn-craft').onclick = () => togglePainel('painel-craft');
   document.getElementById('btn-modo').onclick = () => alternarModo();
   document.getElementById('btn-save').onclick = () => Save.salvar();
+  document.getElementById('btn-fullscreen').onclick = async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+      if (screen.orientation?.lock) {
+        try { await screen.orientation.lock('landscape'); } catch (_) {}
+      }
+    } catch (_) {}
+  };
   document.querySelectorAll('.fechar').forEach(b => {
     b.onclick = () => state.ui.fecharPainel(b.dataset.painel);
   });
