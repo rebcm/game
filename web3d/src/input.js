@@ -23,6 +23,7 @@ function togglePainel(id) {
     if (id === 'painel-craft') state.ui.renderCraft(state.ui.workbenchPerto());
     if (id === 'painel-criativo') state.ui.renderCriativo();
     if (id === 'painel-conquistas') state.ui.renderConquistas?.();
+    if (id === 'painel-stats') state.ui.renderStats?.();
     el.classList.remove('hidden');
     document.exitPointerLock?.();
     Audio.pageFlip();
@@ -111,6 +112,7 @@ export function setupInput() {
         break;
       case 'KeyC': togglePainel('painel-craft'); break;
       case 'KeyL': togglePainel('painel-conquistas'); break;
+      case 'KeyJ': togglePainel('painel-stats'); break;
       case 'KeyG': alternarModo(); break;
       case 'KeyF': _actions?.atacarMob(); break;
       case 'KeyQ': _actions?.comerSlot(); break;

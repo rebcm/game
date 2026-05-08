@@ -514,6 +514,35 @@ export class UI {
     }
   }
 
+  // === Painel de Estatísticas (tecla J) ===
+  renderStats() {
+    const corpo = document.getElementById('stats-corpo');
+    if (!corpo) return;
+    const stats = Save.getStats();
+    const sec = stats.secondsPlayed || 0;
+    const horas = Math.floor(sec / 3600);
+    const min = Math.floor((sec % 3600) / 60);
+    const segs = sec % 60;
+    const tempoFmt = horas > 0 ? `${horas}h ${min}m` : (min > 0 ? `${min}m ${segs}s` : `${segs}s`);
+    const cards = [
+      { ico: '⏱',  valor: tempoFmt,                       rotulo: 'Tempo jogado' },
+      { ico: '⛏',  valor: stats.blocksBroken || 0,        rotulo: 'Blocos quebrados' },
+      { ico: '🧱', valor: stats.blocksPlaced || 0,        rotulo: 'Blocos colocados' },
+      { ico: '⚔',  valor: stats.mobsKilled || 0,          rotulo: 'Mobs derrotados' },
+      { ico: '👣', valor: `${stats.distanceWalked || 0}m`, rotulo: 'Distância' },
+      { ico: '💀', valor: stats.deaths || 0,              rotulo: 'Mortes' },
+      { ico: '🔨', valor: stats.itemsCrafted || 0,        rotulo: 'Itens criados' },
+      { ico: '⭐', valor: stats.levelsGained || 0,        rotulo: 'Níveis ganhos' },
+    ];
+    corpo.innerHTML = cards.map(c =>
+      `<div class="stat-card">
+        <div class="stat-icone">${c.ico}</div>
+        <div class="stat-valor">${c.valor}</div>
+        <div class="stat-rotulo">${c.rotulo}</div>
+      </div>`
+    ).join('');
+  }
+
   // === Painel de Conquistas (tecla L) ===
   renderConquistas() {
     const lista = document.getElementById('conquistas-lista');

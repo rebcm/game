@@ -121,10 +121,17 @@ function atacarMob() {
   }
   // Knockback velocity (smooth) — força ~6 m/s na direção do golpe
   const dirCam = state.renderer.camera.getWorldDirection(_tmpVecAux);
-  const kbForca = isCrit ? 8.5 : 6.0;
+  let kbForca = isCrit ? 8.5 : 6.0;
+  // Knockback enchantment: +50% por nível
+  if (selAtual?.encant?.knockback) kbForca *= 1 + 0.5 * selAtual.encant.knockback;
   m.tomarDano(dano, dirCam.x * kbForca, dirCam.z * kbForca);
   if (m.hp <= 0) {
     const drops = MOB_INFO[m.tipo].drops();
+    // Looting: por nível, 25/50/75% chance de dropar 1 item adicional do mesmo set
+    if (selAtual?.encant?.looting && Math.random() < 0.25 * selAtual.encant.looting) {
+      const extra = MOB_INFO[m.tipo].drops();
+      for (const d of extra) drops.push(d);
+    }
     if (state.player.modo === 'creative') {
       for (const d of drops) state.inv.adicionar(d);
     } else {
@@ -195,10 +202,22 @@ function abrirTradeVillager(mob) {
   document.getElementById('trade-close').onclick = () => modal.classList.add('hidden');
 }
 
-// === Encantar item ativo na mesa de encantamento ===
-// Custa 10/20/30 XP por nível 1/2/3. Tipo do enchant é determinado
-// pelo item (espada=sharpness, picareta=efficiency, armadura=protection).
-// Requer ITEM.LAPIS na hotbar (consume 1 por enchant).
+// === Encantar item ativo: abre modal com enchants disponíveis ===
+// Espada → sharpness, knockback, looting
+// Picareta → efficiency, fortune
+// Armadura → protection
+// Cada nível custa nivel×10 XP + 1 lápis lazuli. Máx 3.
+const _ENCHANTS_POR_TIPO = {
+  esp: [
+    { id: 'sharpness',  nome: 'Sharpness',  desc: '+1 dano por nível' },
+    { id: 'knockback',  nome: 'Knockback',  desc: '+50% empurrão por nível' },
+    { id: 'looting',    nome: 'Looting',    desc: 'chance de drop extra' },
+  ],
+  pic: [
+    { id: 'efficiency', nome: 'Efficiency', desc: '+20% velocidade por nível' },
+    { id: 'fortune',    nome: 'Fortune',    desc: 'chance de drop extra de minério' },
+  ],
+};
 function encantarItemAtual() {
   const sel = state.inv.itemSelecionado();
   if (!sel || sel.i === undefined) {
@@ -206,36 +225,56 @@ function encantarItemAtual() {
     return;
   }
   const info = ITEM_INFO[sel.i];
-  let tipoEnch = null;
-  if (info?.ferramenta === 'esp') tipoEnch = 'sharpness';
-  else if (info?.ferramenta === 'pic') tipoEnch = 'efficiency';
-  else if (info?.armadura) tipoEnch = 'protection';
-  if (!tipoEnch) {
+  let opcoes = null;
+  if (info?.ferramenta === 'esp') opcoes = _ENCHANTS_POR_TIPO.esp;
+  else if (info?.ferramenta === 'pic') opcoes = _ENCHANTS_POR_TIPO.pic;
+  else if (info?.armadura) opcoes = [{ id: 'protection', nome: 'Protection', desc: '-1 dano sofrido por nível' }];
+  if (!opcoes) {
     state.ui.toast('Item não encantável (use espada/picareta/armadura)');
     return;
   }
-  if (sel.encant?.[tipoEnch] >= 3) {
-    state.ui.toast('Item já no nível máximo');
-    return;
+  // Renderiza modal
+  const itemEl = document.getElementById('enchant-item');
+  const opcoesEl = document.getElementById('enchant-opcoes');
+  const ico = info?.icone || '';
+  const nomeBase = sel.nomeCustom ? `"${sel.nomeCustom}" (${info.nome})` : info.nome;
+  if (itemEl) itemEl.textContent = `${ico} ${nomeBase}`;
+  if (opcoesEl) {
+    opcoesEl.innerHTML = '';
+    for (const op of opcoes) {
+      const nivelAtual = sel.encant?.[op.id] || 0;
+      const proxNivel = nivelAtual + 1;
+      const max = nivelAtual >= 3;
+      const custoXP = proxNivel * 10;
+      const temXP = (state.player.xp || 0) >= custoXP;
+      const temLapis = state.inv.contar(undefined, ITEM.LAPIS) > 0;
+      const enabled = !max && temXP && temLapis;
+      const div = document.createElement('div');
+      div.className = `enchant-opt ${enabled ? '' : 'disabled'}`;
+      div.innerHTML = `
+        <div>
+          <div>${op.nome} <span class="enchant-nivel">${nivelAtual > 0 ? `(nv ${nivelAtual})` : ''}</span></div>
+          <div class="enchant-custo">${op.desc}</div>
+        </div>
+        <div class="enchant-custo">${max ? 'MAX' : `${custoXP} XP + 1 🔷`}</div>`;
+      if (enabled) {
+        div.onclick = () => {
+          state.player.xp -= custoXP;
+          state.inv.consumir(undefined, ITEM.LAPIS, 1);
+          sel.encant = sel.encant || {};
+          sel.encant[op.id] = proxNivel;
+          Audio.levelUp?.();
+          state.ui.toast(`✨ ${info.nome} +${op.id} ${proxNivel}!`);
+          state.ui.atualizarXP?.();
+          state.ui.renderHotbar?.();
+          encantarItemAtual(); // re-renderiza pra refletir novo nível/custo
+        };
+      }
+      opcoesEl.appendChild(div);
+    }
   }
-  if (state.inv.contar(undefined, ITEM.LAPIS) <= 0) {
-    state.ui.toast('Precisa de Lápis Lazuli (drop raro de pedra)');
-    return;
-  }
-  const proxNivel = (sel.encant?.[tipoEnch] || 0) + 1;
-  const custoXP = proxNivel * 10;
-  if ((state.player.xp || 0) < custoXP) {
-    state.ui.toast(`Precisa de ${custoXP} XP (você tem ${state.player.xp})`);
-    return;
-  }
-  state.player.xp -= custoXP;
-  state.inv.consumir(undefined, ITEM.LAPIS, 1);
-  sel.encant = sel.encant || {};
-  sel.encant[tipoEnch] = proxNivel;
-  Audio.levelUp?.();
-  state.ui.toast(`✨ ${info.nome} +${tipoEnch} ${proxNivel}!`);
-  state.ui.atualizarXP?.();
-  state.ui.renderHotbar?.();
+  document.getElementById('painel-enchant').classList.remove('hidden');
+  try { document.exitPointerLock?.(); } catch (_) {}
 }
 
 // === Solta o arco (chamado em F keyup) — dispara flecha com força
@@ -570,6 +609,11 @@ function loop(now) {
     _checkMemory();
     // Stat de tempo jogado (1 sec por tick)
     if (!state.player?.morto) Save.incrementarStat('secondsPlayed');
+    // Distância caminhada acumulada no último segundo (em blocos)
+    if (state._distAcc) {
+      Save.incrementarStat('distanceWalked', Math.round(state._distAcc));
+      state._distAcc = 0;
+    }
   }
   qualityTickFps(dt);
 
@@ -579,6 +623,14 @@ function loop(now) {
   if (algumPainelAberto || pausado || state.player.morto) {
     // Pausa lógica
   } else {
+    // Acumula distância caminhada (apenas horizontal, ignora altura)
+    if (state._lastPos) {
+      const dxd = state.player.pos.x - state._lastPos.x;
+      const dzd = state.player.pos.z - state._lastPos.z;
+      const distFrame = Math.hypot(dxd, dzd);
+      if (distFrame < 1.0) state._distAcc = (state._distAcc || 0) + distFrame;
+    }
+    state._lastPos = { x: state.player.pos.x, z: state.player.pos.z };
     state.player.atualizar(dt, state.world);
     // Portal: pisar dentro 1.5s → trocar dimensão
     const blockEm = state.world.get(
@@ -715,6 +767,15 @@ function loop(now) {
           ? [{ b: t.b, q: 1 }]
           : Drops.dropDeBloco(t.b, tier);
         if (foiPlayer) state.world.desmarcarColocadoPeloPlayer(t.x, t.y, t.z);
+        // Fortune: ores ganham +1 drop por nível com chance 33%/66%/100%
+        if (sel?.encant?.fortune && !foiPlayer &&
+            (t.b === BLOCO.CARVAO || t.b === BLOCO.DIAMANTE)) {
+          const chance = sel.encant.fortune * 0.33;
+          if (Math.random() < chance) {
+            const extra = [...drops];
+            for (const d of extra) drops.push({ ...d, q: 1 });
+          }
+        }
         if (state.player.modo === 'creative') {
           for (const d of drops) state.inv.adicionar(d);
         } else {
