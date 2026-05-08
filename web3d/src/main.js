@@ -528,6 +528,9 @@ function init() {
   state.inv.adicionar({ b: BLOCO.COGUMELO_VERM, q: 8 });
   state.inv.adicionar({ b: BLOCO.COGUMELO_MARROM, q: 8 });
   state.inv.adicionar({ i: ITEM.TIGELA, q: 4 });
+  state.inv.adicionar({ b: BLOCO.COBRE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COBRE_GASTO, q: 8 });
+  state.inv.adicionar({ b: BLOCO.COBRE_OXIDADO, q: 8 });
 
   const canvas = document.getElementById('game');
   // Lê escolha do boot screen: window._bootChoice = { worldName, isNew, playerName }
@@ -759,6 +762,25 @@ function loop(now) {
     }
     // Tick do charge do arco
     if (state.player.bowCharging) state.player.bowCharge = (state.player.bowCharge || 0) + dt;
+    // === Oxidação do cobre (tick lento — 60s) ===
+    // A cada minuto, varre 12×12 ao redor do player e cada bloco de cobre
+    // tem ~25% chance de avançar de estado (paridade Minecraft real).
+    state._oxAcc = (state._oxAcc || 0) + dt;
+    if (state._oxAcc >= 60 && !state._heavyFrame) {
+      state._oxAcc = 0;
+      const px = Math.floor(state.player.pos.x), pz = Math.floor(state.player.pos.z);
+      for (let dx = -8; dx <= 8; dx++) for (let dz = -8; dz <= 8; dz++) {
+        for (let dy = -2; dy <= 6; dy++) {
+          const x = px + dx, y = Math.floor(state.player.pos.y) + dy, z = pz + dz;
+          const b = state.world.get(x, y, z);
+          if (b === BLOCO.COBRE && Math.random() < 0.25) {
+            state.world.set(x, y, z, BLOCO.COBRE_GASTO);
+          } else if (b === BLOCO.COBRE_GASTO && Math.random() < 0.25) {
+            state.world.set(x, y, z, BLOCO.COBRE_OXIDADO);
+          }
+        }
+      }
+    }
     // === Fumaça acima de fornalhas ativas (visual de "queimando") ===
     state._fornAcc = (state._fornAcc || 0) + dt;
     if (state._fornAcc >= 0.6 && !state._heavyFrame) {

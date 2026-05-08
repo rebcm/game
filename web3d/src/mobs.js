@@ -97,6 +97,14 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Allay: fada azul fofa que voa próxima do player, drops raros, raríssima
+  allay: {
+    hp: 6, vel: 2.0, hostil: false,
+    drops: () => Math.random() < 0.3 ? [{ i: ITEM.LAPIS, q: 1 }] : [],
+    cor: 0x4fc3f7, sec: 0xb3e5fc, // azul claro brilhante + azul muito claro
+    voa: true,
+    luminoso: true, // emite luz visual sutil
+  },
   // Tartaruga: passiva, lenta, drop raro casco. Spawn em areia perto da água.
   tartaruga: {
     hp: 10, vel: 0.6, hostil: false,
@@ -464,6 +472,41 @@ export function construirModeloMob(tipo, info) {
       grp.add(colar);
       partes.colar = colar;
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
+      break;
+    }
+    case 'allay': {
+      // Pequena fada azul brilhante: corpo + cabeça grande + 4 asas
+      // Corpo azul claro
+      const corpo = cubo(0.20, 0.30, 0.18, info.cor);
+      corpo.position.y = 0.50; grp.add(corpo);
+      // Cabeça maior que o corpo (estilo chibi)
+      const cabeca = cubo(0.30, 0.30, 0.30, info.cor);
+      cabeca.position.set(0, 0.80, 0); grp.add(cabeca);
+      // Olhos pretos grandes (cabeça grande pede olhos grandes)
+      olhosPretos(cabeca, 0.13, 0.04, 0.155, 0.07, 0.04);
+      // Cabelo azul-escuro em cima (3 cubinhos)
+      for (const sx of [-0.08, 0, 0.08]) {
+        const cab = cubo(0.07, 0.06, 0.30, 0x0277bd);
+        cab.position.set(sx, 0.18, -0.05); cabeca.add(cab);
+      }
+      // 4 asas com cor secundária mais clara (translucidez visual)
+      const asaMat = matCor(info.sec);
+      asaMat.transparent = true;
+      asaMat.opacity = 0.75;
+      for (let i = 0; i < 4; i++) {
+        const asa = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.18, 0.20), asaMat);
+        const lado = i < 2 ? -1 : 1;
+        const cima = i % 2 === 0 ? 1 : -1;
+        asa.position.set(lado * 0.14, 0.55 + cima * 0.08, -0.10);
+        asa.rotation.z = lado * 0.3;
+        grp.add(asa);
+      }
+      // Mãos azuis pequenas estendidas (parecem agarrando algo)
+      for (const sx of [-0.13, 0.13]) {
+        const mao = cubo(0.06, 0.06, 0.06, info.cor);
+        mao.position.set(sx, 0.40, 0.10); grp.add(mao);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
       break;
     }
     case 'tartaruga': {
@@ -1169,6 +1212,7 @@ function _dimsMob(tipo) {
     case 'papagaio': return { raio: 0.15, altura: 0.50 };
     case 'urso_polar': return { raio: 0.55, altura: 1.50 };
     case 'tartaruga': return { raio: 0.32, altura: 0.45 };
+    case 'allay':    return { raio: 0.15, altura: 0.50 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
@@ -1907,6 +1951,8 @@ export class MobManager {
         if (Math.random() < 0.08) tipos.push('papagaio');
         // Mooshroom: bem raro (3%) em grama, biome cogumelo proxy
         if (Math.random() < 0.03) tipos.push('mooshroom');
+        // Allay: raríssimo (1%), spawna em qualquer grama
+        if (Math.random() < 0.01) tipos.push('allay');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
         // Tartaruga: spawn em areia próxima da água (1 bloco de água em raio 3)

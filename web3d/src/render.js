@@ -952,6 +952,49 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Cobre (3 estados): metálico com padrão de placas + manchas de oxidação
+  function pintarCobre(idx, base, claro, escuro, manchaOx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de placas verticais (rebites/junções)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + 10, y0, 1, CELL);
+    ctx.fillRect(x0 + 21, y0, 1, CELL);
+    ctx.fillRect(x0, y0 + 10, CELL, 1);
+    ctx.fillRect(x0, y0 + 21, CELL, 1);
+    // Highlights claros (brilho metálico nos cantos das placas)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 2,  y0 + 2,  6, 1);
+    ctx.fillRect(x0 + 13, y0 + 2,  5, 1);
+    ctx.fillRect(x0 + 24, y0 + 2,  5, 1);
+    ctx.fillRect(x0 + 2,  y0 + 13, 6, 1);
+    ctx.fillRect(x0 + 13, y0 + 13, 5, 1);
+    ctx.fillRect(x0 + 24, y0 + 13, 5, 1);
+    // Manchas de oxidação (proporcional ao estágio)
+    if (manchaOx > 0) {
+      let seed = idx * 9301 + 49297;
+      const corOx = '#5fb89e';
+      ctx.fillStyle = corOx;
+      const numManchas = Math.floor(20 * manchaOx);
+      for (let i = 0; i < numManchas; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = (seed % CELL);
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = (seed % CELL);
+        ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // Borda escura sutil
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Cogumelo gigante: chapéu colorido com bolinhas brancas (vermelho) ou liso (marrom)
   function pintarCogumelo(idx, vermelho) {
     const col = idx % COLS;
@@ -1454,6 +1497,9 @@ function criarAtlas() {
   pintarQuartzo(55, true);                                // quartzo polido
   pintarCogumelo(56, true);                               // cogumelo vermelho gigante
   pintarCogumelo(57, false);                              // cogumelo marrom gigante
+  pintarCobre(58, '#e07a3b', '#ff9d5e', '#a04e1c', 0);     // cobre novo
+  pintarCobre(59, '#b47366', '#d6968b', '#7a4a40', 0.4);   // cobre gasto
+  pintarCobre(60, '#5fb89e', '#85d6bc', '#3d8470', 0.9);   // cobre oxidado
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1518,6 +1564,9 @@ function criarAtlas() {
   mapa[BLOCO.QUARTZO_POLIDO] = { top: 55, side: 55, bottom: 55 };
   mapa[BLOCO.COGUMELO_VERM]  = { top: 56, side: 56, bottom: 56 };
   mapa[BLOCO.COGUMELO_MARROM]= { top: 57, side: 57, bottom: 57 };
+  mapa[BLOCO.COBRE]          = { top: 58, side: 58, bottom: 58 };
+  mapa[BLOCO.COBRE_GASTO]    = { top: 59, side: 59, bottom: 59 };
+  mapa[BLOCO.COBRE_OXIDADO]  = { top: 60, side: 60, bottom: 60 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

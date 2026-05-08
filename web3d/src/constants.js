@@ -98,8 +98,11 @@ export const BLOCO = {
   QUARTZO_POLIDO: 57, // versão polida (mais clara, sem grão)
   COGUMELO_VERM:  58, // bloco gigante de cogumelo vermelho com bolinhas brancas
   COGUMELO_MARROM:59, // bloco gigante de cogumelo marrom (chapéu liso)
+  COBRE:          60, // cobre novo (laranja-avermelhado)
+  COBRE_GASTO:    61, // cobre exposto (rosa-marrom)
+  COBRE_OXIDADO:  62, // cobre oxidado (verde-azulado, MC verdigris)
 };
-export const N_BLOCOS = 60;
+export const N_BLOCOS = 63;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -168,6 +171,9 @@ export const BLOCO_INFO = {
   [BLOCO.QUARTZO_POLIDO]:{ nome: 'Quartzo Polido',   solido: true,  emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xfff8e1 },
   [BLOCO.COGUMELO_VERM]: { nome: 'Cogumelo Vermelho',solido: true,  emiteLuz: 1,  cor: 0xc62828, lateral: 0xc62828 },
   [BLOCO.COGUMELO_MARROM]:{nome: 'Cogumelo Marrom', solido: true,  emiteLuz: 1,  cor: 0x6d4c41, lateral: 0x6d4c41 },
+  [BLOCO.COBRE]:         { nome: 'Cobre',            solido: true,  emiteLuz: 0,  cor: 0xe07a3b, lateral: 0xc56226 },
+  [BLOCO.COBRE_GASTO]:   { nome: 'Cobre Gasto',      solido: true,  emiteLuz: 0,  cor: 0xb47366, lateral: 0x8d5e54 },
+  [BLOCO.COBRE_OXIDADO]: { nome: 'Cobre Oxidado',    solido: true,  emiteLuz: 0,  cor: 0x5fb89e, lateral: 0x4a9b82 },
 };
 
 export const ICONE = {
@@ -217,6 +223,7 @@ export const ITEM = {
   COGUMELO_M:    252, // cogumelo marrom coletável
   SOPA_COGUMELO: 253, // sopa: cura 6 fome (paridade MC)
   TIGELA:        254, // bowl/cup vazia, deixada após comer sopa
+  COBRE_LINGOTE: 255, // lingote de cobre (smelt de minério)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -279,6 +286,7 @@ export const ITEM_INFO = {
   [ITEM.COGUMELO_M]:    { nome: 'Cogumelo Marrom',   icone: '🍄' },
   [ITEM.SOPA_COGUMELO]: { nome: 'Sopa de Cogumelo',  icone: '🍲', nutricao: 6 },
   [ITEM.TIGELA]:        { nome: 'Tigela',            icone: '🥣' },
+  [ITEM.COBRE_LINGOTE]: { nome: 'Lingote de Cobre',  icone: '🟧' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -381,6 +389,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 3}], saida: {i: ITEM.TIGELA, q: 4}, wb: false },
   // Sopa de Cogumelo: 1 vermelho + 1 marrom + 1 tigela (paridade MC)
   { custos: [{i: ITEM.COGUMELO_R, q: 1}, {i: ITEM.COGUMELO_M, q: 1}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_COGUMELO, q: 1}, wb: false },
+  // Cobre: 9 lingotes → 1 bloco (paridade MC)
+  { custos: [{i: ITEM.COBRE_LINGOTE, q: 9}], saida: {b: BLOCO.COBRE, q: 1}, wb: true },
   // Bolo: 3 trigo + 1 ovo + 1 carvao (proxy de açúcar) + 1 lã (proxy de leite)
   { custos: [{i: ITEM.TRIGO, q: 3}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.LA, q: 1}], saida: {b: BLOCO.BOLO, q: 1}, wb: true },
 ];
