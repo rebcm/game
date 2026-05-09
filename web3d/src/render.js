@@ -4120,6 +4120,15 @@ function criarAtlas() {
   mapa[BLOCO.PAINEL_VIDRO_CZ]  = { top: 245, side: 245, bottom: 245 };
   mapa[BLOCO.BAMBU_BLOCO]      = { top: 246, side: 246, bottom: 246 };
   mapa[BLOCO.CACTO_BLOCO]      = { top: 247, side: 247, bottom: 247 };
+  // Reusam texturas dos blocos base
+  mapa[BLOCO.ESCADA_COBRE]     = { top: 58,  side: 58,  bottom: 58  };
+  mapa[BLOCO.ESCADA_NETHER]    = { top: 88,  side: 88,  bottom: 88  };
+  mapa[BLOCO.ESCADA_PAVIMENTO] = { top: 90,  side: 90,  bottom: 90  };
+  mapa[BLOCO.ESCADA_LAMA]      = { top: 109, side: 109, bottom: 109 };
+  mapa[BLOCO.PAREDE_ARENITO]   = { top: 85,  side: 85,  bottom: 85  };
+  mapa[BLOCO.PAREDE_LAMA]      = { top: 109, side: 109, bottom: 109 };
+  mapa[BLOCO.SLAB_PAVIMENTO]   = { top: 90,  side: 90,  bottom: 90  };
+  mapa[BLOCO.SLAB_CALCITE]     = { top: 103, side: 103, bottom: 103 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

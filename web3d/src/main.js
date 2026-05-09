@@ -749,6 +749,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.PAINEL_VIDRO_CZ, q: 16 });
   state.inv.adicionar({ b: BLOCO.BAMBU_BLOCO, q: 8 });
   state.inv.adicionar({ b: BLOCO.CACTO_BLOCO, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_COBRE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_NETHER, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_PAVIMENTO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_LAMA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAREDE_ARENITO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAREDE_LAMA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_PAVIMENTO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_CALCITE, q: 16 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

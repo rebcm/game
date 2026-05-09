@@ -325,8 +325,19 @@ export const BLOCO = {
   PAINEL_VIDRO_CZ:268, // painel cinza
   BAMBU_BLOCO:    269, // bambu compactado (4 bambus)
   CACTO_BLOCO:    270, // cacto compactado (sem dano)
+  // 4 escadas adicionais
+  ESCADA_COBRE:   271,
+  ESCADA_NETHER:  272,
+  ESCADA_PAVIMENTO:273,
+  ESCADA_LAMA:    274,
+  // 2 paredes adicionais
+  PAREDE_ARENITO: 275,
+  PAREDE_LAMA:    276,
+  // 2 lajes adicionais
+  SLAB_PAVIMENTO: 277,
+  SLAB_CALCITE:   278,
 };
-export const N_BLOCOS = 271;
+export const N_BLOCOS = 279;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -619,6 +630,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAINEL_VIDRO_CZ]: { nome: 'Painel Vidro Cinza',solido: true, emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x616161, shape: 'bars' },
   [BLOCO.BAMBU_BLOCO]:     { nome: 'Bloco de Bambu',   solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x689f38 },
   [BLOCO.CACTO_BLOCO]:     { nome: 'Bloco de Cacto',   solido: true, emiteLuz: 0, cor: 0x388E3C, lateral: 0x2E7D32 },
+  [BLOCO.ESCADA_COBRE]:    { nome: 'Escada Cobre',     solido: true, emiteLuz: 0, cor: 0xe07a3b, lateral: 0xc56226, shape: 'stairs' },
+  [BLOCO.ESCADA_NETHER]:   { nome: 'Escada Nether',    solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'stairs' },
+  [BLOCO.ESCADA_PAVIMENTO]:{ nome: 'Escada Pavimento', solido: true, emiteLuz: 0, cor: 0x7a7a7a, lateral: 0x5e5e5e, shape: 'stairs' },
+  [BLOCO.ESCADA_LAMA]:     { nome: 'Escada Lama',      solido: true, emiteLuz: 0, cor: 0xa0855e, lateral: 0x856a48, shape: 'stairs' },
+  [BLOCO.PAREDE_ARENITO]:  { nome: 'Parede Arenito',   solido: true, emiteLuz: 0, cor: 0xfdd8a0, lateral: 0xe6c389, shape: 'wall' },
+  [BLOCO.PAREDE_LAMA]:     { nome: 'Parede Lama',      solido: true, emiteLuz: 0, cor: 0xa0855e, lateral: 0x856a48, shape: 'wall' },
+  [BLOCO.SLAB_PAVIMENTO]:  { nome: 'Laje Pavimento',   solido: true, emiteLuz: 0, cor: 0x7a7a7a, lateral: 0x5e5e5e, shape: 'slab' },
+  [BLOCO.SLAB_CALCITE]:    { nome: 'Laje Calcita',     solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xcfd8dc, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1142,6 +1161,17 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.BAMBU, q: 9}], saida: {b: BLOCO.BAMBU_BLOCO, q: 1}, wb: true },
   // Bloco de Cacto: 9 cactos
   { custos: [{b: BLOCO.CACTO, q: 9}], saida: {b: BLOCO.CACTO_BLOCO, q: 1}, wb: true },
+  // 4 escadas adicionais (6 → 4)
+  { custos: [{b: BLOCO.COBRE, q: 6}],          saida: {b: BLOCO.ESCADA_COBRE,    q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO_NETHER, q: 6}],  saida: {b: BLOCO.ESCADA_NETHER,   q: 4}, wb: true },
+  { custos: [{b: BLOCO.PAVIMENTO, q: 6}],      saida: {b: BLOCO.ESCADA_PAVIMENTO,q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO_LAMA, q: 6}],    saida: {b: BLOCO.ESCADA_LAMA,     q: 4}, wb: true },
+  // 2 paredes adicionais (6 → 6)
+  { custos: [{b: BLOCO.ARENITO, q: 6}],     saida: {b: BLOCO.PAREDE_ARENITO, q: 6}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO_LAMA, q: 6}], saida: {b: BLOCO.PAREDE_LAMA,    q: 6}, wb: true },
+  // 2 lajes adicionais (3 → 6)
+  { custos: [{b: BLOCO.PAVIMENTO, q: 3}],   saida: {b: BLOCO.SLAB_PAVIMENTO, q: 6}, wb: true },
+  { custos: [{b: BLOCO.CALCITE, q: 3}],     saida: {b: BLOCO.SLAB_CALCITE,   q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
