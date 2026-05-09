@@ -546,8 +546,17 @@ export const BLOCO = {
   JUNGLE_FOLHA:        476, // folhas selva (verde vivo)
   DARK_OAK_FOLHA:      477, // folhas carvalho escuro (verde profundo)
   STRIPPED_OAK_LOG:    478, // tronco carvalho descascado (interior amarelo)
+  // Sprint 11: stripped variantes + vegetação (479-486)
+  STRIPPED_BIRCH:      479, // bétula descascada (creme)
+  STRIPPED_SPRUCE:     480, // pinheiro descascado (rico)
+  STRIPPED_ACACIA:     481, // acácia descascada (laranja claro)
+  STRIPPED_JUNGLE:     482, // selva descascada (amarelo-marrom)
+  STRIPPED_DARK_OAK:   483, // carvalho escuro descascado (marrom)
+  DEAD_BUSH:           484, // arbusto morto (deserto)
+  TALL_GRASS:          485, // grama alta (2 blocos)
+  FERN:                486, // samambaia (verde escuro)
 };
-export const N_BLOCOS = 479;
+export const N_BLOCOS = 487;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1057,6 +1066,15 @@ export const BLOCO_INFO = {
   [BLOCO.JUNGLE_FOLHA]:      { nome: 'Folhas Selva',       solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c },
   [BLOCO.DARK_OAK_FOLHA]:    { nome: 'Folhas Carv.Esc.',   solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x0e2a08 },
   [BLOCO.STRIPPED_OAK_LOG]:  { nome: 'Tronco Descascado',  solido: true, emiteLuz: 0,  cor: 0xd7b57c, lateral: 0xa1875a },
+  // Sprint 11: stripped variantes + vegetação (479-486)
+  [BLOCO.STRIPPED_BIRCH]:    { nome: 'Bétula Descascada',  solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1 },
+  [BLOCO.STRIPPED_SPRUCE]:   { nome: 'Pinheiro Descasc.',  solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.STRIPPED_ACACIA]:   { nome: 'Acácia Descasc.',    solido: true, emiteLuz: 0,  cor: 0xe65100, lateral: 0xbf360c },
+  [BLOCO.STRIPPED_JUNGLE]:   { nome: 'Selva Descasc.',     solido: true, emiteLuz: 0,  cor: 0xc8a951, lateral: 0xa0863e },
+  [BLOCO.STRIPPED_DARK_OAK]: { nome: 'Carv.Esc. Descasc.', solido: true, emiteLuz: 0,  cor: 0x5d4037, lateral: 0x3e2723 },
+  [BLOCO.DEAD_BUSH]:         { nome: 'Arbusto Morto',      solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x5d4037, shape: 'flower' },
+  [BLOCO.TALL_GRASS]:        { nome: 'Grama Alta',         solido: true, emiteLuz: 0,  cor: 0x7cb342, lateral: 0x558b2f, shape: 'flower' },
+  [BLOCO.FERN]:              { nome: 'Samambaia',          solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20, shape: 'flower' },
 };
 
 export const ICONE = {
@@ -1971,6 +1989,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.JUNGLE_FOLHA, q: 4}, wb: true },
   { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.DARK_OAK_FOLHA, q: 4}, wb: true },
   { custos: [{b: BLOCO.MADEIRA, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_OAK_LOG, q: 1}, wb: true },
+  // Sprint 11: stripped variantes + vegetação (479-486)
+  { custos: [{b: BLOCO.BIRCH_LOG, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_BIRCH, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_LOG, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_SPRUCE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.ACACIA_LOG, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_ACACIA, q: 1}, wb: true },
+  { custos: [{b: BLOCO.JUNGLE_LOG, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_JUNGLE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DARK_OAK_LOG, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_DARK_OAK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 2}, {b: BLOCO.MADEIRA, q: 1}], saida: {b: BLOCO.DEAD_BUSH, q: 2}, wb: true },
+  { custos: [{b: BLOCO.GRAMA, q: 2}], saida: {b: BLOCO.TALL_GRASS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.GRAMA, q: 1}, {b: BLOCO.FOLHA, q: 1}], saida: {b: BLOCO.FERN, q: 2}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

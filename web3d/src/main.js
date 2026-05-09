@@ -984,6 +984,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.JUNGLE_FOLHA, q: 8 });
   state.inv.adicionar({ b: BLOCO.DARK_OAK_FOLHA, q: 8 });
   state.inv.adicionar({ b: BLOCO.STRIPPED_OAK_LOG, q: 8 });
+  // Sprint 11: stripped + vegetação
+  state.inv.adicionar({ b: BLOCO.STRIPPED_BIRCH, q: 8 });
+  state.inv.adicionar({ b: BLOCO.STRIPPED_SPRUCE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.STRIPPED_ACACIA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.STRIPPED_JUNGLE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.STRIPPED_DARK_OAK, q: 8 });
+  state.inv.adicionar({ b: BLOCO.DEAD_BUSH, q: 16 });
+  state.inv.adicionar({ b: BLOCO.TALL_GRASS, q: 16 });
+  state.inv.adicionar({ b: BLOCO.FERN, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

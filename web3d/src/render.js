@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 45, CELL = 32;
+  const COLS = 8, ROWS = 46, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3290,6 +3290,66 @@ function criarAtlas() {
     }
   }
 
+  // Genérico: pinta tronco descascado (anéis horizontais, sem casca)
+  function pintarStrippedLog(idx, corBase, corAnel, corHigh) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais sutis (grão da madeira)
+    ctx.fillStyle = corAnel;
+    for (let i = 0; i < CELL; i += 5) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    // Anéis horizontais (interior do tronco)
+    ctx.fillStyle = corHigh;
+    ctx.fillRect(x0, y0 + 6,  CELL, 1);
+    ctx.fillRect(x0, y0 + 14, CELL, 1);
+    ctx.fillRect(x0, y0 + 22, CELL, 1);
+    // Manchas claras
+    ctx.fillStyle = corHigh;
+    let s = idx * 13 + 25;
+    for (let i = 0; i < 18; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Genérico: planta vertical fina (grama alta, samambaia, dead bush, etc)
+  function pintarPlantaVertical(idx, corBase, corClaro, corEscuro, comTopo) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#0a0a05';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Várias hastes verticais finas com pontas
+    let s = idx * 11 + 17;
+    for (let i = 0; i < 8; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = 4 + Math.floor((s / 233280) * (CELL - 8));
+      s = (s * 9301 + 49297) % 233280;
+      const altura = 14 + Math.floor((s / 233280) * 14);
+      ctx.fillStyle = corBase;
+      ctx.fillRect(x0 + px, y0 + CELL - altura, 1, altura);
+      // Folhinha lateral
+      ctx.fillStyle = corClaro;
+      ctx.fillRect(x0 + px - 1, y0 + CELL - altura + 4, 3, 1);
+      ctx.fillRect(x0 + px - 1, y0 + CELL - altura + 8, 3, 1);
+      // Topo
+      if (comTopo) {
+        ctx.fillStyle = corEscuro;
+        ctx.fillRect(x0 + px - 1, y0 + CELL - altura, 3, 2);
+      }
+    }
+    // Solo na base (escuro)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+  }
+
   // Genérico: pinta folha variante (textura granulada de folhagem)
   function pintarFolhaVariante(idx, corBase, corClaro, corEscuro, corExtra) {
     const col = idx % COLS;
@@ -6214,6 +6274,15 @@ function criarAtlas() {
   pintarFolhaVariante(353, '#66bb6a', '#388e3c', '#1b5e20', '#fdd835');                   // jungle folha (verde vivo)
   pintarFolhaVariante(354, '#33691e', '#0e2a08', '#1b5e20', '#5d4037');                   // dark oak folha
   pintarLogVariante(355, '#a1875a', '#7d6932', '#d7b57c', '#5d4037');                     // stripped oak (interior amarelo claro)
+  // Sprint 11: stripped + vegetação (cells 356-363)
+  pintarStrippedLog(356, '#fff8e1', '#eceff1', '#bcaaa4');                  // stripped birch
+  pintarStrippedLog(357, '#6d4c41', '#4e342e', '#8d6e63');                  // stripped spruce
+  pintarStrippedLog(358, '#e65100', '#bf360c', '#ff8a65');                  // stripped acacia
+  pintarStrippedLog(359, '#c8a951', '#a0863e', '#fff8e1');                  // stripped jungle
+  pintarStrippedLog(360, '#5d4037', '#3e2723', '#8d6e63');                  // stripped dark oak
+  pintarPlantaVertical(361, '#8d6e63', '#a1887f', '#5d4037', false);        // dead bush (marrom seco)
+  pintarPlantaVertical(362, '#7cb342', '#9ccc65', '#33691e', true);         // tall grass (verde claro)
+  pintarPlantaVertical(363, '#33691e', '#558b2f', '#1b5e20', false);        // fern (verde escuro)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6726,6 +6795,15 @@ function criarAtlas() {
   mapa[BLOCO.JUNGLE_FOLHA]          = { top: 353, side: 353, bottom: 353 };
   mapa[BLOCO.DARK_OAK_FOLHA]        = { top: 354, side: 354, bottom: 354 };
   mapa[BLOCO.STRIPPED_OAK_LOG]      = { top: 355, side: 355, bottom: 355 };
+  // Sprint 11: stripped + vegetação (cells 356-363)
+  mapa[BLOCO.STRIPPED_BIRCH]        = { top: 356, side: 356, bottom: 356 };
+  mapa[BLOCO.STRIPPED_SPRUCE]       = { top: 357, side: 357, bottom: 357 };
+  mapa[BLOCO.STRIPPED_ACACIA]       = { top: 358, side: 358, bottom: 358 };
+  mapa[BLOCO.STRIPPED_JUNGLE]       = { top: 359, side: 359, bottom: 359 };
+  mapa[BLOCO.STRIPPED_DARK_OAK]     = { top: 360, side: 360, bottom: 360 };
+  mapa[BLOCO.DEAD_BUSH]             = { top: 361, side: 361, bottom: 361 };
+  mapa[BLOCO.TALL_GRASS]            = { top: 362, side: 362, bottom: 362 };
+  mapa[BLOCO.FERN]                  = { top: 363, side: 363, bottom: 363 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
