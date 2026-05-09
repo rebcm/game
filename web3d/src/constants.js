@@ -720,8 +720,17 @@ export const BLOCO = {
   SLAB_NETHERRACK:     699, SLAB_BLACKSTONE_C:   700, SLAB_DEEPSLATE_C:    701, SLAB_QUARTZO_C:      702,
   ESCADA_TUFF:         703, ESCADA_CALCITE:      704, ESCADA_DRIPSTONE:    705, ESCADA_END_STONE_C:  706,
   ESCADA_NETHERRACK:   707, ESCADA_PURPUR_PIL2:  708, ESCADA_DEEPSLATE_C:  709, ESCADA_TIJOLO_NETHER:710,
+  // Sprint 25: 32 blocos — fences/walls/slabs raros + variantes (711-742)
+  PAREDE_NETHERRACK:   711, PAREDE_BLACKSTONE_C: 712, PAREDE_OBSIDIANA:    713, PAREDE_GLOWSTONE:    714,
+  PAREDE_LAMA_COMP:    715, PAREDE_GELO:         716, PAREDE_AREIA:        717, PAREDE_NEVE:         718,
+  ESCADA_GLOWSTONE:    719, ESCADA_BAMBOO_MOS:   720, ESCADA_GELO:         721, ESCADA_LAMA_COMP:    722,
+  ESCADA_BLACKSTONE_C: 723, ESCADA_QUARTZO_LISO: 724, ESCADA_HONEY:        725, ESCADA_SOUL_SAND:    726,
+  SLAB_GLOWSTONE:      727, SLAB_BAMBOO_MOS:     728, SLAB_GELO:           729, SLAB_LAMA_COMP:      730,
+  SLAB_OBSIDIANA:      731, SLAB_HONEY:          732, SLAB_SOUL_SAND:      733, SLAB_SOUL_SOIL:      734,
+  FENCE_BAMBU:         735, FENCE_DRIED_KELP:    736, FENCE_PURPUR:        737, FENCE_END_STONE:     738,
+  PAREDE_RED_SAND:     739, ESCADA_RED_SAND:     740, SLAB_RED_SAND:       741, SLAB_CHISELED_RS:    742,
 };
-export const N_BLOCOS = 711;
+export const N_BLOCOS = 743;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1477,6 +1486,39 @@ export const BLOCO_INFO = {
   [BLOCO.ESCADA_PURPUR_PIL2]:   { nome: 'Escada Purpur Pilar2',  solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'stairs' },
   [BLOCO.ESCADA_DEEPSLATE_C]:   { nome: 'Escada Deepslate C.',   solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'stairs' },
   [BLOCO.ESCADA_TIJOLO_NETHER]: { nome: 'Escada Tij. Nether',    solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'stairs' },
+  // Sprint 25: 32 blocos diversos (711-742)
+  [BLOCO.PAREDE_NETHERRACK]:    { nome: 'Parede Netherrack',     solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'wall' },
+  [BLOCO.PAREDE_BLACKSTONE_C]:  { nome: 'Parede Blackstone',     solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'wall' },
+  [BLOCO.PAREDE_OBSIDIANA]:     { nome: 'Parede Obsidiana',      solido: true, emiteLuz: 0, cor: 0x1a0033, lateral: 0x0a001a, shape: 'wall' },
+  [BLOCO.PAREDE_GLOWSTONE]:     { nome: 'Parede Glowstone',      solido: true, emiteLuz: 15,cor: 0xfff176, lateral: 0xffeb3b, shape: 'wall' },
+  [BLOCO.PAREDE_LAMA_COMP]:     { nome: 'Parede Lama Comp.',     solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'wall' },
+  [BLOCO.PAREDE_GELO]:          { nome: 'Parede Gelo',           solido: true, emiteLuz: 0, cor: 0xb3e5fc, lateral: 0x81d4fa, shape: 'wall' },
+  [BLOCO.PAREDE_AREIA]:         { nome: 'Parede Areia',          solido: true, emiteLuz: 0, cor: 0xfff59d, lateral: 0xfdd835, shape: 'wall' },
+  [BLOCO.PAREDE_NEVE]:          { nome: 'Parede Neve',           solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeceff1, shape: 'wall' },
+  [BLOCO.ESCADA_GLOWSTONE]:     { nome: 'Escada Glowstone',      solido: true, emiteLuz: 15,cor: 0xfff176, lateral: 0xffeb3b, shape: 'stairs' },
+  [BLOCO.ESCADA_BAMBOO_MOS]:    { nome: 'Escada Bambu Mos.',     solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'stairs' },
+  [BLOCO.ESCADA_GELO]:          { nome: 'Escada Gelo',           solido: true, emiteLuz: 0, cor: 0xb3e5fc, lateral: 0x81d4fa, shape: 'stairs' },
+  [BLOCO.ESCADA_LAMA_COMP]:     { nome: 'Escada Lama Comp.',     solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'stairs' },
+  [BLOCO.ESCADA_BLACKSTONE_C]:  { nome: 'Escada Blackstone C.',  solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'stairs' },
+  [BLOCO.ESCADA_QUARTZO_LISO]:  { nome: 'Escada Quartzo Liso',   solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'stairs' },
+  [BLOCO.ESCADA_HONEY]:         { nome: 'Escada Mel',            solido: true, emiteLuz: 1, cor: 0xffc107, lateral: 0xff8f00, shape: 'stairs' },
+  [BLOCO.ESCADA_SOUL_SAND]:     { nome: 'Escada Soul Sand',      solido: true, emiteLuz: 0, cor: 0x4e342e, lateral: 0x3e2723, shape: 'stairs' },
+  [BLOCO.SLAB_GLOWSTONE]:       { nome: 'Laje Glowstone',        solido: true, emiteLuz: 15,cor: 0xfff176, lateral: 0xffeb3b, shape: 'slab' },
+  [BLOCO.SLAB_BAMBOO_MOS]:      { nome: 'Laje Bambu Mos.',       solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'slab' },
+  [BLOCO.SLAB_GELO]:            { nome: 'Laje Gelo',             solido: true, emiteLuz: 0, cor: 0xb3e5fc, lateral: 0x81d4fa, shape: 'slab' },
+  [BLOCO.SLAB_LAMA_COMP]:       { nome: 'Laje Lama Comp.',       solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'slab' },
+  [BLOCO.SLAB_OBSIDIANA]:       { nome: 'Laje Obsidiana',        solido: true, emiteLuz: 0, cor: 0x1a0033, lateral: 0x0a001a, shape: 'slab' },
+  [BLOCO.SLAB_HONEY]:           { nome: 'Laje Mel',              solido: true, emiteLuz: 1, cor: 0xffc107, lateral: 0xff8f00, shape: 'slab' },
+  [BLOCO.SLAB_SOUL_SAND]:       { nome: 'Laje Soul Sand',        solido: true, emiteLuz: 0, cor: 0x4e342e, lateral: 0x3e2723, shape: 'slab' },
+  [BLOCO.SLAB_SOUL_SOIL]:       { nome: 'Laje Soul Soil',        solido: true, emiteLuz: 0, cor: 0x4e342e, lateral: 0x3e2723, shape: 'slab' },
+  [BLOCO.FENCE_BAMBU]:          { nome: 'Cerca Bambu',           solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x558b2f, shape: 'fence' },
+  [BLOCO.FENCE_DRIED_KELP]:     { nome: 'Cerca Alga Seca',       solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20, shape: 'fence' },
+  [BLOCO.FENCE_PURPUR]:         { nome: 'Cerca Purpur',          solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'fence' },
+  [BLOCO.FENCE_END_STONE]:      { nome: 'Cerca End Stone',       solido: true, emiteLuz: 0, cor: 0xfff59d, lateral: 0xfff176, shape: 'fence' },
+  [BLOCO.PAREDE_RED_SAND]:      { nome: 'Parede Arenito V.',     solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.ESCADA_RED_SAND]:      { nome: 'Escada Arenito V.',     solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
+  [BLOCO.SLAB_RED_SAND]:        { nome: 'Laje Arenito V.',       solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.SLAB_CHISELED_RS]:     { nome: 'Laje Aren.V. Esculp.',  solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
 };
 
 export const ICONE = {
