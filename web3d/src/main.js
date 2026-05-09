@@ -1852,6 +1852,81 @@ function loop(now) {
         state.world.spreadGrama(state.player.pos.x, state.player.pos.z, 6);
       }
     }
+    // SPRINT MEGA-13: Hoppers/Observers tracking via Sets (não scanning)
+    // Setados ao colocar bloco (ver place handler) — tick a cada 1s
+    state._mecAcc = (state._mecAcc || 0) + dt;
+    if (state._mecAcc >= 1.0) {
+      state._mecAcc = 0;
+      // HOPPERS — Set tracking
+      if (state.hoppers && state.hoppers.size) {
+        for (const k of state.hoppers) {
+          const [x, y, z] = k.split(',').map(Number);
+          if (state.world.get(x, y, z) !== BLOCO.HOPPER) {
+            state.hoppers.delete(k); continue;
+          }
+          // Pega 1 item do BAU acima → move pro BAU abaixo
+          if (state.world.get(x, y + 1, z) === BLOCO.BAU &&
+              state.world.get(x, y - 1, z) === BLOCO.BAU) {
+            const kAcima = World.keyXYZ(x, y + 1, z);
+            const kAbaixo = World.keyXYZ(x, y - 1, z);
+            const lootAcima = state.world.bauTesouros?.get(kAcima);
+            if (lootAcima) {
+              const lootAbaixo = state.world.bauTesouros?.get(kAbaixo) || new Array(27).fill(null);
+              for (let i = 0; i < 27; i++) {
+                if (lootAcima[i] && lootAcima[i].q > 0) {
+                  for (let j = 0; j < 27; j++) {
+                    if (!lootAbaixo[j]) {
+                      lootAbaixo[j] = { ...lootAcima[i], q: 1 };
+                      lootAcima[i].q -= 1;
+                      if (lootAcima[i].q <= 0) lootAcima[i] = null;
+                      break;
+                    }
+                  }
+                  state.world.bauTesouros.set(kAbaixo, lootAbaixo);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+      // DAYLIGHT_SENSORS — emite sinal proporcional ao sol
+      if (state.daylightSensors && state.daylightSensors.size) {
+        const sun_local = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
+        for (const k of state.daylightSensors) {
+          const [x, y, z] = k.split(',').map(Number);
+          if (state.world.get(x, y, z) !== BLOCO.DAYLIGHT_DETECTOR) {
+            state.daylightSensors.delete(k); continue;
+          }
+          // Pulsa redstone lamp adjacente baseado no sol
+          if (sun_local > 0.5) {
+            for (const [dx, dz] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+              if (state.world.get(x + dx, y, z + dz) === BLOCO.LAMPADA_RED) {
+                state.world.set(x + dx, y, z + dz, BLOCO.LUZ);
+              }
+            }
+          }
+        }
+      }
+      // OBSERVERS — pulsa pistons adjacentes baseado em mudanças
+      if (state.observers && state.observers.size) {
+        for (const k of state.observers) {
+          const [x, y, z] = k.split(',').map(Number);
+          if (state.world.get(x, y, z) !== BLOCO.OBSERVER) {
+            state.observers.delete(k); continue;
+          }
+          // Random pulse (placeholder pra detection real)
+          if (Math.random() < 0.1) {
+            for (const [dx, dz] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+              const adj = state.world.get(x + dx, y, z + dz);
+              if (adj === BLOCO.PISTON && state.world.get(x + dx, y + 1, z + dz) === BLOCO.AR) {
+                state.world.set(x + dx, y + 1, z + dz, BLOCO.PEDRA);
+              }
+            }
+          }
+        }
+      }
+    }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
@@ -2259,6 +2334,162 @@ function loop(now) {
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.BIGORNA) abrirPainelBigorna();
         else if (blocoAlvo === BLOCO.CAMA) dormir();
+        // SPRINT MEGA-14: Smithing Table (upgrade netherite)
+        else if (blocoAlvo === BLOCO.SMITHING_TABLE) {
+          // Quick action: pega item diamante na hotbar e converte pra netherite (precisa 1 NETHERITE no inv)
+          const sel = state.inv.itemSelecionado();
+          if (sel?.i !== undefined && state.inv.contar?.(undefined, ITEM.NETHERITE) >= 1) {
+            const upgradeMap = {
+              [ITEM.PIC_DIAMANTE]: ITEM.PIC_NETHERITE,
+              [ITEM.ESP_DIAMANTE]: ITEM.ESP_NETHERITE,
+              [ITEM.MACHADO_DIAMANTE]: ITEM.MACHADO_NETHERITE,
+              [ITEM.PA_DIAMANTE]: ITEM.PA_NETHERITE,
+              [ITEM.ENXADA_DIAMANTE]: ITEM.ENXADA_NETHERITE,
+              [ITEM.CAP_DIAMANTE]: ITEM.CAP_NETHERITE,
+              [ITEM.PEI_DIAMANTE]: ITEM.PEI_NETHERITE,
+              [ITEM.PER_DIAMANTE]: ITEM.PER_NETHERITE,
+              [ITEM.BOT_DIAMANTE]: ITEM.BOT_NETHERITE,
+            };
+            const upgrade = upgradeMap[sel.i];
+            if (upgrade !== undefined) {
+              state.inv.consumir(undefined, ITEM.NETHERITE, 1);
+              state.inv.consumirAtual();
+              state.inv.adicionar({ i: upgrade, q: 1 });
+              state.ui.toast('⚒ Item upgrade Netherite!');
+              Audio.colocar?.();
+            } else {
+              state.ui.toast('⚒ Smithing Table — segure item diamante + ter Netherite');
+            }
+          } else {
+            state.ui.toast('⚒ Smithing Table — segure diamante + ter 1 Netherite');
+          }
+        }
+        // Stonecutter — corta 1 pedra em 6 lajes/escadas
+        else if (blocoAlvo === BLOCO.STONECUTTER) {
+          if (state.inv.contar?.(BLOCO.PEDRA, undefined) >= 1) {
+            state.inv.consumir(BLOCO.PEDRA, undefined, 1);
+            state.inv.adicionar({ b: BLOCO.SLAB_PEDRA || BLOCO.PEDRA, q: 2 });
+            state.ui.toast('🪨 Stonecutter: 1 pedra → 2 lajes');
+            Audio.colocar?.();
+          } else {
+            state.ui.toast('🪨 Precisa de Pedra na hotbar');
+          }
+        }
+        // Loom — cria banner com pattern (simplificado)
+        else if (blocoAlvo === BLOCO.LOOM) {
+          if (state.inv.contar?.(undefined, ITEM.BANNER_PADRAO) >= 1) {
+            state.inv.consumir(undefined, ITEM.BANNER_PADRAO, 1);
+            state.inv.adicionar({ i: ITEM.PRINCIPLES_BANNER, q: 1 });
+            state.ui.toast('🏴 Loom: Banner com padrão custom');
+            Audio.colocar?.();
+          } else {
+            state.ui.toast('🏴 Loom — precisa de Bandeira Padrão');
+          }
+        }
+        // Cartography Table — copia mapa
+        else if (blocoAlvo === BLOCO.CARTOGRAPHY) {
+          if (state.inv.contar?.(undefined, ITEM.MAPA_VAZIO) >= 1 &&
+              state.inv.contar?.(undefined, ITEM.PRANCHAS) >= 1) {
+            state.inv.consumir(undefined, ITEM.MAPA_VAZIO, 1);
+            state.inv.consumir(undefined, ITEM.PRANCHAS, 1);
+            state.inv.adicionar({ i: ITEM.MAPA_TESOURO_I, q: 1 });
+            state.ui.toast('🗺️ Cartography: Mapa expandido');
+            Audio.colocar?.();
+          } else {
+            state.ui.toast('🗺️ Cartography — precisa Mapa Vazio + Prancha');
+          }
+        }
+        // Grindstone — repara item gastando XP (placeholder: zera durabilidade do selecionado)
+        else if (blocoAlvo === BLOCO.STONECUTTER) {
+          state.ui.toast('🪨 Grindstone — repara item da hotbar (futuro)');
+        }
+        // Lectern — abre book modal (toast por enquanto)
+        else if (blocoAlvo === BLOCO.LECTERN) {
+          if (state.inv.contar?.(undefined, ITEM.LIVRO) >= 1) {
+            state.ui.toast('📖 Lectern: Livro aberto pra leitura');
+          } else {
+            state.ui.toast('📖 Lectern — precisa de Livro');
+          }
+        }
+        // Brewing Stand — abre painel poções (placeholder: cria poção random)
+        else if (blocoAlvo === BLOCO.BREWING_STAND) {
+          if (state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) >= 1 &&
+              state.inv.contar?.(undefined, ITEM.POTE_AGUA) >= 3) {
+            state.inv.consumir(undefined, ITEM.BLAZE_POWDER, 1);
+            state.inv.consumir(undefined, ITEM.POTE_AGUA, 3);
+            // Random potion
+            const pocoes = [ITEM.POCAO_HEAL, ITEM.POCAO_SPEED, ITEM.POCAO_STRENGTH,
+                            ITEM.POCAO_HASTE, ITEM.POCAO_FIRE_RES];
+            const p = pocoes[Math.floor(Math.random() * pocoes.length)];
+            state.inv.adicionar({ i: p, q: 3 });
+            state.ui.toast('🧪 Brewing Stand: 3 poções fabricadas');
+            Audio.colocar?.();
+          } else {
+            state.ui.toast('🧪 Brewing — precisa Blaze Powder + 3 Pote Água');
+          }
+        }
+        // Composter — adiciona items orgânicos, gera bone meal
+        else if (blocoAlvo === BLOCO.COMPOSTER) {
+          const sel = state.inv.itemSelecionado();
+          if (sel?.i === ITEM.SEMENTE || sel?.i === ITEM.TRIGO || sel?.i === ITEM.PAO ||
+              sel?.i === ITEM.CARNE_PODRE || sel?.i === ITEM.MUDA) {
+            state.inv.consumirAtual();
+            // 30% chance gerar bone meal (paridade MC ~30% per fill)
+            if (Math.random() < 0.30) {
+              state.inv.adicionar({ i: ITEM.OSSO, q: 1 }); // Bone meal proxy
+              state.ui.toast('🧪 Composter cheio! +1 Osso (bone meal)');
+            } else {
+              state.ui.toast('🌱 +1 nível composter');
+            }
+          } else {
+            state.ui.toast('🌱 Composter — adicione semente/comida/muda');
+          }
+        }
+        // Bell — toca som
+        else if (blocoAlvo === BLOCO.BELL) {
+          Audio.cama?.() || Audio.colocar?.();
+          state.ui.toast('🔔 Sino tocou!');
+          // Notifica villagers próximos (paridade MC: alarme de raid)
+        }
+        // SPRINT MEGA-16: Sign editing — prompt() para texto custom
+        else if (blocoAlvo >= BLOCO.SIGN_OAK && blocoAlvo <= BLOCO.SIGN_MANGROVE) {
+          const texto = window.prompt?.('Texto do sign (max 60 chars):', '');
+          if (texto) {
+            state.signTexts = state.signTexts || new Map();
+            state.signTexts.set(World.keyXYZ(t.x, t.y, t.z), texto.slice(0, 60));
+            state.ui.toast(`✏️ Sign: "${texto.slice(0, 30)}"`);
+          }
+        }
+        // Item Frame — coloca item da hotbar dentro
+        else if (blocoAlvo === BLOCO.MOLDURA || blocoAlvo === BLOCO.MOLDURA_BRILHANTE) {
+          const sel = state.inv.itemSelecionado();
+          if (sel?.i !== undefined || sel?.b !== undefined) {
+            state.itemFrames = state.itemFrames || new Map();
+            state.itemFrames.set(World.keyXYZ(t.x, t.y, t.z), { ...sel, q: 1 });
+            state.inv.consumirAtual();
+            state.ui.toast(`🖼️ Item Frame: item exibido`);
+          } else {
+            // Já tem item: rotaciona ou retira
+            const k = World.keyXYZ(t.x, t.y, t.z);
+            if (state.itemFrames?.has(k)) {
+              const item = state.itemFrames.get(k);
+              state.inv.adicionar(item);
+              state.itemFrames.delete(k);
+              state.ui.toast('🖼️ Item retirado da Frame');
+            }
+          }
+        }
+        // Painting placement — substitui parede por pintura
+        else if (state.inv.itemSelecionado()?.i === ITEM.PINTURA) {
+          state.world.set(t.x, t.y, t.z, BLOCO.PINTURA || BLOCO.LA_VERMELHA);
+          state.inv.consumirAtual();
+          state.ui.toast('🎨 Pintura colocada!');
+          Audio.colocar?.();
+        }
+        // Cauldron — interação com balde água
+        else if (blocoAlvo === BLOCO.CALDEIRAO || blocoAlvo === BLOCO.QUARTZO) {
+          // Skip por enquanto
+        }
         else if (blocoAlvo === BLOCO.BOLO) {
           // Comer bolo: restaura fome (4) + 1 hp em survival, consome bloco.
           if (state.player.fome >= state.player.fomeMax && state.player.modo === 'survival') {
@@ -2349,6 +2580,19 @@ function loop(now) {
                 state.conduits = state.conduits || new Set();
                 state.conduits.add(World.keyXYZ(a.x, a.y, a.z));
                 state.ui.toast('🔱 Conduit ativo! Cerque com prismarine pra ativar.');
+              }
+              // SPRINT MEGA-13: Tracking de redstone components
+              if (sel.b === BLOCO.HOPPER) {
+                state.hoppers = state.hoppers || new Set();
+                state.hoppers.add(World.keyXYZ(a.x, a.y, a.z));
+              }
+              if (sel.b === BLOCO.OBSERVER) {
+                state.observers = state.observers || new Set();
+                state.observers.add(World.keyXYZ(a.x, a.y, a.z));
+              }
+              if (sel.b === BLOCO.DAYLIGHT_DETECTOR) {
+                state.daylightSensors = state.daylightSensors || new Set();
+                state.daylightSensors.add(World.keyXYZ(a.x, a.y, a.z));
               }
               // Bed no Nether/End: explode!
               if (sel.b === BLOCO.CAMA && (state.world.dimensao === 'nether' || state.world.dimensao === 'end')) {

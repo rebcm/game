@@ -121,6 +121,34 @@ export function atualizarClima(dt) {
       if (Math.random() < 0.20) {
         Audio.trovao();
         state.ui?.subtitle('⚡ Trovão distante');
+        // SPRINT MEGA-15: Lightning strike — atinge bloco aleatório próximo
+        if (Math.random() < 0.30 && state.world && state.player) {
+          const px = Math.floor(state.player.pos.x);
+          const pz = Math.floor(state.player.pos.z);
+          const dx = Math.floor((Math.random() - 0.5) * 40);
+          const dz = Math.floor((Math.random() - 0.5) * 40);
+          const sx = px + dx, sz = pz + dz;
+          // Encontra o topo
+          for (let sy = 60; sy >= 0; sy--) {
+            const b = state.world.get(sx, sy, sz);
+            if (b !== 0 /*AR*/) {
+              // Incendeia se for madeira/grama/folha
+              const flammable = (b === 5 /*MADEIRA*/ || b === 6 /*PRANCHAS*/ ||
+                                  b === 7 /*FOLHA*/ || b === 0xff);
+              if (state.world.get(sx, sy + 1, sz) === 0 && flammable) {
+                state.world.set(sx, sy + 1, sz, 12 /*LUZ como fogo proxy*/);
+              }
+              // Player próximo: dano elétrico
+              const distToPlayer = Math.hypot(sx - state.player.pos.x, sz - state.player.pos.z);
+              if (distToPlayer < 4) {
+                state.player.aplicarDano?.(8, 'lightning');
+                state.ui?.toast?.('⚡ Atingido por raio!');
+              }
+              break;
+            }
+          }
+          state.renderer?.aplicarShake?.(0.4);
+        }
       }
     }
     // Acúmulo de neve: durante chuva em terreno alto (Y >= 30), há
