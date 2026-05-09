@@ -4163,6 +4163,15 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_BASALTO]      = { top: 94,  side: 94,  bottom: 94  };
   mapa[BLOCO.SLAB_DEEPSLATE_PAV]  = { top: 104, side: 104, bottom: 104 };
   mapa[BLOCO.SLAB_BASALTO]        = { top: 94,  side: 94,  bottom: 94  };
+  // Variantes Crimson/Warped/Bambu/Cobre reusam cells 58/59/60/79/139/140/246
+  mapa[BLOCO.ESCADA_CRIMSON]      = { top: 139, side: 139, bottom: 139 };
+  mapa[BLOCO.ESCADA_WARPED]       = { top: 140, side: 140, bottom: 140 };
+  mapa[BLOCO.ESCADA_BAMBU]        = { top: 246, side: 246, bottom: 246 };
+  mapa[BLOCO.ESCADA_COBRE_GASTO]  = { top: 59,  side: 59,  bottom: 59  };
+  mapa[BLOCO.PAREDE_COBRE]        = { top: 58,  side: 58,  bottom: 58  };
+  mapa[BLOCO.PAREDE_COBRE_OXIDADO]= { top: 60,  side: 60,  bottom: 60  };
+  mapa[BLOCO.SLAB_CRIMSON]        = { top: 139, side: 139, bottom: 139 };
+  mapa[BLOCO.SLAB_WARPED]         = { top: 140, side: 140, bottom: 140 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

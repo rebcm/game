@@ -368,8 +368,16 @@ export const BLOCO = {
   PAREDE_BASALTO:      308,
   SLAB_DEEPSLATE_PAV:  309,
   SLAB_BASALTO:        310,
+  ESCADA_CRIMSON:      311,
+  ESCADA_WARPED:       312,
+  ESCADA_BAMBU:        313,
+  ESCADA_COBRE_GASTO:  314,
+  PAREDE_COBRE:        315,
+  PAREDE_COBRE_OXIDADO:316,
+  SLAB_CRIMSON:        317,
+  SLAB_WARPED:         318,
 };
-export const N_BLOCOS = 311;
+export const N_BLOCOS = 319;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -702,6 +710,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_BASALTO]:      { nome: 'Parede Basalto',      solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x2a2a2a, shape: 'wall' },
   [BLOCO.SLAB_DEEPSLATE_PAV]:  { nome: 'Laje Pav. Ardósia',   solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
   [BLOCO.SLAB_BASALTO]:        { nome: 'Laje Basalto',        solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x2a2a2a, shape: 'slab' },
+  [BLOCO.ESCADA_CRIMSON]:      { nome: 'Escada Crimson',      solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'stairs' },
+  [BLOCO.ESCADA_WARPED]:       { nome: 'Escada Warped',       solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'stairs' },
+  [BLOCO.ESCADA_BAMBU]:        { nome: 'Escada Bambu',        solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x689f38, shape: 'stairs' },
+  [BLOCO.ESCADA_COBRE_GASTO]:  { nome: 'Escada Cobre Gasto',  solido: true, emiteLuz: 0, cor: 0xb47366, lateral: 0x8d5e54, shape: 'stairs' },
+  [BLOCO.PAREDE_COBRE]:        { nome: 'Parede Cobre',        solido: true, emiteLuz: 0, cor: 0xe07a3b, lateral: 0xc56226, shape: 'wall' },
+  [BLOCO.PAREDE_COBRE_OXIDADO]:{ nome: 'Parede Cobre Oxid.',  solido: true, emiteLuz: 0, cor: 0x5fb89e, lateral: 0x4a9b82, shape: 'wall' },
+  [BLOCO.SLAB_CRIMSON]:        { nome: 'Laje Crimson',        solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'slab' },
+  [BLOCO.SLAB_WARPED]:         { nome: 'Laje Warped',         solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1280,6 +1296,17 @@ export const RECEITAS = [
   // 2 lajes (3 → 6)
   { custos: [{b: BLOCO.DEEPSLATE_PAV, q: 3}],  saida: {b: BLOCO.SLAB_DEEPSLATE_PAV,   q: 6}, wb: true },
   { custos: [{b: BLOCO.BASALTO, q: 3}],        saida: {b: BLOCO.SLAB_BASALTO,         q: 6}, wb: true },
+  // 4 escadas (6 → 4)
+  { custos: [{b: BLOCO.CRIMSON_PLANKS, q: 6}], saida: {b: BLOCO.ESCADA_CRIMSON,     q: 4}, wb: true },
+  { custos: [{b: BLOCO.WARPED_PLANKS, q: 6}],  saida: {b: BLOCO.ESCADA_WARPED,      q: 4}, wb: true },
+  { custos: [{b: BLOCO.BAMBU_BLOCO, q: 6}],    saida: {b: BLOCO.ESCADA_BAMBU,       q: 4}, wb: true },
+  { custos: [{b: BLOCO.COBRE_GASTO, q: 6}],    saida: {b: BLOCO.ESCADA_COBRE_GASTO, q: 4}, wb: true },
+  // 2 paredes (6 → 6)
+  { custos: [{b: BLOCO.COBRE, q: 6}],          saida: {b: BLOCO.PAREDE_COBRE,         q: 6}, wb: true },
+  { custos: [{b: BLOCO.COBRE_OXIDADO, q: 6}],  saida: {b: BLOCO.PAREDE_COBRE_OXIDADO, q: 6}, wb: true },
+  // 2 lajes (3 → 6)
+  { custos: [{b: BLOCO.CRIMSON_PLANKS, q: 3}], saida: {b: BLOCO.SLAB_CRIMSON, q: 6}, wb: true },
+  { custos: [{b: BLOCO.WARPED_PLANKS, q: 3}],  saida: {b: BLOCO.SLAB_WARPED,  q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
