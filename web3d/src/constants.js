@@ -835,6 +835,17 @@ export const ITEM = {
   POCAO_RESISTENCIA:297,
   POCAO_SLOW_FALL: 298,
   POCAO_FIRE_RES:  299,
+  // Music discs
+  MUSIC_DISC_13:   300,
+  MUSIC_DISC_CAT:  301,
+  MUSIC_DISC_BLOCKS:302,
+  MUSIC_DISC_CHIRP:303,
+  MUSIC_DISC_FAR:  304,
+  // Foods novas
+  COOKIE:          305, // biscoito
+  PUMPKIN_PIE:     306, // torta de abóbora
+  BEETROOT:        307, // beterraba (vegetal)
+  SOPA_BEETROOT:   308, // sopa de beterraba
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -949,6 +960,17 @@ export const ITEM_INFO = {
   [ITEM.POCAO_RESISTENCIA]:{ nome: 'Poção Resistência', icone: '🧪', pocao: 'resistencia' },
   [ITEM.POCAO_SLOW_FALL]:  { nome: 'Poção Slow Fall',   icone: '🧪', pocao: 'slow_fall' },
   [ITEM.POCAO_FIRE_RES]:   { nome: 'Poção Fire Resist', icone: '🧪', pocao: 'fire_res' },
+  // Music discs
+  [ITEM.MUSIC_DISC_13]:    { nome: 'Disco "13"',          icone: '💿' },
+  [ITEM.MUSIC_DISC_CAT]:   { nome: 'Disco "Cat"',         icone: '💿' },
+  [ITEM.MUSIC_DISC_BLOCKS]:{ nome: 'Disco "Blocks"',      icone: '💿' },
+  [ITEM.MUSIC_DISC_CHIRP]: { nome: 'Disco "Chirp"',       icone: '💿' },
+  [ITEM.MUSIC_DISC_FAR]:   { nome: 'Disco "Far"',         icone: '💿' },
+  // Foods
+  [ITEM.COOKIE]:           { nome: 'Biscoito',           icone: '🍪', nutricao: 2 },
+  [ITEM.PUMPKIN_PIE]:      { nome: 'Torta de Abóbora',   icone: '🥧', nutricao: 8 },
+  [ITEM.BEETROOT]:         { nome: 'Beterraba',          icone: '🍠', nutricao: 1 },
+  [ITEM.SOPA_BEETROOT]:    { nome: 'Sopa de Beterraba',  icone: '🍲', nutricao: 6 },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -1464,6 +1486,17 @@ export const RECEITAS = [
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.RABBIT_FOOT, q: 1}], saida: {i: ITEM.POCAO_SLOW_FALL, q: 1}, wb: true },
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.BLAZE_POWDER, q: 1}], saida: {i: ITEM.POCAO_LEVITACAO, q: 1}, wb: true },
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.POCAO_RESISTENCIA, q: 1}, wb: true },
+  // Music discs (5 paus + 1 redstone + 1 lápis = base; + ingrediente único cada)
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.MUSIC_DISC_13, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.LAPIS, q: 1}],    saida: {i: ITEM.MUSIC_DISC_CAT, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.DIAMANTE, q: 1}], saida: {i: ITEM.MUSIC_DISC_BLOCKS, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.OURO, q: 1}],     saida: {i: ITEM.MUSIC_DISC_CHIRP, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.ESMERALDA, q: 1}],saida: {i: ITEM.MUSIC_DISC_FAR, q: 1}, wb: true },
+  // Foods
+  { custos: [{i: ITEM.TRIGO, q: 2}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.COOKIE, q: 8}, wb: true },
+  { custos: [{b: BLOCO.PUMPKIN, q: 1}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.PUMPKIN_PIE, q: 1}, wb: true },
+  { custos: [{i: ITEM.SEMENTE, q: 4}], saida: {i: ITEM.BEETROOT, q: 1}, wb: false },
+  { custos: [{i: ITEM.BEETROOT, q: 6}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_BEETROOT, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

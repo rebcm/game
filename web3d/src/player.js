@@ -152,7 +152,9 @@ export class Player {
         else this.vel.y = Math.max(-1.5, this.vel.y - 4 * dt);
         vy = this.vel.y;
       } else {
-        this.vel.y += GRAVIDADE * dt;
+        // Slow Fall: gravidade reduzida em 80% (paridade MC slow falling)
+        const slowFall = this.efeitos?.slow_fall && Date.now() < this.efeitos.slow_fall;
+        this.vel.y += (slowFall ? GRAVIDADE * 0.20 : GRAVIDADE) * dt;
         if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
         vy = this.vel.y;
         if (this.input.jump && this.noChao) {
@@ -327,7 +329,9 @@ export class Player {
       if (this.colisaoBlocos(world, this.pos.x, novoY, this.pos.z)) {
         if (dy < 0) {
           const queda = (this.spawnY || this.pos.y) - novoY;
-          if (this.modo === 'survival' && queda > 4) {
+          // Slow Fall: zera dano de queda completamente (paridade MC)
+          const slowFall = this.efeitos?.slow_fall && Date.now() < this.efeitos.slow_fall;
+          if (this.modo === 'survival' && queda > 4 && !slowFall) {
             const dano = Math.round(queda - 3);
             if (dano > 0) this.aplicarDano(dano, `queda ${queda.toFixed(1)}`);
           }
@@ -425,7 +429,15 @@ export class Player {
       }
       reducao = Math.min(0.85, reducao + protBonus);
     }
+    // Fire Resistance: zera dano de lava/fogo/magma
+    if (this.efeitos?.fire_res && Date.now() < this.efeitos.fire_res) {
+      if (fonte === 'lava' || fonte === 'magma') return;
+    } else if (this.efeitos?.fire_res) delete this.efeitos.fire_res;
     let danoReal = Math.max(1, Math.round(d * (1 - reducao)));
+    // Resistência: -50% dano (paridade MC potion of resistance)
+    if (this.efeitos?.resistencia && Date.now() < this.efeitos.resistencia) {
+      danoReal = Math.max(1, Math.round(danoReal * 0.5));
+    } else if (this.efeitos?.resistencia) delete this.efeitos.resistencia;
     // Absorption: corações dourados absorvem dano antes do HP normal
     if (this.absorptionHP > 0) {
       const absorvido = Math.min(this.absorptionHP, danoReal);

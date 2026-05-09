@@ -384,8 +384,25 @@ function aplicarPocao(tipo) {
   p.efeitos = p.efeitos || {};
   if (tipo === 'heal') {
     p.hp = Math.min(p.hpMax, p.hp + 5);
+  } else if (tipo === 'levitacao') {
+    // Levitação: empurra player verticalmente por 10s
+    p.efeitos.levitacao = Date.now() + 10000;
+    p.vel.y = 4;
+  } else if (tipo === 'resistencia') {
+    // Resistência: -50% dano por 30s
+    p.efeitos.resistencia = Date.now() + 30000;
+  } else if (tipo === 'fire_res') {
+    p.efeitos.fire_res = Date.now() + 60000; // 1 min imune a fogo/lava
+  } else if (tipo === 'slow_fall') {
+    p.efeitos.slow_fall = Date.now() + 30000;
+  } else if (tipo === 'invisivel') {
+    p.efeitos.invisivel = Date.now() + 30000;
+    state.ui?.toast?.('🫥 Invisível! Mobs te ignoram.');
+  } else if (tipo === 'noite') {
+    p.efeitos.noite = Date.now() + 60000; // visão noturna 1min
+    state.ui?.toast?.('🌙 Visão noturna ativa');
   } else {
-    p.efeitos[tipo] = Date.now() + 30000; // 30s
+    p.efeitos[tipo] = Date.now() + 30000; // 30s default
   }
 }
 
@@ -829,6 +846,12 @@ function init() {
   state.inv.adicionar({ i: ITEM.POCAO_INVISIVEL, q: 1 });
   state.inv.adicionar({ i: ITEM.POCAO_NOITE, q: 1 });
   state.inv.adicionar({ i: ITEM.POCAO_FIRE_RES, q: 1 });
+  state.inv.adicionar({ i: ITEM.MUSIC_DISC_13, q: 1 });
+  state.inv.adicionar({ i: ITEM.MUSIC_DISC_CAT, q: 1 });
+  state.inv.adicionar({ i: ITEM.COOKIE, q: 8 });
+  state.inv.adicionar({ i: ITEM.PUMPKIN_PIE, q: 4 });
+  state.inv.adicionar({ i: ITEM.BEETROOT, q: 8 });
+  state.inv.adicionar({ i: ITEM.SOPA_BEETROOT, q: 2 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
