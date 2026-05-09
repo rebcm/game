@@ -693,8 +693,17 @@ export const BLOCO = {
   COGUMELO_HASTE:      612, // haste cogumelo
   ALGA_SECA:           613, // alga seca individual
   BAMBU_BROTO:         614, // broto de bambu
+  // Sprint 22: 32 slabs+escadas+paredes coloridas (615-646)
+  SLAB_TIJOLO_R_C:     615, SLAB_TIJOLO_A_C:     616, SLAB_TIJOLO_V_C:     617, SLAB_TIJOLO_AM_C:    618,
+  SLAB_TIJOLO_RX_C:    619, SLAB_TIJOLO_RS_C:    620, SLAB_TIJOLO_CN_C:    621, SLAB_TIJOLO_BR_C:    622,
+  ESCADA_CONCRETO_AM:  623, ESCADA_CONCRETO_PR:  624, ESCADA_CONCRETO_LR:  625, ESCADA_CONCRETO_RS:  626,
+  ESCADA_CONCRETO_CN:  627, ESCADA_CONCRETO_MR:  628, ESCADA_CONCRETO_LM:  629, ESCADA_CONCRETO_PU:  630,
+  SLAB_CONCRETO_V:     631, SLAB_CONCRETO_AM:    632, SLAB_CONCRETO_PR:    633, SLAB_CONCRETO_LR:    634,
+  SLAB_CONCRETO_RS:    635, SLAB_CONCRETO_CN:    636, SLAB_CONCRETO_MR:    637, SLAB_CONCRETO_BR:    638,
+  PAREDE_TIJOLO_R_C:   639, PAREDE_TIJOLO_A_C:   640, PAREDE_TIJOLO_V_C:   641, PAREDE_TIJOLO_AM_C:  642,
+  PAREDE_TIJOLO_RX_C:  643, PAREDE_TIJOLO_RS_C:  644, PAREDE_TIJOLO_CN_C:  645, PAREDE_TIJOLO_BR_C:  646,
 };
-export const N_BLOCOS = 615;
+export const N_BLOCOS = 647;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1351,6 +1360,39 @@ export const BLOCO_INFO = {
   [BLOCO.COGUMELO_HASTE]:    { nome: 'Haste Cogumelo',     solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1 },
   [BLOCO.ALGA_SECA]:         { nome: 'Alga Seca',          solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20, shape: 'flower' },
   [BLOCO.BAMBU_BROTO]:       { nome: 'Broto Bambu',        solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342, shape: 'flower' },
+  // Sprint 22: 32 slabs+escadas+paredes coloridas (615-646)
+  [BLOCO.SLAB_TIJOLO_R_C]:    { nome: 'Laje Tij. Vermelho', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_A_C]:    { nome: 'Laje Tij. Azul',     solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_V_C]:    { nome: 'Laje Tij. Verde',    solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_AM_C]:   { nome: 'Laje Tij. Amarelo',  solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_RX_C]:   { nome: 'Laje Tij. Roxo',     solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_RS_C]:   { nome: 'Laje Tij. Rosa',     solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_CN_C]:   { nome: 'Laje Tij. Ciano',    solido: true, emiteLuz: 0, cor: 0x00838f, lateral: 0x006064, shape: 'slab' },
+  [BLOCO.SLAB_TIJOLO_BR_C]:   { nome: 'Laje Tij. Branco',   solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.ESCADA_CONCRETO_AM]: { nome: 'Escada Conc. Amar.', solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_PR]: { nome: 'Escada Conc. Preto', solido: true, emiteLuz: 0, cor: 0x212121, lateral: 0x000000, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_LR]: { nome: 'Escada Conc. Laran.',solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_RS]: { nome: 'Escada Conc. Rosa',  solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_CN]: { nome: 'Escada Conc. Ciano', solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_MR]: { nome: 'Escada Conc. Mar.',  solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_LM]: { nome: 'Escada Conc. Lima',  solido: true, emiteLuz: 0, cor: 0x9ccc65, lateral: 0x7cb342, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_PU]: { nome: 'Escada Conc. Roxo',  solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'stairs' },
+  [BLOCO.SLAB_CONCRETO_V]:    { nome: 'Laje Conc. Verde',   solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_AM]:   { nome: 'Laje Conc. Amarelo', solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_PR]:   { nome: 'Laje Conc. Preto',   solido: true, emiteLuz: 0, cor: 0x212121, lateral: 0x000000, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_LR]:   { nome: 'Laje Conc. Laranja', solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_RS]:   { nome: 'Laje Conc. Rosa',    solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_CN]:   { nome: 'Laje Conc. Ciano',   solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_MR]:   { nome: 'Laje Conc. Marrom',  solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_BR]:   { nome: 'Laje Conc. Branco',  solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.PAREDE_TIJOLO_R_C]:  { nome: 'Parede Tij. Verm.',  solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_A_C]:  { nome: 'Parede Tij. Azul',   solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_V_C]:  { nome: 'Parede Tij. Verde',  solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_AM_C]: { nome: 'Parede Tij. Amar.',  solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_RX_C]: { nome: 'Parede Tij. Roxo',   solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_RS_C]: { nome: 'Parede Tij. Rosa',   solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_CN_C]: { nome: 'Parede Tij. Ciano',  solido: true, emiteLuz: 0, cor: 0x00838f, lateral: 0x006064, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO_BR_C]: { nome: 'Parede Tij. Branco', solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'wall' },
 };
 
 export const ICONE = {
