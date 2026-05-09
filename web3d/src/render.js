@@ -8058,55 +8058,61 @@ export class Renderer {
     this.renderer.toneMappingExposure = 1.15; // VISUAL-1: levemente mais brilhante
     // SPRINT VISUAL-1: SKY DOME PREMIUM com gradient horizon→zenith
     // Substitui background sólido por skydome gigante com shader gradient
-    const skyGeo = new THREE.SphereGeometry(380, 32, 16);
-    const skyUniforms = {
-      sunPos:    { value: new THREE.Vector3(0, 1, 0) },
-      topColor:    { value: new THREE.Color(0x4a90e2) },     // azul zenith
-      bottomColor: { value: new THREE.Color(0xffd9a0) },     // amarelo horizon
-      sunColor:    { value: new THREE.Color(0xffe8b0) },
-      offset:      { value: 33 },
-      exponent:    { value: 0.7 },
-    };
-    const skyMat = new THREE.ShaderMaterial({
-      uniforms: skyUniforms,
-      side: THREE.BackSide,
-      depthWrite: false,
-      fog: false,
-      vertexShader: `
-        varying vec3 vWorldPos;
-        void main() {
-          vec4 wp = modelMatrix * vec4(position, 1.0);
-          vWorldPos = wp.xyz;
-          gl_Position = projectionMatrix * viewMatrix * wp;
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 topColor;
-        uniform vec3 bottomColor;
-        uniform vec3 sunColor;
-        uniform vec3 sunPos;
-        uniform float offset;
-        uniform float exponent;
-        varying vec3 vWorldPos;
-        void main() {
-          vec3 viewDir = normalize(vWorldPos);
-          float h = max(0.0, viewDir.y + offset / 380.0);
-          float gradient = pow(h, exponent);
-          vec3 sky = mix(bottomColor, topColor, clamp(gradient, 0.0, 1.0));
-          // Sun bloom radial baseado em ângulo com sol
-          float sunDot = max(0.0, dot(viewDir, normalize(sunPos)));
-          float sunHalo = pow(sunDot, 32.0) * 1.0 + pow(sunDot, 8.0) * 0.3;
-          sky += sunColor * sunHalo;
-          // Vignette superior sutil pra dar profundidade
-          gl_FragColor = vec4(sky, 1.0);
-        }
-      `,
-    });
-    this.skyDome = new THREE.Mesh(skyGeo, skyMat);
-    this.skyDome.rotation.order = 'YXZ';
-    this.skyMaterial = skyMat;
-    this.skyUniforms = skyUniforms;
-    this.scene.add(this.skyDome);
+    try {
+      const skyGeo = new THREE.SphereGeometry(380, 32, 16);
+      const skyUniforms = {
+        sunPos:    { value: new THREE.Vector3(0, 1, 0) },
+        topColor:    { value: new THREE.Color(0x4a90e2) },     // azul zenith
+        bottomColor: { value: new THREE.Color(0xffd9a0) },     // amarelo horizon
+        sunColor:    { value: new THREE.Color(0xffe8b0) },
+        offset:      { value: 33 },
+        exponent:    { value: 0.7 },
+      };
+      const skyMat = new THREE.ShaderMaterial({
+        uniforms: skyUniforms,
+        side: THREE.BackSide,
+        depthWrite: false,
+        fog: false,
+        vertexShader: `
+          varying vec3 vWorldPos;
+          void main() {
+            vec4 wp = modelMatrix * vec4(position, 1.0);
+            vWorldPos = wp.xyz;
+            gl_Position = projectionMatrix * viewMatrix * wp;
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 topColor;
+          uniform vec3 bottomColor;
+          uniform vec3 sunColor;
+          uniform vec3 sunPos;
+          uniform float offset;
+          uniform float exponent;
+          varying vec3 vWorldPos;
+          void main() {
+            vec3 viewDir = normalize(vWorldPos);
+            float h = max(0.0, viewDir.y + offset / 380.0);
+            float gradient = pow(h, exponent);
+            vec3 sky = mix(bottomColor, topColor, clamp(gradient, 0.0, 1.0));
+            // Sun bloom radial baseado em ângulo com sol
+            float sunDot = max(0.0, dot(viewDir, normalize(sunPos)));
+            float sunHalo = pow(sunDot, 32.0) * 1.0 + pow(sunDot, 8.0) * 0.3;
+            sky += sunColor * sunHalo;
+            // Vignette superior sutil pra dar profundidade
+            gl_FragColor = vec4(sky, 1.0);
+          }
+        `,
+      });
+      this.skyDome = new THREE.Mesh(skyGeo, skyMat);
+      this.skyDome.rotation.order = 'YXZ';
+      this.skyMaterial = skyMat;
+      this.skyUniforms = skyUniforms;
+      this.scene.add(this.skyDome);
+    } catch (e) {
+      console.warn('Sky dome shader failed:', e);
+      this.skyDome = null;
+      this.skyUniforms = null;
+    }
     // Background fallback (caso skydome desligue)
     this.scene.background = new THREE.Color(0x87CEEB);
     // FogExp2: densidade exponencial (mais natural que linear). Densidade
@@ -8970,7 +8976,7 @@ export class Renderer {
     if (this.scene.background) this.scene.background.copy(bg);
     if (this.scene.fog) this.scene.fog.color.copy(bg);
     // SPRINT VISUAL-1: atualiza skydome shader com sun position + cores dinâmicas
-    if (this.skyUniforms) {
+    if (this.skyUniforms) try {
       const ang = (tempoDia - 0.25) * Math.PI * 2;
       // Posição do sol no shader
       this.skyUniforms.sunPos.value.set(
@@ -9007,6 +9013,8 @@ export class Renderer {
       this.skyUniforms.topColor.value.copy(topCol);
       this.skyUniforms.bottomColor.value.copy(bottomCol);
       this.skyUniforms.sunColor.value.copy(sunCol);
+    } catch (e) {
+      if (!this._skyErrLogged) { console.warn('Sky update failed:', e); this._skyErrLogged = true; }
     }
     // Skydome segue a câmera (sempre rendered atrás de tudo)
     if (this.skyDome && playerPos) {

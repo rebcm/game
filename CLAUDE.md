@@ -17,12 +17,25 @@ Este projeto foi **estruturado especificamente para você (Claude Code, ou qualq
 
 ## 🧭 Bússola: O que este jogo é
 
-Voxel sandbox 3D inspirado em Minecraft, totalmente em browser:
+Voxel sandbox 3D **com paridade Minecraft 1.21**, totalmente em browser:
 
-- **Single-page web app** sem build step. `web3d/index.html` carrega `web3d/src/main.js` diretamente via importmap CDN do Three.js.
-- **Modular** com 14 arquivos `.js` em [`web3d/src/`](web3d/src/) (50–700 linhas cada).
+- **Single-page web app** sem build step. `web3d/index.html` carrega `web3d/src/main.js` diretamente via importmap CDN do Three.js (+ addons postprocessing).
+- **Modular** com 19 arquivos `.js` em [`web3d/src/`](web3d/src/) (~28K LOC total).
 - **Pixel-perfect** com fonte Press Start 2P e atlas procedural sem dependências externas.
 - **Todos os blocos são opacos** — não existe transparência. Não tente reintroduzir.
+
+**Estado atual (2026-05-09):**
+- **1000 blocos** com qualidade visual premium (gradient + bevel + AO sutil)
+- **210+ items** (Shield, Crossbow, Mace 1.21, Elytra, Totem, 14 poções, 11 discos, spawn eggs)
+- **65 mobs** com models 3D + AI ranged dedicada (28 com AI customizada)
+- **14 estruturas** geradas (Stronghold, Nether Fortress, End City, Ancient City, Trial Chamber, etc.)
+- **10 biomas** (deserto, planicies, floresta, taiga, cherry_grove, mangrove_swamp, bamboo_jungle, mushroom_fields, lush_caves, snowy)
+- **15 profissões villager** (farmer, butcher, fisherman, etc.)
+- **17 efeitos** de status, **60 encantamentos** em 12 categorias
+- **64 achievements** com persistência localStorage
+- **Sky Shader Custom GLSL** + **Bloom Post-processing** + **Vignette + Color Grading**
+- **Spatial Audio 3D HRTF** + **Reverb procedural** + **6 ambient loops por bioma**
+- **3 dimensões**: Overworld, Nether (com Fortress), End (com Cities)
 
 ---
 
@@ -35,16 +48,22 @@ A cada ciclo do agente, siga este fluxo:
    - Se for específico, identifique qual(is) módulo(s) tocar.
 
 2. **Localizar o módulo certo** consultando [`docs/MODULES.md`](docs/MODULES.md):
-   - Mundo, blocos, geração → [`web3d/src/world.js`](web3d/src/world.js)
-   - Render 3D, atlas, sky, mesh → [`web3d/src/render.js`](web3d/src/render.js)
-   - Movimento, física, HP/fome → [`web3d/src/player.js`](web3d/src/player.js)
-   - Mobs, IA, spawn → [`web3d/src/mobs.js`](web3d/src/mobs.js)
-   - Inventário, crafting → [`web3d/src/inventory.js`](web3d/src/inventory.js)
-   - HUD, paineis, F3 → [`web3d/src/ui.js`](web3d/src/ui.js)
-   - Save / Load → [`web3d/src/save.js`](web3d/src/save.js)
+   - Mundo, blocos, geração, estruturas, fluidos, crops, tree growth → [`web3d/src/world.js`](web3d/src/world.js)
+   - Render 3D, atlas, sky shader, mesh, bloom, postprocessing → [`web3d/src/render.js`](web3d/src/render.js)
+   - Movimento, física, HP/fome, mounts, elytra glide, efeitos → [`web3d/src/player.js`](web3d/src/player.js)
+   - Mobs, IA, spawn rules, AI ranged, models 3D → [`web3d/src/mobs.js`](web3d/src/mobs.js)
+   - Inventário, crafting, drops → [`web3d/src/inventory.js`](web3d/src/inventory.js)
+   - HUD, paineis, F3, status effects sidebar, criativo → [`web3d/src/ui.js`](web3d/src/ui.js)
+   - Save / Load multi-mundo → [`web3d/src/save.js`](web3d/src/save.js)
    - Input (teclado/mouse/touch) → [`web3d/src/input.js`](web3d/src/input.js)
-   - Audio (wrapper) → [`web3d/src/audio.js`](web3d/src/audio.js); SFX inline em [`web3d/index.html`](web3d/index.html)
-   - Bootstrap + loop principal → [`web3d/src/main.js`](web3d/src/main.js)
+   - Audio: wrapper SFX + Spatial Audio 3D HRTF + reverb → [`web3d/src/audio.js`](web3d/src/audio.js); SFX inline em [`web3d/index.html`](web3d/index.html)
+   - Particles (smoke, leaf, snow, pollen, spark, arrow, drop) → [`web3d/src/particles.js`](web3d/src/particles.js)
+   - Achievements (64 conquistas) → [`web3d/src/achievements.js`](web3d/src/achievements.js)
+   - Weather (chuva, neve, lightning) → [`web3d/src/weather.js`](web3d/src/weather.js)
+   - Multiplayer cross-device → [`web3d/src/multiplayer.js`](web3d/src/multiplayer.js)
+   - Quality auto-detect + FPS monitor → [`web3d/src/quality.js`](web3d/src/quality.js)
+   - Chunk gen async via Worker thread → [`web3d/src/chunkgen-worker.js`](web3d/src/chunkgen-worker.js)
+   - Bootstrap + loop principal + handlers → [`web3d/src/main.js`](web3d/src/main.js)
 
 3. **Editar com cuidado**
    - Mantenha imports/exports consistentes — ES modules nativos.
@@ -58,7 +77,7 @@ A cada ciclo do agente, siga este fluxo:
    # Sintaxe de cada módulo
    for f in web3d/src/*.js; do node --check "$f"; done
 
-   # Smoke tests (93 invariantes)
+   # Smoke tests (124 invariantes)
    TMPDIR=$(mktemp -d) && cp -R web3d/* "$TMPDIR/" && \
      cp scripts/test-web3d-precheck.js "$TMPDIR/_p.js" && \
      ( cd "$TMPDIR" && node ./_p.js . ) && rm -rf "$TMPDIR"

@@ -10,6 +10,8 @@
 // - Reverb por dimensão (cave/cavern/open)
 // =====================================================================
 
+import * as THREE from 'three';
+
 const sfx = () => (window.rebcm && window.rebcm.sfx) || {};
 const call = (nome, arg) => {
   const fn = sfx()[nome];
@@ -133,35 +135,44 @@ function _hashFreq(nome) {
 }
 
 // Atualiza posição/orientação do listener (player camera)
+const _fwdReuse = new THREE.Vector3();
 export function atualizarListener3D(camera) {
-  const ctx = _getCtx();
-  if (!ctx || !_listener) return;
-  const pos = camera.position;
-  // Position
-  if (_listener.positionX) {
-    _listener.positionX.value = pos.x;
-    _listener.positionY.value = pos.y;
-    _listener.positionZ.value = pos.z;
-  } else {
-    _listener.setPosition?.(pos.x, pos.y, pos.z);
-  }
-  // Orientation forward (where camera looks) + up
-  const _fwd = new (window.THREE?.Vector3 || Object)();
-  if (camera.getWorldDirection) {
-    camera.getWorldDirection(_fwd);
-    if (_listener.forwardX) {
-      _listener.forwardX.value = _fwd.x;
-      _listener.forwardY.value = _fwd.y;
-      _listener.forwardZ.value = _fwd.z;
-      _listener.upX.value = 0;
-      _listener.upY.value = 1;
-      _listener.upZ.value = 0;
-    } else {
-      _listener.setOrientation?.(_fwd.x, _fwd.y, _fwd.z, 0, 1, 0);
+  try {
+    const ctx = _getCtx();
+    if (!ctx || !_listener || !camera) return;
+    const pos = camera.position;
+    if (!pos) return;
+    // Position
+    if (_listener.positionX) {
+      _listener.positionX.value = pos.x;
+      _listener.positionY.value = pos.y;
+      _listener.positionZ.value = pos.z;
+    } else if (_listener.setPosition) {
+      _listener.setPosition(pos.x, pos.y, pos.z);
+    }
+    // Orientation forward (where camera looks) + up
+    if (camera.getWorldDirection) {
+      camera.getWorldDirection(_fwdReuse);
+      if (_listener.forwardX) {
+        _listener.forwardX.value = _fwdReuse.x;
+        _listener.forwardY.value = _fwdReuse.y;
+        _listener.forwardZ.value = _fwdReuse.z;
+        _listener.upX.value = 0;
+        _listener.upY.value = 1;
+        _listener.upZ.value = 0;
+      } else if (_listener.setOrientation) {
+        _listener.setOrientation(_fwdReuse.x, _fwdReuse.y, _fwdReuse.z, 0, 1, 0);
+      }
+    }
+    // Cache pos pra distance check
+    window._audio3DListenerPos = { x: pos.x, y: pos.y, z: pos.z };
+  } catch (e) {
+    // Silent fail — não trava o jogo
+    if (!window._audio3DErrLogged) {
+      console.warn('atualizarListener3D failed:', e);
+      window._audio3DErrLogged = true;
     }
   }
-  // Cache pos pra distance check
-  window._audio3DListenerPos = { x: pos.x, y: pos.y, z: pos.z };
 }
 
 // === Ambient Loops por bioma ===
@@ -175,39 +186,47 @@ const AMBIENT_TRACKS = {
 };
 
 export function iniciarAmbiente(biomaTipo) {
-  const ctx = _getCtx();
-  if (!ctx || !_masterGain) return;
-  const cfg = AMBIENT_TRACKS[biomaTipo];
-  if (!cfg) return;
-  // Já tocando?
-  if (_ambientLoops.has(biomaTipo)) return;
-  // Cria oscillator + LFO modulação pra atmosfera
-  const osc = ctx.createOscillator();
-  osc.type = cfg.type;
-  osc.frequency.value = cfg.freq;
-  // LFO modulação freq (0.1Hz oscilação)
-  const lfo = ctx.createOscillator();
-  lfo.frequency.value = 0.08;
-  const lfoGain = ctx.createGain();
-  lfoGain.gain.value = (cfg.freqAlt - cfg.freq) * 0.5;
-  lfo.connect(lfoGain);
-  lfoGain.connect(osc.frequency);
-  // Filter pra suavizar
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 800;
-  filter.Q.value = 0.7;
-  // Volume com fade-in
-  const gain = ctx.createGain();
-  gain.gain.value = 0;
-  gain.gain.linearRampToValueAtTime(cfg.vol, ctx.currentTime + 3);
-  osc.connect(filter);
-  filter.connect(gain);
-  gain.connect(_masterGain);
-  if (_reverbBus) gain.connect(_reverbBus);
-  osc.start();
-  lfo.start();
-  _ambientLoops.set(biomaTipo, { osc, lfo, gain, filter });
+  try {
+    const ctx = _getCtx();
+    if (!ctx || !_masterGain) return;
+    if (ctx.state === 'suspended') return; // skip antes do user gesture
+    const cfg = AMBIENT_TRACKS[biomaTipo];
+    if (!cfg) return;
+    // Já tocando?
+    if (_ambientLoops.has(biomaTipo)) return;
+    // Cria oscillator + LFO modulação pra atmosfera
+    const osc = ctx.createOscillator();
+    osc.type = cfg.type;
+    osc.frequency.value = cfg.freq;
+    // LFO modulação freq (0.1Hz oscilação)
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.08;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = (cfg.freqAlt - cfg.freq) * 0.5;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    // Filter pra suavizar
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 0.7;
+    // Volume com fade-in
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    gain.gain.linearRampToValueAtTime(cfg.vol, ctx.currentTime + 3);
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(_masterGain);
+    if (_reverbBus) gain.connect(_reverbBus);
+    osc.start();
+    lfo.start();
+    _ambientLoops.set(biomaTipo, { osc, lfo, gain, filter });
+  } catch (e) {
+    if (!window._audioAmbErrLogged) {
+      console.warn('iniciarAmbiente failed:', e);
+      window._audioAmbErrLogged = true;
+    }
+  }
 }
 
 export function pararAmbiente(biomaTipo) {
