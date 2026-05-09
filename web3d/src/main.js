@@ -2111,7 +2111,39 @@ function loop(now) {
           Audio.colocar?.();
           state.ui.toast('🎃 Abóbora talhada!');
         }
-        // Ativa portal End: eye_of_ender em qualquer END_STONE → vira portal
+        // SPRINT MEGA-9: End Portal Frame ritual — colocar 12 EYES no anel
+        // Cada PORTAL_END (frame) recebe eye e marca state.endFrames Set
+        // Ao chegar 12, abre portal central 3×3
+        else if (blocoAlvo === BLOCO.PORTAL_END && state.inv.itemSelecionado()?.i === ITEM.EYE_OF_ENDER) {
+          state.inv.consumirAtual();
+          Audio.endermanTeleport?.();
+          state.endFrames = state.endFrames || new Set();
+          state.endFrames.add(`${t.x},${t.y},${t.z}`);
+          state.ui.toast(`👁 Eye colocado! ${state.endFrames.size}/12 frames ativos`);
+          if (state.endFrames.size >= 12) {
+            // Encontra centro
+            let cx = 0, cy = 0, cz = 0;
+            for (const k of state.endFrames) {
+              const [fx, fy, fz] = k.split(',').map(Number);
+              cx += fx; cy += fy; cz += fz;
+            }
+            cx = Math.round(cx / state.endFrames.size);
+            cy = Math.round(cy / state.endFrames.size);
+            cz = Math.round(cz / state.endFrames.size);
+            // Abre 3×3 portais
+            for (let dx = -1; dx <= 1; dx++) {
+              for (let dz = -1; dz <= 1; dz++) {
+                if (state.world.get(cx + dx, cy, cz + dz) === BLOCO.AR) {
+                  state.world.set(cx + dx, cy, cz + dz, BLOCO.PORTAL_END);
+                }
+              }
+            }
+            state.ui.toast('🌀✨ END PORTAL ATIVADO! Pise pra ir ao End!');
+            state.renderer?.aplicarShake?.(0.4);
+            state.endFrames.clear();
+          }
+        }
+        // Ativa portal End rapidamente: eye_of_ender em qualquer END_STONE → portal direto
         else if (blocoAlvo === BLOCO.END_STONE && state.inv.itemSelecionado()?.i === ITEM.EYE_OF_ENDER) {
           state.world.set(t.x, t.y, t.z, BLOCO.PORTAL_END);
           state.inv.consumirAtual();
@@ -2130,6 +2162,99 @@ function loop(now) {
         else if (blocoAlvo === BLOCO.DOOR_ABERTA) {
           state.world.set(t.x, t.y, t.z, BLOCO.DOOR_MADEIRA);
           Audio.colocar?.();
+        }
+        // SPRINT MEGA-9: Redstone básico — alavanca/botão acionam pistons adjacentes
+        else if (blocoAlvo === BLOCO.ALAVANCA || blocoAlvo === BLOCO.BTN_PEDRA ||
+                 blocoAlvo === BLOCO.BTN_MADEIRA || blocoAlvo === BLOCO.BTN_OURO) {
+          Audio.colocar?.();
+          state.ui.toast('⚡ Redstone ativado!');
+          // Pulsar sinal: pistons adjacentes (3×3×3 ao redor) extendem por 2s
+          for (let dx = -2; dx <= 2; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dz = -2; dz <= 2; dz++) {
+                const px = t.x + dx, py = t.y + dy, pz = t.z + dz;
+                const b = state.world.get(px, py, pz);
+                if (b === BLOCO.PISTON || b === BLOCO.STICKY_PISTON) {
+                  // Move bloco adjacente 1 voxel pra cima (extension simulada)
+                  const acima = state.world.get(px, py + 1, pz);
+                  if (acima === BLOCO.AR) {
+                    state.world.set(px, py + 1, pz, b === BLOCO.STICKY_PISTON ? BLOCO.PISTON : BLOCO.STICKY_PISTON);
+                    state.particulas?.spawnQuebra?.(px, py + 1, pz, BLOCO.PISTON);
+                  }
+                }
+                // TNT explode
+                if (b === BLOCO.TNT) {
+                  state.world.set(px, py, pz, BLOCO.AR);
+                  state.particulas?.spawnQuebra?.(px, py, pz, BLOCO.TNT);
+                  Audio.tnt?.() || Audio.creeperBoom?.();
+                  // Damage radial
+                  for (let ex = -3; ex <= 3; ex++) {
+                    for (let ey = -3; ey <= 3; ey++) {
+                      for (let ez = -3; ez <= 3; ez++) {
+                        if (ex*ex + ey*ey + ez*ez > 9) continue;
+                        const tx = px + ex, ty = py + ey, tz = pz + ez;
+                        if (state.world.get(tx, ty, tz) !== BLOCO.AR &&
+                            state.world.get(tx, ty, tz) !== BLOCO.BEDROCK &&
+                            state.world.get(tx, ty, tz) !== BLOCO.OBSIDIANA) {
+                          state.world.set(tx, ty, tz, BLOCO.AR);
+                        }
+                      }
+                    }
+                  }
+                  state.renderer?.aplicarShake?.(0.5);
+                }
+                // Note Block toca som
+                if (b === BLOCO.NOTE_BLOCK) {
+                  Audio.cama?.() || Audio.colocar?.();
+                }
+                // Dispenser/Dropper: conta como sinal pra spawn item (placeholder)
+                if (b === BLOCO.DISPENSER) {
+                  state.particulas?.spawnQuebra?.(px, py, pz, BLOCO.DISPENSER);
+                }
+              }
+            }
+          }
+        }
+        // SPRINT MEGA-9: Trial Spawner — toque ativa wave de mobs
+        else if (blocoAlvo === BLOCO.TRIAL_SPAWNER) {
+          state.ui.toast('⚔ Trial wave! Hostis aproximando!');
+          state.renderer?.aplicarShake?.(0.3);
+          for (let i = 0; i < 4; i++) {
+            const ang = (i / 4) * Math.PI * 2;
+            const sx = t.x + Math.cos(ang) * 2;
+            const sz = t.z + Math.sin(ang) * 2;
+            const tipos = ['zumbi', 'esqueleto', 'aranha', 'creeper', 'pillager'];
+            state.mobMgr?.spawn(tipos[i % tipos.length], sx, t.y + 1, sz);
+          }
+        }
+        // Vault: precisa Trial Key, drop loot
+        else if (blocoAlvo === BLOCO.VAULT) {
+          const temChave = state.inv.contar?.(undefined, ITEM.TRIAL_KEY) > 0;
+          if (temChave) {
+            state.inv.consumir(undefined, ITEM.TRIAL_KEY, 1);
+            // Loot
+            const loot = [
+              { i: ITEM.DIAMANTE, q: 2 + Math.floor(Math.random() * 4) },
+              { i: ITEM.MACE, q: Math.random() < 0.1 ? 1 : 0 },
+              { i: ITEM.WIND_CHARGE, q: 4 },
+              { i: ITEM.MACA_DOURADA, q: 1 },
+            ];
+            for (const it of loot) if (it.q > 0) state.inv.adicionar(it);
+            state.ui.toast('🗝️ Vault aberto! Loot recebido!');
+            Audio.colocar?.();
+          } else {
+            state.ui.toast('🔒 Precisa de Trial Key pra abrir');
+          }
+        }
+        // SPRINT MEGA-9: Respawn Anchor recharge (Glowstone)
+        else if (blocoAlvo === BLOCO.RESPAWN_ANCHOR) {
+          if (state.world.dimensao === 'nether') {
+            usarRespawnAnchor(t.x, t.y, t.z);
+          } else {
+            state.player.aplicarDano(10, 'anchor_explode');
+            state.ui.toast('💥 Respawn Anchor explode!');
+            state.world.set(t.x, t.y, t.z, BLOCO.AR);
+          }
         }
         else if (blocoAlvo === BLOCO.FORNALHA) abrirPainelFornalha(t.x, t.y, t.z);
         else if (blocoAlvo === BLOCO.BIGORNA) abrirPainelBigorna();
