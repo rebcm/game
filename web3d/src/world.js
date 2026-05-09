@@ -310,15 +310,31 @@ export class World {
   // floresta (grama + árvores densas), taiga (neve + grama). Selecionado
   // por dois noises baixa-frequência (temperatura + umidade) — paridade
   // Minecraft ("temperature/humidity climate model").
+  // SPRINT MEGA-5: 6 biomas novos para paridade Minecraft (10 total)
   biomaEm(x, z) {
     if (this.alturaTerreno(x, z) >= 38) return 'taiga'; // alta altitude = sempre frio
     const temp = perlin2(x / 220, z / 220, this.seed ^ 0x7E11);
     const umid = perlin2(x / 180, z / 180, this.seed ^ 0x9999);
-    // temp [-1,1], umid [-1,1]. Mapeia em 4 quadrantes:
+    // Bioma raro (3% das chunks): cherry, bamboo, mushroom, mangrove
+    const raro = perlin2(x / 320, z / 320, this.seed ^ 0xBEEF);
+    if (raro > 0.65) {
+      // Sub-mapeamento por umidade
+      if (umid > 0.4) return 'mangrove_swamp';
+      if (umid > 0.1) return 'cherry_grove';
+      if (umid > -0.2) return 'bamboo_jungle';
+      return 'mushroom_fields';
+    }
+    // Sub-bioma por altura (cavernas)
+    const h = this.alturaTerreno(x, z);
+    if (h < 5) return 'lush_caves'; // baixo + úmido = lush
+    // temp [-1,1], umid [-1,1]. Mapeia em quadrantes:
     if (temp > 0.25) {
       return umid < -0.10 ? 'deserto' : 'planicies';
-    } else {
+    } else if (temp > -0.3) {
       return umid > 0.10 ? 'floresta' : 'taiga';
+    } else {
+      // muito frio
+      return umid > 0.0 ? 'snowy_taiga' : 'snowy_plains';
     }
   }
   // Bloco do topo do terreno dependendo do bioma.
@@ -326,7 +342,28 @@ export class World {
     const b = this.biomaEm(x, z);
     if (b === 'deserto')  return BLOCO.AREIA;
     if (b === 'taiga')    return BLOCO.NEVE;
+    if (b === 'snowy_taiga' || b === 'snowy_plains') return BLOCO.NEVE;
+    if (b === 'cherry_grove') return BLOCO.GRAMA;
+    if (b === 'mangrove_swamp') return BLOCO.LAMA || BLOCO.GRAMA;
+    if (b === 'mushroom_fields') return BLOCO.MICELIO || BLOCO.GRAMA;
+    if (b === 'bamboo_jungle') return BLOCO.GRAMA;
+    if (b === 'lush_caves') return BLOCO.MOSS_BLOCK || BLOCO.GRAMA;
     return BLOCO.GRAMA; // planicies + floresta
+  }
+  // Árvore característica por bioma
+  arvoreBioma(b) {
+    if (b === 'cherry_grove') return BLOCO.CHERRY_LOG || BLOCO.MADEIRA;
+    if (b === 'mangrove_swamp') return BLOCO.MANGROVE_LOG || BLOCO.MADEIRA;
+    if (b === 'bamboo_jungle') return BLOCO.BAMBU || BLOCO.MADEIRA;
+    if (b === 'taiga' || b === 'snowy_taiga') return BLOCO.SPRUCE_LOG || BLOCO.MADEIRA;
+    if (b === 'snowy_plains') return BLOCO.SPRUCE_LOG || BLOCO.MADEIRA;
+    return BLOCO.MADEIRA;
+  }
+  folhaBioma(b) {
+    if (b === 'cherry_grove') return BLOCO.CHERRY_FOLHA || BLOCO.FOLHA;
+    if (b === 'mangrove_swamp') return BLOCO.MANGROVE_FOLHA || BLOCO.FOLHA;
+    if (b === 'taiga' || b === 'snowy_taiga' || b === 'snowy_plains') return BLOCO.SPRUCE_FOLHA || BLOCO.FOLHA;
+    return BLOCO.FOLHA;
   }
   // Cavernas via Perlin 3D — paridade Minecraft real.
   // Threshold > 0.55 cria túneis/câmaras orgânicas. Concentra y em [5, 50].

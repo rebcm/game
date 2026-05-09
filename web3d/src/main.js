@@ -166,8 +166,92 @@ function atacarMob() {
 }
 
 // === Trades de villager ===
-// Cada villager tem 4 trades fixos baseados em seed (não mudam por sessão).
-// Player paga ITEM.X * Q1 → recebe ITEM.Y * Q2.
+// SPRINT MEGA-5: 15 profissões paridade Minecraft real
+// Cada villager tem profissão (5 trades por nível, 5 níveis = 25 trades)
+const _PROFESSIONS = {
+  farmer: [ // 1: trigo→esmeralda; 5: comida elaborada
+    { paga: { i: ITEM.TRIGO, q: 20 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.BEETROOT, q: 15 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.PAO, q: 6 } },
+    { paga: { i: ITEM.ESMERALDA, q: 3 }, recebe: { i: ITEM.MACA_DOURADA, q: 1 } },
+  ],
+  butcher: [ // carne
+    { paga: { i: ITEM.CARNE_CRUA, q: 10 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.CARNE_COZIDA, q: 8 } },
+    { paga: { i: ITEM.ESMERALDA, q: 4 }, recebe: { i: ITEM.CARNE_COELHO, q: 5 } },
+  ],
+  fisherman: [ // peixe
+    { paga: { i: ITEM.PEIXE, q: 6 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.SALMAO, q: 6 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.VARA_PESCA, q: 1 } },
+  ],
+  shepherd: [ // lã
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { b: BLOCO.LA, q: 4 } },
+    { paga: { i: ITEM.ESMERALDA, q: 2 }, recebe: { i: ITEM.PINTURA, q: 3 } },
+    { paga: { i: ITEM.ESMERALDA, q: 3 }, recebe: { i: ITEM.BANNER_PADRAO, q: 1 } },
+  ],
+  fletcher: [ // arco/flecha
+    { paga: { i: ITEM.PAU, q: 32 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.FLECHA, q: 16 } },
+    { paga: { i: ITEM.ESMERALDA, q: 7 }, recebe: { i: ITEM.ARCO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 8 }, recebe: { i: ITEM.CROSSBOW, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 4 }, recebe: { i: ITEM.FLECHA_TIPPED, q: 5 } },
+  ],
+  librarian: [ // livros + encantamentos
+    { paga: { i: ITEM.PAPEL || ITEM.LIVRO, q: 24 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.LIVRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 4 }, recebe: { i: ITEM.BUSSOLA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 5 }, recebe: { i: ITEM.RELOGIO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 9 }, recebe: { i: ITEM.LIVRO, q: 1 } }, // book of enchant
+  ],
+  cleric: [ // poções + redstone
+    { paga: { i: ITEM.CARNE_PODRE, q: 32 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.REDSTONE, q: 2 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.LAPIS, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 5 }, recebe: { i: ITEM.ENDER_PEARL, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 22 }, recebe: { i: ITEM.NETHER_STAR, q: 1 } },
+  ],
+  toolsmith: [ // ferramentas ferro/diamante
+    { paga: { i: ITEM.ESMERALDA, q: 6 }, recebe: { i: ITEM.MACHADO_FERRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 6 }, recebe: { i: ITEM.PIC_FERRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 17 }, recebe: { i: ITEM.PIC_DIAMANTE, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 18 }, recebe: { i: ITEM.MACHADO_DIAMANTE, q: 1 } },
+  ],
+  weaponsmith: [ // espadas
+    { paga: { i: ITEM.ESMERALDA, q: 8 }, recebe: { i: ITEM.ESP_FERRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 17 }, recebe: { i: ITEM.ESP_DIAMANTE, q: 1 } },
+  ],
+  armorer: [ // armaduras
+    { paga: { i: ITEM.ESMERALDA, q: 5 }, recebe: { i: ITEM.CAP_FERRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 9 }, recebe: { i: ITEM.PEI_FERRO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 13 }, recebe: { i: ITEM.PEI_DIAMANTE, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.SHIELD, q: 1 } },
+  ],
+  leatherworker: [ // couro
+    { paga: { i: ITEM.COURO, q: 6 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 4 }, recebe: { i: ITEM.PEI_COURO, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 5 }, recebe: { i: ITEM.SELA, q: 1 } },
+  ],
+  mason: [ // pedras polidas
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { b: BLOCO.PEDRA_LISA || BLOCO.PEDRA, q: 4 } },
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { b: BLOCO.GRANITO_POL || BLOCO.PEDRA, q: 4 } },
+    { paga: { i: ITEM.ESMERALDA, q: 2 }, recebe: { b: BLOCO.QUARTZO || BLOCO.PEDRA, q: 1 } },
+  ],
+  cartographer: [ // mapas
+    { paga: { i: ITEM.PAPEL || ITEM.LIVRO, q: 24 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 7 }, recebe: { i: ITEM.MAPA_TESOURO_I, q: 1 } },
+    { paga: { i: ITEM.ESMERALDA, q: 8 }, recebe: { i: ITEM.BUSSOLA, q: 1 } },
+  ],
+  nitwit: [ // sem trades (só toast)
+    // Vazio
+  ],
+  unemployed: [
+    { paga: { i: ITEM.ESMERALDA, q: 1 }, recebe: { i: ITEM.PAO, q: 4 } },
+  ],
+};
+const _PROFESSION_LIST = Object.keys(_PROFESSIONS);
+
+// Trades base mantidos como fallback
 const _TRADES_BASE = [
   { paga: { i: ITEM.TRIGO, q: 5 },        recebe: { i: ITEM.ESMERALDA, q: 1 } },
   { paga: { i: ITEM.CARNE_COZIDA, q: 3 }, recebe: { i: ITEM.ESMERALDA, q: 1 } },
@@ -182,13 +266,41 @@ const _TRADES_BASE = [
 function abrirTradeVillager(mob) {
   const modal = document.getElementById('trade-modal');
   const lista = document.getElementById('trade-list');
-  // Seleciona 4 trades aleatórios (seed = posição do mob, estável entre right-clicks)
+  // SPRINT MEGA-5: Profissão estável por seed do mob
   const seed = (Math.floor(mob.x * 100) ^ Math.floor(mob.z * 100)) >>> 0;
+  if (!mob.profissao) {
+    mob.profissao = _PROFESSION_LIST[seed % _PROFESSION_LIST.length];
+  }
+  const profTrades = _PROFESSIONS[mob.profissao] || _TRADES_BASE;
   const trades = [];
   let s = seed;
-  for (let i = 0; i < 4; i++) {
+  // 4-6 trades únicos da profissão
+  const numTrades = Math.min(profTrades.length, 6);
+  const usedIdx = new Set();
+  for (let i = 0; i < numTrades; i++) {
     s = (s * 9301 + 49297) % 233280;
-    trades.push(_TRADES_BASE[s % _TRADES_BASE.length]);
+    let idx = s % profTrades.length;
+    let tries = 0;
+    while (usedIdx.has(idx) && tries < 10) { idx = (idx + 1) % profTrades.length; tries++; }
+    usedIdx.add(idx);
+    if (profTrades[idx]) trades.push(profTrades[idx]);
+  }
+  // Header: profissão
+  if (lista.parentElement) {
+    let header = lista.parentElement.querySelector('.trade-prof');
+    if (!header) {
+      header = document.createElement('div');
+      header.className = 'trade-prof';
+      header.style.cssText = 'padding:8px;background:#2a2a2a;color:#fdd835;font-weight:bold;text-align:center;';
+      lista.parentElement.insertBefore(header, lista);
+    }
+    const profIcons = {
+      farmer: '👨‍🌾', butcher: '🥩', fisherman: '🎣', shepherd: '🐑',
+      fletcher: '🏹', librarian: '📚', cleric: '🧙', toolsmith: '⛏️',
+      weaponsmith: '⚔️', armorer: '🛡️', leatherworker: '🪡',
+      mason: '🧱', cartographer: '🗺️', nitwit: '🤪', unemployed: '👤',
+    };
+    header.textContent = `${profIcons[mob.profissao] || '👤'} ${mob.profissao.toUpperCase()}`;
   }
   lista.innerHTML = '';
   for (const t of trades) {
