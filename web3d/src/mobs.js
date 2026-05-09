@@ -97,6 +97,12 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Camelo: passivo grande do deserto, alta HP, drop nada (decorativo)
+  camelo: {
+    hp: 32, vel: 1.4, hostil: false,
+    drops: () => Math.random() < 0.3 ? [{ i: ITEM.COURO, q: 1 }] : [],
+    cor: 0xc6a45e, sec: 0x8d6e3f, // bege deserto + marrom
+  },
   // Glow Squid: lula passiva aquática brilhante (emissive ciano)
   glow_squid: {
     hp: 10, vel: 0.5, hostil: false,
@@ -953,6 +959,41 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
+    case 'camelo': {
+      // Camelo grande com 2 corcovas + pescoço comprido + cabeça pequena
+      const corpo = cubo(0.85, 0.55, 1.40, info.cor);
+      corpo.position.y = 1.20; grp.add(corpo);
+      // 2 corcovas (clássico do dromedário/camelo bactriano)
+      const corcova1 = cubo(0.55, 0.30, 0.40, info.cor);
+      corcova1.position.set(0, 1.62, 0.20); grp.add(corcova1);
+      const corcova2 = cubo(0.55, 0.30, 0.40, info.cor);
+      corcova2.position.set(0, 1.62, -0.30); grp.add(corcova2);
+      // Pescoço longo (vertical inclinado pra frente)
+      const pescoco = cubo(0.30, 0.70, 0.30, info.cor);
+      pescoco.position.set(0, 1.55, 0.75); grp.add(pescoco);
+      // Cabeça
+      const cabeca = cubo(0.32, 0.32, 0.40, info.cor);
+      cabeca.position.set(0, 2.05, 0.85); grp.add(cabeca);
+      olhosPretos(cabeca, 0.10, 0.06, 0.205, 0.05, 0.04);
+      // Boca/focinho mais escuro
+      const focinho = cubo(0.20, 0.10, 0.10, info.sec);
+      focinho.position.set(0, -0.10, 0.20); cabeca.add(focinho);
+      // 2 orelhas pequenas em cima
+      for (const sx of [-0.10, 0.10]) {
+        const o = cubo(0.06, 0.10, 0.04, info.cor);
+        o.position.set(sx, 0.20, -0.05); cabeca.add(o);
+      }
+      // 4 pernas LONGAS (caracteristica camelo)
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const p = pernaComPivot(0.18, 1.10, 0.18, info.sec, 1.10);
+        p.position.x = (i % 2 === 0 ? -0.30 : 0.30);
+        p.position.z = (i < 2 ? 0.50 : -0.50);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
+      break;
+    }
     case 'glow_squid': {
       // Cabeça/manto cônico ciano + 8 tentáculos pendurados (4 longos + 4 curtos)
       // Material emissive (brilha sozinho na água escura)
@@ -1375,6 +1416,7 @@ function _dimsMob(tipo) {
     case 'magma_cube': return { raio: 0.42, altura: 0.55 };
     case 'bee':      return { raio: 0.16, altura: 0.30 };
     case 'glow_squid': return { raio: 0.22, altura: 0.90 };
+    case 'camelo':   return { raio: 0.55, altura: 2.20 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
@@ -2146,6 +2188,8 @@ export class MobManager {
         if (_aguaPerto && Math.random() < 0.25) tipos.push('sapo');
       } else if (blocoChao === BLOCO.AREIA) {
         if (Math.random() < 0.10) tipos.push('coelho');
+        // Camelo: passivo grande do deserto (8% chance em areia)
+        if (Math.random() < 0.08) tipos.push('camelo');
         // Tartaruga: spawn em areia próxima da água (1 bloco de água em raio 3)
         let aguaPerto = false;
         for (let dx = -3; dx <= 3 && !aguaPerto; dx++) {

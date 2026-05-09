@@ -1030,6 +1030,47 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Argila: azul-cinza uniforme com manchas mais claras (textura suave)
+  function pintarArgila(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#a0a4b8';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8a8e9e', 0.50, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#b8bccc', 0.40, 5, 1, seed + 4441);
+  }
+
+  // Bambu: tronco verde claro com nós marcados em forma de anel
+  function pintarBambu(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro pra dar contraste
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Tronco vertical centrado (ocupa ~12px de largura)
+    ctx.fillStyle = '#8bc34a';
+    ctx.fillRect(x0 + 10, y0, 12, CELL);
+    // Sombra direita do tronco (3D)
+    ctx.fillStyle = '#558b2f';
+    ctx.fillRect(x0 + 19, y0, 3, CELL);
+    // Highlight esquerdo (brilho)
+    ctx.fillStyle = '#aed581';
+    ctx.fillRect(x0 + 11, y0, 2, CELL);
+    // 3 nós (anéis horizontais escuros)
+    ctx.fillStyle = '#33691e';
+    for (let py = 5; py < CELL; py += 11) {
+      ctx.fillRect(x0 + 10, y0 + py, 12, 2);
+    }
+    // Folhinhas verdes saindo dos nós (decoração)
+    ctx.fillStyle = '#7cb342';
+    ctx.fillRect(x0 + 5,  y0 + 4,  4, 2);
+    ctx.fillRect(x0 + 23, y0 + 15, 4, 2);
+    ctx.fillRect(x0 + 5,  y0 + 25, 4, 2);
+  }
+
   // Bloco de Mel: dourado translúcido (visualmente) com gotas brilhantes
   function pintarBlocoMel(idx) {
     const col = idx % COLS;
@@ -1796,6 +1837,11 @@ function criarAtlas() {
   pintarColmeiaLado(72);                                    // colmeia lado (entrada)
   pintarLilyPad(73);                                        // vitória-régia
   pintarBlocoMel(74);                                       // bloco de mel
+  pintarPedra(75, '#a66556', '#7a3a2c', '#c98575', 0.45);    // granito (rosa-avermelhado)
+  pintarPedra(76, '#e0e0e0', '#2a2a2a', '#ffffff', 0.40);    // diorito (branco/preto manchado)
+  pintarPedra(77, '#9e9e9e', '#7a7a7a', '#bdbdbd', 0.35);    // andesito (cinza claro suave)
+  pintarArgila(78);                                          // argila azul-cinza
+  pintarBambu(79);                                           // bambu verde com nós
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1876,6 +1922,11 @@ function criarAtlas() {
   mapa[BLOCO.COLMEIA]        = { top: 71, side: 72, bottom: 71 };
   mapa[BLOCO.LILY_PAD]       = { top: 73, side: 73, bottom: 73 };
   mapa[BLOCO.BLOCO_MEL]      = { top: 74, side: 74, bottom: 74 };
+  mapa[BLOCO.GRANITO]        = { top: 75, side: 75, bottom: 75 };
+  mapa[BLOCO.DIORITO]        = { top: 76, side: 76, bottom: 76 };
+  mapa[BLOCO.ANDESITO]       = { top: 77, side: 77, bottom: 77 };
+  mapa[BLOCO.ARGILA]         = { top: 78, side: 78, bottom: 78 };
+  mapa[BLOCO.BAMBU]          = { top: 79, side: 79, bottom: 79 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

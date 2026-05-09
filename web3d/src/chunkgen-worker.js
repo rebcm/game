@@ -21,7 +21,8 @@ const BLOCO = {
   CARVAO: 13, FERRO: 14, CACTO: 15, AGUA: 16, LAVA: 17, OBSIDIANA: 18,
   WORKBENCH: 19, LA: 20, TOCHA: 21, BAU: 22, FORNALHA: 23, CAMA: 24,
   BEDROCK: 25,
-  COBRE_MINERIO: 72, // adicionado pra spawn natural no terreno worker
+  COBRE_MINERIO: 72,
+  GRANITO: 76, DIORITO: 77, ANDESITO: 78,
 };
 
 // ===== Hashes (idem utils.js) =====
@@ -173,7 +174,14 @@ function gerarChunkBase(cx, cz, seed) {
           else if (y < 14 && hh < 14) b = BLOCO.FERRO;
           else if (y >= 8 && y <= 30 && hh < 28) b = BLOCO.COBRE_MINERIO;
           else if (hh < 26) b = BLOCO.CARVAO;
-          else b = BLOCO.PEDRA;
+          // Variantes naturais de pedra
+          else {
+            const vh = hash3(gx, y, gz, seed ^ 0x6E33) & 0xFF;
+            if (vh < 14) b = BLOCO.GRANITO;
+            else if (vh < 28) b = BLOCO.DIORITO;
+            else if (vh < 42) b = BLOCO.ANDESITO;
+            else b = BLOCO.PEDRA;
+          }
         } else if (y < h) {
           b = BLOCO.TERRA;
         } else {

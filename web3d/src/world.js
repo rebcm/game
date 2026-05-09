@@ -332,7 +332,16 @@ export class World {
             // Cobre: bem comum (16-32 abundância), nível 8-30 (paridade MC)
             else if (y >= 8 && y <= 30 && hh < 28) b = BLOCO.COBRE_MINERIO;
             else if (hh < 26) b = BLOCO.CARVAO;
-            else b = BLOCO.PEDRA;
+            // Variantes naturais de pedra (paridade Minecraft real):
+            // distribuídas em "veias" via hash separado pra criar manchas
+            // de granito/diorito/andesito espalhadas entre a pedra normal
+            else {
+              const vh = hash3(gx, y, gz, this.seed ^ 0x6E33) & 0xFF;
+              if (vh < 14) b = BLOCO.GRANITO;
+              else if (vh < 28) b = BLOCO.DIORITO;
+              else if (vh < 42) b = BLOCO.ANDESITO;
+              else b = BLOCO.PEDRA;
+            }
           } else if (y < h) {
             b = BLOCO.TERRA;
           } else {

@@ -114,8 +114,13 @@ export const BLOCO = {
   COLMEIA:        73, // colmeia: gera mel ao longo do tempo, decoração
   LILY_PAD:       74, // vitória-régia: decoração flutuante na água
   BLOCO_MEL:      75, // bloco de mel: decorativo dourado pegajoso
+  GRANITO:        76, // pedra natural rosa-avermelhada
+  DIORITO:        77, // pedra natural branca/preta manchada
+  ANDESITO:       78, // pedra natural cinza-claro
+  ARGILA:         79, // bloco cinza-azulado, smelt → tijolo
+  BAMBU:          80, // tronco verde-claro fino (decoração)
 };
-export const N_BLOCOS = 76;
+export const N_BLOCOS = 81;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -200,6 +205,11 @@ export const BLOCO_INFO = {
   [BLOCO.COLMEIA]:       { nome: 'Colmeia',          solido: true,  emiteLuz: 0,  cor: 0xfdd835, lateral: 0xa1887f },
   [BLOCO.LILY_PAD]:      { nome: 'Vitória-régia',    solido: true,  emiteLuz: 0,  cor: 0x388e3c, lateral: 0x388e3c, shape: 'slab' },
   [BLOCO.BLOCO_MEL]:     { nome: 'Bloco de Mel',     solido: true,  emiteLuz: 1,  cor: 0xffc107, lateral: 0xff8f00 },
+  [BLOCO.GRANITO]:       { nome: 'Granito',          solido: true,  emiteLuz: 0,  cor: 0xa66556, lateral: 0x8a4a3d },
+  [BLOCO.DIORITO]:       { nome: 'Diorito',          solido: true,  emiteLuz: 0,  cor: 0xe0e0e0, lateral: 0xbdbdbd },
+  [BLOCO.ANDESITO]:      { nome: 'Andesito',         solido: true,  emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x757575 },
+  [BLOCO.ARGILA]:        { nome: 'Argila',           solido: true,  emiteLuz: 0,  cor: 0xa0a4b8, lateral: 0x8a8e9e },
+  [BLOCO.BAMBU]:         { nome: 'Bambu',            solido: true,  emiteLuz: 0,  cor: 0x8bc34a, lateral: 0x689f38 },
 };
 
 export const ICONE = {
@@ -435,6 +445,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.FAVO_MEL, q: 3}], saida: {b: BLOCO.COLMEIA, q: 1}, wb: true },
   // Bloco de Mel: 4 mel = 1 bloco
   { custos: [{i: ITEM.MEL, q: 4}], saida: {b: BLOCO.BLOCO_MEL, q: 1}, wb: true },
+  // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
+  { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.MAGMA, q: 4}, wb: true },
   // Lanterna: 8 ferro + 1 tocha → 1 lanterna (paridade MC: nuggets, simplificado)
