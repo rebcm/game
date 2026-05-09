@@ -10,7 +10,7 @@ import {
 } from './constants.js';
 import { clamp } from './utils.js';
 import { state } from './state.js';
-import { Audio } from './audio.js';
+import { Audio, atualizarListener3D, setBiomaAtivo, tocar3D } from './audio.js';
 import { World } from './world.js';
 import { Renderer } from './render.js';
 import { Player } from './player.js';
@@ -2110,6 +2110,28 @@ function loop(now) {
     }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
+    // SPRINT AUDIO 3D: Atualiza listener position/orientation
+    if (state.renderer?.camera) atualizarListener3D(state.renderer.camera);
+    // SPRINT AUDIO biome ambient (a cada 2s)
+    state._biomaAcc = (state._biomaAcc || 0) + dt;
+    if (state._biomaAcc >= 2.0) {
+      state._biomaAcc = 0;
+      const dim = state.world?.dimensao;
+      let bioma = 'forest';
+      if (dim === 'nether') bioma = 'nether';
+      else if (dim === 'end') bioma = 'end';
+      else if (state.player?.pos?.y < 20) bioma = 'cave';
+      else {
+        const b = state.world?.biomaEm?.(state.player.pos.x, state.player.pos.z);
+        if (b === 'deserto') bioma = 'forest'; // sem track desert ainda
+        else if (b === 'taiga' || b === 'snowy_taiga' || b === 'snowy_plains') bioma = 'cave';
+        else bioma = 'forest';
+      }
+      if (state._biomaAtivo !== bioma) {
+        setBiomaAtivo(bioma);
+        state._biomaAtivo = bioma;
+      }
+    }
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
     state.particulas.atualizar(dt);
     Multiplayer.atualizar(dt);
