@@ -730,47 +730,88 @@ function criarAtlas() {
   }
 
   // Água: azul com ondas horizontais.
+  // SPRINT VISUAL-8: Água PREMIUM com gradient + ondulações + reflexos
   function pintarAgua(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#2C8FCF';
+    // Gradient vertical: superfície clara → fundo escuro (efeito profundidade)
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, '#42a5f5');  // surface light blue
+    grad.addColorStop(0.5, '#2C8FCF');
+    grad.addColorStop(1, '#1565c0');  // depth dark blue
+    ctx.fillStyle = grad;
     ctx.fillRect(x0, y0, CELL, CELL);
+    // Ondulações horizontais (3-4 waves)
     ctx.fillStyle = '#1B6EA8';
     for (let py = 2; py < CELL; py += 4) {
       ctx.fillRect(x0, y0 + py, CELL, 1);
     }
-    ctx.fillStyle = '#7AC0E5';
-    let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
+    // Highlight ondulações (luz solar refletindo)
+    ctx.fillStyle = '#9adcff';
+    for (let py = 1; py < CELL; py += 4) {
+      // Wave shape
       for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 1, 1);
+        const off = Math.sin((px + py) * 0.4) > 0.3 ? 1 : 0;
+        if (off) ctx.fillRect(x0 + px, y0 + py, 1, 1);
       }
     }
+    // Sparkles (pontos brancos de reflexo solar)
+    ctx.fillStyle = '#ffffff';
+    let seed = idx * 9301 + 49297;
+    for (let i = 0; i < 8; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const sx = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const sy = (seed % CELL);
+      ctx.fillRect(x0 + sx, y0 + sy, 1, 1);
+    }
+    // Bevel sutil
+    ctx.fillStyle = 'rgba(255,255,255,0.20)';
+    ctx.fillRect(x0, y0, CELL, 1);
   }
 
   // Lava: laranja-amarelo caótico com bolhas brilhantes.
+  // SPRINT VISUAL-8: Lava PREMIUM com gradient fogo + bolhas brilhantes
   function pintarLava(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#D44515';
+    // Gradient fogo (escuro embaixo, brilhante em cima)
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, '#FFEB47');   // amarelo brilhante topo
+    grad.addColorStop(0.3, '#FFA830'); // laranja
+    grad.addColorStop(0.7, '#D44515'); // vermelho
+    grad.addColorStop(1, '#8b0000');   // bordo escuro
+    ctx.fillStyle = grad;
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#FFA830';
+    // Bolhas (clusters laranja/amarelo)
     let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
+    ctx.fillStyle = '#FFA830';
+    for (let i = 0; i < 25; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
     }
+    // Bolhas brilhantes (amarelo intenso)
     ctx.fillStyle = '#FFEB47';
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
+    for (let i = 0; i < 12; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Sparkles brancos (brilho extremo)
+    ctx.fillStyle = '#fff8e1';
+    for (let i = 0; i < 5; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
     }
   }
 
@@ -799,27 +840,39 @@ function criarAtlas() {
   }
 
   // Glowstone (luz): amarelo brilhante com células granuladas.
+  // SPRINT VISUAL-8: Glowstone PREMIUM ultra brilhante (vai disparar bloom)
   function pintarGlowstone(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#E8B547';
+    // Gradient radial brilhante (centro mais luminoso)
+    const grad = ctx.createRadialGradient(x0 + CELL/2, y0 + CELL/2, 0, x0 + CELL/2, y0 + CELL/2, CELL/2);
+    grad.addColorStop(0, '#fff9c4');   // centro super brilhante (acima do threshold bloom 0.78)
+    grad.addColorStop(0.4, '#ffeb3b'); // amarelo brilhante
+    grad.addColorStop(0.8, '#FFA830'); // laranja
+    grad.addColorStop(1, '#A07A28');   // borda escura
+    ctx.fillStyle = grad;
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#FFE680';
+    // Cristais brilhantes (bolas de luz internas)
     let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 8; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const cx = 4 + (seed % (CELL - 8));
+      seed = (seed * 9301 + 49297) % 233280;
+      const cy = 4 + (seed % (CELL - 8));
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+      ctx.fillStyle = '#FFE680';
+      ctx.fillRect(x0 + cx - 1, y0 + cy, 1, 2);
+      ctx.fillRect(x0 + cx + 2, y0 + cy, 1, 2);
+      ctx.fillRect(x0 + cx, y0 + cy - 1, 2, 1);
+      ctx.fillRect(x0 + cx, y0 + cy + 2, 2, 1);
+      ctx.fillStyle = '#ffffff'; // próximo
     }
-    ctx.fillStyle = '#A07A28';
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
+    // Bevel sutil
+    ctx.fillStyle = 'rgba(255,255,255,0.30)';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
   }
 
   // Lã: branco com leve granulação cinza.
@@ -6279,7 +6332,7 @@ function criarAtlas() {
   pintarAreia(4);                          // areia (dunas + grãos visíveis)
   pintarMadeiraTopo(5);                   // madeira topo (anéis)
   pintarMadeiraLado(6);                   // madeira lado (grain VERTICAL)
-  pintarFolha(7);                         // folha (verde escuro caótico)
+  pintarFolhaPremium(7, '#7cb342', '#558b2f', '#33691e', '#ffeb3b'); // folha premium 3-tonal + flor amarela ocasional
   pintarTijolo(8);                        // tijolo (mortar + bricks)
   pintarVidro(9);                         // vidro (claro com moldura)
   pintarOuro(10);                          // ouro (clusters metálicos)
