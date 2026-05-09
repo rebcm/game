@@ -3202,6 +3202,13 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_PEDRA]    = { top: 3,  side: 3,  bottom: 3  };
   mapa[BLOCO.PAREDE_TIJOLO]   = { top: 8,  side: 8,  bottom: 8  };
   mapa[BLOCO.PAREDE_PAVIMENTO]= { top: 90, side: 90, bottom: 90 };
+  // Botões/placas/alavanca reusam textura do material base
+  mapa[BLOCO.BTN_PEDRA]      = { top: 3,  side: 3,  bottom: 3  };
+  mapa[BLOCO.BTN_MADEIRA]    = { top: 5,  side: 6,  bottom: 5  };
+  mapa[BLOCO.BTN_OURO]       = { top: 10, side: 10, bottom: 10 };
+  mapa[BLOCO.PLATE_PEDRA]    = { top: 3,  side: 3,  bottom: 3  };
+  mapa[BLOCO.PLATE_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
+  mapa[BLOCO.ALAVANCA]       = { top: 6,  side: 6,  bottom: 3  };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -3762,6 +3769,54 @@ export class Renderer {
             addFace(SHADE.sideZ,  idxSide,4, x, y, z,  x+1, y+0.5, z+1,    0,0,1, -1,0,0,  0,0.5,0);
             // Face frontal do degrau superior (em z+0.5, y+0.5..y+1)
             addFace(SHADE.sideZ,  idxSide,5, x, y, z,  x,   y+0.5, z+0.5,  0,0,-1, 1,0,0,  0,0.5,0);
+            continue;
+          }
+          if (info.shape === 'button') {
+            // Botão: cubinho fino centralizado no chão (0.375x0.125x0.25)
+            const ax = 0.3125, bx = 0.6875, w = bx - ax;       // largura 0.375
+            const az = 0.4375, bz = 0.5625, d = bz - az;       // prof 0.125
+            const h = 0.125;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x+ax, y+h, z+az, 0,1,0,  w,0,0, 0,0,d);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x+ax, y,   z+bz, 0,-1,0, w,0,0, 0,0,-d);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+bx, y,   z+az, 1,0,0,  0,0,d, 0,h,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x+ax, y,   z+bz,-1,0,0,  0,0,-d,0,h,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+bx, y,   z+bz, 0,0,1, -w,0,0, 0,h,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x+ax, y,   z+az, 0,0,-1, w,0,0, 0,h,0);
+            continue;
+          }
+          if (info.shape === 'plate') {
+            // Placa de pressão: chapinha 1×0.0625×1 no chão (paridade MC)
+            const h = 0.0625;
+            addFace(SHADE.top,    idxTop, 0, x, y, z, x,   y+h, z,    0,1,0,  1,0,0, 0,0,1);
+            addFace(SHADE.bottom, idxBot, 1, x, y, z, x,   y,   z+1,  0,-1,0, 1,0,0, 0,0,-1);
+            addFace(SHADE.sideX,  idxSide,2, x, y, z, x+1, y,   z,    1,0,0,  0,0,1, 0,h,0);
+            addFace(SHADE.sideX,  idxSide,3, x, y, z, x,   y,   z+1, -1,0,0,  0,0,-1,0,h,0);
+            addFace(SHADE.sideZ,  idxSide,4, x, y, z, x+1, y,   z+1,  0,0,1, -1,0,0, 0,h,0);
+            addFace(SHADE.sideZ,  idxSide,5, x, y, z, x,   y,   z,    0,0,-1, 1,0,0, 0,h,0);
+            continue;
+          }
+          if (info.shape === 'lever') {
+            // Alavanca: base pequena (0.25×0.0625×0.25) + cabo vertical
+            // (0.0625×0.5×0.0625) inclinado a partir do centro
+            // Base
+            const ba = 0.375, bb = 0.625, bw = bb - ba;
+            const bh = 0.0625;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x+ba, y+bh, z+ba, 0,1,0,  bw,0,0, 0,0,bw);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x+ba, y,    z+bb, 0,-1,0, bw,0,0, 0,0,-bw);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+bb, y,    z+ba, 1,0,0,  0,0,bw, 0,bh,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x+ba, y,    z+bb,-1,0,0,  0,0,-bw,0,bh,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+bb, y,    z+bb, 0,0,1, -bw,0,0, 0,bh,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x+ba, y,    z+ba, 0,0,-1, bw,0,0, 0,bh,0);
+            // Cabo vertical (mais fino)
+            const ca = 0.4375, cb = 0.5625, cw = cb - ca;
+            const ch = 0.5;
+            const cy = bh; // começa no topo da base
+            addFace(SHADE.sideX, idxSide, 2, x, y, z, x+cb, y+cy, z+ca,  1,0,0,  0,0,cw, 0,ch,0);
+            addFace(SHADE.sideX, idxSide, 3, x, y, z, x+ca, y+cy, z+cb, -1,0,0,  0,0,-cw,0,ch,0);
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z, x+cb, y+cy, z+cb,  0,0,1, -cw,0,0, 0,ch,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z, x+ca, y+cy, z+ca,  0,0,-1, cw,0,0, 0,ch,0);
+            // Topo do cabo
+            addFace(SHADE.top,   idxTop,  0, x, y, z, x+ca, y+cy+ch, z+ca, 0,1,0, cw,0,0, 0,0,cw);
             continue;
           }
           if (info.shape === 'wall') {

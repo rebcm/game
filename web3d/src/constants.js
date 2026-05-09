@@ -220,8 +220,17 @@ export const BLOCO = {
   PAREDE_PEDRA:   170,
   PAREDE_TIJOLO:  171,
   PAREDE_PAVIMENTO:172,
+  // Botões (shape 'button' = cubinho fino 0.25x0.125x0.375)
+  BTN_PEDRA:      173,
+  BTN_MADEIRA:    174,
+  BTN_OURO:       175,
+  // Placas de pressão (shape 'plate' = chapinha fina horizontal)
+  PLATE_PEDRA:    176,
+  PLATE_MADEIRA:  177,
+  // Alavanca (shape 'lever' = pequeno toggle)
+  ALAVANCA:       178,
 };
-export const N_BLOCOS = 173;
+export const N_BLOCOS = 179;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -411,6 +420,15 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_PEDRA]:    { nome: 'Parede Pedra',    solido: true, emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'wall' },
   [BLOCO.PAREDE_TIJOLO]:   { nome: 'Parede Tijolo',   solido: true, emiteLuz: 0, cor: 0xE57373, lateral: 0xC62828, shape: 'wall' },
   [BLOCO.PAREDE_PAVIMENTO]:{ nome: 'Parede Pavimento',solido: true, emiteLuz: 0, cor: 0x7a7a7a, lateral: 0x5e5e5e, shape: 'wall' },
+  // Botões (shape button = cubinho fino na parede)
+  [BLOCO.BTN_PEDRA]:    { nome: 'Botão de Pedra',   solido: false, emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'button' },
+  [BLOCO.BTN_MADEIRA]:  { nome: 'Botão de Madeira', solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'button' },
+  [BLOCO.BTN_OURO]:     { nome: 'Botão de Ouro',    solido: false, emiteLuz: 0, cor: 0xFDD835, lateral: 0xF9A825, shape: 'button' },
+  // Placas de pressão (shape plate = chapinha fina horizontal)
+  [BLOCO.PLATE_PEDRA]:  { nome: 'Placa de Pedra',   solido: false, emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'plate' },
+  [BLOCO.PLATE_MADEIRA]:{ nome: 'Placa de Madeira', solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'plate' },
+  // Alavanca (shape lever = base pequena + cabo vertical)
+  [BLOCO.ALAVANCA]:     { nome: 'Alavanca',         solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'lever' },
 };
 
 export const ICONE = {
@@ -802,6 +820,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PEDRA, q: 6}],     saida: {b: BLOCO.PAREDE_PEDRA, q: 6}, wb: true },
   { custos: [{b: BLOCO.TIJOLO, q: 6}],    saida: {b: BLOCO.PAREDE_TIJOLO, q: 6}, wb: true },
   { custos: [{b: BLOCO.PAVIMENTO, q: 6}], saida: {b: BLOCO.PAREDE_PAVIMENTO, q: 6}, wb: true },
+  // Botões: 1 do material → 1 botão (paridade MC)
+  { custos: [{b: BLOCO.PEDRA,    q: 1}], saida: {b: BLOCO.BTN_PEDRA, q: 1}, wb: false },
+  { custos: [{i: ITEM.PRANCHAS,  q: 1}], saida: {b: BLOCO.BTN_MADEIRA, q: 1}, wb: false },
+  { custos: [{i: ITEM.OURO,      q: 1}], saida: {b: BLOCO.BTN_OURO, q: 1}, wb: false },
+  // Placas de pressão: 2 do material → 1 placa
+  { custos: [{b: BLOCO.PEDRA,    q: 2}], saida: {b: BLOCO.PLATE_PEDRA, q: 1}, wb: false },
+  { custos: [{i: ITEM.PRANCHAS,  q: 2}], saida: {b: BLOCO.PLATE_MADEIRA, q: 1}, wb: false },
+  // Alavanca: 1 pau + 1 pedra
+  { custos: [{i: ITEM.PAU, q: 1}, {b: BLOCO.PEDRA, q: 1}], saida: {b: BLOCO.ALAVANCA, q: 1}, wb: false },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
