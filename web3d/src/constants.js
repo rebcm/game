@@ -417,8 +417,16 @@ export const BLOCO = {
   NOTE_BLOCK:          356,
   BELL:                357,
   SEA_PICKLE:          358,
+  ENDER_CHEST:         359,
+  SHULKER_BOX:         360,
+  ANVIL_DAMAGED:       361,
+  DECORATED_POT:       362,
+  ESCADA_PRISMARINE_BRK:363,
+  SLAB_PRISMARINE:     364,
+  SLAB_PRISMARINE_BRK: 365,
+  PAREDE_PRISMARINE:   366,
 };
-export const N_BLOCOS = 359;
+export const N_BLOCOS = 367;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -799,6 +807,14 @@ export const BLOCO_INFO = {
   [BLOCO.NOTE_BLOCK]:     { nome: 'Bloco de Nota',    solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
   [BLOCO.BELL]:           { nome: 'Sino',             solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0xf9a825 },
   [BLOCO.SEA_PICKLE]:     { nome: 'Pepino-do-mar',    solido: false,emiteLuz: 6,  cor: 0x558b2f, lateral: 0x33691e, shape: 'pot' },
+  [BLOCO.ENDER_CHEST]:    { nome: 'Baú do Ender',     solido: true, emiteLuz: 7, cor: 0x004d40, lateral: 0x00251f },
+  [BLOCO.SHULKER_BOX]:    { nome: 'Shulker Box',      solido: true, emiteLuz: 0, cor: 0x9c27b0, lateral: 0x6a1b9a },
+  [BLOCO.ANVIL_DAMAGED]:  { nome: 'Bigorna Danific.', solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.DECORATED_POT]:  { nome: 'Vaso Decorado',    solido: false,emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'pot' },
+  [BLOCO.ESCADA_PRISMARINE_BRK]:{ nome:'Escada Prismarine Brk',solido: true,emiteLuz: 0, cor: 0x009688, lateral: 0x00695c, shape: 'stairs' },
+  [BLOCO.SLAB_PRISMARINE]:     { nome: 'Laje Prismarine',     solido: true,emiteLuz: 0, cor: 0x4db6ac, lateral: 0x00897b, shape: 'slab' },
+  [BLOCO.SLAB_PRISMARINE_BRK]: { nome: 'Laje Prismarine Brk', solido: true,emiteLuz: 0, cor: 0x009688, lateral: 0x00695c, shape: 'slab' },
+  [BLOCO.PAREDE_PRISMARINE]:   { nome: 'Parede Prismarine',   solido: true,emiteLuz: 0, cor: 0x4db6ac, lateral: 0x00897b, shape: 'wall' },
 };
 
 export const ICONE = {
@@ -1570,6 +1586,16 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 8}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.NOTE_BLOCK, q: 1}, wb: true },
   { custos: [{b: BLOCO.BLOCO_OURO, q: 1}, {b: BLOCO.OBSIDIANA, q: 4}], saida: {b: BLOCO.BELL, q: 1}, wb: true },
   { custos: [{i: ITEM.SLIMEBALL, q: 4}], saida: {b: BLOCO.SEA_PICKLE, q: 4}, wb: true },
+  // 4 Blocos especiais novos
+  { custos: [{b: BLOCO.OBSIDIANA, q: 8}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.ENDER_CHEST, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BAU, q: 1}, {b: BLOCO.PURPUR_BLOCK, q: 2}], saida: {b: BLOCO.SHULKER_BOX, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BIGORNA, q: 1}, {i: ITEM.CARVAO, q: 4}], saida: {b: BLOCO.ANVIL_DAMAGED, q: 1}, wb: true },
+  { custos: [{i: ITEM.TIGELA, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {b: BLOCO.DECORATED_POT, q: 1}, wb: true },
+  // 4 Variantes Prismarine
+  { custos: [{b: BLOCO.PRISMARINE_BRK, q: 6}], saida: {b: BLOCO.ESCADA_PRISMARINE_BRK, q: 4}, wb: true },
+  { custos: [{b: BLOCO.PRISMARINE, q: 3}],     saida: {b: BLOCO.SLAB_PRISMARINE,       q: 6}, wb: true },
+  { custos: [{b: BLOCO.PRISMARINE_BRK, q: 3}], saida: {b: BLOCO.SLAB_PRISMARINE_BRK,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.PRISMARINE, q: 6}],     saida: {b: BLOCO.PAREDE_PRISMARINE,     q: 6}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

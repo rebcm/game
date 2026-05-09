@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 34, CELL = 32;
+  const COLS = 8, ROWS = 35, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1428,6 +1428,109 @@ function criarAtlas() {
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+  }
+
+  // Ender Chest: verde-escuro com pontos/estrelas (gradient End)
+  function pintarEnderChest(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#004d40';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#00251f', 0.40, 4, 2, idx * 9301 + 49297);
+    // Estrelinhas brancas (estilo End)
+    ctx.fillStyle = '#80cbc4';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#80cbc4', 0.30, 5, 1, idx * 9301 + 7331);
+    ctx.fillStyle = '#ffffff';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.15, 7, 1, idx * 9301 + 12347);
+    // Centro + dobradiças
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 14, y0 + 12, 4, 8);
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+  }
+
+  // Shulker Box: roxo com padrão de placas/escamas
+  function pintarShulkerBox(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9c27b0';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Placas escamares (4x4 grid)
+    ctx.fillStyle = '#6a1b9a';
+    for (let by = 0; by < CELL; by += 8) {
+      for (let bx = 0; bx < CELL; bx += 8) {
+        ctx.fillRect(x0 + bx, y0 + by, 7, 1);
+        ctx.fillRect(x0 + bx, y0 + by, 1, 7);
+      }
+    }
+    // Highlights
+    ctx.fillStyle = '#ce93d8';
+    for (let by = 2; by < CELL; by += 8) {
+      for (let bx = 2; bx < CELL; bx += 8) {
+        ctx.fillRect(x0 + bx, y0 + by, 2, 2);
+      }
+    }
+    // Borda
+    ctx.fillStyle = '#4a148c';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Anvil Damaged: bigorna com rachaduras visíveis (mais escuras)
+  function pintarAnvilDamaged(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Reusa lógica básica da bigorna (yunque) mas com rachaduras
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 4, y0 + 6, CELL - 8, CELL - 12);
+    ctx.fillStyle = '#5a5a5a';
+    ctx.fillRect(x0 + 8, y0 + 10, CELL - 16, CELL - 20);
+    // Rachaduras zigzag
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0 + 9,  y0 + 11, 1, 4);
+    ctx.fillRect(x0 + 10, y0 + 14, 1, 3);
+    ctx.fillRect(x0 + 11, y0 + 16, 1, 4);
+    ctx.fillRect(x0 + 18, y0 + 12, 1, 6);
+    ctx.fillRect(x0 + 17, y0 + 17, 2, 1);
+    // Marcas vermelhas (ferrugem/danos)
+    ctx.fillStyle = '#5d2535';
+    ctx.fillRect(x0 + 12, y0 + 18, 2, 1);
+    ctx.fillRect(x0 + 19, y0 + 19, 2, 1);
+  }
+
+  // Decorated Pot: vaso marrom com padrão decorativo
+  function pintarDecoratedPot(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Pote ovalado (parte central marrom)
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0 + 8, y0 + 10, 16, 16);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 10, y0 + 12, 12, 12);
+    // Borda superior decorada
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 6, y0 + 8, 20, 2);
+    // Padrão decorativo central (cruz dourada)
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 8);
+    ctx.fillRect(x0 + 12, y0 + 16, 8, 4);
+    // Reflexo branco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 17, 2, 2);
+    // Base decorada
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 8, y0 + 25, 16, 1);
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -4211,6 +4314,10 @@ function criarAtlas() {
   pintarNoteBlock(269);                                             // note block
   pintarBell(270);                                                  // bell
   pintar(271, '#558b2f', '#33691e', 0.50);                         // sea pickle (verde-escuro)
+  pintarEnderChest(272);                                            // ender chest
+  pintarShulkerBox(273);                                            // shulker box
+  pintarAnvilDamaged(274);                                          // anvil damaged
+  pintarDecoratedPot(275);                                          // decorated pot
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4588,6 +4695,15 @@ function criarAtlas() {
   mapa[BLOCO.NOTE_BLOCK]           = { top: 269, side: 269, bottom: 269 };
   mapa[BLOCO.BELL]                 = { top: 270, side: 270, bottom: 270 };
   mapa[BLOCO.SEA_PICKLE]           = { top: 271, side: 271, bottom: 271 };
+  mapa[BLOCO.ENDER_CHEST]          = { top: 272, side: 272, bottom: 272 };
+  mapa[BLOCO.SHULKER_BOX]          = { top: 273, side: 273, bottom: 273 };
+  mapa[BLOCO.ANVIL_DAMAGED]        = { top: 274, side: 274, bottom: 274 };
+  mapa[BLOCO.DECORATED_POT]        = { top: 275, side: 275, bottom: 275 };
+  // Variantes Prismarine reusam cells 128/129
+  mapa[BLOCO.ESCADA_PRISMARINE_BRK]= { top: 129, side: 129, bottom: 129 };
+  mapa[BLOCO.SLAB_PRISMARINE]      = { top: 128, side: 128, bottom: 128 };
+  mapa[BLOCO.SLAB_PRISMARINE_BRK]  = { top: 129, side: 129, bottom: 129 };
+  mapa[BLOCO.PAREDE_PRISMARINE]    = { top: 128, side: 128, bottom: 128 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
