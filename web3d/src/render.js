@@ -4129,6 +4129,14 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_LAMA]      = { top: 109, side: 109, bottom: 109 };
   mapa[BLOCO.SLAB_PAVIMENTO]   = { top: 90,  side: 90,  bottom: 90  };
   mapa[BLOCO.SLAB_CALCITE]     = { top: 103, side: 103, bottom: 103 };
+  mapa[BLOCO.ESCADA_GRANITO]   = { top: 75,  side: 75,  bottom: 75  };
+  mapa[BLOCO.ESCADA_DIORITO]   = { top: 76,  side: 76,  bottom: 76  };
+  mapa[BLOCO.ESCADA_ANDESITO]  = { top: 77,  side: 77,  bottom: 77  };
+  mapa[BLOCO.ESCADA_PRISMARINE]= { top: 128, side: 128, bottom: 128 };
+  mapa[BLOCO.PAREDE_GRANITO]   = { top: 75,  side: 75,  bottom: 75  };
+  mapa[BLOCO.PAREDE_DIORITO]   = { top: 76,  side: 76,  bottom: 76  };
+  mapa[BLOCO.SLAB_GRANITO]     = { top: 75,  side: 75,  bottom: 75  };
+  mapa[BLOCO.SLAB_DIORITO]     = { top: 76,  side: 76,  bottom: 76  };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
