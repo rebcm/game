@@ -119,8 +119,13 @@ export const BLOCO = {
   ANDESITO:       78, // pedra natural cinza-claro
   ARGILA:         79, // bloco cinza-azulado, smelt → tijolo
   BAMBU:          80, // tronco verde-claro fino (decoração)
+  GRANITO_POL:    81,
+  DIORITO_POL:    82,
+  ANDESITO_POL:   83,
+  PEDRA_LISA:     84, // smooth stone (smelt de pedra)
+  TIJOLO_MUSGO:   85, // tijolo de pedra com musgo
 };
-export const N_BLOCOS = 81;
+export const N_BLOCOS = 86;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -210,6 +215,11 @@ export const BLOCO_INFO = {
   [BLOCO.ANDESITO]:      { nome: 'Andesito',         solido: true,  emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x757575 },
   [BLOCO.ARGILA]:        { nome: 'Argila',           solido: true,  emiteLuz: 0,  cor: 0xa0a4b8, lateral: 0x8a8e9e },
   [BLOCO.BAMBU]:         { nome: 'Bambu',            solido: true,  emiteLuz: 0,  cor: 0x8bc34a, lateral: 0x689f38 },
+  [BLOCO.GRANITO_POL]:   { nome: 'Granito Polido',   solido: true,  emiteLuz: 0,  cor: 0xc98575, lateral: 0xa66556 },
+  [BLOCO.DIORITO_POL]:   { nome: 'Diorito Polido',   solido: true,  emiteLuz: 0,  cor: 0xeeeeee, lateral: 0xe0e0e0 },
+  [BLOCO.ANDESITO_POL]:  { nome: 'Andesito Polido',  solido: true,  emiteLuz: 0,  cor: 0xb0b0b0, lateral: 0x9e9e9e },
+  [BLOCO.PEDRA_LISA]:    { nome: 'Pedra Lisa',       solido: true,  emiteLuz: 0,  cor: 0xb8b8b8, lateral: 0xa0a0a0 },
+  [BLOCO.TIJOLO_MUSGO]:  { nome: 'Tijolo c/ Musgo',  solido: true,  emiteLuz: 0,  cor: 0xc0d0a0, lateral: 0xa0b88a },
 };
 
 export const ICONE = {
@@ -445,6 +455,14 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.FAVO_MEL, q: 3}], saida: {b: BLOCO.COLMEIA, q: 1}, wb: true },
   // Bloco de Mel: 4 mel = 1 bloco
   { custos: [{i: ITEM.MEL, q: 4}], saida: {b: BLOCO.BLOCO_MEL, q: 1}, wb: true },
+  // Variantes polidas: 4 natural → 4 polido (paridade MC stonecutter)
+  { custos: [{b: BLOCO.GRANITO,  q: 4}], saida: {b: BLOCO.GRANITO_POL,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.DIORITO,  q: 4}], saida: {b: BLOCO.DIORITO_POL,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.ANDESITO, q: 4}], saida: {b: BLOCO.ANDESITO_POL, q: 4}, wb: true },
+  // Pedra Lisa: 4 pedra (proxy de smelt)
+  { custos: [{b: BLOCO.PEDRA, q: 4}], saida: {b: BLOCO.PEDRA_LISA, q: 4}, wb: true },
+  // Tijolo c/ musgo: 1 tijolo + 1 muda → 1 tijolo musgo (proxy mossy)
+  { custos: [{b: BLOCO.TIJOLO, q: 1}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.TIJOLO_MUSGO, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

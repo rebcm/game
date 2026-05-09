@@ -563,6 +563,11 @@ function init() {
   state.inv.adicionar({ b: BLOCO.ANDESITO, q: 32 });
   state.inv.adicionar({ b: BLOCO.ARGILA, q: 16 });
   state.inv.adicionar({ b: BLOCO.BAMBU, q: 16 });
+  state.inv.adicionar({ b: BLOCO.GRANITO_POL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DIORITO_POL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ANDESITO_POL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PEDRA_LISA, q: 32 });
+  state.inv.adicionar({ b: BLOCO.TIJOLO_MUSGO, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });

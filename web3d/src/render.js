@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 10, CELL = 32;
+  const COLS = 8, ROWS = 11, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1030,6 +1030,68 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Variante polida: cor base + faixas verticais escuras finas (acabamento)
+  function pintarPolido(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda escura espessa (efeito chanfrado)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0,            CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0,            y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    // Highlight superior (luz cima)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    // Linhas internas finas (4 quadrantes — efeito laje refinada)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + CELL / 2 - 1, y0 + 4, 1, CELL - 8);
+    ctx.fillRect(x0 + 4, y0 + CELL / 2 - 1, CELL - 8, 1);
+  }
+
+  // Pedra Lisa (smooth stone): cinza uniforme com top/bottom em cor mais clara
+  function pintarPedraLisa(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#b8b8b8';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Bandas top/bot mais escuras (efeito de slab compactado)
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0,            CELL, 3);
+    ctx.fillRect(x0, y0 + CELL - 3, CELL, 3);
+    // Highlight de borda superior (brilho)
+    ctx.fillStyle = '#d0d0d0';
+    ctx.fillRect(x0 + 2, y0 + 4, CELL - 4, 1);
+  }
+
+  // Tijolo com musgo: tijolos clássicos com manchas verdes orgânicas
+  function pintarTijoloMusgo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base de tijolo vermelho
+    ctx.fillStyle = '#a13b22';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de tijolos (mortar branco-cinza)
+    ctx.fillStyle = '#888888';
+    // Linha horizontal meio
+    ctx.fillRect(x0, y0 + 15, CELL, 2);
+    // Linhas verticais alternadas (offset por linha)
+    ctx.fillRect(x0 + 10, y0,      2, 15);
+    ctx.fillRect(x0 + 22, y0,      2, 15);
+    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
+    // Manchas verdes (musgo distribuído uniformemente)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#558b2f', 0.50, 4, 3, idx * 9301 + 49297);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#7cb342', 0.30, 5, 2, idx * 9301 + 7331);
+  }
+
   // Argila: azul-cinza uniforme com manchas mais claras (textura suave)
   function pintarArgila(idx) {
     const col = idx % COLS;
@@ -1842,6 +1904,11 @@ function criarAtlas() {
   pintarPedra(77, '#9e9e9e', '#7a7a7a', '#bdbdbd', 0.35);    // andesito (cinza claro suave)
   pintarArgila(78);                                          // argila azul-cinza
   pintarBambu(79);                                           // bambu verde com nós
+  pintarPolido(80, '#c98575', '#7a3a2c', '#e8a59a');         // granito polido
+  pintarPolido(81, '#eeeeee', '#9e9e9e', '#ffffff');         // diorito polido
+  pintarPolido(82, '#b0b0b0', '#7a7a7a', '#d0d0d0');         // andesito polido
+  pintarPedraLisa(83);                                       // pedra lisa (smooth)
+  pintarTijoloMusgo(84);                                     // tijolo com musgo
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1927,6 +1994,11 @@ function criarAtlas() {
   mapa[BLOCO.ANDESITO]       = { top: 77, side: 77, bottom: 77 };
   mapa[BLOCO.ARGILA]         = { top: 78, side: 78, bottom: 78 };
   mapa[BLOCO.BAMBU]          = { top: 79, side: 79, bottom: 79 };
+  mapa[BLOCO.GRANITO_POL]    = { top: 80, side: 80, bottom: 80 };
+  mapa[BLOCO.DIORITO_POL]    = { top: 81, side: 81, bottom: 81 };
+  mapa[BLOCO.ANDESITO_POL]   = { top: 82, side: 82, bottom: 82 };
+  mapa[BLOCO.PEDRA_LISA]     = { top: 83, side: 83, bottom: 83 };
+  mapa[BLOCO.TIJOLO_MUSGO]   = { top: 84, side: 84, bottom: 84 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
