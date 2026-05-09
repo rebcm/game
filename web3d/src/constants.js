@@ -360,8 +360,16 @@ export const BLOCO = {
   PAREDE_NETHER_BRICK:300,
   SLAB_END_BRICK:     301,
   SLAB_PURPUR:        302,
+  ESCADA_DEEPSLATE_PAV:303,
+  ESCADA_DEEPSLATE_POL:304,
+  ESCADA_OBSIDIANA:    305,
+  ESCADA_BASALTO:      306,
+  PAREDE_DEEPSLATE_POL:307,
+  PAREDE_BASALTO:      308,
+  SLAB_DEEPSLATE_PAV:  309,
+  SLAB_BASALTO:        310,
 };
-export const N_BLOCOS = 303;
+export const N_BLOCOS = 311;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -686,6 +694,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_NETHER_BRICK]: { nome: 'Parede Nether Brick', solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'wall' },
   [BLOCO.SLAB_END_BRICK]:      { nome: 'Laje End Brick',      solido: true, emiteLuz: 0, cor: 0xe8d886, lateral: 0xc0a866, shape: 'slab' },
   [BLOCO.SLAB_PURPUR]:         { nome: 'Laje Purpur',         solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'slab' },
+  [BLOCO.ESCADA_DEEPSLATE_PAV]:{ nome: 'Escada Pav. Ardósia', solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'stairs' },
+  [BLOCO.ESCADA_DEEPSLATE_POL]:{ nome: 'Escada Ardósia Pol.', solido: true, emiteLuz: 0, cor: 0x55555f, lateral: 0x40404a, shape: 'stairs' },
+  [BLOCO.ESCADA_OBSIDIANA]:    { nome: 'Escada Obsidiana',    solido: true, emiteLuz: 0, cor: 0x4d3e5e, lateral: 0x3a2c4a, shape: 'stairs' },
+  [BLOCO.ESCADA_BASALTO]:      { nome: 'Escada Basalto',      solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x2a2a2a, shape: 'stairs' },
+  [BLOCO.PAREDE_DEEPSLATE_POL]:{ nome: 'Parede Ardósia Pol.', solido: true, emiteLuz: 0, cor: 0x55555f, lateral: 0x40404a, shape: 'wall' },
+  [BLOCO.PAREDE_BASALTO]:      { nome: 'Parede Basalto',      solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x2a2a2a, shape: 'wall' },
+  [BLOCO.SLAB_DEEPSLATE_PAV]:  { nome: 'Laje Pav. Ardósia',   solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
+  [BLOCO.SLAB_BASALTO]:        { nome: 'Laje Basalto',        solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x2a2a2a, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1253,6 +1269,17 @@ export const RECEITAS = [
   // 2 lajes (3 → 6)
   { custos: [{b: BLOCO.END_BRICK, q: 3}],      saida: {b: BLOCO.SLAB_END_BRICK, q: 6}, wb: true },
   { custos: [{b: BLOCO.PURPUR_BLOCK, q: 3}],   saida: {b: BLOCO.SLAB_PURPUR,    q: 6}, wb: true },
+  // 4 escadas (6 → 4)
+  { custos: [{b: BLOCO.DEEPSLATE_PAV, q: 6}],  saida: {b: BLOCO.ESCADA_DEEPSLATE_PAV, q: 4}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE_POL, q: 6}],  saida: {b: BLOCO.ESCADA_DEEPSLATE_POL, q: 4}, wb: true },
+  { custos: [{b: BLOCO.OBSIDIANA, q: 6}],      saida: {b: BLOCO.ESCADA_OBSIDIANA,     q: 4}, wb: true },
+  { custos: [{b: BLOCO.BASALTO, q: 6}],        saida: {b: BLOCO.ESCADA_BASALTO,       q: 4}, wb: true },
+  // 2 paredes (6 → 6)
+  { custos: [{b: BLOCO.DEEPSLATE_POL, q: 6}],  saida: {b: BLOCO.PAREDE_DEEPSLATE_POL, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BASALTO, q: 6}],        saida: {b: BLOCO.PAREDE_BASALTO,       q: 6}, wb: true },
+  // 2 lajes (3 → 6)
+  { custos: [{b: BLOCO.DEEPSLATE_PAV, q: 3}],  saida: {b: BLOCO.SLAB_DEEPSLATE_PAV,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.BASALTO, q: 3}],        saida: {b: BLOCO.SLAB_BASALTO,         q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

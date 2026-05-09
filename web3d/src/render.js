@@ -4154,6 +4154,15 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_NETHER_BRICK]= { top: 89,  side: 89,  bottom: 89  };
   mapa[BLOCO.SLAB_END_BRICK]     = { top: 136, side: 136, bottom: 136 };
   mapa[BLOCO.SLAB_PURPUR]        = { top: 137, side: 137, bottom: 137 };
+  // Variantes Deepslate/Obsidiana/Basalto reusam cells 19/94/104/105
+  mapa[BLOCO.ESCADA_DEEPSLATE_PAV]= { top: 104, side: 104, bottom: 104 };
+  mapa[BLOCO.ESCADA_DEEPSLATE_POL]= { top: 105, side: 105, bottom: 105 };
+  mapa[BLOCO.ESCADA_OBSIDIANA]    = { top: 19,  side: 19,  bottom: 19  };
+  mapa[BLOCO.ESCADA_BASALTO]      = { top: 94,  side: 94,  bottom: 94  };
+  mapa[BLOCO.PAREDE_DEEPSLATE_POL]= { top: 105, side: 105, bottom: 105 };
+  mapa[BLOCO.PAREDE_BASALTO]      = { top: 94,  side: 94,  bottom: 94  };
+  mapa[BLOCO.SLAB_DEEPSLATE_PAV]  = { top: 104, side: 104, bottom: 104 };
+  mapa[BLOCO.SLAB_BASALTO]        = { top: 94,  side: 94,  bottom: 94  };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
