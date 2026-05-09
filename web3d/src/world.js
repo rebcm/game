@@ -1211,49 +1211,157 @@ export class World {
     return convertidas;
   }
 
-  // === Crops / farming ===
-  // Planta semente em (x, y, z): requer AR no local + TERRA logo abaixo.
+  // === Crops / farming === (SPRINT MEGA-11: 10 tipos paridade Minecraft)
+  // Tipos suportados: trigo, cenoura, batata, beterraba, melancia, abobora,
+  // bambu, cana, kelp, sweet_berries, glow_berries, torchflower, pitcher_plant.
+  // Cada crop tem growthTime + drops + requirements personalizados.
+  static CROP_INFO = {
+    trigo:           { tempo: 30000, dropPrincipal: 'TRIGO',         dropSemente: 'SEMENTE',         qtMin: 1, qtMax: 1, semExtra: 0.6 },
+    cenoura:         { tempo: 35000, dropPrincipal: 'BAGAS_DOCES',   dropSemente: null,              qtMin: 2, qtMax: 4, semExtra: 0 },
+    batata:          { tempo: 40000, dropPrincipal: 'BAGAS_DOCES',   dropSemente: null,              qtMin: 1, qtMax: 4, semExtra: 0 },
+    beterraba:       { tempo: 45000, dropPrincipal: 'BEETROOT',      dropSemente: 'BEETROOT_SEMENTE',qtMin: 1, qtMax: 1, semExtra: 0.7 },
+    melancia:        { tempo: 60000, dropPrincipal: 'MELANCIA_FATIA',dropSemente: 'SEMENTE',         qtMin: 3, qtMax: 7, semExtra: 0 },
+    abobora:         { tempo: 60000, dropPrincipal: null /* spawn PUMPKIN block */, dropSemente: 'SEMENTE', qtMin: 1, qtMax: 1, semExtra: 0 },
+    bambu:           { tempo: 25000, dropPrincipal: 'BAMBOO',        dropSemente: null,              qtMin: 1, qtMax: 2, semExtra: 0 },
+    cana:            { tempo: 35000, dropPrincipal: 'BAMBOO' /* placeholder cana */, dropSemente: null, qtMin: 1, qtMax: 3, semExtra: 0 },
+    kelp:            { tempo: 50000, dropPrincipal: 'KELP_COMIDA',   dropSemente: null,              qtMin: 1, qtMax: 2, semExtra: 0 },
+    sweet_berries:   { tempo: 70000, dropPrincipal: 'BAGAS_DOCES',   dropSemente: null,              qtMin: 2, qtMax: 4, semExtra: 0 },
+    glow_berries:    { tempo: 70000, dropPrincipal: 'BAGAS_BRILHANTES',dropSemente: null,            qtMin: 2, qtMax: 4, semExtra: 0 },
+    torchflower:     { tempo: 90000, dropPrincipal: 'TORCHFLOWER_SEED', dropSemente: null,           qtMin: 1, qtMax: 2, semExtra: 0 },
+    pitcher_plant:   { tempo: 100000,dropPrincipal: 'PITCHER_POD',   dropSemente: null,              qtMin: 1, qtMax: 1, semExtra: 0 },
+  };
+  // Planta semente em (x, y, z): requer AR no local + TERRA/GRAMA logo abaixo.
+  // Aquatic crops (kelp) requer água. Bamboo cresce em qualquer bloco.
   plantarSemente(x, y, z, tipo = 'trigo') {
     if (this.get(x, y, z) !== BLOCO.AR) return false;
     const abaixo = this.get(x, y - 1, z);
-    if (abaixo !== BLOCO.TERRA && abaixo !== BLOCO.GRAMA) return false;
-    this.crops.set(World.keyXYZ(x, y, z), { plantadaEm: Date.now(), tipo });
+    // Kelp precisa de água em volta
+    if (tipo === 'kelp') {
+      if (abaixo !== BLOCO.AGUA && abaixo !== BLOCO.AREIA) return false;
+    } else if (tipo === 'bambu') {
+      if (abaixo !== BLOCO.TERRA && abaixo !== BLOCO.GRAMA && abaixo !== BLOCO.AREIA) return false;
+    } else if (tipo === 'sweet_berries' || tipo === 'glow_berries') {
+      if (abaixo !== BLOCO.GRAMA && abaixo !== BLOCO.MOSS_BLOCK && abaixo !== BLOCO.TERRA) return false;
+    } else {
+      if (abaixo !== BLOCO.TERRA && abaixo !== BLOCO.GRAMA) return false;
+    }
+    // Hydration: se houver água em raio 4 horizontal, crescimento +30%
+    let hydrated = false;
+    for (let dx = -4; dx <= 4 && !hydrated; dx++) {
+      for (let dz = -4; dz <= 4 && !hydrated; dz++) {
+        if (this.get(x + dx, y - 1, z + dz) === BLOCO.AGUA) hydrated = true;
+      }
+    }
+    this.crops.set(World.keyXYZ(x, y, z), {
+      plantadaEm: Date.now(),
+      tipo,
+      stage: 0, // 0-7 growth stages (paridade MC)
+      hydrated,
+    });
     return true;
   }
-  // Tickado a cada frame. Quando crop atinge 30s, vira "maduro" (não muda
-  // bloco visível ainda — quebra direto pela coleta dropa trigo+sementes).
-  // Retorna lista de crops maduros [{x,y,z,tipo}].
+  // Bone meal: instant +1-3 stages
+  aplicarBoneMeal(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    const c = this.crops.get(k);
+    if (!c) return false;
+    if (c.maduro) return false;
+    const stagesAdd = 1 + Math.floor(Math.random() * 3);
+    c.stage = Math.min(7, c.stage + stagesAdd);
+    if (c.stage >= 7) c.maduro = true;
+    // Reseta plantadaEm pra acelerar próximas etapas
+    c.plantadaEm = Date.now() - 30000;
+    return true;
+  }
+  // Tilling: hoe em GRAMA/TERRA → mantém bloco mas marca como farmland
+  // (em MC é blockstate; aqui registramos no Set this.farmlands)
+  tillSoil(x, y, z) {
+    const b = this.get(x, y, z);
+    if (b !== BLOCO.GRAMA && b !== BLOCO.TERRA) return false;
+    if (!this.farmlands) this.farmlands = new Set();
+    this.farmlands.add(World.keyXYZ(x, y, z));
+    // Visualmente continua TERRA
+    if (b === BLOCO.GRAMA) this.set(x, y, z, BLOCO.TERRA);
+    return true;
+  }
+  // Tickado a cada frame. Crop atinge stage 7 = maduro. Hidratado cresce 30% mais rápido.
   atualizarCrops() {
     const agora = Date.now();
     const maduros = [];
     for (const [k, c] of this.crops) {
       if (c.maduro) continue;
-      if (agora - c.plantadaEm < 30000) continue;
-      c.maduro = true;
-      const [x, y, z] = k.split(',').map(Number);
-      maduros.push({ x, y, z, tipo: c.tipo });
+      const info = World.CROP_INFO?.[c.tipo] || World.CROP_INFO?.trigo;
+      const tempoEfetivo = c.hydrated ? info.tempo * 0.70 : info.tempo;
+      const idade = agora - c.plantadaEm;
+      // Stages: 8 etapas (0-7). Cada 1/7 do tempo = +1 stage
+      const novoStage = Math.min(7, Math.floor((idade / tempoEfetivo) * 7));
+      if (novoStage > (c.stage || 0)) {
+        c.stage = novoStage;
+        if (novoStage >= 7) c.maduro = true;
+      }
+      if (c.maduro) {
+        const [x, y, z] = k.split(',').map(Number);
+        maduros.push({ x, y, z, tipo: c.tipo });
+      }
     }
     return maduros;
   }
-  // Colhe um crop em (x,y,z). Retorna drops ou null se não há crop maduro.
+  // Colhe um crop em (x,y,z). Retorna drops baseados em CROP_INFO.
   colherCrop(x, y, z) {
     const k = World.keyXYZ(x, y, z);
     const c = this.crops.get(k);
     if (!c || !c.maduro) return null;
     this.crops.delete(k);
-    return [
-      { i: ITEM.TRIGO, q: 1 },
-      { i: ITEM.SEMENTE, q: 1 + Math.floor(Math.random() * 3) },
-    ];
+    const info = World.CROP_INFO?.[c.tipo] || World.CROP_INFO?.trigo;
+    const drops = [];
+    if (info.dropPrincipal) {
+      const itemId = ITEM[info.dropPrincipal];
+      if (itemId !== undefined) {
+        const q = info.qtMin + Math.floor(Math.random() * (info.qtMax - info.qtMin + 1));
+        drops.push({ i: itemId, q });
+      }
+    }
+    // Abóbora: spawn bloco PUMPKIN ao maduro
+    if (c.tipo === 'abobora' && this.get(x, y, z) === BLOCO.AR) {
+      this.set(x, y, z, BLOCO.PUMPKIN);
+    }
+    if (info.dropSemente && Math.random() < info.semExtra + 0.5) {
+      const semId = ITEM[info.dropSemente];
+      if (semId !== undefined) drops.push({ i: semId, q: 1 + Math.floor(Math.random() * 3) });
+    }
+    return drops;
   }
 
-  // === Mudas / crescimento de árvore ===
-  // Planta uma muda na célula (x, y, z). Requer que esteja em AR e o
-  // bloco abaixo seja GRAMA. Retorna true se plantou.
-  plantarMuda(x, y, z) {
+  // === Mudas / crescimento de árvore === (SPRINT MEGA-12: 8 tipos)
+  static TREE_TYPES = {
+    oak:       { log: BLOCO.MADEIRA,       leaf: BLOCO.FOLHA,            altura: [4, 7], copa: 'esfera' },
+    birch:     { log: BLOCO.BIRCH_LOG,     leaf: BLOCO.BIRCH_FOLHA,      altura: [5, 8], copa: 'esfera' },
+    spruce:    { log: BLOCO.SPRUCE_LOG,    leaf: BLOCO.SPRUCE_FOLHA,     altura: [6, 12], copa: 'cone' },
+    jungle:    { log: BLOCO.JUNGLE_LOG,    leaf: BLOCO.JUNGLE_FOLHA,     altura: [10, 18], copa: 'esfera' },
+    acacia:    { log: BLOCO.ACACIA_LOG,    leaf: BLOCO.ACACIA_FOLHA,     altura: [5, 8], copa: 'plana' },
+    dark_oak:  { log: BLOCO.DARK_OAK_LOG,  leaf: BLOCO.DARK_OAK_FOLHA,   altura: [6, 9], copa: 'mega' },
+    cherry:    { log: BLOCO.CHERRY_LOG,    leaf: BLOCO.CHERRY_FOLHA,     altura: [7, 11], copa: 'cherry' },
+    mangrove:  { log: BLOCO.MANGROVE_LOG,  leaf: BLOCO.MANGROVE_FOLHA,   altura: [4, 7], copa: 'esfera' },
+  };
+  // Planta uma muda na célula (x, y, z). Tipo opcional escolhe a árvore.
+  plantarMuda(x, y, z, tipo = 'oak') {
     if (this.get(x, y, z) !== BLOCO.AR) return false;
-    if (this.get(x, y - 1, z) !== BLOCO.GRAMA) return false;
-    this.mudas.set(World.keyXYZ(x, y, z), { plantadaEm: Date.now() });
+    const abaixo = this.get(x, y - 1, z);
+    // Mangrove cresce em lama; outros em grama
+    if (tipo === 'mangrove') {
+      if (abaixo !== BLOCO.LAMA && abaixo !== BLOCO.LAMA_COMPACTA && abaixo !== BLOCO.GRAMA) return false;
+    } else {
+      if (abaixo !== BLOCO.GRAMA && abaixo !== BLOCO.TERRA) return false;
+    }
+    this.mudas.set(World.keyXYZ(x, y, z), { plantadaEm: Date.now(), tipo });
+    return true;
+  }
+  // Bone meal em muda → cresce instantaneamente
+  acelerarMuda(x, y, z) {
+    const k = World.keyXYZ(x, y, z);
+    const m = this.mudas.get(k);
+    if (!m) return false;
+    m._tempoNec = 0;
     return true;
   }
   // Itera mudas pendentes e converte em árvore após 15-25s. Chamado
@@ -1272,18 +1380,81 @@ export class World {
       if (this.get(x - 1 + 1, y - 1, z) !== BLOCO.GRAMA && this.get(x, y - 1, z) !== BLOCO.GRAMA) {
         this.mudas.delete(k); continue;
       }
-      // Cresce a árvore (mesma lógica do gerarChunk: tronco + copa)
-      const altura = 4 + (Math.floor(Math.random() * 4));
+      // SPRINT MEGA-12: Cresce árvore baseada no tipo (8 variantes)
+      const tipo = m.tipo || 'oak';
+      const treeInfo = World.TREE_TYPES?.[tipo] || World.TREE_TYPES?.oak;
+      const [hMin, hMax] = treeInfo.altura;
+      const altura = hMin + Math.floor(Math.random() * (hMax - hMin + 1));
+      // Tronco
       for (let dy = 0; dy < altura; dy++) {
-        if (this.get(x, y + dy, z) === BLOCO.AR) this.set(x, y + dy, z, BLOCO.MADEIRA);
+        if (this.get(x, y + dy, z) === BLOCO.AR) this.set(x, y + dy, z, treeInfo.log);
       }
-      // Copa esférica
-      for (let dx = -2; dx <= 2; dx++) {
-        for (let dz = -2; dz <= 2; dz++) {
-          for (let dy = 0; dy <= 2; dy++) {
-            if (dx*dx + dz*dz + dy*dy <= 5) {
-              const fx = x + dx, fy = y + altura - 1 + dy, fz = z + dz;
-              if (this.get(fx, fy, fz) === BLOCO.AR) this.set(fx, fy, fz, BLOCO.FOLHA);
+      // Copa baseada no tipo
+      const topY = y + altura - 1;
+      if (treeInfo.copa === 'esfera') {
+        for (let dx = -2; dx <= 2; dx++) {
+          for (let dz = -2; dz <= 2; dz++) {
+            for (let dy = 0; dy <= 2; dy++) {
+              if (dx*dx + dz*dz + dy*dy <= 5) {
+                const fx = x + dx, fy = topY + dy, fz = z + dz;
+                if (this.get(fx, fy, fz) === BLOCO.AR) this.set(fx, fy, fz, treeInfo.leaf);
+              }
+            }
+          }
+        }
+      } else if (treeInfo.copa === 'cone') {
+        // Spruce: cone vertical, mais largo embaixo
+        for (let dy = 0; dy < 5; dy++) {
+          const r = 2 - Math.floor(dy / 2);
+          for (let dx = -r; dx <= r; dx++) {
+            for (let dz = -r; dz <= r; dz++) {
+              if (dx*dx + dz*dz <= r * r + 0.1) {
+                const fy = topY - dy + 1;
+                if (this.get(x + dx, fy, z + dz) === BLOCO.AR) this.set(x + dx, fy, z + dz, treeInfo.leaf);
+              }
+            }
+          }
+        }
+      } else if (treeInfo.copa === 'plana') {
+        // Acacia: copa plana achatada
+        for (let dx = -3; dx <= 3; dx++) {
+          for (let dz = -3; dz <= 3; dz++) {
+            if (Math.abs(dx) + Math.abs(dz) <= 4) {
+              if (this.get(x + dx, topY, z + dz) === BLOCO.AR) this.set(x + dx, topY, z + dz, treeInfo.leaf);
+              if (this.get(x + dx, topY + 1, z + dz) === BLOCO.AR && Math.abs(dx) + Math.abs(dz) <= 2) {
+                this.set(x + dx, topY + 1, z + dz, treeInfo.leaf);
+              }
+            }
+          }
+        }
+      } else if (treeInfo.copa === 'mega') {
+        // Dark Oak: copa muito larga + 2×2 tronco
+        for (let dx = 0; dx <= 1; dx++) {
+          for (let dz = 0; dz <= 1; dz++) {
+            for (let dy = 0; dy < altura; dy++) {
+              if (this.get(x + dx, y + dy, z + dz) === BLOCO.AR) this.set(x + dx, y + dy, z + dz, treeInfo.log);
+            }
+          }
+        }
+        for (let dx = -3; dx <= 4; dx++) {
+          for (let dz = -3; dz <= 4; dz++) {
+            for (let dy = 0; dy <= 2; dy++) {
+              if (dx*dx + dz*dz + dy*dy <= 12) {
+                const fx = x + dx, fy = topY + dy, fz = z + dz;
+                if (this.get(fx, fy, fz) === BLOCO.AR) this.set(fx, fy, fz, treeInfo.leaf);
+              }
+            }
+          }
+        }
+      } else if (treeInfo.copa === 'cherry') {
+        // Cherry: copa rosa fofa larga
+        for (let dx = -3; dx <= 3; dx++) {
+          for (let dz = -3; dz <= 3; dz++) {
+            for (let dy = -1; dy <= 2; dy++) {
+              if (dx*dx + dz*dz + dy*dy <= 9) {
+                const fx = x + dx, fy = topY + dy, fz = z + dz;
+                if (this.get(fx, fy, fz) === BLOCO.AR) this.set(fx, fy, fz, treeInfo.leaf);
+              }
             }
           }
         }
