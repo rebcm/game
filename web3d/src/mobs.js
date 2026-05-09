@@ -2221,6 +2221,8 @@ export class MobManager {
             m.creeperFuse = 0;
           }
         } else if (naAlcance && m.cooldownAtaque <= 0) {
+          // Invisibilidade: mob ignora player se efeito ativo
+          if (player.efeitos?.invisivel && Date.now() < player.efeitos.invisivel) continue;
           player.aplicarDano(info.dano, m.tipo);
           // Veneno: cave spider envenena player por 8s (1 dano cada 1.5s)
           if (info.poison) {

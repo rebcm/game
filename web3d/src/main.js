@@ -852,6 +852,15 @@ function init() {
   state.inv.adicionar({ i: ITEM.PUMPKIN_PIE, q: 4 });
   state.inv.adicionar({ i: ITEM.BEETROOT, q: 8 });
   state.inv.adicionar({ i: ITEM.SOPA_BEETROOT, q: 2 });
+  state.inv.adicionar({ i: ITEM.NETHERITE, q: 4 });
+  state.inv.adicionar({ i: ITEM.ESP_DIAMANTE, q: 1 });
+  state.inv.adicionar({ i: ITEM.PIC_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.ESP_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.MACHADO_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.CAP_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.PEI_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.PER_NETHERITE, q: 1 });
+  state.inv.adicionar({ i: ITEM.BOT_NETHERITE, q: 1 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

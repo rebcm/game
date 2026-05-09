@@ -754,7 +754,7 @@ export const ITEM = {
   PRANCHAS: 110, PAU: 111, CARVAO: 112, FERRO: 113, OURO: 114, DIAMANTE: 115,
   COURO: 120,
   PIC_MADEIRA: 200, PIC_PEDRA: 201, PIC_FERRO: 202, PIC_DIAMANTE: 203,
-  ESP_MADEIRA: 210, ESP_PEDRA: 211, ESP_FERRO: 212,
+  ESP_MADEIRA: 210, ESP_PEDRA: 211, ESP_FERRO: 212, ESP_DIAMANTE: 213,
   ARCO: 220, FLECHA: 221,
   OSSO: 230, MUDA: 231,
   BUCKET: 240, BUCKET_AGUA: 241, BUCKET_LAVA: 242,
@@ -846,6 +846,17 @@ export const ITEM = {
   PUMPKIN_PIE:     306, // torta de abóbora
   BEETROOT:        307, // beterraba (vegetal)
   SOPA_BEETROOT:   308, // sopa de beterraba
+  // Tier Netherite (mais alto que diamante)
+  NETHERITE:       309, // lingote
+  PIC_NETHERITE:   310,
+  ESP_NETHERITE:   311,
+  MACHADO_NETHERITE:312,
+  PA_NETHERITE:    313,
+  ENXADA_NETHERITE:314,
+  CAP_NETHERITE:   315,
+  PEI_NETHERITE:   316,
+  PER_NETHERITE:   317,
+  BOT_NETHERITE:   318,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -871,6 +882,7 @@ export const ITEM_INFO = {
   [ITEM.ESP_MADEIRA]:  { nome: 'Espada madeira',   icone: '⚔', tier: 1, ferramenta: 'esp' },
   [ITEM.ESP_PEDRA]:    { nome: 'Espada pedra',     icone: '⚔', tier: 2, ferramenta: 'esp' },
   [ITEM.ESP_FERRO]:    { nome: 'Espada ferro',     icone: '⚔', tier: 3, ferramenta: 'esp' },
+  [ITEM.ESP_DIAMANTE]: { nome: 'Espada diamante',  icone: '⚔', tier: 4, ferramenta: 'esp' },
   [ITEM.ARCO]:         { nome: 'Arco',             icone: '🏹', ferramenta: 'arco' },
   [ITEM.FLECHA]:       { nome: 'Flecha',           icone: '➹' },
   [ITEM.OSSO]:         { nome: 'Osso',             icone: '🦴', ferramenta: 'osso' },
@@ -971,6 +983,18 @@ export const ITEM_INFO = {
   [ITEM.PUMPKIN_PIE]:      { nome: 'Torta de Abóbora',   icone: '🥧', nutricao: 8 },
   [ITEM.BEETROOT]:         { nome: 'Beterraba',          icone: '🍠', nutricao: 1 },
   [ITEM.SOPA_BEETROOT]:    { nome: 'Sopa de Beterraba',  icone: '🍲', nutricao: 6 },
+  // Netherite tier (5)
+  [ITEM.NETHERITE]:        { nome: 'Lingote Netherite',  icone: '🪨' },
+  [ITEM.PIC_NETHERITE]:    { nome: 'Picareta netherite', icone: '⛏', tier: 5, ferramenta: 'pic' },
+  [ITEM.ESP_NETHERITE]:    { nome: 'Espada netherite',   icone: '⚔', tier: 5, ferramenta: 'esp' },
+  [ITEM.MACHADO_NETHERITE]:{ nome: 'Machado netherite',  icone: '🪓', tier: 5, ferramenta: 'machado' },
+  [ITEM.PA_NETHERITE]:     { nome: 'Pá netherite',       icone: '⛓', tier: 5, ferramenta: 'pa' },
+  [ITEM.ENXADA_NETHERITE]: { nome: 'Enxada netherite',   icone: '🌾', tier: 5, ferramenta: 'enxada' },
+  // Armaduras netherite (defesa máxima)
+  [ITEM.CAP_NETHERITE]:    { nome: 'Capacete netherite', icone: '🪖', armadura: 'cabeca', defesa: 4 },
+  [ITEM.PEI_NETHERITE]:    { nome: 'Peitoral netherite', icone: '👕', armadura: 'torso',  defesa: 9 },
+  [ITEM.PER_NETHERITE]:    { nome: 'Perneiras netherite',icone: '👖', armadura: 'pernas', defesa: 7 },
+  [ITEM.BOT_NETHERITE]:    { nome: 'Botas netherite',    icone: '🥾', armadura: 'botas',  defesa: 4 },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -998,6 +1022,7 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 2}, {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_MADEIRA, q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 2},   {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_PEDRA,   q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 2},    {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_FERRO,   q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 2}, {i: ITEM.PAU, q: 1}], saida: {i: ITEM.ESP_DIAMANTE,q: 1}, wb: true },
   // Arco: 3 paus + 3 lã (proxy de corda). Flechas: 1 pau + 1 lã = 4.
   { custos: [{i: ITEM.PAU, q: 3}, {b: BLOCO.LA, q: 3}], saida: {i: ITEM.ARCO,   q: 1}, wb: true },
   { custos: [{i: ITEM.PAU, q: 1}, {b: BLOCO.LA, q: 1}], saida: {i: ITEM.FLECHA, q: 4}, wb: false },
@@ -1497,6 +1522,19 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PUMPKIN, q: 1}, {i: ITEM.OVO, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {i: ITEM.PUMPKIN_PIE, q: 1}, wb: true },
   { custos: [{i: ITEM.SEMENTE, q: 4}], saida: {i: ITEM.BEETROOT, q: 1}, wb: false },
   { custos: [{i: ITEM.BEETROOT, q: 6}, {i: ITEM.TIGELA, q: 1}], saida: {i: ITEM.SOPA_BEETROOT, q: 1}, wb: true },
+  // Netherite: 4 carvões + 1 ouro + 4 obsidianas (proxy de smelt MC)
+  { custos: [{i: ITEM.CARVAO, q: 4}, {i: ITEM.OURO, q: 1}, {b: BLOCO.OBSIDIANA, q: 4}], saida: {i: ITEM.NETHERITE, q: 1}, wb: true },
+  // Upgrade ferramentas: diamante + 1 lingote netherite (paridade smithing table)
+  { custos: [{i: ITEM.PIC_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.PIC_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.ESP_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.ESP_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.MACHADO_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.MACHADO_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.PA_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.PA_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.ENXADA_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.ENXADA_NETHERITE, q: 1}, wb: true },
+  // Upgrade armaduras
+  { custos: [{i: ITEM.CAP_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.CAP_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.PEI_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.PEI_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.PER_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.PER_NETHERITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.BOT_DIAMANTE, q: 1}, {i: ITEM.NETHERITE, q: 1}], saida: {i: ITEM.BOT_NETHERITE, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
