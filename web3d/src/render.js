@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 32, CELL = 32;
+  const COLS = 8, ROWS = 33, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1428,6 +1428,167 @@ function criarAtlas() {
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+  }
+
+  // Target Block: branco com 4 anéis vermelhos concêntricos (alvo)
+  function pintarTarget(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 4 anéis concêntricos vermelhos
+    const cores = ['#fafafa', '#ef9a9a', '#e57373', '#ef5350', '#c62828'];
+    for (let r = 14; r >= 2; r -= 3) {
+      ctx.fillStyle = cores[Math.floor((14 - r) / 3)];
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, r * 2);
+    }
+    // Centro (bullseye)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+  }
+
+  // Ancient Debris: marrom com manchas roxas brilhantes (raríssimo)
+  function pintarAncientDebris(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#4e342e', 0.40, 4, 2, idx * 9301 + 49297);
+    // Centro com cluster netherite (preto-roxo)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#9c27b0';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 1, 1);
+  }
+
+  // Honeycomb Block: padrão hexagonal de favos
+  function pintarHoneycombBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão hexagonal (3x3 grid)
+    ctx.fillStyle = '#fdd835';
+    for (let row2 = 0; row2 < 3; row2++) {
+      for (let col2 = 0; col2 < 3; col2++) {
+        const cx = 4 + col2 * 9;
+        const cy = 4 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
+        if (cx + 7 < CELL && cy + 7 < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, 7, 6);
+        }
+      }
+    }
+    // Bordas escuras
+    ctx.fillStyle = '#e65100';
+    for (let row2 = 0; row2 < 3; row2++) {
+      for (let col2 = 0; col2 < 3; col2++) {
+        const cx = 4 + col2 * 9;
+        const cy = 4 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
+        if (cx + 7 < CELL && cy + 7 < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, 7, 1);
+          ctx.fillRect(x0 + cx, y0 + cy + 5, 7, 1);
+        }
+      }
+    }
+  }
+
+  // Composter: madeira com topo aberto (caixa)
+  function pintarComposter(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Topo aberto (interior escuro)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    // Tábuas verticais
+    ctx.fillStyle = '#5d4037';
+    for (let px = 4; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+  }
+
+  // Lectern (atril): madeira com livro aberto em cima
+  function pintarLectern(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Inclinação superior (área de livro)
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 14);
+    // Livro central (vermelho)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 8, y0 + 6, CELL - 16, 10);
+    // Páginas (linhas brancas)
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 10, y0 + 8, CELL - 20, 2);
+    ctx.fillRect(x0 + 10, y0 + 12, CELL - 20, 2);
+    // Base com tábuas
+    ctx.fillStyle = '#5d4037';
+    for (let py = 20; py < CELL; py += 4) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+  }
+
+  // Barrel: barril de madeira com aros de ferro
+  function pintarBarrel(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Tábuas verticais (madeira)
+    ctx.fillStyle = '#6d4c41';
+    for (let px = 5; px < CELL; px += 5) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // 2 aros de ferro horizontais
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0, y0 + 6,        CELL, 3);
+    ctx.fillRect(x0, y0 + CELL - 9, CELL, 3);
+    // Highlight dos aros
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0 + 6,        CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 9, CELL, 1);
+  }
+
+  // Campfire: 3 paus em X com chama amarela no topo
+  function pintarCampfire(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 3 paus em X
+    ctx.fillStyle = '#5d4037';
+    for (let i = 0; i < CELL - 2; i++) {
+      ctx.fillRect(x0 + i, y0 + 22 - i / 4, 2, 2); // diagonal
+      ctx.fillRect(x0 + (CELL - 2 - i), y0 + 22 - i / 4, 2, 2); // anti-diag
+    }
+    // Centro: brasa amarela
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Chamas no topo
+    ctx.fillStyle = '#ff6f00';
+    ctx.fillRect(x0 + 10, y0 + 4,  4, 8);
+    ctx.fillRect(x0 + 18, y0 + 4,  4, 8);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 11, y0 + 5,  2, 6);
+    ctx.fillRect(x0 + 19, y0 + 5,  2, 6);
   }
 
   // Workstation genérica: madeira/pedra com painel central decorativo
@@ -3905,6 +4066,15 @@ function criarAtlas() {
   pintarWorkstation(253, '#a1887f', '#5d4037', '#fafafa', 'arrow');  // fletching
   pintarWorkstation(254, '#a1887f', '#5d4037', '#fafafa', 'loom');   // loom
   pintarWorkstation(255, '#9e9e9e', '#424242', '#bdbdbd', 'saw');    // stonecutter
+  // Blocos especiais novos (cells 256-263)
+  pintarTarget(256);
+  pintarAncientDebris(257);
+  pintarHoneycombBlock(258);
+  pintarComposter(259);
+  pintarLectern(260);
+  pintarBarrel(261);
+  pintarCampfire(262);
+  pintar(263, '#33691e', '#1b5e20', 0.40);                          // dried kelp
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4266,6 +4436,14 @@ function criarAtlas() {
   mapa[BLOCO.FLETCHING]            = { top: 253, side: 253, bottom: 253 };
   mapa[BLOCO.LOOM]                 = { top: 254, side: 254, bottom: 254 };
   mapa[BLOCO.STONECUTTER]          = { top: 255, side: 255, bottom: 255 };
+  mapa[BLOCO.TARGET_BLOCK]         = { top: 256, side: 256, bottom: 256 };
+  mapa[BLOCO.ANCIENT_DEBRIS]       = { top: 257, side: 257, bottom: 257 };
+  mapa[BLOCO.HONEYCOMB_BLOCK]      = { top: 258, side: 258, bottom: 258 };
+  mapa[BLOCO.COMPOSTER]            = { top: 259, side: 259, bottom: 259 };
+  mapa[BLOCO.LECTERN]              = { top: 260, side: 260, bottom: 260 };
+  mapa[BLOCO.BARREL]               = { top: 261, side: 261, bottom: 261 };
+  mapa[BLOCO.CAMPFIRE]             = { top: 262, side: 262, bottom: 262 };
+  mapa[BLOCO.DRIED_KELP_BLOCK]     = { top: 263, side: 263, bottom: 263 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

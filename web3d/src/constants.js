@@ -401,8 +401,16 @@ export const BLOCO = {
   FLETCHING:           340,
   LOOM:                341,
   STONECUTTER:         342,
+  TARGET_BLOCK:        343,
+  ANCIENT_DEBRIS:      344,
+  HONEYCOMB_BLOCK:     345,
+  COMPOSTER:           346,
+  LECTERN:             347,
+  BARREL:              348,
+  CAMPFIRE:            349,
+  DRIED_KELP_BLOCK:    350,
 };
-export const N_BLOCOS = 343;
+export const N_BLOCOS = 351;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -767,6 +775,14 @@ export const BLOCO_INFO = {
   [BLOCO.FLETCHING]:      { nome: 'Mesa Fletching', solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
   [BLOCO.LOOM]:           { nome: 'Tear (Loom)',    solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
   [BLOCO.STONECUTTER]:    { nome: 'Stonecutter',    solido: true, emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x757575 },
+  [BLOCO.TARGET_BLOCK]:   { nome: 'Target Block',   solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xc62828 },
+  [BLOCO.ANCIENT_DEBRIS]: { nome: 'Ancient Debris', solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.HONEYCOMB_BLOCK]:{ nome: 'Bloco Favo Mel', solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.COMPOSTER]:      { nome: 'Compostador',    solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.LECTERN]:        { nome: 'Atril',          solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.BARREL]:         { nome: 'Barril',         solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.CAMPFIRE]:       { nome: 'Acampamento',    solido: true, emiteLuz: 14, cor: 0xff9800, lateral: 0x6d4c41 },
+  [BLOCO.DRIED_KELP_BLOCK]:{ nome: 'Bloco Alga Seca',solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20 },
 };
 
 export const ICONE = {
@@ -1520,6 +1536,15 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.SILEX, q: 2}], saida: {b: BLOCO.FLETCHING, q: 1}, wb: true },
   { custos: [{i: ITEM.PRANCHAS, q: 2}, {b: BLOCO.LA, q: 2}], saida: {b: BLOCO.LOOM, q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 1}, {b: BLOCO.PEDRA, q: 3}], saida: {b: BLOCO.STONECUTTER, q: 1}, wb: true },
+  // Novos blocos especiais
+  { custos: [{b: BLOCO.LA, q: 4}, {i: ITEM.REDSTONE, q: 4}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.TARGET_BLOCK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.NETHERRACK, q: 8}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.ANCIENT_DEBRIS, q: 1}, wb: true },
+  { custos: [{i: ITEM.FAVO_MEL, q: 4}], saida: {b: BLOCO.HONEYCOMB_BLOCK, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.PAU, q: 3}], saida: {b: BLOCO.COMPOSTER, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 4}, {b: BLOCO.ESTANTE, q: 1}], saida: {b: BLOCO.LECTERN, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 6}, {b: BLOCO.SLAB_MADEIRA, q: 2}], saida: {b: BLOCO.BARREL, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 3}, {i: ITEM.CARVAO, q: 1}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMPFIRE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_VERDE, q: 9}], saida: {b: BLOCO.DRIED_KELP_BLOCK, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
