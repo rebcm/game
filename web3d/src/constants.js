@@ -528,8 +528,17 @@ export const BLOCO = {
   SUSPICIOUS_SAND:     460, // areia suspeita (arqueologia)
   SUSPICIOUS_GRAVEL:   461, // cascalho suspeito
   CALIBRATED_SCULK:    462, // sensor sculk calibrado (1.20)
+  // Sprint 9: diversidade de madeiras (463-470)
+  BIRCH_LOG:           463, // bétula (casca branca)
+  BIRCH_PRANCHA:       464, // pranchas bétula (clara)
+  SPRUCE_LOG:          465, // pinheiro (escuro)
+  SPRUCE_PRANCHA:      466, // pranchas pinheiro
+  ACACIA_LOG:          467, // acácia (laranja)
+  ACACIA_PRANCHA:      468, // pranchas acácia
+  JUNGLE_LOG:          469, // selva (marrom-verde)
+  DARK_OAK_LOG:        470, // carvalho escuro
 };
-export const N_BLOCOS = 463;
+export const N_BLOCOS = 471;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1021,6 +1030,15 @@ export const BLOCO_INFO = {
   [BLOCO.SUSPICIOUS_SAND]:   { nome: 'Areia Suspeita',     solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0xf9a825 },
   [BLOCO.SUSPICIOUS_GRAVEL]: { nome: 'Cascalho Suspeito',  solido: true, emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x757575 },
   [BLOCO.CALIBRATED_SCULK]:  { nome: 'Sculk Calibrado',    solido: true, emiteLuz: 6,  cor: 0x40c4ff, lateral: 0x0288d1 },
+  // Sprint 9: diversidade de madeiras (463-470)
+  [BLOCO.BIRCH_LOG]:         { nome: 'Tronco Bétula',      solido: true, emiteLuz: 0,  cor: 0xeceff1, lateral: 0xbcaaa4 },
+  [BLOCO.BIRCH_PRANCHA]:     { nome: 'Pranchas Bétula',    solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1 },
+  [BLOCO.SPRUCE_LOG]:        { nome: 'Tronco Pinheiro',    solido: true, emiteLuz: 0,  cor: 0x4e342e, lateral: 0x3e2723 },
+  [BLOCO.SPRUCE_PRANCHA]:    { nome: 'Pranchas Pinheiro',  solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.ACACIA_LOG]:        { nome: 'Tronco Acácia',      solido: true, emiteLuz: 0,  cor: 0xa05a30, lateral: 0x7d3e1c },
+  [BLOCO.ACACIA_PRANCHA]:    { nome: 'Pranchas Acácia',    solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c },
+  [BLOCO.JUNGLE_LOG]:        { nome: 'Tronco Selva',       solido: true, emiteLuz: 0,  cor: 0x827717, lateral: 0x4e3d10 },
+  [BLOCO.DARK_OAK_LOG]:      { nome: 'Carvalho Escuro',    solido: true, emiteLuz: 0,  cor: 0x3e2723, lateral: 0x1a0e08 },
 };
 
 export const ICONE = {
@@ -1917,6 +1935,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.AREIA, q: 4}, {i: ITEM.PRANCHAS, q: 1}], saida: {b: BLOCO.SUSPICIOUS_SAND, q: 4}, wb: true },
   { custos: [{b: BLOCO.PAVIMENTO, q: 4}, {i: ITEM.PRANCHAS, q: 1}], saida: {b: BLOCO.SUSPICIOUS_GRAVEL, q: 4}, wb: true },
   { custos: [{b: BLOCO.SCULK_SENSOR, q: 1}, {b: BLOCO.AMETHYST, q: 3}], saida: {b: BLOCO.CALIBRATED_SCULK, q: 1}, wb: true },
+  // Sprint 9: diversidade de madeiras (463-470)
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.NEVE, q: 1}], saida: {b: BLOCO.BIRCH_LOG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BIRCH_LOG, q: 1}], saida: {b: BLOCO.BIRCH_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.FOLHA, q: 1}], saida: {b: BLOCO.SPRUCE_LOG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_LOG, q: 1}], saida: {b: BLOCO.SPRUCE_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.AREIA, q: 1}], saida: {b: BLOCO.ACACIA_LOG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.ACACIA_LOG, q: 1}], saida: {b: BLOCO.ACACIA_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.JUNGLE_LOG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.DARK_OAK_LOG, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 43, CELL = 32;
+  const COLS = 8, ROWS = 44, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3261,6 +3261,64 @@ function criarAtlas() {
     ctx.fillRect(x0 + 26, y0 + 26, 1, 1);
   }
 
+  // Genérico: pinta log de madeira variante (casca + anéis verticais)
+  function pintarLogVariante(idx, corBase, corCasca, corHigh, corAnel) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais de casca
+    ctx.fillStyle = corCasca;
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    // Highlights claros
+    ctx.fillStyle = corHigh;
+    for (let i = 2; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0 + ((i * 3) % 4), 1, CELL - ((i * 3) % 4));
+    }
+    // Manchas (anéis variados)
+    ctx.fillStyle = corAnel;
+    let s = idx * 17 + 31;
+    for (let i = 0; i < 22; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 1);
+    }
+  }
+
+  // Genérico: pinta pranchas (4 fileiras horizontais com divisões verticais alternadas)
+  function pintarPranchaVariante(idx, corBase, corDiv, corMancha) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = corDiv;
+    // 4 fileiras horizontais
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    // Divisões verticais alternadas
+    ctx.fillRect(x0 + 11, y0,      1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // Manchas
+    ctx.fillStyle = corMancha;
+    let s = idx * 11 + 19;
+    for (let i = 0; i < 16; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
   // Bookshelf Chiseled: estante com 1 livro central destacado
   function pintarBookshelfChiseled(idx) {
     const col = idx % COLS;
@@ -6118,6 +6176,15 @@ function criarAtlas() {
   pintarSuspiciousSand(337);
   pintarSuspiciousGravel(338);
   pintarCalibratedSculk(339);
+  // Sprint 9: madeiras variantes (cells 340-347)
+  pintarLogVariante(340, '#eceff1', '#bcaaa4', '#fafafa', '#212121'); // birch (branca + listras pretas)
+  pintarPranchaVariante(341, '#fff8e1', '#bcaaa4', '#eceff1');         // birch pranchas
+  pintarLogVariante(342, '#3e2723', '#1a0e08', '#5d4037', '#8d6e63'); // spruce (escuro)
+  pintarPranchaVariante(343, '#6d4c41', '#3e2723', '#8d6e63');         // spruce pranchas
+  pintarLogVariante(344, '#7d3e1c', '#5d2510', '#bcaaa4', '#a05a30'); // acacia
+  pintarPranchaVariante(345, '#ff7043', '#bf360c', '#ff8a65');         // acacia pranchas (laranja vivo)
+  pintarLogVariante(346, '#4e3d10', '#33270a', '#827717', '#9e9d24'); // jungle (verde-marrom)
+  pintarLogVariante(347, '#1a0e08', '#000000', '#3e2723', '#5d4037'); // dark oak (quase preto)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6612,6 +6679,15 @@ function criarAtlas() {
   mapa[BLOCO.SUSPICIOUS_SAND]       = { top: 337, side: 337, bottom: 337 };
   mapa[BLOCO.SUSPICIOUS_GRAVEL]     = { top: 338, side: 338, bottom: 338 };
   mapa[BLOCO.CALIBRATED_SCULK]      = { top: 339, side: 339, bottom: 339 };
+  // Sprint 9: madeiras variantes (cells 340-347)
+  mapa[BLOCO.BIRCH_LOG]             = { top: 340, side: 340, bottom: 340 };
+  mapa[BLOCO.BIRCH_PRANCHA]         = { top: 341, side: 341, bottom: 341 };
+  mapa[BLOCO.SPRUCE_LOG]            = { top: 342, side: 342, bottom: 342 };
+  mapa[BLOCO.SPRUCE_PRANCHA]        = { top: 343, side: 343, bottom: 343 };
+  mapa[BLOCO.ACACIA_LOG]            = { top: 344, side: 344, bottom: 344 };
+  mapa[BLOCO.ACACIA_PRANCHA]        = { top: 345, side: 345, bottom: 345 };
+  mapa[BLOCO.JUNGLE_LOG]            = { top: 346, side: 346, bottom: 346 };
+  mapa[BLOCO.DARK_OAK_LOG]          = { top: 347, side: 347, bottom: 347 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

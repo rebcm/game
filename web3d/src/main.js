@@ -966,6 +966,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.SUSPICIOUS_SAND, q: 8 });
   state.inv.adicionar({ b: BLOCO.SUSPICIOUS_GRAVEL, q: 8 });
   state.inv.adicionar({ b: BLOCO.CALIBRATED_SCULK, q: 1 });
+  // Sprint 9: madeiras variantes (Birch/Spruce/Acacia/Jungle/Dark Oak)
+  state.inv.adicionar({ b: BLOCO.BIRCH_LOG, q: 8 });
+  state.inv.adicionar({ b: BLOCO.BIRCH_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SPRUCE_LOG, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SPRUCE_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ACACIA_LOG, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ACACIA_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.JUNGLE_LOG, q: 8 });
+  state.inv.adicionar({ b: BLOCO.DARK_OAK_LOG, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
