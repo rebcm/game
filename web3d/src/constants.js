@@ -591,8 +591,17 @@ export const BLOCO = {
   FENCE_SPRUCE:        516,
   FENCE_ACACIA:        517,
   FENCE_DARK_OAK:      518,
+  // Sprint 16: portas+fence_gates+trapdoors madeiras (519-526)
+  FENCE_JUNGLE:        519,
+  FENCE_CHERRY:        520,
+  FENCE_MANGROVE:      521,
+  DOOR_BIRCH:          522,
+  DOOR_SPRUCE:         523,
+  DOOR_ACACIA:         524,
+  TRAPDOOR_OAK:        525, // alçapão de carvalho
+  FENCE_GATE_OAK:      526, // portão de cerca
 };
-export const N_BLOCOS = 519;
+export const N_BLOCOS = 527;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1147,6 +1156,15 @@ export const BLOCO_INFO = {
   [BLOCO.FENCE_SPRUCE]:      { nome: 'Cerca Pinheiro',     solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'fence' },
   [BLOCO.FENCE_ACACIA]:      { nome: 'Cerca Acácia',       solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c, shape: 'fence' },
   [BLOCO.FENCE_DARK_OAK]:    { nome: 'Cerca Carv.Esc.',    solido: true, emiteLuz: 0,  cor: 0x3e2723, lateral: 0x1a0e08, shape: 'fence' },
+  // Sprint 16: portas+fence_gates+trapdoors madeiras (519-526)
+  [BLOCO.FENCE_JUNGLE]:      { nome: 'Cerca Selva',        solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
+  [BLOCO.FENCE_CHERRY]:      { nome: 'Cerca Cerejeira',    solido: true, emiteLuz: 0,  cor: 0xf8bbd0, lateral: 0xec407a, shape: 'fence' },
+  [BLOCO.FENCE_MANGROVE]:    { nome: 'Cerca Mangrove',     solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'fence' },
+  [BLOCO.DOOR_BIRCH]:        { nome: 'Porta Bétula',       solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1, shape: 'door' },
+  [BLOCO.DOOR_SPRUCE]:       { nome: 'Porta Pinheiro',     solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'door' },
+  [BLOCO.DOOR_ACACIA]:       { nome: 'Porta Acácia',       solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c, shape: 'door' },
+  [BLOCO.TRAPDOOR_OAK]:      { nome: 'Alçapão Carvalho',   solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.FENCE_GATE_OAK]:    { nome: 'Portão Cerca',       solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
 };
 
 export const ICONE = {
@@ -2106,6 +2124,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.SPRUCE_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}],   saida: {b: BLOCO.FENCE_SPRUCE, q: 3}, wb: true },
   { custos: [{b: BLOCO.ACACIA_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}],   saida: {b: BLOCO.FENCE_ACACIA, q: 3}, wb: true },
   { custos: [{b: BLOCO.DARK_OAK_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_DARK_OAK, q: 3}, wb: true },
+  // Sprint 16: portas+fence_gates+trapdoors madeiras (519-526)
+  { custos: [{b: BLOCO.JUNGLE_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_JUNGLE, q: 3}, wb: true },
+  { custos: [{b: BLOCO.CHERRY_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_CHERRY, q: 3}, wb: true },
+  { custos: [{b: BLOCO.MANGROVE_PRANCHA, q: 4}, {i: ITEM.PAU, q: 2}], saida: {b: BLOCO.FENCE_MANGROVE, q: 3}, wb: true },
+  { custos: [{b: BLOCO.BIRCH_PRANCHA, q: 6}], saida: {b: BLOCO.DOOR_BIRCH, q: 3}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_PRANCHA, q: 6}], saida: {b: BLOCO.DOOR_SPRUCE, q: 3}, wb: true },
+  { custos: [{b: BLOCO.ACACIA_PRANCHA, q: 6}], saida: {b: BLOCO.DOOR_ACACIA, q: 3}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 6}], saida: {b: BLOCO.TRAPDOOR_OAK, q: 2}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 2}, {i: ITEM.PAU, q: 4}], saida: {b: BLOCO.FENCE_GATE_OAK, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

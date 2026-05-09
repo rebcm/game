@@ -6968,6 +6968,15 @@ function criarAtlas() {
   mapa[BLOCO.FENCE_SPRUCE]          = { top: 343, side: 343, bottom: 343 };
   mapa[BLOCO.FENCE_ACACIA]          = { top: 345, side: 345, bottom: 345 };
   mapa[BLOCO.FENCE_DARK_OAK]        = { top: 349, side: 349, bottom: 349 };
+  // Sprint 16: portas+fence_gates+trapdoors+fences madeiras (reusa cells pranchas)
+  mapa[BLOCO.FENCE_JUNGLE]          = { top: 348, side: 348, bottom: 348 };
+  mapa[BLOCO.FENCE_CHERRY]          = { top: 300, side: 300, bottom: 300 };
+  mapa[BLOCO.FENCE_MANGROVE]        = { top: 298, side: 298, bottom: 298 };
+  mapa[BLOCO.DOOR_BIRCH]            = { top: 341, side: 341, bottom: 341 };
+  mapa[BLOCO.DOOR_SPRUCE]           = { top: 343, side: 343, bottom: 343 };
+  mapa[BLOCO.DOOR_ACACIA]           = { top: 345, side: 345, bottom: 345 };
+  mapa[BLOCO.TRAPDOOR_OAK]          = { top: 5,   side: 6,   bottom: 5   };
+  mapa[BLOCO.FENCE_GATE_OAK]        = { top: 6,   side: 6,   bottom: 6   };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
