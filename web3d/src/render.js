@@ -8893,6 +8893,28 @@ export class Renderer {
   aplicarShake(intensidade) {
     this.shakeAmount = Math.min(0.45, this.shakeAmount + intensidade);
   }
+  // SPRINT VISUAL-9: Selection cube outline (premium edge highlighting)
+  mostrarSelecao(x, y, z) {
+    if (!this.selectionMesh) {
+      const geo = new THREE.BoxGeometry(1.005, 1.005, 1.005);
+      const edges = new THREE.EdgesGeometry(geo);
+      const mat = new THREE.LineBasicMaterial({
+        color: 0x000000,
+        linewidth: 2,
+        transparent: true,
+        opacity: 0.8,
+        depthTest: false,
+      });
+      this.selectionMesh = new THREE.LineSegments(edges, mat);
+      this.selectionMesh.renderOrder = 999;
+      this.scene.add(this.selectionMesh);
+    }
+    this.selectionMesh.position.set(x + 0.5, y + 0.5, z + 0.5);
+    this.selectionMesh.visible = true;
+  }
+  esconderSelecao() {
+    if (this.selectionMesh) this.selectionMesh.visible = false;
+  }
   atualizarShake(dt) {
     if (this.shakeAmount < 0.001) { this.shakeAmount = 0; return { x: 0, y: 0, z: 0 }; }
     this.shakePhase += dt * 38;

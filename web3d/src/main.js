@@ -2117,6 +2117,13 @@ function loop(now) {
     const dirCamera = state.renderer.camera.getWorldDirection(_tmpVecAux);
     ray = raycastBloco(state.world, state.renderer.camera.position, dirCamera, ALCANCE_BLOCO);
 
+    // SPRINT VISUAL-9: Selection cube outline em bloco mirado
+    if (ray && state.renderer.mostrarSelecao) {
+      state.renderer.mostrarSelecao(ray.hit.x, ray.hit.y, ray.hit.z);
+    } else if (state.renderer.esconderSelecao) {
+      state.renderer.esconderSelecao();
+    }
+
     // Quebra contínua
     let progressoVisual = 0;
     if (state.player.holdE && ray) {

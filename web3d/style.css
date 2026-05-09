@@ -272,12 +272,17 @@ kbd {
    via mix-blend-mode: difference (mantém visível em qualquer cenário,
    tanto em céu claro quanto em pedra escura). Duas barras finas
    compõem o "+" — sem font, sem text-shadow. */
+/* SPRINT VISUAL-9: Crosshair PREMIUM com glow + dot central */
 #crosshair {
   position: absolute;
   top: 50%; left: 50%;
-  width: 10px; height: 10px;
+  width: 14px; height: 14px;
   transform: translate(-50%, -50%);
   pointer-events: none;
+}
+/* Dot central */
+#crosshair {
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 25%, transparent 35%);
 }
 #crosshair::before,
 #crosshair::after {
@@ -285,7 +290,8 @@ kbd {
   position: absolute;
   background: #fff;
   mix-blend-mode: difference;
-  transition: background 80ms;
+  transition: background 80ms, box-shadow 120ms;
+  box-shadow: 0 0 4px rgba(255,255,255,0.8);
 }
 /* Alvo: crosshair fica vermelho saturado quando mira está num mob/bloco
    válido (paridade Minecraft real, feedback de "vou acertar"). */
@@ -293,11 +299,13 @@ kbd {
 #crosshair.alvo-mob::after {
   background: #ff5252;
   mix-blend-mode: normal;
+  box-shadow: 0 0 8px rgba(255, 82, 82, 0.9);
 }
 #crosshair.alvo-bloco::before,
 #crosshair.alvo-bloco::after {
   background: #ffeb3b;
   mix-blend-mode: normal;
+  box-shadow: 0 0 6px rgba(255, 235, 59, 0.8);
 }
 #crosshair::before {
   /* barra horizontal */
