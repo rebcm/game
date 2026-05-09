@@ -294,8 +294,16 @@ export const BLOCO = {
   SLAB_QUARTZO:   240,
   SLAB_DEEPSLATE: 241,
   SLAB_BLACKSTONE:242,
+  ESCADA_ARENITO: 243,
+  ESCADA_QUARTZO: 244,
+  ESCADA_DEEPSLATE:245,
+  ESCADA_BLACKSTONE:246,
+  PAREDE_ANDESITO:247,
+  PAREDE_BLACKSTONE:248,
+  BONE_BLOCK:     249, // bloco de osso (decoração branca com listras)
+  ROOTED_DIRT:    250, // terra com raízes (drylands)
 };
-export const N_BLOCOS = 243;
+export const N_BLOCOS = 251;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -560,6 +568,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_QUARTZO]:   { nome: 'Laje de Quartzo',  solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
   [BLOCO.SLAB_DEEPSLATE]: { nome: 'Laje de Ardósia',  solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
   [BLOCO.SLAB_BLACKSTONE]:{ nome: 'Laje Blackstone',  solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'slab' },
+  [BLOCO.ESCADA_ARENITO]:  { nome: 'Escada Arenito',   solido: true, emiteLuz: 0, cor: 0xfdd8a0, lateral: 0xe6c389, shape: 'stairs' },
+  [BLOCO.ESCADA_QUARTZO]:  { nome: 'Escada Quartzo',   solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'stairs' },
+  [BLOCO.ESCADA_DEEPSLATE]:{ nome: 'Escada Ardósia',   solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'stairs' },
+  [BLOCO.ESCADA_BLACKSTONE]:{nome: 'Escada Blackstone',solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'stairs' },
+  [BLOCO.PAREDE_ANDESITO]: { nome: 'Parede Andesito',  solido: true, emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x757575, shape: 'wall' },
+  [BLOCO.PAREDE_BLACKSTONE]:{nome: 'Parede Blackstone',solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'wall' },
+  [BLOCO.BONE_BLOCK]:      { nome: 'Bloco de Osso',    solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbdbdbd },
+  [BLOCO.ROOTED_DIRT]:     { nome: 'Terra com Raízes', solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x5d4037 },
 };
 
 export const ICONE = {
@@ -1040,6 +1056,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.QUARTZO,    q: 3}], saida: {b: BLOCO.SLAB_QUARTZO,    q: 6}, wb: true },
   { custos: [{b: BLOCO.DEEPSLATE,  q: 3}], saida: {b: BLOCO.SLAB_DEEPSLATE,  q: 6}, wb: true },
   { custos: [{b: BLOCO.BLACKSTONE, q: 3}], saida: {b: BLOCO.SLAB_BLACKSTONE, q: 6}, wb: true },
+  // Escadas adicionais (6 → 4)
+  { custos: [{b: BLOCO.ARENITO, q: 6}],    saida: {b: BLOCO.ESCADA_ARENITO,    q: 4}, wb: true },
+  { custos: [{b: BLOCO.QUARTZO, q: 6}],    saida: {b: BLOCO.ESCADA_QUARTZO,    q: 4}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE, q: 6}],  saida: {b: BLOCO.ESCADA_DEEPSLATE,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE, q: 6}], saida: {b: BLOCO.ESCADA_BLACKSTONE, q: 4}, wb: true },
+  // Paredes adicionais (6 → 6)
+  { custos: [{b: BLOCO.ANDESITO, q: 6}],   saida: {b: BLOCO.PAREDE_ANDESITO,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE, q: 6}], saida: {b: BLOCO.PAREDE_BLACKSTONE, q: 6}, wb: true },
+  // Bone Block: 9 ossos
+  { custos: [{i: ITEM.OSSO, q: 9}],        saida: {b: BLOCO.BONE_BLOCK, q: 1}, wb: true },
+  // Rooted Dirt: 1 terra + 1 muda
+  { custos: [{b: BLOCO.TERRA, q: 1}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.ROOTED_DIRT, q: 1}, wb: false },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

@@ -1030,6 +1030,62 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Bone Block: branco com listras horizontais e padrão de osso
+  function pintarBoneBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#eceff1';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 3 listras horizontais (segmentos do osso)
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0, y0 + 8,  CELL, 2);
+    ctx.fillRect(x0, y0 + 16, CELL, 2);
+    ctx.fillRect(x0, y0 + 24, CELL, 2);
+    // Listras verticais finas (textura óssea)
+    ctx.fillStyle = '#9e9e9e';
+    for (let px = 4; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Manchas escuras (poros do osso)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#757575', 0.20, 5, 1, idx * 9301 + 49297);
+    // Borda escura
+    ctx.fillStyle = '#757575';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+  }
+
+  // Rooted Dirt: marrom com raízes finas escuras espalhadas
+  function pintarRootedDirt(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído de terra
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5d4037', 0.40, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#a1887f', 0.30, 5, 1, seed + 4441);
+    // Raízes (linhas curvas escuras)
+    ctx.fillStyle = '#3e2723';
+    // Raiz 1 (zigzag horizontal)
+    ctx.fillRect(x0 + 4,  y0 + 8,  3, 1);
+    ctx.fillRect(x0 + 6,  y0 + 9,  3, 1);
+    ctx.fillRect(x0 + 8,  y0 + 10, 3, 1);
+    // Raiz 2 (zigzag diagonal)
+    ctx.fillRect(x0 + 18, y0 + 4,  3, 1);
+    ctx.fillRect(x0 + 20, y0 + 5,  3, 1);
+    ctx.fillRect(x0 + 22, y0 + 7,  3, 1);
+    // Raiz 3 (vertical fina)
+    ctx.fillRect(x0 + 12, y0 + 18, 1, 8);
+    ctx.fillRect(x0 + 13, y0 + 25, 2, 1);
+    // Raiz 4 (mais à direita)
+    ctx.fillRect(x0 + 24, y0 + 16, 1, 6);
+    ctx.fillRect(x0 + 25, y0 + 22, 2, 1);
+    // Pontos brancos (fungos/sementes)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#fafafa', 0.10, 8, 1, seed + 7331);
+  }
+
   // Glazed Terracota: cor vibrante com padrão geométrico (paridade MC)
   function pintarGlazed(idx, base, claro, escuro) {
     const col = idx % COLS;
@@ -3597,6 +3653,8 @@ function criarAtlas() {
   pintarGlazed(223, '#f06292', '#f48fb1', '#c2185b');             // glazed rosa
   pintarGlazed(224, '#fafafa', '#ffffff', '#bdbdbd');             // glazed branca
   pintarGlazed(225, '#424242', '#616161', '#000000');             // glazed preta
+  pintarBoneBlock(226);                                           // bone block
+  pintarRootedDirt(227);                                          // rooted dirt
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3848,6 +3906,17 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_QUARTZO]   = { top: 54,  side: 54,  bottom: 54  };
   mapa[BLOCO.SLAB_DEEPSLATE] = { top: 101, side: 101, bottom: 101 };
   mapa[BLOCO.SLAB_BLACKSTONE]= { top: 100, side: 100, bottom: 100 };
+  // Escadas adicionais
+  mapa[BLOCO.ESCADA_ARENITO]   = { top: 85,  side: 85,  bottom: 85  };
+  mapa[BLOCO.ESCADA_QUARTZO]   = { top: 54,  side: 54,  bottom: 54  };
+  mapa[BLOCO.ESCADA_DEEPSLATE] = { top: 101, side: 101, bottom: 101 };
+  mapa[BLOCO.ESCADA_BLACKSTONE]= { top: 100, side: 100, bottom: 100 };
+  // Paredes adicionais
+  mapa[BLOCO.PAREDE_ANDESITO]  = { top: 77,  side: 77,  bottom: 77  };
+  mapa[BLOCO.PAREDE_BLACKSTONE]= { top: 100, side: 100, bottom: 100 };
+  // Blocos novos
+  mapa[BLOCO.BONE_BLOCK]       = { top: 226, side: 226, bottom: 226 };
+  mapa[BLOCO.ROOTED_DIRT]      = { top: 227, side: 227, bottom: 227 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
