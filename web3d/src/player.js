@@ -101,6 +101,57 @@ export class Player {
     // Slowness (flecha do stray): -50% velocidade
     if (this.efeitos?.slowness && Date.now() < this.efeitos.slowness) speed *= 0.50;
     else if (this.efeitos?.slowness) delete this.efeitos.slowness;
+    // SPRINT MEGA-1: Dolphin's Grace (golfinho) — +60% nado
+    if (this.efeitos?.dolphin && Date.now() < this.efeitos.dolphin) {
+      if (naAgua) speed *= 1.60;
+    } else if (this.efeitos?.dolphin) delete this.efeitos.dolphin;
+    // Soul Speed (passar em soul sand, +30%)
+    const blocoBaixoSoul = world.get(Math.floor(this.pos.x), Math.floor(this.pos.y - 0.6), Math.floor(this.pos.z));
+    if (blocoBaixoSoul === BLOCO.SOUL_SAND || blocoBaixoSoul === BLOCO.SOUL_SOIL) {
+      if (this.efeitos?.soul_speed && Date.now() < this.efeitos.soul_speed) speed *= 1.30;
+    }
+    // Wither: dano contínuo 1HP a cada 2s, pode matar (igual MC)
+    if (this.efeitos?.wither) {
+      if (Date.now() >= this.efeitos.wither) delete this.efeitos.wither;
+      else {
+        this._accWither = (this._accWither || 0) + dt;
+        if (this._accWither >= 2.0 && this.modo === 'survival') {
+          this._accWither = 0;
+          this.hp = Math.max(0, this.hp - 1);
+          if (this.hp <= 0) this.morrer?.();
+          state.ui?.toast?.('🖤 Wither!');
+        }
+      }
+    }
+    // Hunger effect: drena fome 0.5 a cada 1s
+    if (this.efeitos?.hunger_effect) {
+      if (Date.now() >= this.efeitos.hunger_effect) delete this.efeitos.hunger_effect;
+      else {
+        this._accHunger = (this._accHunger || 0) + dt;
+        if (this._accHunger >= 1.0) {
+          this._accHunger = 0;
+          this.fome = Math.max(0, (this.fome || 20) - 0.5);
+        }
+      }
+    }
+    // Absorption: extra HP amarelo (4 corações por nível)
+    if (this.efeitos?.absorption && Date.now() < this.efeitos.absorption) {
+      if (!this._absorptionAplicada) {
+        this.hpMax = (this._hpMaxBase || this.hpMax) + 4;
+        this._hpMaxBase = this._hpMaxBase || 20;
+        this._absorptionAplicada = true;
+      }
+    } else if (this.efeitos?.absorption) {
+      delete this.efeitos.absorption;
+      if (this._absorptionAplicada) {
+        this.hpMax = this._hpMaxBase || 20;
+        this.hp = Math.min(this.hp, this.hpMax);
+        this._absorptionAplicada = false;
+      }
+    }
+    // Water Breathing / Conduit Power: pula consumo de oxigênio
+    // (verificado em this.efeitos?.water_breathing dentro do bloco oxigênio)
+    // Jump Boost: +50% pulo (aplicado quando jump triggerado abaixo)
     // Veneno: dreno HP a cada 1.5s enquanto efeito ativo. Mínimo 1 HP
     // (paridade Minecraft real — poison não mata, só debilita).
     if (this.efeitos?.poison) {
@@ -164,8 +215,12 @@ export class Player {
         if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
         vy = this.vel.y;
         if (this.input.jump && this.noChao) {
-          this.vel.y = PULO_VEL;
-          vy = PULO_VEL;
+          // Jump Boost: +50% altura por nível
+          let pulo = PULO_VEL;
+          if (this.efeitos?.jump_boost && Date.now() < this.efeitos.jump_boost) pulo *= 1.5;
+          else if (this.efeitos?.jump_boost) delete this.efeitos.jump_boost;
+          this.vel.y = pulo;
+          vy = pulo;
           this.noChao = false;
         }
       }
@@ -232,9 +287,13 @@ export class Player {
       else if (bPe === BLOCO.MAGMA && !this.sneak) this.aplicarDano(1, 'magma');
     }
 
-    // Oxigênio submerso
+    // Oxigênio submerso (Water Breathing pula consumo)
     this.accAr += dt;
-    if (this.submerso) {
+    const waterBreath = (this.efeitos?.water_breathing && Date.now() < this.efeitos.water_breathing) ||
+                       (this.efeitos?.dolphin && Date.now() < this.efeitos.dolphin) ||
+                       (this.efeitos?.turtle_master && Date.now() < this.efeitos.turtle_master) ||
+                       (this.efeitos?.conduit_power && Date.now() < this.efeitos.conduit_power);
+    if (this.submerso && !waterBreath) {
       if (this.accAr >= 1.0) {
         this.accAr = 0;
         if (this.ar > 0) {
@@ -338,7 +397,12 @@ export class Player {
           // Slow Fall: zera dano de queda completamente (paridade MC)
           const slowFall = this.efeitos?.slow_fall && Date.now() < this.efeitos.slow_fall;
           if (this.modo === 'survival' && queda > 4 && !slowFall) {
-            const dano = Math.round(queda - 3);
+            let dano = Math.round(queda - 3);
+            // SPRINT MEGA-1: Feather Falling — reduz dano de queda 12% por nível
+            const botas = state.inv?.equipado?.('botas');
+            if (botas?.encant?.feather_falling) {
+              dano = Math.max(0, Math.round(dano * (1 - 0.12 * botas.encant.feather_falling)));
+            }
             if (dano > 0) this.aplicarDano(dano, `queda ${queda.toFixed(1)}`);
           }
           this.spawnY = this.pos.y;
@@ -427,11 +491,25 @@ export class Player {
     if (this.modo === 'creative' && fonte !== 'void') return;
     const defesa = state.inv ? state.inv.defesaTotal() : 0;
     let reducao = Math.min(0.8, defesa * 0.04);
-    // Protection enchantment em armaduras: -5%/-10%/-15% por peça com Protection N
+    // Protection enchantments em armaduras: -5%/lvl
+    // SPRINT MEGA-1: Fire/Blast/Projectile Protection específicos
     if (state.inv?.armadura) {
       let protBonus = 0;
       for (const peca of Object.values(state.inv.armadura)) {
         if (peca?.encant?.protection) protBonus += peca.encant.protection * 0.05;
+        if (peca?.encant?.fire_protection && (fonte === 'lava' || fonte === 'magma' || fonte === 'fogo' || fonte === 'queima')) {
+          protBonus += peca.encant.fire_protection * 0.08;
+        }
+        if (peca?.encant?.blast_protection && (fonte === 'creeper' || fonte === 'tnt' || fonte === 'explosao')) {
+          protBonus += peca.encant.blast_protection * 0.08;
+        }
+        if (peca?.encant?.projectile_protection && (fonte === 'flecha' || fonte === 'projetil')) {
+          protBonus += peca.encant.projectile_protection * 0.08;
+        }
+        // Thorns: reflete 1-4 dano ao atacante (handled in mob attack code, mas placeholder aqui)
+        if (peca?.encant?.thorns && (fonte === 'mob' || fonte === 'zumbi')) {
+          // refletido em main.js durante ataque mob→player
+        }
       }
       reducao = Math.min(0.85, reducao + protBonus);
     }

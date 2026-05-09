@@ -114,6 +114,22 @@ function atacarMob() {
   if (state.player.efeitos?.strength && Date.now() < state.player.efeitos.strength) {
     dano = Math.round(dano * 1.5);
   } else if (state.player.efeitos?.strength) delete state.player.efeitos.strength;
+  // SPRINT MEGA-1: Weakness — -50% dano em ataques
+  if (state.player.efeitos?.weakness && Date.now() < state.player.efeitos.weakness) {
+    dano = Math.max(1, Math.round(dano * 0.5));
+  } else if (state.player.efeitos?.weakness) delete state.player.efeitos.weakness;
+  // Smite: +2.5 dano por nível vs undead (zumbi/esqueleto/wither/skeleton variants)
+  if (selAtual?.encant?.smite && /zumbi|esqueleto|husk|stray|drowned|wither|zombified/i.test(m.tipo)) {
+    dano += 2.5 * selAtual.encant.smite;
+  }
+  // Bane of Arthropods: +2.5 vs aranha/silverfish/bee/endermite
+  if (selAtual?.encant?.bane && /aranha|silverfish|bee|endermite|cave_spider/i.test(m.tipo)) {
+    dano += 2.5 * selAtual.encant.bane;
+  }
+  // Fire Aspect: incendeia mob (8s queima 1HP/2s)
+  if (selAtual?.encant?.fire_aspect) {
+    m.queimando = Math.max(m.queimando || 0, 8);
+  }
   if (m.tipo === 'zumbi') Audio.zumbiHit();
   else Audio.hit();
   // Damage number flutuante na tela
@@ -208,15 +224,96 @@ function abrirTradeVillager(mob) {
 // Picareta → efficiency, fortune
 // Armadura → protection
 // Cada nível custa nivel×10 XP + 1 lápis lazuli. Máx 3.
+// SPRINT MEGA-1: 30+ encantamentos paridade Minecraft
 const _ENCHANTS_POR_TIPO = {
   esp: [
-    { id: 'sharpness',  nome: 'Sharpness',  desc: '+1 dano por nível' },
-    { id: 'knockback',  nome: 'Knockback',  desc: '+50% empurrão por nível' },
-    { id: 'looting',    nome: 'Looting',    desc: 'chance de drop extra' },
+    { id: 'sharpness',  nome: 'Sharpness',  desc: '+1 dano por nível', maxLvl: 5 },
+    { id: 'knockback',  nome: 'Knockback',  desc: '+50% empurrão por nível', maxLvl: 2 },
+    { id: 'looting',    nome: 'Looting',    desc: 'chance de drop extra', maxLvl: 3 },
+    { id: 'smite',      nome: 'Smite',      desc: '+2.5 dano vs undead', maxLvl: 5 },
+    { id: 'bane',       nome: 'Bane Arthropods', desc: '+2.5 vs aranhas', maxLvl: 5 },
+    { id: 'fire_aspect',nome: 'Fire Aspect',desc: 'incendeia inimigo', maxLvl: 2 },
+    { id: 'sweeping',   nome: 'Sweeping Edge', desc: 'dano splash em mobs próximos', maxLvl: 3 },
+    { id: 'mending',    nome: 'Mending',    desc: 'XP repara durabilidade', maxLvl: 1 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade × (lvl+1)', maxLvl: 3 },
   ],
   pic: [
-    { id: 'efficiency', nome: 'Efficiency', desc: '+20% velocidade por nível' },
-    { id: 'fortune',    nome: 'Fortune',    desc: 'chance de drop extra de minério' },
+    { id: 'efficiency', nome: 'Efficiency', desc: '+20% velocidade por nível', maxLvl: 5 },
+    { id: 'fortune',    nome: 'Fortune',    desc: 'chance drop extra minério', maxLvl: 3 },
+    { id: 'silk_touch', nome: 'Silk Touch', desc: 'mina bloco original (não fortune!)', maxLvl: 1 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade × (lvl+1)', maxLvl: 3 },
+    { id: 'mending',    nome: 'Mending',    desc: 'XP repara durabilidade', maxLvl: 1 },
+  ],
+  pa: [
+    { id: 'efficiency', nome: 'Efficiency', desc: '+20% velocidade por nível', maxLvl: 5 },
+    { id: 'fortune',    nome: 'Fortune',    desc: 'chance drop extra', maxLvl: 3 },
+    { id: 'silk_touch', nome: 'Silk Touch', desc: 'mina bloco original', maxLvl: 1 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+  ],
+  machado: [
+    { id: 'sharpness',  nome: 'Sharpness',  desc: '+1 dano por nível', maxLvl: 5 },
+    { id: 'efficiency', nome: 'Efficiency', desc: '+20% chop madeira', maxLvl: 5 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+    { id: 'silk_touch', nome: 'Silk Touch', desc: 'mina bloco original', maxLvl: 1 },
+  ],
+  arco: [
+    { id: 'power',      nome: 'Power',      desc: '+25% dano flecha por nível', maxLvl: 5 },
+    { id: 'punch',      nome: 'Punch',      desc: 'knockback flecha', maxLvl: 2 },
+    { id: 'flame',      nome: 'Flame',      desc: 'flechas em chamas', maxLvl: 1 },
+    { id: 'infinity',   nome: 'Infinity',   desc: 'flechas infinitas (1 na hotbar)', maxLvl: 1 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+    { id: 'mending',    nome: 'Mending',    desc: 'XP repara', maxLvl: 1 },
+  ],
+  crossbow: [
+    { id: 'multishot',  nome: 'Multishot',  desc: '3 projéteis simultâneos', maxLvl: 1 },
+    { id: 'quick_charge',nome:'Quick Charge',desc: '-25% recarga', maxLvl: 3 },
+    { id: 'piercing',   nome: 'Piercing',   desc: 'flecha atravessa mobs', maxLvl: 4 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+  ],
+  tridente: [
+    { id: 'loyalty',    nome: 'Loyalty',    desc: 'volta ao player após arremesso', maxLvl: 3 },
+    { id: 'channeling', nome: 'Channeling', desc: 'cria raio em chuva', maxLvl: 1 },
+    { id: 'riptide',    nome: 'Riptide',    desc: 'lança player como projétil', maxLvl: 3 },
+    { id: 'impaling',   nome: 'Impaling',   desc: '+2.5 dano vs criaturas aquáticas', maxLvl: 5 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+  ],
+  mace: [
+    { id: 'density',    nome: 'Density',    desc: '+0.5 dano por nível por bloco caído (1.21)', maxLvl: 5 },
+    { id: 'breach',     nome: 'Breach',     desc: 'ignora 15% armadura por nível (1.21)', maxLvl: 4 },
+    { id: 'wind_burst', nome: 'Wind Burst', desc: 'pulo após smash attack (1.21)', maxLvl: 3 },
+    { id: 'smite',      nome: 'Smite',      desc: '+2.5 dano vs undead', maxLvl: 5 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+  ],
+  cap: [
+    { id: 'protection', nome: 'Protection', desc: '-1 dano sofrido por nível', maxLvl: 4 },
+    { id: 'fire_protection',nome:'Fire Prot.',desc:'reduz dano fogo/lava', maxLvl: 4 },
+    { id: 'blast_protection',nome:'Blast Prot.',desc:'reduz dano explosão', maxLvl: 4 },
+    { id: 'projectile_protection',nome:'Proj. Prot.',desc:'reduz dano flecha', maxLvl: 4 },
+    { id: 'respiration',nome: 'Respiration',desc: '+15s respiração aquática por lvl', maxLvl: 3 },
+    { id: 'aqua_affinity',nome:'Aqua Affinity',desc:'mining normal em água', maxLvl: 1 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+  ],
+  pei: [
+    { id: 'protection', nome: 'Protection', desc: '-1 dano por nível', maxLvl: 4 },
+    { id: 'fire_protection',nome:'Fire Prot.',desc:'reduz dano fogo', maxLvl: 4 },
+    { id: 'blast_protection',nome:'Blast Prot.',desc:'reduz dano explosão', maxLvl: 4 },
+    { id: 'projectile_protection',nome:'Proj. Prot.',desc:'reduz dano flecha', maxLvl: 4 },
+    { id: 'thorns',     nome: 'Thorns',     desc: 'reflete dano ao atacante', maxLvl: 3 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+    { id: 'mending',    nome: 'Mending',    desc: 'XP repara', maxLvl: 1 },
+  ],
+  per: [
+    { id: 'protection', nome: 'Protection', desc: '-1 dano por nível', maxLvl: 4 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
+    { id: 'swift_sneak',nome: 'Swift Sneak',desc: 'sneak +15% velocidade por lvl', maxLvl: 3 },
+  ],
+  bot: [
+    { id: 'protection', nome: 'Protection', desc: '-1 dano por nível', maxLvl: 4 },
+    { id: 'feather_falling',nome:'Feather Falling',desc:'reduz dano queda 12%/lvl', maxLvl: 4 },
+    { id: 'depth_strider',nome:'Depth Strider',desc: '+33% velocidade água/lvl', maxLvl: 3 },
+    { id: 'frost_walker',nome:'Frost Walker',desc: 'gelo embaixo dos pés', maxLvl: 2 },
+    { id: 'soul_speed', nome: 'Soul Speed', desc: '+30% em soul sand/soil', maxLvl: 3 },
+    { id: 'unbreaking', nome: 'Unbreaking', desc: 'durabilidade ×', maxLvl: 3 },
   ],
 };
 function encantarItemAtual() {
@@ -401,6 +498,62 @@ function aplicarPocao(tipo) {
   } else if (tipo === 'noite') {
     p.efeitos.noite = Date.now() + 60000; // visão noturna 1min
     state.ui?.toast?.('🌙 Visão noturna ativa');
+  // SPRINT MEGA-1: novos efeitos paridade Minecraft
+  } else if (tipo === 'harm') {
+    p.aplicarDano?.(6, 'magia');
+  } else if (tipo === 'weakness') {
+    p.efeitos.weakness = Date.now() + 90000; // 1.5min: -50% dano de ataque
+    state.ui?.toast?.('💢 Fraqueza — ataques fracos');
+  } else if (tipo === 'jump_boost') {
+    p.efeitos.jump_boost = Date.now() + 180000; // 3min: +50% pulo
+    state.ui?.toast?.('🦘 Pulo aumentado!');
+  } else if (tipo === 'haste') {
+    p.efeitos.haste = Date.now() + 180000;
+    state.ui?.toast?.('⛏ Pressa! Mineração rápida');
+  } else if (tipo === 'water_breathing') {
+    p.efeitos.water_breathing = Date.now() + 180000;
+    state.ui?.toast?.('🐟 Respiração aquática!');
+  } else if (tipo === 'dolphin') {
+    p.efeitos.dolphin = Date.now() + 60000;
+    state.ui?.toast?.('🐬 Graça do golfinho!');
+  } else if (tipo === 'absorption') {
+    p.efeitos.absorption = Date.now() + 120000; // 2min: +4 corações amarelos
+    p.hp = Math.min((p._hpMaxBase || 20) + 4, p.hp + 4);
+    state.ui?.toast?.('💛 Absorção +4 corações!');
+  } else if (tipo === 'glowing') {
+    p.efeitos.glowing = Date.now() + 60000;
+    state.ui?.toast?.('✨ Brilhando — visível através de paredes');
+  } else if (tipo === 'turtle_master') {
+    p.efeitos.turtle_master = Date.now() + 20000;
+    p.efeitos.resistencia = Date.now() + 20000;
+    p.efeitos.slowness = Date.now() + 20000;
+    state.ui?.toast?.('🐢 Mestre Tartaruga! Resistência+lento');
+  } else if (tipo === 'wither') {
+    p.efeitos.wither = Date.now() + 30000;
+    state.ui?.toast?.('🖤 Withered!');
+  } else if (tipo === 'hunger' || tipo === 'hunger_effect') {
+    p.efeitos.hunger_effect = Date.now() + 30000;
+    state.ui?.toast?.('😵 Fome efeito!');
+  } else if (tipo === 'blindness') {
+    p.efeitos.blindness = Date.now() + 30000;
+    state.ui?.toast?.('🕶 Cego!');
+  } else if (tipo === 'nausea') {
+    p.efeitos.nausea = Date.now() + 30000;
+    state.ui?.toast?.('🌀 Náusea!');
+  } else if (tipo === 'luck') {
+    p.efeitos.luck = Date.now() + 300000; // 5min
+    state.ui?.toast?.('🍀 Sorte!');
+  } else if (tipo === 'soul_speed') {
+    p.efeitos.soul_speed = Date.now() + 240000;
+    state.ui?.toast?.('💨 Velocidade Almas!');
+  } else if (tipo === 'conduit_power') {
+    p.efeitos.conduit_power = Date.now() + 120000;
+    state.ui?.toast?.('🔱 Poder do Conduit!');
+  } else if (tipo === 'poison') {
+    p.efeitos.poison = Date.now() + 30000;
+    state.ui?.toast?.('☠ Envenenado!');
+  } else if (tipo === 'decay') {
+    p.efeitos.wither = Date.now() + 60000; // alias longo wither
   } else {
     p.efeitos[tipo] = Date.now() + 30000; // 30s default
   }
@@ -1446,13 +1599,21 @@ function loop(now) {
         // Se bloco foi colocado pelo player, força drop do bloco original
         // (sem requisito de tier) — UX: jogador não perde o que colocou.
         const foiPlayer = state.world.foiColocadoPeloPlayer(t.x, t.y, t.z);
-        const drops = foiPlayer
-          ? [{ b: t.b, q: 1 }]
-          : Drops.dropDeBloco(t.b, tier);
+        // SPRINT MEGA-1: Silk Touch — força drop do bloco original sem fortune/conversão
+        let drops;
+        if (sel?.encant?.silk_touch && !foiPlayer) {
+          drops = [{ b: t.b, q: 1 }]; // Silk Touch: bloco intacto (vidro, ice, ore in stone form)
+        } else {
+          drops = foiPlayer
+            ? [{ b: t.b, q: 1 }]
+            : Drops.dropDeBloco(t.b, tier);
+        }
         if (foiPlayer) state.world.desmarcarColocadoPeloPlayer(t.x, t.y, t.z);
-        // Fortune: ores ganham +1 drop por nível com chance 33%/66%/100%
-        if (sel?.encant?.fortune && !foiPlayer &&
-            (t.b === BLOCO.CARVAO || t.b === BLOCO.DIAMANTE)) {
+        // Fortune (não combina com Silk Touch): ores ganham +1 drop por nível com chance 33%/66%/100%
+        if (sel?.encant?.fortune && !sel?.encant?.silk_touch && !foiPlayer &&
+            (t.b === BLOCO.CARVAO || t.b === BLOCO.DIAMANTE || t.b === BLOCO.OURO ||
+             t.b === BLOCO.FERRO || t.b === BLOCO.LAPIS_MIN || t.b === BLOCO.ESMERALDA_MIN ||
+             t.b === BLOCO.COBRE_MINERIO)) {
           const chance = sel.encant.fortune * 0.33;
           if (Math.random() < chance) {
             const extra = [...drops];

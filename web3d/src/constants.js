@@ -1986,6 +1986,89 @@ export const ITEM = {
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
   CAP_DIAMANTE: 308, PEI_DIAMANTE: 309, PER_DIAMANTE: 310, BOT_DIAMANTE: 311,
+  // SPRINT MEGA-1: Items críticos faltantes para paridade Minecraft
+  // Combate avançado
+  SHIELD:          400, // escudo: bloqueia 50% dano frontal (segurar F)
+  CROSSBOW:        401, // besta: tipo arco mas com multishot
+  CROSSBOW_CARREGADA:402, // crossbow com flecha já carregada
+  MACE:            403, // maça (1.21 - smash attack ao cair)
+  TOTEM_VIDA:      404, // totem of undying — revive ao morrer
+  ELYTRA:          405, // asas de glide
+  // Comida nova
+  CARNE_COELHO:    406, BAGAS_DOCES: 407, BAGAS_BRILHANTES: 408,
+  KELP_COMIDA:     409, MELANCIA_FATIA:410, BEETROOT_SEMENTE:411,
+  // Materiais especiais
+  BAMBOO:          412, // item bambu separado
+  CHORUS_FRUTA:    413, BOLA_NEVE: 414, OVO_GOLEM: 415,
+  GOAT_HORN:       416, // 1.20 — chama eventos
+  ECHO_SHARD:      417, // recovery compass craft
+  HONEYCOMB:       418, // colmeia material (já existe FAVO_MEL?)
+  TRIAL_KEY:       419, // chave do trial chamber 1.21
+  OMINOUS_KEY:     420, // chave ominosa 1.21
+  WIND_CHARGE:     421, // wind charge 1.21
+  // Mapas e exploração
+  MAPA_VAZIO:      422, MAPA_TESOURO_I:423, MAPA_BUSSOLA: 424,
+  // Banner/Decoração
+  BANNER_PADRAO:   425, ESTANDARTE: 426,
+  // Spawn eggs (essenciais)
+  OVO_VACA:        427, OVO_PORCO: 428, OVO_ZUMBI: 429, OVO_CREEPER: 430,
+  OVO_ESQUELETO:   431, OVO_ARANHA: 432, OVO_VILLAGER: 433, OVO_LOBO: 434,
+  // Poções extras (paridade brewing)
+  POCAO_WEAKNESS:  435, // fraqueza (necessário pra curar villagers)
+  POCAO_HARM:      436, // dano instantâneo
+  POCAO_NAUSEA:    437,
+  POCAO_BLINDNESS: 438,
+  POCAO_HUNGER:    439,
+  POCAO_WITHER:    440, // wither effect
+  POCAO_LUCK:      441,
+  POCAO_JUMP:      442, // jump boost
+  POCAO_HASTE:     443,
+  POCAO_WATER_BR:  444, // water breathing
+  POCAO_DOLPHIN:   445, // dolphin's grace
+  POCAO_ABSORPTION:446, // absorção
+  // Splash + Lingering variantes (mesmas poções, lançáveis)
+  SPLASH_HEAL:     447, SPLASH_HARM: 448, SPLASH_POISON: 449, SPLASH_SPEED: 450,
+  LINGER_HEAL:     451, LINGER_REGEN:452, LINGER_FIRE:   453,
+  // Discos música extras (Minecraft tem 14+)
+  MUSIC_DISC_MELLOHI:454, MUSIC_DISC_STAL:455, MUSIC_DISC_STRAD:456,
+  MUSIC_DISC_WARD: 457, MUSIC_DISC_11:    458, MUSIC_DISC_WAIT:459,
+  MUSIC_DISC_OTHERSIDE:460, MUSIC_DISC_PIGSTEP:461, MUSIC_DISC_RELIC:462,
+  MUSIC_DISC_5:    463, // Ancient City
+  MUSIC_DISC_PRECIPICE:464,
+  // Decorações + utilitários
+  ARMOR_STAND:     465, // suporte de armadura
+  ITEM_FRAME:      466, GLOW_ITEM_FRAME: 467,
+  PINTURA:         468,
+  PASS_FERMENTADO: 469, // ingrediente pra zombification cure
+  COCO_BOLA_NEVE:  470, // ingrediente
+  // Sherds (cacos arqueologia)
+  SHERD_HEART:     471, SHERD_ARCHER: 472, SHERD_DANGER: 473, SHERD_PROSPERITY:474,
+  // Brush (arqueologia)
+  BRUSH:           475,
+  // Ingredientes brewing extras
+  RAW_GOLD:        476, RAW_IRON: 477, RAW_COPPER: 478,
+  TURTLE_SCUTE:    479, // escama tartaruga
+  PHANTOM_MEMBRANE:480, // membrana phantom
+  // Variantes de boats
+  BARCO_OAK:       481, BARCO_BIRCH: 482, BARCO_SPRUCE: 483,
+  BARCO_JUNGLE:    484, BARCO_ACACIA: 485, BARCO_DARK: 486,
+  BARCO_CHERRY:    487, BARCO_MANGROVE:488, BARCO_BAMBU: 489,
+  BARCO_CHEST:     490, // boat com baú
+  // Minecart variantes
+  MINECART:        491, MINECART_CHEST: 492, MINECART_HOPPER:493,
+  MINECART_TNT:    494, MINECART_FORN:  495, MINECART_SPAWN: 496,
+  // Misc 1.20+ items
+  PITCHER_POD:     497, TORCHFLOWER_SEED:498, // sniffer drops
+  FLECHA_FOGO:     499, FLECHA_SPECTRAL:500,
+  FLECHA_TIPPED:   501, // flecha c/ poção
+  GUNPOWDER_2:     502, // duplicata pra crafting
+  PRINCIPLES_BANNER:503, // banner com padrão wither
+  CARTA_NAVIO:     504, // mapa especial
+  WITHER_ROSA_ITEM:505,
+  CHORUS_FLOR_ITEM:506,
+  POCAO_GLOWING:   507,
+  POCAO_TURTLE:    508, // turtle master
+  POCAO_SLOW_GROWTH:509,
 };
 
 export const ITEM_INFO = {
@@ -2132,6 +2215,117 @@ export const ITEM_INFO = {
   [ITEM.PEI_DIAMANTE]: { nome: 'Peitoral diamante', icone: '👕', armadura: 'torso',   defesa: 8 },
   [ITEM.PER_DIAMANTE]: { nome: 'Perneiras diamante',icone: '👖', armadura: 'pernas',  defesa: 6 },
   [ITEM.BOT_DIAMANTE]: { nome: 'Botas diamante',    icone: '🥾', armadura: 'botas',   defesa: 3 },
+  // SPRINT MEGA-1: ITEM_INFO para 100+ itens novos
+  [ITEM.SHIELD]:         { nome: 'Escudo',             icone: '🛡️',  bloqueia: true },
+  [ITEM.CROSSBOW]:       { nome: 'Besta',              icone: '🏹',  arma: 'crossbow' },
+  [ITEM.CROSSBOW_CARREGADA]:{ nome: 'Besta Carregada', icone: '🏹',  arma: 'crossbow_loaded' },
+  [ITEM.MACE]:           { nome: 'Maça',               icone: '🔨',  arma: 'mace', dano: 6 },
+  [ITEM.TOTEM_VIDA]:     { nome: 'Totem Imortalidade', icone: '🗿',  totem: true },
+  [ITEM.ELYTRA]:         { nome: 'Elytra',             icone: '🪽',  armadura: 'torso', defesa: 0, glide: true },
+  [ITEM.CARNE_COELHO]:   { nome: 'Coelho Cozido',      icone: '🍖',  comida: 5, sat: 6 },
+  [ITEM.BAGAS_DOCES]:    { nome: 'Bagas Doces',        icone: '🫐',  comida: 2, sat: 0.4 },
+  [ITEM.BAGAS_BRILHANTES]:{ nome: 'Bagas Brilhantes',  icone: '🟠',  comida: 2, sat: 0.4 },
+  [ITEM.KELP_COMIDA]:    { nome: 'Kelp Seca',          icone: '🌿',  comida: 1, sat: 0.6 },
+  [ITEM.MELANCIA_FATIA]: { nome: 'Fatia Melancia',     icone: '🍉',  comida: 2, sat: 1.2 },
+  [ITEM.BEETROOT_SEMENTE]:{ nome: 'Sementes Beterraba',icone: '🌱' },
+  [ITEM.BAMBOO]:         { nome: 'Bambu',              icone: '🎋' },
+  [ITEM.CHORUS_FRUTA]:   { nome: 'Fruta Chorus',       icone: '🟣',  comida: 4, sat: 2.4, teleport: true },
+  [ITEM.BOLA_NEVE]:      { nome: 'Bola de Neve',       icone: '❄️',  arremessa: true },
+  [ITEM.OVO_GOLEM]:      { nome: 'Ovo Golem',          icone: '🥚' },
+  [ITEM.GOAT_HORN]:      { nome: 'Trompa de Cabra',    icone: '📯',  toca: true },
+  [ITEM.ECHO_SHARD]:     { nome: 'Caco do Eco',        icone: '🟢' },
+  [ITEM.HONEYCOMB]:      { nome: 'Favo Encerado',      icone: '🟧' },
+  [ITEM.TRIAL_KEY]:      { nome: 'Chave do Trial',     icone: '🗝️',  emite_luz: 6 },
+  [ITEM.OMINOUS_KEY]:    { nome: 'Chave Ominosa',      icone: '🗝️',  emite_luz: 8 },
+  [ITEM.WIND_CHARGE]:    { nome: 'Wind Charge',        icone: '💨',  arremessa: true },
+  [ITEM.MAPA_VAZIO]:     { nome: 'Mapa Vazio',         icone: '📜' },
+  [ITEM.MAPA_TESOURO_I]: { nome: 'Mapa do Tesouro',    icone: '🗺️' },
+  [ITEM.MAPA_BUSSOLA]:   { nome: 'Bússola Recovery',   icone: '🧭' },
+  [ITEM.BANNER_PADRAO]:  { nome: 'Bandeira Padrão',    icone: '🚩' },
+  [ITEM.ESTANDARTE]:     { nome: 'Estandarte',         icone: '🏳️' },
+  [ITEM.OVO_VACA]:       { nome: 'Ovo Spawn Vaca',     icone: '🥚',  spawn_egg: 'vaca' },
+  [ITEM.OVO_PORCO]:      { nome: 'Ovo Spawn Porco',    icone: '🥚',  spawn_egg: 'porco' },
+  [ITEM.OVO_ZUMBI]:      { nome: 'Ovo Spawn Zumbi',    icone: '🥚',  spawn_egg: 'zumbi' },
+  [ITEM.OVO_CREEPER]:    { nome: 'Ovo Spawn Creeper',  icone: '🥚',  spawn_egg: 'creeper' },
+  [ITEM.OVO_ESQUELETO]:  { nome: 'Ovo Spawn Esq.',     icone: '🥚',  spawn_egg: 'esqueleto' },
+  [ITEM.OVO_ARANHA]:     { nome: 'Ovo Spawn Aranha',   icone: '🥚',  spawn_egg: 'aranha' },
+  [ITEM.OVO_VILLAGER]:   { nome: 'Ovo Spawn Villager', icone: '🥚',  spawn_egg: 'villager' },
+  [ITEM.OVO_LOBO]:       { nome: 'Ovo Spawn Lobo',     icone: '🥚',  spawn_egg: 'lobo' },
+  [ITEM.POCAO_WEAKNESS]: { nome: 'Poção Fraqueza',     icone: '🧪',  pocao: 'weakness' },
+  [ITEM.POCAO_HARM]:     { nome: 'Poção Dano',         icone: '🧪',  pocao: 'harm' },
+  [ITEM.POCAO_NAUSEA]:   { nome: 'Poção Náusea',       icone: '🧪',  pocao: 'nausea' },
+  [ITEM.POCAO_BLINDNESS]:{ nome: 'Poção Cegueira',     icone: '🧪',  pocao: 'blindness' },
+  [ITEM.POCAO_HUNGER]:   { nome: 'Poção Fome',         icone: '🧪',  pocao: 'hunger' },
+  [ITEM.POCAO_WITHER]:   { nome: 'Poção Wither',       icone: '🧪',  pocao: 'wither' },
+  [ITEM.POCAO_LUCK]:     { nome: 'Poção Sorte',        icone: '🧪',  pocao: 'luck' },
+  [ITEM.POCAO_JUMP]:     { nome: 'Poção Pulo',         icone: '🧪',  pocao: 'jump_boost' },
+  [ITEM.POCAO_HASTE]:    { nome: 'Poção Pressa',       icone: '🧪',  pocao: 'haste' },
+  [ITEM.POCAO_WATER_BR]: { nome: 'Poção Resp. Aquát.', icone: '🧪',  pocao: 'water_breathing' },
+  [ITEM.POCAO_DOLPHIN]:  { nome: 'Poção Golfinho',     icone: '🧪',  pocao: 'dolphin' },
+  [ITEM.POCAO_ABSORPTION]:{ nome: 'Poção Absorção',    icone: '🧪',  pocao: 'absorption' },
+  [ITEM.POCAO_GLOWING]:  { nome: 'Poção Brilhar',      icone: '🧪',  pocao: 'glowing' },
+  [ITEM.POCAO_TURTLE]:   { nome: 'Poção Tartaruga',    icone: '🧪',  pocao: 'turtle_master' },
+  [ITEM.POCAO_SLOW_GROWTH]:{ nome: 'Poção Decadência', icone: '🧪',  pocao: 'decay' },
+  [ITEM.SPLASH_HEAL]:    { nome: 'Poção Splash Cura',  icone: '🧪',  pocao: 'heal',     splash: true },
+  [ITEM.SPLASH_HARM]:    { nome: 'Poção Splash Dano',  icone: '🧪',  pocao: 'harm',     splash: true },
+  [ITEM.SPLASH_POISON]:  { nome: 'Poção Splash Veneno',icone: '🧪',  pocao: 'poison',   splash: true },
+  [ITEM.SPLASH_SPEED]:   { nome: 'Poção Splash Vel.',  icone: '🧪',  pocao: 'speed',    splash: true },
+  [ITEM.LINGER_HEAL]:    { nome: 'Poção Lingering Cura',icone: '🧪', pocao: 'heal',     lingering: true },
+  [ITEM.LINGER_REGEN]:   { nome: 'Poção Lingering Regen',icone: '🧪',pocao: 'regen',    lingering: true },
+  [ITEM.LINGER_FIRE]:    { nome: 'Poção Lingering Fogo',icone: '🧪', pocao: 'fire_res', lingering: true },
+  [ITEM.MUSIC_DISC_MELLOHI]:{ nome: 'Disco Mellohi',  icone: '💿', musica: 'mellohi' },
+  [ITEM.MUSIC_DISC_STAL]:{ nome: 'Disco Stal',         icone: '💿', musica: 'stal' },
+  [ITEM.MUSIC_DISC_STRAD]:{ nome: 'Disco Strad',       icone: '💿', musica: 'strad' },
+  [ITEM.MUSIC_DISC_WARD]:{ nome: 'Disco Ward',         icone: '💿', musica: 'ward' },
+  [ITEM.MUSIC_DISC_11]:  { nome: 'Disco 11',           icone: '💿', musica: '11' },
+  [ITEM.MUSIC_DISC_WAIT]:{ nome: 'Disco Wait',         icone: '💿', musica: 'wait' },
+  [ITEM.MUSIC_DISC_OTHERSIDE]:{nome:'Disco Otherside', icone: '💿', musica: 'otherside' },
+  [ITEM.MUSIC_DISC_PIGSTEP]:{nome: 'Disco Pigstep',    icone: '💿', musica: 'pigstep' },
+  [ITEM.MUSIC_DISC_RELIC]:{ nome: 'Disco Relic',       icone: '💿', musica: 'relic' },
+  [ITEM.MUSIC_DISC_5]:   { nome: 'Disco 5',            icone: '💿', musica: '5' },
+  [ITEM.MUSIC_DISC_PRECIPICE]:{nome:'Disco Precipice', icone: '💿', musica: 'precipice' },
+  [ITEM.ARMOR_STAND]:    { nome: 'Suporte Armadura',   icone: '🗿' },
+  [ITEM.ITEM_FRAME]:     { nome: 'Moldura',            icone: '🖼️' },
+  [ITEM.GLOW_ITEM_FRAME]:{ nome: 'Moldura Brilhante',  icone: '🖼️' },
+  [ITEM.PINTURA]:        { nome: 'Pintura',            icone: '🎨' },
+  [ITEM.PASS_FERMENTADO]:{ nome: 'Maçã Fermentada',    icone: '🍎' },
+  [ITEM.COCO_BOLA_NEVE]: { nome: 'Coco Neve',          icone: '⚪' },
+  [ITEM.SHERD_HEART]:    { nome: 'Caco Coração',       icone: '🏺' },
+  [ITEM.SHERD_ARCHER]:   { nome: 'Caco Arqueiro',      icone: '🏺' },
+  [ITEM.SHERD_DANGER]:   { nome: 'Caco Perigo',        icone: '🏺' },
+  [ITEM.SHERD_PROSPERITY]:{ nome: 'Caco Prosperidade', icone: '🏺' },
+  [ITEM.BRUSH]:          { nome: 'Pincel',             icone: '🖌️',  arqueologia: true },
+  [ITEM.RAW_GOLD]:       { nome: 'Ouro Bruto',         icone: '🟡' },
+  [ITEM.RAW_IRON]:       { nome: 'Ferro Bruto',        icone: '🟤' },
+  [ITEM.RAW_COPPER]:     { nome: 'Cobre Bruto',        icone: '🟧' },
+  [ITEM.TURTLE_SCUTE]:   { nome: 'Escama Tartaruga',   icone: '🐢' },
+  [ITEM.PHANTOM_MEMBRANE]:{ nome: 'Membrana Phantom',  icone: '👻' },
+  [ITEM.BARCO_OAK]:      { nome: 'Barco Carvalho',     icone: '🛶' },
+  [ITEM.BARCO_BIRCH]:    { nome: 'Barco Bétula',       icone: '🛶' },
+  [ITEM.BARCO_SPRUCE]:   { nome: 'Barco Pinheiro',     icone: '🛶' },
+  [ITEM.BARCO_JUNGLE]:   { nome: 'Barco Selva',        icone: '🛶' },
+  [ITEM.BARCO_ACACIA]:   { nome: 'Barco Acácia',       icone: '🛶' },
+  [ITEM.BARCO_DARK]:     { nome: 'Barco Carv.Esc.',    icone: '🛶' },
+  [ITEM.BARCO_CHERRY]:   { nome: 'Barco Cerejeira',    icone: '🛶' },
+  [ITEM.BARCO_MANGROVE]: { nome: 'Barco Mangrove',     icone: '🛶' },
+  [ITEM.BARCO_BAMBU]:    { nome: 'Jangada Bambu',      icone: '🛶' },
+  [ITEM.BARCO_CHEST]:    { nome: 'Barco c/ Baú',       icone: '🛶' },
+  [ITEM.MINECART]:       { nome: 'Vagonete',           icone: '🛒' },
+  [ITEM.MINECART_CHEST]: { nome: 'Vagonete c/ Baú',    icone: '🛒' },
+  [ITEM.MINECART_HOPPER]:{ nome: 'Vagonete c/ Funil',  icone: '🛒' },
+  [ITEM.MINECART_TNT]:   { nome: 'Vagonete c/ TNT',    icone: '🛒' },
+  [ITEM.MINECART_FORN]:  { nome: 'Vagonete c/ Forn.',  icone: '🛒' },
+  [ITEM.MINECART_SPAWN]: { nome: 'Vagonete c/ Spawn',  icone: '🛒' },
+  [ITEM.PITCHER_POD]:    { nome: 'Vagem Pitcher',      icone: '🌱' },
+  [ITEM.TORCHFLOWER_SEED]:{ nome: 'Semente Torchflower',icone: '🌱' },
+  [ITEM.FLECHA_FOGO]:    { nome: 'Flecha de Fogo',     icone: '🔥' },
+  [ITEM.FLECHA_SPECTRAL]:{ nome: 'Flecha Espectral',   icone: '✨' },
+  [ITEM.FLECHA_TIPPED]:  { nome: 'Flecha c/ Poção',    icone: '🧪' },
+  [ITEM.GUNPOWDER_2]:    { nome: 'Pólvora Refinada',   icone: '⚫' },
+  [ITEM.PRINCIPLES_BANNER]:{ nome: 'Banner Wither',    icone: '🏴' },
+  [ITEM.CARTA_NAVIO]:    { nome: 'Carta de Navegação', icone: '📜' },
+  [ITEM.WITHER_ROSA_ITEM]:{ nome: 'Rosa Wither',       icone: '🥀' },
+  [ITEM.CHORUS_FLOR_ITEM]:{ nome: 'Flor Chorus',       icone: '🟣' },
 };
 
 // Receitas de crafting. wb=true exige workbench próximo.
@@ -2880,6 +3074,96 @@ export const RECEITAS = [
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.RABBIT_FOOT, q: 1}], saida: {i: ITEM.POCAO_SLOW_FALL, q: 1}, wb: true },
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.BLAZE_POWDER, q: 1}], saida: {i: ITEM.POCAO_LEVITACAO, q: 1}, wb: true },
   { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.POCAO_RESISTENCIA, q: 1}, wb: true },
+  // SPRINT MEGA-1: receitas para itens críticos faltantes
+  // Combat
+  { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.FERRO, q: 1}], saida: {i: ITEM.SHIELD, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 3}, {i: ITEM.FERRO, q: 1}, {i: ITEM.CORDA, q: 2}], saida: {i: ITEM.CROSSBOW, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 1}, {b: BLOCO.NETHERITE_BLOCK, q: 1}, {b: BLOCO.NETHERITE_SCRAP, q: 4}], saida: {i: ITEM.MACE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.LUZ, q: 4}, {i: ITEM.OURO, q: 4}, {i: ITEM.ESMERALDA, q: 1}], saida: {i: ITEM.TOTEM_VIDA, q: 1}, wb: true },
+  { custos: [{i: ITEM.PHANTOM_MEMBRANE, q: 4}, {i: ITEM.COURO, q: 2}, {i: ITEM.ESMERALDA, q: 2}], saida: {i: ITEM.ELYTRA, q: 1}, wb: true },
+  // Comida
+  { custos: [{i: ITEM.SEMENTE, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {i: ITEM.BAGAS_DOCES, q: 4}, wb: true },
+  { custos: [{i: ITEM.BAGAS_DOCES, q: 1}, {b: BLOCO.LUZ, q: 1}], saida: {i: ITEM.BAGAS_BRILHANTES, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MELANCIA, q: 1}], saida: {i: ITEM.MELANCIA_FATIA, q: 6} },
+  // Materiais especiais
+  { custos: [{i: ITEM.OURO, q: 4}, {i: ITEM.OSSO, q: 1}], saida: {i: ITEM.GOAT_HORN, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SCULK, q: 4}, {i: ITEM.DIAMANTE, q: 1}], saida: {i: ITEM.ECHO_SHARD, q: 1}, wb: true },
+  { custos: [{i: ITEM.MEL, q: 4}, {i: ITEM.PRANCHAS, q: 1}], saida: {i: ITEM.HONEYCOMB, q: 4}, wb: true },
+  { custos: [{i: ITEM.OURO, q: 4}, {b: BLOCO.GLOWSTONE_LISO, q: 1}], saida: {i: ITEM.TRIAL_KEY, q: 1}, wb: true },
+  { custos: [{i: ITEM.OURO, q: 4}, {b: BLOCO.GILDED_BLACKSTONE, q: 1}], saida: {i: ITEM.OMINOUS_KEY, q: 1}, wb: true },
+  { custos: [{i: ITEM.GUNPOWDER, q: 1}, {i: ITEM.BREEZE_ROD || ITEM.BLAZE_ROD, q: 1}], saida: {i: ITEM.WIND_CHARGE, q: 4}, wb: true },
+  // Mapas
+  { custos: [{i: ITEM.PAPEL || ITEM.PRANCHAS, q: 8}, {i: ITEM.BUSSOLA, q: 1}], saida: {i: ITEM.MAPA_VAZIO, q: 1}, wb: true },
+  { custos: [{i: ITEM.MAPA_VAZIO, q: 1}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.MAPA_TESOURO_I, q: 1}, wb: true },
+  { custos: [{i: ITEM.ECHO_SHARD, q: 8}, {i: ITEM.BUSSOLA, q: 1}], saida: {i: ITEM.MAPA_BUSSOLA, q: 1}, wb: true },
+  // Spawn eggs (criativo)
+  { custos: [{b: BLOCO.OVO_GERADOR || BLOCO.LUZ, q: 1}, {i: ITEM.COURO, q: 1}], saida: {i: ITEM.OVO_VACA, q: 1}, wb: true },
+  // Poções novas (brewing simplificado)
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.FERMENTED_EYE, q: 1}], saida: {i: ITEM.POCAO_WEAKNESS, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.FERMENTED_EYE, q: 1}, {i: ITEM.GLISTERING_SLICE, q: 1}], saida: {i: ITEM.POCAO_HARM, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.PHANTOM_MEMBRANE, q: 1}], saida: {i: ITEM.POCAO_NAUSEA, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.TINTA_GLOW, q: 1}], saida: {i: ITEM.POCAO_BLINDNESS, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.CARNE_PODRE, q: 1}], saida: {i: ITEM.POCAO_HUNGER, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {b: BLOCO.SCULK, q: 1}], saida: {i: ITEM.POCAO_WITHER, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.RABBIT_FOOT, q: 1}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.POCAO_LUCK, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.BLAZE_POWDER, q: 1}, {i: ITEM.PAU, q: 1}], saida: {i: ITEM.POCAO_JUMP, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.REDSTONE, q: 2}], saida: {i: ITEM.POCAO_HASTE, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {b: BLOCO.LILY_PAD, q: 1}], saida: {i: ITEM.POCAO_WATER_BR, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.PEIXE, q: 1}, {i: ITEM.GLISTERING_SLICE, q: 1}], saida: {i: ITEM.POCAO_DOLPHIN, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.MACA_DOURADA, q: 1}], saida: {i: ITEM.POCAO_ABSORPTION, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.TINTA_GLOW, q: 1}, {i: ITEM.OURO, q: 1}], saida: {i: ITEM.POCAO_GLOWING, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.TURTLE_SCUTE, q: 1}], saida: {i: ITEM.POCAO_TURTLE, q: 1}, wb: true },
+  // Splash potions (vidro + gunpowder)
+  { custos: [{i: ITEM.POCAO_HEAL, q: 1}, {i: ITEM.GUNPOWDER, q: 1}], saida: {i: ITEM.SPLASH_HEAL, q: 1}, wb: true },
+  { custos: [{i: ITEM.POCAO_HARM, q: 1}, {i: ITEM.GUNPOWDER, q: 1}], saida: {i: ITEM.SPLASH_HARM, q: 1}, wb: true },
+  { custos: [{i: ITEM.POCAO_SPEED, q: 1}, {i: ITEM.GUNPOWDER, q: 1}], saida: {i: ITEM.SPLASH_SPEED, q: 1}, wb: true },
+  // Lingering potions (splash + dragon breath)
+  { custos: [{i: ITEM.SPLASH_HEAL, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.LINGER_HEAL, q: 1}, wb: true },
+  { custos: [{i: ITEM.POCAO_REGEN, q: 1}, {i: ITEM.GUNPOWDER, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.LINGER_REGEN, q: 1}, wb: true },
+  { custos: [{i: ITEM.POCAO_FIRE_RES, q: 1}, {i: ITEM.GUNPOWDER, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.LINGER_FIRE, q: 1}, wb: true },
+  // 11 discos novos
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.MEL, q: 1}],     saida: {i: ITEM.MUSIC_DISC_MELLOHI, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.OURO, q: 1}],    saida: {i: ITEM.MUSIC_DISC_STAL, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.OSSO, q: 1}],    saida: {i: ITEM.MUSIC_DISC_STRAD, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.SLIMEBALL, q: 1}],saida:{i: ITEM.MUSIC_DISC_WARD, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.DIAMANTE, q: 1}],saida: {i: ITEM.MUSIC_DISC_11, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.ESMERALDA, q: 1}],saida:{i: ITEM.MUSIC_DISC_WAIT, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.NETHER_STAR, q: 1}],saida:{i: ITEM.MUSIC_DISC_OTHERSIDE, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.NETHERITE, q: 1}],saida: {i: ITEM.MUSIC_DISC_PIGSTEP, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.ECHO_SHARD, q: 1}],saida:{i: ITEM.MUSIC_DISC_RELIC, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.AMETHYST_SHARD || ITEM.LAPIS, q: 1}],saida:{i: ITEM.MUSIC_DISC_5, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.TRIAL_KEY, q: 1}],saida: {i: ITEM.MUSIC_DISC_PRECIPICE, q: 1}, wb: true },
+  // Decorações
+  { custos: [{i: ITEM.PAU, q: 6}, {b: BLOCO.SLAB_PEDRA, q: 1}], saida: {i: ITEM.ARMOR_STAND, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 8}, {i: ITEM.COURO, q: 1}], saida: {i: ITEM.ITEM_FRAME, q: 1}, wb: true },
+  { custos: [{i: ITEM.ITEM_FRAME, q: 1}, {i: ITEM.TINTA_GLOW, q: 1}], saida: {i: ITEM.GLOW_ITEM_FRAME, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 8}, {b: BLOCO.LA, q: 1}], saida: {i: ITEM.PINTURA, q: 1}, wb: true },
+  // Boats (5 pranchas)
+  { custos: [{i: ITEM.PRANCHAS, q: 5}], saida: {i: ITEM.BARCO_OAK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BIRCH_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_BIRCH, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_SPRUCE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.JUNGLE_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_JUNGLE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.ACACIA_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_ACACIA, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DARK_OAK_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_DARK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.CHERRY_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_CHERRY, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MANGROVE_PRANCHA, q: 5}], saida: {i: ITEM.BARCO_MANGROVE, q: 1}, wb: true },
+  { custos: [{i: ITEM.BAMBOO, q: 5}], saida: {i: ITEM.BARCO_BAMBU, q: 1}, wb: true },
+  { custos: [{i: ITEM.BARCO_OAK, q: 1}, {b: BLOCO.BAU, q: 1}], saida: {i: ITEM.BARCO_CHEST, q: 1}, wb: true },
+  // Minecarts (5 ferro)
+  { custos: [{i: ITEM.FERRO, q: 5}], saida: {i: ITEM.MINECART, q: 1}, wb: true },
+  { custos: [{i: ITEM.MINECART, q: 1}, {b: BLOCO.BAU, q: 1}], saida: {i: ITEM.MINECART_CHEST, q: 1}, wb: true },
+  { custos: [{i: ITEM.MINECART, q: 1}, {b: BLOCO.HOPPER, q: 1}], saida: {i: ITEM.MINECART_HOPPER, q: 1}, wb: true },
+  { custos: [{i: ITEM.MINECART, q: 1}, {b: BLOCO.TNT, q: 1}], saida: {i: ITEM.MINECART_TNT, q: 1}, wb: true },
+  { custos: [{i: ITEM.MINECART, q: 1}, {b: BLOCO.FORNALHA, q: 1}], saida: {i: ITEM.MINECART_FORN, q: 1}, wb: true },
+  { custos: [{i: ITEM.MINECART, q: 1}, {b: BLOCO.LUZ, q: 1}], saida: {i: ITEM.MINECART_SPAWN, q: 1}, wb: true },
+  // Flechas especiais
+  { custos: [{i: ITEM.FLECHA, q: 1}, {b: BLOCO.LAVA, q: 1}], saida: {i: ITEM.FLECHA_FOGO, q: 1}, wb: true },
+  { custos: [{i: ITEM.FLECHA, q: 1}, {i: ITEM.TINTA_GLOW, q: 2}], saida: {i: ITEM.FLECHA_SPECTRAL, q: 1}, wb: true },
+  { custos: [{i: ITEM.FLECHA, q: 8}, {i: ITEM.LINGER_HEAL, q: 1}], saida: {i: ITEM.FLECHA_TIPPED, q: 8}, wb: true },
+  // Materiais brutos (drop minérios)
+  { custos: [{b: BLOCO.OURO_MIN || BLOCO.OURO, q: 1}], saida: {i: ITEM.RAW_GOLD, q: 1} },
+  { custos: [{b: BLOCO.FERRO, q: 1}], saida: {i: ITEM.RAW_IRON, q: 1} },
+  { custos: [{b: BLOCO.COBRE_MINERIO, q: 1}], saida: {i: ITEM.RAW_COPPER, q: 1} },
   // Music discs (5 paus + 1 redstone + 1 lápis = base; + ingrediente único cada)
   { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.MUSIC_DISC_13, q: 1}, wb: true },
   { custos: [{i: ITEM.PAU, q: 5}, {i: ITEM.LAPIS, q: 1}],    saida: {i: ITEM.MUSIC_DISC_CAT, q: 1}, wb: true },
