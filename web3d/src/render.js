@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 44, CELL = 32;
+  const COLS = 8, ROWS = 45, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3290,6 +3290,26 @@ function criarAtlas() {
     }
   }
 
+  // Genérico: pinta folha variante (textura granulada de folhagem)
+  function pintarFolhaVariante(idx, corBase, corClaro, corEscuro, corExtra) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let s = idx * 13 + 29;
+    for (let i = 0; i < 90; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const pick = (s / 233280);
+      ctx.fillStyle = pick < 0.4 ? corClaro : pick < 0.75 ? corEscuro : pick < 0.9 ? corExtra : corBase;
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
   // Genérico: pinta pranchas (4 fileiras horizontais com divisões verticais alternadas)
   function pintarPranchaVariante(idx, corBase, corDiv, corMancha) {
     const col = idx % COLS;
@@ -6185,6 +6205,15 @@ function criarAtlas() {
   pintarPranchaVariante(345, '#ff7043', '#bf360c', '#ff8a65');         // acacia pranchas (laranja vivo)
   pintarLogVariante(346, '#4e3d10', '#33270a', '#827717', '#9e9d24'); // jungle (verde-marrom)
   pintarLogVariante(347, '#1a0e08', '#000000', '#3e2723', '#5d4037'); // dark oak (quase preto)
+  // Sprint 10: pranchas+folhas+stripped (cells 348-355)
+  pintarPranchaVariante(348, '#8d6e63', '#6d4c41', '#a1887f');                            // jungle pranchas
+  pintarPranchaVariante(349, '#3e2723', '#1a0e08', '#5d4037');                            // dark oak pranchas
+  pintarFolhaVariante(350, '#9ccc65', '#7cb342', '#558b2f', '#fafafa');                   // birch folha (verde claro + flores brancas)
+  pintarFolhaVariante(351, '#33691e', '#1b5e20', '#0d3d10', '#3e2723');                   // spruce folha (verde escuro + cones)
+  pintarFolhaVariante(352, '#9e9d24', '#827717', '#33691e', '#fdd835');                   // acacia folha (verde-amarelo)
+  pintarFolhaVariante(353, '#66bb6a', '#388e3c', '#1b5e20', '#fdd835');                   // jungle folha (verde vivo)
+  pintarFolhaVariante(354, '#33691e', '#0e2a08', '#1b5e20', '#5d4037');                   // dark oak folha
+  pintarLogVariante(355, '#a1875a', '#7d6932', '#d7b57c', '#5d4037');                     // stripped oak (interior amarelo claro)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6688,6 +6717,15 @@ function criarAtlas() {
   mapa[BLOCO.ACACIA_PRANCHA]        = { top: 345, side: 345, bottom: 345 };
   mapa[BLOCO.JUNGLE_LOG]            = { top: 346, side: 346, bottom: 346 };
   mapa[BLOCO.DARK_OAK_LOG]          = { top: 347, side: 347, bottom: 347 };
+  // Sprint 10: pranchas+folhas+stripped (cells 348-355)
+  mapa[BLOCO.JUNGLE_PRANCHA]        = { top: 348, side: 348, bottom: 348 };
+  mapa[BLOCO.DARK_OAK_PRANCHA]      = { top: 349, side: 349, bottom: 349 };
+  mapa[BLOCO.BIRCH_FOLHA]           = { top: 350, side: 350, bottom: 350 };
+  mapa[BLOCO.SPRUCE_FOLHA]          = { top: 351, side: 351, bottom: 351 };
+  mapa[BLOCO.ACACIA_FOLHA]          = { top: 352, side: 352, bottom: 352 };
+  mapa[BLOCO.JUNGLE_FOLHA]          = { top: 353, side: 353, bottom: 353 };
+  mapa[BLOCO.DARK_OAK_FOLHA]        = { top: 354, side: 354, bottom: 354 };
+  mapa[BLOCO.STRIPPED_OAK_LOG]      = { top: 355, side: 355, bottom: 355 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

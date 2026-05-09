@@ -975,6 +975,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.ACACIA_PRANCHA, q: 16 });
   state.inv.adicionar({ b: BLOCO.JUNGLE_LOG, q: 8 });
   state.inv.adicionar({ b: BLOCO.DARK_OAK_LOG, q: 8 });
+  // Sprint 10: pranchas+folhas+stripped
+  state.inv.adicionar({ b: BLOCO.JUNGLE_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DARK_OAK_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.BIRCH_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SPRUCE_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ACACIA_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.JUNGLE_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.DARK_OAK_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.STRIPPED_OAK_LOG, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

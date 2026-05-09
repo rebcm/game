@@ -537,8 +537,17 @@ export const BLOCO = {
   ACACIA_PRANCHA:      468, // pranchas acácia
   JUNGLE_LOG:          469, // selva (marrom-verde)
   DARK_OAK_LOG:        470, // carvalho escuro
+  // Sprint 10: pranchas+folhas+stripped (471-478)
+  JUNGLE_PRANCHA:      471, // pranchas selva
+  DARK_OAK_PRANCHA:    472, // pranchas carvalho escuro
+  BIRCH_FOLHA:         473, // folhas bétula (verde claro)
+  SPRUCE_FOLHA:        474, // folhas pinheiro (verde escuro)
+  ACACIA_FOLHA:        475, // folhas acácia (verde-amarelo)
+  JUNGLE_FOLHA:        476, // folhas selva (verde vivo)
+  DARK_OAK_FOLHA:      477, // folhas carvalho escuro (verde profundo)
+  STRIPPED_OAK_LOG:    478, // tronco carvalho descascado (interior amarelo)
 };
-export const N_BLOCOS = 471;
+export const N_BLOCOS = 479;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1039,6 +1048,15 @@ export const BLOCO_INFO = {
   [BLOCO.ACACIA_PRANCHA]:    { nome: 'Pranchas Acácia',    solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c },
   [BLOCO.JUNGLE_LOG]:        { nome: 'Tronco Selva',       solido: true, emiteLuz: 0,  cor: 0x827717, lateral: 0x4e3d10 },
   [BLOCO.DARK_OAK_LOG]:      { nome: 'Carvalho Escuro',    solido: true, emiteLuz: 0,  cor: 0x3e2723, lateral: 0x1a0e08 },
+  // Sprint 10: pranchas+folhas+stripped (471-478)
+  [BLOCO.JUNGLE_PRANCHA]:    { nome: 'Pranchas Selva',     solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41 },
+  [BLOCO.DARK_OAK_PRANCHA]:  { nome: 'Pranchas Carv.Esc.', solido: true, emiteLuz: 0,  cor: 0x3e2723, lateral: 0x1a0e08 },
+  [BLOCO.BIRCH_FOLHA]:       { nome: 'Folhas Bétula',      solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.SPRUCE_FOLHA]:      { nome: 'Folhas Pinheiro',    solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20 },
+  [BLOCO.ACACIA_FOLHA]:      { nome: 'Folhas Acácia',      solido: true, emiteLuz: 0,  cor: 0x9e9d24, lateral: 0x827717 },
+  [BLOCO.JUNGLE_FOLHA]:      { nome: 'Folhas Selva',       solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.DARK_OAK_FOLHA]:    { nome: 'Folhas Carv.Esc.',   solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x0e2a08 },
+  [BLOCO.STRIPPED_OAK_LOG]:  { nome: 'Tronco Descascado',  solido: true, emiteLuz: 0,  cor: 0xd7b57c, lateral: 0xa1875a },
 };
 
 export const ICONE = {
@@ -1944,6 +1962,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.ACACIA_LOG, q: 1}], saida: {b: BLOCO.ACACIA_PRANCHA, q: 4} },
   { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.JUNGLE_LOG, q: 1}, wb: true },
   { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.DARK_OAK_LOG, q: 1}, wb: true },
+  // Sprint 10: pranchas+folhas+stripped (471-478)
+  { custos: [{b: BLOCO.JUNGLE_LOG, q: 1}], saida: {b: BLOCO.JUNGLE_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.DARK_OAK_LOG, q: 1}], saida: {b: BLOCO.DARK_OAK_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.NEVE, q: 1}], saida: {b: BLOCO.BIRCH_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.MADEIRA, q: 1}], saida: {b: BLOCO.SPRUCE_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.AREIA, q: 1}], saida: {b: BLOCO.ACACIA_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.JUNGLE_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.DARK_OAK_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.MADEIRA, q: 1}, {i: ITEM.MACHADO_FERRO, q: 1}], saida: {b: BLOCO.STRIPPED_OAK_LOG, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
