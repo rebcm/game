@@ -814,6 +814,27 @@ export const ITEM = {
   RELOGIO:        279, // mostra hora exata
   ESPELHO:        280, // espelho mágico
   RECOVERY_COMPASS:281, // bússola de recuperação (aponta morte)
+  // Ingredientes de poção
+  BLAZE_POWDER:    282,
+  GHAST_TEAR:      283,
+  MAGMA_CREAM:     284,
+  FERMENTED_EYE:   285, // fermented spider eye
+  GLISTERING_SLICE:286, // golden melon slice
+  RABBIT_FOOT:     287, // mesma coisa que PE_COELHO mas dedicado
+  GLOWSTONE_DUST:  288,
+  GUNPOWDER:       289,
+  // Outros
+  GARRAFA_VIDRO:   290,
+  BLAZE_ROD:       291, // bastão de blaze
+  NETHER_STAR:     292, // estrela do nether (drop wither)
+  POTE_AGUA:       293, // garrafa com água (pre-poção)
+  // Poções novas
+  POCAO_INVISIVEL: 294,
+  POCAO_NOITE:     295, // night vision
+  POCAO_LEVITACAO: 296,
+  POCAO_RESISTENCIA:297,
+  POCAO_SLOW_FALL: 298,
+  POCAO_FIRE_RES:  299,
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -907,6 +928,27 @@ export const ITEM_INFO = {
   [ITEM.RELOGIO]:          { nome: 'Relógio',          icone: '⏰' },
   [ITEM.ESPELHO]:          { nome: 'Espelho Mágico',   icone: '🪞' },
   [ITEM.RECOVERY_COMPASS]: { nome: 'Bússola Recovery', icone: '🧭' },
+  // Ingredientes de poção
+  [ITEM.BLAZE_POWDER]:     { nome: 'Pó de Blaze',       icone: '🟡' },
+  [ITEM.GHAST_TEAR]:       { nome: 'Lágrima de Ghast',  icone: '💧' },
+  [ITEM.MAGMA_CREAM]:      { nome: 'Creme de Magma',    icone: '🟠' },
+  [ITEM.FERMENTED_EYE]:    { nome: 'Olho Fermentado',   icone: '👁' },
+  [ITEM.GLISTERING_SLICE]: { nome: 'Fatia Dourada',     icone: '🍈' },
+  [ITEM.RABBIT_FOOT]:      { nome: 'Pé Coelho (poção)', icone: '🐰' },
+  [ITEM.GLOWSTONE_DUST]:   { nome: 'Pó de Glowstone',   icone: '✨' },
+  [ITEM.GUNPOWDER]:        { nome: 'Pólvora',           icone: '⚫' },
+  // Outros
+  [ITEM.GARRAFA_VIDRO]:    { nome: 'Garrafa de Vidro',  icone: '🍾' },
+  [ITEM.BLAZE_ROD]:        { nome: 'Bastão de Blaze',   icone: '🟨' },
+  [ITEM.NETHER_STAR]:      { nome: 'Estrela do Nether', icone: '⭐' },
+  [ITEM.POTE_AGUA]:        { nome: 'Pote de Água',      icone: '💧' },
+  // Poções novas
+  [ITEM.POCAO_INVISIVEL]:  { nome: 'Poção Invisível',   icone: '🧪', pocao: 'invisivel' },
+  [ITEM.POCAO_NOITE]:      { nome: 'Poção Visão Noite', icone: '🧪', pocao: 'noite' },
+  [ITEM.POCAO_LEVITACAO]:  { nome: 'Poção Levitação',   icone: '🧪', pocao: 'levitacao' },
+  [ITEM.POCAO_RESISTENCIA]:{ nome: 'Poção Resistência', icone: '🧪', pocao: 'resistencia' },
+  [ITEM.POCAO_SLOW_FALL]:  { nome: 'Poção Slow Fall',   icone: '🧪', pocao: 'slow_fall' },
+  [ITEM.POCAO_FIRE_RES]:   { nome: 'Poção Fire Resist', icone: '🧪', pocao: 'fire_res' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -1400,6 +1442,28 @@ export const RECEITAS = [
   { custos: [{i: ITEM.OURO, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.RELOGIO, q: 1}, wb: true },
   { custos: [{i: ITEM.DIAMANTE, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {i: ITEM.ESPELHO, q: 1}, wb: true },
   { custos: [{i: ITEM.ENDER_PEARL, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.RECOVERY_COMPASS, q: 1}, wb: true },
+  // Ingredientes de poção
+  { custos: [{i: ITEM.BLAZE_ROD, q: 1}], saida: {i: ITEM.BLAZE_POWDER, q: 2}, wb: false },
+  { custos: [{i: ITEM.SLIMEBALL, q: 1}, {i: ITEM.BLAZE_POWDER, q: 1}], saida: {i: ITEM.MAGMA_CREAM, q: 1}, wb: false },
+  { custos: [{i: ITEM.OSSO, q: 1}, {b: BLOCO.COGUMELO_VERM, q: 1}], saida: {i: ITEM.FERMENTED_EYE, q: 1}, wb: false },
+  { custos: [{i: ITEM.MACA, q: 1}, {i: ITEM.OURO, q: 8}], saida: {i: ITEM.GLISTERING_SLICE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.LUZ, q: 1}], saida: {i: ITEM.GLOWSTONE_DUST, q: 4}, wb: false },
+  { custos: [{i: ITEM.CARVAO, q: 4}, {b: BLOCO.AREIA, q: 1}], saida: {i: ITEM.GUNPOWDER, q: 4}, wb: true },
+  // Garrafa de vidro: 3 vidros
+  { custos: [{b: BLOCO.VIDRO, q: 3}], saida: {i: ITEM.GARRAFA_VIDRO, q: 3}, wb: true },
+  // Pote de Água: garrafa + balde água
+  { custos: [{i: ITEM.GARRAFA_VIDRO, q: 1}, {i: ITEM.BUCKET_AGUA, q: 1}], saida: {i: ITEM.POTE_AGUA, q: 1}, wb: false },
+  // Blaze Rod: drop blaze (proxy: 4 carvao + 4 ouro)
+  { custos: [{i: ITEM.CARVAO, q: 4}, {i: ITEM.OURO, q: 4}], saida: {i: ITEM.BLAZE_ROD, q: 1}, wb: true },
+  // Nether Star: 3 cranios wither + 1 obsidiana (proxy)
+  { custos: [{b: BLOCO.CRANIO_WITHER, q: 3}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {i: ITEM.NETHER_STAR, q: 1}, wb: true },
+  // 6 poções novas (1 pote + 1 ingrediente + 1 lápis)
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.FERMENTED_EYE, q: 1}, {i: ITEM.LAPIS, q: 1}], saida: {i: ITEM.POCAO_INVISIVEL, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.GLOWSTONE_DUST, q: 1}], saida: {i: ITEM.POCAO_NOITE, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.MAGMA_CREAM, q: 1}], saida: {i: ITEM.POCAO_FIRE_RES, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.RABBIT_FOOT, q: 1}], saida: {i: ITEM.POCAO_SLOW_FALL, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.BLAZE_POWDER, q: 1}], saida: {i: ITEM.POCAO_LEVITACAO, q: 1}, wb: true },
+  { custos: [{i: ITEM.POTE_AGUA, q: 1}, {i: ITEM.GHAST_TEAR, q: 1}], saida: {i: ITEM.POCAO_RESISTENCIA, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
