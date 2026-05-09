@@ -245,8 +245,16 @@ export const BLOCO = {
   COGUMELO_MARROM_P:192,
   CAVEIRA:        193, // caveira de esqueleto
   CRANIO_WITHER:  194, // crânio do wither
+  CONDUIT:        195, // conduit (oceano, dá water breathing)
+  HEAD_CREEPER:   196,
+  HEAD_ZUMBI:     197,
+  HEAD_DRAGON:    198,
+  SOUL_TORCH:     199, // tocha azul (soul fire)
+  SOUL_LANTERN:   200,
+  LAMPADA_RED:    201, // lâmpada de redstone (acesa)
+  BLAZE_BLOCK:    202, // bloco de blaze rod (ouro infernal)
 };
-export const N_BLOCOS = 195;
+export const N_BLOCOS = 203;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -462,6 +470,14 @@ export const BLOCO_INFO = {
   [BLOCO.COGUMELO_MARROM_P]:{nome:'Cogumelo Marrom',solido: false, emiteLuz: 1, cor: 0x6d4c41, lateral: 0xa1887f, shape: 'flower' },
   [BLOCO.CAVEIRA]:      { nome: 'Caveira',          solido: false, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbdbdbd, shape: 'pot' },
   [BLOCO.CRANIO_WITHER]:{ nome: 'Crânio Wither',    solido: false, emiteLuz: 2, cor: 0x424242, lateral: 0x212121, shape: 'pot' },
+  [BLOCO.CONDUIT]:      { nome: 'Conduit',          solido: true,  emiteLuz: 15, cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.HEAD_CREEPER]: { nome: 'Cabeça Creeper',   solido: false, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'pot' },
+  [BLOCO.HEAD_ZUMBI]:   { nome: 'Cabeça Zumbi',     solido: false, emiteLuz: 0, cor: 0x4caf50, lateral: 0x2e7d32, shape: 'pot' },
+  [BLOCO.HEAD_DRAGON]:  { nome: 'Cabeça Dragon',    solido: false, emiteLuz: 4, cor: 0x121212, lateral: 0x000000, shape: 'pot' },
+  [BLOCO.SOUL_TORCH]:   { nome: 'Tocha das Almas',  solido: false, emiteLuz: 10, cor: 0x40c4ff, lateral: 0x0288d1, shape: 'torch' },
+  [BLOCO.SOUL_LANTERN]: { nome: 'Lanterna das Almas',solido: true, emiteLuz: 10, cor: 0x40c4ff, lateral: 0x0288d1 },
+  [BLOCO.LAMPADA_RED]:  { nome: 'Lâmpada Redstone', solido: true,  emiteLuz: 15, cor: 0xfdd835, lateral: 0xa1887f },
+  [BLOCO.BLAZE_BLOCK]:  { nome: 'Bloco de Blaze',   solido: true,  emiteLuz: 8, cor: 0xff9800, lateral: 0xe65100 },
 };
 
 export const ICONE = {
@@ -880,6 +896,20 @@ export const RECEITAS = [
   { custos: [{i: ITEM.OSSO, q: 4}], saida: {b: BLOCO.CAVEIRA, q: 1}, wb: true },
   // Crânio Wither: 4 ossos + 1 carvão (proxy)
   { custos: [{i: ITEM.OSSO, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.CRANIO_WITHER, q: 1}, wb: true },
+  // Conduit: 8 prismarine + 1 nautilus shell (proxy: 8 prismarine + 1 diamante)
+  { custos: [{b: BLOCO.PRISMARINE, q: 8}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.CONDUIT, q: 1}, wb: true },
+  // Heads de mob (proxy de drops raros — workbench)
+  { custos: [{i: ITEM.CARVAO, q: 4}, {b: BLOCO.NETHERRACK, q: 1}], saida: {b: BLOCO.HEAD_CREEPER, q: 1}, wb: true },
+  { custos: [{i: ITEM.CARNE_PODRE, q: 4}], saida: {b: BLOCO.HEAD_ZUMBI, q: 1}, wb: true },
+  { custos: [{i: ITEM.ENDER_PEARL, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.HEAD_DRAGON, q: 1}, wb: true },
+  // Soul Torch: 1 pau + 1 carvão + 1 soul soil
+  { custos: [{i: ITEM.PAU, q: 1}, {i: ITEM.CARVAO, q: 1}, {b: BLOCO.SOUL_SOIL, q: 1}], saida: {b: BLOCO.SOUL_TORCH, q: 4}, wb: false },
+  // Soul Lantern: 8 ferro + 1 soul torch
+  { custos: [{i: ITEM.FERRO, q: 8}, {b: BLOCO.SOUL_TORCH, q: 1}], saida: {b: BLOCO.SOUL_LANTERN, q: 1}, wb: true },
+  // Lâmpada Redstone: 4 redstone + 1 luz (glowstone)
+  { custos: [{i: ITEM.REDSTONE, q: 4}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.LAMPADA_RED, q: 1}, wb: true },
+  // Bloco de Blaze: 9 ouro (proxy de blaze rod)
+  { custos: [{i: ITEM.OURO, q: 9}], saida: {b: BLOCO.BLAZE_BLOCK, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

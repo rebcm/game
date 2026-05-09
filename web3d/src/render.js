@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 23, CELL = 32;
+  const COLS = 8, ROWS = 24, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1030,6 +1030,152 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Conduit: cristal aquático ciano-prismarine com 4 nodos brilhantes
+  function pintarConduit(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base ciano escuro
+    ctx.fillStyle = '#00838f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de "casca" em volta
+    ctx.fillStyle = '#4dd0e1';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
+    // Núcleo branco-azulado
+    ctx.fillStyle = '#b2ebf2';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#e0f7fa';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // 4 olhos nos cantos (caracteristica do conduit)
+    ctx.fillStyle = '#ffeb3b';
+    for (const [cx, cy] of [[6, 6], [22, 6], [6, 22], [22, 22]]) {
+      ctx.fillRect(x0 + cx, y0 + cy, 4, 4);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 2, 2);
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 1, 1);
+      ctx.fillStyle = '#ffeb3b';
+    }
+  }
+
+  // Head genérico (mob): cabeça simplificada com cor + olhos
+  function pintarHead(idx, base, sombra, corOlhos) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cabeça (cubo)
+    ctx.fillStyle = base;
+    ctx.fillRect(x0 + 6, y0 + 6, 20, 20);
+    // Sombra/borda
+    ctx.fillStyle = sombra;
+    ctx.fillRect(x0 + 6,  y0 + 6,  20, 1);
+    ctx.fillRect(x0 + 6,  y0 + 25, 20, 1);
+    ctx.fillRect(x0 + 6,  y0 + 6,  1,  20);
+    ctx.fillRect(x0 + 25, y0 + 6,  1,  20);
+    // Olhos
+    ctx.fillStyle = corOlhos;
+    ctx.fillRect(x0 + 9,  y0 + 11, 5, 5);
+    ctx.fillRect(x0 + 18, y0 + 11, 5, 5);
+    // Ruído (textura)
+    spawnPontosUniforme(x0 + 7, y0 + 7, 18, 18, sombra, 0.30, 4, 1, idx * 9301 + 49297);
+  }
+
+  // Soul Lantern: lanterna mas com janela ciano (alma)
+  function pintarSoulLantern(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Janela ciano brilhante (almas)
+    ctx.fillStyle = '#40c4ff';
+    ctx.fillRect(x0 + 6, y0 + 8, 20, 18);
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 10, y0 + 12, 12, 10);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 6);
+    // Grades horizontais
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 6, y0 + 13, 20, 1);
+    ctx.fillRect(x0 + 6, y0 + 18, 20, 1);
+    ctx.fillRect(x0 + 6, y0 + 22, 20, 1);
+    // Verticais
+    ctx.fillRect(x0 + 14, y0 + 8, 1, 18);
+    ctx.fillRect(x0 + 17, y0 + 8, 1, 18);
+    // Topo
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 4);
+    ctx.fillStyle = '#616161';
+    ctx.fillRect(x0 + 8, y0 + 2, CELL - 16, 2);
+    // Anel pra pendurar
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 14, y0,     4, 2);
+    ctx.fillRect(x0 + 13, y0 + 1, 6, 1);
+  }
+
+  // Lâmpada Redstone: madeira marrom com luz amarela quando acesa
+  function pintarLampadaRed(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base marrom (madeira)
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão xadrez de luz amarela (acesa)
+    ctx.fillStyle = '#fdd835';
+    for (let by = 4; by < CELL - 4; by += 6) {
+      for (let bx = 4; bx < CELL - 4; bx += 6) {
+        if ((bx + by) % 12 === 0) {
+          ctx.fillRect(x0 + bx, y0 + by, 4, 4);
+        }
+      }
+    }
+    // Núcleos brancos brilhantes (efeito luz interna)
+    ctx.fillStyle = '#ffffff';
+    for (let by = 5; by < CELL - 5; by += 6) {
+      for (let bx = 5; bx < CELL - 5; bx += 6) {
+        if ((bx + by) % 12 === 1) {
+          ctx.fillRect(x0 + bx, y0 + by, 1, 1);
+        }
+      }
+    }
+    // Bordas escuras
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Blaze Block: amarelo-laranja com chamas e raios saindo
+  function pintarBlazeBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Manchas amarelas brilhantes (fogo)
+    ctx.fillStyle = '#ff9800';
+    for (let by = 0; by < CELL; by += 5) {
+      for (let bx = 0; bx < CELL; bx += 5) {
+        if ((bx + by) % 10 === 0) {
+          ctx.fillRect(x0 + bx, y0 + by, 4, 4);
+        }
+      }
+    }
+    // Núcleos amarelos super-brilhantes
+    ctx.fillStyle = '#fdd835';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+  }
+
   // Hopper: caixa preta com buraco central (formato funil)
   function pintarHopper(idx) {
     const col = idx % COLS;
@@ -1099,6 +1245,31 @@ function criarAtlas() {
     // Reflexo branco
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(x0 + 14, y0 + 14, 1, 1);
+  }
+
+  // Soul Torch: tocha com chama azul-ciano
+  function pintarSoulTorch(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 14, y0 + 12, 4, 18);
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 14, y0 + 12, 1, 18);
+    // Topo azul-ciano (chama soul fire)
+    ctx.fillStyle = '#0288d1';
+    ctx.fillRect(x0 + 12, y0 + 4,  8, 9);
+    ctx.fillStyle = '#40c4ff';
+    ctx.fillRect(x0 + 13, y0 + 5,  6, 7);
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 14, y0 + 6,  4, 5);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 7,  2, 2);
+    // Glow translúcido azul
+    ctx.fillStyle = 'rgba(100, 200, 255, 0.20)';
+    ctx.fillRect(x0 + 11, y0 + 3, 10, 11);
   }
 
   // Tocha Redstone: igual tocha mas chama vermelha
@@ -3338,6 +3509,14 @@ function criarAtlas() {
   pintarCogumeloPeq(179, '#6d4c41', false);                       // cogumelo marrom pequeno
   pintarCaveira(180, false);                                       // caveira esqueleto
   pintarCaveira(181, true);                                        // crânio wither
+  pintarConduit(182);                                              // conduit
+  pintarHead(183, '#2e7d32', '#1b5e20', '#000000');               // creeper head
+  pintarHead(184, '#4caf50', '#2e7d32', '#ff3d00');               // zumbi head
+  pintarHead(185, '#121212', '#000000', '#b388ff');               // dragon head
+  pintarSoulTorch(186);                                            // soul torch chama azul
+  pintarSoulLantern(187);                                          // soul lantern
+  pintarLampadaRed(188);                                           // lâmpada redstone
+  pintarBlazeBlock(189);                                           // blaze block
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3540,6 +3719,14 @@ function criarAtlas() {
   mapa[BLOCO.COGUMELO_MARROM_P]= { top: 179, side: 179, bottom: 179 };
   mapa[BLOCO.CAVEIRA]        = { top: 180, side: 180, bottom: 180 };
   mapa[BLOCO.CRANIO_WITHER]  = { top: 181, side: 181, bottom: 181 };
+  mapa[BLOCO.CONDUIT]        = { top: 182, side: 182, bottom: 182 };
+  mapa[BLOCO.HEAD_CREEPER]   = { top: 183, side: 183, bottom: 183 };
+  mapa[BLOCO.HEAD_ZUMBI]     = { top: 184, side: 184, bottom: 184 };
+  mapa[BLOCO.HEAD_DRAGON]    = { top: 185, side: 185, bottom: 185 };
+  mapa[BLOCO.SOUL_TORCH]     = { top: 186, side: 186, bottom: 186 };
+  mapa[BLOCO.SOUL_LANTERN]   = { top: 187, side: 187, bottom: 187 };
+  mapa[BLOCO.LAMPADA_RED]    = { top: 188, side: 188, bottom: 188 };
+  mapa[BLOCO.BLAZE_BLOCK]    = { top: 189, side: 189, bottom: 189 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
