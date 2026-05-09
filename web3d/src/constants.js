@@ -183,8 +183,18 @@ export const BLOCO = {
   END_BRICK:     137,
   PURPUR_BLOCK:  138,
   PURPUR_PILLAR: 139,
+  CRIMSON_PLANKS:140,
+  WARPED_PLANKS: 141,
+  SPONGE:        142,
+  SPONGE_WET:    143,
+  JACK_O_LANTERN:144, // pumpkin acesa (emiteLuz 15)
+  TINTED_GLASS:  145, // vidro escurecido
+  SNOW_BLOCK:    146, // neve compacta (3 layers)
+  GLOW_LICHEN:   147, // líquen brilhante
+  SPORE_BLOSSOM: 148, // flor cogumelo (decoração)
+  POWDER_SNOW:   149, // neve em pó (player afunda)
 };
-export const N_BLOCOS = 140;
+export const N_BLOCOS = 150;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -335,6 +345,16 @@ export const BLOCO_INFO = {
   [BLOCO.END_BRICK]:     { nome: 'Tijolo do End',    solido: true,  emiteLuz: 0,  cor: 0xe8d886, lateral: 0xc0a866 },
   [BLOCO.PURPUR_BLOCK]:  { nome: 'Purpur',           solido: true,  emiteLuz: 0,  cor: 0xab47bc, lateral: 0x7b1fa2 },
   [BLOCO.PURPUR_PILLAR]: { nome: 'Pilar Purpur',     solido: true,  emiteLuz: 0,  cor: 0xab47bc, lateral: 0x7b1fa2 },
+  [BLOCO.CRIMSON_PLANKS]:{ nome: 'Pranchas Crimson', solido: true,  emiteLuz: 0,  cor: 0x8a3a4d, lateral: 0x5d2535 },
+  [BLOCO.WARPED_PLANKS]: { nome: 'Pranchas Warped',  solido: true,  emiteLuz: 0,  cor: 0x2c8a8a, lateral: 0x1d5d5d },
+  [BLOCO.SPONGE]:        { nome: 'Esponja',          solido: true,  emiteLuz: 0,  cor: 0xfdd835, lateral: 0xf9a825 },
+  [BLOCO.SPONGE_WET]:    { nome: 'Esponja Molhada',  solido: true,  emiteLuz: 0,  cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.JACK_O_LANTERN]:{ nome: 'Jack-o-Lantern',   solido: true,  emiteLuz: 15, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.TINTED_GLASS]:  { nome: 'Vidro Escuro',     solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.SNOW_BLOCK]:    { nome: 'Bloco de Neve',    solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeceff1 },
+  [BLOCO.GLOW_LICHEN]:   { nome: 'Líquen Brilhante', solido: true,  emiteLuz: 7,  cor: 0xa5d6a7, lateral: 0x66bb6a },
+  [BLOCO.SPORE_BLOSSOM]: { nome: 'Flor Cogumelo',    solido: true,  emiteLuz: 0,  cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.POWDER_SNOW]:   { nome: 'Neve em Pó',       solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeceff1 },
 };
 
 export const ICONE = {
@@ -675,6 +695,25 @@ export const RECEITAS = [
   { custos: [{i: ITEM.ENDER_PEARL, q: 4}, {b: BLOCO.END_STONE, q: 4}], saida: {b: BLOCO.PURPUR_BLOCK, q: 4}, wb: true },
   // Purpur Pillar: 2 purpur → 2 pilares
   { custos: [{b: BLOCO.PURPUR_BLOCK, q: 2}], saida: {b: BLOCO.PURPUR_PILLAR, q: 2}, wb: true },
+  // Crimson/Warped Planks: 1 stem → 4 pranchas (paridade MC)
+  { custos: [{b: BLOCO.CRIMSON_STEM, q: 1}], saida: {b: BLOCO.CRIMSON_PLANKS, q: 4}, wb: false },
+  { custos: [{b: BLOCO.WARPED_STEM, q: 1}], saida: {b: BLOCO.WARPED_PLANKS, q: 4}, wb: false },
+  // Esponja: 9 favos de mel + 1 trigo → 1 esponja (proxy)
+  { custos: [{i: ITEM.FAVO_MEL, q: 9}, {i: ITEM.TRIGO, q: 1}], saida: {b: BLOCO.SPONGE, q: 1}, wb: true },
+  // Esponja Molhada: 1 esponja + 1 balde água
+  { custos: [{b: BLOCO.SPONGE, q: 1}, {i: ITEM.BUCKET_AGUA, q: 1}], saida: {b: BLOCO.SPONGE_WET, q: 1}, wb: false },
+  // Jack-o-Lantern: 1 carved pumpkin + 1 tocha
+  { custos: [{b: BLOCO.CARVED_PUMPKIN, q: 1}, {b: BLOCO.TOCHA, q: 1}], saida: {b: BLOCO.JACK_O_LANTERN, q: 1}, wb: false },
+  // Tinted Glass: 4 vidro + 1 carvão
+  { custos: [{b: BLOCO.VIDRO, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TINTED_GLASS, q: 4}, wb: true },
+  // Bloco de Neve: 4 bolas de neve (paridade MC) — usa BLOCO.NEVE como proxy
+  { custos: [{b: BLOCO.NEVE, q: 4}], saida: {b: BLOCO.SNOW_BLOCK, q: 1}, wb: true },
+  // Powder Snow: 9 neve → 1 powder
+  { custos: [{b: BLOCO.NEVE, q: 9}], saida: {b: BLOCO.POWDER_SNOW, q: 1}, wb: true },
+  // Glow Lichen: 1 muda + 5 tinta_glow
+  { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TINTA_GLOW, q: 5}], saida: {b: BLOCO.GLOW_LICHEN, q: 1}, wb: true },
+  // Spore Blossom: 4 cogumelo R + 1 muda
+  { custos: [{i: ITEM.COGUMELO_R, q: 4}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.SPORE_BLOSSOM, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

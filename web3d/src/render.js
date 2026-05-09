@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 18, CELL = 32;
+  const COLS = 8, ROWS = 20, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,168 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Pranchas (Crimson/Warped): tábuas horizontais com grão vertical
+  function pintarPlanksColorida(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 4 tábuas horizontais (linhas escuras separando)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    // Grão vertical sutil (linhas claras alternadas)
+    ctx.fillStyle = claro;
+    for (let px = 4; px < CELL; px += 6) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Borda escura dos cantos
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Esponja: amarela com 9 buracos pretos (esponja seca) ou marrom (molhada)
+  function pintarEsponja(idx, base, buraco) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 9 buracos em grid 3x3 (estilo esponja MC)
+    ctx.fillStyle = buraco;
+    for (let by = 4; by < CELL - 4; by += 9) {
+      for (let bx = 4; bx < CELL - 4; bx += 9) {
+        ctx.fillRect(x0 + bx, y0 + by, 4, 4);
+      }
+    }
+    // Highlights claros entre buracos
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.20, 5, 1, idx * 9301 + 49297);
+  }
+
+  // Jack-o-Lantern: pumpkin carved com chama amarela emissiva
+  function pintarJackOLantern(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base laranja
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ridges verticais
+    ctx.fillStyle = '#bf360c';
+    for (let px = 4; px < CELL; px += 8) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    ctx.fillStyle = '#ff9800';
+    for (let px = 1; px < CELL; px += 8) {
+      ctx.fillRect(x0 + px, y0, 2, CELL);
+    }
+    // Face brilhante (olhos + boca em chama amarela)
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 6, y0 + 10, 5, 4);
+    ctx.fillRect(x0 + 21, y0 + 10, 5, 4);
+    ctx.fillRect(x0 + 8, y0 + 20, 16, 4);
+    // Núcleo branco super-brilhante (efeito de luz)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 8, y0 + 11, 1, 1);
+    ctx.fillRect(x0 + 23, y0 + 11, 1, 1);
+    ctx.fillRect(x0 + 15, y0 + 21, 2, 1);
+    // Halo difuso ao redor da face (glow)
+    ctx.fillStyle = 'rgba(255, 235, 59, 0.3)';
+    ctx.fillRect(x0 + 4, y0 + 8, CELL - 8, CELL - 12);
+  }
+
+  // Tinted Glass: vidro escuro (cinza-quase-preto) com reflexos sutis
+  function pintarTintedGlass(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Borda
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    // Cruz central (caixilho)
+    ctx.fillRect(x0 + CELL / 2 - 1, y0, 2, CELL);
+    ctx.fillRect(x0, y0 + CELL / 2 - 1, CELL, 2);
+    // Reflexo sutil (vidro mesmo escuro reflete um pouco)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.10)';
+    ctx.fillRect(x0 + 4, y0 + 4, 4, 1);
+    ctx.fillRect(x0 + 4, y0 + 5, 2, 1);
+  }
+
+  // Snow Block / Powder Snow: branco puro com cristais de neve
+  function pintarSnow(idx, comCristais) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Sombras suaves (textura granular)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#eceff1', 0.50, 4, 2, idx * 9301 + 49297);
+    if (comCristais) {
+      // Cristais de neve (estrelas pequenas)
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 8; i++) {
+        const xp = (i * 7 + 3) % (CELL - 6);
+        const yp = (i * 11 + 5) % (CELL - 6);
+        ctx.fillRect(x0 + xp,     y0 + yp + 2, 5, 1);
+        ctx.fillRect(x0 + xp + 2, y0 + yp,     1, 5);
+      }
+    }
+  }
+
+  // Glow Lichen: padrão de líquen verde-claro brilhante
+  function pintarGlowLichen(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de "musgo" orgânico (galhos)
+    ctx.fillStyle = '#a5d6a7';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#a5d6a7', 0.65, 3, 2, idx * 9301 + 49297);
+    // Pontos super-brilhantes
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.30, 5, 1, idx * 9301 + 7331);
+  }
+
+  // Spore Blossom: rosa com 5 pétalas + centro amarelo
+  function pintarSporeBlossom(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 5 pétalas grandes em volta
+    ctx.fillStyle = '#f06292';
+    const cx = 16, cy = 16, r = 11;
+    for (let a = 0; a < 5; a++) {
+      const ang = (a / 5) * Math.PI * 2;
+      const px = Math.floor(cx + Math.cos(ang) * r);
+      const py = Math.floor(cy + Math.sin(ang) * r);
+      ctx.fillRect(x0 + px - 3, y0 + py - 3, 7, 7);
+      // Sombra interna da pétala
+      ctx.fillStyle = '#c2185b';
+      ctx.fillRect(x0 + px - 1, y0 + py - 1, 3, 3);
+      ctx.fillStyle = '#f06292';
+    }
+    // Centro amarelo (pólen)
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
   }
 
   // Slime Block: verde gelatinoso com padrão de bolhas + reflexos
@@ -2628,6 +2790,16 @@ function criarAtlas() {
   pintarEndBrick(136);                                            // end brick
   pintarPurpur(137, false);                                       // purpur block
   pintarPurpur(138, true);                                        // purpur pillar
+  pintarPlanksColorida(139, '#8a3a4d', '#5d2535', '#a85065');     // crimson planks
+  pintarPlanksColorida(140, '#2c8a8a', '#1d5d5d', '#4cb8b8');     // warped planks
+  pintarEsponja(141, '#fdd835', '#5d4037');                      // sponge seca
+  pintarEsponja(142, '#a1887f', '#3e2723');                      // sponge molhada
+  pintarJackOLantern(143);                                        // jack-o-lantern
+  pintarTintedGlass(144);                                         // tinted glass
+  pintarSnow(145, true);                                          // snow block (com cristais)
+  pintarGlowLichen(146);                                          // glow lichen
+  pintarSporeBlossom(147);                                        // spore blossom
+  pintarSnow(148, false);                                         // powder snow (puro)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2772,6 +2944,16 @@ function criarAtlas() {
   mapa[BLOCO.END_BRICK]      = { top: 136, side: 136, bottom: 136 };
   mapa[BLOCO.PURPUR_BLOCK]   = { top: 137, side: 137, bottom: 137 };
   mapa[BLOCO.PURPUR_PILLAR]  = { top: 138, side: 138, bottom: 138 };
+  mapa[BLOCO.CRIMSON_PLANKS] = { top: 139, side: 139, bottom: 139 };
+  mapa[BLOCO.WARPED_PLANKS]  = { top: 140, side: 140, bottom: 140 };
+  mapa[BLOCO.SPONGE]         = { top: 141, side: 141, bottom: 141 };
+  mapa[BLOCO.SPONGE_WET]     = { top: 142, side: 142, bottom: 142 };
+  mapa[BLOCO.JACK_O_LANTERN] = { top: 143, side: 143, bottom: 143 };
+  mapa[BLOCO.TINTED_GLASS]   = { top: 144, side: 144, bottom: 144 };
+  mapa[BLOCO.SNOW_BLOCK]     = { top: 145, side: 145, bottom: 145 };
+  mapa[BLOCO.GLOW_LICHEN]    = { top: 146, side: 146, bottom: 146 };
+  mapa[BLOCO.SPORE_BLOSSOM]  = { top: 147, side: 147, bottom: 147 };
+  mapa[BLOCO.POWDER_SNOW]    = { top: 148, side: 148, bottom: 148 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
