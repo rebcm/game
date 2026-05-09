@@ -626,8 +626,25 @@ export const BLOCO = {
   GLAZED_MAGENTA:      548,
   GLAZED_PURPLE:       549,
   GLAZED_LIGHT_BLUE:   550,
+  // Sprint 19: 16 blocos — terracotas faltantes + tijolos coloridos (551-566)
+  TERRACOTA_LIME:      551,
+  TERRACOTA_MAGENTA:   552,
+  TERRACOTA_PURPLE:    553,
+  TERRACOTA_CIANO:     554,
+  TERRACOTA_LIGHT_BLUE:555,
+  TERRACOTA_LIGHT_GRAY:556,
+  TERRACOTA_MARROM:    557,
+  TERRACOTA_AMARELA:   558,
+  TIJOLO_VERMELHO_C:   559, // tijolos coloridos
+  TIJOLO_AZUL_C:       560,
+  TIJOLO_VERDE_C:      561,
+  TIJOLO_AMARELO_C:    562,
+  TIJOLO_ROXO_C:       563,
+  TIJOLO_ROSA_C:       564,
+  TIJOLO_CIANO_C:      565,
+  TIJOLO_BRANCO_C:     566,
 };
-export const N_BLOCOS = 551;
+export const N_BLOCOS = 567;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1217,6 +1234,23 @@ export const BLOCO_INFO = {
   [BLOCO.GLAZED_MAGENTA]:    { nome: 'Glazed Magenta',     solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
   [BLOCO.GLAZED_PURPLE]:     { nome: 'Glazed Roxo',        solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
   [BLOCO.GLAZED_LIGHT_BLUE]: { nome: 'Glazed Azul Claro',  solido: true, emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x29b6f6 },
+  // Sprint 19: 16 blocos terracotas + tijolos coloridos (551-566)
+  [BLOCO.TERRACOTA_LIME]:    { nome: 'Terracota Lima',     solido: true, emiteLuz: 0,  cor: 0x9e9d24, lateral: 0x827717 },
+  [BLOCO.TERRACOTA_MAGENTA]: { nome: 'Terracota Magenta',  solido: true, emiteLuz: 0,  cor: 0xad1457, lateral: 0x880e4f },
+  [BLOCO.TERRACOTA_PURPLE]:  { nome: 'Terracota Roxa',     solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.TERRACOTA_CIANO]:   { nome: 'Terracota Ciano',    solido: true, emiteLuz: 0,  cor: 0x00838f, lateral: 0x006064 },
+  [BLOCO.TERRACOTA_LIGHT_BLUE]:{nome:'Terracota Azul Cl.', solido: true, emiteLuz: 0,  cor: 0x29b6f6, lateral: 0x0288d1 },
+  [BLOCO.TERRACOTA_LIGHT_GRAY]:{nome:'Terracota Cinza Cl.',solido: true, emiteLuz: 0,  cor: 0xbdbdbd, lateral: 0x9e9e9e },
+  [BLOCO.TERRACOTA_MARROM]:  { nome: 'Terracota Marrom',   solido: true, emiteLuz: 0,  cor: 0x4e342e, lateral: 0x3e2723 },
+  [BLOCO.TERRACOTA_AMARELA]: { nome: 'Terracota Amarela',  solido: true, emiteLuz: 0,  cor: 0xc9a05a, lateral: 0xa67d3a },
+  [BLOCO.TIJOLO_VERMELHO_C]: { nome: 'Tijolos Vermelhos',  solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.TIJOLO_AZUL_C]:     { nome: 'Tijolos Azuis',      solido: true, emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.TIJOLO_VERDE_C]:    { nome: 'Tijolos Verdes',     solido: true, emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.TIJOLO_AMARELO_C]:  { nome: 'Tijolos Amarelos',   solido: true, emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.TIJOLO_ROXO_C]:     { nome: 'Tijolos Roxos',      solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.TIJOLO_ROSA_C]:     { nome: 'Tijolos Rosa',       solido: true, emiteLuz: 0,  cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.TIJOLO_CIANO_C]:    { nome: 'Tijolos Ciano',      solido: true, emiteLuz: 0,  cor: 0x00838f, lateral: 0x006064 },
+  [BLOCO.TIJOLO_BRANCO_C]:   { nome: 'Tijolos Brancos',    solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
 };
 
 export const ICONE = {

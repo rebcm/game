@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 51, CELL = 32;
+  const COLS = 8, ROWS = 53, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -6437,6 +6437,24 @@ function criarAtlas() {
   pintarGlazed(401, '#d81b60', '#ec407a', '#ad1457');     // glazed magenta
   pintarGlazed(402, '#6a1b9a', '#9c27b0', '#4a148c');     // glazed roxo
   pintarGlazed(403, '#4fc3f7', '#81d4fa', '#29b6f6');     // glazed azul claro
+  // Sprint 19: 16 terracotas + tijolos coloridos (cells 404-419)
+  pintarPedra(404, '#9e9d24', '#827717', '#c5e15a', 0.40); // terracota lima
+  pintarPedra(405, '#ad1457', '#880e4f', '#d81b60', 0.40); // terracota magenta
+  pintarPedra(406, '#6a1b9a', '#4a148c', '#9c27b0', 0.40); // terracota roxa
+  pintarPedra(407, '#00838f', '#006064', '#26c6da', 0.40); // terracota ciano
+  pintarPedra(408, '#29b6f6', '#0288d1', '#81d4fa', 0.40); // terracota azul claro
+  pintarPedra(409, '#bdbdbd', '#9e9e9e', '#eeeeee', 0.40); // terracota cinza claro
+  pintarPedra(410, '#4e342e', '#3e2723', '#8d6e63', 0.40); // terracota marrom
+  pintarPedra(411, '#c9a05a', '#a67d3a', '#e8c280', 0.40); // terracota amarela
+  // Tijolos coloridos (textura tijolo padrão com cor)
+  pintar(412, '#c62828', '#8b0000', 0.50); // tijolos vermelhos
+  pintar(413, '#1565c0', '#0d47a1', 0.50); // tijolos azuis
+  pintar(414, '#2e7d32', '#1b5e20', 0.50); // tijolos verdes
+  pintar(415, '#f9a825', '#f57f17', 0.50); // tijolos amarelos
+  pintar(416, '#6a1b9a', '#4a148c', 0.50); // tijolos roxos
+  pintar(417, '#f06292', '#c2185b', 0.50); // tijolos rosa
+  pintar(418, '#00838f', '#006064', 0.50); // tijolos ciano
+  pintar(419, '#fafafa', '#eeeeee', 0.50); // tijolos brancos
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -7029,6 +7047,23 @@ function criarAtlas() {
   mapa[BLOCO.GLAZED_MAGENTA]        = { top: 401, side: 401, bottom: 401 };
   mapa[BLOCO.GLAZED_PURPLE]         = { top: 402, side: 402, bottom: 402 };
   mapa[BLOCO.GLAZED_LIGHT_BLUE]     = { top: 403, side: 403, bottom: 403 };
+  // Sprint 19: 16 terracotas + tijolos coloridos (cells 404-419)
+  mapa[BLOCO.TERRACOTA_LIME]        = { top: 404, side: 404, bottom: 404 };
+  mapa[BLOCO.TERRACOTA_MAGENTA]     = { top: 405, side: 405, bottom: 405 };
+  mapa[BLOCO.TERRACOTA_PURPLE]      = { top: 406, side: 406, bottom: 406 };
+  mapa[BLOCO.TERRACOTA_CIANO]       = { top: 407, side: 407, bottom: 407 };
+  mapa[BLOCO.TERRACOTA_LIGHT_BLUE]  = { top: 408, side: 408, bottom: 408 };
+  mapa[BLOCO.TERRACOTA_LIGHT_GRAY]  = { top: 409, side: 409, bottom: 409 };
+  mapa[BLOCO.TERRACOTA_MARROM]      = { top: 410, side: 410, bottom: 410 };
+  mapa[BLOCO.TERRACOTA_AMARELA]     = { top: 411, side: 411, bottom: 411 };
+  mapa[BLOCO.TIJOLO_VERMELHO_C]     = { top: 412, side: 412, bottom: 412 };
+  mapa[BLOCO.TIJOLO_AZUL_C]         = { top: 413, side: 413, bottom: 413 };
+  mapa[BLOCO.TIJOLO_VERDE_C]        = { top: 414, side: 414, bottom: 414 };
+  mapa[BLOCO.TIJOLO_AMARELO_C]      = { top: 415, side: 415, bottom: 415 };
+  mapa[BLOCO.TIJOLO_ROXO_C]         = { top: 416, side: 416, bottom: 416 };
+  mapa[BLOCO.TIJOLO_ROSA_C]         = { top: 417, side: 417, bottom: 417 };
+  mapa[BLOCO.TIJOLO_CIANO_C]        = { top: 418, side: 418, bottom: 418 };
+  mapa[BLOCO.TIJOLO_BRANCO_C]       = { top: 419, side: 419, bottom: 419 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
