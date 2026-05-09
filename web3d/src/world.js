@@ -160,6 +160,41 @@ export class World {
       const dirEixo = (msHash & 0x1) === 0 ? 'x' : 'z'; // direção do tunel
       this._gerarMineshaft(c, cx, cz, cy, dirEixo);
     }
+    // SPRINT MEGA-3: Estruturas grandes (raras)
+    // Stronghold (~0.5% chance, baseY 8-16): contém End Portal
+    const stHash = hash2(cx, cz, this.seed ^ 0x57008) & 0xFFFF;
+    if (stHash < 300) {
+      const baseY = this.alturaTerreno(gxV, gzV);
+      if (baseY >= 12) this._gerarStronghold(c, cx, cz, Math.min(baseY, 16));
+    }
+    // Ancient City (~0.4% chance, y baixo)
+    const acHash = hash2(cx, cz, this.seed ^ 0xACE40) & 0xFFFF;
+    if (acHash < 250) {
+      this._gerarAncientCity(c, cx, cz);
+    }
+    // Trial Chamber (~0.6% chance, 1.21+)
+    const tcHash = hash2(cx, cz, this.seed ^ 0x71A11) & 0xFFFF;
+    if (tcHash < 400) {
+      this._gerarTrialChamber(c, cx, cz);
+    }
+    // Pillager Outpost (~0.5%, surface, biomas plain/savanna)
+    const poHash = hash2(cx, cz, this.seed ^ 0x9117A) & 0xFFFF;
+    if (poHash < 320 && (bioma === 'planicies' || bioma === 'taiga')) {
+      const baseY = this.alturaTerreno(gxV, gzV);
+      if (baseY >= 14) this._gerarPillagerOutpost(c, cx, cz, baseY);
+    }
+    // Woodland Mansion (~0.3%, raro, biomas floresta)
+    const wmHash = hash2(cx, cz, this.seed ^ 0xA0DDD) & 0xFFFF;
+    if (wmHash < 200 && bioma === 'floresta') {
+      const baseY = this.alturaTerreno(gxV, gzV);
+      if (baseY >= 14) this._gerarWoodlandMansion(c, cx, cz, baseY);
+    }
+    // Ocean Monument (~0.4%, deep ocean - baseY < 8)
+    const omHash = hash2(cx, cz, this.seed ^ 0x0CEA0) & 0xFFFF;
+    const baseYOcean = this.alturaTerreno(gxV, gzV);
+    if (omHash < 280 && baseYOcean < 8) {
+      this._gerarOceanMonument(c, cx, cz, baseYOcean);
+    }
   }
   // Mineshaft: corredor 3-larg × 3-alto cortado em pedra/terra com rails
   // no chão e tochas a cada 4 blocos. Eventualmente, baú no fim.
@@ -585,6 +620,344 @@ export class World {
     return loot;
   }
 
+  // SPRINT MEGA-3: 8 estruturas novas para paridade Minecraft
+  // Stronghold — fortaleza com End Portal Frame (12 frames)
+  _gerarStronghold(c, cx, cz, baseY) {
+    const lx = 1, ly = baseY - 6, lz = 1;
+    const W = 13, H = 5, D = 13;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y || y < 0) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          c.set(x, y, z, naBorda ? BLOCO.MOSSY_STONE_BRICKS : BLOCO.AR);
+        }
+      }
+    }
+    // Portal Frame anel (12 frames com Eye of Ender)
+    const fy = ly + 1;
+    const portalFrames = [
+      [4,0,5],[5,0,4],[6,0,4],[7,0,4],[8,0,5],
+      [8,0,6],[8,0,7],[8,0,8],[7,0,9],[6,0,9],[5,0,9],[4,0,8],
+    ];
+    for (const [dx, dyOff, dz] of portalFrames) {
+      const px = lx + dx, py = fy + dyOff, pz = lz + dz;
+      if (px < CHUNK_SIZE && pz < CHUNK_SIZE && py < WORLD_Y) {
+        c.set(px, py, pz, BLOCO.PORTAL_END);
+      }
+    }
+    // Tochas + baú
+    const cxC = lx + 6, cyC = fy + 1, czC = lz + 6;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE && cyC < WORLD_Y) {
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootStronghold(cx, cz));
+    }
+  }
+
+  _gerarLootStronghold(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.ENDER_PEARL, q: 4 },
+      { i: ITEM.DIAMANTE, q: 2 },
+      { i: ITEM.OURO, q: 5 },
+      { i: ITEM.LIVRO, q: 3 },
+      { i: ITEM.PAO, q: 4 },
+      { i: ITEM.MACA_DOURADA, q: 1 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
+  // Nether Fortress — corredores de tijolo nether com blaze spawner
+  _gerarNetherFortress(c, cx, cz) {
+    const lx = 1, ly = 32, lz = 1;
+    const W = 14, H = 6, D = 14;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          c.set(x, y, z, naBorda ? BLOCO.TIJOLO_NETHER : BLOCO.AR);
+        }
+      }
+    }
+    // Pilares decorativos + lava
+    if (lx + 6 < CHUNK_SIZE && lz + 6 < CHUNK_SIZE) {
+      c.set(lx + 6, ly + 2, lz + 6, BLOCO.LAVA);
+      c.set(lx + 6, ly + 1, lz + 6, BLOCO.MAGMA);
+    }
+    // Baú com loot Nether
+    const cxC = lx + 3, cyC = ly + 1, czC = lz + 3;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootNether(cx, cz));
+    }
+  }
+
+  _gerarLootNether(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.BLAZE_ROD, q: 2 },
+      { i: ITEM.OURO, q: 4 },
+      { i: ITEM.NETHERITE, q: Math.random() < 0.3 ? 1 : 0 },
+      { i: ITEM.MACA_DOURADA, q: 1 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 5; }
+    return loot;
+  }
+
+  // End City — torre de purpur com loot de elytra
+  _gerarEndCity(c, cx, cz, baseY) {
+    const lx = 1, ly = baseY + 1, lz = 1;
+    const W = 8, H = 12, D = 8;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dz === 0 || dz === D-1;
+          if (dy >= H - 2 && dx > 0 && dx < W - 1 && dz > 0 && dz < D - 1) {
+            c.set(x, y, z, dy === H - 1 ? BLOCO.AR : BLOCO.PURPUR_BLOCK || BLOCO.AR);
+          } else {
+            c.set(x, y, z, naBorda ? (BLOCO.PURPUR_PILLAR || BLOCO.PURPUR_BLOCK) : BLOCO.AR);
+          }
+        }
+      }
+    }
+    // End rod + baú no topo
+    const cxC = lx + 4, cyC = ly + H - 3, czC = lz + 4;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC + 1, czC, BLOCO.END_ROD || BLOCO.LUZ);
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootEndCity(cx, cz));
+    }
+  }
+
+  _gerarLootEndCity(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.ELYTRA, q: 1 },
+      { i: ITEM.DIAMANTE, q: 5 },
+      { i: ITEM.OURO, q: 8 },
+      { b: BLOCO.OBSIDIANA, q: 4 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
+  // Ancient City — Deep Dark com sculk + loot raro
+  _gerarAncientCity(c, cx, cz) {
+    const lx = 1, ly = 5, lz = 1;
+    const W = 14, H = 7, D = 14;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          if (naBorda) {
+            // Mistura deepslate + sculk
+            const r = (hash2(x, z, this.seed ^ 0xACE) & 0xFF);
+            c.set(x, y, z, r < 80 ? BLOCO.SCULK : BLOCO.DEEPSLATE_POL);
+          } else {
+            c.set(x, y, z, BLOCO.AR);
+          }
+        }
+      }
+    }
+    // Sculk catalyst + shrieker no centro
+    const cxC = lx + 6, cyC = ly + 1, czC = lz + 6;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC - 2, cyC, czC, BLOCO.SCULK_CATALYST);
+      c.set(cxC + 2, cyC, czC, BLOCO.SCULK_SHRIEKER);
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootAncientCity(cx, cz));
+    }
+  }
+
+  _gerarLootAncientCity(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.ECHO_SHARD, q: 2 },
+      { i: ITEM.MUSIC_DISC_5, q: 1 },
+      { i: ITEM.MUSIC_DISC_OTHERSIDE, q: 1 },
+      { i: ITEM.DIAMANTE, q: 4 },
+      { i: ITEM.NETHERITE, q: 1 },
+      { i: ITEM.MACA_DOURADA, q: 2 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
+  // Trial Chamber (1.21) — câmara com Trial Spawner + Vault
+  _gerarTrialChamber(c, cx, cz) {
+    const lx = 2, ly = 12, lz = 2;
+    const W = 11, H = 6, D = 11;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          c.set(x, y, z, naBorda ? (BLOCO.TUFF_BRICKS || BLOCO.PEDRA) : BLOCO.AR);
+        }
+      }
+    }
+    // Trial Spawner + Vault no centro
+    const cxC = lx + 5, cyC = ly + 1, czC = lz + 5;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC, czC, BLOCO.TRIAL_SPAWNER);
+      c.set(cxC + 3, cyC, czC, BLOCO.VAULT);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootTrialChamber(cx, cz));
+    }
+  }
+
+  _gerarLootTrialChamber(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.TRIAL_KEY, q: 1 },
+      { i: ITEM.OMINOUS_KEY, q: Math.random() < 0.3 ? 1 : 0 },
+      { i: ITEM.MACE, q: Math.random() < 0.2 ? 1 : 0 },
+      { i: ITEM.WIND_CHARGE, q: 6 },
+      { i: ITEM.DIAMANTE, q: 3 },
+    ];
+    let s = 0;
+    for (const it of items) { if (it.q > 0) { loot[s] = { ...it }; s += 4; } }
+    return loot;
+  }
+
+  // Ocean Monument — prismarine + guardians
+  _gerarOceanMonument(c, cx, cz, baseY) {
+    const lx = 1, ly = Math.max(2, baseY - 4), lz = 1;
+    const W = 14, H = 12, D = 14;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dy === 0 || dy === H-1 || dz === 0 || dz === D-1;
+          c.set(x, y, z, naBorda ? (BLOCO.PRISMARINE || BLOCO.PEDRA) : BLOCO.AGUA);
+        }
+      }
+    }
+    // Sea Lantern + tesouro
+    const cxC = lx + 7, cyC = ly + 6, czC = lz + 7;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC + 2, czC, BLOCO.LUZ);
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootOceanMonument(cx, cz));
+    }
+  }
+
+  _gerarLootOceanMonument(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.PRISMARINE_SHARD, q: 8 },
+      { i: ITEM.OURO, q: 8 },
+      { i: ITEM.PEIXE, q: 4 },
+      { i: ITEM.DIAMANTE, q: 1 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
+  // Pillager Outpost — torre de dark oak com pillagers
+  _gerarPillagerOutpost(c, cx, cz, baseY) {
+    const lx = 4, ly = baseY + 1, lz = 4;
+    const W = 7, H = 8, D = 7;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dz === 0 || dz === D-1 || dy === 0 || dy === H-1;
+          c.set(x, y, z, naBorda ? (BLOCO.DARK_OAK_LOG || BLOCO.MADEIRA) : BLOCO.AR);
+        }
+      }
+    }
+    // Bandeira no topo
+    if (lx + 3 < CHUNK_SIZE && lz + 3 < CHUNK_SIZE) {
+      c.set(lx + 3, ly + H, lz + 3, BLOCO.BANDEIRA_R);
+      c.set(lx + 3, ly + H + 1, lz + 3, BLOCO.LANTERNA || BLOCO.LUZ);
+    }
+    // Baú dentro
+    const cxC = lx + 3, cyC = ly + 1, czC = lz + 3;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootPillager(cx, cz));
+    }
+  }
+
+  _gerarLootPillager(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.CROSSBOW, q: 1 },
+      { i: ITEM.FLECHA, q: 8 },
+      { i: ITEM.ESMERALDA, q: 3 },
+      { i: ITEM.PAO, q: 4 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
+  // Woodland Mansion — gigante de dark oak + evokers
+  _gerarWoodlandMansion(c, cx, cz, baseY) {
+    const lx = 1, ly = baseY + 1, lz = 1;
+    const W = 14, H = 10, D = 14;
+    for (let dx = 0; dx < W; dx++) {
+      for (let dy = 0; dy < H; dy++) {
+        for (let dz = 0; dz < D; dz++) {
+          const x = lx + dx, y = ly + dy, z = lz + dz;
+          if (x >= CHUNK_SIZE || z >= CHUNK_SIZE || y >= WORLD_Y) continue;
+          const naBorda = dx === 0 || dx === W-1 || dz === 0 || dz === D-1 || dy === 0 || dy === H-1;
+          c.set(x, y, z, naBorda ? (BLOCO.DARK_OAK_LOG || BLOCO.MADEIRA) : BLOCO.AR);
+        }
+      }
+    }
+    // Lustres
+    for (let h = 1; h < H - 1; h += 3) {
+      if (lx + 7 < CHUNK_SIZE && lz + 7 < CHUNK_SIZE) {
+        c.set(lx + 7, ly + h, lz + 7, BLOCO.LUZ);
+      }
+    }
+    // Baú + Totem of Undying loot
+    const cxC = lx + 7, cyC = ly + 1, czC = lz + 7;
+    if (cxC < CHUNK_SIZE && czC < CHUNK_SIZE) {
+      c.set(cxC, cyC, czC, BLOCO.BAU);
+      const k = World.keyXYZ(cx * CHUNK_SIZE + cxC, cyC, cz * CHUNK_SIZE + czC);
+      this.bauTesouros.set(k, this._gerarLootMansion(cx, cz));
+    }
+  }
+
+  _gerarLootMansion(cx, cz) {
+    const loot = new Array(27).fill(null);
+    const items = [
+      { i: ITEM.TOTEM_VIDA, q: 1 },
+      { i: ITEM.ESMERALDA, q: 5 },
+      { i: ITEM.DIAMANTE, q: 2 },
+      { i: ITEM.PINTURA, q: 3 },
+      { i: ITEM.MAPA_TESOURO_I, q: 1 },
+    ];
+    let s = 0;
+    for (const it of items) { loot[s] = { ...it }; s += 4; }
+    return loot;
+  }
+
   // Carrega chunk (gera se não existe). Cada dimensão tem seu generator.
   getChunk(cx, cz) {
     const k = chunkKey(cx, cz);
@@ -635,6 +1008,11 @@ export class World {
       // Cristal no topo
       c.set(lx, 36, lz, BLOCO.END_CRYSTAL);
     }
+    // End City (~2% chance no End)
+    const ecHash = hash2(cx, cz, this.seed ^ 0xE0001) & 0xFFFF;
+    if (ecHash < 1300) {
+      this._gerarEndCity(c, cx, cz, 30);
+    }
     return c;
   }
 
@@ -670,6 +1048,11 @@ export class World {
           if (b !== BLOCO.AR) c.set(lx, y, lz, b);
         }
       }
+    }
+    // Nether Fortress (~1% chance no Nether)
+    const nfHash = hash2(cx, cz, this.seed ^ 0xF02E5) & 0xFFFF;
+    if (nfHash < 600) {
+      this._gerarNetherFortress(c, cx, cz);
     }
     return c;
   }
