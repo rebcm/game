@@ -4172,6 +4172,15 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_COBRE_OXIDADO]= { top: 60,  side: 60,  bottom: 60  };
   mapa[BLOCO.SLAB_CRIMSON]        = { top: 139, side: 139, bottom: 139 };
   mapa[BLOCO.SLAB_WARPED]         = { top: 140, side: 140, bottom: 140 };
+  // Variantes concreto (cells 196=verm, 197=azul, 198=verde, 200=branco, 201=preto)
+  mapa[BLOCO.ESCADA_CONCRETO_R]   = { top: 196, side: 196, bottom: 196 };
+  mapa[BLOCO.ESCADA_CONCRETO_A]   = { top: 197, side: 197, bottom: 197 };
+  mapa[BLOCO.ESCADA_CONCRETO_V]   = { top: 198, side: 198, bottom: 198 };
+  mapa[BLOCO.ESCADA_CONCRETO_BR]  = { top: 200, side: 200, bottom: 200 };
+  mapa[BLOCO.PAREDE_CONCRETO_R]   = { top: 196, side: 196, bottom: 196 };
+  mapa[BLOCO.PAREDE_CONCRETO_PR]  = { top: 201, side: 201, bottom: 201 };
+  mapa[BLOCO.SLAB_CONCRETO_R]     = { top: 196, side: 196, bottom: 196 };
+  mapa[BLOCO.SLAB_CONCRETO_A]     = { top: 197, side: 197, bottom: 197 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

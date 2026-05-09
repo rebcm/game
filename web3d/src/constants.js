@@ -376,8 +376,16 @@ export const BLOCO = {
   PAREDE_COBRE_OXIDADO:316,
   SLAB_CRIMSON:        317,
   SLAB_WARPED:         318,
+  ESCADA_CONCRETO_R:   319,
+  ESCADA_CONCRETO_A:   320,
+  ESCADA_CONCRETO_V:   321,
+  ESCADA_CONCRETO_BR:  322,
+  PAREDE_CONCRETO_R:   323,
+  PAREDE_CONCRETO_PR:  324,
+  SLAB_CONCRETO_R:     325,
+  SLAB_CONCRETO_A:     326,
 };
-export const N_BLOCOS = 319;
+export const N_BLOCOS = 327;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -718,6 +726,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_COBRE_OXIDADO]:{ nome: 'Parede Cobre Oxid.',  solido: true, emiteLuz: 0, cor: 0x5fb89e, lateral: 0x4a9b82, shape: 'wall' },
   [BLOCO.SLAB_CRIMSON]:        { nome: 'Laje Crimson',        solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'slab' },
   [BLOCO.SLAB_WARPED]:         { nome: 'Laje Warped',         solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'slab' },
+  [BLOCO.ESCADA_CONCRETO_R]:   { nome: 'Escada Concr. Verm.', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_A]:   { nome: 'Escada Concr. Azul',  solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_V]:   { nome: 'Escada Concr. Verde', solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_BR]:  { nome: 'Escada Concr. Branc', solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeceff1, shape: 'stairs' },
+  [BLOCO.PAREDE_CONCRETO_R]:   { nome: 'Parede Concr. Verm.', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_PR]:  { nome: 'Parede Concr. Preto', solido: true, emiteLuz: 0, cor: 0x212121, lateral: 0x000000, shape: 'wall' },
+  [BLOCO.SLAB_CONCRETO_R]:     { nome: 'Laje Concr. Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_A]:     { nome: 'Laje Concr. Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1307,6 +1323,17 @@ export const RECEITAS = [
   // 2 lajes (3 → 6)
   { custos: [{b: BLOCO.CRIMSON_PLANKS, q: 3}], saida: {b: BLOCO.SLAB_CRIMSON, q: 6}, wb: true },
   { custos: [{b: BLOCO.WARPED_PLANKS, q: 3}],  saida: {b: BLOCO.SLAB_WARPED,  q: 6}, wb: true },
+  // 4 escadas concreto (6 → 4)
+  { custos: [{b: BLOCO.CONCRETO_R, q: 6}],     saida: {b: BLOCO.ESCADA_CONCRETO_R,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.CONCRETO_A, q: 6}],     saida: {b: BLOCO.ESCADA_CONCRETO_A,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.CONCRETO_V, q: 6}],     saida: {b: BLOCO.ESCADA_CONCRETO_V,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.CONCRETO_BR, q: 6}],    saida: {b: BLOCO.ESCADA_CONCRETO_BR, q: 4}, wb: true },
+  // 2 paredes concreto (6 → 6)
+  { custos: [{b: BLOCO.CONCRETO_R, q: 6}],     saida: {b: BLOCO.PAREDE_CONCRETO_R,  q: 6}, wb: true },
+  { custos: [{b: BLOCO.CONCRETO_PR, q: 6}],    saida: {b: BLOCO.PAREDE_CONCRETO_PR, q: 6}, wb: true },
+  // 2 lajes concreto (3 → 6)
+  { custos: [{b: BLOCO.CONCRETO_R, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_R,    q: 6}, wb: true },
+  { custos: [{b: BLOCO.CONCRETO_A, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_A,    q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
