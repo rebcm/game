@@ -352,8 +352,16 @@ export const BLOCO = {
   PAREDE_BLACKSTONE_POL:292,
   SLAB_ANDESITO_POL:  293,
   SLAB_BLACKSTONE_POL:294,
+  ESCADA_END_BRICK:   295,
+  ESCADA_PURPUR:      296,
+  ESCADA_NETHER_BRICK:297,
+  ESCADA_MUSGO:       298,
+  PAREDE_END_BRICK:   299,
+  PAREDE_NETHER_BRICK:300,
+  SLAB_END_BRICK:     301,
+  SLAB_PURPUR:        302,
 };
-export const N_BLOCOS = 295;
+export const N_BLOCOS = 303;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -670,6 +678,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_BLACKSTONE_POL]:{nome: 'Parede Blackstone Pol.',solido: true,emiteLuz: 0, cor: 0x2a2a2a, lateral: 0x1a1a1a, shape: 'wall' },
   [BLOCO.SLAB_ANDESITO_POL]:  { nome: 'Laje Andesito Pol.',  solido: true, emiteLuz: 0, cor: 0xb0b0b0, lateral: 0x9e9e9e, shape: 'slab' },
   [BLOCO.SLAB_BLACKSTONE_POL]:{ nome: 'Laje Blackstone Pol.',solido: true, emiteLuz: 0, cor: 0x2a2a2a, lateral: 0x1a1a1a, shape: 'slab' },
+  [BLOCO.ESCADA_END_BRICK]:    { nome: 'Escada End Brick',    solido: true, emiteLuz: 0, cor: 0xe8d886, lateral: 0xc0a866, shape: 'stairs' },
+  [BLOCO.ESCADA_PURPUR]:       { nome: 'Escada Purpur',       solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'stairs' },
+  [BLOCO.ESCADA_NETHER_BRICK]: { nome: 'Escada Nether Brick', solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'stairs' },
+  [BLOCO.ESCADA_MUSGO]:        { nome: 'Escada c/ Musgo',     solido: true, emiteLuz: 0, cor: 0xc0d0a0, lateral: 0xa0b88a, shape: 'stairs' },
+  [BLOCO.PAREDE_END_BRICK]:    { nome: 'Parede End Brick',    solido: true, emiteLuz: 0, cor: 0xe8d886, lateral: 0xc0a866, shape: 'wall' },
+  [BLOCO.PAREDE_NETHER_BRICK]: { nome: 'Parede Nether Brick', solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'wall' },
+  [BLOCO.SLAB_END_BRICK]:      { nome: 'Laje End Brick',      solido: true, emiteLuz: 0, cor: 0xe8d886, lateral: 0xc0a866, shape: 'slab' },
+  [BLOCO.SLAB_PURPUR]:         { nome: 'Laje Purpur',         solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1226,6 +1242,17 @@ export const RECEITAS = [
   // 2 lajes polidas (3 → 6)
   { custos: [{b: BLOCO.ANDESITO_POL, q: 3}],   saida: {b: BLOCO.SLAB_ANDESITO_POL,   q: 6}, wb: true },
   { custos: [{b: BLOCO.BLACKSTONE_POL, q: 3}], saida: {b: BLOCO.SLAB_BLACKSTONE_POL, q: 6}, wb: true },
+  // 4 escadas (6 → 4)
+  { custos: [{b: BLOCO.END_BRICK, q: 6}],     saida: {b: BLOCO.ESCADA_END_BRICK,    q: 4}, wb: true },
+  { custos: [{b: BLOCO.PURPUR_BLOCK, q: 6}],  saida: {b: BLOCO.ESCADA_PURPUR,       q: 4}, wb: true },
+  { custos: [{b: BLOCO.NETHER_CORTADO, q: 6}], saida: {b: BLOCO.ESCADA_NETHER_BRICK, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO_MUSGO, q: 6}],  saida: {b: BLOCO.ESCADA_MUSGO,        q: 4}, wb: true },
+  // 2 paredes (6 → 6)
+  { custos: [{b: BLOCO.END_BRICK, q: 6}],      saida: {b: BLOCO.PAREDE_END_BRICK, q: 6}, wb: true },
+  { custos: [{b: BLOCO.NETHER_CORTADO, q: 6}], saida: {b: BLOCO.PAREDE_NETHER_BRICK, q: 6}, wb: true },
+  // 2 lajes (3 → 6)
+  { custos: [{b: BLOCO.END_BRICK, q: 3}],      saida: {b: BLOCO.SLAB_END_BRICK, q: 6}, wb: true },
+  { custos: [{b: BLOCO.PURPUR_BLOCK, q: 3}],   saida: {b: BLOCO.SLAB_PURPUR,    q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

@@ -4145,6 +4145,15 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_BLACKSTONE_POL]= { top: 106, side: 106, bottom: 106 };
   mapa[BLOCO.SLAB_ANDESITO_POL]  = { top: 82, side: 82, bottom: 82 };
   mapa[BLOCO.SLAB_BLACKSTONE_POL]= { top: 106, side: 106, bottom: 106 };
+  // Variantes End/Purpur/Nether/Mossy reusam texturas (cells 136/137/89/84)
+  mapa[BLOCO.ESCADA_END_BRICK]   = { top: 136, side: 136, bottom: 136 };
+  mapa[BLOCO.ESCADA_PURPUR]      = { top: 137, side: 137, bottom: 137 };
+  mapa[BLOCO.ESCADA_NETHER_BRICK]= { top: 89,  side: 89,  bottom: 89  };
+  mapa[BLOCO.ESCADA_MUSGO]       = { top: 84,  side: 84,  bottom: 84  };
+  mapa[BLOCO.PAREDE_END_BRICK]   = { top: 136, side: 136, bottom: 136 };
+  mapa[BLOCO.PAREDE_NETHER_BRICK]= { top: 89,  side: 89,  bottom: 89  };
+  mapa[BLOCO.SLAB_END_BRICK]     = { top: 136, side: 136, bottom: 136 };
+  mapa[BLOCO.SLAB_PURPUR]        = { top: 137, side: 137, bottom: 137 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
