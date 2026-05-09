@@ -1786,6 +1786,242 @@ function criarAtlas() {
     ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
   }
 
+  // Sticky Piston: igual pistão mas face verde (slime sticky)
+  function pintarStickyPiston(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    // Face frontal (slime verde)
+    ctx.fillStyle = '#8bc34a';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    ctx.fillStyle = '#558b2f';
+    for (let i = 6; i < CELL - 6; i += 4) {
+      for (let j = 6; j < CELL - 6; j += 4) {
+        ctx.fillRect(x0 + i, y0 + j, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#aed581';
+    ctx.fillRect(x0 + 5, y0 + 5, CELL - 10, 1);
+    ctx.fillRect(x0 + 5, y0 + 5, 1, CELL - 10);
+    // Vigas verticais
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
+    ctx.fillRect(x0 + CELL - 7, y0 + 6, 1, CELL - 12);
+  }
+
+  // Repeater: pedra clara + 2 tochas redstone
+  function pintarRepeater(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#bcaaa4';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // 2 tochas (frente e trás)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 13, y0 + 4, 2, 6);
+    ctx.fillRect(x0 + 13, y0 + 22, 2, 6);
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 12, y0 + 4, 4, 3);
+    ctx.fillRect(x0 + 12, y0 + 22, 4, 3);
+    ctx.fillStyle = '#ff5252';
+    ctx.fillRect(x0 + 13, y0 + 5, 2, 1);
+    ctx.fillRect(x0 + 13, y0 + 23, 2, 1);
+    // Linha central de redstone
+    ctx.fillStyle = '#8b0000';
+    ctx.fillRect(x0 + 14, y0 + 10, 1, 12);
+    // Slider (delay)
+    ctx.fillStyle = '#616161';
+    ctx.fillRect(x0 + 18, y0 + 14, 4, 4);
+  }
+
+  // Comparator: similar mas com 3 tochas + cristal quartzo
+  function pintarComparator(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#bcaaa4';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // 3 tochas (2 traseiras + 1 frontal)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 6,  y0 + 22, 2, 5);
+    ctx.fillRect(x0 + 22, y0 + 22, 2, 5);
+    ctx.fillRect(x0 + 13, y0 + 5,  2, 5);
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 5,  y0 + 22, 4, 3);
+    ctx.fillRect(x0 + 21, y0 + 22, 4, 3);
+    ctx.fillRect(x0 + 12, y0 + 5,  4, 3);
+    // Cristal de quartzo central
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0 + 18, y0 + 18, 1, 1);
+  }
+
+  // Crafter: bloco com workbench grid (3x3) + ferro
+  function pintarCrafter(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 1, y0 + 1, CELL - 2, CELL - 2);
+    // Grid 3x3 de slots
+    ctx.fillStyle = '#616161';
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const sx = x0 + 4 + c * 8;
+        const sy = y0 + 4 + r * 8;
+        ctx.fillRect(sx, sy, 7, 7);
+      }
+    }
+    // Slots inner highlights
+    ctx.fillStyle = '#bdbdbd';
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const sx = x0 + 5 + c * 8;
+        const sy = y0 + 5 + r * 8;
+        ctx.fillRect(sx, sy, 5, 1);
+        ctx.fillRect(sx, sy, 1, 5);
+      }
+    }
+    // Borda escura
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Trapped Chest: igual baú mas com vermelho central
+  function pintarTrappedChest(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Madeira marrom (corpo do baú)
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Linha central horizontal (separação tampa/corpo)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0 + 10, CELL, 2);
+    // Fechadura central com tinta vermelha (trapped!)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Pranchas (tabuões verticais simulados)
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(x0 + 8,  y0 + 2, 1, 8);
+    ctx.fillRect(x0 + 16, y0 + 2, 1, 8);
+    ctx.fillRect(x0 + 23, y0 + 2, 1, 8);
+    ctx.fillRect(x0 + 8,  y0 + 13, 1, CELL - 15);
+    ctx.fillRect(x0 + 23, y0 + 13, 1, CELL - 15);
+  }
+
+  // Mangrove Log: vermelho-marrom com anéis de tronco
+  function pintarMangroveLog(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais de casca (mangrove é avermelhado)
+    ctx.fillStyle = '#4e342e';
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    // Manchas vermelhas (característico do mangrove)
+    ctx.fillStyle = '#8d4a3a';
+    let s = idx * 17 + 31;
+    for (let i = 0; i < 30; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 2));
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * (CELL - 2));
+      ctx.fillRect(x0 + px, y0 + py, 2, 1);
+    }
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Mangrove Pranchas: similar mas mais claro + grão de prancha
+  function pintarMangrovePrancha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#6d4c41';
+    // 4 fileiras horizontais de pranchas
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    // Divisões verticais (alternadas)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 11, y0,      1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // Manchas avermelhadas
+    ctx.fillStyle = '#a1605a';
+    let s = idx * 7 + 11;
+    for (let i = 0; i < 18; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Cherry Log: rosa pastel com listras claras (cerejeira)
+  function pintarCherryLog(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#c2185b';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais rosa claro
+    ctx.fillStyle = '#f48fb1';
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    ctx.fillStyle = '#e91e63';
+    for (let i = 2; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    // Pintinhas brancas (flores caídas)
+    ctx.fillStyle = '#fce4ec';
+    let s = idx * 13 + 29;
+    for (let i = 0; i < 20; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    ctx.fillStyle = '#880e4f';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Bookshelf Chiseled: estante com 1 livro central destacado
   function pintarBookshelfChiseled(idx) {
     const col = idx % COLS;
@@ -4589,6 +4825,15 @@ function criarAtlas() {
   pintarBigDripleaf(289);
   pintarChorusFlower(290);
   pintarPiston(291);
+  // Sprint redstone+wood (cells 292-299)
+  pintarStickyPiston(292);
+  pintarRepeater(293);
+  pintarComparator(294);
+  pintarCrafter(295);
+  pintarTrappedChest(296);
+  pintarMangroveLog(297);
+  pintarMangrovePrancha(298);
+  pintarCherryLog(299);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -5029,6 +5274,15 @@ function criarAtlas() {
   mapa[BLOCO.BIG_DRIPLEAF]          = { top: 289, side: 289, bottom: 289 };
   mapa[BLOCO.CHORUS_FLOWER]         = { top: 290, side: 290, bottom: 290 };
   mapa[BLOCO.PISTON]                = { top: 291, side: 291, bottom: 291 };
+  // Sprint redstone+wood (cells 292-299)
+  mapa[BLOCO.STICKY_PISTON]         = { top: 292, side: 292, bottom: 292 };
+  mapa[BLOCO.REPEATER]              = { top: 293, side: 293, bottom: 293 };
+  mapa[BLOCO.COMPARATOR]            = { top: 294, side: 294, bottom: 294 };
+  mapa[BLOCO.CRAFTER]               = { top: 295, side: 295, bottom: 295 };
+  mapa[BLOCO.TRAPPED_CHEST]         = { top: 296, side: 296, bottom: 296 };
+  mapa[BLOCO.MANGROVE_LOG]          = { top: 297, side: 297, bottom: 297 };
+  mapa[BLOCO.MANGROVE_PRANCHA]      = { top: 298, side: 298, bottom: 298 };
+  mapa[BLOCO.CHERRY_LOG]            = { top: 299, side: 299, bottom: 299 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

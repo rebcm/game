@@ -474,8 +474,17 @@ export const BLOCO = {
   BIG_DRIPLEAF:        412, // dripleaf grande (planta tropical)
   CHORUS_FLOWER:       413, // flor do End
   PISTON:              414, // pistão (madeira + ferro central)
+  // Sprint redstone + madeiras 1.20+ (415-422)
+  STICKY_PISTON:       415, // pistão pegajoso (verde)
+  REPEATER:            416, // repetidor (delay redstone)
+  COMPARATOR:          417, // comparador (medidor sinal)
+  CRAFTER:             418, // crafter (auto-craft 1.21)
+  TRAPPED_CHEST:       419, // baú armadilha (vermelho)
+  MANGROVE_LOG:        420, // tronco mangrove (vermelho)
+  MANGROVE_PRANCHA:    421, // pranchas mangrove
+  CHERRY_LOG:          422, // tronco cerejeira (rosa)
 };
-export const N_BLOCOS = 415;
+export const N_BLOCOS = 423;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -913,6 +922,15 @@ export const BLOCO_INFO = {
   [BLOCO.BIG_DRIPLEAF]:      { nome: 'Dripleaf Grande',    solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
   [BLOCO.CHORUS_FLOWER]:     { nome: 'Flor Chorus',        solido: true, emiteLuz: 0,  cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'flower' },
   [BLOCO.PISTON]:            { nome: 'Pistão',             solido: true, emiteLuz: 0,  cor: 0xa1887f, lateral: 0x8d6e63 },
+  // Sprint redstone + madeiras 1.20+ (415-422)
+  [BLOCO.STICKY_PISTON]:     { nome: 'Pistão Pegajoso',    solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.REPEATER]:          { nome: 'Repetidor',          solido: true, emiteLuz: 0,  cor: 0xbcaaa4, lateral: 0x8d6e63, shape: 'plate' },
+  [BLOCO.COMPARATOR]:        { nome: 'Comparador',         solido: true, emiteLuz: 0,  cor: 0xbcaaa4, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.CRAFTER]:           { nome: 'Crafter',            solido: true, emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x424242 },
+  [BLOCO.TRAPPED_CHEST]:     { nome: 'Baú Armadilha',      solido: true, emiteLuz: 0,  cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.MANGROVE_LOG]:      { nome: 'Tronco Mangrove',    solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.MANGROVE_PRANCHA]:  { nome: 'Pranchas Mangrove',  solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41 },
+  [BLOCO.CHERRY_LOG]:        { nome: 'Tronco Cerejeira',   solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xc2185b },
 };
 
 export const ICONE = {
@@ -1755,6 +1773,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.MOSS_BLOCK, q: 2}, {b: BLOCO.LILY_PAD, q: 1}], saida: {b: BLOCO.BIG_DRIPLEAF, q: 2}, wb: true },
   { custos: [{b: BLOCO.END_STONE, q: 4}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.CHORUS_FLOWER, q: 1}, wb: true },
   { custos: [{b: BLOCO.MADEIRA, q: 3}, {b: BLOCO.PEDRA, q: 4}, {i: ITEM.FERRO, q: 1}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.PISTON, q: 1}, wb: true },
+  // Sprint redstone + madeiras 1.20+ (415-422)
+  { custos: [{b: BLOCO.PISTON, q: 1}, {i: ITEM.SLIMEBALL, q: 1}], saida: {b: BLOCO.STICKY_PISTON, q: 1}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 3}, {b: BLOCO.TOCHA_REDSTONE, q: 2}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.REPEATER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 3}, {b: BLOCO.TOCHA_REDSTONE, q: 3}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.COMPARATOR, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 5}, {b: BLOCO.WORKBENCH, q: 1}, {b: BLOCO.DROPPER || BLOCO.DISPENSER, q: 1}, {i: ITEM.REDSTONE, q: 2}], saida: {b: BLOCO.CRAFTER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BAU, q: 1}, {i: ITEM.CORDA, q: 1}], saida: {b: BLOCO.TRAPPED_CHEST, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MANGROVE_LOG, q: 1}], saida: {b: BLOCO.MANGROVE_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.TERRA, q: 4}, {b: BLOCO.LAMA, q: 1}], saida: {b: BLOCO.MANGROVE_LOG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.FLOR_VERMELHA, q: 1}], saida: {b: BLOCO.CHERRY_LOG, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

@@ -912,6 +912,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.BIG_DRIPLEAF, q: 8 });
   state.inv.adicionar({ b: BLOCO.CHORUS_FLOWER, q: 4 });
   state.inv.adicionar({ b: BLOCO.PISTON, q: 4 });
+  // Sprint redstone+wood: 8 blocos novos
+  state.inv.adicionar({ b: BLOCO.STICKY_PISTON, q: 4 });
+  state.inv.adicionar({ b: BLOCO.REPEATER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.COMPARATOR, q: 4 });
+  state.inv.adicionar({ b: BLOCO.CRAFTER, q: 1 });
+  state.inv.adicionar({ b: BLOCO.TRAPPED_CHEST, q: 2 });
+  state.inv.adicionar({ b: BLOCO.MANGROVE_LOG, q: 8 });
+  state.inv.adicionar({ b: BLOCO.MANGROVE_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CHERRY_LOG, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
