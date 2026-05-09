@@ -756,8 +756,17 @@ export const BLOCO = {
   WAXED_COBRE_LISO_G:  827, WAXED_COBRE_LISO_O:  828, WAXED_COBRE_CHISEL_G:829, WAXED_COBRE_CHISEL_O:830,
   COBRE_GRADE_GASTO:   831, COBRE_GRADE_OXID:    832, WAXED_COBRE_GRADE:   833, WAXED_COBRE_GRADE_G: 834,
   WAXED_COBRE_GRADE_O: 835, COPPER_DOOR:         836, COPPER_TRAPDOOR:     837, COPPER_BULB_GASTO_OFF:838,
+  // Sprint 29: 32 — slabs/escadas/walls coloridos diversos (839-870)
+  SLAB_LA_R:           839, SLAB_LA_A:           840, SLAB_LA_V:           841, SLAB_LA_AM:          842,
+  SLAB_LA_LR:          843, SLAB_LA_RS:          844, SLAB_LA_CN:          845, SLAB_LA_BR:          846,
+  ESCADA_LA_R:         847, ESCADA_LA_A:         848, ESCADA_LA_V:         849, ESCADA_LA_AM:        850,
+  PAREDE_VIDRO_R:      851, PAREDE_VIDRO_A:      852, PAREDE_VIDRO_V:      853, PAREDE_VIDRO_AM:     854,
+  SLAB_TERRACOTA_AM:   855, SLAB_TERRACOTA_LR:   856, SLAB_TERRACOTA_RX:   857, SLAB_TERRACOTA_BR:   858,
+  ESCADA_TERRACOTA_AM: 859, ESCADA_TERRACOTA_LR: 860, ESCADA_TERRACOTA_BR: 861, ESCADA_TERRACOTA_RX: 862,
+  PAREDE_TERRACOTA_AM: 863, PAREDE_TERRACOTA_LR: 864, PAREDE_TERRACOTA_BR: 865, PAREDE_TERRACOTA_RX: 866,
+  PAREDE_LA_R:         867, PAREDE_LA_A:         868, PAREDE_LA_V:         869, PAREDE_LA_AM:        870,
 };
-export const N_BLOCOS = 839;
+export const N_BLOCOS = 871;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1645,6 +1654,39 @@ export const BLOCO_INFO = {
   [BLOCO.COPPER_DOOR]:          { nome: 'Porta Cobre',           solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30, shape: 'door' },
   [BLOCO.COPPER_TRAPDOOR]:      { nome: 'Alçapão Cobre',         solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30, shape: 'plate' },
   [BLOCO.COPPER_BULB_GASTO_OFF]:{ nome: 'Bulbo Cobre Off',       solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  // Sprint 29: 32 slabs/escadas/walls coloridos (839-870)
+  [BLOCO.SLAB_LA_R]:     { nome: 'Laje Lã Vermelha',  solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.SLAB_LA_A]:     { nome: 'Laje Lã Azul',      solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.SLAB_LA_V]:     { nome: 'Laje Lã Verde',     solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.SLAB_LA_AM]:    { nome: 'Laje Lã Amarela',   solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'slab' },
+  [BLOCO.SLAB_LA_LR]:    { nome: 'Laje Lã Laranja',   solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'slab' },
+  [BLOCO.SLAB_LA_RS]:    { nome: 'Laje Lã Rosa',      solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'slab' },
+  [BLOCO.SLAB_LA_CN]:    { nome: 'Laje Lã Ciano',     solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'slab' },
+  [BLOCO.SLAB_LA_BR]:    { nome: 'Laje Lã Branca',    solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.ESCADA_LA_R]:   { nome: 'Escada Lã Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
+  [BLOCO.ESCADA_LA_A]:   { nome: 'Escada Lã Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'stairs' },
+  [BLOCO.ESCADA_LA_V]:   { nome: 'Escada Lã Verde',   solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'stairs' },
+  [BLOCO.ESCADA_LA_AM]:  { nome: 'Escada Lã Amar.',   solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'stairs' },
+  [BLOCO.PAREDE_VIDRO_R]:{ nome: 'Parede Vidro Verm.',solido: true, emiteLuz: 0, cor: 0xef5350, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.PAREDE_VIDRO_A]:{ nome: 'Parede Vidro Azul', solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x0d47a1, shape: 'wall' },
+  [BLOCO.PAREDE_VIDRO_V]:{ nome: 'Parede Vidro Verde',solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x1b5e20, shape: 'wall' },
+  [BLOCO.PAREDE_VIDRO_AM]:{nome:'Parede Vidro Amar.', solido: true, emiteLuz: 0, cor: 0xffeb3b, lateral: 0xf9a825, shape: 'wall' },
+  [BLOCO.SLAB_TERRACOTA_AM]:  { nome: 'Laje Terr. Amar.',  solido: true, emiteLuz: 0, cor: 0xc9a05a, lateral: 0xa67d3a, shape: 'slab' },
+  [BLOCO.SLAB_TERRACOTA_LR]:  { nome: 'Laje Terr. Laran.', solido: true, emiteLuz: 0, cor: 0xa05a30, lateral: 0x7d3e1c, shape: 'slab' },
+  [BLOCO.SLAB_TERRACOTA_RX]:  { nome: 'Laje Terr. Roxa',   solido: true, emiteLuz: 0, cor: 0x764467, lateral: 0x5a3050, shape: 'slab' },
+  [BLOCO.SLAB_TERRACOTA_BR]:  { nome: 'Laje Terr. Branca', solido: true, emiteLuz: 0, cor: 0xd6c8b8, lateral: 0xb09f88, shape: 'slab' },
+  [BLOCO.ESCADA_TERRACOTA_AM]:{ nome: 'Escada Terr.Amar.', solido: true, emiteLuz: 0, cor: 0xc9a05a, lateral: 0xa67d3a, shape: 'stairs' },
+  [BLOCO.ESCADA_TERRACOTA_LR]:{ nome: 'Escada Terr.Laran.',solido: true, emiteLuz: 0, cor: 0xa05a30, lateral: 0x7d3e1c, shape: 'stairs' },
+  [BLOCO.ESCADA_TERRACOTA_BR]:{ nome: 'Escada Terr.Branca',solido: true, emiteLuz: 0, cor: 0xd6c8b8, lateral: 0xb09f88, shape: 'stairs' },
+  [BLOCO.ESCADA_TERRACOTA_RX]:{ nome: 'Escada Terr.Roxa',  solido: true, emiteLuz: 0, cor: 0x764467, lateral: 0x5a3050, shape: 'stairs' },
+  [BLOCO.PAREDE_TERRACOTA_AM]:{ nome: 'Parede Terr.Amar.', solido: true, emiteLuz: 0, cor: 0xc9a05a, lateral: 0xa67d3a, shape: 'wall' },
+  [BLOCO.PAREDE_TERRACOTA_LR]:{ nome: 'Parede Terr.Laran.',solido: true, emiteLuz: 0, cor: 0xa05a30, lateral: 0x7d3e1c, shape: 'wall' },
+  [BLOCO.PAREDE_TERRACOTA_BR]:{ nome: 'Parede Terr.Branca',solido: true, emiteLuz: 0, cor: 0xd6c8b8, lateral: 0xb09f88, shape: 'wall' },
+  [BLOCO.PAREDE_TERRACOTA_RX]:{ nome: 'Parede Terr.Roxa',  solido: true, emiteLuz: 0, cor: 0x764467, lateral: 0x5a3050, shape: 'wall' },
+  [BLOCO.PAREDE_LA_R]:   { nome: 'Parede Lã Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.PAREDE_LA_A]:   { nome: 'Parede Lã Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'wall' },
+  [BLOCO.PAREDE_LA_V]:   { nome: 'Parede Lã Verde',   solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
+  [BLOCO.PAREDE_LA_AM]:  { nome: 'Parede Lã Amarela', solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'wall' },
 };
 
 export const ICONE = {
