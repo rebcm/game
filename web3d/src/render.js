@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 48, CELL = 32;
+  const COLS = 8, ROWS = 49, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -6411,6 +6411,15 @@ function criarAtlas() {
   pintarMinerio(377, '#8b3a1a', '#5d2510', '#fafafa');                // nether quartz ore (vermelho + branco)
   pintarPedra(378, '#c62828', '#8b0000', '#ef5350', 0.50);            // red sandstone
   pintarChiseled(379, '#c62828', '#8b0000', '#ef5350');               // chiseled red sandstone
+  // Sprint 17: deepslate variantes + blocks ricos (cells 380-387)
+  pintarMinerioDeep(380, '#c62828', '#8b0000', '#ff5252');             // deepslate redstone
+  pintarMinerioDeep(381, '#1565c0', '#0d47a1', '#42a5f5');             // deepslate lapis
+  pintarMinerioDeep(382, '#00c853', '#008c44', '#69f0ae');             // deepslate emerald
+  pintarBlocoCompacto(383, '#ab47bc', '#ce93d8', '#7b1fa2');           // bloco amethyst compacto
+  pintar(384, '#fdd835', '#a1875a', 0.45);                            // hay block (feno)
+  pintar(385, '#424242', '#212121', 0.40);                            // chain (corrente preta)
+  pintar(386, '#40c4ff', '#0288d1', 0.50);                            // soul fire (azul brilhante)
+  pintar(387, '#e1f5fe', '#b3e5fc', 0.30);                            // crystal block (cristalino)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6977,6 +6986,15 @@ function criarAtlas() {
   mapa[BLOCO.DOOR_ACACIA]           = { top: 345, side: 345, bottom: 345 };
   mapa[BLOCO.TRAPDOOR_OAK]          = { top: 5,   side: 6,   bottom: 5   };
   mapa[BLOCO.FENCE_GATE_OAK]        = { top: 6,   side: 6,   bottom: 6   };
+  // Sprint 17: deepslate variantes + blocks ricos (cells 380-387)
+  mapa[BLOCO.DEEPSLATE_REDSTONE]    = { top: 380, side: 380, bottom: 380 };
+  mapa[BLOCO.DEEPSLATE_LAPIS]       = { top: 381, side: 381, bottom: 381 };
+  mapa[BLOCO.DEEPSLATE_EMERALD]     = { top: 382, side: 382, bottom: 382 };
+  mapa[BLOCO.BLOCO_AMETHYST_COMP]   = { top: 383, side: 383, bottom: 383 };
+  mapa[BLOCO.HAY_BLOCK]             = { top: 384, side: 384, bottom: 384 };
+  mapa[BLOCO.CHAIN]                 = { top: 385, side: 385, bottom: 385 };
+  mapa[BLOCO.SOUL_FIRE_BLOCK]       = { top: 386, side: 386, bottom: 386 };
+  mapa[BLOCO.CRYSTAL_BLOCK]         = { top: 387, side: 387, bottom: 387 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

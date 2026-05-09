@@ -1038,6 +1038,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.DOOR_ACACIA, q: 4 });
   state.inv.adicionar({ b: BLOCO.TRAPDOOR_OAK, q: 8 });
   state.inv.adicionar({ b: BLOCO.FENCE_GATE_OAK, q: 4 });
+  // Sprint 17: deepslate variantes + blocks ricos
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE_REDSTONE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE_LAPIS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE_EMERALD, q: 8 });
+  state.inv.adicionar({ b: BLOCO.BLOCO_AMETHYST_COMP, q: 4 });
+  state.inv.adicionar({ b: BLOCO.HAY_BLOCK, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CHAIN, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SOUL_FIRE_BLOCK, q: 4 });
+  state.inv.adicionar({ b: BLOCO.CRYSTAL_BLOCK, q: 4 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

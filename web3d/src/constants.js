@@ -600,8 +600,17 @@ export const BLOCO = {
   DOOR_ACACIA:         524,
   TRAPDOOR_OAK:        525, // alçapão de carvalho
   FENCE_GATE_OAK:      526, // portão de cerca
+  // Sprint 17: deepslate variantes + blocks ricos (527-534)
+  DEEPSLATE_REDSTONE:  527, // redstone deepslate
+  DEEPSLATE_LAPIS:     528, // lápis deepslate
+  DEEPSLATE_EMERALD:   529, // esmeralda deepslate
+  BLOCO_AMETHYST_COMP: 530, // bloco amethyst compacto
+  HAY_BLOCK:           531, // bloco de feno (amarelo)
+  CHAIN:               532, // corrente (preta)
+  SOUL_FIRE_BLOCK:     533, // bloco de fogo da alma (azul)
+  CRYSTAL_BLOCK:       534, // bloco cristal genérico (transparente brilhante)
 };
-export const N_BLOCOS = 527;
+export const N_BLOCOS = 535;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1165,6 +1174,15 @@ export const BLOCO_INFO = {
   [BLOCO.DOOR_ACACIA]:       { nome: 'Porta Acácia',       solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c, shape: 'door' },
   [BLOCO.TRAPDOOR_OAK]:      { nome: 'Alçapão Carvalho',   solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
   [BLOCO.FENCE_GATE_OAK]:    { nome: 'Portão Cerca',       solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
+  // Sprint 17: deepslate variantes + blocks ricos (527-534)
+  [BLOCO.DEEPSLATE_REDSTONE]:{ nome: 'Redstone Profundo',  solido: true, emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DEEPSLATE_LAPIS]:   { nome: 'Lápis Profundo',     solido: true, emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DEEPSLATE_EMERALD]: { nome: 'Esmeralda Profunda', solido: true, emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.BLOCO_AMETHYST_COMP]:{nome: 'Bloco Ametista Comp.',solido:true, emiteLuz: 4,  cor: 0xab47bc, lateral: 0x7b1fa2 },
+  [BLOCO.HAY_BLOCK]:         { nome: 'Feno',               solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0xa1875a },
+  [BLOCO.CHAIN]:             { nome: 'Corrente',           solido: true, emiteLuz: 0,  cor: 0x424242, lateral: 0x212121, shape: 'fence' },
+  [BLOCO.SOUL_FIRE_BLOCK]:   { nome: 'Fogo da Alma',       solido: true, emiteLuz: 10, cor: 0x40c4ff, lateral: 0x0288d1 },
+  [BLOCO.CRYSTAL_BLOCK]:     { nome: 'Bloco Cristal',      solido: true, emiteLuz: 8,  cor: 0xe1f5fe, lateral: 0xb3e5fc },
 };
 
 export const ICONE = {
@@ -2133,6 +2151,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.ACACIA_PRANCHA, q: 6}], saida: {b: BLOCO.DOOR_ACACIA, q: 3}, wb: true },
   { custos: [{i: ITEM.PRANCHAS, q: 6}], saida: {b: BLOCO.TRAPDOOR_OAK, q: 2}, wb: true },
   { custos: [{i: ITEM.PRANCHAS, q: 2}, {i: ITEM.PAU, q: 4}], saida: {b: BLOCO.FENCE_GATE_OAK, q: 1}, wb: true },
+  // Sprint 17: deepslate variantes + blocks ricos
+  { custos: [{b: BLOCO.DEEPSLATE, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.DEEPSLATE_REDSTONE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {b: BLOCO.DEEPSLATE_LAPIS, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE, q: 4}, {i: ITEM.ESMERALDA, q: 1}], saida: {b: BLOCO.DEEPSLATE_EMERALD, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AMETHYST, q: 9}], saida: {b: BLOCO.BLOCO_AMETHYST_COMP, q: 1}, wb: true },
+  { custos: [{b: BLOCO.GRAMA, q: 9}], saida: {b: BLOCO.HAY_BLOCK, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 6}], saida: {b: BLOCO.CHAIN, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SOUL_SAND, q: 1}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.SOUL_FIRE_BLOCK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AMETHYST, q: 4}, {b: BLOCO.VIDRO, q: 1}], saida: {b: BLOCO.CRYSTAL_BLOCK, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
