@@ -870,6 +870,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.SLAB_ARENITO_LISO, q: 16 });
   state.inv.adicionar({ b: BLOCO.PAREDE_ARENITO_LISO, q: 16 });
   state.inv.adicionar({ b: BLOCO.ESCADA_ARENITO_CORT, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SHULKER_BR, q: 1 });
+  state.inv.adicionar({ b: BLOCO.SHULKER_PR, q: 1 });
+  state.inv.adicionar({ b: BLOCO.SHULKER_LR, q: 1 });
+  state.inv.adicionar({ b: BLOCO.SHULKER_RS, q: 1 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_TERRACOTA_R, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_TERRACOTA_R, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAREDE_TERRACOTA_R, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_TERRACOTA_A, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

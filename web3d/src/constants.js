@@ -433,8 +433,16 @@ export const BLOCO = {
   SLAB_ARENITO_LISO:   372,
   PAREDE_ARENITO_LISO: 373,
   ESCADA_ARENITO_CORT: 374,
+  SHULKER_BR:          375,
+  SHULKER_PR:          376,
+  SHULKER_LR:          377,
+  SHULKER_RS:          378,
+  ESCADA_TERRACOTA_R:  379,
+  SLAB_TERRACOTA_R:    380,
+  PAREDE_TERRACOTA_R:  381,
+  ESCADA_TERRACOTA_A:  382,
 };
-export const N_BLOCOS = 375;
+export const N_BLOCOS = 383;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -831,6 +839,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_ARENITO_LISO]:   { nome: 'Laje Arenito Liso',   solido: true, emiteLuz: 0, cor: 0xfde2b2, lateral: 0xfde2b2, shape: 'slab' },
   [BLOCO.PAREDE_ARENITO_LISO]: { nome: 'Parede Arenito Liso', solido: true, emiteLuz: 0, cor: 0xfde2b2, lateral: 0xfde2b2, shape: 'wall' },
   [BLOCO.ESCADA_ARENITO_CORT]: { nome: 'Escada Arenito Cort.',solido: true, emiteLuz: 0, cor: 0xfdd8a0, lateral: 0xe6c389, shape: 'stairs' },
+  [BLOCO.SHULKER_BR]:          { nome: 'Shulker Branco',      solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeceff1 },
+  [BLOCO.SHULKER_PR]:          { nome: 'Shulker Preto',       solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.SHULKER_LR]:          { nome: 'Shulker Laranja',     solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.SHULKER_RS]:          { nome: 'Shulker Rosa',        solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.ESCADA_TERRACOTA_R]:  { nome: 'Escada Terracota V',  solido: true, emiteLuz: 0, cor: 0xb55a3a, lateral: 0x8b3e23, shape: 'stairs' },
+  [BLOCO.SLAB_TERRACOTA_R]:    { nome: 'Laje Terracota V',    solido: true, emiteLuz: 0, cor: 0xb55a3a, lateral: 0x8b3e23, shape: 'slab' },
+  [BLOCO.PAREDE_TERRACOTA_R]:  { nome: 'Parede Terracota V',  solido: true, emiteLuz: 0, cor: 0xb55a3a, lateral: 0x8b3e23, shape: 'wall' },
+  [BLOCO.ESCADA_TERRACOTA_A]:  { nome: 'Escada Terracota A',  solido: true, emiteLuz: 0, cor: 0x4a5e9a, lateral: 0x2c3d6c, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -1622,6 +1638,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.ARENITO_LISO, q: 3}],    saida: {b: BLOCO.SLAB_ARENITO_LISO,   q: 6}, wb: true },
   { custos: [{b: BLOCO.ARENITO_LISO, q: 6}],    saida: {b: BLOCO.PAREDE_ARENITO_LISO, q: 6}, wb: true },
   { custos: [{b: BLOCO.ARENITO_CORTADO, q: 6}], saida: {b: BLOCO.ESCADA_ARENITO_CORT, q: 4}, wb: true },
+  // 4 Shulker novas cores
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA, q: 1}],          saida: {b: BLOCO.SHULKER_BR, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_PRETA, q: 1}],    saida: {b: BLOCO.SHULKER_PR, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_LARANJA, q: 1}],  saida: {b: BLOCO.SHULKER_LR, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_ROSA, q: 1}],     saida: {b: BLOCO.SHULKER_RS, q: 1}, wb: true },
+  // 4 Variantes Terracota Vermelha + Azul
+  { custos: [{b: BLOCO.TERRACOTA_R, q: 6}], saida: {b: BLOCO.ESCADA_TERRACOTA_R, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TERRACOTA_R, q: 3}], saida: {b: BLOCO.SLAB_TERRACOTA_R,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.TERRACOTA_R, q: 6}], saida: {b: BLOCO.PAREDE_TERRACOTA_R, q: 6}, wb: true },
+  { custos: [{b: BLOCO.TERRACOTA_A, q: 6}], saida: {b: BLOCO.ESCADA_TERRACOTA_A, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 36, CELL = 32;
+  const COLS = 8, ROWS = 37, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -4350,6 +4350,10 @@ function criarAtlas() {
   pintarShulkerCor(277, '#1565c0', '#0d47a1', '#42a5f5', '#082b58');
   pintarShulkerCor(278, '#2e7d32', '#1b5e20', '#66bb6a', '#0f3a14');
   pintarShulkerCor(279, '#f9a825', '#f57f17', '#ffd54f', '#a35200');
+  pintarShulkerCor(280, '#fafafa', '#bdbdbd', '#ffffff', '#9e9e9e'); // shulker branco
+  pintarShulkerCor(281, '#424242', '#212121', '#616161', '#000000'); // shulker preto
+  pintarShulkerCor(282, '#ff9800', '#e65100', '#ffb74d', '#bf360c'); // shulker laranja
+  pintarShulkerCor(283, '#f06292', '#c2185b', '#f48fb1', '#880e4f'); // shulker rosa
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4745,6 +4749,15 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_ARENITO_LISO]    = { top: 86, side: 86, bottom: 86 };
   mapa[BLOCO.PAREDE_ARENITO_LISO]  = { top: 86, side: 86, bottom: 86 };
   mapa[BLOCO.ESCADA_ARENITO_CORT]  = { top: 87, side: 87, bottom: 87 };
+  mapa[BLOCO.SHULKER_BR]           = { top: 280, side: 280, bottom: 280 };
+  mapa[BLOCO.SHULKER_PR]           = { top: 281, side: 281, bottom: 281 };
+  mapa[BLOCO.SHULKER_LR]           = { top: 282, side: 282, bottom: 282 };
+  mapa[BLOCO.SHULKER_RS]           = { top: 283, side: 283, bottom: 283 };
+  // Variantes Terracota reusam cells 202/203
+  mapa[BLOCO.ESCADA_TERRACOTA_R]   = { top: 202, side: 202, bottom: 202 };
+  mapa[BLOCO.SLAB_TERRACOTA_R]     = { top: 202, side: 202, bottom: 202 };
+  mapa[BLOCO.PAREDE_TERRACOTA_R]   = { top: 202, side: 202, bottom: 202 };
+  mapa[BLOCO.ESCADA_TERRACOTA_A]   = { top: 203, side: 203, bottom: 203 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
