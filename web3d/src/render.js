@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 53, CELL = 32;
+  const COLS = 8, ROWS = 56, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -6455,6 +6455,31 @@ function criarAtlas() {
   pintar(417, '#f06292', '#c2185b', 0.50); // tijolos rosa
   pintar(418, '#00838f', '#006064', 0.50); // tijolos ciano
   pintar(419, '#fafafa', '#eeeeee', 0.50); // tijolos brancos
+  // Sprint 20: 24 paineis vidro + velas + bandeiras (cells 420-443)
+  pintarVidroColorido(420, '#9ccc65', '#7cb342'); // painel vidro lima
+  pintarVidroColorido(421, '#d81b60', '#ad1457'); // painel vidro magenta
+  pintarVidroColorido(422, '#6a1b9a', '#4a148c'); // painel vidro purple
+  pintarVidroColorido(423, '#4fc3f7', '#29b6f6'); // painel vidro lblue
+  pintarVidroColorido(424, '#eeeeee', '#bdbdbd'); // painel vidro lgray
+  pintarVidroColorido(425, '#6d4c41', '#4e342e'); // painel vidro brown
+  pintarVidroColorido(426, '#1b5e20', '#0d3d10'); // painel vidro verde escuro
+  pintarVidroColorido(427, '#f57f17', '#e65100'); // painel vidro amarelo escuro
+  pintarVela(428, '#66bb6a', '#388e3c'); // vela verde
+  pintarVela(429, '#fdd835', '#f57f17'); // vela amarela
+  pintarVela(430, '#f48fb1', '#ec407a'); // vela rosa
+  pintarVela(431, '#d81b60', '#ad1457'); // vela magenta
+  pintarVela(432, '#ff9800', '#e65100'); // vela laranja
+  pintarVela(433, '#ab47bc', '#6a1b9a'); // vela roxa
+  pintarVela(434, '#4dd0e1', '#00838f'); // vela ciano
+  pintarVela(435, '#9ccc65', '#7cb342'); // vela lima
+  pintar(436, '#1b5e20', '#0d3d10', 0.50); // bandeira verde escuro
+  pintar(437, '#ff9800', '#e65100', 0.50); // bandeira laranja
+  pintar(438, '#f48fb1', '#ec407a', 0.50); // bandeira rosa
+  pintar(439, '#ab47bc', '#6a1b9a', 0.50); // bandeira roxa
+  pintar(440, '#d81b60', '#ad1457', 0.50); // bandeira magenta
+  pintar(441, '#9ccc65', '#7cb342', 0.50); // bandeira lima
+  pintar(442, '#4dd0e1', '#00838f', 0.50); // bandeira ciano
+  pintar(443, '#fafafa', '#eeeeee', 0.50); // bandeira branca
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -7064,6 +7089,31 @@ function criarAtlas() {
   mapa[BLOCO.TIJOLO_ROSA_C]         = { top: 417, side: 417, bottom: 417 };
   mapa[BLOCO.TIJOLO_CIANO_C]        = { top: 418, side: 418, bottom: 418 };
   mapa[BLOCO.TIJOLO_BRANCO_C]       = { top: 419, side: 419, bottom: 419 };
+  // Sprint 20: 24 paineis vidro + velas + bandeiras (cells 420-443)
+  mapa[BLOCO.PAINEL_VIDRO_LIME]     = { top: 420, side: 420, bottom: 420 };
+  mapa[BLOCO.PAINEL_VIDRO_MAGENTA]  = { top: 421, side: 421, bottom: 421 };
+  mapa[BLOCO.PAINEL_VIDRO_PURPLE]   = { top: 422, side: 422, bottom: 422 };
+  mapa[BLOCO.PAINEL_VIDRO_LBLUE]    = { top: 423, side: 423, bottom: 423 };
+  mapa[BLOCO.PAINEL_VIDRO_LGRAY]    = { top: 424, side: 424, bottom: 424 };
+  mapa[BLOCO.PAINEL_VIDRO_BROWN]    = { top: 425, side: 425, bottom: 425 };
+  mapa[BLOCO.PAINEL_VIDRO_VERDE_E]  = { top: 426, side: 426, bottom: 426 };
+  mapa[BLOCO.PAINEL_VIDRO_AMARELO_E]= { top: 427, side: 427, bottom: 427 };
+  mapa[BLOCO.VELA_VERDE]            = { top: 428, side: 428, bottom: 428 };
+  mapa[BLOCO.VELA_AMARELA]          = { top: 429, side: 429, bottom: 429 };
+  mapa[BLOCO.VELA_ROSA]             = { top: 430, side: 430, bottom: 430 };
+  mapa[BLOCO.VELA_MAGENTA]          = { top: 431, side: 431, bottom: 431 };
+  mapa[BLOCO.VELA_LARANJA]          = { top: 432, side: 432, bottom: 432 };
+  mapa[BLOCO.VELA_ROXA]             = { top: 433, side: 433, bottom: 433 };
+  mapa[BLOCO.VELA_CIANO]            = { top: 434, side: 434, bottom: 434 };
+  mapa[BLOCO.VELA_LIME]             = { top: 435, side: 435, bottom: 435 };
+  mapa[BLOCO.BANDEIRA_VERDE_E]      = { top: 436, side: 436, bottom: 436 };
+  mapa[BLOCO.BANDEIRA_LARANJA]      = { top: 437, side: 437, bottom: 437 };
+  mapa[BLOCO.BANDEIRA_ROSA]         = { top: 438, side: 438, bottom: 438 };
+  mapa[BLOCO.BANDEIRA_ROXA]         = { top: 439, side: 439, bottom: 439 };
+  mapa[BLOCO.BANDEIRA_MAGENTA]      = { top: 440, side: 440, bottom: 440 };
+  mapa[BLOCO.BANDEIRA_LIME]         = { top: 441, side: 441, bottom: 441 };
+  mapa[BLOCO.BANDEIRA_CIANO]        = { top: 442, side: 442, bottom: 442 };
+  mapa[BLOCO.BANDEIRA_BRANCA]       = { top: 443, side: 443, bottom: 443 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

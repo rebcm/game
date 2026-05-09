@@ -643,8 +643,33 @@ export const BLOCO = {
   TIJOLO_ROSA_C:       564,
   TIJOLO_CIANO_C:      565,
   TIJOLO_BRANCO_C:     566,
+  // Sprint 20: 24 blocos — paineis vidro + velas + bandeiras coloridas (567-590)
+  PAINEL_VIDRO_LIME:   567,
+  PAINEL_VIDRO_MAGENTA:568,
+  PAINEL_VIDRO_PURPLE: 569,
+  PAINEL_VIDRO_LBLUE:  570,
+  PAINEL_VIDRO_LGRAY:  571,
+  PAINEL_VIDRO_BROWN:  572,
+  PAINEL_VIDRO_VERDE_E:573, // verde escuro
+  PAINEL_VIDRO_AMARELO_E:574, // amarelo escuro
+  VELA_VERDE:          575,
+  VELA_AMARELA:        576,
+  VELA_ROSA:           577,
+  VELA_MAGENTA:        578,
+  VELA_LARANJA:        579,
+  VELA_ROXA:           580,
+  VELA_CIANO:          581,
+  VELA_LIME:           582,
+  BANDEIRA_VERDE_E:    583,
+  BANDEIRA_LARANJA:    584,
+  BANDEIRA_ROSA:       585,
+  BANDEIRA_ROXA:       586,
+  BANDEIRA_MAGENTA:    587,
+  BANDEIRA_LIME:       588,
+  BANDEIRA_CIANO:      589,
+  BANDEIRA_BRANCA:     590,
 };
-export const N_BLOCOS = 567;
+export const N_BLOCOS = 591;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1251,6 +1276,31 @@ export const BLOCO_INFO = {
   [BLOCO.TIJOLO_ROSA_C]:     { nome: 'Tijolos Rosa',       solido: true, emiteLuz: 0,  cor: 0xf06292, lateral: 0xc2185b },
   [BLOCO.TIJOLO_CIANO_C]:    { nome: 'Tijolos Ciano',      solido: true, emiteLuz: 0,  cor: 0x00838f, lateral: 0x006064 },
   [BLOCO.TIJOLO_BRANCO_C]:   { nome: 'Tijolos Brancos',    solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
+  // Sprint 20: 24 blocos paineis+velas+bandeiras (567-590)
+  [BLOCO.PAINEL_VIDRO_LIME]:    { nome: 'Painel Vidro Lima',  solido: true, emiteLuz: 0, cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.PAINEL_VIDRO_MAGENTA]: { nome: 'Painel Vidro Magenta',solido:true, emiteLuz: 0, cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.PAINEL_VIDRO_PURPLE]:  { nome: 'Painel Vidro Roxo',  solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.PAINEL_VIDRO_LBLUE]:   { nome: 'Painel V. Azul Cl.', solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x29b6f6 },
+  [BLOCO.PAINEL_VIDRO_LGRAY]:   { nome: 'Painel V. Cinza Cl.',solido: true, emiteLuz: 0, cor: 0xeeeeee, lateral: 0xbdbdbd },
+  [BLOCO.PAINEL_VIDRO_BROWN]:   { nome: 'Painel V. Marrom',   solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.PAINEL_VIDRO_VERDE_E]: { nome: 'Painel V. Verde Esc.',solido:true, emiteLuz: 0, cor: 0x1b5e20, lateral: 0x0d3d10 },
+  [BLOCO.PAINEL_VIDRO_AMARELO_E]:{nome:'Painel V. Amar. Esc.',solido:true, emiteLuz: 0, cor: 0xf57f17, lateral: 0xe65100 },
+  [BLOCO.VELA_VERDE]:        { nome: 'Vela Verde',         solido: true, emiteLuz: 3,  cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.VELA_AMARELA]:      { nome: 'Vela Amarela',       solido: true, emiteLuz: 3,  cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.VELA_ROSA]:         { nome: 'Vela Rosa',          solido: true, emiteLuz: 3,  cor: 0xf48fb1, lateral: 0xec407a },
+  [BLOCO.VELA_MAGENTA]:      { nome: 'Vela Magenta',       solido: true, emiteLuz: 3,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.VELA_LARANJA]:      { nome: 'Vela Laranja',       solido: true, emiteLuz: 3,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.VELA_ROXA]:         { nome: 'Vela Roxa',          solido: true, emiteLuz: 3,  cor: 0xab47bc, lateral: 0x6a1b9a },
+  [BLOCO.VELA_CIANO]:        { nome: 'Vela Ciano',         solido: true, emiteLuz: 3,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.VELA_LIME]:         { nome: 'Vela Lima',          solido: true, emiteLuz: 3,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.BANDEIRA_VERDE_E]:  { nome: 'Bandeira Verde Esc.',solido: true, emiteLuz: 0,  cor: 0x1b5e20, lateral: 0x0d3d10 },
+  [BLOCO.BANDEIRA_LARANJA]:  { nome: 'Bandeira Laranja',   solido: true, emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.BANDEIRA_ROSA]:     { nome: 'Bandeira Rosa',      solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xec407a },
+  [BLOCO.BANDEIRA_ROXA]:     { nome: 'Bandeira Roxa',      solido: true, emiteLuz: 0,  cor: 0xab47bc, lateral: 0x6a1b9a },
+  [BLOCO.BANDEIRA_MAGENTA]:  { nome: 'Bandeira Magenta',   solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.BANDEIRA_LIME]:     { nome: 'Bandeira Lima',      solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.BANDEIRA_CIANO]:    { nome: 'Bandeira Ciano',     solido: true, emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.BANDEIRA_BRANCA]:   { nome: 'Bandeira Branca',    solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
 };
 
 export const ICONE = {
