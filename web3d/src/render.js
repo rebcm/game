@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 35, CELL = 32;
+  const COLS = 8, ROWS = 36, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1448,6 +1448,33 @@ function criarAtlas() {
     ctx.fillRect(x0 + 14, y0 + 12, 4, 8);
     ctx.fillStyle = '#FFD700';
     ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+  }
+
+  // Shulker Box colorido (genérico): cor base + placas escamares + bordas
+  function pintarShulkerCor(idx, base, escuro, claro, borda) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = escuro;
+    for (let by = 0; by < CELL; by += 8) {
+      for (let bx = 0; bx < CELL; bx += 8) {
+        ctx.fillRect(x0 + bx, y0 + by, 7, 1);
+        ctx.fillRect(x0 + bx, y0 + by, 1, 7);
+      }
+    }
+    ctx.fillStyle = claro;
+    for (let by = 2; by < CELL; by += 8) {
+      for (let bx = 2; bx < CELL; bx += 8) {
+        ctx.fillRect(x0 + bx, y0 + by, 2, 2);
+      }
+    }
+    ctx.fillStyle = borda;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Shulker Box: roxo com padrão de placas/escamas
@@ -4318,6 +4345,11 @@ function criarAtlas() {
   pintarShulkerBox(273);                                            // shulker box
   pintarAnvilDamaged(274);                                          // anvil damaged
   pintarDecoratedPot(275);                                          // decorated pot
+  // 4 Shulker coloridos (cells 276-279)
+  pintarShulkerCor(276, '#c62828', '#8b0000', '#ef5350', '#5d1212');
+  pintarShulkerCor(277, '#1565c0', '#0d47a1', '#42a5f5', '#082b58');
+  pintarShulkerCor(278, '#2e7d32', '#1b5e20', '#66bb6a', '#0f3a14');
+  pintarShulkerCor(279, '#f9a825', '#f57f17', '#ffd54f', '#a35200');
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4704,6 +4736,15 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_PRISMARINE]      = { top: 128, side: 128, bottom: 128 };
   mapa[BLOCO.SLAB_PRISMARINE_BRK]  = { top: 129, side: 129, bottom: 129 };
   mapa[BLOCO.PAREDE_PRISMARINE]    = { top: 128, side: 128, bottom: 128 };
+  mapa[BLOCO.SHULKER_R]            = { top: 276, side: 276, bottom: 276 };
+  mapa[BLOCO.SHULKER_A]            = { top: 277, side: 277, bottom: 277 };
+  mapa[BLOCO.SHULKER_V]            = { top: 278, side: 278, bottom: 278 };
+  mapa[BLOCO.SHULKER_AM]           = { top: 279, side: 279, bottom: 279 };
+  // Variantes Arenito reusam cells 86 (liso) e 87 (cortado)
+  mapa[BLOCO.ESCADA_ARENITO_LISO]  = { top: 86, side: 86, bottom: 86 };
+  mapa[BLOCO.SLAB_ARENITO_LISO]    = { top: 86, side: 86, bottom: 86 };
+  mapa[BLOCO.PAREDE_ARENITO_LISO]  = { top: 86, side: 86, bottom: 86 };
+  mapa[BLOCO.ESCADA_ARENITO_CORT]  = { top: 87, side: 87, bottom: 87 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

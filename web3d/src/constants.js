@@ -425,8 +425,16 @@ export const BLOCO = {
   SLAB_PRISMARINE:     364,
   SLAB_PRISMARINE_BRK: 365,
   PAREDE_PRISMARINE:   366,
+  SHULKER_R:           367,
+  SHULKER_A:           368,
+  SHULKER_V:           369,
+  SHULKER_AM:          370,
+  ESCADA_ARENITO_LISO: 371,
+  SLAB_ARENITO_LISO:   372,
+  PAREDE_ARENITO_LISO: 373,
+  ESCADA_ARENITO_CORT: 374,
 };
-export const N_BLOCOS = 367;
+export const N_BLOCOS = 375;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -815,6 +823,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_PRISMARINE]:     { nome: 'Laje Prismarine',     solido: true,emiteLuz: 0, cor: 0x4db6ac, lateral: 0x00897b, shape: 'slab' },
   [BLOCO.SLAB_PRISMARINE_BRK]: { nome: 'Laje Prismarine Brk', solido: true,emiteLuz: 0, cor: 0x009688, lateral: 0x00695c, shape: 'slab' },
   [BLOCO.PAREDE_PRISMARINE]:   { nome: 'Parede Prismarine',   solido: true,emiteLuz: 0, cor: 0x4db6ac, lateral: 0x00897b, shape: 'wall' },
+  [BLOCO.SHULKER_R]:           { nome: 'Shulker Vermelho',    solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.SHULKER_A]:           { nome: 'Shulker Azul',        solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.SHULKER_V]:           { nome: 'Shulker Verde',       solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.SHULKER_AM]:          { nome: 'Shulker Amarelo',     solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.ESCADA_ARENITO_LISO]: { nome: 'Escada Arenito Liso', solido: true, emiteLuz: 0, cor: 0xfde2b2, lateral: 0xfde2b2, shape: 'stairs' },
+  [BLOCO.SLAB_ARENITO_LISO]:   { nome: 'Laje Arenito Liso',   solido: true, emiteLuz: 0, cor: 0xfde2b2, lateral: 0xfde2b2, shape: 'slab' },
+  [BLOCO.PAREDE_ARENITO_LISO]: { nome: 'Parede Arenito Liso', solido: true, emiteLuz: 0, cor: 0xfde2b2, lateral: 0xfde2b2, shape: 'wall' },
+  [BLOCO.ESCADA_ARENITO_CORT]: { nome: 'Escada Arenito Cort.',solido: true, emiteLuz: 0, cor: 0xfdd8a0, lateral: 0xe6c389, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -1596,6 +1612,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PRISMARINE, q: 3}],     saida: {b: BLOCO.SLAB_PRISMARINE,       q: 6}, wb: true },
   { custos: [{b: BLOCO.PRISMARINE_BRK, q: 3}], saida: {b: BLOCO.SLAB_PRISMARINE_BRK,   q: 6}, wb: true },
   { custos: [{b: BLOCO.PRISMARINE, q: 6}],     saida: {b: BLOCO.PAREDE_PRISMARINE,     q: 6}, wb: true },
+  // 4 Shulker coloridos: 1 shulker base + 1 lã colorida
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.SHULKER_R,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_AZUL, q: 1}],     saida: {b: BLOCO.SHULKER_A,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_VERDE, q: 1}],    saida: {b: BLOCO.SHULKER_V,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.SHULKER_BOX, q: 1}, {b: BLOCO.LA_AMARELA, q: 1}],  saida: {b: BLOCO.SHULKER_AM, q: 1}, wb: true },
+  // 4 Variantes Arenito Liso/Cortado
+  { custos: [{b: BLOCO.ARENITO_LISO, q: 6}],    saida: {b: BLOCO.ESCADA_ARENITO_LISO, q: 4}, wb: true },
+  { custos: [{b: BLOCO.ARENITO_LISO, q: 3}],    saida: {b: BLOCO.SLAB_ARENITO_LISO,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.ARENITO_LISO, q: 6}],    saida: {b: BLOCO.PAREDE_ARENITO_LISO, q: 6}, wb: true },
+  { custos: [{b: BLOCO.ARENITO_CORTADO, q: 6}], saida: {b: BLOCO.ESCADA_ARENITO_CORT, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
