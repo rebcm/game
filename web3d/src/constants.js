@@ -711,8 +711,17 @@ export const BLOCO = {
   DOOR_MANGROVE:       667, DOOR_CHERRY:         668, TRAPDOOR_BIRCH:      669, TRAPDOOR_SPRUCE:     670,
   TRAPDOOR_ACACIA:     671, TRAPDOOR_JUNGLE:     672, TRAPDOOR_DARK:       673, FENCE_GATE_BIRCH:    674,
   FENCE_GATE_SPRUCE:   675, FENCE_GATE_ACACIA:   676, FENCE_GATE_JUNGLE:   677, FENCE_GATE_DARK:     678,
+  // Sprint 24: 32 blocos — ladders + paredes/slabs/escadas pedras (679-710)
+  LADDER_BIRCH:        679, LADDER_SPRUCE:       680, LADDER_ACACIA:       681, LADDER_JUNGLE:       682,
+  LADDER_DARK:         683, LADDER_CHERRY:       684, LADDER_MANGROVE:     685, LADDER_MUDA:         686,
+  PAREDE_DEEPSLATE:    687, PAREDE_TUFF:         688, PAREDE_CALCITE:      689, PAREDE_DRIPSTONE:    690,
+  PAREDE_END_STONE:    691, PAREDE_PURPUR_PIL:   692, PAREDE_NETHER_BR:    693, PAREDE_QUARTZO_POL:  694,
+  SLAB_DEEPSLATE_POL:  695, SLAB_TUFF:           696, SLAB_DRIPSTONE:      697, SLAB_END_STONE:      698,
+  SLAB_NETHERRACK:     699, SLAB_BLACKSTONE_C:   700, SLAB_DEEPSLATE_C:    701, SLAB_QUARTZO_C:      702,
+  ESCADA_TUFF:         703, ESCADA_CALCITE:      704, ESCADA_DRIPSTONE:    705, ESCADA_END_STONE_C:  706,
+  ESCADA_NETHERRACK:   707, ESCADA_PURPUR_PIL2:  708, ESCADA_DEEPSLATE_C:  709, ESCADA_TIJOLO_NETHER:710,
 };
-export const N_BLOCOS = 679;
+export const N_BLOCOS = 711;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1435,6 +1444,39 @@ export const BLOCO_INFO = {
   [BLOCO.FENCE_GATE_ACACIA]:    { nome: 'Portão Acácia',         solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'fence' },
   [BLOCO.FENCE_GATE_JUNGLE]:    { nome: 'Portão Selva',          solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
   [BLOCO.FENCE_GATE_DARK]:      { nome: 'Portão Carv.Esc.',      solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'fence' },
+  // Sprint 24: 32 blocos ladders + paredes/slabs/escadas pedras (679-710)
+  [BLOCO.LADDER_BIRCH]:         { nome: 'Escada Bétula',         solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'ladder' },
+  [BLOCO.LADDER_SPRUCE]:        { nome: 'Escada Pinheiro',       solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'ladder' },
+  [BLOCO.LADDER_ACACIA]:        { nome: 'Escada Acácia',         solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'ladder' },
+  [BLOCO.LADDER_JUNGLE]:        { nome: 'Escada Selva',          solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'ladder' },
+  [BLOCO.LADDER_DARK]:          { nome: 'Escada Carv.Esc.',      solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'ladder' },
+  [BLOCO.LADDER_CHERRY]:        { nome: 'Escada Cerejeira',      solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'ladder' },
+  [BLOCO.LADDER_MANGROVE]:      { nome: 'Escada Mangrove',       solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'ladder' },
+  [BLOCO.LADDER_MUDA]:          { nome: 'Escada Lama',           solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'ladder' },
+  [BLOCO.PAREDE_DEEPSLATE]:     { nome: 'Parede Deepslate',      solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'wall' },
+  [BLOCO.PAREDE_TUFF]:          { nome: 'Parede Tuff',           solido: true, emiteLuz: 0, cor: 0x707070, lateral: 0x505050, shape: 'wall' },
+  [BLOCO.PAREDE_CALCITE]:       { nome: 'Parede Calcita',        solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbcaaa4, shape: 'wall' },
+  [BLOCO.PAREDE_DRIPSTONE]:     { nome: 'Parede Dripstone',      solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x5d4037, shape: 'wall' },
+  [BLOCO.PAREDE_END_STONE]:     { nome: 'Parede End Stone',      solido: true, emiteLuz: 0, cor: 0xfff59d, lateral: 0xfff176, shape: 'wall' },
+  [BLOCO.PAREDE_PURPUR_PIL]:    { nome: 'Parede Purpur Pilar',   solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'wall' },
+  [BLOCO.PAREDE_NETHER_BR]:     { nome: 'Parede Nether Br.',     solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'wall' },
+  [BLOCO.PAREDE_QUARTZO_POL]:   { nome: 'Parede Quartzo Pol.',   solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'wall' },
+  [BLOCO.SLAB_DEEPSLATE_POL]:   { nome: 'Laje DS Polido',        solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
+  [BLOCO.SLAB_TUFF]:            { nome: 'Laje Tuff',             solido: true, emiteLuz: 0, cor: 0x707070, lateral: 0x505050, shape: 'slab' },
+  [BLOCO.SLAB_DRIPSTONE]:       { nome: 'Laje Dripstone',        solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x5d4037, shape: 'slab' },
+  [BLOCO.SLAB_END_STONE]:       { nome: 'Laje End Stone',        solido: true, emiteLuz: 0, cor: 0xfff59d, lateral: 0xfff176, shape: 'slab' },
+  [BLOCO.SLAB_NETHERRACK]:      { nome: 'Laje Netherrack',       solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'slab' },
+  [BLOCO.SLAB_BLACKSTONE_C]:    { nome: 'Laje Blackstone C.',    solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'slab' },
+  [BLOCO.SLAB_DEEPSLATE_C]:     { nome: 'Laje Deepslate C.',     solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
+  [BLOCO.SLAB_QUARTZO_C]:       { nome: 'Laje Quartzo C.',       solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.ESCADA_TUFF]:          { nome: 'Escada Tuff',           solido: true, emiteLuz: 0, cor: 0x707070, lateral: 0x505050, shape: 'stairs' },
+  [BLOCO.ESCADA_CALCITE]:       { nome: 'Escada Calcita',        solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbcaaa4, shape: 'stairs' },
+  [BLOCO.ESCADA_DRIPSTONE]:     { nome: 'Escada Dripstone',      solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x5d4037, shape: 'stairs' },
+  [BLOCO.ESCADA_END_STONE_C]:   { nome: 'Escada End Stone',      solido: true, emiteLuz: 0, cor: 0xfff59d, lateral: 0xfff176, shape: 'stairs' },
+  [BLOCO.ESCADA_NETHERRACK]:    { nome: 'Escada Netherrack',     solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'stairs' },
+  [BLOCO.ESCADA_PURPUR_PIL2]:   { nome: 'Escada Purpur Pilar2',  solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'stairs' },
+  [BLOCO.ESCADA_DEEPSLATE_C]:   { nome: 'Escada Deepslate C.',   solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'stairs' },
+  [BLOCO.ESCADA_TIJOLO_NETHER]: { nome: 'Escada Tij. Nether',    solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0x2d1010, shape: 'stairs' },
 };
 
 export const ICONE = {
