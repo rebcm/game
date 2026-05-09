@@ -72,23 +72,19 @@ function criarAtlas() {
     }
   }
 
-  // SPRINT VISUAL-2: Helpers PREMIUM para qualidade superior ao Minecraft
-  // Adiciona bevel sutil + AO sombreado + highlight em bordas
+  // SPRINT VISUAL-2 (revisado): Helpers PREMIUM estilo Minecraft autêntico
+  // FIX: removido highlight branco (causava aspecto "prateado/metálico").
+  // Agora só usa SOMBRA escura nas bordas BOTTOM-RIGHT (paridade Minecraft real).
+  // O Minecraft NÃO usa highlight branco — só vertex AO + sombra natural.
   function _aplicarBevelPremium(x0, y0, corClaro, corEscuro, intensidade = 1.0) {
-    // Highlight nas bordas TOP-LEFT (1px translucido)
-    const alpha = (intensidade * 0.35).toFixed(2);
-    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-    ctx.fillRect(x0, y0, CELL, 1);                      // top edge
-    ctx.fillRect(x0, y0, 1, CELL);                      // left edge
-    // Sombra AO nas bordas BOTTOM-RIGHT (1-2px)
-    ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+    // Sombra AO nas bordas BOTTOM-RIGHT — sutil, escura (não branca!)
+    const sombraAlpha = (intensidade * 0.18).toFixed(2);
+    ctx.fillStyle = `rgba(0,0,0,${sombraAlpha})`;
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);          // bottom edge
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);          // right edge
-    // Cantos com sombra mais profunda (corner shading premium)
-    ctx.fillStyle = `rgba(0,0,0,${(intensidade * 0.20).toFixed(2)})`;
+    // Cantos com sombra mais profunda (corner AO)
+    ctx.fillStyle = `rgba(0,0,0,${(intensidade * 0.10).toFixed(2)})`;
     ctx.fillRect(x0 + CELL - 2, y0 + CELL - 2, 1, 1);
-    ctx.fillRect(x0 + CELL - 3, y0 + CELL - 1, 1, 1);
-    ctx.fillRect(x0 + CELL - 1, y0 + CELL - 3, 1, 1);
   }
   // Pinta block PREMIUM com gradient vertical + bevel + ruído tonal
   function pintarPremium(idx, corClaro, corEscuro, corRuido = null, intensidade = 1.0) {
@@ -6327,8 +6323,9 @@ function criarAtlas() {
   pintarGramaTopo(0);                     // grama topo (4 tons + flores ocasionais)
   pintarGramaLado(1);                     // grama lado (terra + faixa verde)
   // SPRINT VISUAL-2: Premium reskin de blocos principais
-  pintarPremium(2, '#9c7044', '#5d3e25', '#6B4A2D', 0.6); // terra premium (gradient + ruído)
-  pintarPedraPremium(3, '#7E7E7E', '#5E5E5E', '#a0a0a0', 0.35); // pedra premium
+  // FIX paleta MC autêntica: cores warm/saturadas (não cinza-prateado)
+  pintarPremium(2, '#8b6240', '#4d3520', '#6e4d2e', 0.7);     // terra MC warm brown
+  pintarPedraPremium(3, '#7c7c7c', '#525252', '#888888', 0.30); // pedra MC neutral gray (não tão claro)
   pintarAreia(4);                          // areia (dunas + grãos visíveis)
   pintarMadeiraTopo(5);                   // madeira topo (anéis)
   pintarMadeiraLado(6);                   // madeira lado (grain VERTICAL)
@@ -6338,7 +6335,7 @@ function criarAtlas() {
   pintarOuro(10);                          // ouro (clusters metálicos)
   pintarGemPremium(11, '#5e5e5e', '#5DD9F1', '#ffffff'); // diamante premium (cristais brilhantes)
   pintarGlowstone(12);                    // luz/glowstone (amarelo brilhante)
-  pintarPremium(13, '#FFFFFF', '#D8E2EF', '#a8b8d0', 0.5); // neve premium (gradient azul sutil)
+  pintarPremium(13, '#fafafa', '#e0e8f0', '#cfd8e0', 0.3);   // neve MC autêntica (sem azul exagerado)
   pintarCarvao(14);                        // carvão (clusters L pretos com highlight)
   pintarFerro(15);                         // ferro (clusters tan com oxidação)
   pintarCacto(16);                        // cacto (cannelura vertical)
@@ -8054,8 +8051,10 @@ export class Renderer {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatio));
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.15; // VISUAL-1: levemente mais brilhante
+    // FIX prateado: ACES dessatura cores → trocar pra NoToneMapping pra paleta Minecraft autêntica
+    // Linear/None preserva saturação das texturas pixeladas
+    this.renderer.toneMapping = THREE.NoToneMapping;
+    this.renderer.toneMappingExposure = 1.0; // exposure neutro
     // SPRINT VISUAL-1: SKY DOME PREMIUM com gradient horizon→zenith
     // Substitui background sólido por skydome gigante com shader gradient
     try {
@@ -8126,14 +8125,16 @@ export class Renderer {
     // com vertex color próximo a 1.0 isso fazia o chão parecer espelhado.
     // A iluminação 15 níveis (sky+block) já está baked no vertex color,
     // então as luzes globais só precisam dar um leve "preenchimento".
-    this.hemi = new THREE.HemisphereLight(0xbcd8ff, 0x6b5a3f, 0.35);
+    // FIX prateado: cores warm em hemisphere (céu-azul + chão-quente Minecraft-like)
+    this.hemi = new THREE.HemisphereLight(0xa0c4e8, 0x665038, 0.30);
     this.scene.add(this.hemi);
-    this.ambient = new THREE.AmbientLight(0xffffff, 0.18);
+    this.ambient = new THREE.AmbientLight(0xffffff, 0.15);
     this.scene.add(this.ambient);
-    this.sol = new THREE.DirectionalLight(0xffffff, 0.35);
+    // Sol cor amarelo-creme (não branco puro = não prateado)
+    this.sol = new THREE.DirectionalLight(0xfff4d6, 0.30);
     this.sol.position.set(40, 80, 30);
     this.scene.add(this.sol);
-    this.luaLuz = new THREE.DirectionalLight(0xc0d0ff, 0.0);
+    this.luaLuz = new THREE.DirectionalLight(0xb8c4e0, 0.0);
     this.luaLuz.position.set(-40, 80, -30);
     this.scene.add(this.luaLuz);
 
@@ -8153,23 +8154,23 @@ export class Renderer {
         this.composer.setPixelRatio(this.renderer.getPixelRatio());
         const renderPass = new RenderPass(this.scene, this.camera);
         this.composer.addPass(renderPass);
-        // UnrealBloom: strength, radius, threshold
+        // FIX prateado: Bloom MUITO mais sutil — só blocos REALMENTE luminosos brilham
         const bloom = new UnrealBloomPass(
           new THREE.Vector2(window.innerWidth, window.innerHeight),
-          0.55,  // strength: bloom intensity
-          0.6,   // radius: bloom spread
-          0.78,  // threshold: só pixels acima brilham
+          0.30,  // strength: bloom intensity (era 0.55 — agora sutil)
+          0.4,   // radius: bloom spread (mais focado)
+          0.92,  // threshold: bem alto, só LUZ verdadeira (lava, glowstone, beacon)
         );
         this.composer.addPass(bloom);
         this.bloomPass = bloom;
-        // Vignette + Color Grading custom shader
+        // FIX prateado: Saturação MAIOR + contraste forte = paleta MC autêntica
         const vignetteShader = {
           uniforms: {
             tDiffuse: { value: null },
-            offset: { value: 0.85 },
-            darkness: { value: 0.65 },
-            saturation: { value: 1.10 },
-            contrast: { value: 1.05 },
+            offset: { value: 0.95 },          // vignette mais sutil (1.0 = sem vignette)
+            darkness: { value: 0.35 },        // muito mais leve (era 0.65)
+            saturation: { value: 1.18 },      // MAIS saturado (cores Minecraft vibrantes)
+            contrast: { value: 1.08 },        // contraste levemente alto
           },
           vertexShader: `
             varying vec2 vUv;
