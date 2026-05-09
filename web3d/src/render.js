@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 12, CELL = 32;
+  const COLS = 8, ROWS = 13, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,139 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Soul Sand: marrom escuro com 3 faces tristes (almas presas no Nether)
+  function pintarSoulSand(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#4e342e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído escuro distribuído
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#3e2723', 0.40, 4, 2, idx * 9301 + 49297);
+    // 3 "rostos" tristes pequenos (ovais com olhos + boca)
+    const faces = [{ x: 6, y: 4 }, { x: 18, y: 14 }, { x: 8, y: 22 }];
+    for (const f of faces) {
+      // Cabeça oval marrom-claro
+      ctx.fillStyle = '#6d4c41';
+      ctx.fillRect(x0 + f.x, y0 + f.y, 7, 6);
+      // 2 olhos pretos
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(x0 + f.x + 1, y0 + f.y + 2, 1, 1);
+      ctx.fillRect(x0 + f.x + 5, y0 + f.y + 2, 1, 1);
+      // Boca triste (linha curva pra baixo)
+      ctx.fillRect(x0 + f.x + 2, y0 + f.y + 4, 3, 1);
+    }
+  }
+
+  // Soul Soil: marrom muito escuro com textura terrosa + manchas roxas
+  function pintarSoulSoil(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#2e1810', 0.55, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5d4037', 0.30, 5, 1, seed + 4441);
+    // Manchas roxas sutis (alma residual)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6a1b9a', 0.10, 6, 1, seed + 7331);
+  }
+
+  // Crimson/Warped Stem: tronco com casca colorida
+  function pintarStem(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Linhas verticais (grão da madeira nether)
+    ctx.fillStyle = escuro;
+    for (let px = 3; px < CELL; px += 5) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Anéis horizontais (nodosidades)
+    ctx.fillStyle = claro;
+    for (let py = 6; py < CELL; py += 10) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    // Pontos brilhantes (suco/seiva)
+    spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.20, 5, 2, idx * 9301 + 49297);
+  }
+
+  // Blackstone: pedra preta com ruído cinza-escuro
+  function pintarBlackstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#0a0a0a', 0.45, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#3a3a3a', 0.30, 5, 1, seed + 4441);
+    // Veios dourados ocasionais (gilded blackstone)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#FFD700', 0.05, 8, 1, seed + 7331);
+  }
+
+  // Deepslate: cinza-escuro com listras verticais (textura de ardósia)
+  function pintarDeepslate(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#4a4a52';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais finas (ardósia natural)
+    ctx.fillStyle = '#35353d';
+    for (let px = 2; px < CELL; px += 4) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Highlights claros entre as listras
+    ctx.fillStyle = '#5a5a62';
+    for (let px = 4; px < CELL; px += 4) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Ruído sutil
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#2a2a32', 0.30, 4, 2, idx * 9301 + 49297);
+  }
+
+  // Amethyst: cristal roxo com facetas + brilhos
+  function pintarAmethyst(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base roxa
+    ctx.fillStyle = '#7b1fa2';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Facetas roxas claras (cristais grandes)
+    ctx.fillStyle = '#ab47bc';
+    ctx.fillRect(x0 + 4,  y0 + 4,  10, 10);
+    ctx.fillRect(x0 + 18, y0 + 4,  10, 10);
+    ctx.fillRect(x0 + 4,  y0 + 18, 10, 10);
+    ctx.fillRect(x0 + 18, y0 + 18, 10, 10);
+    // Centros brilhantes
+    ctx.fillStyle = '#e1bee7';
+    ctx.fillRect(x0 + 7,  y0 + 7,  4, 4);
+    ctx.fillRect(x0 + 21, y0 + 7,  4, 4);
+    ctx.fillRect(x0 + 7,  y0 + 21, 4, 4);
+    ctx.fillRect(x0 + 21, y0 + 21, 4, 4);
+    // Highlights brancos
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 8,  y0 + 8,  1, 1);
+    ctx.fillRect(x0 + 22, y0 + 8,  1, 1);
+    ctx.fillRect(x0 + 8,  y0 + 22, 1, 1);
+    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
+  }
+
+  // Calcite: branca quase pura com pontinhos cinza
+  function pintarCalcite(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#eceff1';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#cfd8dc', 0.45, 4, 2, idx * 9301 + 49297);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.30, 5, 1, idx * 9301 + 7331);
   }
 
   // Gelo: azul claro cristalino com reflexos brancos diagonais
@@ -2088,6 +2221,14 @@ function criarAtlas() {
   pintarGelo(93, '#40c4ff', '#ffffff', '#0288d1', 1.2);      // gelo azul intenso
   pintarBasalto(94, false);                                  // basalto natural
   pintarBasalto(95, true);                                   // basalto polido
+  pintarSoulSand(96);                                        // areia das almas
+  pintarSoulSoil(97);                                        // terra das almas
+  pintarStem(98,  '#8a3a4d', '#5d2535', '#a85065');          // crimson stem
+  pintarStem(99,  '#2c8a8a', '#1d5d5d', '#4cb8b8');          // warped stem
+  pintarBlackstone(100);                                     // blackstone
+  pintarDeepslate(101);                                      // deepslate
+  pintarAmethyst(102);                                       // amethyst
+  pintarCalcite(103);                                        // calcite
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2189,6 +2330,14 @@ function criarAtlas() {
   mapa[BLOCO.GELO_AZUL]      = { top: 93, side: 93, bottom: 93 };
   mapa[BLOCO.BASALTO]        = { top: 94, side: 94, bottom: 94 };
   mapa[BLOCO.BASALTO_POLIDO] = { top: 95, side: 95, bottom: 95 };
+  mapa[BLOCO.SOUL_SAND]      = { top: 96, side: 96, bottom: 96 };
+  mapa[BLOCO.SOUL_SOIL]      = { top: 97, side: 97, bottom: 97 };
+  mapa[BLOCO.CRIMSON_STEM]   = { top: 98, side: 98, bottom: 98 };
+  mapa[BLOCO.WARPED_STEM]    = { top: 99, side: 99, bottom: 99 };
+  mapa[BLOCO.BLACKSTONE]     = { top: 100, side: 100, bottom: 100 };
+  mapa[BLOCO.DEEPSLATE]      = { top: 101, side: 101, bottom: 101 };
+  mapa[BLOCO.AMETHYST]       = { top: 102, side: 102, bottom: 102 };
+  mapa[BLOCO.CALCITE]        = { top: 103, side: 103, bottom: 103 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

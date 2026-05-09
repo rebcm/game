@@ -490,12 +490,17 @@ function raycastBloco(world, origem, dir, alc) {
     else if (tMaxY < tMaxZ)              { y += stepY; t = tMaxY; tMaxY += tDeltaY; face = 'y'; }
     else                                 { z += stepZ; t = tMaxZ; tMaxZ += tDeltaZ; face = 'z'; }
     const b = world.get(x, y, z);
-    if (BLOCO_INFO[b].solido && b !== BLOCO.AR) {
-      const adj = { x, y, z };
-      if (face === 'x') adj.x -= stepX;
-      else if (face === 'y') adj.y -= stepY;
-      else                   adj.z -= stepZ;
-      return { hit: { x, y, z, b }, adj };
+    if (b !== BLOCO.AR) {
+      // Mira em qualquer bloco não-ar: sólidos OU shape custom (torch,
+      // ladder, etc) — usuário precisa quebrar tocha mesmo sendo solido:false
+      const info = BLOCO_INFO[b];
+      if (info.solido || info.shape) {
+        const adj = { x, y, z };
+        if (face === 'x') adj.x -= stepX;
+        else if (face === 'y') adj.y -= stepY;
+        else                   adj.z -= stepZ;
+        return { hit: { x, y, z, b }, adj };
+      }
     }
   }
   return null;
@@ -579,6 +584,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.GELO_AZUL, q: 4 });
   state.inv.adicionar({ b: BLOCO.BASALTO, q: 16 });
   state.inv.adicionar({ b: BLOCO.BASALTO_POLIDO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SOUL_SAND, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SOUL_SOIL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CRIMSON_STEM, q: 16 });
+  state.inv.adicionar({ b: BLOCO.WARPED_STEM, q: 16 });
+  state.inv.adicionar({ b: BLOCO.BLACKSTONE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.AMETHYST, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CALCITE, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });
@@ -986,7 +999,14 @@ function loop(now) {
         Save.incrementarStat('blocksBroken');
         state.world.set(t.x, t.y, t.z, BLOCO.AR);
         // Cascateia areia que estava em cima do bloco removido (gravity)
-        state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
+        // + tochas/velas sem apoio caem (paridade MC) — dropam o item.
+        const cairam = state.world.aplicarGravidadeBlocos(t.x, t.y, t.z);
+        if (cairam && cairam.length) {
+          for (const c of cairam) {
+            if (state.player.modo === 'creative') state.inv.adicionar({ b: c.b, q: 1 });
+            else spawnItemDrop({ b: c.b, q: 1 }, c.x + 0.5, c.y + 0.4, c.z + 0.5);
+          }
+        }
         // Se foi madeira, agenda decay das folhas órfãs em volta
         if (blocoQuebrado === BLOCO.MADEIRA) {
           state.world.iniciarDecayFolhas(t.x, t.y, t.z);

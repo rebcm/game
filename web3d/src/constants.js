@@ -135,8 +135,16 @@ export const BLOCO = {
   GELO_AZUL:      94, // blue ice (intenso)
   BASALTO:        95, // basalto: rocha vulcânica escura
   BASALTO_POLIDO: 96, // basalto polido (smooth)
+  SOUL_SAND:      97, // areia das almas (nether, faces tristes)
+  SOUL_SOIL:      98, // terra das almas (nether, marrom-escuro)
+  CRIMSON_STEM:   99, // tronco crimson (vermelho-rosa)
+  WARPED_STEM:   100, // tronco warped (ciano-turquesa)
+  BLACKSTONE:    101, // pedra preta vulcânica
+  DEEPSLATE:     102, // ardósia profunda (cinza-escuro Y<0)
+  AMETHYST:      103, // ametista (cristal roxo)
+  CALCITE:       104, // calcita (branca lisa)
 };
-export const N_BLOCOS = 97;
+export const N_BLOCOS = 105;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -242,6 +250,14 @@ export const BLOCO_INFO = {
   [BLOCO.GELO_AZUL]:     { nome: 'Gelo Azul',        solido: true,  emiteLuz: 1,  cor: 0x40c4ff, lateral: 0x0288d1 },
   [BLOCO.BASALTO]:       { nome: 'Basalto',          solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x2a2a2a },
   [BLOCO.BASALTO_POLIDO]:{ nome: 'Basalto Polido',   solido: true,  emiteLuz: 0,  cor: 0x5a5a5a, lateral: 0x3a3a3a },
+  [BLOCO.SOUL_SAND]:     { nome: 'Areia das Almas',  solido: true,  emiteLuz: 0,  cor: 0x4e342e, lateral: 0x3e2723 },
+  [BLOCO.SOUL_SOIL]:     { nome: 'Terra das Almas',  solido: true,  emiteLuz: 0,  cor: 0x3e2723, lateral: 0x2e1810 },
+  [BLOCO.CRIMSON_STEM]:  { nome: 'Caule Crimson',    solido: true,  emiteLuz: 0,  cor: 0x8a3a4d, lateral: 0x5d2535 },
+  [BLOCO.WARPED_STEM]:   { nome: 'Caule Warped',     solido: true,  emiteLuz: 0,  cor: 0x2c8a8a, lateral: 0x1d5d5d },
+  [BLOCO.BLACKSTONE]:    { nome: 'Pedra Negra',      solido: true,  emiteLuz: 0,  cor: 0x1a1a1a, lateral: 0x0a0a0a },
+  [BLOCO.DEEPSLATE]:     { nome: 'Ardósia',          solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.AMETHYST]:      { nome: 'Ametista',         solido: true,  emiteLuz: 4,  cor: 0xab47bc, lateral: 0x7b1fa2 },
+  [BLOCO.CALCITE]:       { nome: 'Calcita',          solido: true,  emiteLuz: 0,  cor: 0xeceff1, lateral: 0xcfd8dc },
 };
 
 export const ICONE = {
@@ -507,6 +523,22 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.BASALTO, q: 4}, wb: true },
   // Basalto Polido: 4 basalto → 4 polido
   { custos: [{b: BLOCO.BASALTO, q: 4}], saida: {b: BLOCO.BASALTO_POLIDO, q: 4}, wb: true },
+  // Soul Sand: 1 areia + 1 carvão (proxy de soul sand do Nether)
+  { custos: [{b: BLOCO.AREIA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.SOUL_SAND, q: 1}, wb: false },
+  // Soul Soil: 1 terra + 1 carvão
+  { custos: [{b: BLOCO.TERRA, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.SOUL_SOIL, q: 1}, wb: false },
+  // Crimson Stem: 4 madeira + 1 tijolo (proxy)
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.TIJOLO, q: 1}], saida: {b: BLOCO.CRIMSON_STEM, q: 4}, wb: true },
+  // Warped Stem: 4 madeira + 1 lápis (proxy)
+  { custos: [{b: BLOCO.MADEIRA, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {b: BLOCO.WARPED_STEM, q: 4}, wb: true },
+  // Blackstone: 4 obsidiana → 4 blackstone
+  { custos: [{b: BLOCO.OBSIDIANA, q: 4}], saida: {b: BLOCO.BLACKSTONE, q: 4}, wb: true },
+  // Deepslate: 4 pedra + 1 carvão → 4 deepslate (proxy)
+  { custos: [{b: BLOCO.PEDRA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.DEEPSLATE, q: 4}, wb: true },
+  // Ametista: 4 lápis + 1 diamante → 1 ametista
+  { custos: [{i: ITEM.LAPIS, q: 4}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.AMETHYST, q: 1}, wb: true },
+  // Calcita: 4 neve + 1 ferro → 4 calcita
+  { custos: [{b: BLOCO.NEVE, q: 4}, {i: ITEM.FERRO, q: 1}], saida: {b: BLOCO.CALCITE, q: 4}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

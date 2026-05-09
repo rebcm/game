@@ -917,7 +917,24 @@ export class World {
       movimentos++;
       topo++;
     }
-    return movimentos;
+    // Verifica blocos shape='torch' acima — quebram se sem apoio (paridade MC)
+    // Retorna lista de coordenadas de torches que caíram (pra dropar item).
+    const cairam = [];
+    for (let dy = 1; dy <= 3 && y + dy < WORLD_Y; dy++) {
+      const ya = y + dy;
+      const ba = this.get(x, ya, z);
+      const infoA = BLOCO_INFO[ba];
+      if (infoA?.shape === 'torch') {
+        const apoio = this.get(x, ya - 1, z);
+        const infoApoio = BLOCO_INFO[apoio];
+        // Apoio válido: bloco sólido cubo (não outra torch, não shape custom)
+        if (apoio === BLOCO.AR || (!infoApoio?.solido && infoApoio?.shape !== 'slab')) {
+          this.set(x, ya, z, BLOCO.AR);
+          cairam.push({ x, y: ya, z, b: ba });
+        }
+      }
+    }
+    return cairam;
   }
 
   // === Iluminação 15 níveis (skylight + blocklight) ===
