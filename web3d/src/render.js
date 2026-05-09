@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 24, CELL = 32;
+  const COLS = 8, ROWS = 25, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3517,6 +3517,16 @@ function criarAtlas() {
   pintarSoulLantern(187);                                          // soul lantern
   pintarLampadaRed(188);                                           // lâmpada redstone
   pintarBlazeBlock(189);                                           // blaze block
+  // 6 lãs coloridas adicionais (cells 190-195)
+  pintarLaColorida(190, '#ff9800', '#ffb74d', '#e65100');          // lã laranja
+  pintarLaColorida(191, '#f06292', '#f48fb1', '#c2185b');          // lã rosa
+  pintarLaColorida(192, '#4dd0e1', '#80deea', '#00838f');          // lã ciano
+  pintarLaColorida(193, '#6d4c41', '#8d6e63', '#3e2723');          // lã marrom
+  pintarLaColorida(194, '#424242', '#616161', '#212121');          // lã preta
+  pintarLaColorida(195, '#9e9e9e', '#bdbdbd', '#616161');          // lã cinza
+  // 2 concretos (cells 196-197)
+  pintar(196, '#c62828', '#8b0000', 0.45);                        // concreto vermelho
+  pintar(197, '#1565c0', '#0d47a1', 0.45);                        // concreto azul
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3727,6 +3737,14 @@ function criarAtlas() {
   mapa[BLOCO.SOUL_LANTERN]   = { top: 187, side: 187, bottom: 187 };
   mapa[BLOCO.LAMPADA_RED]    = { top: 188, side: 188, bottom: 188 };
   mapa[BLOCO.BLAZE_BLOCK]    = { top: 189, side: 189, bottom: 189 };
+  mapa[BLOCO.LA_LARANJA]     = { top: 190, side: 190, bottom: 190 };
+  mapa[BLOCO.LA_ROSA]        = { top: 191, side: 191, bottom: 191 };
+  mapa[BLOCO.LA_CIANO]       = { top: 192, side: 192, bottom: 192 };
+  mapa[BLOCO.LA_MARROM]      = { top: 193, side: 193, bottom: 193 };
+  mapa[BLOCO.LA_PRETA]       = { top: 194, side: 194, bottom: 194 };
+  mapa[BLOCO.LA_CINZA]       = { top: 195, side: 195, bottom: 195 };
+  mapa[BLOCO.CONCRETO_R]     = { top: 196, side: 196, bottom: 196 };
+  mapa[BLOCO.CONCRETO_A]     = { top: 197, side: 197, bottom: 197 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

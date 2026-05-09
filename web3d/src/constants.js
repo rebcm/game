@@ -253,8 +253,16 @@ export const BLOCO = {
   SOUL_LANTERN:   200,
   LAMPADA_RED:    201, // lâmpada de redstone (acesa)
   BLAZE_BLOCK:    202, // bloco de blaze rod (ouro infernal)
+  LA_LARANJA:     203,
+  LA_ROSA:        204,
+  LA_CIANO:       205,
+  LA_MARROM:      206,
+  LA_PRETA:       207,
+  LA_CINZA:       208,
+  CONCRETO_R:     209, // concreto vermelho
+  CONCRETO_A:     210, // concreto azul
 };
-export const N_BLOCOS = 203;
+export const N_BLOCOS = 211;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -478,6 +486,14 @@ export const BLOCO_INFO = {
   [BLOCO.SOUL_LANTERN]: { nome: 'Lanterna das Almas',solido: true, emiteLuz: 10, cor: 0x40c4ff, lateral: 0x0288d1 },
   [BLOCO.LAMPADA_RED]:  { nome: 'Lâmpada Redstone', solido: true,  emiteLuz: 15, cor: 0xfdd835, lateral: 0xa1887f },
   [BLOCO.BLAZE_BLOCK]:  { nome: 'Bloco de Blaze',   solido: true,  emiteLuz: 8, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.LA_LARANJA]:   { nome: 'Lã Laranja',       solido: true,  emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.LA_ROSA]:      { nome: 'Lã Rosa',          solido: true,  emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.LA_CIANO]:     { nome: 'Lã Ciano',         solido: true,  emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.LA_MARROM]:    { nome: 'Lã Marrom',        solido: true,  emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.LA_PRETA]:     { nome: 'Lã Preta',         solido: true,  emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.LA_CINZA]:     { nome: 'Lã Cinza',         solido: true,  emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x616161 },
+  [BLOCO.CONCRETO_R]:   { nome: 'Concreto Vermelho',solido: true,  emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.CONCRETO_A]:   { nome: 'Concreto Azul',    solido: true,  emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1 },
 };
 
 export const ICONE = {
@@ -910,6 +926,16 @@ export const RECEITAS = [
   { custos: [{i: ITEM.REDSTONE, q: 4}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.LAMPADA_RED, q: 1}, wb: true },
   // Bloco de Blaze: 9 ouro (proxy de blaze rod)
   { custos: [{i: ITEM.OURO, q: 9}], saida: {b: BLOCO.BLAZE_BLOCK, q: 1}, wb: true },
+  // Lãs adicionais (proxy de corantes)
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.OURO, q: 1}],         saida: {b: BLOCO.LA_LARANJA, q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {b: BLOCO.COGUMELO_VERM, q: 1}], saida: {b: BLOCO.LA_ROSA,    q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {b: BLOCO.PRISMARINE, q: 1}],  saida: {b: BLOCO.LA_CIANO,   q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {b: BLOCO.TERRA, q: 1}],       saida: {b: BLOCO.LA_MARROM,  q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {i: ITEM.CARVAO, q: 1}],       saida: {b: BLOCO.LA_PRETA,   q: 1}, wb: false },
+  { custos: [{b: BLOCO.LA, q: 1}, {b: BLOCO.PEDRA, q: 1}],       saida: {b: BLOCO.LA_CINZA,   q: 1}, wb: false },
+  // Concretos: 4 areia + 1 lã colorida
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.CONCRETO_R, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_AZUL, q: 1}],     saida: {b: BLOCO.CONCRETO_A, q: 4}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
