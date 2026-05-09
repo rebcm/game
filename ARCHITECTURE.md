@@ -1,8 +1,24 @@
 # 🏛 Arquitetura — Construção Criativa da Rebeca
 
 **Autora:** Rebeca Alves Moreira
-**Versão:** Web3D modular (Three.js + ES modules) + Cloudflare Worker pra multiplayer
-**Última atualização:** maio/2026 — pós sprint 9
+**Versão:** Web3D modular (Three.js + addons postprocessing + ES modules nativos) + Cloudflare Worker pra multiplayer
+**Última atualização:** maio/2026 — pós paridade Minecraft 1.21 + sprints VISUAL/AUDIO premium
+
+## 📊 Estado atual (números)
+
+- **1000 blocos** com qualidade visual premium (gradient + bevel + AO)
+- **210+ items** (Shield, Crossbow, Mace, Elytra, Totem, 14 poções, 11 discos, spawn eggs)
+- **65 mobs** com models 3D + AI ranged dedicada (28 com AI customizada)
+- **14 estruturas** geradas (Stronghold, Nether Fortress, End City, Ancient City, Trial Chamber, etc.)
+- **10 biomas** (deserto, planicies, floresta, taiga, cherry_grove, mangrove_swamp, bamboo_jungle, mushroom_fields, lush_caves, snowy_*)
+- **15 profissões** villager (farmer, butcher, fisherman, etc.)
+- **17 efeitos** de status, **60 encantamentos** em 12 categorias
+- **64 achievements** com persistência localStorage
+- **3 dimensões**: Overworld, Nether (Fortress), End (Cities + Dragon)
+- **Sky Shader Custom GLSL** + **Bloom UnrealPass** + **Vignette + Color Grading**
+- **Spatial Audio 3D HRTF** + **Reverb procedural** + **6 ambient loops por bioma**
+- **19 módulos JS** (~28K LOC total)
+- **124/124 smoke tests** ✓
 
 ---
 
@@ -221,8 +237,39 @@ loop(now) [60 fps target]
 - HTML inline `<script>` define `window.rebcm.sfx` com osciladores Web Audio.
 - ~40 SFX: passos por material, mob calls, ambient (cave drip/vento), UI (chest, eat, equip), combate (hurt/critical/explosao), weather (chuva/trovão).
 - Música: progressão harmônica de 4 acordes (pad sustenido) + melodia em escala diatônica, em loop.
-- [`audio.js`](web3d/src/audio.js) só faz wrapper com nomes amigáveis.
+- [`audio.js`](web3d/src/audio.js) faz wrapper com nomes amigáveis.
 - **Master volume** via GainNode interceptado em `ctx.destination` (Object.defineProperty) — todo SFX existente passa por master sem reescrita.
+
+### Áudio Spatial 3D (Sprint AUDIO-3D)
+- **Web Audio API + HRTF**: PannerNode com `panningModel='HRTF'` (binaural realista)
+- **Distance attenuation**: `distanceModel='inverse'`, refDistance 1, maxDistance 16 blocos
+- **Listener tracking**: posição + forward + up vector da camera, atualizado a cada frame
+- **Reverb procedural**: ConvolverNode com IR gerado em runtime (1.8s decay, wet 0.18)
+- **Ambient loops por bioma**: 6 tracks oscilator + LFO modulação + lowpass filter
+  - Auto-switch a cada 2s baseado em y/dimension/biome
+  - Fade-in 3s + fade-out 1.5s
+- **Defensive code**: try/catch + flag `_audio3DErrLogged` previne log spam se Web Audio falhar
+
+### Sky Shader Custom (Sprint VISUAL-1)
+- **SphereGeometry 380 raio** com `THREE.ShaderMaterial` custom GLSL
+- **Vertex shader**: passa worldPos pro fragment
+- **Fragment shader**: gradient horizon→zenith via `pow(viewDir.y + offset, exponent)`
+  - Sun bloom radial via `dot(viewDir, normalize(sunPos))`
+  - Powers diferentes (32 e 8) pra bloom + halo
+- **Uniforms dinâmicos**: sunPos (acompanha tempoDia), topColor/bottomColor/sunColor (mudam por hora do dia)
+- **6 stages temporais**: noite deep / twilight violet / sunrise / golden hour / dia / noon
+- **Skydome segue camera position** (renderizado atrás de tudo)
+- **Defensive**: try/catch na criação + try/catch no update — fallback para `scene.background` solid
+
+### Post-processing pipeline (Sprint VISUAL-3)
+- **EffectComposer** + 4 passes em ordem:
+  1. **RenderPass**: render base scene → framebuffer
+  2. **UnrealBloomPass**: bloom gaussian (strength 0.55, radius 0.6, threshold 0.78) — emissive blocks (lava, glowstone) brilham
+  3. **ShaderPass custom Vignette + Color Grading**: darkness 0.65, saturation 1.10, contraste 1.05
+  4. **OutputPass**: tone mapping ACES Filmic + sRGB encoding
+- **Render**: `composer.render()` se composer existe, senão `renderer.render()`
+- **Resize handler** atualiza composer size também
+- **Defensive**: try/catch ao criar — se postprocessing falha, fallback graceful
 
 ---
 

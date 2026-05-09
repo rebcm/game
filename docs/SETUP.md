@@ -2,7 +2,8 @@
 
 **Projeto:** Construção Criativa da Rebeca — 3D
 **Autora:** Rebeca Alves Moreira
-**Versão atual:** Pós sprints 1-9 + 6.5 + 8.5 (multiplayer cross-device + Nether)
+**Versão atual:** Maio/2026 — paridade Minecraft 1.21 + qualidade visual premium + áudio 3D
+**Stack:** Three.js (+ addons postprocessing) via CDN · ES modules nativos · Cloudflare Pages + Workers
 
 Como rodar o projeto localmente, validar mudanças e fazer deploy do jogo + worker de multiplayer.
 

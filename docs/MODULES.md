@@ -3,7 +3,9 @@
 **Projeto:** Construção Criativa da Rebeca — 3D
 **Autora:** Rebeca Alves Moreira
 
-Este documento descreve cada módulo em [`web3d/src/`](../web3d/src/) com responsabilidade, dependências e principais exports. **18 módulos JS, ~6500 LOC total.**
+Este documento descreve cada módulo em [`web3d/src/`](../web3d/src/) com responsabilidade, dependências e principais exports. **19 módulos JS, ~28K LOC total.**
+
+**Estado do projeto (maio/2026):** 1000 blocos · 210+ items · 65 mobs · 14 estruturas · 10 biomas · 60 encantamentos · 17 efeitos · 64 achievements · Sky Shader Custom + Bloom + Audio 3D HRTF.
 
 Use como mapa pra navegar pelo código.
 
@@ -47,7 +49,7 @@ Use como mapa pra navegar pelo código.
 
 ---
 
-## constants.js
+## constants.js (~3500 LOC)
 
 **Responsabilidade:** Constantes do mundo, blocos, itens, receitas.
 
@@ -56,15 +58,33 @@ Use como mapa pra navegar pelo código.
 **Exports principais:**
 - `CHUNK_SIZE` (16), `WORLD_Y` (64), `VIEW_RADIUS` (6 default — overridden por quality).
 - `PLAYER_HEIGHT` (1.8), `PLAYER_RADIUS` (0.3), `GRAVIDADE`, `VEL_*` — física.
-- `DIA_SEGUNDOS` (240 = 4min/dia), `SAVE_KEY` (legacy v4).
-- `BLOCO` — IDs (0-35). **36 blocos** incluindo SLAB_*, FENCE, LADDER, DOOR, MESA_ENCANT, NETHERRACK, PORTAL_NETHER.
+- `DIA_SEGUNDOS` (240 = 4min/dia), `SAVE_KEY` (`v5`).
+- `BLOCO` — IDs (0-999). **1000 blocos** incluindo:
+  - Naturais (50+): GRAMA, TERRA, PEDRA, AREIA, etc.
+  - 8 madeiras × 8 variantes (Log/Pranchas/Folhas/Slab/Escada/Fence/Door/Trapdoor/Sign/Stripped)
+  - 16 cores × 4 famílias (Lã, Concreto, Terracota, Glazed, Vidro, Banner)
+  - 17 minérios incluindo Deepslate variants + Netherite
+  - 9 Shulker Boxes coloridos
+  - 17 Velas, 16 Bandeiras, 17 Lanternas
+  - Sculk family (1.19), Tuff/Copper variants (1.21 Tricky Trials)
+  - Portal Nether/End, Beacon, Conduit, Trial Spawner, Vault
+  - Bloco icônico **TRONO 1000 BLOCOS** (#999)
+- `N_BLOCOS` — 1000
 - `BLOCO_INFO` — metadata (`nome`, `solido`, `emiteLuz`, `cor`, `lateral`, `shape`).
   - **Sem `transp` — todos opacos.**
-  - `shape`: `'slab' | 'fence' | 'ladder' | 'door' | 'door_open'` pra blocos não-cubo.
+  - `shape`: `'slab' | 'fence' | 'ladder' | 'door' | 'door_open' | 'flower' | 'stairs' | 'wall' | 'button' | 'plate' | 'lever' | 'bars' | 'torch' | 'pot'`
 - `ICONE` — emoji por bloco.
-- `ITEM` — IDs até 290+. Inclui poções (270-273), esmeralda (280), peixe (281), sílex (290), flint_steel (291).
-- `ITEM_INFO` — metadata (nutricao, ferramenta, armadura, defesa, tier, pocao, plantavel).
-- `RECEITAS` — array de ~40 receitas (workbench, crafting básico, baú, fornalha, mesa, baldes, isqueiro).
+- `ITEM` — IDs até 509. **210+ items** incluindo:
+  - Ferramentas: 5 tiers (madeira/pedra/ferro/diamante/netherite) × 5 tipos (pic/esp/machado/pa/enxada)
+  - Armaduras: 4 tiers × 4 peças
+  - Combat: SHIELD, CROSSBOW, MACE (1.21), TOTEM_VIDA, ELYTRA
+  - Comida: 16 tipos
+  - Poções: 21 base + Splash + Lingering variantes
+  - Music Discs: 16 (incl. Pigstep, Otherside, 5, Precipice)
+  - 9 boats variantes + 6 minecart variantes
+  - 8 spawn eggs + Wind Charge, Trial Key, Goat Horn, Echo Shard
+- `ITEM_INFO` — metadata (nutricao, ferramenta, armadura, defesa, tier, pocao, plantavel, splash, lingering, totem, glide, spawn_egg)
+- `RECEITAS` — array de ~250+ receitas (crafting + smelting + brewing + tools + variants)
 
 ---
 
@@ -107,9 +127,9 @@ Use como mapa pra navegar pelo código.
 
 ## audio.js
 
-**Responsabilidade:** Wrapper sobre `window.rebcm.sfx` (definido inline em `index.html`).
+**Responsabilidade:** Wrapper sobre `window.rebcm.sfx` + Sistema Spatial Audio 3D HRTF.
 
-**Sem dependências de outros módulos.**
+**Importa:** `three` (pra Vector3 nas calculations).
 
 **Export:** objeto `Audio` com ~50 métodos:
 - Mundo: `quebrar()`, `colocar()`.
@@ -122,6 +142,16 @@ Use como mapa pra navegar pelo código.
 - UI: `chestOpen/Close()`, `bowDraw/Release()`, `arrow()`, `equipArmor()`, `cama()`, `fornalhaLit()`, `pageFlip()`.
 - Clima: `chuva()`, `trovao()`.
 - Música: `musicaIniciar()`, `musicaParar()`.
+
+**Sistema Spatial 3D (Sprint AUDIO-3D):**
+- `tocar3D(nome, x, y, z, pitch, volume, maxDist)` — toca som procedural numa posição 3D
+- `atualizarListener3D(camera)` — sync listener position + forward + up vector da camera
+- `iniciarAmbiente(biomaTipo)` — inicia ambient loop oscilator + LFO modulação
+- `pararAmbiente(biomaTipo)` — fade-out + cleanup
+- `setBiomaAtivo(biomaTipo)` — switch automático entre biomas
+- `setReverbWet(wet)` — ajusta reverb amount
+- **6 ambient tracks**: cave, ocean, forest, nether, end, dungeon
+- **Defensive code**: try/catch + flags `_audio3DErrLogged`, `_audioAmbErrLogged`
 
 ---
 
@@ -156,35 +186,52 @@ Use como mapa pra navegar pelo código.
 
 ---
 
-## render.js
+## render.js (~9000 LOC — maior módulo)
 
-**Responsabilidade:** Three.js scene, atlas procedural, mesh builder com AO + iluminação, sky/sol/lua/nuvens/estrelas, mão 1ª pessoa, highlight, cracks, camera shake, FOV pulse, bobbing, custom shapes (slabs/fence/ladder/door).
+**Responsabilidade:** Three.js scene, atlas procedural premium (1000 blocos), mesh builder com AO + iluminação 15 níveis, **Sky Dome shader GLSL custom**, **Bloom post-processing**, **Vignette + Color Grading**, sol/lua/nuvens parallax/estrelas, mão 1ª pessoa, highlight, **selection cube outline**, cracks, camera shake, FOV pulse, bobbing, custom shapes (slabs/fence/ladder/door/flower/stairs/wall/button/plate/bars/torch/pot).
 
-**Importa:** Three.js, `constants.js`, `utils.js`, `weather.js`, `state.js`.
+**Importa:** Three.js + addons (EffectComposer, RenderPass, UnrealBloomPass, ShaderPass, OutputPass), `constants.js`, `utils.js`, `weather.js`, `state.js`.
 
-**Tamanho:** ~1300 LOC (maior módulo).
+**Tamanho:** ~9000 LOC (maior módulo) — atlas 1000 blocos com pintores premium individuais.
 
 **Classes/exports:**
 - `class Renderer`:
   - `constructor(canvas)` — cria scene, camera, lights, atlas, sky.
-    - Lê `state.quality` (Sprint 8): pixelRatio, antialias.
-    - ACES Filmic Tonemapping + sRGB output (Sprint 8).
+    - Lê `state.quality`: pixelRatio, antialias, bloom toggle.
+    - ACES Filmic Tonemapping + sRGB output + exposure 1.15 (premium).
+    - **Sky Dome shader GLSL custom** com gradient horizon→zenith dinâmico (try/catch defensivo).
+    - **Post-processing pipeline** (try/catch): EffectComposer → RenderPass → UnrealBloomPass → Vignette+Color Grading ShaderPass → OutputPass.
     - Antialiasing dinâmico, preserveDrawingBuffer pra F2 screenshot.
-  - `buildChunkMesh(world, chunk)` — gera mesh. **Otimizações Sprint 6.5**:
+  - **Atlas Premium** com 1000 blocos:
+    - Helpers: `pintarPremium`, `pintarPedraPremium`, `pintarGemPremium`, `pintarMadeiraPremium`, `pintarFolhaPremium`
+    - Cada um adiciona gradient + bevel highlight + AO sutil + ruído tonal
+    - Glowstone radial brilhante (gera bloom REAL)
+    - Lava 4-stop fogo + bolhas brilhantes
+    - Água com sparkles solares + ondas
+  - `buildChunkMesh(world, chunk)` — gera mesh:
     - Solid lookup cache (Uint8Array por block ID).
     - Skip fully-buried blocks.
-    - Vertex color em Uint8 (era Float32).
-    - Custom shapes (slab/fence/ladder/door/door_open) com geometria especializada.
+    - Vertex color em Uint8 (4× menos GPU).
+    - **AO por vértice** (Ambient Occlusion calculado).
+    - 14 custom shapes especializados.
   - `liberarChunkMesh(chunk)` — dispose explícito de geometry + nullifica arrays pra ajudar GC.
   - `contagemFacesTotal()` — perf stat (F3).
   - `atualizarAlvo(hit, progresso)` — highlight + cracks + crosshair color (mob/bloco/branco).
+  - `mostrarSelecao(x, y, z)` / `esconderSelecao()` — **Selection cube 3D outline** com 12 line segments + opacity 0.8 + depthTest:false.
   - `atualizarMao(dt, batendo, ferramenta)` — animação swing.
-  - `atualizarFOV(dt, correndo)` — FOV pulse no sprint (com fovBase do settings).
+  - `atualizarFOV(dt, correndo)` — FOV pulse no sprint.
   - `aplicarShake(intensidade)`, `atualizarShake(dt)` — camera shake ao tomar dano.
-  - `atualizarBobbing(dt, andando, sprintando)` — Sprint 1.
-  - `atualizarCeu(tempoDia, playerPos)` — sky multi-stop 6-keypoints (Sprint 8), sol, lua com glow noturno, nuvens, estrelas com twinkle 4Hz.
+  - `atualizarBobbing(dt, andando, sprintando)`.
+  - `atualizarCeu(tempoDia, playerPos)`:
+    - Atualiza skyUniforms (sunPos, topColor, bottomColor, sunColor) dinamicamente
+    - 6 stages: noite/twilight/sunrise/golden/dia/noon
+    - Sol+lua com glow noturno
+    - **2 layers de nuvens** com drift parallax
+    - Estrelas com twinkle
+    - Try/catch defensivo
   - `atualizarLuzesPontuais(world, playerPos)` — pool de 8 PointLights.
-  - `render()`.
+  - **`criarBeaconBeam(x, y, z)` / `removerBeaconBeam(x, y, z)`** — Beacon beam 3D.
+  - `render()` — usa composer se disponível, senão renderer.render fallback.
 
 ---
 

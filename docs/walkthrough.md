@@ -1,7 +1,8 @@
 # 🎮 Walkthrough — Construção Criativa da Rebeca
 
 **Autora:** Rebeca Alves Moreira
-**Versão atual:** Pós sprint 9 — 16 mobs, 36 blocos, Nether dimension, multiplayer cross-device.
+**Versão atual:** Maio/2026 — paridade Minecraft 1.21 + qualidade premium + áudio 3D
+**Estado:** 1000 blocos · 65 mobs · 14 estruturas · 10 biomas · 3 dimensões · 64 achievements
 
 Guia passo-a-passo pra começar a jogar e dominar todas as mecânicas.
 
@@ -31,10 +32,12 @@ Para construir livremente sem sobrevivência:
 - **Selecione bloco** com scroll do mouse ou teclas `1`–`9`.
 - **Coloque bloco** com clique direito.
 - **Quebre bloco** com clique esquerdo (instantâneo no Criativo).
-- **`E`** abre o **Inventário Criativo** com 8 abas + busca:
+- **`E`** abre o **Inventário Criativo** com abas + busca:
   - 🧱 Construção · 🌿 Natureza · 💎 Minérios · 💧 Líquidos
   - 🪟 Decoração · ⛏ Ferramentas · ⚔ Combate · 🍖 Comida
+  - 🧪 Poções · 🥚 Spawn Eggs · 💿 Discos · 🎨 Decoração Premium
 - Toque num item — substitui o slot ativo da hotbar com 64 unidades.
+- Modo criativo permite acesso a TODOS os 1000 blocos + 210 items.
 
 ### Dicas de construção
 

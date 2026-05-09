@@ -2,8 +2,9 @@
 
 **Projeto:** Construção Criativa da Rebeca — 3D
 **Autora:** Rebeca Alves Moreira
-**Versão atual:** Web3D modular (Three.js + ES modules nativos) + Cloudflare Worker pra multiplayer
-**Última grande atualização:** maio/2026 — sprints 1-9 + 6.5 + 8.5 entregues
+**Versão atual:** Web3D modular (Three.js + addons postprocessing + ES modules nativos) + Cloudflare Worker pra multiplayer
+**Última grande atualização:** maio/2026 — paridade Minecraft 1.21 + qualidade visual premium + áudio 3D HRTF
+**Estado atual:** 1000 blocos · 210+ items · 65 mobs · 14 estruturas · 10 biomas · 60 encantamentos · 17 efeitos · 64 achievements · 124/124 testes ✓
 
 ---
 
@@ -29,11 +30,11 @@ A versão **ativa e única** está em [`web3d/`](web3d/) (jogo) + [`worker/`](wo
 
 2. **Código que funciona.** Sem TODO/FIXME/HACK no código mergeado. Cada feature roda completa.
 
-3. **Modular.** Engine vive em [`web3d/src/*.js`](web3d/src/) com 18 módulos. Adicione novos arquivos quando justificar; não inflar módulos existentes além de ~1000 LOC.
+3. **Modular.** Engine vive em [`web3d/src/*.js`](web3d/src/) com 19 módulos (~28K LOC total). Módulos grandes (render.js ~9K LOC, mobs.js ~3K LOC, constants.js ~3.5K LOC, main.js ~3.3K LOC) refletem a complexidade legítima de cada domínio. Adicione novos arquivos quando justificar.
 
 4. **Sem build step.** `index.html` carrega `src/main.js` diretamente. Sem Webpack/Vite/Rollup/TypeScript/JSX/Babel.
 
-5. **Sem deps runtime extras.** Só Three.js via importmap CDN. Sem React/Vue/jQuery/Lodash.
+5. **Sem deps runtime extras.** Só Three.js (+ addons postprocessing) via importmap CDN. Sem React/Vue/jQuery/Lodash.
    - **Exceção 1**: `wrangler` (CLI Cloudflare) só pra deploy — não roda em produção.
    - **Exceção 2**: nada novo no `worker/` além de Cloudflare Workers runtime (já tem WebSocket nativo + Durable Objects).
 
@@ -46,6 +47,10 @@ A versão **ativa e única** está em [`web3d/`](web3d/) (jogo) + [`worker/`](wo
 8. **`package.json` está intencionalmente ausente** na raiz. Não criar. (Smoke tests rodam via mktemp pra evitar resolver de Node subir a árvore.)
 
 9. **Mobile-first.** Mudanças devem rodar em celular Android médio em modo paisagem. Sistema adaptive quality já protege automaticamente — mas grandes refatores requerem teste manual em mobile.
+
+11. **Defensive code obrigatório** para features visuais/audio modernas (sky shader GLSL, Bloom postprocessing, Web Audio API, AudioContext). Wrap em `try/catch` com fallback gracioso e log único — **nunca** quebrar o init do jogo se a feature opcional falhar em alguma GPU/browser.
+
+12. **Não importar módulos via window.X.** Sempre `import * as THREE from 'three'`, etc. Se precisar de THREE em outro módulo, importe lá — não dependa de globals injetados.
 
 10. **Free tier sempre.** Não introduzir features que exijam paid tier (Cloudflare Workers Paid Plan, KV pago, R2, etc.). Atualmente:
     - Pages free tier (web3d/) — ilimitado pra static.

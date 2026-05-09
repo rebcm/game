@@ -132,12 +132,14 @@ A cada ciclo do agente, siga este fluxo:
 Antes de cada commit, garanta:
 
 - [ ] `node --check web3d/src/*.js` passa em todos
-- [ ] Smoke tests passam (`93 passaram   0 falharam`)
+- [ ] Smoke tests passam (`124 passaram   0 falharam`)
 - [ ] `index.html` aponta pra `src/main.js` (não `game.js` antigo)
 - [ ] Sem `transp:true` em `constants.js`
 - [ ] Sem `meshT/positionsT` em `render.js`
 - [ ] Sem `KeyT` (alternar transparência) em `input.js`
 - [ ] Autoria "Rebeca Alves Moreira" preservada em README
+- [ ] Novas features visuais (sky shader, bloom, audio 3D) em try/catch defensivo
+  - Não pode quebrar inicialização se GLSL/Web Audio falhar em alguma GPU/browser
 
 ---
 
@@ -159,14 +161,14 @@ game/
 │   └── SETUP.md         # Setup local
 ├── scripts/
 │   ├── deploy-web3d.sh  # Script de deploy
-│   └── test-web3d-precheck.js  # 93 smoke tests
+│   └── test-web3d-precheck.js  # 124 smoke tests
 └── web3d/
     ├── index.html
     ├── style.css
     ├── manifest.json
     ├── _headers
     ├── favicon.svg / .png
-    └── src/             # 14 módulos JS
+    └── src/             # 19 módulos JS (~28K LOC)
 ```
 
 ---
@@ -205,18 +207,26 @@ git push origin main
 
 ## 🎯 Auto-continue: o que evoluir
 
-Em ordem de prioridade para fidelidade ao Minecraft real:
+**JÁ ATINGIDO (paridade Minecraft 1.21):** 1000 blocos, 65 mobs, 14 estruturas, 10 biomas, 60 encantamentos, 17 efeitos, 64 achievements, Sky shader + Bloom, Audio 3D HRTF.
+
+**Próximas fronteiras (em ordem de prioridade):**
 
 1. **Greedy meshing** em [`render.js`](web3d/src/render.js) — performance massiva em mobile.
-2. **Perlin/Simplex 2D+3D** em [`utils.js`](web3d/src/utils.js) — terreno menos "ondulado" que senoides.
-3. **Skylight propagação lateral** em [`world.js`](web3d/src/world.js) — luz mais realista nas bordas de cavernas.
-4. **Estruturas geradas**: vilas, dungeons, ravinas em [`world.js`](web3d/src/world.js).
-5. **Pathfinding A*** em [`mobs.js`](web3d/src/mobs.js) — mobs evitam buracos e seguem você melhor.
-6. **Weather**: chuva, neve, trovões em [`render.js`](web3d/src/render.js) + ambient triggers em [`particles.js`](web3d/src/particles.js).
-7. **Animação 1ª pessoa rica**: bobbing ao andar, swing por ação.
-8. **Combate avançado**: arco/flecha (item ITEM.ARCO), shield, attack cooldown bar.
+2. **Skylight propagação lateral** em [`world.js`](web3d/src/world.js) — luz mais realista nas bordas de cavernas.
+3. **Brewing Stand UI completa** — modal com 3 slots de ingredientes (já tem crafting alternativo).
+4. **Anvil sistema completo** — repair cost ramping + enchant merging + prior work penalty.
+5. **Tree variants growth** — sapling de cherry/mangrove/birch/spruce/jungle/acacia/dark_oak (já tem oak).
+6. **Splash + Lingering particles** — projétil real ao invés de aplicar instant.
+7. **Boats/Minecarts physics** — dirigir realmente (atualmente só place).
+8. **Map item rendering** — exibir mundo 2D em map item.
+9. **Banner patterns** — design custom via Loom (atualmente cria genérico).
+10. **Sculk vibration detection** — Sculk Sensor real detection de footsteps.
+11. **Time travel/Rewind** — feature inovadora, gravar últimos N blocos pra desfazer.
+12. **Holograma blueprint** — visualizar plano de construção overlay.
 
 Cada um desses pode ser feito em uma sessão de auto-continue de poucas centenas de LOC.
+
+**Importante:** novas features visuais/audio devem ser **defensivas** com try/catch — se GLSL shader ou Web Audio falhar em alguma GPU/browser, jogo deve degradar graciosamente sem travar.
 
 ---
 
