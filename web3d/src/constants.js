@@ -501,8 +501,17 @@ export const BLOCO = {
   TWISTING_VINES:      436, // cipó torcido azul (Nether)
   WEEPING_VINES:       437, // cipó pendente vermelho (Nether)
   SCAFFOLDING:         438, // andaime de bambu
+  // Sprint 6: cavernas+gemas (439-446)
+  HANGING_ROOTS:       439, // raízes pendentes (1.18 lush caves)
+  GLOW_BERRIES:        440, // frutas brilhantes laranja
+  AMETHYST_BUDDING:    441, // bloco que gera amethyst clusters
+  AMETHYST_CLUSTER:    442, // cluster ametista (gemas)
+  POINTED_DRIPSTONE:   443, // estalactite/estalagmite
+  MOSSY_COBBLESTONE:   444, // cobblestone com musgo (clássico)
+  CRACKED_STONE_BRICKS:445, // tijolos rachados
+  MOSSY_STONE_BRICKS:  446, // tijolos com musgo
 };
-export const N_BLOCOS = 439;
+export const N_BLOCOS = 447;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -967,6 +976,15 @@ export const BLOCO_INFO = {
   [BLOCO.TWISTING_VINES]:    { nome: 'Cipó Torcido',       solido: true, emiteLuz: 0,  cor: 0x00bcd4, lateral: 0x00838f, shape: 'flower' },
   [BLOCO.WEEPING_VINES]:     { nome: 'Cipó Pendente',      solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000, shape: 'flower' },
   [BLOCO.SCAFFOLDING]:       { nome: 'Andaime',            solido: true, emiteLuz: 0,  cor: 0xc8a951, lateral: 0x6d4c41, shape: 'fence' },
+  // Sprint 6: cavernas+gemas (439-446)
+  [BLOCO.HANGING_ROOTS]:     { nome: 'Raízes Pendentes',   solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x5d4037, shape: 'flower' },
+  [BLOCO.GLOW_BERRIES]:      { nome: 'Frutas Brilhantes',  solido: true, emiteLuz: 12, cor: 0xff9800, lateral: 0xe65100, shape: 'flower' },
+  [BLOCO.AMETHYST_BUDDING]:  { nome: 'Ametista Brotando',  solido: true, emiteLuz: 6,  cor: 0xab47bc, lateral: 0x7b1fa2 },
+  [BLOCO.AMETHYST_CLUSTER]:  { nome: 'Cluster Ametista',   solido: true, emiteLuz: 8,  cor: 0xce93d8, lateral: 0x8e24aa, shape: 'flower' },
+  [BLOCO.POINTED_DRIPSTONE]: { nome: 'Pingente Pedra',     solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x5d4037, shape: 'flower' },
+  [BLOCO.MOSSY_COBBLESTONE]: { nome: 'Cobblestone Musgo',  solido: true, emiteLuz: 0,  cor: 0x6e7e4a, lateral: 0x4d5e35 },
+  [BLOCO.CRACKED_STONE_BRICKS]:{nome: 'Tijolos Rachados',  solido: true, emiteLuz: 0,  cor: 0x808080, lateral: 0x606060 },
+  [BLOCO.MOSSY_STONE_BRICKS]:{ nome: 'Tijolos c/ Musgo',   solido: true, emiteLuz: 0,  cor: 0x6e8050, lateral: 0x4d5e35 },
 };
 
 export const ICONE = {
@@ -1836,6 +1854,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.WARPED_STEM, q: 2}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.TWISTING_VINES, q: 4}, wb: true },
   { custos: [{b: BLOCO.CRIMSON_STEM, q: 2}, {b: BLOCO.SOUL_SAND, q: 1}], saida: {b: BLOCO.WEEPING_VINES, q: 4}, wb: true },
   { custos: [{b: BLOCO.BAMBU, q: 6}, {i: ITEM.CORDA, q: 1}], saida: {b: BLOCO.SCAFFOLDING, q: 6}, wb: true },
+  // Sprint 6: cavernas+gemas (439-446)
+  { custos: [{b: BLOCO.ROOTED_DIRT, q: 1}], saida: {b: BLOCO.HANGING_ROOTS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.VINE, q: 4}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.GLOW_BERRIES, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AMETHYST, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.AMETHYST_BUDDING, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AMETHYST, q: 1}], saida: {b: BLOCO.AMETHYST_CLUSTER, q: 4}, wb: true },
+  { custos: [{b: BLOCO.DRIPSTONE, q: 1}], saida: {b: BLOCO.POINTED_DRIPSTONE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.MOSSY_COBBLESTONE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO, q: 4}], saida: {b: BLOCO.CRACKED_STONE_BRICKS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO, q: 4}, {b: BLOCO.MOSS_BLOCK, q: 1}], saida: {b: BLOCO.MOSSY_STONE_BRICKS, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

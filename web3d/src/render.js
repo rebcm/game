@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 40, CELL = 32;
+  const COLS = 8, ROWS = 41, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -2447,6 +2447,272 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0 + 1, 1, CELL - 2);
     ctx.fillRect(x0 + 1, y0 + 1, CELL - 2, 1);
     ctx.fillRect(x0 + 1, y0 + CELL - 2, CELL - 2, 1);
+  }
+
+  // Hanging Roots: raízes pendentes marrom (lush caves)
+  function pintarHangingRoots(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1010';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Raízes pendentes do topo
+    ctx.fillStyle = '#8d6e63';
+    let s = idx * 11 + 13;
+    for (let i = 0; i < 14; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 2));
+      s = (s * 9301 + 49297) % 233280;
+      const altura = 6 + Math.floor((s / 233280) * 14);
+      ctx.fillRect(x0 + px, y0, 1, altura);
+    }
+    // Texturas mais escuras
+    ctx.fillStyle = '#5d4037';
+    s = idx * 7 + 17;
+    for (let i = 0; i < 10; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 2));
+      s = (s * 9301 + 49297) % 233280;
+      const altura = 4 + Math.floor((s / 233280) * 10);
+      ctx.fillRect(x0 + px, y0, 1, altura);
+    }
+    // Pontas mais grossas
+    ctx.fillStyle = '#a1887f';
+    for (let i = 4; i < CELL; i += 6) {
+      ctx.fillRect(x0 + i, y0 + 8, 2, 1);
+    }
+  }
+
+  // Glow Berries: vinhas verdes com frutas laranja brilhantes
+  function pintarGlowBerries(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2510';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Folhagem (verde escura)
+    ctx.fillStyle = '#33691e';
+    let s = idx * 9 + 23;
+    for (let i = 0; i < 50; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Frutas laranja brilhantes (3 destaques)
+    const frutas = [[6, 10], [16, 18], [22, 8]];
+    for (const [px, py] of frutas) {
+      ctx.fillStyle = '#e65100';
+      ctx.fillRect(x0 + px, y0 + py, 4, 4);
+      ctx.fillStyle = '#ff9800';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 2, 2);
+      ctx.fillStyle = '#fff176';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 1, 1);
+    }
+  }
+
+  // Amethyst Budding: bloco rocha com cristais ametista nascendo
+  function pintarAmethystBudding(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3a1a4a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Manchas roxas (geode)
+    ctx.fillStyle = '#7b1fa2';
+    let s = idx * 13 + 27;
+    for (let i = 0; i < 40; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Brotos de cristais (4 cantos)
+    const brotos = [[3, 3], [25, 3], [3, 25], [25, 25]];
+    for (const [px, py] of brotos) {
+      ctx.fillStyle = '#ab47bc';
+      ctx.fillRect(x0 + px, y0 + py, 4, 4);
+      ctx.fillStyle = '#ce93d8';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 2, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 1, 1);
+    }
+  }
+
+  // Amethyst Cluster: cristais grandes em grupo (gemas)
+  function pintarAmethystCluster(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cristais grandes (forma diamante 3D)
+    ctx.fillStyle = '#7b1fa2';
+    ctx.fillRect(x0 + 12, y0 + 8, 8, 16);
+    ctx.fillStyle = '#9c27b0';
+    ctx.fillRect(x0 + 13, y0 + 9, 6, 14);
+    ctx.fillStyle = '#ab47bc';
+    ctx.fillRect(x0 + 14, y0 + 10, 4, 12);
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 14, y0 + 12, 1, 8);
+    ctx.fillRect(x0 + 17, y0 + 12, 1, 8);
+    // Pontas (topo + base)
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 14, y0 + 6, 4, 2);
+    ctx.fillRect(x0 + 14, y0 + 24, 4, 2);
+    // Cristais laterais menores
+    ctx.fillStyle = '#9c27b0';
+    ctx.fillRect(x0 + 4, y0 + 14, 4, 8);
+    ctx.fillRect(x0 + 24, y0 + 14, 4, 8);
+    ctx.fillStyle = '#e1bee7';
+    ctx.fillRect(x0 + 5, y0 + 15, 2, 2);
+    ctx.fillRect(x0 + 25, y0 + 15, 2, 2);
+    // Brilho central
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+  }
+
+  // Pointed Dripstone: estalactite/estalagmite (pingente de pedra)
+  function pintarPointedDripstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#2a2018';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Estalactite triangular (cresce para baixo)
+    ctx.fillStyle = '#8d6e63';
+    for (let y = 0; y < CELL; y++) {
+      const meio = CELL / 2;
+      const largura = Math.floor((CELL - y) / 2);
+      if (largura > 0) {
+        ctx.fillRect(x0 + meio - largura, y0 + y, largura * 2, 1);
+      }
+    }
+    // Highlight central
+    ctx.fillStyle = '#a1887f';
+    for (let y = 0; y < CELL; y++) {
+      const largura = Math.max(1, Math.floor((CELL - y) / 4));
+      const meio = CELL / 2 - 1;
+      ctx.fillRect(x0 + meio, y0 + y, 1, 1);
+    }
+    // Sombra lateral
+    ctx.fillStyle = '#5d4037';
+    for (let y = 0; y < CELL; y++) {
+      const meio = CELL / 2;
+      const largura = Math.floor((CELL - y) / 2);
+      if (largura > 0) {
+        ctx.fillRect(x0 + meio + largura - 1, y0 + y, 1, 1);
+      }
+    }
+  }
+
+  // Mossy Cobblestone: cobble cinza com manchas verdes de musgo
+  function pintarMossyCobblestone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão cobble (irregular)
+    ctx.fillStyle = '#757575';
+    for (let i = 0; i < CELL; i += 6) {
+      for (let j = 0; j < CELL; j += 6) {
+        if (((i + j) >> 1) & 1) ctx.fillRect(x0 + i, y0 + j, 5, 5);
+      }
+    }
+    // Manchas verdes de musgo (cresce)
+    ctx.fillStyle = '#558b2f';
+    let s = idx * 17 + 31;
+    for (let i = 0; i < 25; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const tipo = (s / 233280);
+      ctx.fillStyle = tipo < 0.5 ? '#558b2f' : tipo < 0.8 ? '#33691e' : '#7cb342';
+      ctx.fillRect(x0 + px, y0 + py, 2, 1);
+    }
+    // Bordas
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Cracked Stone Bricks: tijolos rachados (perigosa estrutura)
+  function pintarCrackedStoneBricks(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de tijolos (4 horizontal × 2 vertical)
+    ctx.fillStyle = '#606060';
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    // Divisões verticais alternadas
+    ctx.fillRect(x0 + 7,  y0,      1, 7);
+    ctx.fillRect(x0 + 15, y0,      1, 7);
+    ctx.fillRect(x0 + 23, y0,      1, 7);
+    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // RACHADURAS (preto, diagonais aleatórias)
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0 + 4,  y0 + 4,  1, 8);
+    ctx.fillRect(x0 + 5,  y0 + 5,  1, 4);
+    ctx.fillRect(x0 + 18, y0 + 12, 6, 1);
+    ctx.fillRect(x0 + 20, y0 + 13, 4, 1);
+    ctx.fillRect(x0 + 12, y0 + 20, 1, 6);
+    ctx.fillRect(x0 + 13, y0 + 21, 1, 4);
+    ctx.fillRect(x0 + 24, y0 + 26, 5, 1);
+  }
+
+  // Mossy Stone Bricks: tijolos com musgo verde (clássico)
+  function pintarMossyStoneBricks(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6e8050';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de tijolos
+    ctx.fillStyle = '#4d5e35';
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    ctx.fillRect(x0 + 7,  y0,      1, 7);
+    ctx.fillRect(x0 + 15, y0,      1, 7);
+    ctx.fillRect(x0 + 23, y0,      1, 7);
+    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // Manchas de musgo
+    ctx.fillStyle = '#33691e';
+    let s = idx * 19 + 41;
+    for (let i = 0; i < 30; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Highlights de pedra cinza
+    ctx.fillStyle = '#9e9e9e';
+    for (let i = 2; i < CELL; i += 8) {
+      ctx.fillRect(x0 + i, y0 + 2, 2, 1);
+      ctx.fillRect(x0 + i, y0 + 18, 2, 1);
+    }
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -5279,6 +5545,15 @@ function criarAtlas() {
   pintarTwistingVines(313);
   pintarWeepingVines(314);
   pintarScaffolding(315);
+  // Sprint 6: cavernas+gemas (cells 316-323)
+  pintarHangingRoots(316);
+  pintarGlowBerries(317);
+  pintarAmethystBudding(318);
+  pintarAmethystCluster(319);
+  pintarPointedDripstone(320);
+  pintarMossyCobblestone(321);
+  pintarCrackedStoneBricks(322);
+  pintarMossyStoneBricks(323);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -5746,6 +6021,15 @@ function criarAtlas() {
   mapa[BLOCO.TWISTING_VINES]        = { top: 313, side: 313, bottom: 313 };
   mapa[BLOCO.WEEPING_VINES]         = { top: 314, side: 314, bottom: 314 };
   mapa[BLOCO.SCAFFOLDING]           = { top: 315, side: 315, bottom: 315 };
+  // Sprint 6: cavernas+gemas (cells 316-323)
+  mapa[BLOCO.HANGING_ROOTS]         = { top: 316, side: 316, bottom: 316 };
+  mapa[BLOCO.GLOW_BERRIES]          = { top: 317, side: 317, bottom: 317 };
+  mapa[BLOCO.AMETHYST_BUDDING]      = { top: 318, side: 318, bottom: 318 };
+  mapa[BLOCO.AMETHYST_CLUSTER]      = { top: 319, side: 319, bottom: 319 };
+  mapa[BLOCO.POINTED_DRIPSTONE]     = { top: 320, side: 320, bottom: 320 };
+  mapa[BLOCO.MOSSY_COBBLESTONE]     = { top: 321, side: 321, bottom: 321 };
+  mapa[BLOCO.CRACKED_STONE_BRICKS]  = { top: 322, side: 322, bottom: 322 };
+  mapa[BLOCO.MOSSY_STONE_BRICKS]    = { top: 323, side: 323, bottom: 323 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

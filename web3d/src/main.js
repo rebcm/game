@@ -939,6 +939,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.TWISTING_VINES, q: 8 });
   state.inv.adicionar({ b: BLOCO.WEEPING_VINES, q: 8 });
   state.inv.adicionar({ b: BLOCO.SCAFFOLDING, q: 16 });
+  // Sprint 6: cavernas+gemas
+  state.inv.adicionar({ b: BLOCO.HANGING_ROOTS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.GLOW_BERRIES, q: 8 });
+  state.inv.adicionar({ b: BLOCO.AMETHYST_BUDDING, q: 4 });
+  state.inv.adicionar({ b: BLOCO.AMETHYST_CLUSTER, q: 8 });
+  state.inv.adicionar({ b: BLOCO.POINTED_DRIPSTONE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.MOSSY_COBBLESTONE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CRACKED_STONE_BRICKS, q: 16 });
+  state.inv.adicionar({ b: BLOCO.MOSSY_STONE_BRICKS, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
