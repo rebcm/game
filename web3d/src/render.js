@@ -4181,6 +4181,16 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_CONCRETO_PR]  = { top: 201, side: 201, bottom: 201 };
   mapa[BLOCO.SLAB_CONCRETO_R]     = { top: 196, side: 196, bottom: 196 };
   mapa[BLOCO.SLAB_CONCRETO_A]     = { top: 197, side: 197, bottom: 197 };
+  // Cobre cortado/liso reusam cells 58/59/60
+  mapa[BLOCO.COBRE_CORTADO]        = { top: 58, side: 58, bottom: 58 };
+  mapa[BLOCO.COBRE_GASTO_CORTADO]  = { top: 59, side: 59, bottom: 59 };
+  mapa[BLOCO.COBRE_OXIDADO_CORTADO]= { top: 60, side: 60, bottom: 60 };
+  mapa[BLOCO.COBRE_LISO]           = { top: 58, side: 58, bottom: 58 };
+  // Variantes purpur reusam cell 137 (pillar) e 138 (block)
+  mapa[BLOCO.ESCADA_PURPUR_PILLAR] = { top: 138, side: 138, bottom: 138 };
+  mapa[BLOCO.PAREDE_PURPUR]        = { top: 137, side: 137, bottom: 137 };
+  mapa[BLOCO.SLAB_PURPUR_PILLAR]   = { top: 138, side: 138, bottom: 138 };
+  mapa[BLOCO.PURPUR_LIMPO]         = { top: 137, side: 137, bottom: 137 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

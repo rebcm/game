@@ -384,8 +384,16 @@ export const BLOCO = {
   PAREDE_CONCRETO_PR:  324,
   SLAB_CONCRETO_R:     325,
   SLAB_CONCRETO_A:     326,
+  COBRE_CORTADO:       327,
+  COBRE_GASTO_CORTADO: 328,
+  COBRE_OXIDADO_CORTADO:329,
+  COBRE_LISO:          330,
+  ESCADA_PURPUR_PILLAR:331,
+  PAREDE_PURPUR:       332,
+  SLAB_PURPUR_PILLAR:  333,
+  PURPUR_LIMPO:        334,
 };
-export const N_BLOCOS = 327;
+export const N_BLOCOS = 335;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -734,6 +742,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_CONCRETO_PR]:  { nome: 'Parede Concr. Preto', solido: true, emiteLuz: 0, cor: 0x212121, lateral: 0x000000, shape: 'wall' },
   [BLOCO.SLAB_CONCRETO_R]:     { nome: 'Laje Concr. Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
   [BLOCO.SLAB_CONCRETO_A]:     { nome: 'Laje Concr. Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.COBRE_CORTADO]:       { nome: 'Cobre Cortado',       solido: true, emiteLuz: 0, cor: 0xe07a3b, lateral: 0xc56226 },
+  [BLOCO.COBRE_GASTO_CORTADO]: { nome: 'Cobre Gasto Cortado', solido: true, emiteLuz: 0, cor: 0xb47366, lateral: 0x8d5e54 },
+  [BLOCO.COBRE_OXIDADO_CORTADO]:{nome:'Cobre Oxid. Cortado', solido: true, emiteLuz: 0, cor: 0x5fb89e, lateral: 0x4a9b82 },
+  [BLOCO.COBRE_LISO]:          { nome: 'Cobre Liso',          solido: true, emiteLuz: 0, cor: 0xff9d5e, lateral: 0xe07a3b },
+  [BLOCO.ESCADA_PURPUR_PILLAR]:{ nome: 'Escada Pilar Purpur', solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'stairs' },
+  [BLOCO.PAREDE_PURPUR]:       { nome: 'Parede Purpur',       solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'wall' },
+  [BLOCO.SLAB_PURPUR_PILLAR]:  { nome: 'Laje Pilar Purpur',   solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'slab' },
+  [BLOCO.PURPUR_LIMPO]:        { nome: 'Purpur Limpo',        solido: true, emiteLuz: 0, cor: 0xce93d8, lateral: 0xab47bc },
 };
 
 export const ICONE = {
@@ -1467,6 +1483,17 @@ export const RECEITAS = [
   // 2 lajes concreto (3 → 6)
   { custos: [{b: BLOCO.CONCRETO_R, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_R,    q: 6}, wb: true },
   { custos: [{b: BLOCO.CONCRETO_A, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_A,    q: 6}, wb: true },
+  // Cobre cortado: 4 cobre → 4 cortado
+  { custos: [{b: BLOCO.COBRE, q: 4}],          saida: {b: BLOCO.COBRE_CORTADO, q: 4}, wb: true },
+  { custos: [{b: BLOCO.COBRE_GASTO, q: 4}],    saida: {b: BLOCO.COBRE_GASTO_CORTADO, q: 4}, wb: true },
+  { custos: [{b: BLOCO.COBRE_OXIDADO, q: 4}],  saida: {b: BLOCO.COBRE_OXIDADO_CORTADO, q: 4}, wb: true },
+  // Cobre liso (smelt 1 cobre + 1 carvão)
+  { custos: [{b: BLOCO.COBRE, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.COBRE_LISO, q: 1}, wb: false },
+  // Variantes purpur (6/3 → 4/6)
+  { custos: [{b: BLOCO.PURPUR_PILLAR, q: 6}], saida: {b: BLOCO.ESCADA_PURPUR_PILLAR, q: 4}, wb: true },
+  { custos: [{b: BLOCO.PURPUR_BLOCK, q: 6}],  saida: {b: BLOCO.PAREDE_PURPUR, q: 6}, wb: true },
+  { custos: [{b: BLOCO.PURPUR_PILLAR, q: 3}], saida: {b: BLOCO.SLAB_PURPUR_PILLAR, q: 6}, wb: true },
+  { custos: [{b: BLOCO.PURPUR_BLOCK, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {b: BLOCO.PURPUR_LIMPO, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

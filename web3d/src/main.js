@@ -822,6 +822,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.PAREDE_CONCRETO_PR, q: 16 });
   state.inv.adicionar({ b: BLOCO.SLAB_CONCRETO_R, q: 16 });
   state.inv.adicionar({ b: BLOCO.SLAB_CONCRETO_A, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COBRE_CORTADO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COBRE_GASTO_CORTADO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COBRE_OXIDADO_CORTADO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COBRE_LISO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_PURPUR_PILLAR, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAREDE_PURPUR, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_PURPUR_PILLAR, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PURPUR_LIMPO, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
@@ -1677,6 +1685,12 @@ function loop(now) {
   // Underwater tint: aparece quando player.naAgua
   const _under = document.getElementById('underwater-tint');
   if (_under) _under.classList.toggle('show', !!state.player.naAgua);
+  // Visão noturna: overlay amarelo se efeito ativo
+  const _night = document.getElementById('night-vision-overlay');
+  if (_night) {
+    const ativo = state.player.efeitos?.noite && Date.now() < state.player.efeitos.noite;
+    _night.classList.toggle('show', !!ativo);
+  }
   // Color grading: tint baseado na hora do dia
   const _grade = document.getElementById('color-grade');
   if (_grade) {

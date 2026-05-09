@@ -1101,6 +1101,20 @@ kbd {
   100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
 }
 
+/* === Visão noturna: overlay amarelo brighten quando efeito ativo === */
+#night-vision-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+  background: rgba(255, 255, 200, 0);
+  mix-blend-mode: screen;
+  transition: background-color 0.6s ease;
+}
+#night-vision-overlay.show {
+  background: rgba(255, 255, 200, 0.30);
+}
+
 /* === Color grading overlay (dawn/dusk amber, dusk red, night cool blue) ===
    JS atualiza background-color e opacity baseado em sun (hora do dia). */
 #color-grade {
