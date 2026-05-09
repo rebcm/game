@@ -592,6 +592,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.DEEPSLATE, q: 16 });
   state.inv.adicionar({ b: BLOCO.AMETHYST, q: 8 });
   state.inv.adicionar({ b: BLOCO.CALCITE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE_PAV, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DEEPSLATE_POL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.BLACKSTONE_POL, q: 16 });
+  state.inv.adicionar({ b: BLOCO.LAMA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.LAMA_COMPACTA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.TIJOLO_LAMA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.TUFF, q: 16 });
+  state.inv.adicionar({ b: BLOCO.DRIPSTONE, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });
@@ -1260,6 +1268,11 @@ function loop(now) {
             const pz = Math.floor(state.player.pos.z);
             // Não coloca bloco onde o player está (paridade Minecraft real)
             if (!(a.x === px && a.z === pz && (a.y === py || a.y === py + 1))) {
+              // Tocha/Vela precisam de apoio em algum lado (paridade MC)
+              const infoSel = BLOCO_INFO[sel.b];
+              if (infoSel?.shape === 'torch' && !state.world._tochaTemApoio(a.x, a.y, a.z)) {
+                state.ui.toast('⚠ Tocha precisa de apoio sólido (chão ou parede)');
+              } else {
               state.world.setPeloPlayer(a.x, a.y, a.z, sel.b);
               // Beacon: ao colocar, registra no set ativo e cria beam visual
               if (sel.b === BLOCO.BEACON) {
@@ -1288,6 +1301,7 @@ function loop(now) {
               state.particulas.spawnQuebra(a.x, a.y, a.z, sel.b);
               state.renderer.swingProgress = 0.01;
               Save.incrementarStat('blocksPlaced');
+              } // fecha else do tochaTemApoio
             }
           }
         }

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 13, CELL = 32;
+  const COLS = 8, ROWS = 14, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,70 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Lama: marrom úmido com gotas escuras + manchas mais claras
+  function pintarLama(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.50, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.35, 5, 2, seed + 4441);
+  }
+
+  // Tufo: cinza-esverdeado com manchas brancas (textura volcânica)
+  function pintarTuff(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6b6e6c';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#55585a', 0.45, 4, 2, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9b9e9c', 0.30, 5, 1, seed + 4441);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#e0e0e0', 0.15, 8, 1, seed + 7331);
+  }
+
+  // Dripstone: laranja-marrom com listras horizontais (camadas estratigráficas)
+  function pintarDripstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#c28560';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras horizontais (camadas)
+    ctx.fillStyle = '#a56a4c';
+    for (let py = 4; py < CELL; py += 6) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    ctx.fillStyle = '#d49a78';
+    for (let py = 7; py < CELL; py += 6) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    // Pontos pseudo-aleatórios
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#7a4d36', 0.30, 5, 1, idx * 9301 + 49297);
+  }
+
+  // Tijolo de Lama: padrão de tijolos com tons de areia/lama
+  function pintarTijoloLama(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#a0855e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Mortar mais escuro
+    ctx.fillStyle = '#6b5337';
+    ctx.fillRect(x0, y0 + 15, CELL, 2);
+    ctx.fillRect(x0 + 10, y0,      2, 15);
+    ctx.fillRect(x0 + 22, y0,      2, 15);
+    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
+    // Highlights claros
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#c2a07a', 0.25, 5, 1, idx * 9301 + 49297);
   }
 
   // Soul Sand: marrom escuro com 3 faces tristes (almas presas no Nether)
@@ -2229,6 +2293,14 @@ function criarAtlas() {
   pintarDeepslate(101);                                      // deepslate
   pintarAmethyst(102);                                       // amethyst
   pintarCalcite(103);                                        // calcite
+  pintarPedra(104, '#3a3a42', '#1a1a22', '#5a5a62', 0.40);   // deepslate cobbled
+  pintarPolido(105, '#55555f', '#35353d', '#7a7a82');        // deepslate polido
+  pintarPolido(106, '#2a2a2a', '#0a0a0a', '#4a4a4a');        // blackstone polido
+  pintarLama(107, '#4d3826', '#36281a', '#7a5e44');          // lama escura úmida
+  pintarLama(108, '#806746', '#5e4a30', '#a08868');          // lama compacta clara
+  pintarTijoloLama(109);                                     // tijolo de lama
+  pintarTuff(110);                                           // tufo
+  pintarDripstone(111);                                      // dripstone
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2338,6 +2410,14 @@ function criarAtlas() {
   mapa[BLOCO.DEEPSLATE]      = { top: 101, side: 101, bottom: 101 };
   mapa[BLOCO.AMETHYST]       = { top: 102, side: 102, bottom: 102 };
   mapa[BLOCO.CALCITE]        = { top: 103, side: 103, bottom: 103 };
+  mapa[BLOCO.DEEPSLATE_PAV]  = { top: 104, side: 104, bottom: 104 };
+  mapa[BLOCO.DEEPSLATE_POL]  = { top: 105, side: 105, bottom: 105 };
+  mapa[BLOCO.BLACKSTONE_POL] = { top: 106, side: 106, bottom: 106 };
+  mapa[BLOCO.LAMA]           = { top: 107, side: 107, bottom: 107 };
+  mapa[BLOCO.LAMA_COMPACTA]  = { top: 108, side: 108, bottom: 108 };
+  mapa[BLOCO.TIJOLO_LAMA]    = { top: 109, side: 109, bottom: 109 };
+  mapa[BLOCO.TUFF]           = { top: 110, side: 110, bottom: 110 };
+  mapa[BLOCO.DRIPSTONE]      = { top: 111, side: 111, bottom: 111 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

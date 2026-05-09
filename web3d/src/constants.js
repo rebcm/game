@@ -143,8 +143,16 @@ export const BLOCO = {
   DEEPSLATE:     102, // ardósia profunda (cinza-escuro Y<0)
   AMETHYST:      103, // ametista (cristal roxo)
   CALCITE:       104, // calcita (branca lisa)
+  DEEPSLATE_PAV: 105, // pavimento de deepslate (cobbled)
+  DEEPSLATE_POL: 106, // deepslate polido
+  BLACKSTONE_POL:107, // blackstone polido
+  LAMA:          108, // lama / mud (marrom umedo)
+  LAMA_COMPACTA: 109, // lama compactada
+  TIJOLO_LAMA:   110, // tijolo de lama
+  TUFF:          111, // tufo (cinza claro vulcânico)
+  DRIPSTONE:     112, // pedra goteira (laranja)
 };
-export const N_BLOCOS = 105;
+export const N_BLOCOS = 113;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -258,6 +266,14 @@ export const BLOCO_INFO = {
   [BLOCO.DEEPSLATE]:     { nome: 'Ardósia',          solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
   [BLOCO.AMETHYST]:      { nome: 'Ametista',         solido: true,  emiteLuz: 4,  cor: 0xab47bc, lateral: 0x7b1fa2 },
   [BLOCO.CALCITE]:       { nome: 'Calcita',          solido: true,  emiteLuz: 0,  cor: 0xeceff1, lateral: 0xcfd8dc },
+  [BLOCO.DEEPSLATE_PAV]: { nome: 'Pav. de Ardósia',  solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DEEPSLATE_POL]: { nome: 'Ardósia Polida',   solido: true,  emiteLuz: 0,  cor: 0x55555f, lateral: 0x40404a },
+  [BLOCO.BLACKSTONE_POL]:{ nome: 'Blackstone Polida',solido: true,  emiteLuz: 0,  cor: 0x2a2a2a, lateral: 0x1a1a1a },
+  [BLOCO.LAMA]:          { nome: 'Lama',             solido: true,  emiteLuz: 0,  cor: 0x4d3826, lateral: 0x36281a },
+  [BLOCO.LAMA_COMPACTA]: { nome: 'Lama Compacta',    solido: true,  emiteLuz: 0,  cor: 0x806746, lateral: 0x6b5337 },
+  [BLOCO.TIJOLO_LAMA]:   { nome: 'Tijolo de Lama',   solido: true,  emiteLuz: 0,  cor: 0xa0855e, lateral: 0x856a48 },
+  [BLOCO.TUFF]:          { nome: 'Tufo',             solido: true,  emiteLuz: 0,  cor: 0x6b6e6c, lateral: 0x55585a },
+  [BLOCO.DRIPSTONE]:     { nome: 'Pedra Goteira',    solido: true,  emiteLuz: 0,  cor: 0xc28560, lateral: 0xa56a4c },
 };
 
 export const ICONE = {
@@ -539,6 +555,21 @@ export const RECEITAS = [
   { custos: [{i: ITEM.LAPIS, q: 4}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.AMETHYST, q: 1}, wb: true },
   // Calcita: 4 neve + 1 ferro → 4 calcita
   { custos: [{b: BLOCO.NEVE, q: 4}, {i: ITEM.FERRO, q: 1}], saida: {b: BLOCO.CALCITE, q: 4}, wb: true },
+  // Deepslate variants
+  { custos: [{b: BLOCO.DEEPSLATE, q: 4}], saida: {b: BLOCO.DEEPSLATE_PAV, q: 4}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE_PAV, q: 4}], saida: {b: BLOCO.DEEPSLATE_POL, q: 4}, wb: true },
+  // Blackstone polido: 4 blackstone → 4 polido
+  { custos: [{b: BLOCO.BLACKSTONE, q: 4}], saida: {b: BLOCO.BLACKSTONE_POL, q: 4}, wb: true },
+  // Lama: 1 terra + 1 água (proxy: balde água)
+  { custos: [{b: BLOCO.TERRA, q: 1}, {i: ITEM.BUCKET_AGUA, q: 1}], saida: {b: BLOCO.LAMA, q: 1}, wb: false },
+  // Lama Compacta: 1 lama + 1 trigo
+  { custos: [{b: BLOCO.LAMA, q: 1}, {i: ITEM.TRIGO, q: 1}], saida: {b: BLOCO.LAMA_COMPACTA, q: 1}, wb: false },
+  // Tijolo de Lama: 4 lama compacta → 4 tijolo lama
+  { custos: [{b: BLOCO.LAMA_COMPACTA, q: 4}], saida: {b: BLOCO.TIJOLO_LAMA, q: 4}, wb: true },
+  // Tufo: 4 pedra + 1 obsidiana
+  { custos: [{b: BLOCO.PEDRA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.TUFF, q: 4}, wb: true },
+  // Dripstone: 4 areia + 1 lava bucket
+  { custos: [{b: BLOCO.AREIA, q: 4}, {i: ITEM.BUCKET_LAVA, q: 1}], saida: {b: BLOCO.DRIPSTONE, q: 4}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

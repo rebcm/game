@@ -917,24 +917,47 @@ export class World {
       movimentos++;
       topo++;
     }
-    // Verifica blocos shape='torch' acima — quebram se sem apoio (paridade MC)
-    // Retorna lista de coordenadas de torches que caíram (pra dropar item).
+    // Verifica blocos shape='torch' nos 6 voxels ao redor — quebram se
+    // sem apoio (paridade MC: precisa apoio em pelo menos 1 dos 5 lados:
+    // embaixo OU 4 laterais). Retorna array de torches que caíram.
     const cairam = [];
-    for (let dy = 1; dy <= 3 && y + dy < WORLD_Y; dy++) {
-      const ya = y + dy;
-      const ba = this.get(x, ya, z);
+    const checagens = [
+      { x, y: y + 1, z },     { x, y: y - 1, z },
+      { x: x + 1, y, z },     { x: x - 1, y, z },
+      { x, y, z: z + 1 },     { x, y, z: z - 1 },
+    ];
+    for (const c of checagens) {
+      if (c.y < 0 || c.y >= WORLD_Y) continue;
+      const ba = this.get(c.x, c.y, c.z);
       const infoA = BLOCO_INFO[ba];
       if (infoA?.shape === 'torch') {
-        const apoio = this.get(x, ya - 1, z);
-        const infoApoio = BLOCO_INFO[apoio];
-        // Apoio válido: bloco sólido cubo (não outra torch, não shape custom)
-        if (apoio === BLOCO.AR || (!infoApoio?.solido && infoApoio?.shape !== 'slab')) {
-          this.set(x, ya, z, BLOCO.AR);
-          cairam.push({ x, y: ya, z, b: ba });
+        if (!this._tochaTemApoio(c.x, c.y, c.z)) {
+          this.set(c.x, c.y, c.z, BLOCO.AR);
+          cairam.push({ x: c.x, y: c.y, z: c.z, b: ba });
         }
       }
     }
     return cairam;
+  }
+
+  // Tocha tem apoio se há bloco sólido cubo em pelo menos 1 dos 5 lados:
+  // embaixo, +X, -X, +Z, -Z (paridade Minecraft real)
+  _tochaTemApoio(x, y, z) {
+    const vizinhos = [
+      { x, y: y - 1, z },     // embaixo
+      { x: x + 1, y, z },     // leste
+      { x: x - 1, y, z },     // oeste
+      { x, y, z: z + 1 },     // sul
+      { x, y, z: z - 1 },     // norte
+    ];
+    for (const v of vizinhos) {
+      if (v.y < 0 || v.y >= WORLD_Y) continue;
+      const b = this.get(v.x, v.y, v.z);
+      const info = BLOCO_INFO[b];
+      // Apoio válido: bloco sólido SEM shape custom (cubo cheio)
+      if (info?.solido && !info?.shape) return true;
+    }
+    return false;
   }
 
   // === Iluminação 15 níveis (skylight + blocklight) ===
