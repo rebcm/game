@@ -317,6 +317,275 @@ export const MOB_INFO = {
     cor: 0x121212, sec: 0xb388ff,
     flutua: true, boss: true, // boss = HP bar na HUD
   },
+  // SPRINT MEGA-2: 24 mobs novos para paridade total
+  // BOSS Wither — 3 cabeças, 200 HP, atira withersulks
+  wither: {
+    hp: 200, vel: 1.0, hostil: true, dano: 12, alcance: 20.0,
+    drops: () => [
+      { i: ITEM.NETHER_STAR, q: 1 },
+    ],
+    cor: 0x1a1a1a, sec: 0x424242,
+    flutua: true, boss: true, ranged: true,
+  },
+  // Guardian — Ocean Monument, atira laser
+  guardian: {
+    hp: 30, vel: 1.0, hostil: true, dano: 6, alcance: 12.0,
+    drops: () => [
+      { i: ITEM.PRISMARINE_SHARD, q: 1 + Math.floor(Math.random() * 2) },
+      { i: ITEM.PEIXE, q: Math.random() < 0.4 ? 1 : 0 },
+    ],
+    cor: 0x4dd0e1, sec: 0xff5722, // ciano + olho laranja
+    aquatico: true, ranged: true,
+  },
+  // Elder Guardian — debuff mining fatigue
+  elder_guardian: {
+    hp: 80, vel: 0.7, hostil: true, dano: 8, alcance: 16.0,
+    drops: () => [
+      { i: ITEM.PRISMARINE_SHARD, q: 3 + Math.floor(Math.random() * 5) },
+      { b: 100 /* PRISMARINE bloco */, q: Math.random() < 0.5 ? 1 : 0 },
+    ],
+    cor: 0xb2dfdb, sec: 0xff5722,
+    aquatico: true, ranged: true, boss: true,
+  },
+  // Warden — Deep Dark, invisível pra player se não fizer som
+  warden: {
+    hp: 500, vel: 1.4, hostil: true, dano: 30, alcance: 8.0,
+    drops: () => [
+      { i: ITEM.SCULK_CATALYST || 154, q: 1 },
+      { i: ITEM.ECHO_SHARD, q: 1 + Math.floor(Math.random() * 2) },
+    ],
+    cor: 0x0a1a2a, sec: 0x40c4ff,
+    boss: true, ignoresArmor: true,
+  },
+  // Phantom — voa alto, ataca insônia
+  phantom: {
+    hp: 20, vel: 2.5, hostil: true, dano: 4, alcance: 4.0,
+    drops: () => [
+      { i: ITEM.PHANTOM_MEMBRANE, q: 1 },
+    ],
+    cor: 0x2c1f47, sec: 0x9c27b0,
+    flutua: true,
+  },
+  // Pillager — outpost, crossbow
+  pillager: {
+    hp: 24, vel: 1.5, hostil: true, dano: 5, alcance: 8.0,
+    drops: () => [
+      { i: ITEM.CROSSBOW, q: Math.random() < 0.3 ? 1 : 0 },
+      { i: ITEM.ESMERALDA, q: Math.random() < 0.5 ? 1 : 0 },
+    ],
+    cor: 0x607d8b, sec: 0x424242,
+    ranged: true,
+  },
+  // Vindicator — espada, mansion
+  vindicator: {
+    hp: 24, vel: 1.4, hostil: true, dano: 7,
+    drops: () => [
+      { i: ITEM.MACHADO_FERRO, q: Math.random() < 0.3 ? 1 : 0 },
+      { i: ITEM.ESMERALDA, q: 1 + Math.floor(Math.random() * 2) },
+    ],
+    cor: 0x4a4a4a, sec: 0x6d4c41,
+  },
+  // Evoker — magia, summon Vex
+  evoker: {
+    hp: 24, vel: 1.5, hostil: true, dano: 6, alcance: 10.0,
+    drops: () => [
+      { i: ITEM.TOTEM_VIDA, q: 1 },
+      { i: ITEM.ESMERALDA, q: 2 + Math.floor(Math.random() * 3) },
+    ],
+    cor: 0x4a4a4a, sec: 0xfdd835,
+    ranged: true,
+  },
+  // Vex — voa, espada, summoned by Evoker
+  vex: {
+    hp: 14, vel: 2.8, hostil: true, dano: 5,
+    drops: () => [],
+    cor: 0xeceff1, sec: 0xc62828,
+    flutua: true,
+  },
+  // Ravager — gigante, raids
+  ravager: {
+    hp: 100, vel: 1.2, hostil: true, dano: 12,
+    drops: () => [
+      { i: ITEM.SELA, q: 1 },
+      { i: ITEM.ESMERALDA, q: 5 + Math.floor(Math.random() * 5) },
+    ],
+    cor: 0x4a4a4a, sec: 0x000000,
+    big: true,
+  },
+  // Horse — montar, sela, jump boost
+  horse: {
+    hp: 30, vel: 2.4, hostil: false,
+    drops: () => [
+      { i: ITEM.COURO, q: 1 },
+    ],
+    cor: 0x6d4c41, sec: 0x3e2723,
+    rideable: true,
+  },
+  // Donkey — inventory extra
+  donkey: {
+    hp: 22, vel: 1.8, hostil: false,
+    drops: () => [{ i: ITEM.COURO, q: 1 }],
+    cor: 0x9e9e9e, sec: 0x616161,
+    rideable: true, hasInventory: true,
+  },
+  // Mule — Donkey × Horse breed
+  mule: {
+    hp: 26, vel: 2.0, hostil: false,
+    drops: () => [{ i: ITEM.COURO, q: 1 }],
+    cor: 0x5d4037, sec: 0x3e2723,
+    rideable: true, hasInventory: true,
+  },
+  // Llama — neutro, cuspem
+  llama: {
+    hp: 22, vel: 1.4, hostil: false,
+    drops: () => [{ i: ITEM.COURO, q: 1 }],
+    cor: 0xeceff1, sec: 0xa1887f,
+    rideable: true, ranged: true, // cospe quando provocada
+  },
+  // Strider — Nether, montar em lava
+  strider: {
+    hp: 20, vel: 1.7, hostil: false,
+    drops: () => [{ i: ITEM.CORDA, q: 1 }],
+    cor: 0xc62828, sec: 0xfdd835, // vermelho com listras amarelas
+    rideable: true, lavaWalker: true,
+  },
+  // Piglin — Nether, neutro com ouro, atrai trades
+  piglin: {
+    hp: 16, vel: 1.5, hostil: true, dano: 4,
+    drops: () => [
+      { i: ITEM.OURO, q: Math.random() < 0.3 ? 1 : 0 },
+      { i: ITEM.PIC_OURO || ITEM.PIC_FERRO, q: Math.random() < 0.1 ? 1 : 0 },
+    ],
+    cor: 0xc97a4d, sec: 0xfdd835,
+  },
+  // Hoglin — Nether hostil, comida
+  hoglin: {
+    hp: 40, vel: 1.6, hostil: true, dano: 7,
+    drops: () => [
+      { i: ITEM.CARNE_CRUA, q: 2 + Math.floor(Math.random() * 3) },
+      { i: ITEM.COURO, q: Math.random() < 0.5 ? 1 : 0 },
+    ],
+    cor: 0xc62828, sec: 0x6d4c41,
+    big: true,
+  },
+  // Zoglin — Hoglin zumbi
+  zoglin: {
+    hp: 40, vel: 1.6, hostil: true, dano: 8,
+    drops: () => [
+      { i: ITEM.CARNE_PODRE, q: 1 + Math.floor(Math.random() * 3) },
+    ],
+    cor: 0x4a4a4a, sec: 0x424242,
+    big: true,
+  },
+  // Zombified Piglin — Nether, neutro a menos que provocado
+  zombified_piglin: {
+    hp: 20, vel: 1.5, hostil: false, dano: 5, // ataca se provocado
+    drops: () => [
+      { i: ITEM.OURO, q: Math.random() < 0.4 ? 1 : 0 },
+      { i: ITEM.CARNE_PODRE, q: Math.random() < 0.6 ? 1 : 0 },
+    ],
+    cor: 0x9e9e9e, sec: 0xfdd835,
+  },
+  // Endermite — drop enderman, hostil
+  endermite: {
+    hp: 8, vel: 2.4, hostil: true, dano: 2,
+    drops: () => [],
+    cor: 0x121212, sec: 0x9c27b0,
+    pequeno: true,
+  },
+  // Silverfish — mineshaft, hostil
+  silverfish: {
+    hp: 8, vel: 2.4, hostil: true, dano: 1,
+    drops: () => [],
+    cor: 0xbcaaa4, sec: 0x9e9e9e,
+    pequeno: true,
+  },
+  // Goat — montanha, corneia
+  goat: {
+    hp: 10, vel: 2.0, hostil: false,
+    drops: () => [
+      { i: ITEM.GOAT_HORN, q: Math.random() < 0.2 ? 1 : 0 },
+    ],
+    cor: 0xfff8e1, sec: 0xeceff1,
+  },
+  // Panda — bambu, 7 personalidades
+  panda: {
+    hp: 30, vel: 1.5, hostil: false,
+    drops: () => [
+      { i: ITEM.BAMBOO, q: 1 + Math.floor(Math.random() * 3) },
+    ],
+    cor: 0xfafafa, sec: 0x000000,
+  },
+  // Bat — caverna, neutra
+  bat: {
+    hp: 6, vel: 1.5, hostil: false,
+    drops: () => [],
+    cor: 0x424242, sec: 0x6d4c41,
+    flutua: true, pequeno: true,
+  },
+  // Squid — oceano, drop tinta
+  squid: {
+    hp: 10, vel: 0.8, hostil: false,
+    drops: () => [{ i: ITEM.TINTA_GLOW, q: 1 + Math.floor(Math.random() * 3) }],
+    cor: 0x424242, sec: 0x000000,
+    aquatico: true,
+  },
+  // Dolphin — oceano, neutro
+  dolphin: {
+    hp: 10, vel: 2.5, hostil: false,
+    drops: () => [{ i: ITEM.PEIXE, q: Math.random() < 0.5 ? 1 : 0 }],
+    cor: 0x90a4ae, sec: 0xeceff1,
+    aquatico: true,
+  },
+  // Shulker — End City, ranged
+  shulker: {
+    hp: 30, vel: 0.0, hostil: true, dano: 4, alcance: 10.0,
+    drops: () => [
+      { i: ITEM.SCULK_CATALYST || 154, q: Math.random() < 0.5 ? 1 : 0 },
+    ],
+    cor: 0xab47bc, sec: 0xc97a4d,
+    ranged: true, static: true,
+  },
+  // Spider Jockey — esqueleto montando aranha (compound)
+  spider_jockey: {
+    hp: 20, vel: 2.6, hostil: true, dano: 4, alcance: 7.0,
+    drops: () => [
+      { i: ITEM.OSSO, q: 1 },
+      { i: ITEM.CORDA, q: Math.random() < 0.4 ? 1 : 0 },
+    ],
+    cor: 0x424242, sec: 0xfafafa,
+    ranged: true, big: true,
+  },
+  // Frog — sapo (ja existe? — variantes 3 cores)
+  frog_temperate: {
+    hp: 10, vel: 1.6, hostil: false,
+    drops: () => [],
+    cor: 0xf57f17, sec: 0xfdd835,
+  },
+  frog_warm: {
+    hp: 10, vel: 1.6, hostil: false,
+    drops: () => [],
+    cor: 0xfff176, sec: 0xfff8e1,
+  },
+  frog_cold: {
+    hp: 10, vel: 1.6, hostil: false,
+    drops: () => [],
+    cor: 0x4dd0e1, sec: 0xb3e5fc,
+  },
+  // Tadpole (girino) — frog filhote
+  tadpole: {
+    hp: 4, vel: 1.5, hostil: false,
+    drops: () => [],
+    cor: 0x4e342e, sec: 0x000000,
+    aquatico: true, pequeno: true,
+  },
+  // Glow Squid — caverna brilhante
+  glow_squid_var: {
+    hp: 10, vel: 0.8, hostil: false,
+    drops: () => [{ i: ITEM.TINTA_GLOW, q: 1 + Math.floor(Math.random() * 3) }],
+    cor: 0x4dd0e1, sec: 0xe1f5fe,
+    aquatico: true, brilha: true,
+  },
 };
 
 // Constrói modelo 3D de um mob com pivots para animação.
