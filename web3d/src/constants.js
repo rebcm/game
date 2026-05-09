@@ -111,8 +111,10 @@ export const BLOCO = {
   BANDEIRA_V:     70, // bandeira verde
   BANDEIRA_AM:    71, // bandeira amarela
   COBRE_MINERIO:  72, // minério de cobre (gera em pedra, smelt → lingote)
+  COLMEIA:        73, // colmeia: gera mel ao longo do tempo, decoração
+  LILY_PAD:       74, // vitória-régia: decoração flutuante na água
 };
-export const N_BLOCOS = 73;
+export const N_BLOCOS = 75;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -194,6 +196,8 @@ export const BLOCO_INFO = {
   [BLOCO.BANDEIRA_V]:    { nome: 'Bandeira Verde',   solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
   [BLOCO.BANDEIRA_AM]:   { nome: 'Bandeira Amarela', solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
   [BLOCO.COBRE_MINERIO]: { nome: 'Minério de Cobre', solido: true,  emiteLuz: 0,  cor: 0x8e7060, lateral: 0x6b5448 },
+  [BLOCO.COLMEIA]:       { nome: 'Colmeia',          solido: true,  emiteLuz: 0,  cor: 0xfdd835, lateral: 0xa1887f },
+  [BLOCO.LILY_PAD]:      { nome: 'Vitória-régia',    solido: true,  emiteLuz: 0,  cor: 0x388e3c, lateral: 0x388e3c, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -247,6 +251,8 @@ export const ITEM = {
   MACA:          256, // maçã: comida normal + drop raro de folha
   MACA_DOURADA:  257, // maçã dourada: regen + absorption (paridade MC real)
   SALMAO:        258, // salmão: pesca alternativa, mais nutritivo que peixe
+  MEL:           259, // mel: comida da colmeia, restaura fome
+  FAVO_MEL:      260, // favo de mel: ingrediente futuro
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -313,6 +319,8 @@ export const ITEM_INFO = {
   [ITEM.MACA]:          { nome: 'Maçã',              icone: '🍎', nutricao: 4 },
   [ITEM.MACA_DOURADA]:  { nome: 'Maçã Dourada',      icone: '🍏', nutricao: 4, dourada: true },
   [ITEM.SALMAO]:        { nome: 'Salmão',            icone: '🐟', nutricao: 5 },
+  [ITEM.MEL]:           { nome: 'Mel',               icone: '🍯', nutricao: 6 },
+  [ITEM.FAVO_MEL]:      { nome: 'Favo de Mel',       icone: '🟨' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -419,6 +427,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.COBRE_LINGOTE, q: 9}], saida: {b: BLOCO.COBRE, q: 1}, wb: true },
   // Maçã Dourada: 8 ouro + 1 maçã (paridade MC real, item endgame)
   { custos: [{i: ITEM.OURO, q: 8}, {i: ITEM.MACA, q: 1}], saida: {i: ITEM.MACA_DOURADA, q: 1}, wb: true },
+  // Colmeia: 6 pranchas + 3 favos de mel (paridade MC)
+  { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.FAVO_MEL, q: 3}], saida: {b: BLOCO.COLMEIA, q: 1}, wb: true },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.MAGMA, q: 4}, wb: true },
   // Lanterna: 8 ferro + 1 tocha → 1 lanterna (paridade MC: nuggets, simplificado)

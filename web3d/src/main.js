@@ -554,6 +554,9 @@ function init() {
   state.inv.adicionar({ i: ITEM.MACA_DOURADA, q: 1 });
   state.inv.adicionar({ b: BLOCO.MAGMA, q: 8 });
   state.inv.adicionar({ b: BLOCO.LANTERNA, q: 4 });
+  state.inv.adicionar({ b: BLOCO.COLMEIA, q: 2 });
+  state.inv.adicionar({ b: BLOCO.LILY_PAD, q: 8 });
+  state.inv.adicionar({ i: ITEM.MEL, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });

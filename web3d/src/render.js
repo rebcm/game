@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 9, CELL = 32;
+  const COLS = 8, ROWS = 10, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -956,6 +956,110 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Colmeia topo: padrão hexagonal de mel (favo) com gotas douradas
+  function pintarColmeiaTopo(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base bege da madeira de cobre
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão hexagonal central (favo) — 9 hexágonos pequenos
+    ctx.fillStyle = '#fdd835';
+    const hexSize = 8;
+    for (let row2 = 0; row2 < 3; row2++) {
+      for (let col2 = 0; col2 < 3; col2++) {
+        const cx = 6 + col2 * 9;
+        const cy = 6 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
+        if (cx + hexSize < CELL && cy + hexSize < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, hexSize, hexSize - 2);
+          ctx.fillRect(x0 + cx + 1, y0 + cy + hexSize - 2, hexSize - 2, 1);
+        }
+      }
+    }
+    // Gotas escuras nos hexágonos (mel mais escuro = bordas)
+    ctx.fillStyle = '#f57f17';
+    for (let row2 = 0; row2 < 3; row2++) {
+      for (let col2 = 0; col2 < 3; col2++) {
+        const cx = 6 + col2 * 9;
+        const cy = 6 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
+        if (cx + 4 < CELL && cy + 4 < CELL) {
+          ctx.fillRect(x0 + cx + 2, y0 + cy + 2, 2, 2);
+        }
+      }
+    }
+    // Borda escura
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+  // Colmeia lateral: madeira marrom + entrada hexagonal central + tábuas
+  function pintarColmeiaLado(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base madeira clara
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras horizontais (tábuas)
+    ctx.fillStyle = '#8d6e63';
+    for (let py = 5; py < CELL; py += 7) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    // Grão da madeira (linhas verticais sutis)
+    ctx.fillStyle = '#7a5b50';
+    for (let px = 6; px < CELL; px += 9) {
+      ctx.fillRect(x0 + px, y0 + 4, 1, CELL - 8);
+    }
+    // Entrada hexagonal escura (porta da colmeia)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 12, y0 + 18, 8, 8);
+    ctx.fillStyle = '#1a0f0a';
+    ctx.fillRect(x0 + 13, y0 + 19, 6, 6);
+    // Mel pingando da entrada (gota dourada)
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 14, y0 + 25, 2, 2);
+    ctx.fillRect(x0 + 17, y0 + 26, 2, 1);
+    // Borda
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Lily Pad: folha verde redonda flutuante + nervuras + 1 flor branca
+  function pintarLilyPad(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro (água debaixo)
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Forma circular da folha (verde médio)
+    ctx.fillStyle = '#388e3c';
+    // Aproximação de círculo com 4 retângulos
+    ctx.fillRect(x0 + 4,  y0 + 8,  24, 16);
+    ctx.fillRect(x0 + 8,  y0 + 4,  16, 24);
+    // Centro mais escuro (sombra natural)
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
+    // Nervuras radiais (4 linhas saindo do centro)
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(x0 + 16, y0 + 6,  1, 20); // vertical
+    ctx.fillRect(x0 + 6,  y0 + 16, 20, 1); // horizontal
+    // Recorte radial pequeno (caracteristica da vitória-régia)
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(x0 + 14, y0 + 4, 4, 6);
+    // Flor branca pequena central
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+  }
+
   // Minério de Cobre: pedra base + clusters cor cobre (laranja-marrom)
   function pintarCobreMinerio(idx) {
     const col = idx % COLS;
@@ -1651,6 +1755,9 @@ function criarAtlas() {
   pintarBandeira(68, '#2e7d32', '#1b5e20', '#66bb6a');     // bandeira verde
   pintarBandeira(69, '#f9a825', '#f57f17', '#ffd54f');     // bandeira amarela
   pintarCobreMinerio(70);                                   // minério de cobre
+  pintarColmeiaTopo(71);                                    // colmeia topo (favo)
+  pintarColmeiaLado(72);                                    // colmeia lado (entrada)
+  pintarLilyPad(73);                                        // vitória-régia
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1728,6 +1835,8 @@ function criarAtlas() {
   mapa[BLOCO.BANDEIRA_V]     = { top: 68, side: 68, bottom: 68 };
   mapa[BLOCO.BANDEIRA_AM]    = { top: 69, side: 69, bottom: 69 };
   mapa[BLOCO.COBRE_MINERIO]  = { top: 70, side: 70, bottom: 70 };
+  mapa[BLOCO.COLMEIA]        = { top: 71, side: 72, bottom: 71 };
+  mapa[BLOCO.LILY_PAD]       = { top: 73, side: 73, bottom: 73 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

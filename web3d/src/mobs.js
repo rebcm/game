@@ -97,6 +97,14 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Bee: passiva voa baixo, neutro provocado pica e morre
+  bee: {
+    hp: 8, vel: 1.5, hostil: false, neutro: true, dano: 2, alcance: 1.4,
+    drops: () => Math.random() < 0.4 ? [{ i: ITEM.FAVO_MEL, q: 1 }] : [],
+    cor: 0xfdd835, sec: 0x212121, // amarelo + preto
+    voa: true,
+    pica: true, // morre após picar (perde aguilhão)
+  },
   // Magma Cube: slime do Nether, vermelho-laranja, dano alto, queima
   magma_cube: {
     hp: 12, vel: 2.0, hostil: true, dano: 4, alcance: 1.4,
@@ -937,6 +945,54 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
+    case 'bee': {
+      // Corpo amarelo com listras pretas (clássico abelha) + asas + ferrão
+      const corpo = cubo(0.30, 0.22, 0.26, info.cor);
+      corpo.position.y = 0.55; grp.add(corpo);
+      // 3 listras pretas no corpo
+      for (const z of [-0.10, 0, 0.10]) {
+        const listra = cubo(0.31, 0.06, 0.04, info.sec);
+        listra.position.set(0, 0.55, z); grp.add(listra);
+      }
+      // Cabeça preta pequena
+      const cabeca = cubo(0.20, 0.18, 0.16, info.sec);
+      cabeca.position.set(0, 0.55, 0.18); grp.add(cabeca);
+      // Olhos brancos
+      for (const sx of [-0.06, 0.06]) {
+        const o = cubo(0.05, 0.07, 0.02, 0xfafafa);
+        o.position.set(sx, 0, 0.085); cabeca.add(o);
+      }
+      // Antenas pequenas (2 cubinhos finos)
+      for (const sx of [-0.04, 0.04]) {
+        const ant = cubo(0.02, 0.10, 0.02, info.sec);
+        ant.position.set(sx, 0.13, 0.04); cabeca.add(ant);
+      }
+      // Ferrão preto traseiro
+      const ferrao = cubo(0.04, 0.04, 0.06, info.sec);
+      ferrao.position.set(0, 0.55, -0.18); grp.add(ferrao);
+      // 4 asas translúcidas brancas (par superior + par inferior)
+      const asaMat = matCor(0xfafafa);
+      asaMat.transparent = true;
+      asaMat.opacity = 0.55;
+      for (let i = 0; i < 4; i++) {
+        const asa = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.10, 0.18), asaMat);
+        const lado = i < 2 ? -1 : 1;
+        const cima = i % 2 === 0 ? 1 : -1;
+        asa.position.set(lado * 0.13, 0.65 + cima * 0.04, -0.04);
+        asa.rotation.z = lado * 0.25;
+        grp.add(asa);
+      }
+      // Pernas pequenas (4)
+      for (let i = 0; i < 4; i++) {
+        const p = cubo(0.03, 0.08, 0.03, info.sec);
+        p.position.x = (i % 2 === 0 ? -0.10 : 0.10);
+        p.position.y = 0.40;
+        p.position.z = (i < 2 ? -0.06 : 0.06);
+        grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      break;
+    }
     case 'magma_cube':
     case 'slime': {
       // Corpo gelatinoso semi-transparente
@@ -1275,6 +1331,7 @@ function _dimsMob(tipo) {
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'magma_cube': return { raio: 0.42, altura: 0.55 };
+    case 'bee':      return { raio: 0.16, altura: 0.30 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
@@ -2032,6 +2089,8 @@ export class MobManager {
         if (Math.random() < 0.03) tipos.push('mooshroom');
         // Allay: raríssimo (1%), spawna em qualquer grama
         if (Math.random() < 0.01) tipos.push('allay');
+        // Bee: passiva voadora, comum em grama (15% chance) — fauna ambient
+        if (Math.random() < 0.15) tipos.push('bee');
         // Sapo: spawn em grama com água perto (proxy de pântano)
         let _aguaPerto = false;
         for (let dx = -3; dx <= 3 && !_aguaPerto; dx++) {
