@@ -705,6 +705,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.TERRACOTA_RX, q: 16 });
   state.inv.adicionar({ b: BLOCO.TERRACOTA_LR, q: 16 });
   state.inv.adicionar({ b: BLOCO.TERRACOTA_PR, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAINEL_VIDRO_R, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAINEL_VIDRO_A, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAINEL_VIDRO_V, q: 16 });
+  state.inv.adicionar({ b: BLOCO.PAINEL_VIDRO_AM, q: 16 });
+  state.inv.adicionar({ b: BLOCO.GLAZED_R, q: 8 });
+  state.inv.adicionar({ b: BLOCO.GLAZED_A, q: 8 });
+  state.inv.adicionar({ b: BLOCO.GLAZED_V, q: 8 });
+  state.inv.adicionar({ b: BLOCO.GLAZED_AM, q: 8 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

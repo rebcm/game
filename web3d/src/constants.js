@@ -277,8 +277,16 @@ export const BLOCO = {
   TERRACOTA_RX:   224, // roxa
   TERRACOTA_LR:   225, // laranja
   TERRACOTA_PR:   226, // preta
+  PAINEL_VIDRO_R: 227, // painel de vidro vermelho (shape bars)
+  PAINEL_VIDRO_A: 228, // azul
+  PAINEL_VIDRO_V: 229, // verde
+  PAINEL_VIDRO_AM:230, // amarelo
+  GLAZED_R:       231, // glazed terracota vermelha
+  GLAZED_A:       232, // azul
+  GLAZED_V:       233, // verde
+  GLAZED_AM:      234, // amarela
 };
-export const N_BLOCOS = 227;
+export const N_BLOCOS = 235;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -526,6 +534,14 @@ export const BLOCO_INFO = {
   [BLOCO.TERRACOTA_RX]: { nome: 'Terracota Roxa',   solido: true,  emiteLuz: 0, cor: 0x764467, lateral: 0x5a3050 },
   [BLOCO.TERRACOTA_LR]: { nome: 'Terracota Laranja',solido: true,  emiteLuz: 0, cor: 0xa05a30, lateral: 0x7d3e1c },
   [BLOCO.TERRACOTA_PR]: { nome: 'Terracota Preta',  solido: true,  emiteLuz: 0, cor: 0x251610, lateral: 0x150a05 },
+  [BLOCO.PAINEL_VIDRO_R]: { nome: 'Painel Vidro Verm', solido: true, emiteLuz: 0, cor: 0xef5350, lateral: 0xc62828, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_A]: { nome: 'Painel Vidro Azul', solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x1565c0, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_V]: { nome: 'Painel Vidro Verde',solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x2e7d32, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_AM]:{ nome: 'Painel Vidro Amar', solido: true, emiteLuz: 0, cor: 0xffeb3b, lateral: 0xf9a825, shape: 'bars' },
+  [BLOCO.GLAZED_R]:       { nome: 'Glazed Vermelha',  solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.GLAZED_A]:       { nome: 'Glazed Azul',      solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.GLAZED_V]:       { nome: 'Glazed Verde',     solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.GLAZED_AM]:      { nome: 'Glazed Amarela',   solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17 },
 };
 
 export const ICONE = {
@@ -987,6 +1003,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_ROSA, q: 1}],     saida: {b: BLOCO.TERRACOTA_RX, q: 1}, wb: false },
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_LARANJA, q: 1}],  saida: {b: BLOCO.TERRACOTA_LR, q: 1}, wb: false },
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_PRETA, q: 1}],    saida: {b: BLOCO.TERRACOTA_PR, q: 1}, wb: false },
+  // Painéis de vidro coloridos: 6 vidro colorido → 16 painéis
+  { custos: [{b: BLOCO.VIDRO_VERMELHO, q: 6}], saida: {b: BLOCO.PAINEL_VIDRO_R,  q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO_AZUL, q: 6}],     saida: {b: BLOCO.PAINEL_VIDRO_A,  q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO_VERDE, q: 6}],    saida: {b: BLOCO.PAINEL_VIDRO_V,  q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO_AMARELO, q: 6}],  saida: {b: BLOCO.PAINEL_VIDRO_AM, q: 16}, wb: true },
+  // Glazed Terracotas: 1 terracota colorida + 1 carvão (proxy de smelt)
+  { custos: [{b: BLOCO.TERRACOTA_R, q: 1},  {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_R,  q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_A, q: 1},  {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_A,  q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_V, q: 1},  {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_V,  q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_AM, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_AM, q: 1}, wb: false },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

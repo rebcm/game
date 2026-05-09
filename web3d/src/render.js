@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 27, CELL = 32;
+  const COLS = 8, ROWS = 28, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,43 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Glazed Terracota: cor vibrante com padrão geométrico (paridade MC)
+  function pintarGlazed(idx, base, claro, escuro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão central diamante (X)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 6, y0 + 6, 20, 4);
+    ctx.fillRect(x0 + 6, y0 + CELL - 10, 20, 4);
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 20);
+    ctx.fillRect(x0 + CELL - 10, y0 + 6, 4, 20);
+    // Centro grande contrastante
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // 4 cantos com pontos decorativos
+    ctx.fillStyle = '#ffffff';
+    for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+    }
+    // Cruz na borda
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + CELL/2 - 1, y0 + 2, 2, 2);
+    ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL - 4, 2, 2);
+    ctx.fillRect(x0 + 2, y0 + CELL/2 - 1, 2, 2);
+    ctx.fillRect(x0 + CELL - 4, y0 + CELL/2 - 1, 2, 2);
+    // Borda escura
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Conduit: cristal aquático ciano-prismarine com 4 nodos brilhantes
@@ -3546,6 +3583,16 @@ function criarAtlas() {
   pintarPedra(211, '#764467', '#5a3050', '#9c6d8d', 0.40);        // terracota roxa
   pintarPedra(212, '#a05a30', '#7d3e1c', '#c97a4d', 0.40);        // terracota laranja
   pintarPedra(213, '#251610', '#150a05', '#3d2820', 0.40);        // terracota preta
+  // 4 painéis de vidro coloridos (cells 214-217) — reusam pintor vidro
+  pintarVidroColorido(214, '#ef5350', '#8b0000');                 // painel vidro vermelho
+  pintarVidroColorido(215, '#4fc3f7', '#0d47a1');                 // painel vidro azul
+  pintarVidroColorido(216, '#66bb6a', '#1b5e20');                 // painel vidro verde
+  pintarVidroColorido(217, '#ffeb3b', '#f9a825');                 // painel vidro amarelo
+  // 4 glazed terracotas (cells 218-221)
+  pintarGlazed(218, '#c62828', '#ef5350', '#8b0000');             // glazed vermelha
+  pintarGlazed(219, '#1565c0', '#4fc3f7', '#0d47a1');             // glazed azul
+  pintarGlazed(220, '#2e7d32', '#66bb6a', '#1b5e20');             // glazed verde
+  pintarGlazed(221, '#f9a825', '#ffd54f', '#f57f17');             // glazed amarela
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3780,6 +3827,14 @@ function criarAtlas() {
   mapa[BLOCO.TERRACOTA_RX]   = { top: 211, side: 211, bottom: 211 };
   mapa[BLOCO.TERRACOTA_LR]   = { top: 212, side: 212, bottom: 212 };
   mapa[BLOCO.TERRACOTA_PR]   = { top: 213, side: 213, bottom: 213 };
+  mapa[BLOCO.PAINEL_VIDRO_R] = { top: 214, side: 214, bottom: 214 };
+  mapa[BLOCO.PAINEL_VIDRO_A] = { top: 215, side: 215, bottom: 215 };
+  mapa[BLOCO.PAINEL_VIDRO_V] = { top: 216, side: 216, bottom: 216 };
+  mapa[BLOCO.PAINEL_VIDRO_AM]= { top: 217, side: 217, bottom: 217 };
+  mapa[BLOCO.GLAZED_R]       = { top: 218, side: 218, bottom: 218 };
+  mapa[BLOCO.GLAZED_A]       = { top: 219, side: 219, bottom: 219 };
+  mapa[BLOCO.GLAZED_V]       = { top: 220, side: 220, bottom: 220 };
+  mapa[BLOCO.GLAZED_AM]      = { top: 221, side: 221, bottom: 221 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
