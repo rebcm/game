@@ -560,19 +560,66 @@ function aplicarPocao(tipo) {
 }
 
 // === Dormir ===
+// SPRINT MEGA-4: paridade Minecraft real
+// - Cama no Nether/End: explode com dano 8
+// - Spawn point: ressetado para a cama
+// - Tempo: pula direto pra manhã
+// - Heal completo + remove phantoms próximos
 function dormir() {
+  // Bed explosion no Nether/End
+  if (state.world.dimensao === 'nether' || state.world.dimensao === 'end') {
+    state.ui.toast('💥 Cama explode aqui!');
+    Audio.creeperBoom?.() || Audio.tnt?.();
+    state.player.aplicarDano(8, 'cama_explode');
+    return;
+  }
   const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
   if (sun > 0.4) { state.ui.toast('Você só pode dormir à noite'); return; }
+  // Verificar mobs hostis próximos (paridade MC: não pode dormir com hostil em ~8 blocos)
+  if (state.mobs && state.mobs.lista) {
+    const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+    for (const m of state.mobs.lista) {
+      const info = m.tipo && state.mobs.MOB_INFO?.[m.tipo];
+      if (info?.hostil) {
+        const dist = Math.hypot(m.x - px, m.y - py, m.z - pz);
+        if (dist < 8) { state.ui.toast('😱 Mobs hostis impedem o sono!'); return; }
+      }
+    }
+  }
   Audio.cama();
   const overlay = document.getElementById('dormindo-overlay');
-  overlay.classList.remove('hidden');
+  overlay?.classList?.remove('hidden');
   setTimeout(() => {
     state.tempoDia = 0.22;
     state.player.hp = state.player.hpMax;
-    state.player.fome = Math.max(state.player.fome - 1, 0);
-    overlay.classList.add('hidden');
-    state.ui.toast('Bom dia! ☀️');
+    // Saturação cheia (paridade MC)
+    state.player.fome = state.player.fomeMax || 20;
+    state.player.saturation = Math.min(20, (state.player.saturation || 0) + 5);
+    // Reset spawn point para a cama
+    if (state.player.pos) {
+      state.player.spawnPoint = { x: state.player.pos.x, y: state.player.pos.y, z: state.player.pos.z };
+    }
+    // Remove phantoms (paridade MC — phantoms só atacam quando insônia)
+    if (state.mobs?.lista) {
+      state.mobs.lista = state.mobs.lista.filter(m => m.tipo !== 'phantom');
+    }
+    overlay?.classList?.add('hidden');
+    state.ui.toast('Bom dia! ☀️ Spawn ressetado!');
+    // Limpar Bad Omen ao dormir (paridade MC)
+    if (state.player.efeitos?.bad_omen) delete state.player.efeitos.bad_omen;
   }, 1200);
+}
+
+// SPRINT MEGA-4: Respawn Anchor (Nether)
+// Carregado com Glowstone (4 cargas). Ao morrer, ressetada o spawn no Nether.
+function usarRespawnAnchor(x, y, z) {
+  if (state.world.dimensao !== 'nether') {
+    state.ui.toast('💥 Respawn Anchor explode no Overworld!');
+    state.player.aplicarDano(10, 'anchor_explode');
+    return;
+  }
+  state.player.spawnPoint = { x, y, z, dim: 'nether' };
+  state.ui.toast('🛏️ Respawn ancorado no Nether!');
 }
 
 // === Painel do baú ===
@@ -1518,29 +1565,89 @@ function loop(now) {
     state._beaconAcc = (state._beaconAcc || 0) + dt;
     if (state._beaconAcc >= 1.0) {
       state._beaconAcc = 0;
+      // SPRINT MEGA-4: Beacon paridade Minecraft real
+      // - 4 tiers de pirâmide (1×1 base → 4×4 base)
+      // - Tier 1 (9 blocos): Speed I, Haste I (32 blocos range)
+      // - Tier 2 (34 blocos): + Resistance, Jump Boost (40 blocos)
+      // - Tier 3 (83 blocos): + Strength (48 blocos)
+      // - Tier 4 (164 blocos): + Regeneration (50 blocos) + 2× tier
       if (state.beacons && state.beacons.size) {
         const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
         for (const k of state.beacons) {
           const [sx, y, sz] = k.split(',').map(Number);
-          const dx = sx - px, dy = y - py, dz = sz - pz;
-          if (dx*dx + dy*dy + dz*dz > 16 * 16) continue;
           if (state.world.get(sx, y, sz) !== BLOCO.BEACON) {
             state.beacons.delete(k);
             state.renderer.removerBeaconBeam(sx, y, sz);
             continue;
           }
-          let preciosos = 0;
-          for (let ddx = -1; ddx <= 1; ddx++) for (let ddz = -1; ddz <= 1; ddz++) {
-            const b = state.world.get(sx + ddx, y - 1, sz + ddz);
-            if (b === BLOCO.FERRO || b === BLOCO.OURO || b === BLOCO.DIAMANTE) preciosos++;
+          // Calcular tier da pirâmide (4 níveis abaixo)
+          let tier = 0;
+          for (let lvl = 1; lvl <= 4; lvl++) {
+            let blocosVal = 0;
+            const span = lvl * 2 + 1; // 3,5,7,9
+            const off = lvl;
+            for (let ddx = -off; ddx <= off; ddx++) {
+              for (let ddz = -off; ddz <= off; ddz++) {
+                const b = state.world.get(sx + ddx, y - lvl, sz + ddz);
+                if (b === BLOCO.FERRO || b === BLOCO.OURO ||
+                    b === BLOCO.DIAMANTE || b === BLOCO.NETHERITE_BLOCK ||
+                    b === BLOCO.BLOCO_FERRO || b === BLOCO.BLOCO_OURO ||
+                    b === BLOCO.BLOCO_DIAMANTE || b === BLOCO.BLOCO_ESMERALDA) blocosVal++;
+              }
+            }
+            if (blocosVal >= span * span) tier = lvl;
+            else break;
           }
-          if (preciosos >= 9) {
-            state.player.efeitos = state.player.efeitos || {};
-            state.player.efeitos.speed = Date.now() + 2200;
+          // Range: 20+10×tier (até 50 blocos no tier 4)
+          const range = 20 + 10 * tier;
+          const dx = sx - px, dy = y - py, dz = sz - pz;
+          if (dx*dx + dy*dy + dz*dz > range * range) continue;
+          state.player.efeitos = state.player.efeitos || {};
+          // Tier 1+: Speed
+          if (tier >= 1) state.player.efeitos.speed = Date.now() + 2200;
+          // Tier 2+: Haste, Resistance, Jump Boost
+          if (tier >= 2) {
             state.player.efeitos.haste = Date.now() + 2200;
-          } else if (preciosos >= 4) {
-            state.player.efeitos = state.player.efeitos || {};
-            state.player.efeitos.speed = Date.now() + 2200;
+            state.player.efeitos.resistencia = Date.now() + 2200;
+            state.player.efeitos.jump_boost = Date.now() + 2200;
+          }
+          // Tier 3+: Strength
+          if (tier >= 3) state.player.efeitos.strength = Date.now() + 2200;
+          // Tier 4: Regen
+          if (tier >= 4) state.player.efeitos.regen = Date.now() + 2200;
+        }
+      }
+      // SPRINT MEGA-4: Conduit Power
+      // CONDUIT block ativo se cercado por prismarine (5×5 ou 3×3 frame)
+      // Aplica: water_breathing, +mining underwater, vision underwater
+      if (state.conduits && state.conduits.size) {
+        const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        for (const k of state.conduits) {
+          const [sx, sy, sz] = k.split(',').map(Number);
+          if (state.world.get(sx, sy, sz) !== BLOCO.CONDUIT) {
+            state.conduits.delete(k);
+            continue;
+          }
+          // Conta blocos prismarine ao redor (3×3×3 frame mínimo = 16 blocos)
+          let prismarine = 0;
+          for (let ddx = -2; ddx <= 2; ddx++) {
+            for (let ddy = -2; ddy <= 2; ddy++) {
+              for (let ddz = -2; ddz <= 2; ddz++) {
+                if (Math.abs(ddx) < 2 && Math.abs(ddy) < 2 && Math.abs(ddz) < 2) continue;
+                const b = state.world.get(sx + ddx, sy + ddy, sz + ddz);
+                if (b === BLOCO.PRISMARINE || b === BLOCO.PRISMARINE_BRK ||
+                    b === BLOCO.PRISMARINE_DARK || b === BLOCO.LUZ) prismarine++;
+              }
+            }
+          }
+          if (prismarine >= 16) {
+            const range = 32 + Math.floor(prismarine / 7) * 16; // até 96 blocos
+            const dx = sx - px, dy = sy - py, dz = sz - pz;
+            if (dx*dx + dy*dy + dz*dz <= range * range) {
+              state.player.efeitos = state.player.efeitos || {};
+              state.player.efeitos.conduit_power = Date.now() + 2200;
+              state.player.efeitos.water_breathing = Date.now() + 2200;
+            }
           }
         }
       }
@@ -1930,7 +2037,26 @@ function loop(now) {
                 state.beacons = state.beacons || new Set();
                 state.beacons.add(World.keyXYZ(a.x, a.y, a.z));
                 state.renderer.criarBeaconBeam(a.x, a.y, a.z);
-                state.ui.toast('🌟 Beacon ativo! Construa pirâmide debaixo pra buff.');
+                state.ui.toast('🌟 Beacon ativo! Construa pirâmide (1-4 níveis) pra buffs.');
+              }
+              // SPRINT MEGA-4: Conduit tracking (ativo se cercado por prismarine)
+              if (sel.b === BLOCO.CONDUIT) {
+                state.conduits = state.conduits || new Set();
+                state.conduits.add(World.keyXYZ(a.x, a.y, a.z));
+                state.ui.toast('🔱 Conduit ativo! Cerque com prismarine pra ativar.');
+              }
+              // Bed no Nether/End: explode!
+              if (sel.b === BLOCO.CAMA && (state.world.dimensao === 'nether' || state.world.dimensao === 'end')) {
+                state.world.set(a.x, a.y, a.z, BLOCO.AR);
+                state.player.aplicarDano(8, 'cama_explode');
+                state.ui.toast('💥 Cama explode no Nether/End!');
+                Audio.tnt?.() || Audio.creeperBoom?.();
+              }
+              // Respawn Anchor no Overworld: explode!
+              if (sel.b === BLOCO.RESPAWN_ANCHOR && state.world.dimensao !== 'nether') {
+                state.world.set(a.x, a.y, a.z, BLOCO.AR);
+                state.player.aplicarDano(10, 'anchor_explode');
+                state.ui.toast('💥 Respawn Anchor explode!');
               }
               // Build Snow Golem: CARVED_PUMPKIN colocada sobre 2 NEVE
               // empilhadas → remove os 3 blocos + spawn snow_golem.
