@@ -154,7 +154,13 @@ export class Player {
       } else {
         // Slow Fall: gravidade reduzida em 80% (paridade MC slow falling)
         const slowFall = this.efeitos?.slow_fall && Date.now() < this.efeitos.slow_fall;
-        this.vel.y += (slowFall ? GRAVIDADE * 0.20 : GRAVIDADE) * dt;
+        // Levitação: gravity invertida (player sobe lentamente)
+        const levitacao = this.efeitos?.levitacao && Date.now() < this.efeitos.levitacao;
+        if (levitacao) {
+          this.vel.y = Math.max(this.vel.y, 1.5); // sobe a 1.5 m/s
+        } else {
+          this.vel.y += (slowFall ? GRAVIDADE * 0.20 : GRAVIDADE) * dt;
+        }
         if (this.vel.y < VEL_TERM) this.vel.y = VEL_TERM;
         vy = this.vel.y;
         if (this.input.jump && this.noChao) {

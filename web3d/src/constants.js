@@ -392,8 +392,17 @@ export const BLOCO = {
   PAREDE_PURPUR:       332,
   SLAB_PURPUR_PILLAR:  333,
   PURPUR_LIMPO:        334,
+  // Workstations
+  SMITHING_TABLE:      335,
+  BREWING_STAND:       336,
+  BLAST_FURNACE:       337,
+  SMOKER:              338,
+  CARTOGRAPHY:         339,
+  FLETCHING:           340,
+  LOOM:                341,
+  STONECUTTER:         342,
 };
-export const N_BLOCOS = 335;
+export const N_BLOCOS = 343;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -750,6 +759,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_PURPUR]:       { nome: 'Parede Purpur',       solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'wall' },
   [BLOCO.SLAB_PURPUR_PILLAR]:  { nome: 'Laje Pilar Purpur',   solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'slab' },
   [BLOCO.PURPUR_LIMPO]:        { nome: 'Purpur Limpo',        solido: true, emiteLuz: 0, cor: 0xce93d8, lateral: 0xab47bc },
+  [BLOCO.SMITHING_TABLE]: { nome: 'Mesa Smithing',  solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.BREWING_STAND]:  { nome: 'Brewing Stand',  solido: true, emiteLuz: 1, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.BLAST_FURNACE]:  { nome: 'Blast Furnace',  solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.SMOKER]:         { nome: 'Smoker',         solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.CARTOGRAPHY]:    { nome: 'Mesa Cartografia',solido: true,emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.FLETCHING]:      { nome: 'Mesa Fletching', solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.LOOM]:           { nome: 'Tear (Loom)',    solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.STONECUTTER]:    { nome: 'Stonecutter',    solido: true, emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x757575 },
 };
 
 export const ICONE = {
@@ -1494,6 +1511,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PURPUR_BLOCK, q: 6}],  saida: {b: BLOCO.PAREDE_PURPUR, q: 6}, wb: true },
   { custos: [{b: BLOCO.PURPUR_PILLAR, q: 3}], saida: {b: BLOCO.SLAB_PURPUR_PILLAR, q: 6}, wb: true },
   { custos: [{b: BLOCO.PURPUR_BLOCK, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {b: BLOCO.PURPUR_LIMPO, q: 4}, wb: true },
+  // Workstations (paridade Minecraft)
+  { custos: [{i: ITEM.FERRO, q: 2}, {i: ITEM.PRANCHAS, q: 4}], saida: {b: BLOCO.SMITHING_TABLE, q: 1}, wb: true },
+  { custos: [{i: ITEM.BLAZE_ROD, q: 1}, {b: BLOCO.PEDRA, q: 3}], saida: {b: BLOCO.BREWING_STAND, q: 1}, wb: true },
+  { custos: [{b: BLOCO.FORNALHA, q: 1}, {i: ITEM.FERRO, q: 5}, {b: BLOCO.PEDRA, q: 3}], saida: {b: BLOCO.BLAST_FURNACE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.FORNALHA, q: 1}, {i: ITEM.PRANCHAS, q: 4}], saida: {b: BLOCO.SMOKER, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.LIVRO, q: 2}], saida: {b: BLOCO.CARTOGRAPHY, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 4}, {i: ITEM.SILEX, q: 2}], saida: {b: BLOCO.FLETCHING, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 2}, {b: BLOCO.LA, q: 2}], saida: {b: BLOCO.LOOM, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 1}, {b: BLOCO.PEDRA, q: 3}], saida: {b: BLOCO.STONECUTTER, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 31, CELL = 32;
+  const COLS = 8, ROWS = 32, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1428,6 +1428,64 @@ function criarAtlas() {
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+  }
+
+  // Workstation genérica: madeira/pedra com painel central decorativo
+  function pintarWorkstation(idx, base, escuro, claro, simbolo) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda escura (frame da workstation)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    // Painel central (área de trabalho)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    // Símbolo central (caractere especial visual)
+    ctx.fillStyle = escuro;
+    if (simbolo === 'hammer') {
+      // Martelo (smithing): retângulo + cabo
+      ctx.fillRect(x0 + 10, y0 + 10, 12, 4);
+      ctx.fillRect(x0 + 14, y0 + 14, 4, 12);
+    } else if (simbolo === 'flask') {
+      // Frasco (brewing): forma de garrafa
+      ctx.fillRect(x0 + 14, y0 + 8,  4, 4);
+      ctx.fillRect(x0 + 12, y0 + 12, 8, 4);
+      ctx.fillRect(x0 + 10, y0 + 16, 12, 8);
+    } else if (simbolo === 'fire') {
+      // Chama (furnace/smoker)
+      ctx.fillRect(x0 + 12, y0 + 18, 8, 4);
+      ctx.fillStyle = '#ff9800';
+      ctx.fillRect(x0 + 13, y0 + 14, 6, 4);
+      ctx.fillStyle = '#fdd835';
+      ctx.fillRect(x0 + 14, y0 + 12, 4, 2);
+    } else if (simbolo === 'map') {
+      // Mapa (cartography)
+      ctx.fillRect(x0 + 10, y0 + 10, 12, 1);
+      ctx.fillRect(x0 + 10, y0 + 14, 8, 1);
+      ctx.fillRect(x0 + 10, y0 + 18, 12, 1);
+      ctx.fillRect(x0 + 10, y0 + 22, 6, 1);
+    } else if (simbolo === 'arrow') {
+      // Flecha (fletching)
+      ctx.fillRect(x0 + 10, y0 + 16, 12, 2);
+      ctx.fillRect(x0 + 8,  y0 + 14, 2, 6);
+      ctx.fillRect(x0 + 22, y0 + 14, 2, 6);
+    } else if (simbolo === 'loom') {
+      // Tear (linhas verticais)
+      for (const px of [10, 14, 18, 22]) ctx.fillRect(x0 + px, y0 + 8, 1, CELL - 16);
+      ctx.fillRect(x0 + 8, y0 + 14, CELL - 16, 1);
+    } else if (simbolo === 'saw') {
+      // Serra (stonecutter)
+      ctx.fillRect(x0 + 8, y0 + 16, CELL - 16, 1);
+      for (const px of [9, 12, 15, 18, 21]) {
+        ctx.fillRect(x0 + px, y0 + 14, 2, 2);
+      }
+    }
   }
 
   // Hopper: caixa preta com buraco central (formato funil)
@@ -3838,6 +3896,15 @@ function criarAtlas() {
   // Blocos compactados bambu/cacto (cells 246-247)
   pintar(246, '#8bc34a', '#558b2f', 0.50);                        // bambu compactado
   pintar(247, '#388E3C', '#1b5e20', 0.50);                        // cacto compactado
+  // 8 workstations (cells 248-255)
+  pintarWorkstation(248, '#424242', '#212121', '#9e9e9e', 'hammer'); // smithing
+  pintarWorkstation(249, '#a1887f', '#5d4037', '#fdd835', 'flask');  // brewing
+  pintarWorkstation(250, '#424242', '#212121', '#ff9800', 'fire');   // blast furnace
+  pintarWorkstation(251, '#6d4c41', '#3e2723', '#ff9800', 'fire');   // smoker
+  pintarWorkstation(252, '#a1887f', '#5d4037', '#fff8e1', 'map');    // cartography
+  pintarWorkstation(253, '#a1887f', '#5d4037', '#fafafa', 'arrow');  // fletching
+  pintarWorkstation(254, '#a1887f', '#5d4037', '#fafafa', 'loom');   // loom
+  pintarWorkstation(255, '#9e9e9e', '#424242', '#bdbdbd', 'saw');    // stonecutter
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4191,6 +4258,14 @@ function criarAtlas() {
   mapa[BLOCO.PAREDE_PURPUR]        = { top: 137, side: 137, bottom: 137 };
   mapa[BLOCO.SLAB_PURPUR_PILLAR]   = { top: 138, side: 138, bottom: 138 };
   mapa[BLOCO.PURPUR_LIMPO]         = { top: 137, side: 137, bottom: 137 };
+  mapa[BLOCO.SMITHING_TABLE]       = { top: 248, side: 248, bottom: 248 };
+  mapa[BLOCO.BREWING_STAND]        = { top: 249, side: 249, bottom: 249 };
+  mapa[BLOCO.BLAST_FURNACE]        = { top: 250, side: 250, bottom: 250 };
+  mapa[BLOCO.SMOKER]               = { top: 251, side: 251, bottom: 251 };
+  mapa[BLOCO.CARTOGRAPHY]          = { top: 252, side: 252, bottom: 252 };
+  mapa[BLOCO.FLETCHING]            = { top: 253, side: 253, bottom: 253 };
+  mapa[BLOCO.LOOM]                 = { top: 254, side: 254, bottom: 254 };
+  mapa[BLOCO.STONECUTTER]          = { top: 255, side: 255, bottom: 255 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
