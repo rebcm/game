@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 37, CELL = 32;
+  const COLS = 8, ROWS = 38, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1558,6 +1558,46 @@ function criarAtlas() {
     // Base decorada
     ctx.fillStyle = '#5d4037';
     ctx.fillRect(x0 + 8, y0 + 25, 16, 1);
+  }
+
+  // 🎯 Command Block (Marco 400!): laranja-marrom com circuito/seta característica
+  function pintarCommandBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base laranja-marrom
+    ctx.fillStyle = '#a05a30';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão diagonal sutil (textura "metal/circuito")
+    ctx.fillStyle = '#7d3e1c';
+    for (let i = 0; i < CELL; i += 4) {
+      for (let j = 0; j < CELL; j += 4) {
+        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 2, 2);
+      }
+    }
+    // Tons mais claros (relevo)
+    ctx.fillStyle = '#c97a4d';
+    ctx.fillRect(x0 + 3, y0 + 3, CELL - 6, 1);
+    ctx.fillRect(x0 + 3, y0 + 3, 1, CELL - 6);
+    // Circle/ring central (símbolo command)
+    ctx.fillStyle = '#3a1a08';
+    ctx.fillRect(x0 + 8,  y0 + 11, 16, 1);
+    ctx.fillRect(x0 + 8,  y0 + 20, 16, 1);
+    ctx.fillRect(x0 + 7,  y0 + 12, 1, 8);
+    ctx.fillRect(x0 + 24, y0 + 12, 1, 8);
+    // Seta direcional (Command Block característico)
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 11, y0 + 15, 8, 2);
+    ctx.fillRect(x0 + 17, y0 + 13, 2, 2);
+    ctx.fillRect(x0 + 19, y0 + 14, 2, 4);
+    ctx.fillRect(x0 + 17, y0 + 18, 2, 2);
+    // Brilho dourado (LED ligado)
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 19, y0 + 15, 1, 2);
+    // Sombra inferior/direita
+    ctx.fillStyle = '#5a3018';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -4354,6 +4394,7 @@ function criarAtlas() {
   pintarShulkerCor(281, '#424242', '#212121', '#616161', '#000000'); // shulker preto
   pintarShulkerCor(282, '#ff9800', '#e65100', '#ffb74d', '#bf360c'); // shulker laranja
   pintarShulkerCor(283, '#f06292', '#c2185b', '#f48fb1', '#880e4f'); // shulker rosa
+  pintarCommandBlock(284);                                            // 🎯 Marco 400! Command Block
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4776,6 +4817,15 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_QUARTZO_POL]     = { top: 55, side: 55, bottom: 55 };
   mapa[BLOCO.PAREDE_QUARTZO]       = { top: 54, side: 54, bottom: 54 };
   mapa[BLOCO.ESCADA_BLOCO_OURO]    = { top: 118, side: 118, bottom: 118 };
+  // 🎯 Marco 400 blocos! Command Block (cell 284 nova) + 7 escadas/lajes premium reusam cells dos blocos compactos
+  mapa[BLOCO.COMMAND_BLOCK]         = { top: 284, side: 284, bottom: 284 };
+  mapa[BLOCO.ESCADA_BLOCO_FERRO]    = { top: 117, side: 117, bottom: 117 };
+  mapa[BLOCO.SLAB_BLOCO_FERRO]      = { top: 117, side: 117, bottom: 117 };
+  mapa[BLOCO.ESCADA_BLOCO_DIAMANTE] = { top: 119, side: 119, bottom: 119 };
+  mapa[BLOCO.SLAB_BLOCO_DIAMANTE]   = { top: 119, side: 119, bottom: 119 };
+  mapa[BLOCO.ESCADA_BLOCO_LAPIS]    = { top: 121, side: 121, bottom: 121 };
+  mapa[BLOCO.SLAB_BLOCO_LAPIS]      = { top: 121, side: 121, bottom: 121 };
+  mapa[BLOCO.ESCADA_BLOCO_REDSTONE] = { top: 127, side: 127, bottom: 127 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

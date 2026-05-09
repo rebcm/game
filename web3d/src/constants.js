@@ -457,8 +457,16 @@ export const BLOCO = {
   SLAB_QUARTZO_POL:    396,
   PAREDE_QUARTZO:      397,
   ESCADA_BLOCO_OURO:   398,
+  COMMAND_BLOCK:       399, // marco 400! command block icônico
+  ESCADA_BLOCO_FERRO:  400,
+  SLAB_BLOCO_FERRO:    401,
+  ESCADA_BLOCO_DIAMANTE:402,
+  SLAB_BLOCO_DIAMANTE: 403,
+  ESCADA_BLOCO_LAPIS:  404,
+  SLAB_BLOCO_LAPIS:    405,
+  ESCADA_BLOCO_REDSTONE:406,
 };
-export const N_BLOCOS = 399;
+export const N_BLOCOS = 407;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -879,6 +887,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_QUARTZO_POL]:    { nome: 'Laje Quartzo Pol.',  solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xfff8e1, shape: 'slab' },
   [BLOCO.PAREDE_QUARTZO]:      { nome: 'Parede Quartzo',     solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'wall' },
   [BLOCO.ESCADA_BLOCO_OURO]:   { nome: 'Escada Bl. Ouro',    solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0xf9a825, shape: 'stairs' },
+  [BLOCO.COMMAND_BLOCK]:       { nome: 'Command Block',      solido: true, emiteLuz: 4, cor: 0xa05a30, lateral: 0x7d3e1c },
+  [BLOCO.ESCADA_BLOCO_FERRO]:  { nome: 'Escada Bl. Ferro',   solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xcfd8dc, shape: 'stairs' },
+  [BLOCO.SLAB_BLOCO_FERRO]:    { nome: 'Laje Bl. Ferro',     solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xcfd8dc, shape: 'slab' },
+  [BLOCO.ESCADA_BLOCO_DIAMANTE]:{nome: 'Escada Bl. Diamante',solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'stairs' },
+  [BLOCO.SLAB_BLOCO_DIAMANTE]: { nome: 'Laje Bl. Diamante',  solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'slab' },
+  [BLOCO.ESCADA_BLOCO_LAPIS]:  { nome: 'Escada Bl. Lápis',   solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'stairs' },
+  [BLOCO.SLAB_BLOCO_LAPIS]:    { nome: 'Laje Bl. Lápis',     solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.ESCADA_BLOCO_REDSTONE]:{nome:'Escada Bl. Redstone', solido: true, emiteLuz: 7, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -1702,6 +1718,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.QUARTZO, q: 6}],         saida: {b: BLOCO.PAREDE_QUARTZO, q: 6}, wb: true },
   // Escada Bloco Ouro
   { custos: [{b: BLOCO.BLOCO_OURO, q: 6}], saida: {b: BLOCO.ESCADA_BLOCO_OURO, q: 4}, wb: true },
+  // Command Block: receita endgame (1 nether star + 4 obsidiana + 4 redstone)
+  { custos: [{i: ITEM.NETHER_STAR, q: 1}, {b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.REDSTONE, q: 4}], saida: {b: BLOCO.COMMAND_BLOCK, q: 1}, wb: true },
+  // Escadas/lajes de blocos compactados premium
+  { custos: [{b: BLOCO.BLOCO_FERRO, q: 6}],     saida: {b: BLOCO.ESCADA_BLOCO_FERRO, q: 4}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_FERRO, q: 3}],     saida: {b: BLOCO.SLAB_BLOCO_FERRO, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_DIAMANTE, q: 6}],  saida: {b: BLOCO.ESCADA_BLOCO_DIAMANTE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_DIAMANTE, q: 3}],  saida: {b: BLOCO.SLAB_BLOCO_DIAMANTE, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_LAPIS, q: 6}],     saida: {b: BLOCO.ESCADA_BLOCO_LAPIS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_LAPIS, q: 3}],     saida: {b: BLOCO.SLAB_BLOCO_LAPIS, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_REDSTONE, q: 6}],  saida: {b: BLOCO.ESCADA_BLOCO_REDSTONE, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

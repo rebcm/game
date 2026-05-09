@@ -894,6 +894,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.SLAB_QUARTZO_POL, q: 16 });
   state.inv.adicionar({ b: BLOCO.PAREDE_QUARTZO, q: 16 });
   state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_OURO, q: 8 });
+  // 🎯 Marco 400 blocos! Command Block + 7 escadas/lajes premium
+  state.inv.adicionar({ b: BLOCO.COMMAND_BLOCK, q: 1 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_FERRO, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SLAB_BLOCO_FERRO, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_DIAMANTE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SLAB_BLOCO_DIAMANTE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_LAPIS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SLAB_BLOCO_LAPIS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_REDSTONE, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
