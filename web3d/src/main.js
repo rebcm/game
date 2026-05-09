@@ -1020,6 +1020,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.SLAB_CHERRY, q: 16 });
   state.inv.adicionar({ b: BLOCO.ESCADA_BIRCH, q: 8 });
   state.inv.adicionar({ b: BLOCO.ESCADA_SPRUCE, q: 8 });
+  // Sprint 15: escadas+fences madeiras
+  state.inv.adicionar({ b: BLOCO.ESCADA_ACACIA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_JUNGLE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_DARK_OAK, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_CHERRY, q: 8 });
+  state.inv.adicionar({ b: BLOCO.FENCE_BIRCH, q: 16 });
+  state.inv.adicionar({ b: BLOCO.FENCE_SPRUCE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.FENCE_ACACIA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.FENCE_DARK_OAK, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
