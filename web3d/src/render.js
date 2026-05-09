@@ -7,6 +7,12 @@
 // =====================================================================
 
 import * as THREE from 'three';
+// SPRINT VISUAL-3: Bloom post-processing
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import {
   CHUNK_SIZE, WORLD_Y, BLOCO, BLOCO_INFO, VIEW_RADIUS, N_BLOCOS,
 } from './constants.js';
@@ -64,6 +70,210 @@ function criarAtlas() {
       // bem espaçados. Tamanho 2 pra ainda ser visível pixel-art.
       spawnPontosUniforme(x0, y0, CELL, CELL, corRuido, intensidadeRuido, 4, 2, idx * 9301 + 49297);
     }
+  }
+
+  // SPRINT VISUAL-2: Helpers PREMIUM para qualidade superior ao Minecraft
+  // Adiciona bevel sutil + AO sombreado + highlight em bordas
+  function _aplicarBevelPremium(x0, y0, corClaro, corEscuro, intensidade = 1.0) {
+    // Highlight nas bordas TOP-LEFT (1px translucido)
+    const alpha = (intensidade * 0.35).toFixed(2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fillRect(x0, y0, CELL, 1);                      // top edge
+    ctx.fillRect(x0, y0, 1, CELL);                      // left edge
+    // Sombra AO nas bordas BOTTOM-RIGHT (1-2px)
+    ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);          // bottom edge
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);          // right edge
+    // Cantos com sombra mais profunda (corner shading premium)
+    ctx.fillStyle = `rgba(0,0,0,${(intensidade * 0.20).toFixed(2)})`;
+    ctx.fillRect(x0 + CELL - 2, y0 + CELL - 2, 1, 1);
+    ctx.fillRect(x0 + CELL - 3, y0 + CELL - 1, 1, 1);
+    ctx.fillRect(x0 + CELL - 1, y0 + CELL - 3, 1, 1);
+  }
+  // Pinta block PREMIUM com gradient vertical + bevel + ruído tonal
+  function pintarPremium(idx, corClaro, corEscuro, corRuido = null, intensidade = 1.0) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base gradient vertical (cima→baixo)
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, corClaro);
+    grad.addColorStop(1, corEscuro);
+    ctx.fillStyle = grad;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído tonal sobreposto (textura natural)
+    if (corRuido) {
+      spawnPontosUniforme(x0, y0, CELL, CELL, corRuido, 0.35 * intensidade, 4, 2, idx * 9301 + 49297);
+    }
+    // Bevel: highlight + AO
+    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, intensidade);
+  }
+  // Pinta block PREMIUM tipo pedra com cracks + variações + AO
+  function pintarPedraPremium(idx, base, dark, light, intensity = 0.30) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Gradient base (cima mais claro, baixo mais escuro)
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, light);
+    grad.addColorStop(0.4, base);
+    grad.addColorStop(1, dark);
+    ctx.fillStyle = grad;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Variações de cor stratificadas
+    const seed1 = idx * 9301 + 49297;
+    let seed = spawnPontosUniforme(x0, y0, CELL, CELL, dark, intensity * 0.45, 4, 2, seed1);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, light, intensity * 0.55, 4, 2, seed + 7919);
+    // Cracks naturais
+    ctx.fillStyle = dark;
+    for (let i = 0; i < 2; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      let cx = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      let cy = (seed % CELL);
+      const len = 6 + (seed % 8);
+      for (let j = 0; j < len; j++) {
+        if (cx >= 0 && cx < CELL && cy >= 0 && cy < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
+        }
+        seed = (seed * 9301 + 49297) % 233280;
+        const dir = seed % 4;
+        if (dir === 0) cx++;
+        else if (dir === 1) cy++;
+        else if (dir === 2) { cx++; cy++; }
+        else { cx--; cy++; }
+      }
+    }
+    // Bevel premium
+    _aplicarBevelPremium(x0, y0, light, dark, 0.7);
+  }
+  // Pinta diamond/gemstone PREMIUM com cristais brilhantes + sparkle + glow
+  function pintarGemPremium(idx, corBase, corCristal, corBrilho) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base pedra escura (gradient sutil)
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, '#9c9c9c');
+    grad.addColorStop(1, '#6c6c6c');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Stipple stone texture
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#5e5e5e', 0.3, 4, 2, idx * 9301 + 49297);
+    // 3-5 cristais losango (premium)
+    let seed = idx * 7919 + 1234;
+    const numCrystals = 3 + (seed % 3);
+    for (let c = 0; c < numCrystals; c++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const cx = 4 + (seed % 24);
+      seed = (seed * 9301 + 49297) % 233280;
+      const cy = 4 + (seed % 24);
+      // Losango 3×3 com gradient
+      ctx.fillStyle = corCristal;
+      ctx.fillRect(x0 + cx, y0 + cy, 3, 3);
+      ctx.fillRect(x0 + cx - 1, y0 + cy + 1, 1, 1);
+      ctx.fillRect(x0 + cx + 3, y0 + cy + 1, 1, 1);
+      ctx.fillRect(x0 + cx + 1, y0 + cy - 1, 1, 1);
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 3, 1, 1);
+      // Highlight sparkle no centro (faceta)
+      ctx.fillStyle = corBrilho;
+      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 1, 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + cx + 1, y0 + cy, 1, 1); // top sparkle
+    }
+    // Glints aleatórios extras (4-6 pontos brancos minúsculos)
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 4; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const sx = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const sy = (seed % CELL);
+      ctx.fillRect(x0 + sx, y0 + sy, 1, 1);
+    }
+    _aplicarBevelPremium(x0, y0, '#9c9c9c', '#5e5e5e', 0.6);
+  }
+  // Pinta madeira PREMIUM com grão realista + nós escuros
+  function pintarMadeiraPremium(idx, corBase, corGrao, corNo) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Gradient base
+    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
+    grad.addColorStop(0, corBase);
+    grad.addColorStop(0.5, corBase);
+    grad.addColorStop(1, corGrao);
+    ctx.fillStyle = grad;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais de grão (cor mais escura)
+    ctx.fillStyle = corGrao;
+    for (let lx = 0; lx < CELL; lx += 3) {
+      ctx.fillRect(x0 + lx, y0, 1, CELL);
+    }
+    // Estrias finas extras (textura grão sutil)
+    ctx.fillStyle = corBase;
+    for (let lx = 1; lx < CELL; lx += 4) {
+      ctx.fillRect(x0 + lx, y0 + 2, 1, CELL - 4);
+    }
+    // 1-2 nós da madeira (knots) — gradient circular escuro
+    let seed = idx * 9301 + 49297;
+    const numKnots = 1 + (seed % 2);
+    for (let n = 0; n < numKnots; n++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const kx = 6 + (seed % 20);
+      seed = (seed * 9301 + 49297) % 233280;
+      const ky = 6 + (seed % 20);
+      // Knot principal
+      ctx.fillStyle = corNo;
+      ctx.fillRect(x0 + kx - 1, y0 + ky, 3, 2);
+      ctx.fillRect(x0 + kx, y0 + ky - 1, 2, 1);
+      ctx.fillRect(x0 + kx, y0 + ky + 2, 2, 1);
+      // Highlight central
+      ctx.fillStyle = corBase;
+      ctx.fillRect(x0 + kx, y0 + ky, 1, 1);
+    }
+    _aplicarBevelPremium(x0, y0, corBase, corGrao, 0.6);
+  }
+  // Folha PREMIUM com depth (tons múltiplos + transparência simulada)
+  function pintarFolhaPremium(idx, corClaro, corMedio, corEscuro, corFlor = null) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base verde médio
+    ctx.fillStyle = corMedio;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 13 + 29;
+    // Camada 1: pontos claros (brilho de luz solar)
+    for (let i = 0; i < 100; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = (seed / 233280);
+      ctx.fillStyle = r < 0.40 ? corEscuro : (r < 0.75 ? corClaro : corMedio);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Camada 2: "buracos" simulados (escuro mais profundo, dá depth)
+    ctx.fillStyle = '#0d2208';
+    for (let i = 0; i < 8; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Camada 3: flores ocasionais (cherry/pink)
+    if (corFlor) {
+      ctx.fillStyle = corFlor;
+      for (let i = 0; i < 4; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = (seed % CELL);
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = (seed % CELL);
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.5);
   }
 
   // Pinta padrão de tijolos: mortar cinza + tijolos vermelhos staggered + highlight.
@@ -6063,8 +6273,9 @@ function criarAtlas() {
   // paridade Minecraft (oak, stone, sand, ores, etc).
   pintarGramaTopo(0);                     // grama topo (4 tons + flores ocasionais)
   pintarGramaLado(1);                     // grama lado (terra + faixa verde)
-  pintar(2,  '#866043', '#6B4A2D', 0.18); // terra (warm brown MC)
-  pintarPedra(3, '#7E7E7E', '#5E5E5E', '#9C9C9C', 0.30); // pedra 2-tone
+  // SPRINT VISUAL-2: Premium reskin de blocos principais
+  pintarPremium(2, '#9c7044', '#5d3e25', '#6B4A2D', 0.6); // terra premium (gradient + ruído)
+  pintarPedraPremium(3, '#7E7E7E', '#5E5E5E', '#a0a0a0', 0.35); // pedra premium
   pintarAreia(4);                          // areia (dunas + grãos visíveis)
   pintarMadeiraTopo(5);                   // madeira topo (anéis)
   pintarMadeiraLado(6);                   // madeira lado (grain VERTICAL)
@@ -6072,9 +6283,9 @@ function criarAtlas() {
   pintarTijolo(8);                        // tijolo (mortar + bricks)
   pintarVidro(9);                         // vidro (claro com moldura)
   pintarOuro(10);                          // ouro (clusters metálicos)
-  pintarDiamante(11);                      // diamante (cristais losango + sparkles)
+  pintarGemPremium(11, '#5e5e5e', '#5DD9F1', '#ffffff'); // diamante premium (cristais brilhantes)
   pintarGlowstone(12);                    // luz/glowstone (amarelo brilhante)
-  pintar(13, '#F5F5F5', '#E0E0E0', 0.10); // neve (branco)
+  pintarPremium(13, '#FFFFFF', '#D8E2EF', '#a8b8d0', 0.5); // neve premium (gradient azul sutil)
   pintarCarvao(14);                        // carvão (clusters L pretos com highlight)
   pintarFerro(15);                         // ferro (clusters tan com oxidação)
   pintarCacto(16);                        // cacto (cannelura vertical)
@@ -7790,12 +8001,63 @@ export class Renderer {
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
-    // Cor inicial — atualizada por atualizarCeu.
+    this.renderer.toneMappingExposure = 1.15; // VISUAL-1: levemente mais brilhante
+    // SPRINT VISUAL-1: SKY DOME PREMIUM com gradient horizon→zenith
+    // Substitui background sólido por skydome gigante com shader gradient
+    const skyGeo = new THREE.SphereGeometry(380, 32, 16);
+    const skyUniforms = {
+      sunPos:    { value: new THREE.Vector3(0, 1, 0) },
+      topColor:    { value: new THREE.Color(0x4a90e2) },     // azul zenith
+      bottomColor: { value: new THREE.Color(0xffd9a0) },     // amarelo horizon
+      sunColor:    { value: new THREE.Color(0xffe8b0) },
+      offset:      { value: 33 },
+      exponent:    { value: 0.7 },
+    };
+    const skyMat = new THREE.ShaderMaterial({
+      uniforms: skyUniforms,
+      side: THREE.BackSide,
+      depthWrite: false,
+      fog: false,
+      vertexShader: `
+        varying vec3 vWorldPos;
+        void main() {
+          vec4 wp = modelMatrix * vec4(position, 1.0);
+          vWorldPos = wp.xyz;
+          gl_Position = projectionMatrix * viewMatrix * wp;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 topColor;
+        uniform vec3 bottomColor;
+        uniform vec3 sunColor;
+        uniform vec3 sunPos;
+        uniform float offset;
+        uniform float exponent;
+        varying vec3 vWorldPos;
+        void main() {
+          vec3 viewDir = normalize(vWorldPos);
+          float h = max(0.0, viewDir.y + offset / 380.0);
+          float gradient = pow(h, exponent);
+          vec3 sky = mix(bottomColor, topColor, clamp(gradient, 0.0, 1.0));
+          // Sun bloom radial baseado em ângulo com sol
+          float sunDot = max(0.0, dot(viewDir, normalize(sunPos)));
+          float sunHalo = pow(sunDot, 32.0) * 1.0 + pow(sunDot, 8.0) * 0.3;
+          sky += sunColor * sunHalo;
+          // Vignette superior sutil pra dar profundidade
+          gl_FragColor = vec4(sky, 1.0);
+        }
+      `,
+    });
+    this.skyDome = new THREE.Mesh(skyGeo, skyMat);
+    this.skyDome.rotation.order = 'YXZ';
+    this.skyMaterial = skyMat;
+    this.skyUniforms = skyUniforms;
+    this.scene.add(this.skyDome);
+    // Background fallback (caso skydome desligue)
     this.scene.background = new THREE.Color(0x87CEEB);
     // FogExp2: densidade exponencial (mais natural que linear). Densidade
     // calculada pra dar transição suave dentro do view radius.
-    const fogDensidade = 0.018 * (8 / Math.max(4, q.viewRadius || 6));
+    const fogDensidade = 0.014 * (8 / Math.max(4, q.viewRadius || 6));
     this.scene.fog = new THREE.FogExp2(0x87CEEB, fogDensidade);
 
     // === Luzes globais ===
@@ -7821,6 +8083,73 @@ export class Renderer {
     this.scene.add(this.discoSol);
     this.scene.add(this.discoLua);
 
+    // SPRINT VISUAL-3: Post-processing pipeline com Bloom
+    // Bloom dá glow sutil em emissive blocks (lava, glowstone, beacon, fire)
+    // + Vignette + Color grading
+    if (q.bloom !== false) {
+      try {
+        this.composer = new EffectComposer(this.renderer);
+        this.composer.setSize(window.innerWidth, window.innerHeight);
+        this.composer.setPixelRatio(this.renderer.getPixelRatio());
+        const renderPass = new RenderPass(this.scene, this.camera);
+        this.composer.addPass(renderPass);
+        // UnrealBloom: strength, radius, threshold
+        const bloom = new UnrealBloomPass(
+          new THREE.Vector2(window.innerWidth, window.innerHeight),
+          0.55,  // strength: bloom intensity
+          0.6,   // radius: bloom spread
+          0.78,  // threshold: só pixels acima brilham
+        );
+        this.composer.addPass(bloom);
+        this.bloomPass = bloom;
+        // Vignette + Color Grading custom shader
+        const vignetteShader = {
+          uniforms: {
+            tDiffuse: { value: null },
+            offset: { value: 0.85 },
+            darkness: { value: 0.65 },
+            saturation: { value: 1.10 },
+            contrast: { value: 1.05 },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform sampler2D tDiffuse;
+            uniform float offset;
+            uniform float darkness;
+            uniform float saturation;
+            uniform float contrast;
+            varying vec2 vUv;
+            void main() {
+              vec4 color = texture2D(tDiffuse, vUv);
+              // Vignette: escurece bordas
+              vec2 uv = (vUv - 0.5) * vec2(offset);
+              float vig = 1.0 - dot(uv, uv) * darkness;
+              color.rgb *= vig;
+              // Saturação
+              float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+              color.rgb = mix(vec3(gray), color.rgb, saturation);
+              // Contraste
+              color.rgb = (color.rgb - 0.5) * contrast + 0.5;
+              gl_FragColor = color;
+            }
+          `,
+        };
+        const vignettePass = new ShaderPass(vignetteShader);
+        this.composer.addPass(vignettePass);
+        // OutputPass: tone mapping + sRGB encoding
+        const outputPass = new OutputPass();
+        this.composer.addPass(outputPass);
+      } catch (e) {
+        console.warn('Bloom/Postprocessing failed to load:', e);
+        this.composer = null;
+      }
+    }
     // Estrelas (visíveis à noite)
     this._criarEstrelas();
     // Nuvens (paralelo no céu)
@@ -7954,40 +8283,58 @@ export class Renderer {
   }
 
   _criarNuvens() {
-    const cnv = document.createElement('canvas');
-    cnv.width = 256; cnv.height = 256;
-    const ctx = cnv.getContext('2d');
-    ctx.clearRect(0, 0, 256, 256);
-    ctx.fillStyle = '#ffffff';
-    let seed = 1234;
-    const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    for (let i = 0; i < 80; i++) {
-      const x = Math.floor(rand() * 256 / 16) * 16;
-      const y = Math.floor(rand() * 256 / 16) * 16;
-      const w = (3 + Math.floor(rand() * 5)) * 16;
-      const h = (1 + Math.floor(rand() * 3)) * 16;
-      ctx.fillRect(x, y, w, h);
-    }
-    for (let i = 0; i < 50; i++) {
-      const x = Math.floor(rand() * 256 / 16) * 16;
-      const y = Math.floor(rand() * 256 / 16) * 16;
-      ctx.fillRect(x, y, 16, 16);
-    }
-    const tex = new THREE.CanvasTexture(cnv);
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(8, 8);
-    tex.magFilter = THREE.NearestFilter;
-    tex.minFilter = THREE.NearestFilter;
+    // SPRINT VISUAL-5: Nuvens PREMIUM com 2 layers + drift assíncrono
+    const _gerarTexNuvem = (densidade, tamMin, tamMax, opacidade) => {
+      const cnv = document.createElement('canvas');
+      cnv.width = 512; cnv.height = 512;
+      const ctx = cnv.getContext('2d');
+      ctx.clearRect(0, 0, 512, 512);
+      let seed = Math.floor(Math.random() * 100000);
+      const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+      // Camada 1: clusters grandes brancos
+      for (let i = 0; i < densidade; i++) {
+        const x = Math.floor(rand() * 512);
+        const y = Math.floor(rand() * 512);
+        const w = (tamMin + Math.floor(rand() * (tamMax - tamMin))) * 16;
+        const h = (1 + Math.floor(rand() * 3)) * 16;
+        // Gradient de borda suave
+        const grad = ctx.createRadialGradient(x + w/2, y + h/2, 0, x + w/2, y + h/2, w/2);
+        grad.addColorStop(0, `rgba(255,255,255,${opacidade})`);
+        grad.addColorStop(0.7, `rgba(255,255,255,${opacidade * 0.8})`);
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, w, h);
+      }
+      const tex = new THREE.CanvasTexture(cnv);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(6, 6);
+      tex.magFilter = THREE.LinearFilter;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.generateMipmaps = true;
+      return tex;
+    };
+    const tex = _gerarTexNuvem(60, 4, 8, 0.85);
+    const tex2 = _gerarTexNuvem(40, 2, 5, 0.65);
     this.cloudTexture = tex;
     const mat = new THREE.MeshBasicMaterial({
-      map: tex, transparent: true, opacity: 0.85,
-      depthWrite: false, alphaTest: 0.5,
+      map: tex, transparent: true, opacity: 0.92,
+      depthWrite: false,
+    });
+    const mat2 = new THREE.MeshBasicMaterial({
+      map: tex2, transparent: true, opacity: 0.65,
+      depthWrite: false,
     });
     const geo = new THREE.PlaneGeometry(2048, 2048);
     this.cloudMesh = new THREE.Mesh(geo, mat);
     this.cloudMesh.rotation.x = -Math.PI / 2;
     this.cloudMesh.position.y = 70;
     this.cloudMesh.renderOrder = -1;
+    // Camada 2 superior, drifta em direção oposta + mais devagar
+    this.cloudMesh2 = new THREE.Mesh(geo, mat2);
+    this.cloudMesh2.rotation.x = -Math.PI / 2;
+    this.cloudMesh2.position.y = 90;
+    this.cloudMesh2.renderOrder = -1;
+    this.scene.add(this.cloudMesh2);
     this.scene.add(this.cloudMesh);
   }
 
@@ -8008,6 +8355,10 @@ export class Renderer {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
+    // SPRINT VISUAL-3: Resize composer também
+    if (this.composer) {
+      this.composer.setSize(window.innerWidth, window.innerHeight);
+    }
   }
 
   // === Mesh builder por chunk ===
@@ -8542,6 +8893,49 @@ export class Renderer {
     this.renderer.setClearColor(bg);
     if (this.scene.background) this.scene.background.copy(bg);
     if (this.scene.fog) this.scene.fog.color.copy(bg);
+    // SPRINT VISUAL-1: atualiza skydome shader com sun position + cores dinâmicas
+    if (this.skyUniforms) {
+      const ang = (tempoDia - 0.25) * Math.PI * 2;
+      // Posição do sol no shader
+      this.skyUniforms.sunPos.value.set(
+        Math.sin(ang),
+        Math.cos(ang),
+        0.2,
+      ).normalize();
+      // Cores zenith vs horizon dinâmicas
+      // Zenith: noite=preto-azul, dia=azul vibrante
+      // Horizon: noite=violeta, dia=amarelo (golden hour) ou claro
+      let topCol, bottomCol, sunCol;
+      if (sun < 0.15) {
+        topCol = new THREE.Color(0x05051a);    // night zenith deep
+        bottomCol = new THREE.Color(0x1a1040); // night horizon violet
+        sunCol = new THREE.Color(0x404060);
+      } else if (sun < 0.35) {
+        // Sunrise/sunset
+        const t = (sun - 0.15) / 0.20;
+        topCol = new THREE.Color(0x05051a).lerp(new THREE.Color(0x4a90e2), t);
+        bottomCol = new THREE.Color(0xff5a2f);
+        sunCol = new THREE.Color(0xff8030);
+      } else if (sun < 0.55) {
+        // Golden hour
+        const t = (sun - 0.35) / 0.20;
+        topCol = new THREE.Color(0x4a90e2);
+        bottomCol = new THREE.Color(0xff5a2f).lerp(new THREE.Color(0xffd9a0), t);
+        sunCol = new THREE.Color(0xffe8b0);
+      } else {
+        // Dia
+        topCol = new THREE.Color(0x4a90e2);
+        bottomCol = new THREE.Color(0xc7e3ff);
+        sunCol = new THREE.Color(0xffefd0);
+      }
+      this.skyUniforms.topColor.value.copy(topCol);
+      this.skyUniforms.bottomColor.value.copy(bottomCol);
+      this.skyUniforms.sunColor.value.copy(sunCol);
+    }
+    // Skydome segue a câmera (sempre rendered atrás de tudo)
+    if (this.skyDome && playerPos) {
+      this.skyDome.position.copy(playerPos);
+    }
     // Sol e lua
     const ang = (tempoDia - 0.25) * Math.PI * 2;
     const r = 80;
@@ -8559,12 +8953,23 @@ export class Renderer {
     this.discoLua.visible = this.discoLua.position.y > playerPos.y - 30;
     this.sol.position.copy(this.discoSol.position);
     this.luaLuz.position.copy(this.discoLua.position);
-    // Nuvens scrolling + opacidade
+    // Nuvens scrolling + opacidade (SPRINT VISUAL-5: 2 layers drift assíncrono)
     if (this.cloudMesh) {
       this.cloudMesh.position.x = playerPos.x;
       this.cloudMesh.position.z = playerPos.z;
       this.cloudTexture.offset.x = (tempoDia * 8) % 1;
       this.cloudMesh.material.opacity = 0.30 + 0.55 * Math.max(0, sun);
+    }
+    if (this.cloudMesh2) {
+      this.cloudMesh2.position.x = playerPos.x;
+      this.cloudMesh2.position.z = playerPos.z;
+      // Drifta em direção oposta + mais devagar (efeito parallax)
+      const tex2 = this.cloudMesh2.material.map;
+      if (tex2) {
+        tex2.offset.x = -(tempoDia * 4) % 1;
+        tex2.offset.y = (tempoDia * 2) % 1;
+      }
+      this.cloudMesh2.material.opacity = 0.20 + 0.45 * Math.max(0, sun);
     }
     // Estrelas: fade noturno + twinkle leve (pulso aleatório do campo)
     if (this.estrelas) {
@@ -8692,5 +9097,12 @@ export class Renderer {
     this._beamMeshes.delete(k);
   }
 
-  render() { this.renderer.render(this.scene, this.camera); }
+  render() {
+    // SPRINT VISUAL-3: Bloom composer (fallback se falhar)
+    if (this.composer) {
+      this.composer.render();
+    } else {
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
 }
