@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 20, CELL = 32;
+  const COLS = 8, ROWS = 21, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,110 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Porta colorida (genérico): tábuas verticais + maçaneta + dobradiças
+  function pintarPortaCor(idx, base, escuro, claro, mac) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 3 tábuas verticais (separadas por linhas escuras)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + 10, y0, 1, CELL);
+    ctx.fillRect(x0 + 21, y0, 1, CELL);
+    // Highlights claros nas tábuas
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 5,  y0, 1, CELL);
+    ctx.fillRect(x0 + 16, y0, 1, CELL);
+    ctx.fillRect(x0 + 26, y0, 1, CELL);
+    // 3 dobradiças (lado esquerdo)
+    ctx.fillStyle = mac;
+    ctx.fillRect(x0 + 1, y0 + 4,  3, 4);
+    ctx.fillRect(x0 + 1, y0 + 14, 3, 4);
+    ctx.fillRect(x0 + 1, y0 + 24, 3, 4);
+    // Maçaneta dourada (lado direito, altura média)
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x0 + CELL - 4, y0 + 14, 3, 3);
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + CELL - 3, y0 + 15, 1, 1);
+    // Borda escura
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Trapdoor: padrão de tábuas + 2 dobradiças
+  function pintarTrapdoor(idx, base, escuro, ferro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    if (ferro) {
+      // Trapdoor de ferro: padrão grade metálica
+      ctx.fillStyle = escuro;
+      // Cruz central
+      for (let i = 4; i < CELL; i += 6) {
+        ctx.fillRect(x0 + i, y0, 1, CELL);
+        ctx.fillRect(x0, y0 + i, CELL, 1);
+      }
+      // Rebites nos cantos
+      ctx.fillStyle = '#212121';
+      for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
+        ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+      }
+    } else {
+      // Trapdoor de madeira: 4 tábuas horizontais + grão vertical
+      ctx.fillStyle = escuro;
+      ctx.fillRect(x0, y0 + 7,  CELL, 1);
+      ctx.fillRect(x0, y0 + 15, CELL, 1);
+      ctx.fillRect(x0, y0 + 23, CELL, 1);
+      // Grão vertical
+      ctx.fillStyle = '#7a5b50';
+      for (let px = 5; px < CELL; px += 7) {
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
+      // 2 dobradiças metálicas no topo
+      ctx.fillStyle = '#424242';
+      ctx.fillRect(x0 + 6,  y0 + 1, 5, 3);
+      ctx.fillRect(x0 + 21, y0 + 1, 5, 3);
+    }
+    // Borda escura
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Placa de madeira: textura tábua com 3 linhas horizontais (texto futuro)
+  function pintarSign(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Topo da placa (área de texto)
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 18);
+    // 3 linhas horizontais escuras (texto stylized)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 4,  y0 + 6,  CELL - 8, 2);
+    ctx.fillRect(x0 + 4,  y0 + 11, CELL - 14, 2);
+    ctx.fillRect(x0 + 4,  y0 + 16, CELL - 6, 2);
+    // Estaca embaixo (suporte)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + CELL/2 - 1, y0 + 20, 2, CELL - 20);
+    // Borda
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + 20, CELL, 1);
+    ctx.fillRect(x0, y0, 2, 20);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, 20);
   }
 
   // Sculk: azul-escuro com pontos brilhantes ciano (orgânico)
@@ -2911,6 +3015,14 @@ function criarAtlas() {
   pintarCama(155, '#2e7d32', '#1b5e20', '#66bb6a');              // cama verde
   pintarCama(156, '#f9a825', '#f57f17', '#ffd54f');              // cama amarela
   pintarCama(157, '#7b1fa2', '#4a148c', '#ce93d8');              // cama roxa
+  pintarPortaCor(158, '#8a3a4d', '#5d2535', '#a85065', '#424242'); // porta crimson
+  pintarPortaCor(159, '#2c8a8a', '#1d5d5d', '#4cb8b8', '#424242'); // porta warped
+  pintarPortaCor(160, '#cfd8dc', '#90a4ae', '#eceff1', '#5e5e5e'); // porta ferro
+  pintarTrapdoor(161, '#a1887f', '#5d4037', false);              // trapdoor madeira
+  pintarTrapdoor(162, '#cfd8dc', '#5e5e5e', true);               // trapdoor ferro
+  pintarPortaCor(163, '#a1887f', '#5d4037', '#bcaaa4', '#424242'); // portão madeira (reusa pintor porta)
+  pintarPortaCor(164, '#8a3a4d', '#5d2535', '#a85065', '#424242'); // portão crimson
+  pintarSign(165);                                                 // placa
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3074,6 +3186,14 @@ function criarAtlas() {
   mapa[BLOCO.CAMA_VERDE]     = { top: 155, side: 155, bottom: 155 };
   mapa[BLOCO.CAMA_AMARELA]   = { top: 156, side: 156, bottom: 156 };
   mapa[BLOCO.CAMA_ROXA]      = { top: 157, side: 157, bottom: 157 };
+  mapa[BLOCO.PORTA_CRIMSON]  = { top: 158, side: 158, bottom: 158 };
+  mapa[BLOCO.PORTA_WARPED]   = { top: 159, side: 159, bottom: 159 };
+  mapa[BLOCO.PORTA_FERRO]    = { top: 160, side: 160, bottom: 160 };
+  mapa[BLOCO.TRAPDOOR_M]     = { top: 161, side: 161, bottom: 161 };
+  mapa[BLOCO.TRAPDOOR_F]     = { top: 162, side: 162, bottom: 162 };
+  mapa[BLOCO.PORTAO_M]       = { top: 163, side: 163, bottom: 163 };
+  mapa[BLOCO.PORTAO_C]       = { top: 164, side: 164, bottom: 164 };
+  mapa[BLOCO.SIGN_MADEIRA]   = { top: 165, side: 165, bottom: 165 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

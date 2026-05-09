@@ -204,8 +204,16 @@ export const BLOCO = {
   CAMA_VERDE:    156,
   CAMA_AMARELA:  157,
   CAMA_ROXA:     158,
+  PORTA_CRIMSON: 159,
+  PORTA_WARPED:  160,
+  PORTA_FERRO:   161,
+  TRAPDOOR_M:    162, // trapdoor de madeira
+  TRAPDOOR_F:    163, // trapdoor de ferro
+  PORTAO_M:      164, // fence gate de madeira
+  PORTAO_C:      165, // fence gate crimson
+  SIGN_MADEIRA:  166, // placa
 };
-export const N_BLOCOS = 159;
+export const N_BLOCOS = 167;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -375,6 +383,18 @@ export const BLOCO_INFO = {
   [BLOCO.CAMA_VERDE]:    { nome: 'Cama Verde',       solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
   [BLOCO.CAMA_AMARELA]:  { nome: 'Cama Amarela',     solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
   [BLOCO.CAMA_ROXA]:     { nome: 'Cama Roxa',        solido: true,  emiteLuz: 0,  cor: 0x7b1fa2, lateral: 0x4a148c },
+  // Portas coloridas (shape 'door' reusado)
+  [BLOCO.PORTA_CRIMSON]: { nome: 'Porta Crimson',    solido: true,  emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'door' },
+  [BLOCO.PORTA_WARPED]:  { nome: 'Porta Warped',     solido: true,  emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'door' },
+  [BLOCO.PORTA_FERRO]:   { nome: 'Porta de Ferro',   solido: true,  emiteLuz: 0, cor: 0xcfd8dc, lateral: 0x90a4ae, shape: 'door' },
+  // Trapdoors (shape 'slab' meia altura)
+  [BLOCO.TRAPDOOR_M]:    { nome: 'Trapdoor Madeira', solido: false, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63, shape: 'slab' },
+  [BLOCO.TRAPDOOR_F]:    { nome: 'Trapdoor Ferro',   solido: false, emiteLuz: 0, cor: 0xcfd8dc, lateral: 0x90a4ae, shape: 'slab' },
+  // Portões (fence gate, shape 'fence' reusado)
+  [BLOCO.PORTAO_M]:      { nome: 'Portão Madeira',   solido: true,  emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63, shape: 'fence' },
+  [BLOCO.PORTAO_C]:      { nome: 'Portão Crimson',   solido: true,  emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'fence' },
+  // Placa
+  [BLOCO.SIGN_MADEIRA]:  { nome: 'Placa',            solido: false, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63, shape: 'ladder' },
 };
 
 export const ICONE = {
@@ -745,6 +765,19 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.LA_VERDE,    q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_VERDE,   q: 1}, wb: true },
   { custos: [{b: BLOCO.LA_AMARELA,  q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_AMARELA, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA_VERMELHA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_ROXA,    q: 1}, wb: true },
+  // Portas coloridas: 6 pranchas crimson/warped → 1 porta
+  { custos: [{b: BLOCO.CRIMSON_PLANKS, q: 6}], saida: {b: BLOCO.PORTA_CRIMSON, q: 1}, wb: true },
+  { custos: [{b: BLOCO.WARPED_PLANKS, q: 6}], saida: {b: BLOCO.PORTA_WARPED, q: 1}, wb: true },
+  // Porta de ferro: 6 ferro
+  { custos: [{i: ITEM.FERRO, q: 6}], saida: {b: BLOCO.PORTA_FERRO, q: 1}, wb: true },
+  // Trapdoors: 6 pranchas → 2 trapdoors / 4 ferro → 1 trapdoor ferro
+  { custos: [{i: ITEM.PRANCHAS, q: 6}], saida: {b: BLOCO.TRAPDOOR_M, q: 2}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 4}], saida: {b: BLOCO.TRAPDOOR_F, q: 1}, wb: true },
+  // Portões: 4 paus + 2 pranchas → 1 portão
+  { custos: [{i: ITEM.PAU, q: 4}, {i: ITEM.PRANCHAS, q: 2}], saida: {b: BLOCO.PORTAO_M, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 4}, {b: BLOCO.CRIMSON_PLANKS, q: 2}], saida: {b: BLOCO.PORTAO_C, q: 1}, wb: true },
+  // Placa: 6 pranchas + 1 pau → 3 placas
+  { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.SIGN_MADEIRA, q: 3}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
