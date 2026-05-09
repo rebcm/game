@@ -564,8 +564,17 @@ export const BLOCO = {
   HORN_CORAL:          492, // coral chifre amarelo
   BUBBLE_CORAL:        493, // coral bolha roxo
   RAW_IRON_BLOCK:      494, // bloco ferro bruto (1.17)
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS! Minérios premium + raw + Nether (495-502)
+  RAW_GOLD_BLOCK:      495, // bloco ouro bruto
+  RAW_COPPER_BLOCK:    496, // bloco cobre bruto
+  NETHERITE_BLOCK:     497, // bloco netherite (super raro)
+  NETHERITE_SCRAP:     498, // sucata netherite (drop nether)
+  GILDED_BLACKSTONE:   499, // 🎯 #500! blackstone dourada (Nether)
+  NETHER_QUARTZ_ORE:   500, // minério quartzo no Nether
+  RED_SANDSTONE:       501, // arenito vermelho (mesa biome)
+  CHISELED_RED_SANDSTONE:502, // arenito vermelho esculpido
 };
-export const N_BLOCOS = 495;
+export const N_BLOCOS = 503;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1093,6 +1102,15 @@ export const BLOCO_INFO = {
   [BLOCO.HORN_CORAL]:        { nome: 'Coral Chifre',       solido: true, emiteLuz: 2,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'flower' },
   [BLOCO.BUBBLE_CORAL]:      { nome: 'Coral Bolha',        solido: true, emiteLuz: 3,  cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'flower' },
   [BLOCO.RAW_IRON_BLOCK]:    { nome: 'Bloco Ferro Bruto',  solido: true, emiteLuz: 0,  cor: 0xa1887f, lateral: 0x6d4c41 },
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS! Minérios premium (495-502)
+  [BLOCO.RAW_GOLD_BLOCK]:    { nome: 'Bloco Ouro Bruto',   solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.RAW_COPPER_BLOCK]:  { nome: 'Bloco Cobre Bruto',  solido: true, emiteLuz: 0,  cor: 0xc97a4d, lateral: 0xa05a30 },
+  [BLOCO.NETHERITE_BLOCK]:   { nome: 'Bloco Netherite',    solido: true, emiteLuz: 0,  cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.NETHERITE_SCRAP]:   { nome: 'Sucata Netherite',   solido: true, emiteLuz: 1,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.GILDED_BLACKSTONE]: { nome: 'Blackstone Dourada', solido: true, emiteLuz: 2,  cor: 0xfdd835, lateral: 0x1a1a1a },
+  [BLOCO.NETHER_QUARTZ_ORE]: { nome: 'Quartzo do Nether',  solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0x8b3a1a },
+  [BLOCO.RED_SANDSTONE]:     { nome: 'Arenito Vermelho',   solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.CHISELED_RED_SANDSTONE]:{nome:'Arenito V. Esculp.',solido:true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
 };
 
 export const ICONE = {
@@ -2025,6 +2043,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_AMARELA, q: 1}], saida: {b: BLOCO.HORN_CORAL, q: 1}, wb: true },
   { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_ROSA, q: 1}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.BUBBLE_CORAL, q: 1}, wb: true },
   { custos: [{i: ITEM.FERRO, q: 9}], saida: {b: BLOCO.RAW_IRON_BLOCK, q: 1}, wb: true },
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS!
+  { custos: [{i: ITEM.OURO, q: 9}], saida: {b: BLOCO.RAW_GOLD_BLOCK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.COBRE, q: 9}], saida: {b: BLOCO.RAW_COPPER_BLOCK, q: 1}, wb: true },
+  { custos: [{i: ITEM.NETHERITE, q: 9}], saida: {b: BLOCO.NETHERITE_BLOCK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {b: BLOCO.NETHERRACK, q: 4}, {i: ITEM.OURO, q: 1}], saida: {b: BLOCO.NETHERITE_SCRAP, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE, q: 4}, {i: ITEM.OURO, q: 1}], saida: {b: BLOCO.GILDED_BLACKSTONE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.NETHERRACK, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.NETHER_QUARTZ_ORE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.RED_SANDSTONE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.RED_SANDSTONE, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.CHISELED_RED_SANDSTONE, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

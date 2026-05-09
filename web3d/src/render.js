@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 47, CELL = 32;
+  const COLS = 8, ROWS = 48, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3290,6 +3290,84 @@ function criarAtlas() {
     }
   }
 
+  // 🎯 Marco 500! Gilded Blackstone — preto com manchas douradas brilhantes (Nether)
+  function pintarGildedBlackstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão blackstone (textura de pedra escura)
+    ctx.fillStyle = '#0a0a0a';
+    let s = idx * 13 + 21;
+    for (let i = 0; i < 60; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Veias de ouro brilhante
+    ctx.fillStyle = '#fdd835';
+    s = idx * 17 + 31;
+    for (let i = 0; i < 18; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 1);
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 1, 1);
+    }
+    // Pontos brancos (brilho extra)
+    ctx.fillStyle = '#fff8e1';
+    s = idx * 7 + 13;
+    for (let i = 0; i < 6; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Borda
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Netherite Block: super premium (quase preto com brilho metálico)
+  function pintarNetheriteBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão metálico cruzado
+    ctx.fillStyle = '#424242';
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0 + i, 2, 2);
+      if (CELL - i > 2) ctx.fillRect(x0 + (CELL - i - 2), y0 + i, 2, 2);
+    }
+    // Cantos com chanfro premium
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 2, y0 + 2, 6, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, 6);
+    ctx.fillRect(x0 + CELL - 8, y0 + 2, 6, 1);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, 6);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, 6, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 8, 1, 6);
+    ctx.fillRect(x0 + CELL - 8, y0 + CELL - 3, 6, 1);
+    ctx.fillRect(x0 + CELL - 3, y0 + CELL - 8, 1, 6);
+    // Ponto brilhante central (pó de glowstone)
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Sombra externa
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Genérico: pinta coral subaquático (haste central + bulbos no topo)
   function pintarCoral(idx, corBulbo, corHaste, corBrilho) {
     const col = idx % COLS;
@@ -6324,6 +6402,15 @@ function criarAtlas() {
   pintarCoral(369, '#fdd835', '#f57f17', '#fff176');                  // horn coral (amarelo)
   pintarCoral(370, '#ab47bc', '#6a1b9a', '#ce93d8');                  // bubble coral (roxo)
   pintarMinerio(371, '#a1887f', '#6d4c41', '#d7b57c');                // raw iron block (textura ferro bruto)
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS! (cells 372-379)
+  pintarMinerio(372, '#fdd835', '#f57f17', '#fff176');                // raw gold block (dourado)
+  pintarMinerio(373, '#c97a4d', '#a05a30', '#e8a070');                // raw copper block
+  pintarNetheriteBlock(374);                                           // netherite block (premium!)
+  pintarMinerio(375, '#6d4c41', '#4e342e', '#a1887f');                // netherite scrap
+  pintarGildedBlackstone(376);                                         // 🎯 #500 GILDED BLACKSTONE!
+  pintarMinerio(377, '#8b3a1a', '#5d2510', '#fafafa');                // nether quartz ore (vermelho + branco)
+  pintarPedra(378, '#c62828', '#8b0000', '#ef5350', 0.50);            // red sandstone
+  pintarChiseled(379, '#c62828', '#8b0000', '#ef5350');               // chiseled red sandstone
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6854,6 +6941,15 @@ function criarAtlas() {
   mapa[BLOCO.HORN_CORAL]            = { top: 369, side: 369, bottom: 369 };
   mapa[BLOCO.BUBBLE_CORAL]          = { top: 370, side: 370, bottom: 370 };
   mapa[BLOCO.RAW_IRON_BLOCK]        = { top: 371, side: 371, bottom: 371 };
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS! (cells 372-379)
+  mapa[BLOCO.RAW_GOLD_BLOCK]        = { top: 372, side: 372, bottom: 372 };
+  mapa[BLOCO.RAW_COPPER_BLOCK]      = { top: 373, side: 373, bottom: 373 };
+  mapa[BLOCO.NETHERITE_BLOCK]       = { top: 374, side: 374, bottom: 374 };
+  mapa[BLOCO.NETHERITE_SCRAP]       = { top: 375, side: 375, bottom: 375 };
+  mapa[BLOCO.GILDED_BLACKSTONE]     = { top: 376, side: 376, bottom: 376 };
+  mapa[BLOCO.NETHER_QUARTZ_ORE]     = { top: 377, side: 377, bottom: 377 };
+  mapa[BLOCO.RED_SANDSTONE]         = { top: 378, side: 378, bottom: 378 };
+  mapa[BLOCO.CHISELED_RED_SANDSTONE]= { top: 379, side: 379, bottom: 379 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

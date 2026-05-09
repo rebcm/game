@@ -1002,6 +1002,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.HORN_CORAL, q: 4 });
   state.inv.adicionar({ b: BLOCO.BUBBLE_CORAL, q: 4 });
   state.inv.adicionar({ b: BLOCO.RAW_IRON_BLOCK, q: 4 });
+  // 🎯 Sprint 13 — MARCO 500 BLOCOS! Minérios premium
+  state.inv.adicionar({ b: BLOCO.RAW_GOLD_BLOCK, q: 4 });
+  state.inv.adicionar({ b: BLOCO.RAW_COPPER_BLOCK, q: 4 });
+  state.inv.adicionar({ b: BLOCO.NETHERITE_BLOCK, q: 1 });
+  state.inv.adicionar({ b: BLOCO.NETHERITE_SCRAP, q: 4 });
+  state.inv.adicionar({ b: BLOCO.GILDED_BLACKSTONE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.NETHER_QUARTZ_ORE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.RED_SANDSTONE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CHISELED_RED_SANDSTONE, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
