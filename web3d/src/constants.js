@@ -765,8 +765,17 @@ export const BLOCO = {
   ESCADA_TERRACOTA_AM: 859, ESCADA_TERRACOTA_LR: 860, ESCADA_TERRACOTA_BR: 861, ESCADA_TERRACOTA_RX: 862,
   PAREDE_TERRACOTA_AM: 863, PAREDE_TERRACOTA_LR: 864, PAREDE_TERRACOTA_BR: 865, PAREDE_TERRACOTA_RX: 866,
   PAREDE_LA_R:         867, PAREDE_LA_A:         868, PAREDE_LA_V:         869, PAREDE_LA_AM:        870,
+  // Sprint 30: 32 — concreto/glazed slabs/escadas/walls (871-902)
+  SLAB_CONCRETO_LIME:  871, SLAB_CONCRETO_MAG:   872, SLAB_CONCRETO_PUR:   873, SLAB_CONCRETO_LBL:   874,
+  SLAB_CONCRETO_LGY:   875, ESCADA_CONCRETO_LM2: 876, ESCADA_CONCRETO_MAG: 877, ESCADA_CONCRETO_PUR2:878,
+  PAREDE_CONCRETO_AM:  879, PAREDE_CONCRETO_LR:  880, PAREDE_CONCRETO_BR:  881, PAREDE_CONCRETO_MR:  882,
+  PAREDE_CONCRETO_V:   883, PAREDE_CONCRETO_RX:  884, PAREDE_CONCRETO_CN:  885, PAREDE_CONCRETO_LM:  886,
+  SLAB_GLAZED_V:       887, SLAB_GLAZED_AM:      888, SLAB_GLAZED_LR:      889, SLAB_GLAZED_RS:      890,
+  SLAB_GLAZED_BR:      891, SLAB_GLAZED_PR:      892, SLAB_GLAZED_CN:      893, SLAB_GLAZED_MR:      894,
+  ESCADA_GLAZED_RS:    895, ESCADA_GLAZED_BR:    896, ESCADA_GLAZED_PR:    897, ESCADA_GLAZED_CN:    898,
+  ESCADA_GLAZED_MR:    899, PAREDE_GLAZED_R:     900, PAREDE_GLAZED_A:     901, PAREDE_GLAZED_V:     902,
 };
-export const N_BLOCOS = 871;
+export const N_BLOCOS = 903;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1687,6 +1696,39 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_LA_A]:   { nome: 'Parede Lã Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'wall' },
   [BLOCO.PAREDE_LA_V]:   { nome: 'Parede Lã Verde',   solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
   [BLOCO.PAREDE_LA_AM]:  { nome: 'Parede Lã Amarela', solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'wall' },
+  // Sprint 30: 32 concreto/glazed slabs/escadas/walls (871-902)
+  [BLOCO.SLAB_CONCRETO_LIME]: { nome: 'Laje Conc. Lima',  solido: true, emiteLuz: 0, cor: 0x9ccc65, lateral: 0x7cb342, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_MAG]:  { nome: 'Laje Conc. Mag.',  solido: true, emiteLuz: 0, cor: 0xd81b60, lateral: 0xad1457, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_PUR]:  { nome: 'Laje Conc. Roxo',  solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_LBL]:  { nome: 'Laje Conc. Az.Cl.',solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x29b6f6, shape: 'slab' },
+  [BLOCO.SLAB_CONCRETO_LGY]:  { nome: 'Laje Conc. Cz.Cl.',solido: true, emiteLuz: 0, cor: 0xeeeeee, lateral: 0xbdbdbd, shape: 'slab' },
+  [BLOCO.ESCADA_CONCRETO_LM2]:{ nome: 'Escada Conc. Lima2',solido: true, emiteLuz: 0, cor: 0x9ccc65, lateral: 0x7cb342, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_MAG]:{ nome: 'Escada Conc. Mag.', solido: true, emiteLuz: 0, cor: 0xd81b60, lateral: 0xad1457, shape: 'stairs' },
+  [BLOCO.ESCADA_CONCRETO_PUR2]:{nome:'Escada Conc. Roxo2', solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'stairs' },
+  [BLOCO.PAREDE_CONCRETO_AM]: { nome: 'Parede Conc. Amar.',solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_LR]: { nome: 'Parede Conc. Laran.',solido:true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_BR]: { nome: 'Parede Conc. Branca',solido:true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_MR]: { nome: 'Parede Conc. Marrom',solido:true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_V]:  { nome: 'Parede Conc. Verde',solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_RX]: { nome: 'Parede Conc. Roxo', solido: true, emiteLuz: 0, cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_CN]: { nome: 'Parede Conc. Ciano',solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'wall' },
+  [BLOCO.PAREDE_CONCRETO_LM]: { nome: 'Parede Conc. Lima', solido: true, emiteLuz: 0, cor: 0x9ccc65, lateral: 0x7cb342, shape: 'wall' },
+  [BLOCO.SLAB_GLAZED_V]:      { nome: 'Laje Glazed Verde',  solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_AM]:     { nome: 'Laje Glazed Amar.',  solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_LR]:     { nome: 'Laje Glazed Laran.', solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_RS]:     { nome: 'Laje Glazed Rosa',   solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_BR]:     { nome: 'Laje Glazed Branca', solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_PR]:     { nome: 'Laje Glazed Preta',  solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x000000, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_CN]:     { nome: 'Laje Glazed Ciano',  solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'slab' },
+  [BLOCO.SLAB_GLAZED_MR]:     { nome: 'Laje Glazed Mar.',   solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'slab' },
+  [BLOCO.ESCADA_GLAZED_RS]:   { nome: 'Escada Glazed Rosa', solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'stairs' },
+  [BLOCO.ESCADA_GLAZED_BR]:   { nome: 'Escada Glazed Br.',  solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'stairs' },
+  [BLOCO.ESCADA_GLAZED_PR]:   { nome: 'Escada Glazed Pr.',  solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x000000, shape: 'stairs' },
+  [BLOCO.ESCADA_GLAZED_CN]:   { nome: 'Escada Glazed Cn.',  solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'stairs' },
+  [BLOCO.ESCADA_GLAZED_MR]:   { nome: 'Escada Glazed Mr.',  solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'stairs' },
+  [BLOCO.PAREDE_GLAZED_R]:    { nome: 'Parede Glazed Verm.',solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
+  [BLOCO.PAREDE_GLAZED_A]:    { nome: 'Parede Glazed Azul', solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'wall' },
+  [BLOCO.PAREDE_GLAZED_V]:    { nome: 'Parede Glazed Verde',solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
 };
 
 export const ICONE = {
