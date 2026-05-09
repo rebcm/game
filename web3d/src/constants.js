@@ -302,8 +302,19 @@ export const BLOCO = {
   PAREDE_BLACKSTONE:248,
   BONE_BLOCK:     249, // bloco de osso (decoração branca com listras)
   ROOTED_DIRT:    250, // terra com raízes (drylands)
+  // Pedras esculpidas (chiseled — paridade MC)
+  CHISELED_STONE: 251,
+  CHISELED_QUARTZO:252,
+  CHISELED_DEEPSLATE:253,
+  CHISELED_BLACKSTONE:254,
+  // Hyphae nether (caules sem casca)
+  CRIMSON_HYPHAE: 255,
+  WARPED_HYPHAE:  256,
+  // Froglights (luzes orgânicas dos sapos)
+  FROGLIGHT_VERDE:257, // verdant froglight
+  FROGLIGHT_ROXO: 258, // pearlescent froglight
 };
-export const N_BLOCOS = 251;
+export const N_BLOCOS = 259;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -576,6 +587,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_BLACKSTONE]:{nome: 'Parede Blackstone',solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'wall' },
   [BLOCO.BONE_BLOCK]:      { nome: 'Bloco de Osso',    solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbdbdbd },
   [BLOCO.ROOTED_DIRT]:     { nome: 'Terra com Raízes', solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x5d4037 },
+  [BLOCO.CHISELED_STONE]:    { nome: 'Pedra Esculpida',  solido: true, emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575 },
+  [BLOCO.CHISELED_QUARTZO]:  { nome: 'Quartzo Esculpido',solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.CHISELED_DEEPSLATE]:{ nome: 'Ardósia Esculpida',solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.CHISELED_BLACKSTONE]:{nome:'Blackstone Esculp.',solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a },
+  [BLOCO.CRIMSON_HYPHAE]:    { nome: 'Hifa Crimson',     solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535 },
+  [BLOCO.WARPED_HYPHAE]:     { nome: 'Hifa Warped',      solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d },
+  [BLOCO.FROGLIGHT_VERDE]:   { nome: 'Froglight Verde',  solido: true, emiteLuz: 15, cor: 0xa5d6a7, lateral: 0x66bb6a },
+  [BLOCO.FROGLIGHT_ROXO]:    { nome: 'Froglight Roxo',   solido: true, emiteLuz: 15, cor: 0xce93d8, lateral: 0xab47bc },
 };
 
 export const ICONE = {
@@ -1068,6 +1087,17 @@ export const RECEITAS = [
   { custos: [{i: ITEM.OSSO, q: 9}],        saida: {b: BLOCO.BONE_BLOCK, q: 1}, wb: true },
   // Rooted Dirt: 1 terra + 1 muda
   { custos: [{b: BLOCO.TERRA, q: 1}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.ROOTED_DIRT, q: 1}, wb: false },
+  // Pedras esculpidas: 2 lajes do material → 1 chiseled (paridade MC)
+  { custos: [{b: BLOCO.SLAB_PEDRA,    q: 2}], saida: {b: BLOCO.CHISELED_STONE,    q: 1}, wb: true },
+  { custos: [{b: BLOCO.SLAB_QUARTZO,  q: 2}], saida: {b: BLOCO.CHISELED_QUARTZO,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.SLAB_DEEPSLATE,q: 2}], saida: {b: BLOCO.CHISELED_DEEPSLATE,q: 1}, wb: true },
+  { custos: [{b: BLOCO.SLAB_BLACKSTONE,q: 2}], saida: {b: BLOCO.CHISELED_BLACKSTONE, q: 1}, wb: true },
+  // Hyphae: 4 stems do mesmo tipo (paridade MC stripped log)
+  { custos: [{b: BLOCO.CRIMSON_STEM, q: 4}], saida: {b: BLOCO.CRIMSON_HYPHAE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.WARPED_STEM,  q: 4}], saida: {b: BLOCO.WARPED_HYPHAE,  q: 4}, wb: true },
+  // Froglights: 4 slimeballs + 1 luz (proxy de drop sapo+magma cube)
+  { custos: [{i: ITEM.SLIMEBALL, q: 4}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.FROGLIGHT_VERDE, q: 1}, wb: true },
+  { custos: [{i: ITEM.SLIMEBALL, q: 4}, {b: BLOCO.AMETHYST, q: 1}], saida: {b: BLOCO.FROGLIGHT_ROXO, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

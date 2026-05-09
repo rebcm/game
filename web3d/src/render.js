@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 29, CELL = 32;
+  const COLS = 8, ROWS = 30, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,93 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Pedra Esculpida (chiseled): cor base + padrão geométrico central
+  function pintarChiseled(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão central elevado (estilo "pillar" chiseled)
+    ctx.fillStyle = escuro;
+    // Borda externa do padrão
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 1);
+    ctx.fillRect(x0 + 4, y0 + CELL - 5, CELL - 8, 1);
+    ctx.fillRect(x0 + 4, y0 + 4, 1, CELL - 8);
+    ctx.fillRect(x0 + CELL - 5, y0 + 4, 1, CELL - 8);
+    // Inner box
+    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, 1);
+    ctx.fillRect(x0 + 6, y0 + CELL - 7, CELL - 12, 1);
+    // Pilares verticais (3 colunas)
+    ctx.fillRect(x0 + 10, y0 + 7, 1, CELL - 14);
+    ctx.fillRect(x0 + 15, y0 + 7, 1, CELL - 14);
+    ctx.fillRect(x0 + CELL - 11, y0 + 7, 1, CELL - 14);
+    // Highlights claros
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 5, y0 + 5, 1, CELL - 10);
+    ctx.fillRect(x0 + 5, y0 + 5, CELL - 10, 1);
+    // Centro decorativo
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL/2 - 1, 2, 2);
+  }
+
+  // Hyphae (caule sem casca): grão em todas as direções (texture vertical+horizontal)
+  function pintarHyphae(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão circular interno (corte transversal do caule)
+    ctx.fillStyle = escuro;
+    // Anéis concêntricos
+    for (let r = 4; r < 16; r += 4) {
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, 1);
+      ctx.fillRect(x0 + 16 - r, y0 + 16 + r - 1, r * 2, 1);
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 1, r * 2);
+      ctx.fillRect(x0 + 16 + r - 1, y0 + 16 - r, 1, r * 2);
+    }
+    // Centro claro (medula)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Manchas escuras pseudo-aleatórias
+    spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.20, 6, 1, idx * 9301 + 49297);
+  }
+
+  // Froglight: cilindro brilhante interior + 4 nodos colorid + ranhuras
+  function pintarFroglight(idx, base, claro, brilho) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras horizontais escuras (segmentos do cilindro)
+    ctx.fillStyle = claro;
+    for (let py = 4; py < CELL; py += 7) {
+      ctx.fillRect(x0, y0 + py, CELL, 1);
+    }
+    // Núcleo brilhante central
+    ctx.fillStyle = brilho;
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // 4 pontos brilhantes nos cantos
+    ctx.fillStyle = brilho;
+    for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+    }
+    // Borda escura sutil
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Bone Block: branco com listras horizontais e padrão de osso
@@ -3655,6 +3742,14 @@ function criarAtlas() {
   pintarGlazed(225, '#424242', '#616161', '#000000');             // glazed preta
   pintarBoneBlock(226);                                           // bone block
   pintarRootedDirt(227);                                          // rooted dirt
+  pintarChiseled(228, '#9E9E9E', '#5E5E5E', '#bdbdbd');           // chiseled stone
+  pintarChiseled(229, '#fafafa', '#bdbdbd', '#ffffff');           // chiseled quartzo
+  pintarChiseled(230, '#4a4a52', '#1a1a22', '#7a7a82');           // chiseled deepslate
+  pintarChiseled(231, '#1a1a1a', '#000000', '#3a3a3a');           // chiseled blackstone
+  pintarHyphae(232, '#8a3a4d', '#5d2535', '#a85065');             // crimson hyphae
+  pintarHyphae(233, '#2c8a8a', '#1d5d5d', '#4cb8b8');             // warped hyphae
+  pintarFroglight(234, '#a5d6a7', '#66bb6a', '#c5e1a5');          // froglight verde
+  pintarFroglight(235, '#ce93d8', '#ab47bc', '#e1bee7');          // froglight roxo
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3917,6 +4012,14 @@ function criarAtlas() {
   // Blocos novos
   mapa[BLOCO.BONE_BLOCK]       = { top: 226, side: 226, bottom: 226 };
   mapa[BLOCO.ROOTED_DIRT]      = { top: 227, side: 227, bottom: 227 };
+  mapa[BLOCO.CHISELED_STONE]   = { top: 228, side: 228, bottom: 228 };
+  mapa[BLOCO.CHISELED_QUARTZO] = { top: 229, side: 229, bottom: 229 };
+  mapa[BLOCO.CHISELED_DEEPSLATE]= { top: 230, side: 230, bottom: 230 };
+  mapa[BLOCO.CHISELED_BLACKSTONE]={top: 231, side: 231, bottom: 231 };
+  mapa[BLOCO.CRIMSON_HYPHAE]   = { top: 232, side: 232, bottom: 232 };
+  mapa[BLOCO.WARPED_HYPHAE]    = { top: 233, side: 233, bottom: 233 };
+  mapa[BLOCO.FROGLIGHT_VERDE]  = { top: 234, side: 234, bottom: 234 };
+  mapa[BLOCO.FROGLIGHT_ROXO]   = { top: 235, side: 235, bottom: 235 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
