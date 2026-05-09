@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 30, CELL = 32;
+  const COLS = 8, ROWS = 31, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3828,6 +3828,16 @@ function criarAtlas() {
   pintarMelancia(237, true);                                      // melancia dourada
   pintarFlor(238, '#ffeb3b', '#a05a30');                         // girassol amarelo
   pintarAbacaxi(239);                                             // abacaxi
+  // 6 painéis vidro adicionais (cells 240-245)
+  pintarVidroColorido(240, '#ff9800', '#e65100');                 // painel laranja
+  pintarVidroColorido(241, '#f06292', '#c2185b');                 // painel rosa
+  pintarVidroColorido(242, '#4dd0e1', '#00838f');                 // painel ciano
+  pintarVidroColorido(243, '#fafafa', '#bdbdbd');                 // painel branco
+  pintarVidroColorido(244, '#424242', '#000000');                 // painel preto
+  pintarVidroColorido(245, '#9e9e9e', '#616161');                 // painel cinza
+  // Blocos compactados bambu/cacto (cells 246-247)
+  pintar(246, '#8bc34a', '#558b2f', 0.50);                        // bambu compactado
+  pintar(247, '#388E3C', '#1b5e20', 0.50);                        // cacto compactado
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4102,6 +4112,14 @@ function criarAtlas() {
   mapa[BLOCO.MELANCIA_GLISTER] = { top: 237, side: 237, bottom: 237 };
   mapa[BLOCO.GIRASSOL]         = { top: 238, side: 238, bottom: 238 };
   mapa[BLOCO.ABACAXI]          = { top: 239, side: 239, bottom: 239 };
+  mapa[BLOCO.PAINEL_VIDRO_LR]  = { top: 240, side: 240, bottom: 240 };
+  mapa[BLOCO.PAINEL_VIDRO_RS]  = { top: 241, side: 241, bottom: 241 };
+  mapa[BLOCO.PAINEL_VIDRO_CN]  = { top: 242, side: 242, bottom: 242 };
+  mapa[BLOCO.PAINEL_VIDRO_BR]  = { top: 243, side: 243, bottom: 243 };
+  mapa[BLOCO.PAINEL_VIDRO_PR]  = { top: 244, side: 244, bottom: 244 };
+  mapa[BLOCO.PAINEL_VIDRO_CZ]  = { top: 245, side: 245, bottom: 245 };
+  mapa[BLOCO.BAMBU_BLOCO]      = { top: 246, side: 246, bottom: 246 };
+  mapa[BLOCO.CACTO_BLOCO]      = { top: 247, side: 247, bottom: 247 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

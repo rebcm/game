@@ -317,8 +317,16 @@ export const BLOCO = {
   MELANCIA_GLISTER:260, // melancia dourada (cura mais)
   GIRASSOL:       261, // girassol (decoração) - shape flower
   ABACAXI:        262, // abacaxi (decoração)
+  PAINEL_VIDRO_LR:263, // painel laranja
+  PAINEL_VIDRO_RS:264, // painel rosa
+  PAINEL_VIDRO_CN:265, // painel ciano
+  PAINEL_VIDRO_BR:266, // painel branco
+  PAINEL_VIDRO_PR:267, // painel preto
+  PAINEL_VIDRO_CZ:268, // painel cinza
+  BAMBU_BLOCO:    269, // bambu compactado (4 bambus)
+  CACTO_BLOCO:    270, // cacto compactado (sem dano)
 };
-export const N_BLOCOS = 263;
+export const N_BLOCOS = 271;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -603,6 +611,14 @@ export const BLOCO_INFO = {
   [BLOCO.MELANCIA_GLISTER]:{ nome: 'Melancia Dourada', solido: true, emiteLuz: 4, cor: 0xffd54f, lateral: 0xf9a825 },
   [BLOCO.GIRASSOL]:        { nome: 'Girassol',         solido: false,emiteLuz: 0, cor: 0xffeb3b, lateral: 0x2e7d32, shape: 'flower' },
   [BLOCO.ABACAXI]:         { nome: 'Abacaxi',          solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0x2e7d32 },
+  [BLOCO.PAINEL_VIDRO_LR]: { nome: 'Painel Vidro Lar', solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_RS]: { nome: 'Painel Vidro Rosa', solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_CN]: { nome: 'Painel Vidro Cian', solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_BR]: { nome: 'Painel Vidro Branco',solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeceff1, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_PR]: { nome: 'Painel Vidro Preto',solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121, shape: 'bars' },
+  [BLOCO.PAINEL_VIDRO_CZ]: { nome: 'Painel Vidro Cinza',solido: true, emiteLuz: 0, cor: 0x9e9e9e, lateral: 0x616161, shape: 'bars' },
+  [BLOCO.BAMBU_BLOCO]:     { nome: 'Bloco de Bambu',   solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x689f38 },
+  [BLOCO.CACTO_BLOCO]:     { nome: 'Bloco de Cacto',   solido: true, emiteLuz: 0, cor: 0x388E3C, lateral: 0x2E7D32 },
 };
 
 export const ICONE = {
@@ -1114,6 +1130,18 @@ export const RECEITAS = [
   { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TRIGO, q: 1}, {b: BLOCO.FLOR_AMARELA, q: 1}], saida: {b: BLOCO.GIRASSOL, q: 1}, wb: true },
   // Abacaxi: 1 muda + 4 trigo
   { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TRIGO, q: 4}], saida: {b: BLOCO.ABACAXI, q: 1}, wb: true },
+  // Painéis de vidro adicionais (6 vidro padrão + 1 corante → 16 painéis)
+  // Aqui simplifico: usa lã colorida pra fornecer cor + 6 vidro normal
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA_LARANJA, q: 1}], saida: {b: BLOCO.PAINEL_VIDRO_LR, q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA_ROSA, q: 1}],    saida: {b: BLOCO.PAINEL_VIDRO_RS, q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA_CIANO, q: 1}],   saida: {b: BLOCO.PAINEL_VIDRO_CN, q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA, q: 1}],         saida: {b: BLOCO.PAINEL_VIDRO_BR, q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA_PRETA, q: 1}],   saida: {b: BLOCO.PAINEL_VIDRO_PR, q: 16}, wb: true },
+  { custos: [{b: BLOCO.VIDRO, q: 6}, {b: BLOCO.LA_CINZA, q: 1}],   saida: {b: BLOCO.PAINEL_VIDRO_CZ, q: 16}, wb: true },
+  // Bloco de Bambu: 9 bambus
+  { custos: [{b: BLOCO.BAMBU, q: 9}], saida: {b: BLOCO.BAMBU_BLOCO, q: 1}, wb: true },
+  // Bloco de Cacto: 9 cactos
+  { custos: [{b: BLOCO.CACTO, q: 9}], saida: {b: BLOCO.CACTO_BLOCO, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
