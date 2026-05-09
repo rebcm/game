@@ -4758,6 +4758,16 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_TERRACOTA_R]     = { top: 202, side: 202, bottom: 202 };
   mapa[BLOCO.PAREDE_TERRACOTA_R]   = { top: 202, side: 202, bottom: 202 };
   mapa[BLOCO.ESCADA_TERRACOTA_A]   = { top: 203, side: 203, bottom: 203 };
+  // Tijolo Nether (cell 88)
+  mapa[BLOCO.SLAB_NETHER]          = { top: 88, side: 88, bottom: 88 };
+  mapa[BLOCO.PAREDE_NETHER]        = { top: 88, side: 88, bottom: 88 };
+  // Glazed Terracotas (cells 218/219/220/221)
+  mapa[BLOCO.ESCADA_GLAZED_R]      = { top: 218, side: 218, bottom: 218 };
+  mapa[BLOCO.SLAB_GLAZED_R]        = { top: 218, side: 218, bottom: 218 };
+  mapa[BLOCO.ESCADA_GLAZED_A]      = { top: 219, side: 219, bottom: 219 };
+  mapa[BLOCO.SLAB_GLAZED_A]        = { top: 219, side: 219, bottom: 219 };
+  mapa[BLOCO.ESCADA_GLAZED_V]      = { top: 220, side: 220, bottom: 220 };
+  mapa[BLOCO.ESCADA_GLAZED_AM]     = { top: 221, side: 221, bottom: 221 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

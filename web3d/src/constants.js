@@ -441,8 +441,16 @@ export const BLOCO = {
   SLAB_TERRACOTA_R:    380,
   PAREDE_TERRACOTA_R:  381,
   ESCADA_TERRACOTA_A:  382,
+  SLAB_NETHER:         383,
+  PAREDE_NETHER:       384,
+  ESCADA_GLAZED_R:     385,
+  SLAB_GLAZED_R:       386,
+  ESCADA_GLAZED_A:     387,
+  SLAB_GLAZED_A:       388,
+  ESCADA_GLAZED_V:     389,
+  ESCADA_GLAZED_AM:    390,
 };
-export const N_BLOCOS = 383;
+export const N_BLOCOS = 391;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -847,6 +855,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_TERRACOTA_R]:    { nome: 'Laje Terracota V',    solido: true, emiteLuz: 0, cor: 0xb55a3a, lateral: 0x8b3e23, shape: 'slab' },
   [BLOCO.PAREDE_TERRACOTA_R]:  { nome: 'Parede Terracota V',  solido: true, emiteLuz: 0, cor: 0xb55a3a, lateral: 0x8b3e23, shape: 'wall' },
   [BLOCO.ESCADA_TERRACOTA_A]:  { nome: 'Escada Terracota A',  solido: true, emiteLuz: 0, cor: 0x4a5e9a, lateral: 0x2c3d6c, shape: 'stairs' },
+  [BLOCO.SLAB_NETHER]:         { nome: 'Laje Tijolo Nether',  solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'slab' },
+  [BLOCO.PAREDE_NETHER]:       { nome: 'Parede Tijolo Nether',solido: true, emiteLuz: 0, cor: 0x4a0e0e, lateral: 0x2d0707, shape: 'wall' },
+  [BLOCO.ESCADA_GLAZED_R]:     { nome: 'Escada Glazed Verm.', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
+  [BLOCO.SLAB_GLAZED_R]:       { nome: 'Laje Glazed Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.ESCADA_GLAZED_A]:     { nome: 'Escada Glazed Azul',  solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'stairs' },
+  [BLOCO.SLAB_GLAZED_A]:       { nome: 'Laje Glazed Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.ESCADA_GLAZED_V]:     { nome: 'Escada Glazed Verde', solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'stairs' },
+  [BLOCO.ESCADA_GLAZED_AM]:    { nome: 'Escada Glazed Amare.',solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -1648,6 +1664,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.TERRACOTA_R, q: 3}], saida: {b: BLOCO.SLAB_TERRACOTA_R,   q: 6}, wb: true },
   { custos: [{b: BLOCO.TERRACOTA_R, q: 6}], saida: {b: BLOCO.PAREDE_TERRACOTA_R, q: 6}, wb: true },
   { custos: [{b: BLOCO.TERRACOTA_A, q: 6}], saida: {b: BLOCO.ESCADA_TERRACOTA_A, q: 4}, wb: true },
+  // Variantes Nether brick
+  { custos: [{b: BLOCO.TIJOLO_NETHER, q: 3}], saida: {b: BLOCO.SLAB_NETHER, q: 6}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO_NETHER, q: 6}], saida: {b: BLOCO.PAREDE_NETHER, q: 6}, wb: true },
+  // 6 Variantes Glazed
+  { custos: [{b: BLOCO.GLAZED_R, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_R, q: 4}, wb: true },
+  { custos: [{b: BLOCO.GLAZED_R, q: 3}], saida: {b: BLOCO.SLAB_GLAZED_R, q: 6}, wb: true },
+  { custos: [{b: BLOCO.GLAZED_A, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_A, q: 4}, wb: true },
+  { custos: [{b: BLOCO.GLAZED_A, q: 3}], saida: {b: BLOCO.SLAB_GLAZED_A, q: 6}, wb: true },
+  { custos: [{b: BLOCO.GLAZED_V, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_V, q: 4}, wb: true },
+  { custos: [{b: BLOCO.GLAZED_AM, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_AM, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
