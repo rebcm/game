@@ -6950,6 +6950,15 @@ function criarAtlas() {
   mapa[BLOCO.NETHER_QUARTZ_ORE]     = { top: 377, side: 377, bottom: 377 };
   mapa[BLOCO.RED_SANDSTONE]         = { top: 378, side: 378, bottom: 378 };
   mapa[BLOCO.CHISELED_RED_SANDSTONE]= { top: 379, side: 379, bottom: 379 };
+  // Sprint 14: lajes+escadas madeiras variantes (reusam cells das pranchas: 341, 343, 345, 348, 349, 300)
+  mapa[BLOCO.SLAB_BIRCH]            = { top: 341, side: 341, bottom: 341 };
+  mapa[BLOCO.SLAB_SPRUCE]           = { top: 343, side: 343, bottom: 343 };
+  mapa[BLOCO.SLAB_ACACIA]           = { top: 345, side: 345, bottom: 345 };
+  mapa[BLOCO.SLAB_JUNGLE]           = { top: 348, side: 348, bottom: 348 };
+  mapa[BLOCO.SLAB_DARK_OAK]         = { top: 349, side: 349, bottom: 349 };
+  mapa[BLOCO.SLAB_CHERRY]           = { top: 300, side: 300, bottom: 300 };
+  mapa[BLOCO.ESCADA_BIRCH]          = { top: 341, side: 341, bottom: 341 };
+  mapa[BLOCO.ESCADA_SPRUCE]         = { top: 343, side: 343, bottom: 343 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

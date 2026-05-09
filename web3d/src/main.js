@@ -1011,6 +1011,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.NETHER_QUARTZ_ORE, q: 8 });
   state.inv.adicionar({ b: BLOCO.RED_SANDSTONE, q: 16 });
   state.inv.adicionar({ b: BLOCO.CHISELED_RED_SANDSTONE, q: 8 });
+  // Sprint 14: lajes+escadas madeiras variantes
+  state.inv.adicionar({ b: BLOCO.SLAB_BIRCH, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_SPRUCE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_ACACIA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_JUNGLE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_DARK_OAK, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SLAB_CHERRY, q: 16 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_BIRCH, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ESCADA_SPRUCE, q: 8 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

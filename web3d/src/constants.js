@@ -573,8 +573,17 @@ export const BLOCO = {
   NETHER_QUARTZ_ORE:   500, // minério quartzo no Nether
   RED_SANDSTONE:       501, // arenito vermelho (mesa biome)
   CHISELED_RED_SANDSTONE:502, // arenito vermelho esculpido
+  // Sprint 14: lajes+escadas das madeiras variantes (503-510)
+  SLAB_BIRCH:          503,
+  SLAB_SPRUCE:         504,
+  SLAB_ACACIA:         505,
+  SLAB_JUNGLE:         506,
+  SLAB_DARK_OAK:       507,
+  SLAB_CHERRY:         508,
+  ESCADA_BIRCH:        509,
+  ESCADA_SPRUCE:       510,
 };
-export const N_BLOCOS = 503;
+export const N_BLOCOS = 511;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1111,6 +1120,15 @@ export const BLOCO_INFO = {
   [BLOCO.NETHER_QUARTZ_ORE]: { nome: 'Quartzo do Nether',  solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0x8b3a1a },
   [BLOCO.RED_SANDSTONE]:     { nome: 'Arenito Vermelho',   solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
   [BLOCO.CHISELED_RED_SANDSTONE]:{nome:'Arenito V. Esculp.',solido:true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000 },
+  // Sprint 14: lajes+escadas das madeiras variantes (503-510)
+  [BLOCO.SLAB_BIRCH]:        { nome: 'Laje Bétula',        solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1, shape: 'slab' },
+  [BLOCO.SLAB_SPRUCE]:       { nome: 'Laje Pinheiro',      solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'slab' },
+  [BLOCO.SLAB_ACACIA]:       { nome: 'Laje Acácia',        solido: true, emiteLuz: 0,  cor: 0xff7043, lateral: 0xbf360c, shape: 'slab' },
+  [BLOCO.SLAB_JUNGLE]:       { nome: 'Laje Selva',         solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'slab' },
+  [BLOCO.SLAB_DARK_OAK]:     { nome: 'Laje Carv.Esc.',     solido: true, emiteLuz: 0,  cor: 0x3e2723, lateral: 0x1a0e08, shape: 'slab' },
+  [BLOCO.SLAB_CHERRY]:       { nome: 'Laje Cerejeira',     solido: true, emiteLuz: 0,  cor: 0xf8bbd0, lateral: 0xec407a, shape: 'slab' },
+  [BLOCO.ESCADA_BIRCH]:      { nome: 'Escada Bétula',      solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1, shape: 'stairs' },
+  [BLOCO.ESCADA_SPRUCE]:     { nome: 'Escada Pinheiro',    solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -2052,6 +2070,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.NETHERRACK, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.NETHER_QUARTZ_ORE, q: 1}, wb: true },
   { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.RED_SANDSTONE, q: 4}, wb: true },
   { custos: [{b: BLOCO.RED_SANDSTONE, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.CHISELED_RED_SANDSTONE, q: 1}, wb: true },
+  // Sprint 14: lajes+escadas das madeiras variantes (503-510)
+  { custos: [{b: BLOCO.BIRCH_PRANCHA, q: 3}],     saida: {b: BLOCO.SLAB_BIRCH, q: 6}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_PRANCHA, q: 3}],    saida: {b: BLOCO.SLAB_SPRUCE, q: 6}, wb: true },
+  { custos: [{b: BLOCO.ACACIA_PRANCHA, q: 3}],    saida: {b: BLOCO.SLAB_ACACIA, q: 6}, wb: true },
+  { custos: [{b: BLOCO.JUNGLE_PRANCHA, q: 3}],    saida: {b: BLOCO.SLAB_JUNGLE, q: 6}, wb: true },
+  { custos: [{b: BLOCO.DARK_OAK_PRANCHA, q: 3}],  saida: {b: BLOCO.SLAB_DARK_OAK, q: 6}, wb: true },
+  { custos: [{b: BLOCO.CHERRY_PRANCHA, q: 3}],    saida: {b: BLOCO.SLAB_CHERRY, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BIRCH_PRANCHA, q: 6}],     saida: {b: BLOCO.ESCADA_BIRCH, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SPRUCE_PRANCHA, q: 6}],    saida: {b: BLOCO.ESCADA_SPRUCE, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
