@@ -792,6 +792,28 @@ export const ITEM = {
   TINTA_GLOW:    261, // tinta brilhante (drop do glow squid)
   REDSTONE:      262, // pó de redstone (drop do minério)
   PRISMARINE_SHARD:263, // shard de prismarine (drop)
+  // Ferramentas: machados (chop wood mais rápido)
+  MACHADO_MADEIRA:264,
+  MACHADO_PEDRA:  265,
+  MACHADO_FERRO:  266,
+  MACHADO_DIAMANTE:267,
+  // Pás (digging)
+  PA_MADEIRA:     268,
+  PA_PEDRA:       269,
+  PA_FERRO:       270,
+  PA_DIAMANTE:    271,
+  // Enxadas (farming)
+  ENXADA_MADEIRA: 272,
+  ENXADA_PEDRA:   273,
+  ENXADA_FERRO:   274,
+  ENXADA_DIAMANTE:275,
+  // Utilitários
+  TESOURA:        276, // tosquiar ovelha + cortar folha
+  SELA:           277, // saddle pra montar mobs
+  CORDA:          278, // lead pra puxar mobs
+  RELOGIO:        279, // mostra hora exata
+  ESPELHO:        280, // espelho mágico
+  RECOVERY_COMPASS:281, // bússola de recuperação (aponta morte)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -863,6 +885,28 @@ export const ITEM_INFO = {
   [ITEM.TINTA_GLOW]:    { nome: 'Tinta Brilhante',   icone: '💠' },
   [ITEM.REDSTONE]:      { nome: 'Pó de Redstone',    icone: '🔴' },
   [ITEM.PRISMARINE_SHARD]:{ nome: 'Shard Prismarine', icone: '🔷' },
+  // Machados
+  [ITEM.MACHADO_MADEIRA]:  { nome: 'Machado madeira',  icone: '🪓', tier: 1, ferramenta: 'machado' },
+  [ITEM.MACHADO_PEDRA]:    { nome: 'Machado pedra',    icone: '🪓', tier: 2, ferramenta: 'machado' },
+  [ITEM.MACHADO_FERRO]:    { nome: 'Machado ferro',    icone: '🪓', tier: 3, ferramenta: 'machado' },
+  [ITEM.MACHADO_DIAMANTE]: { nome: 'Machado diamante', icone: '🪓', tier: 4, ferramenta: 'machado' },
+  // Pás
+  [ITEM.PA_MADEIRA]:       { nome: 'Pá madeira',       icone: '⛓', tier: 1, ferramenta: 'pa' },
+  [ITEM.PA_PEDRA]:         { nome: 'Pá pedra',         icone: '⛓', tier: 2, ferramenta: 'pa' },
+  [ITEM.PA_FERRO]:         { nome: 'Pá ferro',         icone: '⛓', tier: 3, ferramenta: 'pa' },
+  [ITEM.PA_DIAMANTE]:      { nome: 'Pá diamante',      icone: '⛓', tier: 4, ferramenta: 'pa' },
+  // Enxadas
+  [ITEM.ENXADA_MADEIRA]:   { nome: 'Enxada madeira',   icone: '🌾', tier: 1, ferramenta: 'enxada' },
+  [ITEM.ENXADA_PEDRA]:     { nome: 'Enxada pedra',     icone: '🌾', tier: 2, ferramenta: 'enxada' },
+  [ITEM.ENXADA_FERRO]:     { nome: 'Enxada ferro',     icone: '🌾', tier: 3, ferramenta: 'enxada' },
+  [ITEM.ENXADA_DIAMANTE]:  { nome: 'Enxada diamante',  icone: '🌾', tier: 4, ferramenta: 'enxada' },
+  // Utilitários
+  [ITEM.TESOURA]:          { nome: 'Tesoura',          icone: '✂', ferramenta: 'tesoura' },
+  [ITEM.SELA]:             { nome: 'Sela',             icone: '🐎' },
+  [ITEM.CORDA]:            { nome: 'Corda',            icone: '➰' },
+  [ITEM.RELOGIO]:          { nome: 'Relógio',          icone: '⏰' },
+  [ITEM.ESPELHO]:          { nome: 'Espelho Mágico',   icone: '🪞' },
+  [ITEM.RECOVERY_COMPASS]: { nome: 'Bússola Recovery', icone: '🧭' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -1334,6 +1378,28 @@ export const RECEITAS = [
   // 2 lajes concreto (3 → 6)
   { custos: [{b: BLOCO.CONCRETO_R, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_R,    q: 6}, wb: true },
   { custos: [{b: BLOCO.CONCRETO_A, q: 3}],     saida: {b: BLOCO.SLAB_CONCRETO_A,    q: 6}, wb: true },
+  // Machados (3 do material + 2 paus)
+  { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 3},    {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_FERRO,    q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_DIAMANTE, q: 1}, wb: true },
+  // Pás (1 do material + 2 paus)
+  { custos: [{i: ITEM.PRANCHAS, q: 1}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.PA_MADEIRA,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 1},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.PA_PEDRA,    q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 1},    {i: ITEM.PAU, q: 2}], saida: {i: ITEM.PA_FERRO,    q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 1}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.PA_DIAMANTE, q: 1}, wb: true },
+  // Enxadas (2 do material + 2 paus)
+  { custos: [{i: ITEM.PRANCHAS, q: 2}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.ENXADA_MADEIRA,  q: 1}, wb: true },
+  { custos: [{b: BLOCO.PEDRA, q: 2},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.ENXADA_PEDRA,    q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 2},    {i: ITEM.PAU, q: 2}], saida: {i: ITEM.ENXADA_FERRO,    q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 2}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.ENXADA_DIAMANTE, q: 1}, wb: true },
+  // Utilitários
+  { custos: [{i: ITEM.FERRO, q: 2}], saida: {i: ITEM.TESOURA, q: 1}, wb: true },
+  { custos: [{i: ITEM.COURO, q: 5}, {i: ITEM.FERRO, q: 1}], saida: {i: ITEM.SELA, q: 1}, wb: true },
+  { custos: [{i: ITEM.PAU, q: 4}, {b: BLOCO.LA, q: 4}], saida: {i: ITEM.CORDA, q: 2}, wb: true },
+  { custos: [{i: ITEM.OURO, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.RELOGIO, q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 4}, {i: ITEM.LAPIS, q: 1}], saida: {i: ITEM.ESPELHO, q: 1}, wb: true },
+  { custos: [{i: ITEM.ENDER_PEARL, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {i: ITEM.RECOVERY_COMPASS, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

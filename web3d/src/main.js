@@ -805,6 +805,17 @@ function init() {
   state.inv.adicionar({ b: BLOCO.PAREDE_CONCRETO_PR, q: 16 });
   state.inv.adicionar({ b: BLOCO.SLAB_CONCRETO_R, q: 16 });
   state.inv.adicionar({ b: BLOCO.SLAB_CONCRETO_A, q: 16 });
+  state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
+  state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
+  state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
+  state.inv.adicionar({ i: ITEM.PA_DIAMANTE, q: 1 });
+  state.inv.adicionar({ i: ITEM.ENXADA_FERRO, q: 1 });
+  state.inv.adicionar({ i: ITEM.TESOURA, q: 1 });
+  state.inv.adicionar({ i: ITEM.SELA, q: 1 });
+  state.inv.adicionar({ i: ITEM.CORDA, q: 2 });
+  state.inv.adicionar({ i: ITEM.RELOGIO, q: 1 });
+  state.inv.adicionar({ i: ITEM.ESPELHO, q: 1 });
+  state.inv.adicionar({ i: ITEM.RECOVERY_COMPASS, q: 1 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
