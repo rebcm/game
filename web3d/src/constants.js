@@ -747,8 +747,17 @@ export const BLOCO = {
   CRIMSON_PRANCHA:     795, WARPED_PRANCHA:      796, CRIMSON_DOOR:        797, WARPED_DOOR:         798,
   CRIMSON_TRAPDOOR:    799, WARPED_TRAPDOOR:     800, CRIMSON_FENCE:       801, WARPED_FENCE:        802,
   CRIMSON_GATE:        803, WARPED_GATE:         804, CRIMSON_BUTTON:      805, WARPED_BUTTON:       806,
+  // Sprint 28: 32 blocos — crimson/warped slabs + mushroom + raros (807-838)
+  SLAB_CRIMSON_PR:     807, SLAB_WARPED_PR:      808, ESCADA_CRIMSON_PR:   809, ESCADA_WARPED_PR:    810,
+  CRIMSON_LADDER:      811, WARPED_LADDER:       812, CRIMSON_PLATE:       813, WARPED_PLATE:        814,
+  COGUMELO_VAR_R:      815, COGUMELO_VAR_M:      816, COGUMELO_HASTE_VAR:  817, MUSHROOM_GIGANTE_R:  818,
+  MUSHROOM_GIGANTE_M:  819, MUSHROOM_INNER:      820, NETHER_WART_LISO:    821, MARROM_FUNGO:        822,
+  WAXED_COBRE_GASTO:   823, WAXED_COBRE_OXID:    824, COBRE_GASTO_LISO:    825, COBRE_OXID_LISO:     826,
+  WAXED_COBRE_LISO_G:  827, WAXED_COBRE_LISO_O:  828, WAXED_COBRE_CHISEL_G:829, WAXED_COBRE_CHISEL_O:830,
+  COBRE_GRADE_GASTO:   831, COBRE_GRADE_OXID:    832, WAXED_COBRE_GRADE:   833, WAXED_COBRE_GRADE_G: 834,
+  WAXED_COBRE_GRADE_O: 835, COPPER_DOOR:         836, COPPER_TRAPDOOR:     837, COPPER_BULB_GASTO_OFF:838,
 };
-export const N_BLOCOS = 807;
+export const N_BLOCOS = 839;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1603,6 +1612,39 @@ export const BLOCO_INFO = {
   [BLOCO.WARPED_GATE]:          { nome: 'Portão Warped',         solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'fence' },
   [BLOCO.CRIMSON_BUTTON]:       { nome: 'Botão Crimson',         solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'button' },
   [BLOCO.WARPED_BUTTON]:        { nome: 'Botão Warped',          solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'button' },
+  // Sprint 28: 32 blocos crimson/warped + mushroom + cobre raros (807-838)
+  [BLOCO.SLAB_CRIMSON_PR]:      { nome: 'Laje Crimson',          solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'slab' },
+  [BLOCO.SLAB_WARPED_PR]:       { nome: 'Laje Warped',           solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'slab' },
+  [BLOCO.ESCADA_CRIMSON_PR]:    { nome: 'Escada Crimson',        solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'stairs' },
+  [BLOCO.ESCADA_WARPED_PR]:     { nome: 'Escada Warped',         solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'stairs' },
+  [BLOCO.CRIMSON_LADDER]:       { nome: 'Escada Cipo Crimson',   solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'ladder' },
+  [BLOCO.WARPED_LADDER]:        { nome: 'Escada Cipo Warped',    solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'ladder' },
+  [BLOCO.CRIMSON_PLATE]:        { nome: 'Placa Crimson',         solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'plate' },
+  [BLOCO.WARPED_PLATE]:         { nome: 'Placa Warped',          solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'plate' },
+  [BLOCO.COGUMELO_VAR_R]:       { nome: 'Cogumelo Var Verm.',    solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0xfafafa },
+  [BLOCO.COGUMELO_VAR_M]:       { nome: 'Cogumelo Var Marrom',   solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0xfafafa },
+  [BLOCO.COGUMELO_HASTE_VAR]:   { nome: 'Haste Cogumelo Var',    solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xfff8e1 },
+  [BLOCO.MUSHROOM_GIGANTE_R]:   { nome: 'Cogumelo Gig. Verm.',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0xfafafa },
+  [BLOCO.MUSHROOM_GIGANTE_M]:   { nome: 'Cogumelo Gig. Marrom',  solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0xfafafa },
+  [BLOCO.MUSHROOM_INNER]:       { nome: 'Cogumelo Interno',      solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1 },
+  [BLOCO.NETHER_WART_LISO]:     { nome: 'Nether Wart Liso',      solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.MARROM_FUNGO]:         { nome: 'Fungo Marrom',          solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.WAXED_COBRE_GASTO]:    { nome: 'Cobre Encerado Gasto',  solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.WAXED_COBRE_OXID]:     { nome: 'Cobre Encerado Oxid.',  solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.COBRE_GASTO_LISO]:     { nome: 'Cobre Gasto Liso',      solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.COBRE_OXID_LISO]:      { nome: 'Cobre Oxidado Liso',    solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.WAXED_COBRE_LISO_G]:   { nome: 'Cobre Enc. Liso Gasto', solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.WAXED_COBRE_LISO_O]:   { nome: 'Cobre Enc. Liso Oxid.', solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.WAXED_COBRE_CHISEL_G]: { nome: 'Cobre Enc. Esc. Gasto', solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.WAXED_COBRE_CHISEL_O]: { nome: 'Cobre Enc. Esc. Oxid.', solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.COBRE_GRADE_GASTO]:    { nome: 'Grade Cobre Gasto',     solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'bars' },
+  [BLOCO.COBRE_GRADE_OXID]:     { nome: 'Grade Cobre Oxidado',   solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c, shape: 'bars' },
+  [BLOCO.WAXED_COBRE_GRADE]:    { nome: 'Grade Cobre Enc.',      solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30, shape: 'bars' },
+  [BLOCO.WAXED_COBRE_GRADE_G]:  { nome: 'Grade Cobre E. Gasto',  solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'bars' },
+  [BLOCO.WAXED_COBRE_GRADE_O]:  { nome: 'Grade Cobre E. Oxid.',  solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c, shape: 'bars' },
+  [BLOCO.COPPER_DOOR]:          { nome: 'Porta Cobre',           solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30, shape: 'door' },
+  [BLOCO.COPPER_TRAPDOOR]:      { nome: 'Alçapão Cobre',         solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30, shape: 'plate' },
+  [BLOCO.COPPER_BULB_GASTO_OFF]:{ nome: 'Bulbo Cobre Off',       solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
 };
 
 export const ICONE = {
