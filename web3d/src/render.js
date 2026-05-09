@@ -2730,6 +2730,24 @@ export class Renderer {
             addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x,   y,   z,    0,0,-1, 1,0,0, 0,1,0);
             continue;
           }
+          if (info.shape === 'torch') {
+            // Haste fina central (0.125 wide × 0.625 alta). Centralizada
+            // em XZ no bloco. Usa idxSide pra haste e idxTop pra topo da
+            // chama (visual estilo Minecraft real — não é cubo cheio).
+            const a = 0.4375, b = 0.5625; // 1/16 grid (~ 9-7 = 0.125)
+            const w = b - a;              // largura da haste = 0.125
+            const ht = 0.625;             // altura total
+            const yt = y + ht;
+            // Haste: 4 faces laterais
+            addFace(SHADE.sideX, idxSide, 2, x, y, z,  x+b, y, z+a,   1,0,0,  0,0,w,  0,ht,0);
+            addFace(SHADE.sideX, idxSide, 3, x, y, z,  x+a, y, z+b,  -1,0,0,  0,0,-w, 0,ht,0);
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z,  x+b, y, z+b,   0,0,1, -w,0,0,  0,ht,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z,  x+a, y, z+a,   0,0,-1, w,0,0,  0,ht,0);
+            // Topo (chama) e base (sob a torch)
+            addFace(SHADE.top,    idxTop, 0, x, y, z,  x+a, yt, z+a,  0,1,0,  w,0,0,  0,0,w);
+            addFace(SHADE.bottom, idxBot, 1, x, y, z,  x+a, y,  z+b,  0,-1,0, w,0,0,  0,0,-w);
+            continue;
+          }
           if (info.shape === 'door_open') {
             // Porta aberta: chapinha 0.18×1×1 colada na face -X (lateral esquerda).
             const d = 0.18;
