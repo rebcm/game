@@ -269,8 +269,16 @@ export const BLOCO = {
   TERRACOTA_A:    216,
   TERRACOTA_AM:   217,
   TERRACOTA_BR:   218,
+  CONCRETO_LR:    219, // laranja
+  CONCRETO_RS:    220, // rosa
+  CONCRETO_CN:    221, // ciano
+  CONCRETO_MR:    222, // marrom
+  TERRACOTA_V:    223, // verde
+  TERRACOTA_RX:   224, // roxa
+  TERRACOTA_LR:   225, // laranja
+  TERRACOTA_PR:   226, // preta
 };
-export const N_BLOCOS = 219;
+export const N_BLOCOS = 227;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -510,6 +518,14 @@ export const BLOCO_INFO = {
   [BLOCO.TERRACOTA_A]:  { nome: 'Terracota Azul',   solido: true,  emiteLuz: 0, cor: 0x4a5e9a, lateral: 0x2c3d6c },
   [BLOCO.TERRACOTA_AM]: { nome: 'Terracota Amarela',solido: true,  emiteLuz: 0, cor: 0xc9a05a, lateral: 0xa67d3a },
   [BLOCO.TERRACOTA_BR]: { nome: 'Terracota Branca', solido: true,  emiteLuz: 0, cor: 0xd6c8b8, lateral: 0xb09f88 },
+  [BLOCO.CONCRETO_LR]:  { nome: 'Concreto Laranja', solido: true,  emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.CONCRETO_RS]:  { nome: 'Concreto Rosa',    solido: true,  emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.CONCRETO_CN]:  { nome: 'Concreto Ciano',   solido: true,  emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.CONCRETO_MR]:  { nome: 'Concreto Marrom',  solido: true,  emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.TERRACOTA_V]:  { nome: 'Terracota Verde',  solido: true,  emiteLuz: 0, cor: 0x4d6233, lateral: 0x344020 },
+  [BLOCO.TERRACOTA_RX]: { nome: 'Terracota Roxa',   solido: true,  emiteLuz: 0, cor: 0x764467, lateral: 0x5a3050 },
+  [BLOCO.TERRACOTA_LR]: { nome: 'Terracota Laranja',solido: true,  emiteLuz: 0, cor: 0xa05a30, lateral: 0x7d3e1c },
+  [BLOCO.TERRACOTA_PR]: { nome: 'Terracota Preta',  solido: true,  emiteLuz: 0, cor: 0x251610, lateral: 0x150a05 },
 };
 
 export const ICONE = {
@@ -961,6 +977,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_AZUL, q: 1}],     saida: {b: BLOCO.TERRACOTA_A,  q: 1}, wb: false },
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_AMARELA, q: 1}],  saida: {b: BLOCO.TERRACOTA_AM, q: 1}, wb: false },
   { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA, q: 1}],          saida: {b: BLOCO.TERRACOTA_BR, q: 1}, wb: false },
+  // Concretos adicionais
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_LARANJA, q: 1}],   saida: {b: BLOCO.CONCRETO_LR, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_ROSA, q: 1}],      saida: {b: BLOCO.CONCRETO_RS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_CIANO, q: 1}],     saida: {b: BLOCO.CONCRETO_CN, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LA_MARROM, q: 1}],    saida: {b: BLOCO.CONCRETO_MR, q: 4}, wb: true },
+  // Terracotas adicionais
+  { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_VERDE, q: 1}],    saida: {b: BLOCO.TERRACOTA_V,  q: 1}, wb: false },
+  { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_ROSA, q: 1}],     saida: {b: BLOCO.TERRACOTA_RX, q: 1}, wb: false },
+  { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_LARANJA, q: 1}],  saida: {b: BLOCO.TERRACOTA_LR, q: 1}, wb: false },
+  { custos: [{b: BLOCO.ARGILA, q: 1}, {b: BLOCO.LA_PRETA, q: 1}],    saida: {b: BLOCO.TERRACOTA_PR, q: 1}, wb: false },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
