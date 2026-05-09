@@ -702,8 +702,17 @@ export const BLOCO = {
   SLAB_CONCRETO_RS:    635, SLAB_CONCRETO_CN:    636, SLAB_CONCRETO_MR:    637, SLAB_CONCRETO_BR:    638,
   PAREDE_TIJOLO_R_C:   639, PAREDE_TIJOLO_A_C:   640, PAREDE_TIJOLO_V_C:   641, PAREDE_TIJOLO_AM_C:  642,
   PAREDE_TIJOLO_RX_C:  643, PAREDE_TIJOLO_RS_C:  644, PAREDE_TIJOLO_CN_C:  645, PAREDE_TIJOLO_BR_C:  646,
+  // Sprint 23: 32 blocos — stripped slabs/escadas/fences + portas/trapdoors/gates (647-678)
+  SLAB_STRIPPED_OAK:   647, SLAB_STRIPPED_BIRCH: 648, SLAB_STRIPPED_SPRUCE:649, SLAB_STRIPPED_ACACIA:650,
+  SLAB_STRIPPED_JUNGLE:651, SLAB_STRIPPED_DARK:  652, ESCADA_STRIPPED_OAK: 653, ESCADA_STRIPPED_BIRCH:654,
+  ESCADA_STRIPPED_SPR: 655, ESCADA_STRIPPED_ACA: 656, ESCADA_STRIPPED_JUN: 657, ESCADA_STRIPPED_DAR: 658,
+  FENCE_STRIPPED_OAK:  659, FENCE_STRIPPED_BIRCH:660, FENCE_STRIPPED_SPR:  661, FENCE_STRIPPED_ACA:  662,
+  FENCE_STRIPPED_JUN:  663, FENCE_STRIPPED_DAR:  664, DOOR_JUNGLE:         665, DOOR_DARK_OAK:       666,
+  DOOR_MANGROVE:       667, DOOR_CHERRY:         668, TRAPDOOR_BIRCH:      669, TRAPDOOR_SPRUCE:     670,
+  TRAPDOOR_ACACIA:     671, TRAPDOOR_JUNGLE:     672, TRAPDOOR_DARK:       673, FENCE_GATE_BIRCH:    674,
+  FENCE_GATE_SPRUCE:   675, FENCE_GATE_ACACIA:   676, FENCE_GATE_JUNGLE:   677, FENCE_GATE_DARK:     678,
 };
-export const N_BLOCOS = 647;
+export const N_BLOCOS = 679;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1393,6 +1402,39 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_TIJOLO_RS_C]: { nome: 'Parede Tij. Rosa',   solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b, shape: 'wall' },
   [BLOCO.PAREDE_TIJOLO_CN_C]: { nome: 'Parede Tij. Ciano',  solido: true, emiteLuz: 0, cor: 0x00838f, lateral: 0x006064, shape: 'wall' },
   [BLOCO.PAREDE_TIJOLO_BR_C]: { nome: 'Parede Tij. Branco', solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'wall' },
+  // Sprint 23: 32 blocos — stripped slabs/escadas/fences + portas/trapdoors/gates (647-678)
+  [BLOCO.SLAB_STRIPPED_OAK]:    { nome: 'Laje Tronco Desc.',     solido: true, emiteLuz: 0, cor: 0xd7b57c, lateral: 0xa1875a, shape: 'slab' },
+  [BLOCO.SLAB_STRIPPED_BIRCH]:  { nome: 'Laje Bétula Desc.',     solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'slab' },
+  [BLOCO.SLAB_STRIPPED_SPRUCE]: { nome: 'Laje Pinheiro Desc.',   solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'slab' },
+  [BLOCO.SLAB_STRIPPED_ACACIA]: { nome: 'Laje Acácia Desc.',     solido: true, emiteLuz: 0, cor: 0xe65100, lateral: 0xbf360c, shape: 'slab' },
+  [BLOCO.SLAB_STRIPPED_JUNGLE]: { nome: 'Laje Selva Desc.',      solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'slab' },
+  [BLOCO.SLAB_STRIPPED_DARK]:   { nome: 'Laje Carv.Esc.Desc.',   solido: true, emiteLuz: 0, cor: 0x5d4037, lateral: 0x3e2723, shape: 'slab' },
+  [BLOCO.ESCADA_STRIPPED_OAK]:  { nome: 'Escada Tronco Desc.',   solido: true, emiteLuz: 0, cor: 0xd7b57c, lateral: 0xa1875a, shape: 'stairs' },
+  [BLOCO.ESCADA_STRIPPED_BIRCH]:{ nome: 'Escada Bétula Desc.',   solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'stairs' },
+  [BLOCO.ESCADA_STRIPPED_SPR]:  { nome: 'Escada Pinheiro Desc.', solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'stairs' },
+  [BLOCO.ESCADA_STRIPPED_ACA]:  { nome: 'Escada Acácia Desc.',   solido: true, emiteLuz: 0, cor: 0xe65100, lateral: 0xbf360c, shape: 'stairs' },
+  [BLOCO.ESCADA_STRIPPED_JUN]:  { nome: 'Escada Selva Desc.',    solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'stairs' },
+  [BLOCO.ESCADA_STRIPPED_DAR]:  { nome: 'Escada Carv.Esc.Desc.', solido: true, emiteLuz: 0, cor: 0x5d4037, lateral: 0x3e2723, shape: 'stairs' },
+  [BLOCO.FENCE_STRIPPED_OAK]:   { nome: 'Cerca Tronco Desc.',    solido: true, emiteLuz: 0, cor: 0xd7b57c, lateral: 0xa1875a, shape: 'fence' },
+  [BLOCO.FENCE_STRIPPED_BIRCH]: { nome: 'Cerca Bétula Desc.',    solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'fence' },
+  [BLOCO.FENCE_STRIPPED_SPR]:   { nome: 'Cerca Pinheiro Desc.',  solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'fence' },
+  [BLOCO.FENCE_STRIPPED_ACA]:   { nome: 'Cerca Acácia Desc.',    solido: true, emiteLuz: 0, cor: 0xe65100, lateral: 0xbf360c, shape: 'fence' },
+  [BLOCO.FENCE_STRIPPED_JUN]:   { nome: 'Cerca Selva Desc.',     solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'fence' },
+  [BLOCO.FENCE_STRIPPED_DAR]:   { nome: 'Cerca Carv.Esc.Desc.',  solido: true, emiteLuz: 0, cor: 0x5d4037, lateral: 0x3e2723, shape: 'fence' },
+  [BLOCO.DOOR_JUNGLE]:          { nome: 'Porta Selva',           solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'door' },
+  [BLOCO.DOOR_DARK_OAK]:        { nome: 'Porta Carv.Esc.',       solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'door' },
+  [BLOCO.DOOR_MANGROVE]:        { nome: 'Porta Mangrove',        solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'door' },
+  [BLOCO.DOOR_CHERRY]:          { nome: 'Porta Cerejeira',       solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'door' },
+  [BLOCO.TRAPDOOR_BIRCH]:       { nome: 'Alçapão Bétula',        solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'plate' },
+  [BLOCO.TRAPDOOR_SPRUCE]:      { nome: 'Alçapão Pinheiro',      solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'plate' },
+  [BLOCO.TRAPDOOR_ACACIA]:      { nome: 'Alçapão Acácia',        solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'plate' },
+  [BLOCO.TRAPDOOR_JUNGLE]:      { nome: 'Alçapão Selva',         solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.TRAPDOOR_DARK]:        { nome: 'Alçapão Carv.Esc.',     solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'plate' },
+  [BLOCO.FENCE_GATE_BIRCH]:     { nome: 'Portão Bétula',         solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'fence' },
+  [BLOCO.FENCE_GATE_SPRUCE]:    { nome: 'Portão Pinheiro',       solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'fence' },
+  [BLOCO.FENCE_GATE_ACACIA]:    { nome: 'Portão Acácia',         solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'fence' },
+  [BLOCO.FENCE_GATE_JUNGLE]:    { nome: 'Portão Selva',          solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
+  [BLOCO.FENCE_GATE_DARK]:      { nome: 'Portão Carv.Esc.',      solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'fence' },
 };
 
 export const ICONE = {
