@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 14, CELL = 32;
+  const COLS = 8, ROWS = 16, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,67 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Minério deepslate genérico (base ardósia + clusters da cor do minério)
+  function pintarMinerioDeep(idx, corCluster, corClusterClaro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base deepslate (cinza-escuro)
+    ctx.fillStyle = '#4a4a52';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras verticais finas (textura ardósia)
+    ctx.fillStyle = '#35353d';
+    for (let px = 2; px < CELL; px += 4) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // 5 clusters do minério em posições pseudo-aleatórias
+    const clusters = [
+      { x: 6,  y: 8  }, { x: 22, y: 5  }, { x: 12, y: 18 },
+      { x: 24, y: 22 }, { x: 4,  y: 26 },
+    ];
+    for (const c of clusters) {
+      ctx.fillStyle = corCluster;
+      ctx.fillRect(x0 + c.x, y0 + c.y, 4, 4);
+      ctx.fillStyle = corClusterClaro;
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 2, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 1, 1);
+    }
+  }
+
+  // Bloco compactado (storage): cor sólida com padrão geométrico de chanfros
+  function pintarBlocoCompacto(idx, base, claro, escuro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão diagonal (acabamento metálico premium)
+    ctx.fillStyle = claro;
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0 + i, 2, 2);
+      if (CELL - i > 2) ctx.fillRect(x0 + (CELL - i - 2), y0 + i, 2, 2);
+    }
+    // 4 cantos com chanfro (efeito "moldado")
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 2,  y0 + 2,  4, 1);
+    ctx.fillRect(x0 + 2,  y0 + 2,  1, 4);
+    ctx.fillRect(x0 + CELL - 6, y0 + 2,  4, 1);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2,  1, 4);
+    ctx.fillRect(x0 + 2,  y0 + CELL - 3, 4, 1);
+    ctx.fillRect(x0 + 2,  y0 + CELL - 6, 1, 4);
+    ctx.fillRect(x0 + CELL - 6, y0 + CELL - 3, 4, 1);
+    ctx.fillRect(x0 + CELL - 3, y0 + CELL - 6, 1, 4);
+    // Sombra interna (relevo)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Borda externa
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
   }
 
   // Lama: marrom úmido com gotas escuras + manchas mais claras
@@ -2301,6 +2362,18 @@ function criarAtlas() {
   pintarTijoloLama(109);                                     // tijolo de lama
   pintarTuff(110);                                           // tufo
   pintarDripstone(111);                                      // dripstone
+  // Deepslate ores (cells 112-116) — base ardósia + cluster colorido
+  pintarMinerioDeep(112, '#212121', '#424242');              // ds carvão
+  pintarMinerioDeep(113, '#a1887f', '#cfd8dc');              // ds ferro
+  pintarMinerioDeep(114, '#fdd835', '#fff176');              // ds ouro
+  pintarMinerioDeep(115, '#4dd0e1', '#80deea');              // ds diamante
+  pintarMinerioDeep(116, '#e07a3b', '#ff9d5e');              // ds cobre
+  // Compactados (cells 117-121)
+  pintarBlocoCompacto(117, '#cfd8dc', '#eceff1', '#90a4ae'); // ferro
+  pintarBlocoCompacto(118, '#fdd835', '#fff59d', '#f9a825'); // ouro
+  pintarBlocoCompacto(119, '#4dd0e1', '#b2ebf2', '#00838f'); // diamante
+  pintarBlocoCompacto(120, '#212121', '#424242', '#000000'); // carvão
+  pintarBlocoCompacto(121, '#1565c0', '#42a5f5', '#0d47a1'); // lápis
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2418,6 +2491,16 @@ function criarAtlas() {
   mapa[BLOCO.TIJOLO_LAMA]    = { top: 109, side: 109, bottom: 109 };
   mapa[BLOCO.TUFF]           = { top: 110, side: 110, bottom: 110 };
   mapa[BLOCO.DRIPSTONE]      = { top: 111, side: 111, bottom: 111 };
+  mapa[BLOCO.DS_CARVAO]      = { top: 112, side: 112, bottom: 112 };
+  mapa[BLOCO.DS_FERRO]       = { top: 113, side: 113, bottom: 113 };
+  mapa[BLOCO.DS_OURO]        = { top: 114, side: 114, bottom: 114 };
+  mapa[BLOCO.DS_DIAMANTE]    = { top: 115, side: 115, bottom: 115 };
+  mapa[BLOCO.DS_COBRE]       = { top: 116, side: 116, bottom: 116 };
+  mapa[BLOCO.BLOCO_FERRO]    = { top: 117, side: 117, bottom: 117 };
+  mapa[BLOCO.BLOCO_OURO]     = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.BLOCO_DIAMANTE] = { top: 119, side: 119, bottom: 119 };
+  mapa[BLOCO.BLOCO_CARVAO]   = { top: 120, side: 120, bottom: 120 };
+  mapa[BLOCO.BLOCO_LAPIS]    = { top: 121, side: 121, bottom: 121 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

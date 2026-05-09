@@ -151,8 +151,20 @@ export const BLOCO = {
   TIJOLO_LAMA:   110, // tijolo de lama
   TUFF:          111, // tufo (cinza claro vulcânico)
   DRIPSTONE:     112, // pedra goteira (laranja)
+  // Deepslate ores (Y < 0 paridade MC)
+  DS_CARVAO:     113,
+  DS_FERRO:      114,
+  DS_OURO:       115,
+  DS_DIAMANTE:   116,
+  DS_COBRE:      117,
+  // Blocos compactados (visual + storage)
+  BLOCO_FERRO:   118,
+  BLOCO_OURO:    119,
+  BLOCO_DIAMANTE:120,
+  BLOCO_CARVAO:  121,
+  BLOCO_LAPIS:   122,
 };
-export const N_BLOCOS = 113;
+export const N_BLOCOS = 123;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -274,6 +286,18 @@ export const BLOCO_INFO = {
   [BLOCO.TIJOLO_LAMA]:   { nome: 'Tijolo de Lama',   solido: true,  emiteLuz: 0,  cor: 0xa0855e, lateral: 0x856a48 },
   [BLOCO.TUFF]:          { nome: 'Tufo',             solido: true,  emiteLuz: 0,  cor: 0x6b6e6c, lateral: 0x55585a },
   [BLOCO.DRIPSTONE]:     { nome: 'Pedra Goteira',    solido: true,  emiteLuz: 0,  cor: 0xc28560, lateral: 0xa56a4c },
+  // Deepslate ores (versão dark dos minérios — Y baixo)
+  [BLOCO.DS_CARVAO]:     { nome: 'Carvão Profundo',  solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DS_FERRO]:      { nome: 'Ferro Profundo',   solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DS_OURO]:       { nome: 'Ouro Profundo',    solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DS_DIAMANTE]:   { nome: 'Diamante Profundo',solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.DS_COBRE]:      { nome: 'Cobre Profundo',   solido: true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  // Blocos compactados (storage de 9 unidades + decoração)
+  [BLOCO.BLOCO_FERRO]:   { nome: 'Bloco de Ferro',   solido: true,  emiteLuz: 0,  cor: 0xeceff1, lateral: 0xcfd8dc },
+  [BLOCO.BLOCO_OURO]:    { nome: 'Bloco de Ouro',    solido: true,  emiteLuz: 0,  cor: 0xfdd835, lateral: 0xf9a825 },
+  [BLOCO.BLOCO_DIAMANTE]:{ nome: 'Bloco de Diamante',solido: true,  emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.BLOCO_CARVAO]:  { nome: 'Bloco de Carvão',  solido: true,  emiteLuz: 0,  cor: 0x212121, lateral: 0x000000 },
+  [BLOCO.BLOCO_LAPIS]:   { nome: 'Bloco de Lápis',   solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
 };
 
 export const ICONE = {
@@ -570,6 +594,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PEDRA, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.TUFF, q: 4}, wb: true },
   // Dripstone: 4 areia + 1 lava bucket
   { custos: [{b: BLOCO.AREIA, q: 4}, {i: ITEM.BUCKET_LAVA, q: 1}], saida: {b: BLOCO.DRIPSTONE, q: 4}, wb: true },
+  // Blocos compactados (paridade MC: 9 itens → 1 bloco, reversível)
+  { custos: [{i: ITEM.FERRO,    q: 9}], saida: {b: BLOCO.BLOCO_FERRO,    q: 1}, wb: true },
+  { custos: [{i: ITEM.OURO,     q: 9}], saida: {b: BLOCO.BLOCO_OURO,     q: 1}, wb: true },
+  { custos: [{i: ITEM.DIAMANTE, q: 9}], saida: {b: BLOCO.BLOCO_DIAMANTE, q: 1}, wb: true },
+  { custos: [{i: ITEM.CARVAO,   q: 9}], saida: {b: BLOCO.BLOCO_CARVAO,   q: 1}, wb: true },
+  { custos: [{i: ITEM.LAPIS,    q: 9}], saida: {b: BLOCO.BLOCO_LAPIS,    q: 1}, wb: true },
+  // Reversível
+  { custos: [{b: BLOCO.BLOCO_FERRO,    q: 1}], saida: {i: ITEM.FERRO,    q: 9}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_OURO,     q: 1}], saida: {i: ITEM.OURO,     q: 9}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_DIAMANTE, q: 1}], saida: {i: ITEM.DIAMANTE, q: 9}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_CARVAO,   q: 1}], saida: {i: ITEM.CARVAO,   q: 9}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_LAPIS,    q: 1}], saida: {i: ITEM.LAPIS,    q: 9}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

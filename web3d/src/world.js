@@ -326,7 +326,15 @@ export class World {
             // Cavernas
             if (this.caverna(gx, y, gz)) { c.set(lx, y, lz, BLOCO.AR); continue; }
             const hh = hash3(gx, y, gz, this.seed ^ 0xa1b2) & 0xFF;
-            if (y < 6 && hh < 3) b = BLOCO.DIAMANTE;
+            // Camada deepslate (Y < 6): variantes ardósia
+            if (y < 6) {
+              if (hh < 3) b = BLOCO.DS_DIAMANTE;
+              else if (hh < 8) b = BLOCO.DS_OURO;
+              else if (hh < 16) b = BLOCO.DS_FERRO;
+              else if (hh < 22) b = BLOCO.DS_COBRE;
+              else if (hh < 30) b = BLOCO.DS_CARVAO;
+              else b = BLOCO.DEEPSLATE;
+            }
             else if (y < 10 && hh < 6) b = BLOCO.OURO;
             else if (y < 14 && hh < 14) b = BLOCO.FERRO;
             // Cobre: bem comum (16-32 abundância), nível 8-30 (paridade MC)
