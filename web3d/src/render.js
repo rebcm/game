@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 39, CELL = 32;
+  const COLS = 8, ROWS = 40, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -2223,6 +2223,230 @@ function criarAtlas() {
     ctx.fillRect(x0 + 20, y0 + 18, 1, 1);
     ctx.fillRect(x0 + 11, y0 + 24, 1, 1);
     ctx.fillRect(x0 + 20, y0 + 24, 1, 1);
+  }
+
+  // Bamboo Mosaic: padrão entrelaçado de bambu (1.20 — bonito decorativo)
+  function pintarBambooMosaic(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#c8a951';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão entrelaçado (4 quadrantes alternados)
+    ctx.fillStyle = '#a0863e';
+    for (let i = 0; i < CELL; i += 8) {
+      for (let j = 0; j < CELL; j += 8) {
+        if (((i + j) >> 3) & 1) {
+          ctx.fillRect(x0 + i, y0 + j, 8, 8);
+        }
+      }
+    }
+    // Linhas de junta (efeito tear)
+    ctx.fillStyle = '#7d6932';
+    for (let i = 0; i < CELL; i += 8) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+      ctx.fillRect(x0, y0 + i, CELL, 1);
+    }
+    // Pontos brilhantes (verniz)
+    ctx.fillStyle = '#fff8e1';
+    for (let i = 4; i < CELL; i += 8) {
+      for (let j = 4; j < CELL; j += 8) {
+        ctx.fillRect(x0 + i, y0 + j, 1, 1);
+      }
+    }
+  }
+
+  // Crimson Roots: raízes vermelhas finas (Nether)
+  function pintarCrimsonRoots(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Várias raízes verticais finas
+    ctx.fillStyle = '#8a3a4d';
+    let s = idx * 11 + 19;
+    for (let i = 0; i < 12; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 2));
+      s = (s * 9301 + 49297) % 233280;
+      const altura = 8 + Math.floor((s / 233280) * 16);
+      ctx.fillRect(x0 + px, y0 + CELL - altura, 1, altura);
+    }
+    // Bulbo na ponta de algumas
+    ctx.fillStyle = '#d75a72';
+    s = idx * 7 + 17;
+    for (let i = 0; i < 6; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 3));
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * (CELL - 3));
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+  }
+
+  // Warped Roots: raízes verdes-azuladas (Nether warped)
+  function pintarWarpedRoots(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#0a2a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#2c8a8a';
+    let s = idx * 13 + 23;
+    for (let i = 0; i < 12; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 2));
+      s = (s * 9301 + 49297) % 233280;
+      const altura = 8 + Math.floor((s / 233280) * 16);
+      ctx.fillRect(x0 + px, y0 + CELL - altura, 1, altura);
+    }
+    ctx.fillStyle = '#4cb8b8';
+    s = idx * 5 + 13;
+    for (let i = 0; i < 6; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 3));
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * (CELL - 3));
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+  }
+
+  // Frosted Ice: gelo com cristais geométricos (frostwalker)
+  function pintarFrostedIce(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#b3e5fc';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#81d4fa';
+    // Padrão de cristais geométricos
+    for (let i = 0; i < CELL; i += 6) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+      ctx.fillRect(x0, y0 + i, CELL, 1);
+    }
+    // Manchas brilhantes
+    ctx.fillStyle = '#e1f5fe';
+    for (let i = 3; i < CELL; i += 6) {
+      for (let j = 3; j < CELL; j += 6) {
+        ctx.fillRect(x0 + i, y0 + j, 2, 2);
+      }
+    }
+    // Reflexos (azul claro)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 2, y0 + 2, 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, 4);
+    ctx.fillRect(x0 + 24, y0 + 24, 4, 1);
+    ctx.fillRect(x0 + 26, y0 + 24, 1, 4);
+  }
+
+  // Vine: cipó verde tradicional pendendo
+  function pintarVine(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2510';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Folhagem de cipó (verde)
+    ctx.fillStyle = '#33691e';
+    for (let i = 2; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    ctx.fillStyle = '#558b2f';
+    for (let i = 4; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0 + 2, 1, CELL - 2);
+    }
+    // Folhinhas
+    ctx.fillStyle = '#7cb342';
+    let s = idx * 7 + 11;
+    for (let i = 0; i < 30; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 1);
+    }
+  }
+
+  // Twisting Vines: cipó torcido azul-ciano (Nether warped)
+  function pintarTwistingVines(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#0a2a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Espiral central torcida (cresce pra cima)
+    ctx.fillStyle = '#00bcd4';
+    for (let y = 4; y < CELL; y += 2) {
+      const offset = Math.sin(y * 0.5) * 3;
+      ctx.fillRect(x0 + 14 + Math.floor(offset), y0 + y, 4, 1);
+    }
+    // Folhinhas brilhantes
+    ctx.fillStyle = '#80deea';
+    for (let y = 6; y < CELL - 4; y += 4) {
+      const offset = Math.sin(y * 0.5) * 3;
+      ctx.fillRect(x0 + 12 + Math.floor(offset), y0 + y, 1, 1);
+      ctx.fillRect(x0 + 19 + Math.floor(offset), y0 + y, 1, 1);
+    }
+    // Topo (broto)
+    ctx.fillStyle = '#4dd0e1';
+    ctx.fillRect(x0 + 14, y0 + 2, 4, 4);
+    ctx.fillStyle = '#e0f7fa';
+    ctx.fillRect(x0 + 15, y0 + 3, 2, 2);
+  }
+
+  // Weeping Vines: cipó pendente vermelho (Nether crimson)
+  function pintarWeepingVines(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cipó pendente (cresce pra baixo)
+    ctx.fillStyle = '#c62828';
+    for (let y = 0; y < CELL - 4; y += 2) {
+      const offset = Math.sin(y * 0.4) * 3;
+      ctx.fillRect(x0 + 14 + Math.floor(offset), y0 + y, 4, 1);
+    }
+    ctx.fillStyle = '#ef5350';
+    for (let y = 2; y < CELL - 4; y += 4) {
+      const offset = Math.sin(y * 0.4) * 3;
+      ctx.fillRect(x0 + 12 + Math.floor(offset), y0 + y, 1, 1);
+      ctx.fillRect(x0 + 19 + Math.floor(offset), y0 + y, 1, 1);
+    }
+    // Pontas pendentes (gotas)
+    ctx.fillStyle = '#8b0000';
+    ctx.fillRect(x0 + 14, y0 + CELL - 4, 4, 4);
+    ctx.fillStyle = '#b71c1c';
+    ctx.fillRect(x0 + 15, y0 + CELL - 3, 2, 2);
+  }
+
+  // Scaffolding: andaime de bambu (estrutura aberta)
+  function pintarScaffolding(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro (ar entre as barras)
+    ctx.fillStyle = '#1a1a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Estrutura de bambu: 4 verticais + 4 horizontais
+    ctx.fillStyle = '#c8a951';
+    ctx.fillRect(x0,           y0, 3, CELL);
+    ctx.fillRect(x0 + CELL - 3, y0, 3, CELL);
+    ctx.fillRect(x0, y0,           CELL, 3);
+    ctx.fillRect(x0, y0 + CELL - 3, CELL, 3);
+    // Diagonal X (cordas)
+    ctx.fillStyle = '#6d4c41';
+    for (let i = 4; i < CELL - 4; i++) {
+      ctx.fillRect(x0 + i, y0 + i, 1, 1);
+      ctx.fillRect(x0 + i, y0 + (CELL - 1 - i), 1, 1);
+    }
+    // Highlights de bambu (claros)
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 1, y0 + 1, 1, CELL - 2);
+    ctx.fillRect(x0 + CELL - 2, y0 + 1, 1, CELL - 2);
+    ctx.fillRect(x0 + 1, y0 + 1, CELL - 2, 1);
+    ctx.fillRect(x0 + 1, y0 + CELL - 2, CELL - 2, 1);
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -5046,6 +5270,15 @@ function criarAtlas() {
   pintarAzaleaFlower(305);
   pintarPinkPetals(306);
   pintarCactusFlower(307);
+  // Sprint 5: Nether plants + cipós (cells 308-315)
+  pintarBambooMosaic(308);
+  pintarCrimsonRoots(309);
+  pintarWarpedRoots(310);
+  pintarFrostedIce(311);
+  pintarVine(312);
+  pintarTwistingVines(313);
+  pintarWeepingVines(314);
+  pintarScaffolding(315);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -5504,6 +5737,15 @@ function criarAtlas() {
   mapa[BLOCO.AZALEA_FLOWER]         = { top: 305, side: 305, bottom: 305 };
   mapa[BLOCO.PINK_PETALS]           = { top: 306, side: 306, bottom: 306 };
   mapa[BLOCO.CACTUS_FLOWER]         = { top: 307, side: 307, bottom: 307 };
+  // Sprint 5: Nether plants + cipós (cells 308-315)
+  mapa[BLOCO.BAMBOO_MOSAIC]         = { top: 308, side: 308, bottom: 308 };
+  mapa[BLOCO.CRIMSON_ROOTS]         = { top: 309, side: 309, bottom: 309 };
+  mapa[BLOCO.WARPED_ROOTS]          = { top: 310, side: 310, bottom: 310 };
+  mapa[BLOCO.FROSTED_ICE]           = { top: 311, side: 311, bottom: 311 };
+  mapa[BLOCO.VINE]                  = { top: 312, side: 312, bottom: 312 };
+  mapa[BLOCO.TWISTING_VINES]        = { top: 313, side: 313, bottom: 313 };
+  mapa[BLOCO.WEEPING_VINES]         = { top: 314, side: 314, bottom: 314 };
+  mapa[BLOCO.SCAFFOLDING]           = { top: 315, side: 315, bottom: 315 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

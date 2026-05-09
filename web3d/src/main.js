@@ -930,6 +930,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.AZALEA_FLOWER, q: 4 });
   state.inv.adicionar({ b: BLOCO.PINK_PETALS, q: 16 });
   state.inv.adicionar({ b: BLOCO.CACTUS_FLOWER, q: 4 });
+  // Sprint 5: Nether plants + cipós + andaime
+  state.inv.adicionar({ b: BLOCO.BAMBOO_MOSAIC, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CRIMSON_ROOTS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.WARPED_ROOTS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.FROSTED_ICE, q: 4 });
+  state.inv.adicionar({ b: BLOCO.VINE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.TWISTING_VINES, q: 8 });
+  state.inv.adicionar({ b: BLOCO.WEEPING_VINES, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SCAFFOLDING, q: 16 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

@@ -492,8 +492,17 @@ export const BLOCO = {
   AZALEA_FLOWER:       428, // azaléia florida (rosa)
   PINK_PETALS:         429, // pétalas rosa (carpet floral)
   CACTUS_FLOWER:       430, // flor cacto 1.20
+  // Sprint 5: Nether plants + cipós + andaime (431-438)
+  BAMBOO_MOSAIC:       431, // mosaico de bambu (1.20)
+  CRIMSON_ROOTS:       432, // raízes vermelhas crimson
+  WARPED_ROOTS:        433, // raízes verdes warped
+  FROSTED_ICE:         434, // gelo congelado (frostwalker)
+  VINE:                435, // cipó vertical
+  TWISTING_VINES:      436, // cipó torcido azul (Nether)
+  WEEPING_VINES:       437, // cipó pendente vermelho (Nether)
+  SCAFFOLDING:         438, // andaime de bambu
 };
-export const N_BLOCOS = 431;
+export const N_BLOCOS = 439;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -949,6 +958,15 @@ export const BLOCO_INFO = {
   [BLOCO.AZALEA_FLOWER]:     { nome: 'Azaléia Florida',    solido: true, emiteLuz: 0,  cor: 0xf06292, lateral: 0x66bb6a, shape: 'flower' },
   [BLOCO.PINK_PETALS]:       { nome: 'Pétalas Rosa',       solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xf48fb1, shape: 'plate' },
   [BLOCO.CACTUS_FLOWER]:     { nome: 'Flor de Cacto',      solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0x388e3c, shape: 'flower' },
+  // Sprint 5: Nether plants + cipós + andaime (431-438)
+  [BLOCO.BAMBOO_MOSAIC]:     { nome: 'Mosaico Bambu',      solido: true, emiteLuz: 0,  cor: 0xc8a951, lateral: 0xa0863e },
+  [BLOCO.CRIMSON_ROOTS]:     { nome: 'Raízes Crimson',     solido: true, emiteLuz: 0,  cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'flower' },
+  [BLOCO.WARPED_ROOTS]:      { nome: 'Raízes Warped',      solido: true, emiteLuz: 0,  cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'flower' },
+  [BLOCO.FROSTED_ICE]:       { nome: 'Gelo Congelado',     solido: true, emiteLuz: 0,  cor: 0xb3e5fc, lateral: 0x81d4fa },
+  [BLOCO.VINE]:              { nome: 'Cipó',               solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20, shape: 'flower' },
+  [BLOCO.TWISTING_VINES]:    { nome: 'Cipó Torcido',       solido: true, emiteLuz: 0,  cor: 0x00bcd4, lateral: 0x00838f, shape: 'flower' },
+  [BLOCO.WEEPING_VINES]:     { nome: 'Cipó Pendente',      solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000, shape: 'flower' },
+  [BLOCO.SCAFFOLDING]:       { nome: 'Andaime',            solido: true, emiteLuz: 0,  cor: 0xc8a951, lateral: 0x6d4c41, shape: 'fence' },
 };
 
 export const ICONE = {
@@ -1809,6 +1827,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.AZALEA, q: 1}, {b: BLOCO.FLOR_VERMELHA, q: 1}], saida: {b: BLOCO.AZALEA_FLOWER, q: 1}, wb: true },
   { custos: [{b: BLOCO.CHERRY_FOLHA, q: 1}], saida: {b: BLOCO.PINK_PETALS, q: 4} },
   { custos: [{b: BLOCO.CACTO, q: 1}, {b: BLOCO.FLOR_AMARELA, q: 1}], saida: {b: BLOCO.CACTUS_FLOWER, q: 1}, wb: true },
+  // Sprint 5: Nether plants + cipós + andaime (431-438)
+  { custos: [{b: BLOCO.BAMBU_BLOCO, q: 4}], saida: {b: BLOCO.BAMBOO_MOSAIC, q: 4}, wb: true },
+  { custos: [{b: BLOCO.NETHERRACK, q: 1}, {b: BLOCO.CRIMSON_STEM, q: 1}], saida: {b: BLOCO.CRIMSON_ROOTS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.NETHERRACK, q: 1}, {b: BLOCO.WARPED_STEM, q: 1}], saida: {b: BLOCO.WARPED_ROOTS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.GELO, q: 1}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.FROSTED_ICE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}], saida: {b: BLOCO.VINE, q: 8}, wb: true },
+  { custos: [{b: BLOCO.WARPED_STEM, q: 2}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.TWISTING_VINES, q: 4}, wb: true },
+  { custos: [{b: BLOCO.CRIMSON_STEM, q: 2}, {b: BLOCO.SOUL_SAND, q: 1}], saida: {b: BLOCO.WEEPING_VINES, q: 4}, wb: true },
+  { custos: [{b: BLOCO.BAMBU, q: 6}, {i: ITEM.CORDA, q: 1}], saida: {b: BLOCO.SCAFFOLDING, q: 6}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
