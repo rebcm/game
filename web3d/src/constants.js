@@ -113,8 +113,9 @@ export const BLOCO = {
   COBRE_MINERIO:  72, // minério de cobre (gera em pedra, smelt → lingote)
   COLMEIA:        73, // colmeia: gera mel ao longo do tempo, decoração
   LILY_PAD:       74, // vitória-régia: decoração flutuante na água
+  BLOCO_MEL:      75, // bloco de mel: decorativo dourado pegajoso
 };
-export const N_BLOCOS = 75;
+export const N_BLOCOS = 76;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -198,6 +199,7 @@ export const BLOCO_INFO = {
   [BLOCO.COBRE_MINERIO]: { nome: 'Minério de Cobre', solido: true,  emiteLuz: 0,  cor: 0x8e7060, lateral: 0x6b5448 },
   [BLOCO.COLMEIA]:       { nome: 'Colmeia',          solido: true,  emiteLuz: 0,  cor: 0xfdd835, lateral: 0xa1887f },
   [BLOCO.LILY_PAD]:      { nome: 'Vitória-régia',    solido: true,  emiteLuz: 0,  cor: 0x388e3c, lateral: 0x388e3c, shape: 'slab' },
+  [BLOCO.BLOCO_MEL]:     { nome: 'Bloco de Mel',     solido: true,  emiteLuz: 1,  cor: 0xffc107, lateral: 0xff8f00 },
 };
 
 export const ICONE = {
@@ -253,6 +255,7 @@ export const ITEM = {
   SALMAO:        258, // salmão: pesca alternativa, mais nutritivo que peixe
   MEL:           259, // mel: comida da colmeia, restaura fome
   FAVO_MEL:      260, // favo de mel: ingrediente futuro
+  TINTA_GLOW:    261, // tinta brilhante (drop do glow squid)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -321,6 +324,7 @@ export const ITEM_INFO = {
   [ITEM.SALMAO]:        { nome: 'Salmão',            icone: '🐟', nutricao: 5 },
   [ITEM.MEL]:           { nome: 'Mel',               icone: '🍯', nutricao: 6 },
   [ITEM.FAVO_MEL]:      { nome: 'Favo de Mel',       icone: '🟨' },
+  [ITEM.TINTA_GLOW]:    { nome: 'Tinta Brilhante',   icone: '💠' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -429,6 +433,8 @@ export const RECEITAS = [
   { custos: [{i: ITEM.OURO, q: 8}, {i: ITEM.MACA, q: 1}], saida: {i: ITEM.MACA_DOURADA, q: 1}, wb: true },
   // Colmeia: 6 pranchas + 3 favos de mel (paridade MC)
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.FAVO_MEL, q: 3}], saida: {b: BLOCO.COLMEIA, q: 1}, wb: true },
+  // Bloco de Mel: 4 mel = 1 bloco
+  { custos: [{i: ITEM.MEL, q: 4}], saida: {b: BLOCO.BLOCO_MEL, q: 1}, wb: true },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.MAGMA, q: 4}, wb: true },
   // Lanterna: 8 ferro + 1 tocha → 1 lanterna (paridade MC: nuggets, simplificado)

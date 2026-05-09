@@ -1030,6 +1030,43 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Bloco de Mel: dourado translúcido (visualmente) com gotas brilhantes
+  function pintarBlocoMel(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base dourada
+    ctx.fillStyle = '#ffc107';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de bolhas (efeito mel viscoso)
+    ctx.fillStyle = '#ff8f00';
+    const bolhas = [
+      { x: 5,  y: 6,  r: 5 },
+      { x: 18, y: 9,  r: 6 },
+      { x: 8,  y: 18, r: 4 },
+      { x: 20, y: 22, r: 5 },
+      { x: 25, y: 5,  r: 3 },
+    ];
+    for (const b of bolhas) {
+      ctx.fillRect(x0 + b.x, y0 + b.y, b.r, b.r);
+    }
+    // Highlights claros (brilho translúcido)
+    ctx.fillStyle = '#fff8e1';
+    for (const b of bolhas) {
+      ctx.fillRect(x0 + b.x + 1, y0 + b.y + 1, 2, 1);
+    }
+    // Reflexo branco diagonal
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 3, y0 + 3, 3, 1);
+    ctx.fillRect(x0 + 4, y0 + 4, 2, 1);
+    // Borda mais escura sutil
+    ctx.fillStyle = '#bf360c';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Lily Pad: folha verde redonda flutuante + nervuras + 1 flor branca
   function pintarLilyPad(idx) {
     const col = idx % COLS;
@@ -1758,6 +1795,7 @@ function criarAtlas() {
   pintarColmeiaTopo(71);                                    // colmeia topo (favo)
   pintarColmeiaLado(72);                                    // colmeia lado (entrada)
   pintarLilyPad(73);                                        // vitória-régia
+  pintarBlocoMel(74);                                       // bloco de mel
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1837,6 +1875,7 @@ function criarAtlas() {
   mapa[BLOCO.COBRE_MINERIO]  = { top: 70, side: 70, bottom: 70 };
   mapa[BLOCO.COLMEIA]        = { top: 71, side: 72, bottom: 71 };
   mapa[BLOCO.LILY_PAD]       = { top: 73, side: 73, bottom: 73 };
+  mapa[BLOCO.BLOCO_MEL]      = { top: 74, side: 74, bottom: 74 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

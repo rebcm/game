@@ -97,6 +97,14 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Glow Squid: lula passiva aquática brilhante (emissive ciano)
+  glow_squid: {
+    hp: 10, vel: 0.5, hostil: false,
+    drops: () => Math.random() < 0.7 ? [{ i: ITEM.TINTA_GLOW, q: 1 + Math.floor(Math.random()*2) }] : [],
+    cor: 0x00bcd4, sec: 0x00838f, // ciano + ciano escuro
+    voa: true, // "voa" na água (move livre)
+    luminoso: true,
+  },
   // Bee: passiva voa baixo, neutro provocado pica e morre
   bee: {
     hp: 8, vel: 1.5, hostil: false, neutro: true, dano: 2, alcance: 1.4,
@@ -945,6 +953,40 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
+    case 'glow_squid': {
+      // Cabeça/manto cônico ciano + 8 tentáculos pendurados (4 longos + 4 curtos)
+      // Material emissive (brilha sozinho na água escura)
+      const matBril = new THREE.MeshLambertMaterial({
+        color: info.cor, emissive: info.cor, emissiveIntensity: 0.8,
+      });
+      const matBrilSec = new THREE.MeshLambertMaterial({
+        color: info.sec, emissive: info.sec, emissiveIntensity: 0.5,
+      });
+      // Cabeça/manto: trapezoide aprox via 2 cubos empilhados
+      const manto1 = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.20, 0.40), matBril);
+      manto1.position.y = 0.55; grp.add(manto1);
+      const manto2 = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.18, 0.30), matBril);
+      manto2.position.y = 0.78; grp.add(manto2);
+      // Olhos ciano-claros emissivos (lateral do manto)
+      for (const sx of [-0.21, 0.21]) {
+        const o = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.06), matBril);
+        o.position.set(sx, 0.55, 0); grp.add(o);
+        // Pupila escura
+        const pup = cubo(0.02, 0.02, 0.025, 0x000000);
+        pup.position.set(sx + (sx < 0 ? -0.025 : 0.025), 0.55, 0); grp.add(pup);
+      }
+      // 8 tentáculos pendurados (4 longos + 4 curtos)
+      for (let i = 0; i < 8; i++) {
+        const longo = i < 4;
+        const altT = longo ? 0.45 : 0.25;
+        const t = new THREE.Mesh(new THREE.BoxGeometry(0.05, altT, 0.05), matBrilSec);
+        const ang = (i / 8) * Math.PI * 2;
+        t.position.set(Math.cos(ang) * 0.13, 0.55 - altT / 2 - 0.10, Math.sin(ang) * 0.13);
+        grp.add(t);
+      }
+      partes.cabeca = manto1; partes.corpo = manto2;
+      break;
+    }
     case 'bee': {
       // Corpo amarelo com listras pretas (clássico abelha) + asas + ferrão
       const corpo = cubo(0.30, 0.22, 0.26, info.cor);
@@ -1332,6 +1374,7 @@ function _dimsMob(tipo) {
     case 'slime':    return { raio: 0.42, altura: 0.55 };
     case 'magma_cube': return { raio: 0.42, altura: 0.55 };
     case 'bee':      return { raio: 0.16, altura: 0.30 };
+    case 'glow_squid': return { raio: 0.22, altura: 0.90 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
@@ -2072,6 +2115,8 @@ export class MobManager {
       // Drowned: spawn em (ou sobre) AGUA, durante a noite
       if (blocoChao === BLOCO.AGUA || world.get(x, y, z) === BLOCO.AGUA) {
         tipos.push('drowned'); tipos.push('drowned'); // peso 2× pra dominar em água
+        // Glow Squid: passivo aquático, brilhante (chance moderada)
+        if (Math.random() < 0.40) tipos.push('glow_squid');
       }
       // Stray: substitui esqueleto em chão de NEVE (taiga/montanhas)
       if (blocoChao === BLOCO.NEVE) {
