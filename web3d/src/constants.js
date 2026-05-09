@@ -449,8 +449,16 @@ export const BLOCO = {
   SLAB_GLAZED_A:       388,
   ESCADA_GLAZED_V:     389,
   ESCADA_GLAZED_AM:    390,
+  SLAB_BAMBU:          391,
+  PAREDE_BAMBU:        392,
+  ESCADA_DRIED_KELP:   393,
+  SLAB_DRIED_KELP:     394,
+  ESCADA_QUARTZO_POL:  395,
+  SLAB_QUARTZO_POL:    396,
+  PAREDE_QUARTZO:      397,
+  ESCADA_BLOCO_OURO:   398,
 };
-export const N_BLOCOS = 391;
+export const N_BLOCOS = 399;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -863,6 +871,14 @@ export const BLOCO_INFO = {
   [BLOCO.SLAB_GLAZED_A]:       { nome: 'Laje Glazed Azul',    solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
   [BLOCO.ESCADA_GLAZED_V]:     { nome: 'Escada Glazed Verde', solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'stairs' },
   [BLOCO.ESCADA_GLAZED_AM]:    { nome: 'Escada Glazed Amare.',solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'stairs' },
+  [BLOCO.SLAB_BAMBU]:          { nome: 'Laje Bambu',         solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x689f38, shape: 'slab' },
+  [BLOCO.PAREDE_BAMBU]:        { nome: 'Parede Bambu',       solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x689f38, shape: 'wall' },
+  [BLOCO.ESCADA_DRIED_KELP]:   { nome: 'Escada Alga Seca',   solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20, shape: 'stairs' },
+  [BLOCO.SLAB_DRIED_KELP]:     { nome: 'Laje Alga Seca',     solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.ESCADA_QUARTZO_POL]:  { nome: 'Escada Quartzo Pol.',solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xfff8e1, shape: 'stairs' },
+  [BLOCO.SLAB_QUARTZO_POL]:    { nome: 'Laje Quartzo Pol.',  solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xfff8e1, shape: 'slab' },
+  [BLOCO.PAREDE_QUARTZO]:      { nome: 'Parede Quartzo',     solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'wall' },
+  [BLOCO.ESCADA_BLOCO_OURO]:   { nome: 'Escada Bl. Ouro',    solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0xf9a825, shape: 'stairs' },
 };
 
 export const ICONE = {
@@ -1674,6 +1690,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.GLAZED_A, q: 3}], saida: {b: BLOCO.SLAB_GLAZED_A, q: 6}, wb: true },
   { custos: [{b: BLOCO.GLAZED_V, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_V, q: 4}, wb: true },
   { custos: [{b: BLOCO.GLAZED_AM, q: 6}], saida: {b: BLOCO.ESCADA_GLAZED_AM, q: 4}, wb: true },
+  // Variantes Bambu
+  { custos: [{b: BLOCO.BAMBU_BLOCO, q: 3}], saida: {b: BLOCO.SLAB_BAMBU, q: 6}, wb: true },
+  { custos: [{b: BLOCO.BAMBU_BLOCO, q: 6}], saida: {b: BLOCO.PAREDE_BAMBU, q: 6}, wb: true },
+  // Variantes Dried Kelp
+  { custos: [{b: BLOCO.DRIED_KELP_BLOCK, q: 6}], saida: {b: BLOCO.ESCADA_DRIED_KELP, q: 4}, wb: true },
+  { custos: [{b: BLOCO.DRIED_KELP_BLOCK, q: 3}], saida: {b: BLOCO.SLAB_DRIED_KELP, q: 6}, wb: true },
+  // Variantes Quartzo Polido + Parede
+  { custos: [{b: BLOCO.QUARTZO_POLIDO, q: 6}], saida: {b: BLOCO.ESCADA_QUARTZO_POL, q: 4}, wb: true },
+  { custos: [{b: BLOCO.QUARTZO_POLIDO, q: 3}], saida: {b: BLOCO.SLAB_QUARTZO_POL, q: 6}, wb: true },
+  { custos: [{b: BLOCO.QUARTZO, q: 6}],         saida: {b: BLOCO.PAREDE_QUARTZO, q: 6}, wb: true },
+  // Escada Bloco Ouro
+  { custos: [{b: BLOCO.BLOCO_OURO, q: 6}], saida: {b: BLOCO.ESCADA_BLOCO_OURO, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

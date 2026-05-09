@@ -4768,6 +4768,14 @@ function criarAtlas() {
   mapa[BLOCO.SLAB_GLAZED_A]        = { top: 219, side: 219, bottom: 219 };
   mapa[BLOCO.ESCADA_GLAZED_V]      = { top: 220, side: 220, bottom: 220 };
   mapa[BLOCO.ESCADA_GLAZED_AM]     = { top: 221, side: 221, bottom: 221 };
+  mapa[BLOCO.SLAB_BAMBU]           = { top: 246, side: 246, bottom: 246 };
+  mapa[BLOCO.PAREDE_BAMBU]         = { top: 246, side: 246, bottom: 246 };
+  mapa[BLOCO.ESCADA_DRIED_KELP]    = { top: 263, side: 263, bottom: 263 };
+  mapa[BLOCO.SLAB_DRIED_KELP]      = { top: 263, side: 263, bottom: 263 };
+  mapa[BLOCO.ESCADA_QUARTZO_POL]   = { top: 55, side: 55, bottom: 55 };
+  mapa[BLOCO.SLAB_QUARTZO_POL]     = { top: 55, side: 55, bottom: 55 };
+  mapa[BLOCO.PAREDE_QUARTZO]       = { top: 54, side: 54, bottom: 54 };
+  mapa[BLOCO.ESCADA_BLOCO_OURO]    = { top: 118, side: 118, bottom: 118 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
