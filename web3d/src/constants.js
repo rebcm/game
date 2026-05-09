@@ -668,8 +668,33 @@ export const BLOCO = {
   BANDEIRA_LIME:       588,
   BANDEIRA_CIANO:      589,
   BANDEIRA_BRANCA:     590,
+  // Sprint 21: 24 blocos diversos (591-614)
+  SHULKER_LIME:        591,
+  SHULKER_LIGHT_BLUE:  592,
+  SHULKER_LIGHT_GRAY:  593,
+  SHULKER_MAGENTA:     594,
+  SHULKER_PURPLE:      595,
+  SHULKER_CIANO:       596,
+  SHULKER_MARROM:      597,
+  SHULKER_VERDE_E:     598,
+  LANTERNA_AZUL:       599,
+  LANTERNA_VERDE:      600,
+  LANTERNA_VERMELHA:   601,
+  LANTERNA_AMARELA:    602,
+  LANTERNA_ROXA:       603,
+  LANTERNA_ROSA:       604,
+  LANTERNA_BRANCA:     605,
+  LANTERNA_LARANJA:    606,
+  PUMPKIN_FACE:        607, // jack-o-lantern variante
+  CARVED_PUMPKIN_2:    608, // segunda variante carved
+  PUMPKIN_LISA:        609, // pumpkin sem face
+  CARVED_PUMPKIN_3:    610, // terceira variante
+  COGUMELO_PEQ:        611, // cogumelo pequeno
+  COGUMELO_HASTE:      612, // haste cogumelo
+  ALGA_SECA:           613, // alga seca individual
+  BAMBU_BROTO:         614, // broto de bambu
 };
-export const N_BLOCOS = 591;
+export const N_BLOCOS = 615;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1301,6 +1326,31 @@ export const BLOCO_INFO = {
   [BLOCO.BANDEIRA_LIME]:     { nome: 'Bandeira Lima',      solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
   [BLOCO.BANDEIRA_CIANO]:    { nome: 'Bandeira Ciano',     solido: true, emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
   [BLOCO.BANDEIRA_BRANCA]:   { nome: 'Bandeira Branca',    solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee },
+  // Sprint 21: 24 blocos diversos (591-614)
+  [BLOCO.SHULKER_LIME]:      { nome: 'Shulker Lima',       solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.SHULKER_LIGHT_BLUE]:{ nome: 'Shulker Azul Cl.',   solido: true, emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x29b6f6 },
+  [BLOCO.SHULKER_LIGHT_GRAY]:{ nome: 'Shulker Cinza Cl.',  solido: true, emiteLuz: 0,  cor: 0xeeeeee, lateral: 0xbdbdbd },
+  [BLOCO.SHULKER_MAGENTA]:   { nome: 'Shulker Magenta',    solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.SHULKER_PURPLE]:    { nome: 'Shulker Roxo',       solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.SHULKER_CIANO]:     { nome: 'Shulker Ciano',      solido: true, emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.SHULKER_MARROM]:    { nome: 'Shulker Marrom',     solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.SHULKER_VERDE_E]:   { nome: 'Shulker Verde Esc.', solido: true, emiteLuz: 0,  cor: 0x1b5e20, lateral: 0x0d3d10 },
+  [BLOCO.LANTERNA_AZUL]:     { nome: 'Lanterna Azul',      solido: true, emiteLuz: 14, cor: 0x42a5f5, lateral: 0x1565c0 },
+  [BLOCO.LANTERNA_VERDE]:    { nome: 'Lanterna Verde',     solido: true, emiteLuz: 14, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.LANTERNA_VERMELHA]: { nome: 'Lanterna Vermelha',  solido: true, emiteLuz: 14, cor: 0xef5350, lateral: 0xc62828 },
+  [BLOCO.LANTERNA_AMARELA]:  { nome: 'Lanterna Amarela',   solido: true, emiteLuz: 14, cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.LANTERNA_ROXA]:     { nome: 'Lanterna Roxa',      solido: true, emiteLuz: 14, cor: 0xab47bc, lateral: 0x6a1b9a },
+  [BLOCO.LANTERNA_ROSA]:     { nome: 'Lanterna Rosa',      solido: true, emiteLuz: 14, cor: 0xf48fb1, lateral: 0xec407a },
+  [BLOCO.LANTERNA_BRANCA]:   { nome: 'Lanterna Branca',    solido: true, emiteLuz: 14, cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.LANTERNA_LARANJA]:  { nome: 'Lanterna Laranja',   solido: true, emiteLuz: 14, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.PUMPKIN_FACE]:      { nome: 'Abóbora Sorridente', solido: true, emiteLuz: 8,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.CARVED_PUMPKIN_2]:  { nome: 'Abóbora Esc. Var2',  solido: true, emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.PUMPKIN_LISA]:      { nome: 'Abóbora Lisa',       solido: true, emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.CARVED_PUMPKIN_3]:  { nome: 'Abóbora Esc. Var3',  solido: true, emiteLuz: 0,  cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.COGUMELO_PEQ]:      { nome: 'Cogumelo Pequeno',   solido: true, emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeeeeee, shape: 'flower' },
+  [BLOCO.COGUMELO_HASTE]:    { nome: 'Haste Cogumelo',     solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xeceff1 },
+  [BLOCO.ALGA_SECA]:         { nome: 'Alga Seca',          solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20, shape: 'flower' },
+  [BLOCO.BAMBU_BROTO]:       { nome: 'Broto Bambu',        solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342, shape: 'flower' },
 };
 
 export const ICONE = {

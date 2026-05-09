@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 56, CELL = 32;
+  const COLS = 8, ROWS = 59, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -6480,6 +6480,31 @@ function criarAtlas() {
   pintar(441, '#9ccc65', '#7cb342', 0.50); // bandeira lima
   pintar(442, '#4dd0e1', '#00838f', 0.50); // bandeira ciano
   pintar(443, '#fafafa', '#eeeeee', 0.50); // bandeira branca
+  // Sprint 21: 24 blocos diversos (cells 444-467)
+  pintarShulkerCor(444, '#9ccc65', '#7cb342', '#aed581', '#558b2f'); // shulker lime
+  pintarShulkerCor(445, '#4fc3f7', '#29b6f6', '#81d4fa', '#0d47a1'); // shulker light blue
+  pintarShulkerCor(446, '#eeeeee', '#bdbdbd', '#fafafa', '#9e9e9e'); // shulker light gray
+  pintarShulkerCor(447, '#d81b60', '#ad1457', '#ec407a', '#880e4f'); // shulker magenta
+  pintarShulkerCor(448, '#6a1b9a', '#4a148c', '#9c27b0', '#311b92'); // shulker purple
+  pintarShulkerCor(449, '#4dd0e1', '#00838f', '#80deea', '#006064'); // shulker ciano
+  pintarShulkerCor(450, '#6d4c41', '#4e342e', '#a1887f', '#3e2723'); // shulker marrom
+  pintarShulkerCor(451, '#1b5e20', '#0d3d10', '#388e3c', '#0a2a08'); // shulker verde escuro
+  pintarLanterna(452); // lanterna azul -- todas reusam a base; vamos fazer simples
+  pintarLanterna(453);
+  pintarLanterna(454);
+  pintarLanterna(455);
+  pintarLanterna(456);
+  pintarLanterna(457);
+  pintarLanterna(458);
+  pintarLanterna(459);
+  pintar(460, '#ff9800', '#e65100', 0.55); // pumpkin face
+  pintar(461, '#ff9800', '#e65100', 0.55); // carved pumpkin v2
+  pintar(462, '#ff9800', '#e65100', 0.55); // pumpkin lisa
+  pintar(463, '#ff9800', '#e65100', 0.55); // carved v3
+  pintarCogumeloPeq(464); // cogumelo pequeno
+  pintar(465, '#fff8e1', '#eceff1', 0.40); // haste cogumelo
+  pintar(466, '#33691e', '#1b5e20', 0.45); // alga seca
+  pintar(467, '#9ccc65', '#7cb342', 0.45); // broto bambu
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -7114,6 +7139,31 @@ function criarAtlas() {
   mapa[BLOCO.BANDEIRA_LIME]         = { top: 441, side: 441, bottom: 441 };
   mapa[BLOCO.BANDEIRA_CIANO]        = { top: 442, side: 442, bottom: 442 };
   mapa[BLOCO.BANDEIRA_BRANCA]       = { top: 443, side: 443, bottom: 443 };
+  // Sprint 21: 24 blocos diversos (cells 444-467)
+  mapa[BLOCO.SHULKER_LIME]          = { top: 444, side: 444, bottom: 444 };
+  mapa[BLOCO.SHULKER_LIGHT_BLUE]    = { top: 445, side: 445, bottom: 445 };
+  mapa[BLOCO.SHULKER_LIGHT_GRAY]    = { top: 446, side: 446, bottom: 446 };
+  mapa[BLOCO.SHULKER_MAGENTA]       = { top: 447, side: 447, bottom: 447 };
+  mapa[BLOCO.SHULKER_PURPLE]        = { top: 448, side: 448, bottom: 448 };
+  mapa[BLOCO.SHULKER_CIANO]         = { top: 449, side: 449, bottom: 449 };
+  mapa[BLOCO.SHULKER_MARROM]        = { top: 450, side: 450, bottom: 450 };
+  mapa[BLOCO.SHULKER_VERDE_E]       = { top: 451, side: 451, bottom: 451 };
+  mapa[BLOCO.LANTERNA_AZUL]         = { top: 452, side: 452, bottom: 452 };
+  mapa[BLOCO.LANTERNA_VERDE]        = { top: 453, side: 453, bottom: 453 };
+  mapa[BLOCO.LANTERNA_VERMELHA]     = { top: 454, side: 454, bottom: 454 };
+  mapa[BLOCO.LANTERNA_AMARELA]      = { top: 455, side: 455, bottom: 455 };
+  mapa[BLOCO.LANTERNA_ROXA]         = { top: 456, side: 456, bottom: 456 };
+  mapa[BLOCO.LANTERNA_ROSA]         = { top: 457, side: 457, bottom: 457 };
+  mapa[BLOCO.LANTERNA_BRANCA]       = { top: 458, side: 458, bottom: 458 };
+  mapa[BLOCO.LANTERNA_LARANJA]      = { top: 459, side: 459, bottom: 459 };
+  mapa[BLOCO.PUMPKIN_FACE]          = { top: 460, side: 460, bottom: 460 };
+  mapa[BLOCO.CARVED_PUMPKIN_2]      = { top: 461, side: 461, bottom: 461 };
+  mapa[BLOCO.PUMPKIN_LISA]          = { top: 462, side: 462, bottom: 462 };
+  mapa[BLOCO.CARVED_PUMPKIN_3]      = { top: 463, side: 463, bottom: 463 };
+  mapa[BLOCO.COGUMELO_PEQ]          = { top: 464, side: 464, bottom: 464 };
+  mapa[BLOCO.COGUMELO_HASTE]        = { top: 465, side: 465, bottom: 465 };
+  mapa[BLOCO.ALGA_SECA]             = { top: 466, side: 466, bottom: 466 };
+  mapa[BLOCO.BAMBU_BROTO]           = { top: 467, side: 467, bottom: 467 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
