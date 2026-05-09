@@ -48,6 +48,40 @@ export class UI {
       const mostrar = state.player.submerso || (state.player.ar < state.player.arMax && state.player.modo === 'survival');
       arWrap.classList.toggle('hidden', !mostrar);
     }
+    // SPRINT MEGA-6: HUD de Status Effects (sidebar superior direita)
+    this.renderStatusEffects();
+  }
+
+  renderStatusEffects() {
+    if (!state.player?.efeitos) return;
+    let bar = document.getElementById('status-effects-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'status-effects-bar';
+      bar.style.cssText = 'position:fixed;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:50;font-family:"Press Start 2P",monospace;font-size:8px;';
+      document.body.appendChild(bar);
+    }
+    const efeitos = state.player.efeitos;
+    const ativos = [];
+    const now = Date.now();
+    const ICONES = {
+      speed: '⚡', slowness: '🐌', poison: '☠️', regen: '❤️',
+      strength: '💪', weakness: '💢', fire_res: '🔥', resistencia: '🛡️',
+      slow_fall: '🪶', levitacao: '🎈', invisivel: '👻', noite: '🌙',
+      water_breathing: '🐟', dolphin: '🐬', haste: '⛏️', jump_boost: '🦘',
+      absorption: '💛', wither: '🖤', hunger_effect: '😵',
+      blindness: '🕶️', nausea: '🌀', luck: '🍀', soul_speed: '💨',
+      conduit_power: '🔱', turtle_master: '🐢', glowing: '✨',
+    };
+    for (const [tipo, fim] of Object.entries(efeitos)) {
+      if (fim > now) {
+        const segs = Math.ceil((fim - now) / 1000);
+        const icone = ICONES[tipo] || '✦';
+        ativos.push(`<div style="background:rgba(0,0,0,0.7);padding:4px 6px;border-radius:3px;color:#fafafa;border:1px solid #fdd835;">${icone} ${tipo} ${segs}s</div>`);
+      }
+    }
+    bar.innerHTML = ativos.join('');
+    bar.style.display = ativos.length ? 'flex' : 'none';
   }
 
   flashDano() {

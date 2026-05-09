@@ -536,6 +536,32 @@ export class Player {
       state.renderer.aplicarShake(Math.min(0.30, 0.05 + danoReal * 0.025));
     }
     if (this.hp <= 0) {
+      // SPRINT MEGA-6: Totem of Undying — revive ao morrer (paridade Minecraft)
+      // Procura TOTEM_VIDA no inventário (slots de mão ou hotbar)
+      if (state.inv?.slots) {
+        let totemSlot = -1;
+        for (let i = 0; i < state.inv.slots.length; i++) {
+          const it = state.inv.slots[i];
+          if (it && it.i === 404 /* ITEM.TOTEM_VIDA */ && it.q > 0) {
+            totemSlot = i;
+            break;
+          }
+        }
+        if (totemSlot >= 0) {
+          // Consome 1 totem, revive
+          state.inv.slots[totemSlot].q -= 1;
+          if (state.inv.slots[totemSlot].q <= 0) state.inv.slots[totemSlot] = null;
+          this.hp = 1;
+          this.efeitos = this.efeitos || {};
+          this.efeitos.regen = Date.now() + 40000; // Regen II 40s
+          this.efeitos.absorption = Date.now() + 5000; // Absorção 5s
+          this.efeitos.fire_res = Date.now() + 40000; // Fire Res 40s
+          state.ui?.toast?.('🗿 TOTEM DE IMORTALIDADE! Revivido!');
+          state.renderer?.aplicarShake?.(0.5);
+          if (state.ui?.renderHotbar) state.ui.renderHotbar();
+          return;
+        }
+      }
       this.hp = 0;
       this.morto = true;
       this.causaMorte = fonte;

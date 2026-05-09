@@ -531,6 +531,74 @@ function comerSlot() {
   const s = state.inv.itemSelecionado();
   if (!s || s.i === undefined) { state.ui.toast('Nada comestível selecionado'); return; }
   const info = ITEM_INFO[s.i];
+  // SPRINT MEGA-6: Spawn eggs (right-click pra spawnar mob na frente)
+  if (info?.spawn_egg && state.mobMgr) {
+    const px = state.player.pos.x;
+    const pz = state.player.pos.z;
+    const py = state.player.pos.y;
+    const yaw = state.renderer?.camera?.rotation?.y || 0;
+    const dx = -Math.sin(yaw) * 2;
+    const dz = -Math.cos(yaw) * 2;
+    state.mobMgr.spawn(info.spawn_egg, px + dx, py, pz + dz);
+    state.inv.consumirAtual();
+    state.ui.toast(`🥚 ${info.spawn_egg} invocado!`);
+    Audio.colocar?.();
+    return;
+  }
+  // SPRINT MEGA-6: Goat Horn (toca som + summon eventos)
+  if (info?.toca && s.i === ITEM.GOAT_HORN) {
+    Audio.fireworkLaunch?.() || Audio.cama?.();
+    state.ui.toast('📯 Trompa soa! Som ressoa pelo mundo.');
+    return;
+  }
+  // SPRINT MEGA-6: Wind Charge (atira projétil)
+  if (s.i === ITEM.WIND_CHARGE && state.particulas?.spawnArrow) {
+    const yaw = state.renderer?.camera?.rotation?.y || 0;
+    const px = state.player.pos.x;
+    const py = state.player.pos.y + 1.5;
+    const pz = state.player.pos.z;
+    const vx = -Math.sin(yaw) * 18;
+    const vz = -Math.cos(yaw) * 18;
+    state.particulas.spawnArrow(px, py, pz, vx, 0, vz, 0); // dano 0, é knockback
+    state.inv.consumirAtual();
+    state.ui.toast('💨 Wind Charge!');
+    return;
+  }
+  // SPRINT MEGA-6: Totem of Undying (segurar e ao morrer revive)
+  // Já gerenciado em aplicarDano (verifica state.inv pra TOTEM_VIDA)
+  // SPRINT MEGA-6: Bola de Neve / Ovo (projétil)
+  if (s.i === ITEM.BOLA_NEVE || s.i === ITEM.OVO) {
+    if (state.particulas?.spawnArrow) {
+      const yaw = state.renderer?.camera?.rotation?.y || 0;
+      const px = state.player.pos.x, py = state.player.pos.y + 1.5, pz = state.player.pos.z;
+      state.particulas.spawnArrow(px, py, pz, -Math.sin(yaw) * 14, 0, -Math.cos(yaw) * 14, 1);
+    }
+    state.inv.consumirAtual();
+    return;
+  }
+  // SPRINT MEGA-6: Chorus Fruta (teleport aleatório 8-16 blocos)
+  if (s.i === ITEM.CHORUS_FRUTA) {
+    state.player.fome = clamp(state.player.fome + 4, 0, state.player.fomeMax);
+    state.player.saturation = Math.min(20, (state.player.saturation || 0) + 2.4);
+    const dist = 8 + Math.random() * 8;
+    const ang = Math.random() * Math.PI * 2;
+    const tx = state.player.pos.x + Math.cos(ang) * dist;
+    const tz = state.player.pos.z + Math.sin(ang) * dist;
+    let ty = state.player.pos.y;
+    // Encontra o solo seguro
+    for (let dy = 0; dy < 30; dy++) {
+      if (state.world.get(Math.floor(tx), Math.floor(ty - dy), Math.floor(tz)) !== 0 &&
+          state.world.get(Math.floor(tx), Math.floor(ty - dy + 1), Math.floor(tz)) === 0) {
+        ty = ty - dy + 1;
+        break;
+      }
+    }
+    state.player.pos.set(tx, ty, tz);
+    state.inv.consumirAtual();
+    state.ui.toast('🟣 Teleport!');
+    Audio.enderTeleport?.() || Audio.colocar?.();
+    return;
+  }
   // Poções: efeitos imediatos ou timer
   if (info?.pocao) {
     aplicarPocao(info.pocao);
