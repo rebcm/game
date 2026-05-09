@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 16, CELL = 32;
+  const COLS = 8, ROWS = 18, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,95 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Prismarine: turquesa com padrão tabuleiro xadrez sutil
+  function pintarPrismarine(idx, base, escuro, claro, brick) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    if (brick) {
+      // Padrão tijolo (3x3 grid de blocos)
+      ctx.fillStyle = escuro;
+      ctx.fillRect(x0, y0 + 10, CELL, 1);
+      ctx.fillRect(x0, y0 + 21, CELL, 1);
+      ctx.fillRect(x0 + 10, y0,      1, 11);
+      ctx.fillRect(x0 + 21, y0,      1, 11);
+      ctx.fillRect(x0 + 4,  y0 + 11, 1, 10);
+      ctx.fillRect(x0 + 26, y0 + 11, 1, 10);
+      ctx.fillRect(x0 + 14, y0 + 22, 1, 10);
+      ctx.fillStyle = claro;
+      // Highlights diagonais
+      for (let py = 4; py < CELL; py += 11) {
+        ctx.fillRect(x0 + py, y0 + py, 2, 2);
+      }
+    } else {
+      // Padrão xadrez 4x4 sutil
+      ctx.fillStyle = escuro;
+      for (let by = 0; by < CELL; by += 8) {
+        for (let bx = 0; bx < CELL; bx += 8) {
+          if ((bx + by) % 16 === 0) {
+            ctx.fillRect(x0 + bx, y0 + by, 4, 4);
+            ctx.fillRect(x0 + bx + 4, y0 + by + 4, 4, 4);
+          }
+        }
+      }
+      ctx.fillStyle = claro;
+      for (let i = 0; i < CELL; i += 4) {
+        ctx.fillRect(x0 + i, y0 + i, 1, 1);
+      }
+    }
+  }
+
+  // Sea Lantern: cristalino branco-turquesa com 4 nodos brilhantes centrais
+  function pintarSeaLantern(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#80cbc4';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 4 nodos brilhantes (cristal-branco)
+    ctx.fillStyle = '#b2dfdb';
+    ctx.fillRect(x0 + 4,  y0 + 4,  10, 10);
+    ctx.fillRect(x0 + 18, y0 + 4,  10, 10);
+    ctx.fillRect(x0 + 4,  y0 + 18, 10, 10);
+    ctx.fillRect(x0 + 18, y0 + 18, 10, 10);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 7,  y0 + 7,  4, 4);
+    ctx.fillRect(x0 + 21, y0 + 7,  4, 4);
+    ctx.fillRect(x0 + 7,  y0 + 21, 4, 4);
+    ctx.fillRect(x0 + 21, y0 + 21, 4, 4);
+    // Núcleo super brilhante
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 8,  y0 + 8,  1, 1);
+    ctx.fillRect(x0 + 22, y0 + 8,  1, 1);
+    ctx.fillRect(x0 + 8,  y0 + 22, 1, 1);
+    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
+  }
+
+  // Minério em pedra normal (base cinza + clusters da cor do minério)
+  function pintarMinerio(idx, corCluster, corClusterClaro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#7E7E7E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5E5E5E', 0.40, 4, 2, seed);
+    const clusters = [
+      { x: 6,  y: 8  }, { x: 22, y: 5  }, { x: 12, y: 18 },
+      { x: 24, y: 22 }, { x: 4,  y: 26 },
+    ];
+    for (const c of clusters) {
+      ctx.fillStyle = corCluster;
+      ctx.fillRect(x0 + c.x, y0 + c.y, 4, 4);
+      ctx.fillStyle = corClusterClaro;
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 2, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 1, 1);
+    }
   }
 
   // Minério deepslate genérico (base ardósia + clusters da cor do minério)
@@ -2374,6 +2463,18 @@ function criarAtlas() {
   pintarBlocoCompacto(119, '#4dd0e1', '#b2ebf2', '#00838f'); // diamante
   pintarBlocoCompacto(120, '#212121', '#424242', '#000000'); // carvão
   pintarBlocoCompacto(121, '#1565c0', '#42a5f5', '#0d47a1'); // lápis
+  // Esmeralda (cells 122-124)
+  pintarMinerio(122, '#00c853', '#69f0ae');                  // esmeralda em pedra
+  pintarMinerioDeep(123, '#00c853', '#69f0ae');              // esmeralda em deepslate
+  pintarBlocoCompacto(124, '#00c853', '#69f0ae', '#008c44'); // bloco esmeralda
+  // Redstone (cells 125-127)
+  pintarMinerio(125, '#c62828', '#ef5350');                  // redstone em pedra
+  pintarMinerioDeep(126, '#c62828', '#ef5350');              // redstone em deepslate
+  pintarBlocoCompacto(127, '#c62828', '#ef5350', '#8b0000'); // bloco redstone
+  // Prismarine (cells 128-130)
+  pintarPrismarine(128, '#4db6ac', '#00897b', '#80cbc4', false); // prismarine
+  pintarPrismarine(129, '#009688', '#00695c', '#4db6ac', true);  // prismarine bricks
+  pintarSeaLantern(130);                                          // sea lantern
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2501,6 +2602,15 @@ function criarAtlas() {
   mapa[BLOCO.BLOCO_DIAMANTE] = { top: 119, side: 119, bottom: 119 };
   mapa[BLOCO.BLOCO_CARVAO]   = { top: 120, side: 120, bottom: 120 };
   mapa[BLOCO.BLOCO_LAPIS]    = { top: 121, side: 121, bottom: 121 };
+  mapa[BLOCO.ESMERALDA_MIN]  = { top: 122, side: 122, bottom: 122 };
+  mapa[BLOCO.DS_ESMERALDA]   = { top: 123, side: 123, bottom: 123 };
+  mapa[BLOCO.BLOCO_ESMERALDA]= { top: 124, side: 124, bottom: 124 };
+  mapa[BLOCO.REDSTONE_MIN]   = { top: 125, side: 125, bottom: 125 };
+  mapa[BLOCO.DS_REDSTONE]    = { top: 126, side: 126, bottom: 126 };
+  mapa[BLOCO.BLOCO_REDSTONE] = { top: 127, side: 127, bottom: 127 };
+  mapa[BLOCO.PRISMARINE]     = { top: 128, side: 128, bottom: 128 };
+  mapa[BLOCO.PRISMARINE_BRK] = { top: 129, side: 129, bottom: 129 };
+  mapa[BLOCO.SEA_LANTERN]    = { top: 130, side: 130, bottom: 130 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

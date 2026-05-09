@@ -163,8 +163,20 @@ export const BLOCO = {
   BLOCO_DIAMANTE:120,
   BLOCO_CARVAO:  121,
   BLOCO_LAPIS:   122,
+  // Esmeralda (3 variantes)
+  ESMERALDA_MIN: 123, // minério em pedra
+  DS_ESMERALDA:  124, // minério em deepslate
+  BLOCO_ESMERALDA:125,
+  // Redstone (3 variantes)
+  REDSTONE_MIN:  126,
+  DS_REDSTONE:   127,
+  BLOCO_REDSTONE:128,
+  // Prismarine (3 variantes)
+  PRISMARINE:    129,
+  PRISMARINE_BRK:130,
+  SEA_LANTERN:   131,
 };
-export const N_BLOCOS = 123;
+export const N_BLOCOS = 132;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -298,6 +310,15 @@ export const BLOCO_INFO = {
   [BLOCO.BLOCO_DIAMANTE]:{ nome: 'Bloco de Diamante',solido: true,  emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
   [BLOCO.BLOCO_CARVAO]:  { nome: 'Bloco de Carvão',  solido: true,  emiteLuz: 0,  cor: 0x212121, lateral: 0x000000 },
   [BLOCO.BLOCO_LAPIS]:   { nome: 'Bloco de Lápis',   solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.ESMERALDA_MIN]: { nome: 'Minério Esmeralda',solido: true,  emiteLuz: 0,  cor: 0x7E7E7E, lateral: 0x5E5E5E },
+  [BLOCO.DS_ESMERALDA]:  { nome: 'Esmeralda Profunda',solido:true,  emiteLuz: 0,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.BLOCO_ESMERALDA]:{nome:'Bloco de Esmeralda', solido:true, emiteLuz: 0,  cor: 0x00c853, lateral: 0x008c44 },
+  [BLOCO.REDSTONE_MIN]:  { nome: 'Minério Redstone', solido: true,  emiteLuz: 4,  cor: 0x7E7E7E, lateral: 0x5E5E5E },
+  [BLOCO.DS_REDSTONE]:   { nome: 'Redstone Profunda',solido: true,  emiteLuz: 4,  cor: 0x4a4a52, lateral: 0x35353d },
+  [BLOCO.BLOCO_REDSTONE]:{ nome: 'Bloco de Redstone',solido: true,  emiteLuz: 7,  cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.PRISMARINE]:    { nome: 'Prismarine',       solido: true,  emiteLuz: 0,  cor: 0x4db6ac, lateral: 0x00897b },
+  [BLOCO.PRISMARINE_BRK]:{ nome: 'Tijolo Prismarine',solido: true,  emiteLuz: 0,  cor: 0x009688, lateral: 0x00695c },
+  [BLOCO.SEA_LANTERN]:   { nome: 'Sea Lantern',      solido: true,  emiteLuz: 15, cor: 0xb2dfdb, lateral: 0x80cbc4 },
 };
 
 export const ICONE = {
@@ -354,6 +375,8 @@ export const ITEM = {
   MEL:           259, // mel: comida da colmeia, restaura fome
   FAVO_MEL:      260, // favo de mel: ingrediente futuro
   TINTA_GLOW:    261, // tinta brilhante (drop do glow squid)
+  REDSTONE:      262, // pó de redstone (drop do minério)
+  PRISMARINE_SHARD:263, // shard de prismarine (drop)
   // Armaduras: tier × peça
   CAP_COURO: 300, PEI_COURO: 301, PER_COURO: 302, BOT_COURO: 303,
   CAP_FERRO: 304, PEI_FERRO: 305, PER_FERRO: 306, BOT_FERRO: 307,
@@ -423,6 +446,8 @@ export const ITEM_INFO = {
   [ITEM.MEL]:           { nome: 'Mel',               icone: '🍯', nutricao: 6 },
   [ITEM.FAVO_MEL]:      { nome: 'Favo de Mel',       icone: '🟨' },
   [ITEM.TINTA_GLOW]:    { nome: 'Tinta Brilhante',   icone: '💠' },
+  [ITEM.REDSTONE]:      { nome: 'Pó de Redstone',    icone: '🔴' },
+  [ITEM.PRISMARINE_SHARD]:{ nome: 'Shard Prismarine', icone: '🔷' },
   [ITEM.CAP_COURO]:    { nome: 'Capacete couro',    icone: '🪖', armadura: 'cabeca',  defesa: 1 },
   [ITEM.PEI_COURO]:    { nome: 'Peitoral couro',    icone: '👕', armadura: 'torso',   defesa: 3 },
   [ITEM.PER_COURO]:    { nome: 'Perneiras couro',   icone: '👖', armadura: 'pernas',  defesa: 2 },
@@ -606,6 +631,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.BLOCO_DIAMANTE, q: 1}], saida: {i: ITEM.DIAMANTE, q: 9}, wb: true },
   { custos: [{b: BLOCO.BLOCO_CARVAO,   q: 1}], saida: {i: ITEM.CARVAO,   q: 9}, wb: true },
   { custos: [{b: BLOCO.BLOCO_LAPIS,    q: 1}], saida: {i: ITEM.LAPIS,    q: 9}, wb: true },
+  // Esmeralda compactada (9 esmeraldas → 1 bloco) reversível
+  { custos: [{i: ITEM.ESMERALDA, q: 9}], saida: {b: BLOCO.BLOCO_ESMERALDA, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_ESMERALDA, q: 1}], saida: {i: ITEM.ESMERALDA, q: 9}, wb: true },
+  // Redstone compactado
+  { custos: [{i: ITEM.REDSTONE, q: 9}], saida: {b: BLOCO.BLOCO_REDSTONE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_REDSTONE, q: 1}], saida: {i: ITEM.REDSTONE, q: 9}, wb: true },
+  // Prismarine: 4 shards → 1 prismarine
+  { custos: [{i: ITEM.PRISMARINE_SHARD, q: 4}], saida: {b: BLOCO.PRISMARINE, q: 1}, wb: true },
+  // Tijolo prismarine: 9 shards → 1 tijolo
+  { custos: [{i: ITEM.PRISMARINE_SHARD, q: 9}], saida: {b: BLOCO.PRISMARINE_BRK, q: 1}, wb: true },
+  // Sea Lantern: 4 prismarine + 5 tinta_glow → 1 sea lantern
+  { custos: [{b: BLOCO.PRISMARINE, q: 4}, {i: ITEM.TINTA_GLOW, q: 5}], saida: {b: BLOCO.SEA_LANTERN, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

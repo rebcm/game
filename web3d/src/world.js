@@ -328,15 +328,19 @@ export class World {
             const hh = hash3(gx, y, gz, this.seed ^ 0xa1b2) & 0xFF;
             // Camada deepslate (Y < 6): variantes ardósia
             if (y < 6) {
-              if (hh < 3) b = BLOCO.DS_DIAMANTE;
-              else if (hh < 8) b = BLOCO.DS_OURO;
-              else if (hh < 16) b = BLOCO.DS_FERRO;
-              else if (hh < 22) b = BLOCO.DS_COBRE;
-              else if (hh < 30) b = BLOCO.DS_CARVAO;
+              if (hh < 1) b = BLOCO.DS_ESMERALDA; // raríssimo
+              else if (hh < 3) b = BLOCO.DS_DIAMANTE;
+              else if (hh < 6) b = BLOCO.DS_REDSTONE;
+              else if (hh < 10) b = BLOCO.DS_OURO;
+              else if (hh < 18) b = BLOCO.DS_FERRO;
+              else if (hh < 24) b = BLOCO.DS_COBRE;
+              else if (hh < 32) b = BLOCO.DS_CARVAO;
               else b = BLOCO.DEEPSLATE;
             }
+            else if (y < 8 && hh < 4) b = BLOCO.REDSTONE_MIN; // baixo
             else if (y < 10 && hh < 6) b = BLOCO.OURO;
             else if (y < 14 && hh < 14) b = BLOCO.FERRO;
+            else if (y < 18 && hh < 1) b = BLOCO.ESMERALDA_MIN; // raríssimo
             // Cobre: bem comum (16-32 abundância), nível 8-30 (paridade MC)
             else if (y >= 8 && y <= 30 && hh < 28) b = BLOCO.COBRE_MINERIO;
             else if (hh < 26) b = BLOCO.CARVAO;

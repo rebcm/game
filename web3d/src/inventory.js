@@ -135,8 +135,10 @@ export class Inventario {
 export const Drops = {
   podeMinerar(b, tier) {
     if (b === BLOCO.BEDROCK) return false;
-    if ([BLOCO.DIAMANTE, BLOCO.OURO, BLOCO.DS_DIAMANTE, BLOCO.DS_OURO].includes(b)) return tier >= 3;
-    if ([BLOCO.FERRO, BLOCO.DS_FERRO].includes(b)) return tier >= 2;
+    if ([BLOCO.DIAMANTE, BLOCO.OURO, BLOCO.DS_DIAMANTE, BLOCO.DS_OURO,
+         BLOCO.ESMERALDA_MIN, BLOCO.DS_ESMERALDA].includes(b)) return tier >= 3;
+    if ([BLOCO.FERRO, BLOCO.DS_FERRO,
+         BLOCO.REDSTONE_MIN, BLOCO.DS_REDSTONE].includes(b)) return tier >= 2;
     if ([BLOCO.COBRE_MINERIO, BLOCO.DS_COBRE].includes(b)) return tier >= 2; // mesmo tier que ferro
     if ([BLOCO.PEDRA, BLOCO.CARVAO].includes(b)) return tier >= 1;
     if (b === BLOCO.OBSIDIANA) return tier >= 4;
@@ -180,6 +182,10 @@ export const Drops = {
       case BLOCO.DS_FERRO:    return [{ i: ITEM.FERRO, q: 1 }];
       case BLOCO.DS_OURO:     return [{ i: ITEM.OURO, q: 1 }];
       case BLOCO.DS_DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];
+      case BLOCO.ESMERALDA_MIN: return [{ i: ITEM.ESMERALDA, q: 1 }];
+      case BLOCO.DS_ESMERALDA:  return [{ i: ITEM.ESMERALDA, q: 1 }];
+      case BLOCO.REDSTONE_MIN:  return [{ i: ITEM.REDSTONE, q: 4 + Math.floor(Math.random()*2) }];
+      case BLOCO.DS_REDSTONE:   return [{ i: ITEM.REDSTONE, q: 4 + Math.floor(Math.random()*2) }];
       case BLOCO.DS_COBRE: {
         const q = 1 + (Math.random() < 0.4 ? 1 : 0);
         return [{ i: ITEM.COBRE_LINGOTE, q }];
