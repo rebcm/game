@@ -609,8 +609,25 @@ export const BLOCO = {
   CHAIN:               532, // corrente (preta)
   SOUL_FIRE_BLOCK:     533, // bloco de fogo da alma (azul)
   CRYSTAL_BLOCK:       534, // bloco cristal genérico (transparente brilhante)
+  // Sprint 18: 16 cores faltantes — wools + concretes + glazed (535-550)
+  LA_LIME:             535, // lã verde-lima
+  LA_LIGHT_BLUE:       536, // lã azul claro
+  LA_MAGENTA:          537, // lã magenta
+  LA_LIGHT_GRAY:       538, // lã cinza claro
+  CONCRETO_LIME:       539,
+  CONCRETO_MAGENTA:    540,
+  CONCRETO_PURPLE:     541,
+  CONCRETO_LIGHT_BLUE: 542,
+  CONCRETO_LIGHT_GRAY: 543,
+  GLAZED_CIANO:        544,
+  GLAZED_MARROM:       545,
+  GLAZED_PRETA:        546,
+  GLAZED_LIME:         547,
+  GLAZED_MAGENTA:      548,
+  GLAZED_PURPLE:       549,
+  GLAZED_LIGHT_BLUE:   550,
 };
-export const N_BLOCOS = 535;
+export const N_BLOCOS = 551;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1183,6 +1200,23 @@ export const BLOCO_INFO = {
   [BLOCO.CHAIN]:             { nome: 'Corrente',           solido: true, emiteLuz: 0,  cor: 0x424242, lateral: 0x212121, shape: 'fence' },
   [BLOCO.SOUL_FIRE_BLOCK]:   { nome: 'Fogo da Alma',       solido: true, emiteLuz: 10, cor: 0x40c4ff, lateral: 0x0288d1 },
   [BLOCO.CRYSTAL_BLOCK]:     { nome: 'Bloco Cristal',      solido: true, emiteLuz: 8,  cor: 0xe1f5fe, lateral: 0xb3e5fc },
+  // Sprint 18: 16 cores faltantes (535-550)
+  [BLOCO.LA_LIME]:           { nome: 'Lã Lima',            solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.LA_LIGHT_BLUE]:     { nome: 'Lã Azul Claro',      solido: true, emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x29b6f6 },
+  [BLOCO.LA_MAGENTA]:        { nome: 'Lã Magenta',         solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.LA_LIGHT_GRAY]:     { nome: 'Lã Cinza Claro',     solido: true, emiteLuz: 0,  cor: 0xeeeeee, lateral: 0xbdbdbd },
+  [BLOCO.CONCRETO_LIME]:     { nome: 'Concreto Lima',      solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.CONCRETO_MAGENTA]:  { nome: 'Concreto Magenta',   solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.CONCRETO_PURPLE]:   { nome: 'Concreto Roxo',      solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.CONCRETO_LIGHT_BLUE]:{nome:'Concreto Azul Claro', solido: true, emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x29b6f6 },
+  [BLOCO.CONCRETO_LIGHT_GRAY]:{nome:'Concreto Cinza Claro',solido: true, emiteLuz: 0,  cor: 0xeeeeee, lateral: 0xbdbdbd },
+  [BLOCO.GLAZED_CIANO]:      { nome: 'Glazed Ciano',       solido: true, emiteLuz: 0,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.GLAZED_MARROM]:     { nome: 'Glazed Marrom',      solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.GLAZED_PRETA]:      { nome: 'Glazed Preta',       solido: true, emiteLuz: 0,  cor: 0x424242, lateral: 0x000000 },
+  [BLOCO.GLAZED_LIME]:       { nome: 'Glazed Lima',        solido: true, emiteLuz: 0,  cor: 0x9ccc65, lateral: 0x7cb342 },
+  [BLOCO.GLAZED_MAGENTA]:    { nome: 'Glazed Magenta',     solido: true, emiteLuz: 0,  cor: 0xd81b60, lateral: 0xad1457 },
+  [BLOCO.GLAZED_PURPLE]:     { nome: 'Glazed Roxo',        solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c },
+  [BLOCO.GLAZED_LIGHT_BLUE]: { nome: 'Glazed Azul Claro',  solido: true, emiteLuz: 0,  cor: 0x4fc3f7, lateral: 0x29b6f6 },
 };
 
 export const ICONE = {

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 49, CELL = 32;
+  const COLS = 8, ROWS = 51, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -6420,6 +6420,23 @@ function criarAtlas() {
   pintar(385, '#424242', '#212121', 0.40);                            // chain (corrente preta)
   pintar(386, '#40c4ff', '#0288d1', 0.50);                            // soul fire (azul brilhante)
   pintar(387, '#e1f5fe', '#b3e5fc', 0.30);                            // crystal block (cristalino)
+  // Sprint 18: 16 cores faltantes (cells 388-403)
+  pintarLaColorida(388, '#9ccc65', '#aed581', '#7cb342'); // lã lima
+  pintarLaColorida(389, '#4fc3f7', '#81d4fa', '#29b6f6'); // lã azul claro
+  pintarLaColorida(390, '#d81b60', '#ec407a', '#ad1457'); // lã magenta
+  pintarLaColorida(391, '#eeeeee', '#fafafa', '#bdbdbd'); // lã cinza claro
+  pintar(392, '#9ccc65', '#7cb342', 0.45);                // concreto lima
+  pintar(393, '#d81b60', '#ad1457', 0.45);                // concreto magenta
+  pintar(394, '#6a1b9a', '#4a148c', 0.45);                // concreto roxo
+  pintar(395, '#4fc3f7', '#29b6f6', 0.45);                // concreto azul claro
+  pintar(396, '#eeeeee', '#bdbdbd', 0.45);                // concreto cinza claro
+  pintarGlazed(397, '#4dd0e1', '#80deea', '#00838f');     // glazed ciano
+  pintarGlazed(398, '#6d4c41', '#a1887f', '#4e342e');     // glazed marrom
+  pintarGlazed(399, '#424242', '#616161', '#000000');     // glazed preta
+  pintarGlazed(400, '#9ccc65', '#aed581', '#7cb342');     // glazed lima
+  pintarGlazed(401, '#d81b60', '#ec407a', '#ad1457');     // glazed magenta
+  pintarGlazed(402, '#6a1b9a', '#9c27b0', '#4a148c');     // glazed roxo
+  pintarGlazed(403, '#4fc3f7', '#81d4fa', '#29b6f6');     // glazed azul claro
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6995,6 +7012,23 @@ function criarAtlas() {
   mapa[BLOCO.CHAIN]                 = { top: 385, side: 385, bottom: 385 };
   mapa[BLOCO.SOUL_FIRE_BLOCK]       = { top: 386, side: 386, bottom: 386 };
   mapa[BLOCO.CRYSTAL_BLOCK]         = { top: 387, side: 387, bottom: 387 };
+  // Sprint 18: 16 cores faltantes (cells 388-403)
+  mapa[BLOCO.LA_LIME]               = { top: 388, side: 388, bottom: 388 };
+  mapa[BLOCO.LA_LIGHT_BLUE]         = { top: 389, side: 389, bottom: 389 };
+  mapa[BLOCO.LA_MAGENTA]            = { top: 390, side: 390, bottom: 390 };
+  mapa[BLOCO.LA_LIGHT_GRAY]         = { top: 391, side: 391, bottom: 391 };
+  mapa[BLOCO.CONCRETO_LIME]         = { top: 392, side: 392, bottom: 392 };
+  mapa[BLOCO.CONCRETO_MAGENTA]      = { top: 393, side: 393, bottom: 393 };
+  mapa[BLOCO.CONCRETO_PURPLE]       = { top: 394, side: 394, bottom: 394 };
+  mapa[BLOCO.CONCRETO_LIGHT_BLUE]   = { top: 395, side: 395, bottom: 395 };
+  mapa[BLOCO.CONCRETO_LIGHT_GRAY]   = { top: 396, side: 396, bottom: 396 };
+  mapa[BLOCO.GLAZED_CIANO]          = { top: 397, side: 397, bottom: 397 };
+  mapa[BLOCO.GLAZED_MARROM]         = { top: 398, side: 398, bottom: 398 };
+  mapa[BLOCO.GLAZED_PRETA]          = { top: 399, side: 399, bottom: 399 };
+  mapa[BLOCO.GLAZED_LIME]           = { top: 400, side: 400, bottom: 400 };
+  mapa[BLOCO.GLAZED_MAGENTA]        = { top: 401, side: 401, bottom: 401 };
+  mapa[BLOCO.GLAZED_PURPLE]         = { top: 402, side: 402, bottom: 402 };
+  mapa[BLOCO.GLAZED_LIGHT_BLUE]     = { top: 403, side: 403, bottom: 403 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
