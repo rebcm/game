@@ -961,13 +961,17 @@ function abrirPainelBigorna() {
   const nomeInput = document.getElementById('bigorna-nome');
   const aplicarBtn = document.getElementById('bigorna-aplicar');
   const xpEl = document.getElementById('bigorna-xp');
-  const custoXP = 3;
-  if (xpEl) xpEl.textContent = custoXP;
+  // PARIDADE MC: cost ramping baseado em prior work penalty
+  const priorWork = sel?.priorWork || 0;
+  const custoXPRename = 3 + priorWork;
+  const custoXPRepair = 5 + priorWork * 2;
+  const custoXPCombine = 8 + priorWork * 3;
+  if (xpEl) xpEl.textContent = custoXPRename;
   if (sel && (sel.i !== undefined || sel.b !== undefined)) {
     const info = sel.i !== undefined ? ITEM_INFO[sel.i] : BLOCO_INFO[sel.b];
     const ico = sel.i !== undefined ? (ITEM_INFO[sel.i]?.icone || '') : '';
     const nome = sel.nomeCustom || info?.nome || '?';
-    if (itemEl) itemEl.textContent = `${ico} ${nome} ×${sel.q}`;
+    if (itemEl) itemEl.textContent = `${ico} ${nome} ×${sel.q}${priorWork > 0 ? ` (lvl ${priorWork})` : ''}`;
     if (nomeInput) nomeInput.value = sel.nomeCustom || '';
   } else {
     if (itemEl) itemEl.textContent = '— nada selecionado —';
@@ -982,20 +986,109 @@ function abrirPainelBigorna() {
       }
       const novo = (nomeInput?.value || '').trim();
       if (!novo) { state.ui.toast('Digite um nome'); return; }
-      if ((state.player.xp || 0) < custoXP) {
-        state.ui.toast(`Precisa de ${custoXP} XP (você tem ${state.player.xp})`);
+      if ((state.player.xp || 0) < custoXPRename) {
+        state.ui.toast(`Precisa de ${custoXPRename} XP (você tem ${state.player.xp})`);
         return;
       }
-      state.player.xp -= custoXP;
+      state.player.xp -= custoXPRename;
       sel2.nomeCustom = novo.slice(0, 24);
+      sel2.priorWork = (sel2.priorWork || 0) + 1; // cost ramping next time
       Audio.colocar?.();
-      state.ui.toast(`✏ Renomeado: "${sel2.nomeCustom}"`);
+      state.ui.toast(`✏ Renomeado: "${sel2.nomeCustom}" (custou ${custoXPRename} XP)`);
       state.ui.atualizarXP?.();
       state.ui.renderHotbar?.();
       document.getElementById('painel-bigorna').classList.add('hidden');
     };
   }
+  // SPRINT ANVIL-COMPLETO: Botão REPAIR (precisa material correspondente na hotbar)
+  const repararBtn = document.getElementById('bigorna-reparar');
+  if (repararBtn) {
+    repararBtn.onclick = () => {
+      const sel2 = state.inv.itemSelecionado();
+      if (!sel2?.i) { state.ui.toast('Selecione item ferramenta/armadura'); return; }
+      // Material requerido baseado no item (placeholder: 1 ferro pra todos)
+      const matRequired = ITEM.FERRO;
+      if (state.inv.contar?.(undefined, matRequired) < 1) {
+        state.ui.toast(`Precisa de 1 ${ITEM_INFO[matRequired]?.nome} no inventário`);
+        return;
+      }
+      if ((state.player.xp || 0) < custoXPRepair) {
+        state.ui.toast(`Precisa de ${custoXPRepair} XP`);
+        return;
+      }
+      state.inv.consumir(undefined, matRequired, 1);
+      state.player.xp -= custoXPRepair;
+      sel2.durability = (sel2.durability || 100) + 50; // restaura 50 durabilidade
+      sel2.priorWork = (sel2.priorWork || 0) + 1;
+      Audio.colocar?.();
+      state.ui.toast(`🔨 Item reparado! (+50 durabilidade, custou ${custoXPRepair} XP)`);
+      state.ui.atualizarXP?.();
+      document.getElementById('painel-bigorna').classList.add('hidden');
+    };
+  }
   document.getElementById('painel-bigorna').classList.remove('hidden');
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
+// SPRINT BREWING-UI: Painel de Brewing Stand (paridade MC)
+function abrirPainelBrewing(x, y, z) {
+  state.brewingCoords = { x, y, z };
+  // Cria modal inline se não existir
+  let modal = document.getElementById('painel-brewing');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'painel-brewing';
+    modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#2a1d3f;color:#fafafa;padding:20px;border:3px solid #fdd835;font-family:"Press Start 2P",monospace;font-size:9px;z-index:100;border-radius:8px;min-width:320px;';
+    modal.innerHTML = `
+      <h3 style="color:#fdd835;text-align:center;margin:0 0 12px;">🧪 Brewing Stand</h3>
+      <div style="margin-bottom:8px;color:#bbb;font-size:8px;">Selecione ingredientes na hotbar:</div>
+      <div id="brewing-info" style="margin-bottom:12px;line-height:1.6;"></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button id="brewing-heal" style="padding:8px;background:#c62828;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🧪 Heal</button>
+        <button id="brewing-speed" style="padding:8px;background:#0288d1;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">⚡ Speed</button>
+        <button id="brewing-strength" style="padding:8px;background:#e65100;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">💪 Strength</button>
+        <button id="brewing-fire" style="padding:8px;background:#bf360c;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🔥 Fire Res</button>
+        <button id="brewing-night" style="padding:8px;background:#311b92;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🌙 Night Vision</button>
+        <button id="brewing-jump" style="padding:8px;background:#558b2f;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🦘 Jump</button>
+      </div>
+      <button id="brewing-close" style="margin-top:12px;width:100%;padding:6px;background:#666;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">Fechar [X]</button>
+    `;
+    document.body.appendChild(modal);
+  }
+  // Update info
+  const info = document.getElementById('brewing-info');
+  const blazes = state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) || 0;
+  const potes = state.inv.contar?.(undefined, ITEM.POTE_AGUA) || 0;
+  if (info) info.innerHTML = `Blaze Powder: ${blazes}<br>Pote de Água: ${potes}<br><span style="color:#888;font-size:7px;">Custa: 1 BP + 1 PA + ingrediente</span>`;
+  // Brewing actions (cada um = 1 BP + 1 PA + ingrediente específico)
+  const brewing = (efeito, ingrediente, ingNome) => {
+    if (state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) < 1) { state.ui.toast('Precisa Blaze Powder'); return; }
+    if (state.inv.contar?.(undefined, ITEM.POTE_AGUA) < 1) { state.ui.toast('Precisa Pote de Água'); return; }
+    if (ingrediente && state.inv.contar?.(undefined, ingrediente) < 1) {
+      state.ui.toast(`Precisa: ${ingNome}`);
+      return;
+    }
+    state.inv.consumir(undefined, ITEM.BLAZE_POWDER, 1);
+    state.inv.consumir(undefined, ITEM.POTE_AGUA, 1);
+    if (ingrediente) state.inv.consumir(undefined, ingrediente, 1);
+    // Mapa efeito → item poção
+    const pocaoMap = {
+      heal: ITEM.POCAO_HEAL, speed: ITEM.POCAO_SPEED, strength: ITEM.POCAO_STRENGTH,
+      fire_res: ITEM.POCAO_FIRE_RES, noite: ITEM.POCAO_NOITE, jump_boost: ITEM.POCAO_JUMP,
+    };
+    state.inv.adicionar({ i: pocaoMap[efeito] || ITEM.POCAO_HEAL, q: 1 });
+    Audio.colocar?.();
+    state.ui.toast(`🧪 Poção ${efeito} criada!`);
+    abrirPainelBrewing(x, y, z); // refresh
+  };
+  document.getElementById('brewing-heal').onclick = () => brewing('heal', ITEM.OURO, 'Ouro');
+  document.getElementById('brewing-speed').onclick = () => brewing('speed', ITEM.PAU, 'Pau');
+  document.getElementById('brewing-strength').onclick = () => brewing('strength', ITEM.FERRO, 'Ferro');
+  document.getElementById('brewing-fire').onclick = () => brewing('fire_res', ITEM.MAGMA_CREAM, 'Magma Cream');
+  document.getElementById('brewing-night').onclick = () => brewing('noite', ITEM.GLOWSTONE_DUST, 'Glowstone Dust');
+  document.getElementById('brewing-jump').onclick = () => brewing('jump_boost', ITEM.RABBIT_FOOT, 'Rabbit Foot');
+  document.getElementById('brewing-close').onclick = () => modal.remove();
+  modal.style.display = 'block';
   try { document.exitPointerLock?.(); } catch (_) {}
 }
 
@@ -2112,6 +2205,48 @@ function loop(now) {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     // SPRINT AUDIO 3D: Atualiza listener position/orientation
     if (state.renderer?.camera) atualizarListener3D(state.renderer.camera);
+    // SPRINT SCULK-VIBRATION: detecta vibração quando player se move perto de Sculk Sensor
+    state._vibracaoAcc = (state._vibracaoAcc || 0) + dt;
+    if (state._vibracaoAcc >= 0.5 && state.world && state.player) {
+      state._vibracaoAcc = 0;
+      const px = Math.floor(state.player.pos.x);
+      const py = Math.floor(state.player.pos.y);
+      const pz = Math.floor(state.player.pos.z);
+      const movendo = state.player.input.fwd !== 0 || state.player.input.side !== 0;
+      if (movendo) {
+        // Scan 8x4x8 ao redor do player por sculk sensors
+        for (let dx = -8; dx <= 8; dx += 2) {
+          for (let dz = -8; dz <= 8; dz += 2) {
+            for (let dy = -2; dy <= 2; dy++) {
+              const b = state.world.get(px + dx, py + dy, pz + dz);
+              if (b === BLOCO.SCULK_SENSOR || b === BLOCO.CALIBRATED_SCULK) {
+                // Acorda Warden próximo (se houver)
+                if (state.mobMgr?.mobs) {
+                  for (const m of state.mobMgr.mobs) {
+                    if (m.tipo === 'warden') {
+                      const dist = Math.hypot(m.x - px, m.z - pz);
+                      if (dist < 16) {
+                        m._vePlayer = true;
+                        m._losTimer = 5; // ataca 5s
+                      }
+                    }
+                  }
+                }
+                // Pulsa luz no sensor (visual feedback) - skip por performance
+                // Notify shrieker se houver adjacente
+                for (const [sdx, sdz] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+                  if (state.world.get(px + dx + sdx, py + dy, pz + dz + sdz) === BLOCO.SCULK_SHRIEKER) {
+                    state.ui?.toast?.('🔊 Sculk Shrieker! Warden alerta!');
+                    Audio.cama?.() || Audio.colocar?.();
+                  }
+                }
+                return; // só uma vibração por tick
+              }
+            }
+          }
+        }
+      }
+    }
     // SPRINT AUDIO biome ambient (a cada 2s)
     state._biomaAcc = (state._biomaAcc || 0) + dt;
     if (state._biomaAcc >= 2.0) {
@@ -2701,22 +2836,9 @@ function loop(now) {
             state.ui.toast('📖 Lectern — precisa de Livro');
           }
         }
-        // Brewing Stand — abre painel poções (placeholder: cria poção random)
+        // SPRINT BREWING-UI: abre painel completo de Brewing Stand
         else if (blocoAlvo === BLOCO.BREWING_STAND) {
-          if (state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) >= 1 &&
-              state.inv.contar?.(undefined, ITEM.POTE_AGUA) >= 3) {
-            state.inv.consumir(undefined, ITEM.BLAZE_POWDER, 1);
-            state.inv.consumir(undefined, ITEM.POTE_AGUA, 3);
-            // Random potion
-            const pocoes = [ITEM.POCAO_HEAL, ITEM.POCAO_SPEED, ITEM.POCAO_STRENGTH,
-                            ITEM.POCAO_HASTE, ITEM.POCAO_FIRE_RES];
-            const p = pocoes[Math.floor(Math.random() * pocoes.length)];
-            state.inv.adicionar({ i: p, q: 3 });
-            state.ui.toast('🧪 Brewing Stand: 3 poções fabricadas');
-            Audio.colocar?.();
-          } else {
-            state.ui.toast('🧪 Brewing — precisa Blaze Powder + 3 Pote Água');
-          }
+          abrirPainelBrewing(t.x, t.y, t.z);
         }
         // Composter — adiciona items orgânicos, gera bone meal
         else if (blocoAlvo === BLOCO.COMPOSTER) {
