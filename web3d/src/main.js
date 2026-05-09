@@ -957,6 +957,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.COPPER_GRATE, q: 8 });
   state.inv.adicionar({ b: BLOCO.TRIAL_SPAWNER, q: 1 });
   state.inv.adicionar({ b: BLOCO.VAULT, q: 1 });
+  // Sprint 8: Pottery + arqueologia + 1.20
+  state.inv.adicionar({ b: BLOCO.PITCHER_PLANT, q: 4 });
+  state.inv.adicionar({ b: BLOCO.PITCHER_CROP, q: 4 });
+  state.inv.adicionar({ b: BLOCO.TORCHFLOWER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.TORCHFLOWER_CROP, q: 4 });
+  state.inv.adicionar({ b: BLOCO.SNIFFER_EGG, q: 1 });
+  state.inv.adicionar({ b: BLOCO.SUSPICIOUS_SAND, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SUSPICIOUS_GRAVEL, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CALIBRATED_SCULK, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

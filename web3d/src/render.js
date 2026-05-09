@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 42, CELL = 32;
+  const COLS = 8, ROWS = 43, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -2995,6 +2995,272 @@ function criarAtlas() {
     ctx.fillRect(x0 + 23, y0 + 23, 1, 1);
   }
 
+  // Pitcher Plant: planta carnívora roxa (1.20)
+  function pintarPitcherPlant(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Caule verde central
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 14, y0 + 18, 4, 12);
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(x0 + 14, y0 + 18, 1, 12);
+    // "Jarra" roxa central (forma de pitcher)
+    ctx.fillStyle = '#4a148c';
+    ctx.fillRect(x0 + 9, y0 + 8, 14, 12);
+    ctx.fillStyle = '#6a1b9a';
+    ctx.fillRect(x0 + 10, y0 + 9, 12, 10);
+    ctx.fillStyle = '#7b1fa2';
+    ctx.fillRect(x0 + 11, y0 + 10, 10, 8);
+    // Topo aberto da jarra (escuro)
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(x0 + 11, y0 + 6, 10, 4);
+    // Borda da abertura
+    ctx.fillStyle = '#9c27b0';
+    ctx.fillRect(x0 + 11, y0 + 6, 10, 1);
+    ctx.fillRect(x0 + 11, y0 + 9, 10, 1);
+    // Padrão decorativo (linhas verticais)
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 13, y0 + 11, 1, 6);
+    ctx.fillRect(x0 + 18, y0 + 11, 1, 6);
+  }
+
+  // Pitcher Crop: planta brotando (cresce em fases)
+  function pintarPitcherCrop(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2510';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Solo marrom
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0 + CELL - 4, CELL, 1);
+    // Brotos verdes saindo
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 8,  y0 + 18, 2, 10);
+    ctx.fillRect(x0 + 14, y0 + 14, 2, 14);
+    ctx.fillRect(x0 + 22, y0 + 20, 2, 8);
+    // Folhinhas brotando (verdes)
+    ctx.fillStyle = '#66bb6a';
+    ctx.fillRect(x0 + 6,  y0 + 18, 5, 2);
+    ctx.fillRect(x0 + 12, y0 + 14, 6, 2);
+    ctx.fillRect(x0 + 20, y0 + 20, 5, 2);
+    // Pontos roxos (botões)
+    ctx.fillStyle = '#7b1fa2';
+    ctx.fillRect(x0 + 14, y0 + 12, 2, 2);
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 14, y0 + 12, 1, 1);
+  }
+
+  // Torchflower: flor laranja brilhante como tocha
+  function pintarTorchflower(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2510';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Caule verde
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 14, y0 + 18, 4, 12);
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 14, y0 + 18, 1, 12);
+    // Folhas laterais
+    ctx.fillStyle = '#66bb6a';
+    ctx.fillRect(x0 + 8,  y0 + 22, 4, 2);
+    ctx.fillRect(x0 + 20, y0 + 22, 4, 2);
+    // Flor "tocha" laranja (cabeça grande)
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0 + 10, y0 + 6,  12, 12);
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0 + 11, y0 + 7,  10, 10);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 12, y0 + 8,  8, 8);
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 14, y0 + 10, 4, 4);
+    // Chama no topo
+    ctx.fillStyle = '#ff5252';
+    ctx.fillRect(x0 + 14, y0 + 4, 4, 2);
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 15, y0 + 11, 2, 2);
+  }
+
+  // Torchflower Crop: muda da torchflower (verde com botão laranja)
+  function pintarTorchflowerCrop(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2510';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Solo
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
+    // Caule curto
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 14);
+    // Folhinhas pequenas
+    ctx.fillStyle = '#66bb6a';
+    ctx.fillRect(x0 + 10, y0 + 18, 4, 2);
+    ctx.fillRect(x0 + 18, y0 + 18, 4, 2);
+    ctx.fillRect(x0 + 12, y0 + 22, 8, 2);
+    // Botão laranja (ainda fechado)
+    ctx.fillStyle = '#bf360c';
+    ctx.fillRect(x0 + 12, y0 + 8, 8, 6);
+    ctx.fillStyle = '#e65100';
+    ctx.fillRect(x0 + 13, y0 + 9, 6, 4);
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0 + 14, y0 + 10, 4, 2);
+  }
+
+  // Sniffer Egg: ovo grande marrom-escuro com manchas (1.20)
+  function pintarSnifferEgg(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a0a05';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Forma oval do ovo (largura crescente)
+    ctx.fillStyle = '#7d3e1c';
+    for (let y = 0; y < CELL; y++) {
+      const alturaRel = y / CELL;
+      const largura = Math.floor(8 + Math.sin(alturaRel * Math.PI) * 12);
+      const meio = CELL / 2;
+      ctx.fillRect(x0 + meio - largura / 2, y0 + y, largura, 1);
+    }
+    // Highlights
+    ctx.fillStyle = '#a05a30';
+    for (let y = 4; y < CELL - 4; y++) {
+      const alturaRel = y / CELL;
+      const largura = Math.floor(6 + Math.sin(alturaRel * Math.PI) * 9);
+      const meio = CELL / 2;
+      ctx.fillRect(x0 + meio - largura / 2, y0 + y, largura, 1);
+    }
+    // Manchas verdes (algas da pré-história)
+    ctx.fillStyle = '#33691e';
+    let s = idx * 17 + 33;
+    for (let i = 0; i < 14; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = 8 + Math.floor((s / 233280) * 16);
+      s = (s * 9301 + 49297) % 233280;
+      const py = 4 + Math.floor((s / 233280) * 24);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Brilho superior
+    ctx.fillStyle = '#c97a4d';
+    ctx.fillRect(x0 + 12, y0 + 6, 4, 2);
+    ctx.fillRect(x0 + 13, y0 + 7, 2, 1);
+  }
+
+  // Suspicious Sand: areia normal com pontos arqueológicos
+  function pintarSuspiciousSand(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de areia
+    ctx.fillStyle = '#f9a825';
+    let s = idx * 11 + 19;
+    for (let i = 0; i < 60; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Marcas suspeitas (rachaduras retangulares)
+    ctx.fillStyle = '#bf360c';
+    ctx.fillRect(x0 + 8,  y0 + 8,  16, 1);
+    ctx.fillRect(x0 + 8,  y0 + 8,  1,  16);
+    ctx.fillRect(x0 + 8,  y0 + 23, 16, 1);
+    ctx.fillRect(x0 + 23, y0 + 8,  1,  16);
+    // X central (artefato escondido)
+    ctx.fillStyle = '#8b0000';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 1);
+    ctx.fillRect(x0 + 14, y0 + 17, 4, 1);
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 4);
+    ctx.fillRect(x0 + 17, y0 + 14, 1, 4);
+  }
+
+  // Suspicious Gravel: cascalho cinza com marcas arqueológicas
+  function pintarSuspiciousGravel(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de cascalho
+    ctx.fillStyle = '#757575';
+    let s = idx * 13 + 23;
+    for (let i = 0; i < 50; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Marcas suspeitas
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0 + 8,  y0 + 8,  16, 1);
+    ctx.fillRect(x0 + 8,  y0 + 8,  1,  16);
+    ctx.fillRect(x0 + 8,  y0 + 23, 16, 1);
+    ctx.fillRect(x0 + 23, y0 + 8,  1,  16);
+    // X central
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 1);
+    ctx.fillRect(x0 + 14, y0 + 17, 4, 1);
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 4);
+    ctx.fillRect(x0 + 17, y0 + 14, 1, 4);
+  }
+
+  // Calibrated Sculk: sensor sculk calibrado (azul brilhante c/ ametista)
+  function pintarCalibratedSculk(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#0a1a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Manchas sculk (azul-escuro)
+    ctx.fillStyle = '#051018';
+    let s = idx * 19 + 41;
+    for (let i = 0; i < 40; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    }
+    // Bordas calibradas (ametista)
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
+    // Sensor central (azul brilhante)
+    ctx.fillStyle = '#40c4ff';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#80d4ff';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#e1f5fe';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // 4 antenas (cantos com ametistas)
+    ctx.fillStyle = '#ab47bc';
+    ctx.fillRect(x0 + 4,  y0 + 4,  3, 3);
+    ctx.fillRect(x0 + 25, y0 + 4,  3, 3);
+    ctx.fillRect(x0 + 4,  y0 + 25, 3, 3);
+    ctx.fillRect(x0 + 25, y0 + 25, 3, 3);
+    ctx.fillStyle = '#e1bee7';
+    ctx.fillRect(x0 + 5,  y0 + 5,  1, 1);
+    ctx.fillRect(x0 + 26, y0 + 5,  1, 1);
+    ctx.fillRect(x0 + 5,  y0 + 26, 1, 1);
+    ctx.fillRect(x0 + 26, y0 + 26, 1, 1);
+  }
+
   // Bookshelf Chiseled: estante com 1 livro central destacado
   function pintarBookshelfChiseled(idx) {
     const col = idx % COLS;
@@ -5843,6 +6109,15 @@ function criarAtlas() {
   pintarCopperGrate(329);
   pintarTrialSpawner(330);
   pintarVault(331);
+  // Sprint 8: Pottery + arqueologia + 1.20 (cells 332-339)
+  pintarPitcherPlant(332);
+  pintarPitcherCrop(333);
+  pintarTorchflower(334);
+  pintarTorchflowerCrop(335);
+  pintarSnifferEgg(336);
+  pintarSuspiciousSand(337);
+  pintarSuspiciousGravel(338);
+  pintarCalibratedSculk(339);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6328,6 +6603,15 @@ function criarAtlas() {
   mapa[BLOCO.COPPER_GRATE]          = { top: 329, side: 329, bottom: 329 };
   mapa[BLOCO.TRIAL_SPAWNER]         = { top: 330, side: 330, bottom: 330 };
   mapa[BLOCO.VAULT]                 = { top: 331, side: 331, bottom: 331 };
+  // Sprint 8: Pottery + arqueologia + 1.20 (cells 332-339)
+  mapa[BLOCO.PITCHER_PLANT]         = { top: 332, side: 332, bottom: 332 };
+  mapa[BLOCO.PITCHER_CROP]          = { top: 333, side: 333, bottom: 333 };
+  mapa[BLOCO.TORCHFLOWER]           = { top: 334, side: 334, bottom: 334 };
+  mapa[BLOCO.TORCHFLOWER_CROP]      = { top: 335, side: 335, bottom: 335 };
+  mapa[BLOCO.SNIFFER_EGG]           = { top: 336, side: 336, bottom: 336 };
+  mapa[BLOCO.SUSPICIOUS_SAND]       = { top: 337, side: 337, bottom: 337 };
+  mapa[BLOCO.SUSPICIOUS_GRAVEL]     = { top: 338, side: 338, bottom: 338 };
+  mapa[BLOCO.CALIBRATED_SCULK]      = { top: 339, side: 339, bottom: 339 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

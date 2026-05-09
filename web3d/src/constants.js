@@ -519,8 +519,17 @@ export const BLOCO = {
   COPPER_GRATE:        452, // grade de cobre
   TRIAL_SPAWNER:       453, // spawner trial chamber
   VAULT:               454, // cofre (1.21)
+  // Sprint 8: Pottery + arqueologia + 1.20 Trails & Tales (455-462)
+  PITCHER_PLANT:       455, // pitcher plant (planta 1.20)
+  PITCHER_CROP:        456, // pitcher crop (planta brotando)
+  TORCHFLOWER:         457, // torchflower (flor laranja)
+  TORCHFLOWER_CROP:    458, // muda torchflower
+  SNIFFER_EGG:         459, // ovo sniffer (1.20)
+  SUSPICIOUS_SAND:     460, // areia suspeita (arqueologia)
+  SUSPICIOUS_GRAVEL:   461, // cascalho suspeito
+  CALIBRATED_SCULK:    462, // sensor sculk calibrado (1.20)
 };
-export const N_BLOCOS = 455;
+export const N_BLOCOS = 463;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1003,6 +1012,15 @@ export const BLOCO_INFO = {
   [BLOCO.COPPER_GRATE]:      { nome: 'Grade de Cobre',     solido: true, emiteLuz: 0,  cor: 0xc97a4d, lateral: 0xa45a30, shape: 'bars' },
   [BLOCO.TRIAL_SPAWNER]:     { nome: 'Trial Spawner',      solido: true, emiteLuz: 5,  cor: 0x424242, lateral: 0x212121 },
   [BLOCO.VAULT]:             { nome: 'Vault',              solido: true, emiteLuz: 6,  cor: 0x424242, lateral: 0x212121 },
+  // Sprint 8: Pottery + arqueologia + 1.20 Trails & Tales (455-462)
+  [BLOCO.PITCHER_PLANT]:     { nome: 'Pitcher Plant',      solido: true, emiteLuz: 0,  cor: 0x6a1b9a, lateral: 0x4a148c, shape: 'flower' },
+  [BLOCO.PITCHER_CROP]:      { nome: 'Pitcher Crop',       solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
+  [BLOCO.TORCHFLOWER]:       { nome: 'Torchflower',        solido: true, emiteLuz: 4,  cor: 0xff9800, lateral: 0xe65100, shape: 'flower' },
+  [BLOCO.TORCHFLOWER_CROP]:  { nome: 'Muda Torchflower',   solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
+  [BLOCO.SNIFFER_EGG]:       { nome: 'Ovo Sniffer',        solido: true, emiteLuz: 0,  cor: 0xa05a30, lateral: 0x7d3e1c },
+  [BLOCO.SUSPICIOUS_SAND]:   { nome: 'Areia Suspeita',     solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0xf9a825 },
+  [BLOCO.SUSPICIOUS_GRAVEL]: { nome: 'Cascalho Suspeito',  solido: true, emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x757575 },
+  [BLOCO.CALIBRATED_SCULK]:  { nome: 'Sculk Calibrado',    solido: true, emiteLuz: 6,  cor: 0x40c4ff, lateral: 0x0288d1 },
 };
 
 export const ICONE = {
@@ -1890,6 +1908,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.COBRE, q: 4}], saida: {b: BLOCO.COPPER_GRATE, q: 4}, wb: true },
   { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {b: BLOCO.SCULK_SHRIEKER, q: 1}, {i: ITEM.NETHER_STAR, q: 1}], saida: {b: BLOCO.TRIAL_SPAWNER, q: 1}, wb: true },
   { custos: [{b: BLOCO.OBSIDIANA, q: 6}, {b: BLOCO.LUZ, q: 1}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.VAULT, q: 1}, wb: true },
+  // Sprint 8: Pottery + arqueologia + 1.20 Trails & Tales (455-462)
+  { custos: [{b: BLOCO.FLOR_ROXA, q: 2}, {b: BLOCO.FOLHA, q: 2}], saida: {b: BLOCO.PITCHER_PLANT, q: 1}, wb: true },
+  { custos: [{b: BLOCO.PITCHER_PLANT, q: 1}], saida: {b: BLOCO.PITCHER_CROP, q: 2}, wb: true },
+  { custos: [{b: BLOCO.FLOR_AMARELA, q: 1}, {b: BLOCO.TOCHA, q: 1}], saida: {b: BLOCO.TORCHFLOWER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.TORCHFLOWER, q: 1}], saida: {b: BLOCO.TORCHFLOWER_CROP, q: 2}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {b: BLOCO.LAMA, q: 1}], saida: {b: BLOCO.SNIFFER_EGG, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AREIA, q: 4}, {i: ITEM.PRANCHAS, q: 1}], saida: {b: BLOCO.SUSPICIOUS_SAND, q: 4}, wb: true },
+  { custos: [{b: BLOCO.PAVIMENTO, q: 4}, {i: ITEM.PRANCHAS, q: 1}], saida: {b: BLOCO.SUSPICIOUS_GRAVEL, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SCULK_SENSOR, q: 1}, {b: BLOCO.AMETHYST, q: 3}], saida: {b: BLOCO.CALIBRATED_SCULK, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
