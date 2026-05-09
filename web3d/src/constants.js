@@ -738,8 +738,17 @@ export const BLOCO = {
   ESTANTE_VAZIA:       763, ESTANTE_CHEIA:       764, ESTANTE_GRANDE:      765, BAU_GRANDE:          766,
   ARMORS_STAND:        767, BANDEIRA_PADRAO:     768, ESCUDO_DECORATIVO:   769, FLOR_DENDELION:      770,
   FLOR_TULIPA_R:       771, FLOR_TULIPA_LR:      772, FLOR_TULIPA_BR:      773, FLOR_TULIPA_RS:      774,
+  // Sprint 27: 32 blocos — flores raras + nether (775-806)
+  FLOR_ALLIUM:         775, FLOR_BLUE_ORCHID:    776, FLOR_OXEYE:          777, FLOR_LILY_VALE:      778,
+  FLOR_CORNFLOWER:     779, FLOR_WITHER_ROSE:    780, FLOR_AZURE:          781, FLOR_PEONY:          782,
+  ROSA_AZUL:           783, LILAC:               784, ROSA_BUSH:           785, SUNFLOWER_TOP:       786,
+  CRIMSON_FUNGUS:      787, WARPED_FUNGUS:       788, NETHER_SPROUT:       789, TWISTING_VINES_BR:   790,
+  WEEPING_VINES_BR:    791, NETHER_WART_BLOCK:   792, WARPED_WART_BLOCK:   793, SHROOMLIGHT_VAR:     794,
+  CRIMSON_PRANCHA:     795, WARPED_PRANCHA:      796, CRIMSON_DOOR:        797, WARPED_DOOR:         798,
+  CRIMSON_TRAPDOOR:    799, WARPED_TRAPDOOR:     800, CRIMSON_FENCE:       801, WARPED_FENCE:        802,
+  CRIMSON_GATE:        803, WARPED_GATE:         804, CRIMSON_BUTTON:      805, WARPED_BUTTON:       806,
 };
-export const N_BLOCOS = 775;
+export const N_BLOCOS = 807;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1561,6 +1570,39 @@ export const BLOCO_INFO = {
   [BLOCO.FLOR_TULIPA_LR]:       { nome: 'Tulipa Laranja',        solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0x33691e, shape: 'flower' },
   [BLOCO.FLOR_TULIPA_BR]:       { nome: 'Tulipa Branca',         solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0x33691e, shape: 'flower' },
   [BLOCO.FLOR_TULIPA_RS]:       { nome: 'Tulipa Rosa',           solido: true, emiteLuz: 0, cor: 0xf48fb1, lateral: 0x33691e, shape: 'flower' },
+  // Sprint 27: 32 blocos flores raras + nether (775-806)
+  [BLOCO.FLOR_ALLIUM]:          { nome: 'Allium',                solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_BLUE_ORCHID]:     { nome: 'Orquídea Azul',         solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_OXEYE]:           { nome: 'Margarida',             solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_LILY_VALE]:       { nome: 'Lírio do Vale',         solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_CORNFLOWER]:      { nome: 'Centáurea',             solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_WITHER_ROSE]:     { nome: 'Rosa Wither',           solido: true, emiteLuz: 0, cor: 0x000000, lateral: 0x424242, shape: 'flower' },
+  [BLOCO.FLOR_AZURE]:           { nome: 'Bluet',                 solido: true, emiteLuz: 0, cor: 0xb3e5fc, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_PEONY]:           { nome: 'Peônia',                solido: true, emiteLuz: 0, cor: 0xf48fb1, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.ROSA_AZUL]:            { nome: 'Rosa Azul',             solido: true, emiteLuz: 0, cor: 0x4fc3f7, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.LILAC]:                { nome: 'Lilás',                 solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.ROSA_BUSH]:            { nome: 'Roseira',               solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.SUNFLOWER_TOP]:        { nome: 'Topo Girassol',         solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.CRIMSON_FUNGUS]:       { nome: 'Fungo Crimson',         solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'flower' },
+  [BLOCO.WARPED_FUNGUS]:        { nome: 'Fungo Warped',          solido: true, emiteLuz: 0, cor: 0x00838f, lateral: 0x006064, shape: 'flower' },
+  [BLOCO.NETHER_SPROUT]:        { nome: 'Broto Nether',          solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f, shape: 'flower' },
+  [BLOCO.TWISTING_VINES_BR]:    { nome: 'Cipó Torcido Broto',    solido: true, emiteLuz: 0, cor: 0x00bcd4, lateral: 0x00838f, shape: 'flower' },
+  [BLOCO.WEEPING_VINES_BR]:     { nome: 'Cipó Pendente Broto',   solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'flower' },
+  [BLOCO.NETHER_WART_BLOCK]:    { nome: 'Bloco Nether Wart',     solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.WARPED_WART_BLOCK]:    { nome: 'Bloco Warped Wart',     solido: true, emiteLuz: 0, cor: 0x00838f, lateral: 0x006064 },
+  [BLOCO.SHROOMLIGHT_VAR]:      { nome: 'Shroomlight Var',       solido: true, emiteLuz: 15,cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.CRIMSON_PRANCHA]:      { nome: 'Pranchas Crimson',      solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535 },
+  [BLOCO.WARPED_PRANCHA]:       { nome: 'Pranchas Warped',       solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d },
+  [BLOCO.CRIMSON_DOOR]:         { nome: 'Porta Crimson',         solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'door' },
+  [BLOCO.WARPED_DOOR]:          { nome: 'Porta Warped',          solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'door' },
+  [BLOCO.CRIMSON_TRAPDOOR]:     { nome: 'Alçapão Crimson',       solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'plate' },
+  [BLOCO.WARPED_TRAPDOOR]:      { nome: 'Alçapão Warped',        solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'plate' },
+  [BLOCO.CRIMSON_FENCE]:        { nome: 'Cerca Crimson',         solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'fence' },
+  [BLOCO.WARPED_FENCE]:         { nome: 'Cerca Warped',          solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'fence' },
+  [BLOCO.CRIMSON_GATE]:         { nome: 'Portão Crimson',        solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'fence' },
+  [BLOCO.WARPED_GATE]:          { nome: 'Portão Warped',         solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'fence' },
+  [BLOCO.CRIMSON_BUTTON]:       { nome: 'Botão Crimson',         solido: true, emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'button' },
+  [BLOCO.WARPED_BUTTON]:        { nome: 'Botão Warped',          solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d, shape: 'button' },
 };
 
 export const ICONE = {
