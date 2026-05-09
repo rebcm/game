@@ -1030,6 +1030,108 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Sculk: azul-escuro com pontos brilhantes ciano (orgânico)
+  function pintarSculk(idx, variante) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base preto-azulada
+    ctx.fillStyle = '#0a1a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Manchas mais escuras
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#051018', 0.45, 4, 2, idx * 9301 + 49297);
+    // Padrão orgânico (manchas azuis claras espalhadas)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#1a3a5a', 0.50, 4, 2, idx * 9301 + 7331);
+    // Pontos super-brilhantes ciano (estrutura sculk)
+    if (variante === 'plain') {
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#40c4ff', 0.20, 5, 1, idx * 9301 + 12347);
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 7, 1, idx * 9301 + 19999);
+    } else if (variante === 'shrieker') {
+      // Shrieker: padrão central de "boca" azul-claro
+      ctx.fillStyle = '#40c4ff';
+      ctx.fillRect(x0 + 8, y0 + 12, 16, 8);
+      ctx.fillStyle = '#0288d1';
+      ctx.fillRect(x0 + 10, y0 + 14, 12, 4);
+      // Dentes/projeções amarelas
+      ctx.fillStyle = '#fff176';
+      for (let bx = 11; bx < 22; bx += 3) {
+        ctx.fillRect(x0 + bx, y0 + 13, 1, 2);
+        ctx.fillRect(x0 + bx, y0 + 18, 1, 2);
+      }
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    } else if (variante === 'sensor') {
+      // Sensor: 2 antenas ciano + nodo central
+      ctx.fillStyle = '#40c4ff';
+      ctx.fillRect(x0 + 14, y0 + 4,  4, 8);
+      ctx.fillRect(x0 + 14, y0 + 20, 4, 8);
+      ctx.fillRect(x0 + 4,  y0 + 14, 8, 4);
+      ctx.fillRect(x0 + 20, y0 + 14, 8, 4);
+      // Núcleo central
+      ctx.fillStyle = '#80deea';
+      ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    } else if (variante === 'catalyst') {
+      // Catalyst: 4 nodos brilhantes nos cantos + cruz central
+      ctx.fillStyle = '#4dd0e1';
+      ctx.fillRect(x0 + 4,  y0 + 4,  4, 4);
+      ctx.fillRect(x0 + 24, y0 + 4,  4, 4);
+      ctx.fillRect(x0 + 4,  y0 + 24, 4, 4);
+      ctx.fillRect(x0 + 24, y0 + 24, 4, 4);
+      ctx.fillStyle = '#80deea';
+      ctx.fillRect(x0 + CELL/2 - 2, y0 + 8,  4, 16);
+      ctx.fillRect(x0 + 8, y0 + CELL/2 - 2,  16, 4);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL/2 - 1, 2, 2);
+    } else if (variante === 'vein') {
+      // Vein: padrão de veias finas (curvas)
+      ctx.fillStyle = '#1a3a5a';
+      ctx.fillRect(x0 + 4, y0 + 8,  4, 1);
+      ctx.fillRect(x0 + 8, y0 + 9,  6, 1);
+      ctx.fillRect(x0 + 14, y0 + 10, 8, 1);
+      ctx.fillRect(x0 + 22, y0 + 11, 6, 1);
+      ctx.fillRect(x0 + 4, y0 + 22, 6, 1);
+      ctx.fillRect(x0 + 10, y0 + 21, 8, 1);
+      ctx.fillRect(x0 + 18, y0 + 22, 6, 1);
+      ctx.fillStyle = '#40c4ff';
+      ctx.fillRect(x0 + 8, y0 + 15, 1, 1);
+      ctx.fillRect(x0 + 16, y0 + 18, 1, 1);
+      ctx.fillRect(x0 + 24, y0 + 14, 1, 1);
+    }
+  }
+
+  // Cama colorida: padrão simples com travesseiro claro + manta colorida
+  function pintarCama(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Manta colorida (parte principal)
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Travesseiro branco-claro no topo (terceiro superior)
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 8);
+    // Borda escura do travesseiro
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 1);
+    ctx.fillRect(x0 + 4, y0 + 11, CELL - 8, 1);
+    // Listras horizontais na manta (textura tecida)
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0 + 16, CELL, 1);
+    ctx.fillRect(x0, y0 + 22, CELL, 1);
+    // Highlights claros nas listras
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0, y0 + 18, CELL, 1);
+    ctx.fillRect(x0, y0 + 24, CELL, 1);
+    // Borda escura do bloco
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // Pranchas (Crimson/Warped): tábuas horizontais com grão vertical
   function pintarPlanksColorida(idx, base, escuro, claro) {
     const col = idx % COLS;
@@ -2800,6 +2902,15 @@ function criarAtlas() {
   pintarGlowLichen(146);                                          // glow lichen
   pintarSporeBlossom(147);                                        // spore blossom
   pintarSnow(148, false);                                         // powder snow (puro)
+  pintarSculk(149, 'plain');                                      // sculk
+  pintarSculk(150, 'vein');                                       // sculk vein
+  pintarSculk(151, 'shrieker');                                   // sculk shrieker
+  pintarSculk(152, 'sensor');                                     // sculk sensor
+  pintarSculk(153, 'catalyst');                                   // sculk catalyst
+  pintarCama(154, '#1565c0', '#0d47a1', '#42a5f5');              // cama azul
+  pintarCama(155, '#2e7d32', '#1b5e20', '#66bb6a');              // cama verde
+  pintarCama(156, '#f9a825', '#f57f17', '#ffd54f');              // cama amarela
+  pintarCama(157, '#7b1fa2', '#4a148c', '#ce93d8');              // cama roxa
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2954,6 +3065,15 @@ function criarAtlas() {
   mapa[BLOCO.GLOW_LICHEN]    = { top: 146, side: 146, bottom: 146 };
   mapa[BLOCO.SPORE_BLOSSOM]  = { top: 147, side: 147, bottom: 147 };
   mapa[BLOCO.POWDER_SNOW]    = { top: 148, side: 148, bottom: 148 };
+  mapa[BLOCO.SCULK]          = { top: 149, side: 149, bottom: 149 };
+  mapa[BLOCO.SCULK_VEIN]     = { top: 150, side: 150, bottom: 150 };
+  mapa[BLOCO.SCULK_SHRIEKER] = { top: 151, side: 151, bottom: 151 };
+  mapa[BLOCO.SCULK_SENSOR]   = { top: 152, side: 152, bottom: 152 };
+  mapa[BLOCO.SCULK_CATALYST] = { top: 153, side: 153, bottom: 153 };
+  mapa[BLOCO.CAMA_AZUL]      = { top: 154, side: 154, bottom: 154 };
+  mapa[BLOCO.CAMA_VERDE]     = { top: 155, side: 155, bottom: 155 };
+  mapa[BLOCO.CAMA_AMARELA]   = { top: 156, side: 156, bottom: 156 };
+  mapa[BLOCO.CAMA_ROXA]      = { top: 157, side: 157, bottom: 157 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

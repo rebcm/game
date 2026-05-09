@@ -628,6 +628,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.GLOW_LICHEN, q: 8 });
   state.inv.adicionar({ b: BLOCO.SPORE_BLOSSOM, q: 4 });
   state.inv.adicionar({ b: BLOCO.POWDER_SNOW, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SCULK, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SCULK_VEIN, q: 8 });
+  state.inv.adicionar({ b: BLOCO.SCULK_SHRIEKER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.SCULK_SENSOR, q: 4 });
+  state.inv.adicionar({ b: BLOCO.SCULK_CATALYST, q: 4 });
+  state.inv.adicionar({ b: BLOCO.CAMA_AZUL, q: 1 });
+  state.inv.adicionar({ b: BLOCO.CAMA_VERDE, q: 1 });
+  state.inv.adicionar({ b: BLOCO.CAMA_AMARELA, q: 1 });
+  state.inv.adicionar({ b: BLOCO.CAMA_ROXA, q: 1 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

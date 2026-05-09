@@ -193,8 +193,19 @@ export const BLOCO = {
   GLOW_LICHEN:   147, // líquen brilhante
   SPORE_BLOSSOM: 148, // flor cogumelo (decoração)
   POWDER_SNOW:   149, // neve em pó (player afunda)
+  // Família Sculk (paridade Minecraft 1.19+)
+  SCULK:         150, // bloco sculk (xp ao quebrar)
+  SCULK_VEIN:    151, // veias sculk (decoração)
+  SCULK_SHRIEKER:152, // shrieker (alarma warden)
+  SCULK_SENSOR:  153, // sensor (detecta vibração)
+  SCULK_CATALYST:154, // catalisador (gera sculk)
+  // Camas coloridas (4 cores adicionais)
+  CAMA_AZUL:     155,
+  CAMA_VERDE:    156,
+  CAMA_AMARELA:  157,
+  CAMA_ROXA:     158,
 };
-export const N_BLOCOS = 150;
+export const N_BLOCOS = 159;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -355,6 +366,15 @@ export const BLOCO_INFO = {
   [BLOCO.GLOW_LICHEN]:   { nome: 'Líquen Brilhante', solido: true,  emiteLuz: 7,  cor: 0xa5d6a7, lateral: 0x66bb6a },
   [BLOCO.SPORE_BLOSSOM]: { nome: 'Flor Cogumelo',    solido: true,  emiteLuz: 0,  cor: 0xf06292, lateral: 0xc2185b },
   [BLOCO.POWDER_SNOW]:   { nome: 'Neve em Pó',       solido: true,  emiteLuz: 0,  cor: 0xfafafa, lateral: 0xeceff1 },
+  [BLOCO.SCULK]:         { nome: 'Sculk',            solido: true,  emiteLuz: 1,  cor: 0x0a1a2a, lateral: 0x051018 },
+  [BLOCO.SCULK_VEIN]:    { nome: 'Veia Sculk',       solido: true,  emiteLuz: 1,  cor: 0x0a1a2a, lateral: 0x051018 },
+  [BLOCO.SCULK_SHRIEKER]:{ nome: 'Shrieker',         solido: true,  emiteLuz: 5,  cor: 0x40c4ff, lateral: 0x0288d1 },
+  [BLOCO.SCULK_SENSOR]:  { nome: 'Sensor Sculk',     solido: true,  emiteLuz: 4,  cor: 0x40c4ff, lateral: 0x0288d1 },
+  [BLOCO.SCULK_CATALYST]:{ nome: 'Catalisador Sculk',solido: true,  emiteLuz: 6,  cor: 0x4dd0e1, lateral: 0x00838f },
+  [BLOCO.CAMA_AZUL]:     { nome: 'Cama Azul',        solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
+  [BLOCO.CAMA_VERDE]:    { nome: 'Cama Verde',       solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
+  [BLOCO.CAMA_AMARELA]:  { nome: 'Cama Amarela',     solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.CAMA_ROXA]:     { nome: 'Cama Roxa',        solido: true,  emiteLuz: 0,  cor: 0x7b1fa2, lateral: 0x4a148c },
 };
 
 export const ICONE = {
@@ -714,6 +734,17 @@ export const RECEITAS = [
   { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TINTA_GLOW, q: 5}], saida: {b: BLOCO.GLOW_LICHEN, q: 1}, wb: true },
   // Spore Blossom: 4 cogumelo R + 1 muda
   { custos: [{i: ITEM.COGUMELO_R, q: 4}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.SPORE_BLOSSOM, q: 1}, wb: true },
+  // Família Sculk (recipes proxy — MC normal são naturais do Deep Dark)
+  { custos: [{i: ITEM.OSSO, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.SCULK, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SCULK, q: 1}], saida: {b: BLOCO.SCULK_VEIN, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SCULK, q: 4}, {i: ITEM.OSSO, q: 1}], saida: {b: BLOCO.SCULK_SHRIEKER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SCULK, q: 4}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.SCULK_SENSOR, q: 1}, wb: true },
+  { custos: [{b: BLOCO.SCULK, q: 4}, {i: ITEM.TINTA_GLOW, q: 1}], saida: {b: BLOCO.SCULK_CATALYST, q: 1}, wb: true },
+  // Camas coloridas: 3 lã colorida + 3 pranchas (paridade MC)
+  { custos: [{b: BLOCO.LA_AZUL,     q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_AZUL,    q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_VERDE,    q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_VERDE,   q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_AMARELA,  q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_AMARELA, q: 1}, wb: true },
+  { custos: [{b: BLOCO.LA_VERMELHA, q: 3}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMA_ROXA,    q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
