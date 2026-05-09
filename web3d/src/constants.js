@@ -229,8 +229,16 @@ export const BLOCO = {
   PLATE_MADEIRA:  177,
   // Alavanca (shape 'lever' = pequeno toggle)
   ALAVANCA:       178,
+  TNT:            179, // explosivo (decoração visual; explode ao quebrar)
+  FLOR_VERMELHA:  180,
+  FLOR_AMARELA:   181,
+  FLOR_AZUL:      182,
+  FLOR_BRANCA:    183,
+  FLOR_ROXA:      184,
+  VASO_FLOR:      185,
+  GRADE_FERRO:    186,
 };
-export const N_BLOCOS = 179;
+export const N_BLOCOS = 187;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -429,6 +437,15 @@ export const BLOCO_INFO = {
   [BLOCO.PLATE_MADEIRA]:{ nome: 'Placa de Madeira', solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'plate' },
   // Alavanca (shape lever = base pequena + cabo vertical)
   [BLOCO.ALAVANCA]:     { nome: 'Alavanca',         solido: false, emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'lever' },
+  [BLOCO.TNT]:          { nome: 'TNT',              solido: true,  emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  // Flores: shape 'flower' (haste fina + pétalas no topo, similar a torch)
+  [BLOCO.FLOR_VERMELHA]:{ nome: 'Rosa',             solido: false, emiteLuz: 0, cor: 0xc62828, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.FLOR_AMARELA]: { nome: 'Dente-leão',       solido: false, emiteLuz: 0, cor: 0xfdd835, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.FLOR_AZUL]:    { nome: 'Cornflower',       solido: false, emiteLuz: 0, cor: 0x42a5f5, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.FLOR_BRANCA]:  { nome: 'Margarida',        solido: false, emiteLuz: 0, cor: 0xfafafa, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.FLOR_ROXA]:    { nome: 'Allium',           solido: false, emiteLuz: 0, cor: 0xab47bc, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.VASO_FLOR]:    { nome: 'Vaso',             solido: false, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'pot' },
+  [BLOCO.GRADE_FERRO]:  { nome: 'Grade de Ferro',   solido: true,  emiteLuz: 0, cor: 0xcfd8dc, lateral: 0x90a4ae, shape: 'bars' },
 };
 
 export const ICONE = {
@@ -829,6 +846,12 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS,  q: 2}], saida: {b: BLOCO.PLATE_MADEIRA, q: 1}, wb: false },
   // Alavanca: 1 pau + 1 pedra
   { custos: [{i: ITEM.PAU, q: 1}, {b: BLOCO.PEDRA, q: 1}], saida: {b: BLOCO.ALAVANCA, q: 1}, wb: false },
+  // TNT: 5 areia + 4 carvão (proxy de pólvora) → 1 TNT
+  { custos: [{b: BLOCO.AREIA, q: 5}, {i: ITEM.CARVAO, q: 4}], saida: {b: BLOCO.TNT, q: 1}, wb: true },
+  // Vaso de Flor: 3 tijolos
+  { custos: [{b: BLOCO.TIJOLO, q: 3}], saida: {b: BLOCO.VASO_FLOR, q: 1}, wb: true },
+  // Grade de Ferro: 6 ferro → 16 grades
+  { custos: [{i: ITEM.FERRO, q: 6}], saida: {b: BLOCO.GRADE_FERRO, q: 16}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 21, CELL = 32;
+  const COLS = 8, ROWS = 22, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,134 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // TNT: vermelho com listras pretas + texto "TNT" branco
+  function pintarTNT(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Listras pretas top/bot (cinto explosivo)
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0,           CELL, 4);
+    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
+    // Texto "TNT" central (3 letras estilizadas pixel art)
+    ctx.fillStyle = '#fafafa';
+    // T
+    ctx.fillRect(x0 + 4,  y0 + 12, 5, 1);
+    ctx.fillRect(x0 + 6,  y0 + 12, 1, 8);
+    // N
+    ctx.fillRect(x0 + 12, y0 + 12, 1, 8);
+    ctx.fillRect(x0 + 17, y0 + 12, 1, 8);
+    ctx.fillRect(x0 + 13, y0 + 13, 1, 1);
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 1);
+    ctx.fillRect(x0 + 15, y0 + 15, 1, 1);
+    ctx.fillRect(x0 + 16, y0 + 16, 1, 1);
+    // T
+    ctx.fillRect(x0 + 21, y0 + 12, 5, 1);
+    ctx.fillRect(x0 + 23, y0 + 12, 1, 8);
+    // Bordas escuras nas listras
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0 + 4,        CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 5, CELL, 1);
+    // Manchas vermelhas mais escuras (textura)
+    spawnPontosUniforme(x0, y0 + 4, CELL, CELL - 8, '#8b0000', 0.30, 4, 1, idx * 9301 + 49297);
+  }
+
+  // Flor: haste verde fina + pétalas coloridas no topo
+  function pintarFlor(idx, corPet, corMiolo) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro pra realçar
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Haste verde fina vertical (centralizada)
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 15, y0 + 14, 2, 16);
+    // Sombra da haste
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(x0 + 16, y0 + 14, 1, 16);
+    // 4 folhas saindo da haste
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 12, y0 + 18, 3, 1);
+    ctx.fillRect(x0 + 17, y0 + 22, 3, 1);
+    ctx.fillRect(x0 + 13, y0 + 26, 3, 1);
+    // Pétalas coloridas (5 quadrados ao redor do miolo)
+    ctx.fillStyle = corPet;
+    ctx.fillRect(x0 + 12, y0 + 5,  4, 4);  // esq
+    ctx.fillRect(x0 + 16, y0 + 5,  4, 4);  // dir
+    ctx.fillRect(x0 + 14, y0 + 2,  4, 4);  // top
+    ctx.fillRect(x0 + 12, y0 + 9,  4, 4);  // esq-bot
+    ctx.fillRect(x0 + 16, y0 + 9,  4, 4);  // dir-bot
+    // Sombras das pétalas
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 12, y0 + 5, 1, 4);
+    ctx.fillRect(x0 + 19, y0 + 5, 1, 4);
+    ctx.fillRect(x0 + 14, y0 + 2, 1, 4);
+    // Miolo amarelo central
+    ctx.fillStyle = corMiolo;
+    ctx.fillRect(x0 + 14, y0 + 6, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 7, 2, 2);
+  }
+
+  // Vaso de flor: pote de tijolo marrom (vasinho cônico)
+  function pintarVasoFlor(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Pote (parte central marrom)
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 8, y0 + 14, 16, 12);
+    // Borda superior do pote (mais clara)
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0 + 6, y0 + 12, 20, 2);
+    // Sombra interna do pote
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 8, y0 + 14, 16, 1);
+    ctx.fillRect(x0 + 8, y0 + 14, 1, 12);
+    ctx.fillRect(x0 + 23, y0 + 14, 1, 12);
+    ctx.fillRect(x0 + 8, y0 + 25, 16, 1);
+    // Padrão decorativo (3 linhas claras horizontais)
+    ctx.fillStyle = '#bcaaa4';
+    ctx.fillRect(x0 + 9, y0 + 17, 14, 1);
+    ctx.fillRect(x0 + 9, y0 + 21, 14, 1);
+  }
+
+  // Grade de Ferro: padrão de barras verticais + horizontal central
+  function pintarGradeFerro(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 4 barras verticais
+    ctx.fillStyle = '#cfd8dc';
+    for (const px of [4, 12, 20, 28]) {
+      ctx.fillRect(x0 + px - 1, y0, 2, CELL);
+    }
+    // Highlights
+    ctx.fillStyle = '#eceff1';
+    for (const px of [4, 12, 20, 28]) {
+      ctx.fillRect(x0 + px - 1, y0, 1, CELL);
+    }
+    // Sombras
+    ctx.fillStyle = '#90a4ae';
+    for (const px of [5, 13, 21, 29]) {
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // Barra horizontal central (cruzando)
+    ctx.fillStyle = '#cfd8dc';
+    ctx.fillRect(x0, y0 + 14, CELL, 2);
+    ctx.fillStyle = '#eceff1';
+    ctx.fillRect(x0, y0 + 14, CELL, 1);
   }
 
   // Porta colorida (genérico): tábuas verticais + maçaneta + dobradiças
@@ -3023,6 +3151,14 @@ function criarAtlas() {
   pintarPortaCor(163, '#a1887f', '#5d4037', '#bcaaa4', '#424242'); // portão madeira (reusa pintor porta)
   pintarPortaCor(164, '#8a3a4d', '#5d2535', '#a85065', '#424242'); // portão crimson
   pintarSign(165);                                                 // placa
+  pintarTNT(166);                                                  // TNT
+  pintarFlor(167, '#c62828', '#fdd835');                          // rosa vermelha
+  pintarFlor(168, '#fdd835', '#fff176');                          // dente-leão amarelo
+  pintarFlor(169, '#42a5f5', '#fff176');                          // cornflower azul
+  pintarFlor(170, '#fafafa', '#fdd835');                          // margarida branca
+  pintarFlor(171, '#ab47bc', '#fdd835');                          // allium roxa
+  pintarVasoFlor(172);                                             // vaso de flor
+  pintarGradeFerro(173);                                           // grade de ferro
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3209,6 +3345,14 @@ function criarAtlas() {
   mapa[BLOCO.PLATE_PEDRA]    = { top: 3,  side: 3,  bottom: 3  };
   mapa[BLOCO.PLATE_MADEIRA]  = { top: 5,  side: 6,  bottom: 5  };
   mapa[BLOCO.ALAVANCA]       = { top: 6,  side: 6,  bottom: 3  };
+  mapa[BLOCO.TNT]            = { top: 166, side: 166, bottom: 166 };
+  mapa[BLOCO.FLOR_VERMELHA]  = { top: 167, side: 167, bottom: 167 };
+  mapa[BLOCO.FLOR_AMARELA]   = { top: 168, side: 168, bottom: 168 };
+  mapa[BLOCO.FLOR_AZUL]      = { top: 169, side: 169, bottom: 169 };
+  mapa[BLOCO.FLOR_BRANCA]    = { top: 170, side: 170, bottom: 170 };
+  mapa[BLOCO.FLOR_ROXA]      = { top: 171, side: 171, bottom: 171 };
+  mapa[BLOCO.VASO_FLOR]      = { top: 172, side: 172, bottom: 172 };
+  mapa[BLOCO.GRADE_FERRO]    = { top: 173, side: 173, bottom: 173 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -3769,6 +3913,44 @@ export class Renderer {
             addFace(SHADE.sideZ,  idxSide,4, x, y, z,  x+1, y+0.5, z+1,    0,0,1, -1,0,0,  0,0.5,0);
             // Face frontal do degrau superior (em z+0.5, y+0.5..y+1)
             addFace(SHADE.sideZ,  idxSide,5, x, y, z,  x,   y+0.5, z+0.5,  0,0,-1, 1,0,0,  0,0.5,0);
+            continue;
+          }
+          if (info.shape === 'flower') {
+            // Flor: chapinha vertical estreita 1×0.75 centralizada (x+0.25..x+0.75)
+            // Visual: 2 chapas perpendiculares formando X (paridade MC sapling)
+            const a = 0.5, ht = 0.75;
+            // Quad 1: plano X (face perpendicular ao eixo Z, centrada em z+0.5)
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z, x+0.85, y, z+a, 0,0,1, -0.7,0,0, 0,ht,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z, x+0.15, y, z+a, 0,0,-1, 0.7,0,0, 0,ht,0);
+            // Quad 2: plano Z (face perpendicular ao eixo X, centrada em x+0.5)
+            addFace(SHADE.sideX, idxSide, 2, x, y, z, x+a, y, z+0.15, 1,0,0, 0,0,0.7, 0,ht,0);
+            addFace(SHADE.sideX, idxSide, 3, x, y, z, x+a, y, z+0.85,-1,0,0, 0,0,-0.7,0,ht,0);
+            continue;
+          }
+          if (info.shape === 'pot') {
+            // Vaso: cubo pequeno 0.5×0.5×0.5 no chão (centralizado)
+            const a = 0.25, b = 0.75, w = b - a, h = 0.5;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x+a, y+h, z+a, 0,1,0,  w,0,0, 0,0,w);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x+a, y,   z+b, 0,-1,0, w,0,0, 0,0,-w);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+b, y,   z+a, 1,0,0,  0,0,w, 0,h,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x+a, y,   z+b,-1,0,0,  0,0,-w,0,h,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+b, y,   z+b, 0,0,1, -w,0,0, 0,h,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x+a, y,   z+a, 0,0,-1, w,0,0, 0,h,0);
+            continue;
+          }
+          if (info.shape === 'bars') {
+            // Grade de ferro: 2 chapas finas perpendiculares (X+Z) full altura
+            // Visual: cruz de barras finas estilo iron bars MC
+            const a = 0.4375, b = 0.5625, w = b - a;
+            // Chapa eixo Z (perpendicular X)
+            addFace(SHADE.sideZ, idxSide, 4, x, y, z, x+1, y, z+b, 0,0,1, -1,0,0, 0,1,0);
+            addFace(SHADE.sideZ, idxSide, 5, x, y, z, x,   y, z+a, 0,0,-1, 1,0,0, 0,1,0);
+            // Chapa eixo X (perpendicular Z)
+            addFace(SHADE.sideX, idxSide, 2, x, y, z, x+b, y, z,   1,0,0,  0,0,1, 0,1,0);
+            addFace(SHADE.sideX, idxSide, 3, x, y, z, x+a, y, z+1,-1,0,0,  0,0,-1,0,1,0);
+            // Topo (cruz)
+            addFace(SHADE.top, idxTop, 0, x, y, z, x, y+1, z+a, 0,1,0, 1,0,0, 0,0,w);
+            addFace(SHADE.top, idxTop, 0, x, y, z, x+a, y+1, z, 0,1,0, w,0,0, 0,0,1);
             continue;
           }
           if (info.shape === 'button') {
