@@ -555,8 +555,17 @@ export const BLOCO = {
   DEAD_BUSH:           484, // arbusto morto (deserto)
   TALL_GRASS:          485, // grama alta (2 blocos)
   FERN:                486, // samambaia (verde escuro)
+  // Sprint 12: oceano + corais + minérios brutos (487-494)
+  KELP:                487, // alga marinha (cresce)
+  SEAGRASS:            488, // grama marinha curta
+  TUBE_CORAL:          489, // coral tubular azul
+  BRAIN_CORAL:         490, // coral cérebro rosa
+  FIRE_CORAL:          491, // coral de fogo (vermelho)
+  HORN_CORAL:          492, // coral chifre amarelo
+  BUBBLE_CORAL:        493, // coral bolha roxo
+  RAW_IRON_BLOCK:      494, // bloco ferro bruto (1.17)
 };
-export const N_BLOCOS = 487;
+export const N_BLOCOS = 495;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1075,6 +1084,15 @@ export const BLOCO_INFO = {
   [BLOCO.DEAD_BUSH]:         { nome: 'Arbusto Morto',      solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x5d4037, shape: 'flower' },
   [BLOCO.TALL_GRASS]:        { nome: 'Grama Alta',         solido: true, emiteLuz: 0,  cor: 0x7cb342, lateral: 0x558b2f, shape: 'flower' },
   [BLOCO.FERN]:              { nome: 'Samambaia',          solido: true, emiteLuz: 0,  cor: 0x33691e, lateral: 0x1b5e20, shape: 'flower' },
+  // Sprint 12: oceano + corais + minérios brutos (487-494)
+  [BLOCO.KELP]:              { nome: 'Alga Marinha',       solido: true, emiteLuz: 0,  cor: 0x558b2f, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.SEAGRASS]:          { nome: 'Grama Marinha',      solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
+  [BLOCO.TUBE_CORAL]:        { nome: 'Coral Tubular',      solido: true, emiteLuz: 2,  cor: 0x1565c0, lateral: 0x0d47a1, shape: 'flower' },
+  [BLOCO.BRAIN_CORAL]:       { nome: 'Coral Cérebro',      solido: true, emiteLuz: 2,  cor: 0xf06292, lateral: 0xc2185b, shape: 'flower' },
+  [BLOCO.FIRE_CORAL]:        { nome: 'Coral de Fogo',      solido: true, emiteLuz: 4,  cor: 0xc62828, lateral: 0x8b0000, shape: 'flower' },
+  [BLOCO.HORN_CORAL]:        { nome: 'Coral Chifre',       solido: true, emiteLuz: 2,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'flower' },
+  [BLOCO.BUBBLE_CORAL]:      { nome: 'Coral Bolha',        solido: true, emiteLuz: 3,  cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'flower' },
+  [BLOCO.RAW_IRON_BLOCK]:    { nome: 'Bloco Ferro Bruto',  solido: true, emiteLuz: 0,  cor: 0xa1887f, lateral: 0x6d4c41 },
 };
 
 export const ICONE = {
@@ -1998,6 +2016,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.AREIA, q: 2}, {b: BLOCO.MADEIRA, q: 1}], saida: {b: BLOCO.DEAD_BUSH, q: 2}, wb: true },
   { custos: [{b: BLOCO.GRAMA, q: 2}], saida: {b: BLOCO.TALL_GRASS, q: 4}, wb: true },
   { custos: [{b: BLOCO.GRAMA, q: 1}, {b: BLOCO.FOLHA, q: 1}], saida: {b: BLOCO.FERN, q: 2}, wb: true },
+  // Sprint 12: oceano + corais + minérios brutos (487-494)
+  { custos: [{b: BLOCO.AGUA, q: 1}, {b: BLOCO.FOLHA, q: 1}], saida: {b: BLOCO.KELP, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 1}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.SEAGRASS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_AZUL, q: 1}], saida: {b: BLOCO.TUBE_CORAL, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_ROSA, q: 1}], saida: {b: BLOCO.BRAIN_CORAL, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_VERMELHA, q: 1}], saida: {b: BLOCO.FIRE_CORAL, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_AMARELA, q: 1}], saida: {b: BLOCO.HORN_CORAL, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AGUA, q: 2}, {b: BLOCO.LA_ROSA, q: 1}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.BUBBLE_CORAL, q: 1}, wb: true },
+  { custos: [{i: ITEM.FERRO, q: 9}], saida: {b: BLOCO.RAW_IRON_BLOCK, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

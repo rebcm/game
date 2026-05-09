@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 46, CELL = 32;
+  const COLS = 8, ROWS = 47, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3290,6 +3290,38 @@ function criarAtlas() {
     }
   }
 
+  // Genérico: pinta coral subaquático (haste central + bulbos no topo)
+  function pintarCoral(idx, corBulbo, corHaste, corBrilho) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo azul-escuro (água)
+    ctx.fillStyle = '#0a1a2a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 3 hastes de coral
+    ctx.fillStyle = corHaste;
+    ctx.fillRect(x0 + 7,  y0 + 14, 2, 16);
+    ctx.fillRect(x0 + 15, y0 + 10, 2, 20);
+    ctx.fillRect(x0 + 23, y0 + 16, 2, 14);
+    // Bulbos no topo de cada haste
+    ctx.fillStyle = corBulbo;
+    ctx.fillRect(x0 + 5,  y0 + 11, 6, 4);
+    ctx.fillRect(x0 + 13, y0 + 7,  6, 4);
+    ctx.fillRect(x0 + 21, y0 + 13, 6, 4);
+    // Pontos brilhantes (luminescência)
+    ctx.fillStyle = corBrilho;
+    ctx.fillRect(x0 + 7,  y0 + 12, 2, 2);
+    ctx.fillRect(x0 + 15, y0 + 8,  2, 2);
+    ctx.fillRect(x0 + 23, y0 + 14, 2, 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 7,  y0 + 12, 1, 1);
+    ctx.fillRect(x0 + 15, y0 + 8,  1, 1);
+    ctx.fillRect(x0 + 23, y0 + 14, 1, 1);
+    // Solo escuro
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+  }
+
   // Genérico: pinta tronco descascado (anéis horizontais, sem casca)
   function pintarStrippedLog(idx, corBase, corAnel, corHigh) {
     const col = idx % COLS;
@@ -6283,6 +6315,15 @@ function criarAtlas() {
   pintarPlantaVertical(361, '#8d6e63', '#a1887f', '#5d4037', false);        // dead bush (marrom seco)
   pintarPlantaVertical(362, '#7cb342', '#9ccc65', '#33691e', true);         // tall grass (verde claro)
   pintarPlantaVertical(363, '#33691e', '#558b2f', '#1b5e20', false);        // fern (verde escuro)
+  // Sprint 12: oceano + corais (cells 364-371)
+  pintarPlantaVertical(364, '#558b2f', '#7cb342', '#33691e', true);   // kelp (alta)
+  pintarPlantaVertical(365, '#66bb6a', '#9ccc65', '#388e3c', false);  // seagrass (curta)
+  pintarCoral(366, '#1565c0', '#0d47a1', '#42a5f5');                  // tube coral (azul)
+  pintarCoral(367, '#f06292', '#c2185b', '#f48fb1');                  // brain coral (rosa)
+  pintarCoral(368, '#c62828', '#8b0000', '#ef5350');                  // fire coral (vermelho)
+  pintarCoral(369, '#fdd835', '#f57f17', '#fff176');                  // horn coral (amarelo)
+  pintarCoral(370, '#ab47bc', '#6a1b9a', '#ce93d8');                  // bubble coral (roxo)
+  pintarMinerio(371, '#a1887f', '#6d4c41', '#d7b57c');                // raw iron block (textura ferro bruto)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6804,6 +6845,15 @@ function criarAtlas() {
   mapa[BLOCO.DEAD_BUSH]             = { top: 361, side: 361, bottom: 361 };
   mapa[BLOCO.TALL_GRASS]            = { top: 362, side: 362, bottom: 362 };
   mapa[BLOCO.FERN]                  = { top: 363, side: 363, bottom: 363 };
+  // Sprint 12: oceano + corais (cells 364-371)
+  mapa[BLOCO.KELP]                  = { top: 364, side: 364, bottom: 364 };
+  mapa[BLOCO.SEAGRASS]              = { top: 365, side: 365, bottom: 365 };
+  mapa[BLOCO.TUBE_CORAL]            = { top: 366, side: 366, bottom: 366 };
+  mapa[BLOCO.BRAIN_CORAL]           = { top: 367, side: 367, bottom: 367 };
+  mapa[BLOCO.FIRE_CORAL]            = { top: 368, side: 368, bottom: 368 };
+  mapa[BLOCO.HORN_CORAL]            = { top: 369, side: 369, bottom: 369 };
+  mapa[BLOCO.BUBBLE_CORAL]          = { top: 370, side: 370, bottom: 370 };
+  mapa[BLOCO.RAW_IRON_BLOCK]        = { top: 371, side: 371, bottom: 371 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

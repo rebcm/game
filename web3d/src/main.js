@@ -993,6 +993,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.DEAD_BUSH, q: 16 });
   state.inv.adicionar({ b: BLOCO.TALL_GRASS, q: 16 });
   state.inv.adicionar({ b: BLOCO.FERN, q: 16 });
+  // Sprint 12: oceano + corais + raw iron
+  state.inv.adicionar({ b: BLOCO.KELP, q: 16 });
+  state.inv.adicionar({ b: BLOCO.SEAGRASS, q: 16 });
+  state.inv.adicionar({ b: BLOCO.TUBE_CORAL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BRAIN_CORAL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.FIRE_CORAL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.HORN_CORAL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BUBBLE_CORAL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.RAW_IRON_BLOCK, q: 4 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
