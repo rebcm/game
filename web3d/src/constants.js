@@ -175,8 +175,16 @@ export const BLOCO = {
   PRISMARINE:    129,
   PRISMARINE_BRK:130,
   SEA_LANTERN:   131,
+  SLIME_BLOCK:   132,
+  CRYING_OBSIDIAN:133,
+  NETHER_WART_R: 134,
+  NETHER_WART_A: 135,
+  SHROOMLIGHT:   136,
+  END_BRICK:     137,
+  PURPUR_BLOCK:  138,
+  PURPUR_PILLAR: 139,
 };
-export const N_BLOCOS = 132;
+export const N_BLOCOS = 140;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -319,6 +327,14 @@ export const BLOCO_INFO = {
   [BLOCO.PRISMARINE]:    { nome: 'Prismarine',       solido: true,  emiteLuz: 0,  cor: 0x4db6ac, lateral: 0x00897b },
   [BLOCO.PRISMARINE_BRK]:{ nome: 'Tijolo Prismarine',solido: true,  emiteLuz: 0,  cor: 0x009688, lateral: 0x00695c },
   [BLOCO.SEA_LANTERN]:   { nome: 'Sea Lantern',      solido: true,  emiteLuz: 15, cor: 0xb2dfdb, lateral: 0x80cbc4 },
+  [BLOCO.SLIME_BLOCK]:   { nome: 'Bloco de Slime',   solido: true,  emiteLuz: 0,  cor: 0x8bc34a, lateral: 0x558b2f },
+  [BLOCO.CRYING_OBSIDIAN]:{nome:'Obsidiana Chorando',solido: true,  emiteLuz: 10, cor: 0x4a148c, lateral: 0x311b92 },
+  [BLOCO.NETHER_WART_R]: { nome: 'Nether Wart Verm.',solido: true,  emiteLuz: 0,  cor: 0x6a0d0d, lateral: 0x4a0707 },
+  [BLOCO.NETHER_WART_A]: { nome: 'Warped Wart Azul', solido: true,  emiteLuz: 0,  cor: 0x0d6a6a, lateral: 0x074a4a },
+  [BLOCO.SHROOMLIGHT]:   { nome: 'Shroomlight',      solido: true,  emiteLuz: 15, cor: 0xff9800, lateral: 0xf57c00 },
+  [BLOCO.END_BRICK]:     { nome: 'Tijolo do End',    solido: true,  emiteLuz: 0,  cor: 0xe8d886, lateral: 0xc0a866 },
+  [BLOCO.PURPUR_BLOCK]:  { nome: 'Purpur',           solido: true,  emiteLuz: 0,  cor: 0xab47bc, lateral: 0x7b1fa2 },
+  [BLOCO.PURPUR_PILLAR]: { nome: 'Pilar Purpur',     solido: true,  emiteLuz: 0,  cor: 0xab47bc, lateral: 0x7b1fa2 },
 };
 
 export const ICONE = {
@@ -643,6 +659,22 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRISMARINE_SHARD, q: 9}], saida: {b: BLOCO.PRISMARINE_BRK, q: 1}, wb: true },
   // Sea Lantern: 4 prismarine + 5 tinta_glow → 1 sea lantern
   { custos: [{b: BLOCO.PRISMARINE, q: 4}, {i: ITEM.TINTA_GLOW, q: 5}], saida: {b: BLOCO.SEA_LANTERN, q: 1}, wb: true },
+  // Slime block: 9 slimeballs (paridade MC)
+  { custos: [{i: ITEM.SLIMEBALL, q: 9}], saida: {b: BLOCO.SLIME_BLOCK, q: 1}, wb: true },
+  // Crying Obsidian: 1 obsidiana + 1 ender pearl
+  { custos: [{b: BLOCO.OBSIDIANA, q: 1}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.CRYING_OBSIDIAN, q: 1}, wb: true },
+  // Nether Wart Block (vermelho): 9 favos de mel (proxy)
+  { custos: [{i: ITEM.FAVO_MEL, q: 9}], saida: {b: BLOCO.NETHER_WART_R, q: 1}, wb: true },
+  // Warped Wart Block (azul): 9 tinta glow
+  { custos: [{i: ITEM.TINTA_GLOW, q: 9}], saida: {b: BLOCO.NETHER_WART_A, q: 1}, wb: true },
+  // Shroomlight: 4 cogumelo vermelho + 4 brasa (carvao) → 1
+  { custos: [{i: ITEM.COGUMELO_R, q: 4}, {i: ITEM.CARVAO, q: 4}], saida: {b: BLOCO.SHROOMLIGHT, q: 1}, wb: true },
+  // End Brick: 4 end stone → 4 tijolos
+  { custos: [{b: BLOCO.END_STONE, q: 4}], saida: {b: BLOCO.END_BRICK, q: 4}, wb: true },
+  // Purpur: 4 ender pearl + 4 end stone → 4 purpur
+  { custos: [{i: ITEM.ENDER_PEARL, q: 4}, {b: BLOCO.END_STONE, q: 4}], saida: {b: BLOCO.PURPUR_BLOCK, q: 4}, wb: true },
+  // Purpur Pillar: 2 purpur → 2 pilares
+  { custos: [{b: BLOCO.PURPUR_BLOCK, q: 2}], saida: {b: BLOCO.PURPUR_PILLAR, q: 2}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

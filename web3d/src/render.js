@@ -1030,6 +1030,151 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Slime Block: verde gelatinoso com padrão de bolhas + reflexos
+  function pintarSlimeBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8bc34a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Bolhas escuras (efeito gelatinoso)
+    ctx.fillStyle = '#558b2f';
+    const bolhas = [
+      { x: 6, y: 8, r: 5 },
+      { x: 18, y: 6, r: 4 },
+      { x: 22, y: 18, r: 5 },
+      { x: 4, y: 22, r: 4 },
+      { x: 14, y: 22, r: 3 },
+    ];
+    for (const b of bolhas) {
+      ctx.fillRect(x0 + b.x, y0 + b.y, b.r, b.r);
+    }
+    // Highlights claros (brilho gelatinoso translúcido)
+    ctx.fillStyle = '#aed581';
+    for (const b of bolhas) {
+      ctx.fillRect(x0 + b.x, y0 + b.y, 1, 1);
+      ctx.fillRect(x0 + b.x + 1, y0 + b.y + 1, 1, 1);
+    }
+    // Reflexo branco diagonal
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 3, y0 + 3, 3, 1);
+    ctx.fillRect(x0 + 4, y0 + 4, 2, 1);
+    // Borda escura
+    ctx.fillStyle = '#33691e';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Crying Obsidian: obsidiana com gotas roxo-claro caindo
+  function pintarCryingObsidian(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base obsidiana (roxo-escuro)
+    ctx.fillStyle = '#311b92';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Manchas mais escuras
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#1a0a4a', 0.45, 4, 2, idx * 9301 + 49297);
+    // 4 gotas roxo-claro caindo (com cauda vertical)
+    const gotas = [{ x: 6, y: 5 }, { x: 14, y: 8 }, { x: 22, y: 4 }, { x: 26, y: 14 }];
+    for (const g of gotas) {
+      ctx.fillStyle = '#9c27b0';
+      ctx.fillRect(x0 + g.x, y0 + g.y, 3, 3);
+      ctx.fillStyle = '#ba68c8';
+      ctx.fillRect(x0 + g.x + 1, y0 + g.y + 1, 1, 1);
+      // Cauda da gota descendo
+      ctx.fillStyle = '#7b1fa2';
+      ctx.fillRect(x0 + g.x + 1, y0 + g.y + 4, 1, 6);
+    }
+    // Brilho central (energia)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 7, y0 + 6, 1, 1);
+    ctx.fillRect(x0 + 23, y0 + 5, 1, 1);
+  }
+
+  // Nether Wart Block: cor sólida com padrão orgânico (textura tipo musgo)
+  function pintarNetherWart(idx, base, escuro, claro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Textura orgânica (manchas escuras + claras)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.50, 4, 3, seed);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.40, 4, 2, seed + 4441);
+    // Pontinhos brilhantes (esporos)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 7, 1, seed + 7331);
+  }
+
+  // Shroomlight: laranja brilhante com padrão de poros
+  function pintarShroomlight(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de poros radial (saindo do centro)
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Anéis radiais (poros do fungo)
+    ctx.fillStyle = '#f57c00';
+    for (const r of [4, 8]) {
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, 1);
+      ctx.fillRect(x0 + 16 - r, y0 + 16 + r - 1, r * 2, 1);
+      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 1, r * 2);
+      ctx.fillRect(x0 + 16 + r - 1, y0 + 16 - r, 1, r * 2);
+    }
+    // Pontos brilhantes ao redor (esporos)
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffeb3b', 0.20, 5, 1, idx * 9301 + 49297);
+  }
+
+  // End Brick: tijolos amarelos do end com mortar escuro
+  function pintarEndBrick(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#e8d886';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Mortar escuro entre tijolos
+    ctx.fillStyle = '#a08254';
+    ctx.fillRect(x0, y0 + 15, CELL, 2);
+    ctx.fillRect(x0 + 10, y0,      2, 15);
+    ctx.fillRect(x0 + 22, y0,      2, 15);
+    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
+    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
+    // Highlights claros
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff8e1', 0.20, 5, 1, idx * 9301 + 49297);
+  }
+
+  // Purpur: roxo manchado com padrão diamante
+  function pintarPurpur(idx, pilar) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#7b1fa2';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de manchas claras
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ab47bc', 0.50, 4, 2, idx * 9301 + 49297);
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#e1bee7', 0.30, 5, 1, idx * 9301 + 7331);
+    if (pilar) {
+      // Pilar: linhas verticais nas bordas (efeito coluna)
+      ctx.fillStyle = '#4a148c';
+      ctx.fillRect(x0 + 4,  y0, 1, CELL);
+      ctx.fillRect(x0 + CELL - 5, y0, 1, CELL);
+      ctx.fillStyle = '#ce93d8';
+      ctx.fillRect(x0 + 6,  y0, 1, CELL);
+      ctx.fillRect(x0 + CELL - 7, y0, 1, CELL);
+    }
+  }
+
   // Prismarine: turquesa com padrão tabuleiro xadrez sutil
   function pintarPrismarine(idx, base, escuro, claro, brick) {
     const col = idx % COLS;
@@ -2475,6 +2620,14 @@ function criarAtlas() {
   pintarPrismarine(128, '#4db6ac', '#00897b', '#80cbc4', false); // prismarine
   pintarPrismarine(129, '#009688', '#00695c', '#4db6ac', true);  // prismarine bricks
   pintarSeaLantern(130);                                          // sea lantern
+  pintarSlimeBlock(131);                                          // slime block
+  pintarCryingObsidian(132);                                      // crying obsidian
+  pintarNetherWart(133, '#6a0d0d', '#3d0707', '#a01818');         // nether wart vermelho
+  pintarNetherWart(134, '#0d6a6a', '#073d3d', '#18a0a0');         // warped wart azul
+  pintarShroomlight(135);                                         // shroomlight
+  pintarEndBrick(136);                                            // end brick
+  pintarPurpur(137, false);                                       // purpur block
+  pintarPurpur(138, true);                                        // purpur pillar
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2611,6 +2764,14 @@ function criarAtlas() {
   mapa[BLOCO.PRISMARINE]     = { top: 128, side: 128, bottom: 128 };
   mapa[BLOCO.PRISMARINE_BRK] = { top: 129, side: 129, bottom: 129 };
   mapa[BLOCO.SEA_LANTERN]    = { top: 130, side: 130, bottom: 130 };
+  mapa[BLOCO.SLIME_BLOCK]    = { top: 131, side: 131, bottom: 131 };
+  mapa[BLOCO.CRYING_OBSIDIAN]= { top: 132, side: 132, bottom: 132 };
+  mapa[BLOCO.NETHER_WART_R]  = { top: 133, side: 133, bottom: 133 };
+  mapa[BLOCO.NETHER_WART_A]  = { top: 134, side: 134, bottom: 134 };
+  mapa[BLOCO.SHROOMLIGHT]    = { top: 135, side: 135, bottom: 135 };
+  mapa[BLOCO.END_BRICK]      = { top: 136, side: 136, bottom: 136 };
+  mapa[BLOCO.PURPUR_BLOCK]   = { top: 137, side: 137, bottom: 137 };
+  mapa[BLOCO.PURPUR_PILLAR]  = { top: 138, side: 138, bottom: 138 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
