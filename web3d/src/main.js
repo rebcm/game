@@ -535,6 +535,8 @@ function init() {
   console.log(`[quality] tier=${q.tier} (auto=${q.detectado}, mode=${q.modo})`,
               `score: mem=${q.info.mem}GB cpu=${q.info.cpu} mob=${q.info.isMobile} gpu=${q.info.gpuInfo}`);
   // Hotbar inicial
+  // 🏆 MARCO 1000 BLOCOS — Trono Dourado Supremo!
+  state.inv.adicionar({ b: BLOCO.MILESTONE_1000, q: 1 });
   state.inv.adicionar({ b: BLOCO.GRAMA, q: 64 });
   state.inv.adicionar({ b: BLOCO.TERRA, q: 64 });
   state.inv.adicionar({ b: BLOCO.PEDRA, q: 64 });

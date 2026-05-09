@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 59, CELL = 32;
+  const COLS = 8, ROWS = 60, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3290,6 +3290,68 @@ function criarAtlas() {
     }
   }
 
+  // 🏆 MARCO 1000! Trono Dourado Supremo — pintor especial icônico
+  function pintarTrono1000(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base vermelha real
+    ctx.fillStyle = '#8b0000';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de tijolos dourados
+    ctx.fillStyle = '#fdd835';
+    for (let i = 0; i < CELL; i += 4) {
+      for (let j = 0; j < CELL; j += 4) {
+        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 4, 4);
+      }
+    }
+    // Coroa central (forma de C)
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 8,  y0 + 4,  16, 4);   // base coroa
+    ctx.fillRect(x0 + 8,  y0 + 8,  4,  6);   // pico esquerda
+    ctx.fillRect(x0 + 14, y0 + 6,  4,  8);   // pico central (alto)
+    ctx.fillRect(x0 + 20, y0 + 8,  4,  6);   // pico direita
+    // Joias coloridas na coroa
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 9,  y0 + 5,  2, 2);
+    ctx.fillRect(x0 + 21, y0 + 5,  2, 2);
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(x0 + 15, y0 + 5,  2, 2);
+    // "1000" em formato simples (centro)
+    ctx.fillStyle = '#fff8e1';
+    // 1
+    ctx.fillRect(x0 + 7,  y0 + 18, 1, 6);
+    ctx.fillRect(x0 + 6,  y0 + 19, 3, 1);
+    ctx.fillRect(x0 + 6,  y0 + 23, 3, 1);
+    // 0
+    ctx.fillRect(x0 + 11, y0 + 18, 4, 1);
+    ctx.fillRect(x0 + 11, y0 + 23, 4, 1);
+    ctx.fillRect(x0 + 11, y0 + 19, 1, 4);
+    ctx.fillRect(x0 + 14, y0 + 19, 1, 4);
+    // 0
+    ctx.fillRect(x0 + 17, y0 + 18, 4, 1);
+    ctx.fillRect(x0 + 17, y0 + 23, 4, 1);
+    ctx.fillRect(x0 + 17, y0 + 19, 1, 4);
+    ctx.fillRect(x0 + 20, y0 + 19, 1, 4);
+    // 0
+    ctx.fillRect(x0 + 23, y0 + 18, 4, 1);
+    ctx.fillRect(x0 + 23, y0 + 23, 4, 1);
+    ctx.fillRect(x0 + 23, y0 + 19, 1, 4);
+    ctx.fillRect(x0 + 26, y0 + 19, 1, 4);
+    // Brilho supremo (4 cantos com pontos brancos)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 1,  y0 + 1,  2, 2);
+    ctx.fillRect(x0 + 29, y0 + 1,  2, 2);
+    ctx.fillRect(x0 + 1,  y0 + 29, 2, 2);
+    ctx.fillRect(x0 + 29, y0 + 29, 2, 2);
+    // Borda externa dourada
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
   // 🎯 Marco 500! Gilded Blackstone — preto com manchas douradas brilhantes (Nether)
   function pintarGildedBlackstone(idx) {
     const col = idx % COLS;
@@ -6505,6 +6567,8 @@ function criarAtlas() {
   pintar(465, '#fff8e1', '#eceff1', 0.40); // haste cogumelo
   pintar(466, '#33691e', '#1b5e20', 0.45); // alga seca
   pintar(467, '#9ccc65', '#7cb342', 0.45); // broto bambu
+  // 🏆 MARCO 1000! Trono dourado supremo (cell 468)
+  pintarTrono1000(468);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -7527,6 +7591,41 @@ function criarAtlas() {
   mapa[BLOCO.HANGING_SIGN_DARK]     = { top: 349, side: 349, bottom: 349 };
   mapa[BLOCO.HANGING_SIGN_CHERRY]   = { top: 300, side: 300, bottom: 300 };
   mapa[BLOCO.HANGING_SIGN_MANGROVE] = { top: 298, side: 298, bottom: 298 };
+  // 🎯🎉 SPRINT 33 FINAL — MARCO 1000 BLOCOS! (atlas reusa cells; #999 usa cell 468 nova)
+  mapa[BLOCO.TROFEU_BRONZE]         = { top: 10,  side: 10,  bottom: 10  };
+  mapa[BLOCO.TROFEU_PRATA]          = { top: 117, side: 117, bottom: 117 };
+  mapa[BLOCO.TROFEU_OURO]           = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.TROFEU_DIAMANTE]       = { top: 119, side: 119, bottom: 119 };
+  mapa[BLOCO.TROFEU_NETHERITE]      = { top: 374, side: 374, bottom: 374 };
+  mapa[BLOCO.ESTATUA_REBECA]        = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.BOLO_FESTA]            = { top: 37,  side: 38,  bottom: 38  };
+  mapa[BLOCO.FOGUETE_DOURADO]       = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.RELICARIO]             = { top: 24,  side: 24,  bottom: 24  };
+  mapa[BLOCO.TOTEM_VITORIA]         = { top: 41,  side: 41,  bottom: 41  };
+  mapa[BLOCO.GLOWSTONE_LISO]        = { top: 12,  side: 12,  bottom: 12  };
+  mapa[BLOCO.BEACON_DOURADO]        = { top: 41,  side: 41,  bottom: 41  };
+  mapa[BLOCO.CRISTAL_LUNAR]         = { top: 102, side: 102, bottom: 102 };
+  mapa[BLOCO.CRISTAL_SOLAR]         = { top: 12,  side: 12,  bottom: 12  };
+  mapa[BLOCO.CRISTAL_ESTELAR]       = { top: 33,  side: 33,  bottom: 33  };
+  mapa[BLOCO.JOIA_REI]              = { top: 119, side: 119, bottom: 119 };
+  mapa[BLOCO.COROA_OURO]            = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.MAPA_TESOURO]          = { top: 252, side: 252, bottom: 252 };
+  mapa[BLOCO.BAU_CRISTAL]           = { top: 387, side: 387, bottom: 387 };
+  mapa[BLOCO.ARTEFATO_ANTIGO]       = { top: 257, side: 257, bottom: 257 };
+  mapa[BLOCO.ESPELHO_MAGICO]        = { top: 9,   side: 9,   bottom: 9   };
+  mapa[BLOCO.ORBE_PODER]            = { top: 319, side: 319, bottom: 319 };
+  mapa[BLOCO.RUNA_VITORIA]          = { top: 287, side: 287, bottom: 287 };
+  mapa[BLOCO.CETRO_REAL]            = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.TAPETE_VERMELHO]       = { top: 46,  side: 46,  bottom: 46  };
+  mapa[BLOCO.ESCUDO_DOURADO]        = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.BANDEIRA_FESTA]        = { top: 66,  side: 66,  bottom: 66  };
+  mapa[BLOCO.FONTE_LUZ]             = { top: 12,  side: 12,  bottom: 12  };
+  mapa[BLOCO.ESTRELA_SUPREMA]       = { top: 33,  side: 33,  bottom: 33  };
+  mapa[BLOCO.BLOCO_VITORIA]         = { top: 372, side: 372, bottom: 372 };
+  mapa[BLOCO.ESCADA_VITORIA]        = { top: 118, side: 118, bottom: 118 };
+  mapa[BLOCO.PEDESTAL_OURO]         = { top: 118, side: 118, bottom: 118 };
+  // 🏆 #999 — TRONO MARCO 1000!
+  mapa[BLOCO.MILESTONE_1000]        = { top: 468, side: 468, bottom: 468 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

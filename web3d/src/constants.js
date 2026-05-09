@@ -792,8 +792,19 @@ export const BLOCO = {
   SIGN_JUNGLE:         955, SIGN_DARK_OAK:       956, SIGN_CHERRY:         957, SIGN_MANGROVE:       958,
   HANGING_SIGN_OAK:    959, HANGING_SIGN_BIRCH:  960, HANGING_SIGN_SPRUCE: 961, HANGING_SIGN_ACACIA: 962,
   HANGING_SIGN_JUNGLE: 963, HANGING_SIGN_DARK:   964, HANGING_SIGN_CHERRY: 965, HANGING_SIGN_MANGROVE:966,
+  // 🎯🎉 SPRINT 33 FINAL — MARCO 1000 BLOCOS! (967-999)
+  TROFEU_BRONZE:       967, TROFEU_PRATA:        968, TROFEU_OURO:         969, TROFEU_DIAMANTE:     970,
+  TROFEU_NETHERITE:    971, ESTATUA_REBECA:      972, BOLO_FESTA:          973, FOGUETE_DOURADO:     974,
+  RELICARIO:           975, TOTEM_VITORIA:       976, GLOWSTONE_LISO:      977, BEACON_DOURADO:      978,
+  CRISTAL_LUNAR:       979, CRISTAL_SOLAR:       980, CRISTAL_ESTELAR:     981, JOIA_REI:            982,
+  COROA_OURO:          983, MAPA_TESOURO:        984, BAU_CRISTAL:         985, ARTEFATO_ANTIGO:     986,
+  ESPELHO_MAGICO:      987, ORBE_PODER:          988, RUNA_VITORIA:        989, CETRO_REAL:          990,
+  TAPETE_VERMELHO:     991, ESCUDO_DOURADO:      992, BANDEIRA_FESTA:      993, FONTE_LUZ:           994,
+  ESTRELA_SUPREMA:     995, BLOCO_VITORIA:       996, ESCADA_VITORIA:      997, PEDESTAL_OURO:       998,
+  // ⭐ #999 — BLOCO ICÔNICO MARCO 1000!
+  MILESTONE_1000:      999, // 🏆 Bloco trono dourado supremo
 };
-export const N_BLOCOS = 967;
+export const N_BLOCOS = 1000;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1813,6 +1824,41 @@ export const BLOCO_INFO = {
   [BLOCO.HANGING_SIGN_DARK]:   { nome: 'Placa Susp. C.E.', solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'plate' },
   [BLOCO.HANGING_SIGN_CHERRY]: { nome: 'Placa Susp. Cer.', solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'plate' },
   [BLOCO.HANGING_SIGN_MANGROVE]:{nome:'Placa Susp. Man.',  solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  // 🎯🎉 SPRINT 33 FINAL — MARCO 1000 BLOCOS! (967-999)
+  [BLOCO.TROFEU_BRONZE]:    { nome: 'Troféu Bronze',    solido: true, emiteLuz: 4,  cor: 0xa05a30, lateral: 0x7d3e1c, shape: 'flower' },
+  [BLOCO.TROFEU_PRATA]:     { nome: 'Troféu Prata',     solido: true, emiteLuz: 5,  cor: 0xeceff1, lateral: 0xbcaaa4, shape: 'flower' },
+  [BLOCO.TROFEU_OURO]:      { nome: 'Troféu Ouro',      solido: true, emiteLuz: 7,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'flower' },
+  [BLOCO.TROFEU_DIAMANTE]:  { nome: 'Troféu Diamante',  solido: true, emiteLuz: 9,  cor: 0x4dd0e1, lateral: 0x00838f, shape: 'flower' },
+  [BLOCO.TROFEU_NETHERITE]: { nome: 'Troféu Netherite', solido: true, emiteLuz: 12, cor: 0x424242, lateral: 0x212121, shape: 'flower' },
+  [BLOCO.ESTATUA_REBECA]:   { nome: 'Estátua Rebeca',   solido: true, emiteLuz: 8,  cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.BOLO_FESTA]:       { nome: 'Bolo de Festa',    solido: true, emiteLuz: 6,  cor: 0xf48fb1, lateral: 0xfafafa },
+  [BLOCO.FOGUETE_DOURADO]:  { nome: 'Foguete Dourado',  solido: true, emiteLuz: 10, cor: 0xfdd835, lateral: 0xf57f17, shape: 'flower' },
+  [BLOCO.RELICARIO]:        { nome: 'Relicário',        solido: true, emiteLuz: 8,  cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.TOTEM_VITORIA]:    { nome: 'Totem Vitória',    solido: true, emiteLuz: 10, cor: 0xfdd835, lateral: 0x66bb6a, shape: 'flower' },
+  [BLOCO.GLOWSTONE_LISO]:   { nome: 'Glowstone Lisa',   solido: true, emiteLuz: 15, cor: 0xfff176, lateral: 0xffeb3b },
+  [BLOCO.BEACON_DOURADO]:   { nome: 'Beacon Dourado',   solido: true, emiteLuz: 15, cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.CRISTAL_LUNAR]:    { nome: 'Cristal Lunar',    solido: true, emiteLuz: 12, cor: 0xeceff1, lateral: 0x9e9e9e, shape: 'flower' },
+  [BLOCO.CRISTAL_SOLAR]:    { nome: 'Cristal Solar',    solido: true, emiteLuz: 14, cor: 0xfdd835, lateral: 0xf57f17, shape: 'flower' },
+  [BLOCO.CRISTAL_ESTELAR]:  { nome: 'Cristal Estelar',  solido: true, emiteLuz: 13, cor: 0xfff8e1, lateral: 0x4fc3f7, shape: 'flower' },
+  [BLOCO.JOIA_REI]:         { nome: 'Joia do Rei',      solido: true, emiteLuz: 9,  cor: 0xc62828, lateral: 0xfdd835 },
+  [BLOCO.COROA_OURO]:       { nome: 'Coroa de Ouro',    solido: true, emiteLuz: 7,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'plate' },
+  [BLOCO.MAPA_TESOURO]:     { nome: 'Mapa Tesouro',     solido: true, emiteLuz: 0,  cor: 0xfff8e1, lateral: 0xa1875a, shape: 'plate' },
+  [BLOCO.BAU_CRISTAL]:      { nome: 'Baú de Cristal',   solido: true, emiteLuz: 6,  cor: 0xe1f5fe, lateral: 0xb3e5fc },
+  [BLOCO.ARTEFATO_ANTIGO]:  { nome: 'Artefato Antigo',  solido: true, emiteLuz: 4,  cor: 0xa05a30, lateral: 0x7d3e1c },
+  [BLOCO.ESPELHO_MAGICO]:   { nome: 'Espelho Mágico',   solido: true, emiteLuz: 8,  cor: 0xeceff1, lateral: 0x4fc3f7 },
+  [BLOCO.ORBE_PODER]:       { nome: 'Orbe do Poder',    solido: true, emiteLuz: 13, cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'flower' },
+  [BLOCO.RUNA_VITORIA]:     { nome: 'Runa Vitória',     solido: true, emiteLuz: 6,  cor: 0xfdd835, lateral: 0x4a148c },
+  [BLOCO.CETRO_REAL]:       { nome: 'Cetro Real',       solido: true, emiteLuz: 8,  cor: 0xfdd835, lateral: 0xc62828, shape: 'fence' },
+  [BLOCO.TAPETE_VERMELHO]:  { nome: 'Tapete Vermelho',  solido: true, emiteLuz: 0,  cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.ESCUDO_DOURADO]:   { nome: 'Escudo Dourado',   solido: true, emiteLuz: 5,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'plate' },
+  [BLOCO.BANDEIRA_FESTA]:   { nome: 'Bandeira Festa',   solido: true, emiteLuz: 3,  cor: 0xfdd835, lateral: 0xc62828 },
+  [BLOCO.FONTE_LUZ]:        { nome: 'Fonte de Luz',     solido: true, emiteLuz: 15, cor: 0xfff8e1, lateral: 0xfdd835 },
+  [BLOCO.ESTRELA_SUPREMA]:  { nome: 'Estrela Suprema',  solido: true, emiteLuz: 15, cor: 0xfff8e1, lateral: 0xfdd835, shape: 'flower' },
+  [BLOCO.BLOCO_VITORIA]:    { nome: 'Bloco da Vitória', solido: true, emiteLuz: 12, cor: 0xfdd835, lateral: 0xf57f17 },
+  [BLOCO.ESCADA_VITORIA]:   { nome: 'Escada da Vitória',solido: true, emiteLuz: 8,  cor: 0xfdd835, lateral: 0xf57f17, shape: 'stairs' },
+  [BLOCO.PEDESTAL_OURO]:    { nome: 'Pedestal de Ouro', solido: true, emiteLuz: 9,  cor: 0xfdd835, lateral: 0xf57f17 },
+  // 🏆 #999 — BLOCO TRONO MARCO 1000!
+  [BLOCO.MILESTONE_1000]:   { nome: '🏆 Trono 1000 Blocos', solido: true, emiteLuz: 15, cor: 0xfdd835, lateral: 0xc62828 },
 };
 
 export const ICONE = {
