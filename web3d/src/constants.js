@@ -212,8 +212,16 @@ export const BLOCO = {
   PORTAO_M:      164, // fence gate de madeira
   PORTAO_C:      165, // fence gate crimson
   SIGN_MADEIRA:  166, // placa
+  // Escadas (shape 'stairs') — reusam textura de blocos existentes
+  ESCADA_PEDRA:   167,
+  ESCADA_MADEIRA: 168,
+  ESCADA_TIJOLO:  169,
+  // Paredes (shape 'wall') — paredes baixinhas (cobblestone/brick)
+  PAREDE_PEDRA:   170,
+  PAREDE_TIJOLO:  171,
+  PAREDE_PAVIMENTO:172,
 };
-export const N_BLOCOS = 167;
+export const N_BLOCOS = 173;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -395,6 +403,14 @@ export const BLOCO_INFO = {
   [BLOCO.PORTAO_C]:      { nome: 'Portão Crimson',   solido: true,  emiteLuz: 0, cor: 0x8a3a4d, lateral: 0x5d2535, shape: 'fence' },
   // Placa
   [BLOCO.SIGN_MADEIRA]:  { nome: 'Placa',            solido: false, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63, shape: 'ladder' },
+  // Escadas (shape 'stairs' = slab inferior + meio cubo superior atrás)
+  [BLOCO.ESCADA_PEDRA]:   { nome: 'Escada Pedra',    solido: true,  emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'stairs' },
+  [BLOCO.ESCADA_MADEIRA]: { nome: 'Escada Madeira',  solido: true,  emiteLuz: 0, cor: 0xA1887F, lateral: 0x8D6E63, shape: 'stairs' },
+  [BLOCO.ESCADA_TIJOLO]:  { nome: 'Escada Tijolo',   solido: true,  emiteLuz: 0, cor: 0xE57373, lateral: 0xC62828, shape: 'stairs' },
+  // Paredes (shape 'wall' = pillar central mais alto que fence)
+  [BLOCO.PAREDE_PEDRA]:    { nome: 'Parede Pedra',    solido: true, emiteLuz: 0, cor: 0x9E9E9E, lateral: 0x757575, shape: 'wall' },
+  [BLOCO.PAREDE_TIJOLO]:   { nome: 'Parede Tijolo',   solido: true, emiteLuz: 0, cor: 0xE57373, lateral: 0xC62828, shape: 'wall' },
+  [BLOCO.PAREDE_PAVIMENTO]:{ nome: 'Parede Pavimento',solido: true, emiteLuz: 0, cor: 0x7a7a7a, lateral: 0x5e5e5e, shape: 'wall' },
 };
 
 export const ICONE = {
@@ -778,6 +794,14 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PAU, q: 4}, {b: BLOCO.CRIMSON_PLANKS, q: 2}], saida: {b: BLOCO.PORTAO_C, q: 1}, wb: true },
   // Placa: 6 pranchas + 1 pau → 3 placas
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {i: ITEM.PAU, q: 1}], saida: {b: BLOCO.SIGN_MADEIRA, q: 3}, wb: true },
+  // Escadas: 6 do material → 4 escadas (paridade MC stair recipe)
+  { custos: [{b: BLOCO.PEDRA, q: 6}],     saida: {b: BLOCO.ESCADA_PEDRA, q: 4}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 6}],   saida: {b: BLOCO.ESCADA_MADEIRA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO, q: 6}],    saida: {b: BLOCO.ESCADA_TIJOLO, q: 4}, wb: true },
+  // Paredes: 6 do material → 6 paredes
+  { custos: [{b: BLOCO.PEDRA, q: 6}],     saida: {b: BLOCO.PAREDE_PEDRA, q: 6}, wb: true },
+  { custos: [{b: BLOCO.TIJOLO, q: 6}],    saida: {b: BLOCO.PAREDE_TIJOLO, q: 6}, wb: true },
+  { custos: [{b: BLOCO.PAVIMENTO, q: 6}], saida: {b: BLOCO.PAREDE_PAVIMENTO, q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

@@ -3194,6 +3194,14 @@ function criarAtlas() {
   mapa[BLOCO.PORTAO_M]       = { top: 163, side: 163, bottom: 163 };
   mapa[BLOCO.PORTAO_C]       = { top: 164, side: 164, bottom: 164 };
   mapa[BLOCO.SIGN_MADEIRA]   = { top: 165, side: 165, bottom: 165 };
+  // Escadas: reusam textura dos blocos base (pedra=3, madeira topo=5/lado=6, tijolo=8)
+  mapa[BLOCO.ESCADA_PEDRA]   = { top: 3, side: 3, bottom: 3 };
+  mapa[BLOCO.ESCADA_MADEIRA] = { top: 5, side: 6, bottom: 5 };
+  mapa[BLOCO.ESCADA_TIJOLO]  = { top: 8, side: 8, bottom: 8 };
+  // Paredes: idem
+  mapa[BLOCO.PAREDE_PEDRA]    = { top: 3,  side: 3,  bottom: 3  };
+  mapa[BLOCO.PAREDE_TIJOLO]   = { top: 8,  side: 8,  bottom: 8  };
+  mapa[BLOCO.PAREDE_PAVIMENTO]= { top: 90, side: 90, bottom: 90 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
@@ -3733,6 +3741,40 @@ export class Renderer {
             addFace(SHADE.sideX,  idxSide, 3, x, y, z, x,   y,   z+d, -1,0,0,  0,0,-d,0,1,0);
             addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+1, y,   z+d,  0,0,1, -1,0,0, 0,1,0);
             addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x,   y,   z,    0,0,-1, 1,0,0, 0,1,0);
+            continue;
+          }
+          if (info.shape === 'stairs') {
+            // Escada: slab inferior (full XZ × 0.5 alta) + meio cubo
+            // superior atrás (XZ 0.5 traseiro × 0.5 alto). Visual de
+            // 2 degraus 0.5 cada (paridade Minecraft real, simplificado
+            // sem rotação por orientação — sempre vira pra +Z).
+            // === SLAB INFERIOR ===
+            addFace(SHADE.top,    idxTop, 0, x, y, z,  x,   y+0.5, z+0.5,  0,1,0,  1,0,0, 0,0,0.5); // topo do degrau frontal (z..z+0.5)
+            addFace(SHADE.bottom, idxBot, 1, x, y, z,  x,   y,     z+1,    0,-1,0, 1,0,0, 0,0,-1);
+            addFace(SHADE.sideX,  idxSide,2, x, y, z,  x+1, y,     z,      1,0,0,  0,0,1, 0,0.5,0);
+            addFace(SHADE.sideX,  idxSide,3, x, y, z,  x,   y,     z+1,   -1,0,0,  0,0,-1,0,0.5,0);
+            addFace(SHADE.sideZ,  idxSide,4, x, y, z,  x+1, y,     z+1,    0,0,1, -1,0,0, 0,0.5,0);
+            addFace(SHADE.sideZ,  idxSide,5, x, y, z,  x,   y,     z,      0,0,-1, 1,0,0, 0,0.5,0);
+            // === MEIO CUBO SUPERIOR (atrás, z+0.5..z+1) ===
+            addFace(SHADE.top,    idxTop, 0, x, y, z,  x,   y+1,   z+0.5,  0,1,0,  1,0,0, 0,0,0.5);
+            addFace(SHADE.sideX,  idxSide,2, x, y, z,  x+1, y+0.5, z+0.5,  1,0,0,  0,0,0.5, 0,0.5,0);
+            addFace(SHADE.sideX,  idxSide,3, x, y, z,  x,   y+0.5, z+1,   -1,0,0,  0,0,-0.5,0,0.5,0);
+            addFace(SHADE.sideZ,  idxSide,4, x, y, z,  x+1, y+0.5, z+1,    0,0,1, -1,0,0,  0,0.5,0);
+            // Face frontal do degrau superior (em z+0.5, y+0.5..y+1)
+            addFace(SHADE.sideZ,  idxSide,5, x, y, z,  x,   y+0.5, z+0.5,  0,0,-1, 1,0,0,  0,0.5,0);
+            continue;
+          }
+          if (info.shape === 'wall') {
+            // Pared baixinha: pillar central 0.5×1×0.5 (mais alta que fence
+            // 0.4×1×0.4, ainda atravessável visualmente — usado em decoração
+            // tipo muro de jardim)
+            const a = 0.25, b = 0.75, w = b - a;
+            addFace(SHADE.top,    idxTop,  0, x, y, z, x+a, y+1, z+a, 0,1,0,  w,0,0, 0,0,w);
+            addFace(SHADE.bottom, idxBot,  1, x, y, z, x+a, y,   z+b, 0,-1,0, w,0,0, 0,0,-w);
+            addFace(SHADE.sideX,  idxSide, 2, x, y, z, x+b, y,   z+a, 1,0,0,  0,0,w, 0,1,0);
+            addFace(SHADE.sideX,  idxSide, 3, x, y, z, x+a, y,   z+b,-1,0,0,  0,0,-w,0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 4, x, y, z, x+b, y,   z+b, 0,0,1, -w,0,0, 0,1,0);
+            addFace(SHADE.sideZ,  idxSide, 5, x, y, z, x+a, y,   z+a, 0,0,-1, w,0,0, 0,1,0);
             continue;
           }
           if (info.shape === 'torch') {
