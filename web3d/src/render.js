@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 28, CELL = 32;
+  const COLS = 8, ROWS = 29, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3593,6 +3593,10 @@ function criarAtlas() {
   pintarGlazed(219, '#1565c0', '#4fc3f7', '#0d47a1');             // glazed azul
   pintarGlazed(220, '#2e7d32', '#66bb6a', '#1b5e20');             // glazed verde
   pintarGlazed(221, '#f9a825', '#ffd54f', '#f57f17');             // glazed amarela
+  pintarGlazed(222, '#ff9800', '#ffb74d', '#e65100');             // glazed laranja
+  pintarGlazed(223, '#f06292', '#f48fb1', '#c2185b');             // glazed rosa
+  pintarGlazed(224, '#fafafa', '#ffffff', '#bdbdbd');             // glazed branca
+  pintarGlazed(225, '#424242', '#616161', '#000000');             // glazed preta
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3835,6 +3839,15 @@ function criarAtlas() {
   mapa[BLOCO.GLAZED_A]       = { top: 219, side: 219, bottom: 219 };
   mapa[BLOCO.GLAZED_V]       = { top: 220, side: 220, bottom: 220 };
   mapa[BLOCO.GLAZED_AM]      = { top: 221, side: 221, bottom: 221 };
+  mapa[BLOCO.GLAZED_LR]      = { top: 222, side: 222, bottom: 222 };
+  mapa[BLOCO.GLAZED_RS]      = { top: 223, side: 223, bottom: 223 };
+  mapa[BLOCO.GLAZED_BR]      = { top: 224, side: 224, bottom: 224 };
+  mapa[BLOCO.GLAZED_PR]      = { top: 225, side: 225, bottom: 225 };
+  // Lajes reusam texturas dos blocos base (cells existentes)
+  mapa[BLOCO.SLAB_ARENITO]   = { top: 85,  side: 85,  bottom: 85  };
+  mapa[BLOCO.SLAB_QUARTZO]   = { top: 54,  side: 54,  bottom: 54  };
+  mapa[BLOCO.SLAB_DEEPSLATE] = { top: 101, side: 101, bottom: 101 };
+  mapa[BLOCO.SLAB_BLACKSTONE]= { top: 100, side: 100, bottom: 100 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

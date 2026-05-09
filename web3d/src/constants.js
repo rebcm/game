@@ -285,8 +285,17 @@ export const BLOCO = {
   GLAZED_A:       232, // azul
   GLAZED_V:       233, // verde
   GLAZED_AM:      234, // amarela
+  GLAZED_LR:      235, // laranja
+  GLAZED_RS:      236, // rosa
+  GLAZED_BR:      237, // branca
+  GLAZED_PR:      238, // preta
+  // Lajes (slabs) de pedras especiais
+  SLAB_ARENITO:   239,
+  SLAB_QUARTZO:   240,
+  SLAB_DEEPSLATE: 241,
+  SLAB_BLACKSTONE:242,
 };
-export const N_BLOCOS = 235;
+export const N_BLOCOS = 243;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -542,6 +551,15 @@ export const BLOCO_INFO = {
   [BLOCO.GLAZED_A]:       { nome: 'Glazed Azul',      solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1 },
   [BLOCO.GLAZED_V]:       { nome: 'Glazed Verde',     solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20 },
   [BLOCO.GLAZED_AM]:      { nome: 'Glazed Amarela',   solido: true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.GLAZED_LR]:      { nome: 'Glazed Laranja',   solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100 },
+  [BLOCO.GLAZED_RS]:      { nome: 'Glazed Rosa',      solido: true, emiteLuz: 0, cor: 0xf06292, lateral: 0xc2185b },
+  [BLOCO.GLAZED_BR]:      { nome: 'Glazed Branca',    solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeceff1 },
+  [BLOCO.GLAZED_PR]:      { nome: 'Glazed Preta',     solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  // Lajes de pedras especiais (shape='slab')
+  [BLOCO.SLAB_ARENITO]:   { nome: 'Laje de Arenito',  solido: true, emiteLuz: 0, cor: 0xfdd8a0, lateral: 0xe6c389, shape: 'slab' },
+  [BLOCO.SLAB_QUARTZO]:   { nome: 'Laje de Quartzo',  solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.SLAB_DEEPSLATE]: { nome: 'Laje de Ardósia',  solido: true, emiteLuz: 0, cor: 0x4a4a52, lateral: 0x35353d, shape: 'slab' },
+  [BLOCO.SLAB_BLACKSTONE]:{ nome: 'Laje Blackstone',  solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1013,6 +1031,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.TERRACOTA_A, q: 1},  {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_A,  q: 1}, wb: false },
   { custos: [{b: BLOCO.TERRACOTA_V, q: 1},  {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_V,  q: 1}, wb: false },
   { custos: [{b: BLOCO.TERRACOTA_AM, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_AM, q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_LR, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_LR, q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_RX, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_RS, q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_BR, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_BR, q: 1}, wb: false },
+  { custos: [{b: BLOCO.TERRACOTA_PR, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.GLAZED_PR, q: 1}, wb: false },
+  // Lajes de pedras especiais (3 do material → 6 lajes, paridade MC)
+  { custos: [{b: BLOCO.ARENITO,    q: 3}], saida: {b: BLOCO.SLAB_ARENITO,    q: 6}, wb: true },
+  { custos: [{b: BLOCO.QUARTZO,    q: 3}], saida: {b: BLOCO.SLAB_QUARTZO,    q: 6}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE,  q: 3}], saida: {b: BLOCO.SLAB_DEEPSLATE,  q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE, q: 3}], saida: {b: BLOCO.SLAB_BLACKSTONE, q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
