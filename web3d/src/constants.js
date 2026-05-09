@@ -237,8 +237,16 @@ export const BLOCO = {
   FLOR_ROXA:      184,
   VASO_FLOR:      185,
   GRADE_FERRO:    186,
+  HOPPER:         187, // funil
+  DISPENSER:      188, // despachador
+  OBSERVER:       189, // observador
+  TOCHA_REDSTONE: 190, // tocha vermelha redstone
+  COGUMELO_VERM_P:191, // cogumelo vermelho pequeno (decoração)
+  COGUMELO_MARROM_P:192,
+  CAVEIRA:        193, // caveira de esqueleto
+  CRANIO_WITHER:  194, // crânio do wither
 };
-export const N_BLOCOS = 187;
+export const N_BLOCOS = 195;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -446,6 +454,14 @@ export const BLOCO_INFO = {
   [BLOCO.FLOR_ROXA]:    { nome: 'Allium',           solido: false, emiteLuz: 0, cor: 0xab47bc, lateral: 0x2e7d32, shape: 'flower' },
   [BLOCO.VASO_FLOR]:    { nome: 'Vaso',             solido: false, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'pot' },
   [BLOCO.GRADE_FERRO]:  { nome: 'Grade de Ferro',   solido: true,  emiteLuz: 0, cor: 0xcfd8dc, lateral: 0x90a4ae, shape: 'bars' },
+  [BLOCO.HOPPER]:       { nome: 'Funil',            solido: true,  emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.DISPENSER]:    { nome: 'Despachador',      solido: true,  emiteLuz: 0, cor: 0x6E6E6E, lateral: 0x424242 },
+  [BLOCO.OBSERVER]:     { nome: 'Observador',       solido: true,  emiteLuz: 0, cor: 0x4a4a4a, lateral: 0x2a2a2a },
+  [BLOCO.TOCHA_REDSTONE]:{ nome: 'Tocha Redstone', solido: false, emiteLuz: 7, cor: 0xc62828, lateral: 0x8b0000, shape: 'torch' },
+  [BLOCO.COGUMELO_VERM_P]:{nome:'Cogumelo Vermelho',solido: false, emiteLuz: 1, cor: 0xc62828, lateral: 0xfafafa, shape: 'flower' },
+  [BLOCO.COGUMELO_MARROM_P]:{nome:'Cogumelo Marrom',solido: false, emiteLuz: 1, cor: 0x6d4c41, lateral: 0xa1887f, shape: 'flower' },
+  [BLOCO.CAVEIRA]:      { nome: 'Caveira',          solido: false, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbdbdbd, shape: 'pot' },
+  [BLOCO.CRANIO_WITHER]:{ nome: 'Crânio Wither',    solido: false, emiteLuz: 2, cor: 0x424242, lateral: 0x212121, shape: 'pot' },
 };
 
 export const ICONE = {
@@ -852,6 +868,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.TIJOLO, q: 3}], saida: {b: BLOCO.VASO_FLOR, q: 1}, wb: true },
   // Grade de Ferro: 6 ferro → 16 grades
   { custos: [{i: ITEM.FERRO, q: 6}], saida: {b: BLOCO.GRADE_FERRO, q: 16}, wb: true },
+  // Hopper: 5 ferro + 1 baú
+  { custos: [{i: ITEM.FERRO, q: 5}, {b: BLOCO.BAU, q: 1}], saida: {b: BLOCO.HOPPER, q: 1}, wb: true },
+  // Dispenser: 7 pedra + 1 arco + 1 redstone
+  { custos: [{b: BLOCO.PEDRA, q: 7}, {i: ITEM.ARCO, q: 1}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.DISPENSER, q: 1}, wb: true },
+  // Observer: 6 pedra + 2 redstone + 1 quartzo
+  { custos: [{b: BLOCO.PEDRA, q: 6}, {i: ITEM.REDSTONE, q: 2}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.OBSERVER, q: 1}, wb: true },
+  // Tocha Redstone: 1 pau + 1 redstone
+  { custos: [{i: ITEM.PAU, q: 1}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.TOCHA_REDSTONE, q: 1}, wb: false },
+  // Caveira: drop do esqueleto (proxy: 4 ossos)
+  { custos: [{i: ITEM.OSSO, q: 4}], saida: {b: BLOCO.CAVEIRA, q: 1}, wb: true },
+  // Crânio Wither: 4 ossos + 1 carvão (proxy)
+  { custos: [{i: ITEM.OSSO, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.CRANIO_WITHER, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

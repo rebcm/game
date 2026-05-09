@@ -665,6 +665,14 @@ function init() {
   state.inv.adicionar({ b: BLOCO.FLOR_ROXA, q: 8 });
   state.inv.adicionar({ b: BLOCO.VASO_FLOR, q: 4 });
   state.inv.adicionar({ b: BLOCO.GRADE_FERRO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.HOPPER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.DISPENSER, q: 2 });
+  state.inv.adicionar({ b: BLOCO.OBSERVER, q: 2 });
+  state.inv.adicionar({ b: BLOCO.TOCHA_REDSTONE, q: 16 });
+  state.inv.adicionar({ b: BLOCO.COGUMELO_VERM_P, q: 8 });
+  state.inv.adicionar({ b: BLOCO.COGUMELO_MARROM_P, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CAVEIRA, q: 2 });
+  state.inv.adicionar({ b: BLOCO.CRANIO_WITHER, q: 1 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

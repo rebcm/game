@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 22, CELL = 32;
+  const COLS = 8, ROWS = 23, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1028,6 +1028,177 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
     ctx.fillRect(x0, y0, 2, CELL);
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+  }
+
+  // Hopper: caixa preta com buraco central (formato funil)
+  function pintarHopper(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda metálica
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Buraco central (funil convergente)
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Rebites nos cantos
+    ctx.fillStyle = '#616161';
+    for (const [cx, cy] of [[3, 3], [CELL-5, 3], [3, CELL-5], [CELL-5, CELL-5]]) {
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+    }
+  }
+
+  // Dispenser: pedra com face circular (mira) + ranhura
+  function pintarDispenser(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6E6E6E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído de pedra
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#5E5E5E', 0.30, 4, 2, idx * 9301 + 49297);
+    // Face circular escura (mira do dispenser)
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    // Núcleo (cruz central)
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + CELL/2 - 1, y0 + 11, 2, 10);
+    ctx.fillRect(x0 + 11, y0 + CELL/2 - 1, 10, 2);
+    // Brilho metálico no centro
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+  }
+
+  // Observer: pedra com 1 olho vermelho central
+  function pintarObserver(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#4a4a4a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Ruído de pedra escura
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#2a2a2a', 0.40, 4, 2, idx * 9301 + 49297);
+    // Olho vermelho central (sensor)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#ef5350';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#ff8a80';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    // Pupila preta
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Reflexo branco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 1);
+  }
+
+  // Tocha Redstone: igual tocha mas chama vermelha
+  function pintarTochaRedstone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cabo de madeira centralizado
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 14, y0 + 12, 4, 18);
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 14, y0 + 12, 1, 18);
+    // Topo vermelho (chama redstone)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 12, y0 + 4,  8, 9);
+    ctx.fillStyle = '#ef5350';
+    ctx.fillRect(x0 + 13, y0 + 5,  6, 7);
+    ctx.fillStyle = '#ff8a80';
+    ctx.fillRect(x0 + 14, y0 + 6,  4, 5);
+    // Núcleo brilhante branco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 7,  2, 2);
+    // Glow translúcido
+    ctx.fillStyle = 'rgba(255, 100, 100, 0.20)';
+    ctx.fillRect(x0 + 11, y0 + 3, 10, 11);
+  }
+
+  // Cogumelo pequeno: chapéu colorido + caule branco
+  function pintarCogumeloPeq(idx, corChapeu, comBolinhas) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Caule branco vertical
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 14);
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0 + 14, y0 + 14, 1, 14);
+    // Chapéu (semicírculo aproximado)
+    ctx.fillStyle = corChapeu;
+    ctx.fillRect(x0 + 8,  y0 + 6,  16, 8);
+    ctx.fillRect(x0 + 10, y0 + 4,  12, 2);
+    // Borda escura do chapéu
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 8,  y0 + 14, 16, 1);
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 10, y0 + 4,  12, 1);
+    if (comBolinhas) {
+      // Bolinhas brancas no chapéu (cogumelo amanita)
+      ctx.fillStyle = '#fafafa';
+      ctx.fillRect(x0 + 11, y0 + 8,  2, 2);
+      ctx.fillRect(x0 + 17, y0 + 7,  2, 2);
+      ctx.fillRect(x0 + 14, y0 + 11, 2, 2);
+      ctx.fillRect(x0 + 19, y0 + 11, 2, 2);
+    }
+  }
+
+  // Caveira de esqueleto: branca com 2 olhos pretos + boca
+  function pintarCaveira(idx, wither) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Crânio (cubo principal)
+    const corBase = wither ? '#424242' : '#eceff1';
+    const corSombra = wither ? '#212121' : '#bdbdbd';
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0 + 6, y0 + 6, 20, 20);
+    // Sombras
+    ctx.fillStyle = corSombra;
+    ctx.fillRect(x0 + 6,  y0 + 6,  20, 1);
+    ctx.fillRect(x0 + 6,  y0 + 25, 20, 1);
+    ctx.fillRect(x0 + 6,  y0 + 6,  1,  20);
+    ctx.fillRect(x0 + 25, y0 + 6,  1,  20);
+    // 2 olhos pretos grandes
+    const corOlho = wither ? '#1a1a1a' : '#000000';
+    ctx.fillStyle = corOlho;
+    ctx.fillRect(x0 + 9,  y0 + 11, 5, 5);
+    ctx.fillRect(x0 + 18, y0 + 11, 5, 5);
+    if (wither) {
+      // Olhos vermelhos para wither
+      ctx.fillStyle = '#c62828';
+      ctx.fillRect(x0 + 10, y0 + 12, 3, 3);
+      ctx.fillRect(x0 + 19, y0 + 12, 3, 3);
+    }
+    // Boca (linha horizontal preta com dentes)
+    ctx.fillStyle = corOlho;
+    ctx.fillRect(x0 + 9, y0 + 19, 14, 3);
+    // Dentes (linhas verticais cortando a boca)
+    ctx.fillStyle = corBase;
+    ctx.fillRect(x0 + 12, y0 + 19, 1, 3);
+    ctx.fillRect(x0 + 15, y0 + 19, 1, 3);
+    ctx.fillRect(x0 + 18, y0 + 19, 1, 3);
   }
 
   // TNT: vermelho com listras pretas + texto "TNT" branco
@@ -3159,6 +3330,14 @@ function criarAtlas() {
   pintarFlor(171, '#ab47bc', '#fdd835');                          // allium roxa
   pintarVasoFlor(172);                                             // vaso de flor
   pintarGradeFerro(173);                                           // grade de ferro
+  pintarHopper(174);                                               // hopper
+  pintarDispenser(175);                                            // dispenser
+  pintarObserver(176);                                             // observer
+  pintarTochaRedstone(177);                                        // tocha redstone
+  pintarCogumeloPeq(178, '#c62828', true);                        // cogumelo vermelho pequeno
+  pintarCogumeloPeq(179, '#6d4c41', false);                       // cogumelo marrom pequeno
+  pintarCaveira(180, false);                                       // caveira esqueleto
+  pintarCaveira(181, true);                                        // crânio wither
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3353,6 +3532,14 @@ function criarAtlas() {
   mapa[BLOCO.FLOR_ROXA]      = { top: 171, side: 171, bottom: 171 };
   mapa[BLOCO.VASO_FLOR]      = { top: 172, side: 172, bottom: 172 };
   mapa[BLOCO.GRADE_FERRO]    = { top: 173, side: 173, bottom: 173 };
+  mapa[BLOCO.HOPPER]         = { top: 174, side: 174, bottom: 174 };
+  mapa[BLOCO.DISPENSER]      = { top: 175, side: 175, bottom: 175 };
+  mapa[BLOCO.OBSERVER]       = { top: 176, side: 176, bottom: 176 };
+  mapa[BLOCO.TOCHA_REDSTONE] = { top: 177, side: 177, bottom: 177 };
+  mapa[BLOCO.COGUMELO_VERM_P]= { top: 178, side: 178, bottom: 178 };
+  mapa[BLOCO.COGUMELO_MARROM_P]= { top: 179, side: 179, bottom: 179 };
+  mapa[BLOCO.CAVEIRA]        = { top: 180, side: 180, bottom: 180 };
+  mapa[BLOCO.CRANIO_WITHER]  = { top: 181, side: 181, bottom: 181 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
