@@ -1379,7 +1379,13 @@ function loop(now) {
       bossBar.classList.add('hidden');
     }
   }
-  state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
+  // Luzes pontuais: throttle 4Hz (era cada frame). Varre 5×5 chunks
+  // procurando lights — operação custosa que não precisa rodar 60Hz
+  state._luzAcc = (state._luzAcc || 0) + dt;
+  if (state._luzAcc >= 0.25) {
+    state._luzAcc = 0;
+    state.renderer.atualizarLuzesPontuais(state.world, state.player.pos);
+  }
   state.renderer.atualizarSombraPlayer(state.world, state.player.pos);
   // Zoom: ativo se ITEM.LUNETA estiver selecionado E state._zoomLuneta=true
   const _selZoom = state.inv?.itemSelecionado?.();

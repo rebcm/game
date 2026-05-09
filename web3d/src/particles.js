@@ -921,6 +921,8 @@ export function atualizarAmbientBioma(dt) {
   _biomaAcc = 0;
   // Skip em condições de baixa visibilidade ou frame pesado
   if (state._heavyFrame) return;
+  // Skip em tier baixo (mobile fraco) — partículas ambiente são luxo
+  if (state.quality?.tier === 'low') return;
   // Só spawn se player está fora (céu visível) — não dentro de caverna
   const px = Math.floor(state.player.pos.x);
   const py = Math.floor(state.player.pos.y);

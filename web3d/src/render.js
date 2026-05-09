@@ -26,25 +26,43 @@ function criarAtlas() {
   // Fundo magenta (debug — qualquer célula não pintada vira ofensiva)
   ctx.fillStyle = '#ff00ff'; ctx.fillRect(0, 0, W, H);
 
-  // Pinta uma célula sólida com ruído suave estilo pixel art Minecraft.
-  function pintar(idx, corBase, corRuido = null, intensidadeRuido = 0.18) {
+  // ============================================================
+  // Stratified sampling: distribui pontos de cor SEM aglutinação.
+  // Divide a área em sub-células `bucket` e sortia 1 ponto por
+  // bucket com offset aleatório dentro dela. Resultado:
+  // distribuição uniforme estilo Poisson disk (sem clusters
+  // visíveis que aparecem com Math.random ou rng denso linear).
+  // ============================================================
+  function spawnPontosUniforme(x0, y0, w, h, cor, densidade = 0.5, bucket = 4, tamPonto = 1, seedInit = 1) {
+    ctx.fillStyle = cor;
+    let seed = seedInit | 0;
+    for (let by = 0; by < h; by += bucket) {
+      for (let bx = 0; bx < w; bx += bucket) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) >= densidade) continue;
+        // Offset dentro do bucket (1 ponto por bucket)
+        seed = (seed * 9301 + 49297) % 233280;
+        const ox = seed % Math.max(1, bucket - tamPonto);
+        seed = (seed * 9301 + 49297) % 233280;
+        const oy = seed % Math.max(1, bucket - tamPonto);
+        ctx.fillRect(x0 + bx + ox, y0 + by + oy, tamPonto, tamPonto);
+      }
+    }
+    return seed;
+  }
+
+  // Pinta uma célula sólida com ruído distribuído uniformemente
+  // (sem clusters de pontos pretos aglutinados — qualidade visual MC real).
+  function pintar(idx, corBase, corRuido = null, intensidadeRuido = 0.45) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
     if (corRuido) {
-      ctx.fillStyle = corRuido;
-      // Ruído determinístico por célula (noise pixelado)
-      let seed = idx * 9301 + 49297;
-      for (let py = 0; py < CELL; py += 2) {
-        for (let px = 0; px < CELL; px += 2) {
-          seed = (seed * 9301 + 49297) % 233280;
-          if ((seed / 233280) < intensidadeRuido) {
-            ctx.fillRect(x0 + px, y0 + py, 2, 2);
-          }
-        }
-      }
+      // Stratified: bucket 4×4 → max 64 pontos por célula 32×32, todos
+      // bem espaçados. Tamanho 2 pra ainda ser visível pixel-art.
+      spawnPontosUniforme(x0, y0, CELL, CELL, corRuido, intensidadeRuido, 4, 2, idx * 9301 + 49297);
     }
   }
 
@@ -78,17 +96,11 @@ function criarAtlas() {
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const r = seed / 233280;
-        if (r < intensity / 2)        ctx.fillStyle = dark;
-        else if (r < intensity)       ctx.fillStyle = light;
-        else                          continue;
-        ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
+    // Stratified sampling: dark (sombras) e light (highlights) distribuídos
+    // uniformemente sem aglutinação. Bucket 4×4 garante espaçamento.
+    const seed1 = idx * 9301 + 49297;
+    let seed = spawnPontosUniforme(x0, y0, CELL, CELL, dark,  intensity * 0.55, 4, 2, seed1);
+    seed     = spawnPontosUniforme(x0, y0, CELL, CELL, light, intensity * 0.55, 4, 2, seed + 7919);
     // Cracks: 2-3 linhas finas escuras zigue-zague (fissuras naturais)
     ctx.fillStyle = dark;
     for (let i = 0; i < 2; i++) {
@@ -373,17 +385,9 @@ function criarAtlas() {
         if (wave) ctx.fillRect(x0 + px, y0 + py, 1, 1);
       }
     }
-    // Grãos: pontos individuais 1×1 alternando claro/escuro
-    for (let py = 0; py < CELL; py++) {
-      for (let px = 0; px < CELL; px++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const r = seed / 233280;
-        if (r < 0.08)       ctx.fillStyle = '#FFEFA0'; // grão brilhante
-        else if (r < 0.18)  ctx.fillStyle = '#A5904A'; // grão escuro
-        else continue;
-        ctx.fillRect(x0 + px, y0 + py, 1, 1);
-      }
-    }
+    // Grãos uniformemente distribuídos (sem clusters)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFEFA0', 0.40, 3, 1, seed + 4421);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A5904A', 0.55, 3, 1, seed + 7331);
   }
 
   // Madeira topo: anéis concêntricos de log (paridade Minecraft oak).
@@ -1049,23 +1053,9 @@ function criarAtlas() {
       if (horizontal) ctx.fillRect(x0 + px, y0 + py, tam, 1);
       else ctx.fillRect(x0 + px, y0 + py, 1, tam);
     }
-    // Pontos brilhantes amarelos (carvões em brasa)
-    ctx.fillStyle = '#ffeb3b';
-    for (let i = 0; i < 6; i++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const px = (seed % CELL);
-      seed = (seed * 9301 + 49297) % 233280;
-      const py = (seed % CELL);
-      ctx.fillRect(x0 + px, y0 + py, 2, 2);
-    }
-    // Manchas vermelho-escuras pra textura rugosa
-    ctx.fillStyle = '#1a0000';
-    for (let py = 0; py < CELL; py += 4) {
-      for (let px = 0; px < CELL; px += 4) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 1, 1);
-      }
-    }
+    // Brasas amarelas + manchas escuras distribuídas uniformemente
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffeb3b', 0.40, 8, 2, seed + 3001);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#1a0000', 0.55, 4, 1, seed + 5001);
   }
 
   // Lanterna: estrutura escura de ferro com janela de vidro brilhante
@@ -1160,19 +1150,10 @@ function criarAtlas() {
     ctx.fillRect(x0 + 2,  y0 + 13, 6, 1);
     ctx.fillRect(x0 + 13, y0 + 13, 5, 1);
     ctx.fillRect(x0 + 24, y0 + 13, 5, 1);
-    // Manchas de oxidação (proporcional ao estágio)
+    // Manchas de oxidação distribuídas uniformemente (sem clusters)
     if (manchaOx > 0) {
-      let seed = idx * 9301 + 49297;
-      const corOx = '#5fb89e';
-      ctx.fillStyle = corOx;
-      const numManchas = Math.floor(20 * manchaOx);
-      for (let i = 0; i < numManchas; i++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const px = (seed % CELL);
-        seed = (seed * 9301 + 49297) % 233280;
-        const py = (seed % CELL);
-        ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#5fb89e', manchaOx * 0.7, 4, 2,
+        idx * 9301 + 49297);
     }
     // Borda escura sutil
     ctx.fillStyle = escuro;
@@ -1250,22 +1231,9 @@ function criarAtlas() {
       ctx.fillRect(x0, y0,            CELL, 1);
       ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     } else {
-      // Quartzo natural: ruído sutil + manchas claras + brilho central
-      ctx.fillStyle = '#eeeeee';
-      for (let py = 0; py < CELL; py += 2) {
-        for (let px = 0; px < CELL; px += 2) {
-          seed = (seed * 9301 + 49297) % 233280;
-          if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-        }
-      }
-      ctx.fillStyle = '#ffffff';
-      for (let i = 0; i < 8; i++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const px = (seed % CELL);
-        seed = (seed * 9301 + 49297) % 233280;
-        const py = (seed % CELL);
-        ctx.fillRect(x0 + px, y0 + py, 3, 3);
-      }
+      // Quartzo natural: ruído + brilhos cristalinos uniformes
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#eeeeee', 0.55, 4, 2, seed);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.40, 8, 3, seed + 9001);
     }
     // Borda escura sutil pra delimitar o bloco (todos)
     ctx.fillStyle = '#bdbdbd';
@@ -1300,30 +1268,16 @@ function criarAtlas() {
     ctx.fillRect(x0 + 19, y0 + 19, 3, 1);
   }
 
-  // Lã colorida (genérica): aplica padrão de fios curtos sobre cor base
+  // Lã colorida (genérica): padrão de fios distribuídos uniformemente
   function pintarLaColorida(idx, corBase, corClaro, corEscuro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Fios escuros (textura de lã)
-    let seed = idx * 9301 + 49297;
-    ctx.fillStyle = corEscuro;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.18) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
-    // Highlights claros
-    ctx.fillStyle = corClaro;
-    for (let py = 0; py < CELL; py += 3) {
-      for (let px = 0; px < CELL; px += 3) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 1, 1);
-      }
-    }
+    const seed1 = idx * 9301 + 49297;
+    let seed = spawnPontosUniforme(x0, y0, CELL, CELL, corEscuro, 0.55, 4, 2, seed1);
+    seed     = spawnPontosUniforme(x0, y0, CELL, CELL, corClaro, 0.45, 5, 1, seed + 4441);
   }
 
   // Estante de Livros: faces laterais com fileira de livros coloridos
