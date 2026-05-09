@@ -574,6 +574,11 @@ function init() {
   state.inv.adicionar({ b: BLOCO.TIJOLO_NETHER, q: 16 });
   state.inv.adicionar({ b: BLOCO.NETHER_CORTADO, q: 16 });
   state.inv.adicionar({ b: BLOCO.PAVIMENTO, q: 32 });
+  state.inv.adicionar({ b: BLOCO.GELO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.GELO_EMPACOTADO, q: 8 });
+  state.inv.adicionar({ b: BLOCO.GELO_AZUL, q: 4 });
+  state.inv.adicionar({ b: BLOCO.BASALTO, q: 16 });
+  state.inv.adicionar({ b: BLOCO.BASALTO_POLIDO, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_A, q: 4 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_V, q: 4 });

@@ -130,8 +130,13 @@ export const BLOCO = {
   TIJOLO_NETHER:  89, // nether brick (vermelho-escuro)
   NETHER_CORTADO: 90, // chiseled nether brick
   PAVIMENTO:      91, // cobblestone (pedras irregulares cinza)
+  GELO:           92, // gelo translúcido (visualmente azul claro)
+  GELO_EMPACOTADO:93, // packed ice (mais opaco, denso)
+  GELO_AZUL:      94, // blue ice (intenso)
+  BASALTO:        95, // basalto: rocha vulcânica escura
+  BASALTO_POLIDO: 96, // basalto polido (smooth)
 };
-export const N_BLOCOS = 92;
+export const N_BLOCOS = 97;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -232,6 +237,11 @@ export const BLOCO_INFO = {
   [BLOCO.TIJOLO_NETHER]: { nome: 'Tijolo do Nether', solido: true,  emiteLuz: 0,  cor: 0x4a0e0e, lateral: 0x2d0707 },
   [BLOCO.NETHER_CORTADO]:{ nome: 'Nether Cortado',  solido: true,  emiteLuz: 0,  cor: 0x4a0e0e, lateral: 0x2d0707 },
   [BLOCO.PAVIMENTO]:     { nome: 'Pavimento',        solido: true,  emiteLuz: 0,  cor: 0x7a7a7a, lateral: 0x5e5e5e },
+  [BLOCO.GELO]:          { nome: 'Gelo',             solido: true,  emiteLuz: 0,  cor: 0xb3e5fc, lateral: 0x90caf9 },
+  [BLOCO.GELO_EMPACOTADO]:{ nome: 'Gelo Empacotado', solido: true,  emiteLuz: 0,  cor: 0xc1d8ff, lateral: 0xa0c0ec },
+  [BLOCO.GELO_AZUL]:     { nome: 'Gelo Azul',        solido: true,  emiteLuz: 1,  cor: 0x40c4ff, lateral: 0x0288d1 },
+  [BLOCO.BASALTO]:       { nome: 'Basalto',          solido: true,  emiteLuz: 0,  cor: 0x424242, lateral: 0x2a2a2a },
+  [BLOCO.BASALTO_POLIDO]:{ nome: 'Basalto Polido',   solido: true,  emiteLuz: 0,  cor: 0x5a5a5a, lateral: 0x3a3a3a },
 };
 
 export const ICONE = {
@@ -487,6 +497,16 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.TIJOLO_NETHER, q: 4}], saida: {b: BLOCO.NETHER_CORTADO, q: 4}, wb: true },
   // Pavimento: 4 pedras → 4 pavimento (cobblestone — paridade quase invertida MC)
   { custos: [{b: BLOCO.PEDRA, q: 4}], saida: {b: BLOCO.PAVIMENTO, q: 4}, wb: true },
+  // Gelo: 9 neve → 1 gelo
+  { custos: [{b: BLOCO.NEVE, q: 9}], saida: {b: BLOCO.GELO, q: 1}, wb: true },
+  // Gelo Empacotado: 9 gelo → 1 empacotado (paridade MC)
+  { custos: [{b: BLOCO.GELO, q: 9}], saida: {b: BLOCO.GELO_EMPACOTADO, q: 1}, wb: true },
+  // Gelo Azul: 9 empacotado → 1 azul
+  { custos: [{b: BLOCO.GELO_EMPACOTADO, q: 9}], saida: {b: BLOCO.GELO_AZUL, q: 1}, wb: true },
+  // Basalto: 4 obsidiana + 1 carvão → 4 basalto
+  { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.BASALTO, q: 4}, wb: true },
+  // Basalto Polido: 4 basalto → 4 polido
+  { custos: [{b: BLOCO.BASALTO, q: 4}], saida: {b: BLOCO.BASALTO_POLIDO, q: 4}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

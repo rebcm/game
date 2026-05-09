@@ -1030,6 +1030,70 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Gelo: azul claro cristalino com reflexos brancos diagonais
+  function pintarGelo(idx, base, claro, escuro, intensidade = 1.0) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de cristais (linhas diagonais escuras)
+    ctx.fillStyle = escuro;
+    for (let i = 0; i < CELL; i += 6) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+      ctx.fillRect(x0, y0 + i, CELL, 1);
+    }
+    // Reflexos brancos (diagonais brilhantes)
+    ctx.fillStyle = claro;
+    for (let i = 0; i < CELL; i += 4) {
+      const k = Math.floor(i * intensidade);
+      if (k < CELL) {
+        ctx.fillRect(x0 + k, y0 + k, 2, 1);
+      }
+    }
+    // Pontos brancos brilhantes (estrelas no gelo)
+    ctx.fillStyle = '#ffffff';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.20 * intensidade, 6, 1, idx * 9301 + 49297);
+    // Borda
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Basalto: rocha vulcânica escura com listras verticais (caracteristica MC)
+  function pintarBasalto(idx, polido) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = polido ? '#5a5a5a' : '#424242';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    if (polido) {
+      // Polido: listras finas + bordas chanfradas
+      ctx.fillStyle = '#3a3a3a';
+      for (let py = 4; py < CELL; py += 6) {
+        ctx.fillRect(x0, y0 + py, CELL, 1);
+      }
+      ctx.fillStyle = '#7a7a7a';
+      ctx.fillRect(x0, y0, CELL, 1);
+      ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    } else {
+      // Padrão: faixas verticais escuras (basalto colunar real)
+      ctx.fillStyle = '#1a1a1a';
+      for (let px = 4; px < CELL; px += 6) {
+        ctx.fillRect(x0 + px, y0, 2, CELL);
+      }
+      // Highlights laterais (relevo)
+      ctx.fillStyle = '#5e5e5e';
+      for (let px = 7; px < CELL; px += 6) {
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
+      // Manchas escuras pequenas
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#0a0a0a', 0.25, 4, 1, idx * 9301 + 49297);
+    }
+  }
+
   // Arenito (sandstone): bege com grãos pseudo-aleatórios
   function pintarArenito(idx, variante) {
     const col = idx % COLS;
@@ -2019,6 +2083,11 @@ function criarAtlas() {
   pintarTijoloNether(88, false);                             // tijolo do nether
   pintarTijoloNether(89, true);                              // nether cortado
   pintarPavimento(90);                                       // pavimento (cobblestone)
+  pintarGelo(91, '#b3e5fc', '#ffffff', '#90caf9', 0.7);      // gelo padrão
+  pintarGelo(92, '#c1d8ff', '#ffffff', '#a0c0ec', 0.5);      // gelo empacotado
+  pintarGelo(93, '#40c4ff', '#ffffff', '#0288d1', 1.2);      // gelo azul intenso
+  pintarBasalto(94, false);                                  // basalto natural
+  pintarBasalto(95, true);                                   // basalto polido
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -2115,6 +2184,11 @@ function criarAtlas() {
   mapa[BLOCO.TIJOLO_NETHER]  = { top: 88, side: 88, bottom: 88 };
   mapa[BLOCO.NETHER_CORTADO] = { top: 89, side: 89, bottom: 89 };
   mapa[BLOCO.PAVIMENTO]      = { top: 90, side: 90, bottom: 90 };
+  mapa[BLOCO.GELO]           = { top: 91, side: 91, bottom: 91 };
+  mapa[BLOCO.GELO_EMPACOTADO]= { top: 92, side: 92, bottom: 92 };
+  mapa[BLOCO.GELO_AZUL]      = { top: 93, side: 93, bottom: 93 };
+  mapa[BLOCO.BASALTO]        = { top: 94, side: 94, bottom: 94 };
+  mapa[BLOCO.BASALTO_POLIDO] = { top: 95, side: 95, bottom: 95 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
