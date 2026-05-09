@@ -903,6 +903,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_LAPIS, q: 8 });
   state.inv.adicionar({ b: BLOCO.SLAB_BLOCO_LAPIS, q: 8 });
   state.inv.adicionar({ b: BLOCO.ESCADA_BLOCO_REDSTONE, q: 8 });
+  // Sprint paridade MC: 8 blocos novos (Respawn Anchor, Lodestone, Reinforced DS, Moss, Carpet, Dripleaf, Chorus, Piston)
+  state.inv.adicionar({ b: BLOCO.RESPAWN_ANCHOR, q: 1 });
+  state.inv.adicionar({ b: BLOCO.LODESTONE, q: 1 });
+  state.inv.adicionar({ b: BLOCO.REINFORCED_DS, q: 4 });
+  state.inv.adicionar({ b: BLOCO.MOSS_BLOCK, q: 16 });
+  state.inv.adicionar({ b: BLOCO.MOSS_CARPET, q: 16 });
+  state.inv.adicionar({ b: BLOCO.BIG_DRIPLEAF, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CHORUS_FLOWER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.PISTON, q: 4 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

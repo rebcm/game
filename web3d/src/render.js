@@ -1600,6 +1600,192 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
+  // Respawn Anchor: obsidiana com glowstone interna em camadas
+  function pintarRespawnAnchor(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#311b92';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#4a148c';
+    for (let i = 2; i < CELL - 2; i += 4) {
+      for (let j = 2; j < CELL - 2; j += 4) {
+        ctx.fillRect(x0 + i, y0 + j, 2, 2);
+      }
+    }
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#1a0a3a';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Lodestone: deepslate cinza com símbolo de bússola central
+  function pintarLodestone(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#bdbdbd';
+    for (let i = 0; i < CELL; i += 8) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+      ctx.fillRect(x0, y0 + i, CELL, 1);
+    }
+    ctx.fillStyle = '#616161';
+    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, CELL - 12);
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
+    // N/S/E/W (4 pequenas marcas)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 15, y0 + 9, 2, 6);
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(x0 + 15, y0 + 17, 2, 6);
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+  }
+
+  // Reinforced Deepslate: deepslate escuro com runas brilhantes (bloco do Warden)
+  function pintarReinforcedDS(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#2a2a2a';
+    for (let i = 0; i < CELL; i += 4) {
+      for (let j = 0; j < CELL; j += 4) {
+        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 4, 4);
+      }
+    }
+    // Runas verde-azuladas (efeito Warden)
+    ctx.fillStyle = '#00bcd4';
+    ctx.fillRect(x0 + 7, y0 + 8, 6, 1);
+    ctx.fillRect(x0 + 9, y0 + 9, 1, 6);
+    ctx.fillRect(x0 + 18, y0 + 18, 1, 6);
+    ctx.fillRect(x0 + 18, y0 + 22, 6, 1);
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 9, y0 + 11, 1, 1);
+    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Moss Block: musgo verde com manchas mais escuras
+  function pintarMossBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#558b2f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let s = idx * 9301 + 49297;
+    for (let i = 0; i < 60; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const pick = (s / 233280);
+      ctx.fillStyle = pick < 0.4 ? '#33691e' : pick < 0.7 ? '#7cb342' : '#1b5e20';
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Topo levemente mais claro (luz)
+    ctx.fillStyle = '#7cb342';
+    ctx.fillRect(x0, y0, CELL, 1);
+  }
+
+  // Big Dripleaf: planta tropical (haste verde + folha grande)
+  function pintarBigDripleaf(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2515';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Haste vertical
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 14, y0 + 12, 4, 18);
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 14, y0 + 12, 1, 18);
+    // Folha grande no topo
+    ctx.fillStyle = '#66bb6a';
+    ctx.fillRect(x0 + 6, y0 + 6, 20, 8);
+    ctx.fillStyle = '#43a047';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 4);
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 6, y0 + 12, 20, 1);
+    // Veias
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(x0 + 16, y0 + 6, 1, 7);
+    ctx.fillRect(x0 + 10, y0 + 9, 12, 1);
+  }
+
+  // Chorus Flower: planta do End (roxo + branca)
+  function pintarChorusFlower(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a0a2e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Bulbo central (roxo claro)
+    ctx.fillStyle = '#ce93d8';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#ab47bc';
+    ctx.fillRect(x0 + 11, y0 + 11, 10, 10);
+    // 4 pétalas (cantos)
+    ctx.fillStyle = '#e1bee7';
+    ctx.fillRect(x0 + 6,  y0 + 6,  6, 6);
+    ctx.fillRect(x0 + 20, y0 + 6,  6, 6);
+    ctx.fillRect(x0 + 6,  y0 + 20, 6, 6);
+    ctx.fillRect(x0 + 20, y0 + 20, 6, 6);
+    // Centro branco (estame)
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Sombras nos cantos das pétalas
+    ctx.fillStyle = '#6a1b9a';
+    ctx.fillRect(x0 + 7,  y0 + 7,  1, 4);
+    ctx.fillRect(x0 + 24, y0 + 7,  1, 4);
+    ctx.fillRect(x0 + 7,  y0 + 24, 1, 1);
+    ctx.fillRect(x0 + 24, y0 + 24, 1, 1);
+  }
+
+  // Pistão: madeira top + ferro central + base laranja
+  function pintarPiston(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base laranja-marrom
+    ctx.fillStyle = '#a1887f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    // Face frontal (face do pistão — superfície de madeira clara)
+    ctx.fillStyle = '#bcaaa4';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    ctx.fillStyle = '#fdd835';
+    // X central (parafusos)
+    ctx.fillRect(x0 + 14, y0 + 6, 4, 2);
+    ctx.fillRect(x0 + 14, y0 + 24, 4, 2);
+    ctx.fillRect(x0 + 6, y0 + 14, 2, 4);
+    ctx.fillRect(x0 + 24, y0 + 14, 2, 4);
+    // Vigas verticais (madeira escura)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
+    ctx.fillRect(x0 + CELL - 7, y0 + 6, 1, CELL - 12);
+    // Centro com placa de ferro
+    ctx.fillStyle = '#cfd8dc';
+    ctx.fillRect(x0 + 11, y0 + 11, 10, 10);
+    ctx.fillStyle = '#90a4ae';
+    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+  }
+
   // Bookshelf Chiseled: estante com 1 livro central destacado
   function pintarBookshelfChiseled(idx) {
     const col = idx % COLS;
@@ -4395,6 +4581,14 @@ function criarAtlas() {
   pintarShulkerCor(282, '#ff9800', '#e65100', '#ffb74d', '#bf360c'); // shulker laranja
   pintarShulkerCor(283, '#f06292', '#c2185b', '#f48fb1', '#880e4f'); // shulker rosa
   pintarCommandBlock(284);                                            // 🎯 Marco 400! Command Block
+  // Sprint paridade MC (cells 285-292)
+  pintarRespawnAnchor(285);
+  pintarLodestone(286);
+  pintarReinforcedDS(287);
+  pintarMossBlock(288);
+  pintarBigDripleaf(289);
+  pintarChorusFlower(290);
+  pintarPiston(291);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4826,6 +5020,15 @@ function criarAtlas() {
   mapa[BLOCO.ESCADA_BLOCO_LAPIS]    = { top: 121, side: 121, bottom: 121 };
   mapa[BLOCO.SLAB_BLOCO_LAPIS]      = { top: 121, side: 121, bottom: 121 };
   mapa[BLOCO.ESCADA_BLOCO_REDSTONE] = { top: 127, side: 127, bottom: 127 };
+  // Sprint paridade MC (cells 285-291; moss carpet reusa cell 288)
+  mapa[BLOCO.RESPAWN_ANCHOR]        = { top: 285, side: 285, bottom: 285 };
+  mapa[BLOCO.LODESTONE]             = { top: 286, side: 286, bottom: 286 };
+  mapa[BLOCO.REINFORCED_DS]         = { top: 287, side: 287, bottom: 287 };
+  mapa[BLOCO.MOSS_BLOCK]            = { top: 288, side: 288, bottom: 288 };
+  mapa[BLOCO.MOSS_CARPET]           = { top: 288, side: 288, bottom: 288 };
+  mapa[BLOCO.BIG_DRIPLEAF]          = { top: 289, side: 289, bottom: 289 };
+  mapa[BLOCO.CHORUS_FLOWER]         = { top: 290, side: 290, bottom: 290 };
+  mapa[BLOCO.PISTON]                = { top: 291, side: 291, bottom: 291 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

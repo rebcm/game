@@ -465,8 +465,17 @@ export const BLOCO = {
   ESCADA_BLOCO_LAPIS:  404,
   SLAB_BLOCO_LAPIS:    405,
   ESCADA_BLOCO_REDSTONE:406,
+  // Sprint paridade Minecraft (407-414)
+  RESPAWN_ANCHOR:      407, // respawn no Nether (obsidiana + glowstone)
+  LODESTONE:           408, // bússola aponta pra ele (deepslate liso central + bordas chiseled)
+  REINFORCED_DS:       409, // reinforced deepslate (bloco do Warden)
+  MOSS_BLOCK:          410, // bloco musgo (verde)
+  MOSS_CARPET:         411, // tapete musgo (slab)
+  BIG_DRIPLEAF:        412, // dripleaf grande (planta tropical)
+  CHORUS_FLOWER:       413, // flor do End
+  PISTON:              414, // pistão (madeira + ferro central)
 };
-export const N_BLOCOS = 407;
+export const N_BLOCOS = 415;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -895,6 +904,15 @@ export const BLOCO_INFO = {
   [BLOCO.ESCADA_BLOCO_LAPIS]:  { nome: 'Escada Bl. Lápis',   solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'stairs' },
   [BLOCO.SLAB_BLOCO_LAPIS]:    { nome: 'Laje Bl. Lápis',     solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
   [BLOCO.ESCADA_BLOCO_REDSTONE]:{nome:'Escada Bl. Redstone', solido: true, emiteLuz: 7, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
+  // Sprint paridade MC (407-414)
+  [BLOCO.RESPAWN_ANCHOR]:    { nome: 'Respawn Anchor',     solido: true, emiteLuz: 15, cor: 0x4a148c, lateral: 0x311b92 },
+  [BLOCO.LODESTONE]:         { nome: 'Lodestone',          solido: true, emiteLuz: 0,  cor: 0x9e9e9e, lateral: 0x616161 },
+  [BLOCO.REINFORCED_DS]:     { nome: 'Ardósia Reforçada',  solido: true, emiteLuz: 0,  cor: 0x2a2a2a, lateral: 0x1a1a1a },
+  [BLOCO.MOSS_BLOCK]:        { nome: 'Bloco Musgo',        solido: true, emiteLuz: 0,  cor: 0x558b2f, lateral: 0x33691e },
+  [BLOCO.MOSS_CARPET]:       { nome: 'Tapete Musgo',       solido: true, emiteLuz: 0,  cor: 0x558b2f, lateral: 0x33691e, shape: 'slab' },
+  [BLOCO.BIG_DRIPLEAF]:      { nome: 'Dripleaf Grande',    solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
+  [BLOCO.CHORUS_FLOWER]:     { nome: 'Flor Chorus',        solido: true, emiteLuz: 0,  cor: 0xab47bc, lateral: 0x6a1b9a, shape: 'flower' },
+  [BLOCO.PISTON]:            { nome: 'Pistão',             solido: true, emiteLuz: 0,  cor: 0xa1887f, lateral: 0x8d6e63 },
 };
 
 export const ICONE = {
@@ -1728,6 +1746,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.BLOCO_LAPIS, q: 6}],     saida: {b: BLOCO.ESCADA_BLOCO_LAPIS, q: 4}, wb: true },
   { custos: [{b: BLOCO.BLOCO_LAPIS, q: 3}],     saida: {b: BLOCO.SLAB_BLOCO_LAPIS, q: 6}, wb: true },
   { custos: [{b: BLOCO.BLOCO_REDSTONE, q: 6}],  saida: {b: BLOCO.ESCADA_BLOCO_REDSTONE, q: 4}, wb: true },
+  // Sprint paridade Minecraft (407-414)
+  { custos: [{b: BLOCO.CRYING_OBSIDIAN, q: 6}, {b: BLOCO.LUZ, q: 3}], saida: {b: BLOCO.RESPAWN_ANCHOR, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE_POL, q: 8}, {i: ITEM.NETHER_STAR, q: 1}], saida: {b: BLOCO.LODESTONE, q: 1}, wb: true },
+  { custos: [{b: BLOCO.DEEPSLATE, q: 4}, {i: ITEM.DIAMANTE, q: 4}, {b: BLOCO.OBSIDIANA, q: 1}], saida: {b: BLOCO.REINFORCED_DS, q: 1}, wb: true },
+  { custos: [{b: BLOCO.GRAMA, q: 4}, {b: BLOCO.FOLHA, q: 4}], saida: {b: BLOCO.MOSS_BLOCK, q: 4}, wb: true },
+  { custos: [{b: BLOCO.MOSS_BLOCK, q: 3}], saida: {b: BLOCO.MOSS_CARPET, q: 6}, wb: true },
+  { custos: [{b: BLOCO.MOSS_BLOCK, q: 2}, {b: BLOCO.LILY_PAD, q: 1}], saida: {b: BLOCO.BIG_DRIPLEAF, q: 2}, wb: true },
+  { custos: [{b: BLOCO.END_STONE, q: 4}, {i: ITEM.ENDER_PEARL, q: 1}], saida: {b: BLOCO.CHORUS_FLOWER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.MADEIRA, q: 3}, {b: BLOCO.PEDRA, q: 4}, {i: ITEM.FERRO, q: 1}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.PISTON, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
