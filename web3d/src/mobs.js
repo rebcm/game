@@ -2770,6 +2770,139 @@ export class MobManager {
         const d2 = ddx*ddx + ddy*ddy + ddz*ddz;
         const naAlcance = d2 < info.alcance ** 2 && m._vePlayer; // só ataca se vê
         m.cooldownFlecha -= dt;
+        // SPRINT MEGA-10: Pillager — ataque crossbow (flecha mais rápida)
+        if (m.tipo === 'pillager' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, info.dano);
+            m.cooldownFlecha = 1.8; // mais rápido que esqueleto
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Blaze — atira fireball
+        if (m.tipo === 'blaze' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, info.dano);
+            // TODO: incendiar player ao atingir (placeholder via efeito wither)
+            if (len < 6 && Math.random() < 0.3) {
+              player.efeitos = player.efeitos || {};
+              player.efeitos.wither = Date.now() + 5000;
+            }
+            m.cooldownFlecha = 2.0;
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Ghast — fireball lenta mas explode
+        if (m.tipo === 'ghast' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, info.dano);
+            m.cooldownFlecha = 3.0;
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Wither boss — atira 3 fireballs por turno (3 cabeças)
+        if (m.tipo === 'wither' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.8);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            // 3 fireballs (uma por cabeça, leve dispersão)
+            for (let k = -1; k <= 1; k++) {
+              const ang = Math.atan2(dz, dx) + k * 0.15;
+              const dirL = { x: Math.cos(ang), y: dy/len, z: Math.sin(ang) };
+              spawnArrow({ x: m.x, y: m.y + 1.8, z: m.z }, dirL, info.dano);
+            }
+            // Wither effect próximo
+            if (len < 8) {
+              player.efeitos = player.efeitos || {};
+              player.efeitos.wither = Date.now() + 10000;
+            }
+            m.cooldownFlecha = 2.5;
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Shulker — atira shulker bullet (homing simulado)
+        if (m.tipo === 'shulker' && naAlcance && m.cooldownFlecha <= 0) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 0.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 0.5, z: m.z }, dir, info.dano);
+            // Levitação 5s próximo (paridade MC shulker)
+            if (len < 10) {
+              player.efeitos = player.efeitos || {};
+              player.efeitos.levitacao = Date.now() + 5000;
+            }
+            m.cooldownFlecha = 3.5;
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Phantom dive — ataque vertical de cima
+        if (m.tipo === 'phantom' && naAlcance && m.cooldownAtaque <= 0) {
+          // Mergulha rapidamente (placeholder via dano direto)
+          player.aplicarDano(info.dano, 'phantom');
+          m.cooldownAtaque = 4.0;
+          continue;
+        }
+        // SPRINT MEGA-10: Warden — sonic boom (atravessa paredes, sem armor reduce)
+        if (m.tipo === 'warden' && naAlcance && m.cooldownFlecha <= 0) {
+          // Aplica dano mesmo se player escondido (warden detecta vibração)
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 2.2);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len < 12) {
+            player.aplicarDano(15, 'warden_sonic'); // sonic boom não considera armor
+            player.efeitos = player.efeitos || {};
+            player.efeitos.blindness = Date.now() + 8000; // cega
+            player.efeitos.weakness = Date.now() + 12000;
+            m.cooldownFlecha = 5.0;
+            state.ui?.toast?.('💥 SONIC BOOM!');
+            state.renderer?.aplicarShake?.(0.6);
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Llama — cuspe ranged
+        if (m.tipo === 'llama' && naAlcance && m.cooldownFlecha <= 0 && m._provocada) {
+          const dx = player.pos.x - m.x;
+          const dy = (player.pos.y + 1.4) - (m.y + 1.5);
+          const dz = player.pos.z - m.z;
+          const len = Math.hypot(dx, dy, dz);
+          if (len > 0.5) {
+            const dir = { x: dx/len, y: dy/len, z: dz/len };
+            spawnArrow({ x: m.x, y: m.y + 1.5, z: m.z }, dir, 1);
+            m.cooldownFlecha = 3.0;
+          }
+          continue;
+        }
+        // SPRINT MEGA-10: Evoker — summon Vex periodically
+        if (m.tipo === 'evoker' && naAlcance && m.cooldownFlecha <= 0) {
+          // Spawn 3 vex ao redor
+          for (let k = 0; k < 3; k++) {
+            const ang = (k / 3) * Math.PI * 2;
+            this.spawn('vex', m.x + Math.cos(ang) * 2, m.y + 1, m.z + Math.sin(ang) * 2);
+          }
+          m.cooldownFlecha = 12.0; // 12s entre summons
+          state.ui?.toast?.('🎆 Evoker summons Vex!');
+          continue;
+        }
         // Esqueleto + Stray + Witch: ataque ranged (flecha / poção). Cooldown 2.5s.
         if ((m.tipo === 'esqueleto' || m.tipo === 'stray' || m.tipo === 'witch') && naAlcance && m.cooldownFlecha <= 0) {
           const dx = player.pos.x - m.x;
