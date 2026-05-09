@@ -344,8 +344,16 @@ export const BLOCO = {
   PAREDE_DIORITO: 284,
   SLAB_GRANITO:   285,
   SLAB_DIORITO:   286,
+  ESCADA_GRANITO_POL: 287,
+  ESCADA_DIORITO_POL: 288,
+  ESCADA_ANDESITO_POL:289,
+  ESCADA_PEDRA_LISA:  290,
+  PAREDE_ANDESITO_POL:291,
+  PAREDE_BLACKSTONE_POL:292,
+  SLAB_ANDESITO_POL:  293,
+  SLAB_BLACKSTONE_POL:294,
 };
-export const N_BLOCOS = 287;
+export const N_BLOCOS = 295;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -654,6 +662,14 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_DIORITO]:   { nome: 'Parede Diorito',   solido: true, emiteLuz: 0, cor: 0xe0e0e0, lateral: 0xbdbdbd, shape: 'wall' },
   [BLOCO.SLAB_GRANITO]:     { nome: 'Laje Granito',     solido: true, emiteLuz: 0, cor: 0xa66556, lateral: 0x8a4a3d, shape: 'slab' },
   [BLOCO.SLAB_DIORITO]:     { nome: 'Laje Diorito',     solido: true, emiteLuz: 0, cor: 0xe0e0e0, lateral: 0xbdbdbd, shape: 'slab' },
+  [BLOCO.ESCADA_GRANITO_POL]: { nome: 'Escada Granito Pol.', solido: true, emiteLuz: 0, cor: 0xc98575, lateral: 0xa66556, shape: 'stairs' },
+  [BLOCO.ESCADA_DIORITO_POL]: { nome: 'Escada Diorito Pol.', solido: true, emiteLuz: 0, cor: 0xeeeeee, lateral: 0xe0e0e0, shape: 'stairs' },
+  [BLOCO.ESCADA_ANDESITO_POL]:{ nome: 'Escada Andesito Pol.',solido: true, emiteLuz: 0, cor: 0xb0b0b0, lateral: 0x9e9e9e, shape: 'stairs' },
+  [BLOCO.ESCADA_PEDRA_LISA]:  { nome: 'Escada Pedra Lisa',   solido: true, emiteLuz: 0, cor: 0xb8b8b8, lateral: 0xa0a0a0, shape: 'stairs' },
+  [BLOCO.PAREDE_ANDESITO_POL]:{ nome: 'Parede Andesito Pol.', solido: true,emiteLuz: 0, cor: 0xb0b0b0, lateral: 0x9e9e9e, shape: 'wall' },
+  [BLOCO.PAREDE_BLACKSTONE_POL]:{nome: 'Parede Blackstone Pol.',solido: true,emiteLuz: 0, cor: 0x2a2a2a, lateral: 0x1a1a1a, shape: 'wall' },
+  [BLOCO.SLAB_ANDESITO_POL]:  { nome: 'Laje Andesito Pol.',  solido: true, emiteLuz: 0, cor: 0xb0b0b0, lateral: 0x9e9e9e, shape: 'slab' },
+  [BLOCO.SLAB_BLACKSTONE_POL]:{ nome: 'Laje Blackstone Pol.',solido: true, emiteLuz: 0, cor: 0x2a2a2a, lateral: 0x1a1a1a, shape: 'slab' },
 };
 
 export const ICONE = {
@@ -1199,6 +1215,17 @@ export const RECEITAS = [
   // 2 lajes pedras naturais (3 → 6)
   { custos: [{b: BLOCO.GRANITO, q: 3}],    saida: {b: BLOCO.SLAB_GRANITO, q: 6}, wb: true },
   { custos: [{b: BLOCO.DIORITO, q: 3}],    saida: {b: BLOCO.SLAB_DIORITO, q: 6}, wb: true },
+  // 4 escadas polidas (6 → 4)
+  { custos: [{b: BLOCO.GRANITO_POL, q: 6}],  saida: {b: BLOCO.ESCADA_GRANITO_POL,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.DIORITO_POL, q: 6}],  saida: {b: BLOCO.ESCADA_DIORITO_POL,  q: 4}, wb: true },
+  { custos: [{b: BLOCO.ANDESITO_POL, q: 6}], saida: {b: BLOCO.ESCADA_ANDESITO_POL, q: 4}, wb: true },
+  { custos: [{b: BLOCO.PEDRA_LISA, q: 6}],   saida: {b: BLOCO.ESCADA_PEDRA_LISA,   q: 4}, wb: true },
+  // 2 paredes polidas (6 → 6)
+  { custos: [{b: BLOCO.ANDESITO_POL, q: 6}],   saida: {b: BLOCO.PAREDE_ANDESITO_POL,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE_POL, q: 6}], saida: {b: BLOCO.PAREDE_BLACKSTONE_POL, q: 6}, wb: true },
+  // 2 lajes polidas (3 → 6)
+  { custos: [{b: BLOCO.ANDESITO_POL, q: 3}],   saida: {b: BLOCO.SLAB_ANDESITO_POL,   q: 6}, wb: true },
+  { custos: [{b: BLOCO.BLACKSTONE_POL, q: 3}], saida: {b: BLOCO.SLAB_BLACKSTONE_POL, q: 6}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)
