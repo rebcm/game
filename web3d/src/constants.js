@@ -729,8 +729,17 @@ export const BLOCO = {
   SLAB_OBSIDIANA:      731, SLAB_HONEY:          732, SLAB_SOUL_SAND:      733, SLAB_SOUL_SOIL:      734,
   FENCE_BAMBU:         735, FENCE_DRIED_KELP:    736, FENCE_PURPUR:        737, FENCE_END_STONE:     738,
   PAREDE_RED_SAND:     739, ESCADA_RED_SAND:     740, SLAB_RED_SAND:       741, SLAB_CHISELED_RS:    742,
+  // Sprint 26: 32 blocos — cobre waxed + amethyst + decoração (743-774)
+  WAXED_COPPER:        743, WAXED_COPPER_GASTO:  744, WAXED_COPPER_OXID:   745, WAXED_COPPER_LISO:   746,
+  WAXED_COPPER_CORTADO:747, WAXED_COPPER_CHISEL: 748, COPPER_BULB_GASTO:   749, COPPER_BULB_OXID:    750,
+  AMETHYST_BUD_PEQ:    751, AMETHYST_BUD_MED:    752, AMETHYST_BUD_GRANDE: 753, AMETHYST_SHARD:      754,
+  CALCITE_LISO:        755, TUFF_LISO:           756, BLACKSTONE_LISO:     757, BASALTO_LISO:        758,
+  NETHER_GOLD_ORE:     759, ANCIENT_DEBRIS_2:    760, OBSIDIANA_LISA:      761, MAGMA_LISO:          762,
+  ESTANTE_VAZIA:       763, ESTANTE_CHEIA:       764, ESTANTE_GRANDE:      765, BAU_GRANDE:          766,
+  ARMORS_STAND:        767, BANDEIRA_PADRAO:     768, ESCUDO_DECORATIVO:   769, FLOR_DENDELION:      770,
+  FLOR_TULIPA_R:       771, FLOR_TULIPA_LR:      772, FLOR_TULIPA_BR:      773, FLOR_TULIPA_RS:      774,
 };
-export const N_BLOCOS = 743;
+export const N_BLOCOS = 775;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1519,6 +1528,39 @@ export const BLOCO_INFO = {
   [BLOCO.ESCADA_RED_SAND]:      { nome: 'Escada Arenito V.',     solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'stairs' },
   [BLOCO.SLAB_RED_SAND]:        { nome: 'Laje Arenito V.',       solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
   [BLOCO.SLAB_CHISELED_RS]:     { nome: 'Laje Aren.V. Esculp.',  solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  // Sprint 26: 32 blocos cobre waxed + amethyst + decoração (743-774)
+  [BLOCO.WAXED_COPPER]:         { nome: 'Cobre Encerado',        solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30 },
+  [BLOCO.WAXED_COPPER_GASTO]:   { nome: 'Cobre Encerado Gasto',  solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.WAXED_COPPER_OXID]:    { nome: 'Cobre Encerado Oxid.',  solido: true, emiteLuz: 0, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.WAXED_COPPER_LISO]:    { nome: 'Cobre Enc. Liso',       solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30 },
+  [BLOCO.WAXED_COPPER_CORTADO]: { nome: 'Cobre Enc. Cortado',    solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30 },
+  [BLOCO.WAXED_COPPER_CHISEL]:  { nome: 'Cobre Enc. Esculp.',    solido: true, emiteLuz: 0, cor: 0xc97a4d, lateral: 0xa05a30 },
+  [BLOCO.COPPER_BULB_GASTO]:    { nome: 'Bulbo Cobre Gasto',     solido: true, emiteLuz: 12,cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.COPPER_BULB_OXID]:     { nome: 'Bulbo Cobre Oxidado',   solido: true, emiteLuz: 8, cor: 0x66bb6a, lateral: 0x388e3c },
+  [BLOCO.AMETHYST_BUD_PEQ]:     { nome: 'Broto Ametista Peq.',   solido: true, emiteLuz: 1, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'flower' },
+  [BLOCO.AMETHYST_BUD_MED]:     { nome: 'Broto Ametista Médio',  solido: true, emiteLuz: 2, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'flower' },
+  [BLOCO.AMETHYST_BUD_GRANDE]:  { nome: 'Broto Ametista Grande', solido: true, emiteLuz: 4, cor: 0xab47bc, lateral: 0x7b1fa2, shape: 'flower' },
+  [BLOCO.AMETHYST_SHARD]:       { nome: 'Caco Ametista',         solido: true, emiteLuz: 2, cor: 0xce93d8, lateral: 0x9c27b0, shape: 'flower' },
+  [BLOCO.CALCITE_LISO]:         { nome: 'Calcita Lisa',          solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbcaaa4 },
+  [BLOCO.TUFF_LISO]:            { nome: 'Tuff Liso',             solido: true, emiteLuz: 0, cor: 0x707070, lateral: 0x505050 },
+  [BLOCO.BLACKSTONE_LISO]:      { nome: 'Blackstone Lisa',       solido: true, emiteLuz: 0, cor: 0x1a1a1a, lateral: 0x0a0a0a },
+  [BLOCO.BASALTO_LISO]:         { nome: 'Basalto Liso',          solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.NETHER_GOLD_ORE]:      { nome: 'Ouro do Nether',        solido: true, emiteLuz: 0, cor: 0x4a1f1f, lateral: 0xfdd835 },
+  [BLOCO.ANCIENT_DEBRIS_2]:     { nome: 'Ancient Debris (var)',  solido: true, emiteLuz: 1, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.OBSIDIANA_LISA]:       { nome: 'Obsidiana Lisa',        solido: true, emiteLuz: 0, cor: 0x1a0033, lateral: 0x0a001a },
+  [BLOCO.MAGMA_LISO]:           { nome: 'Magma Liso',            solido: true, emiteLuz: 3, cor: 0xff5722, lateral: 0xbf360c },
+  [BLOCO.ESTANTE_VAZIA]:        { nome: 'Estante Vazia',         solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.ESTANTE_CHEIA]:        { nome: 'Estante Cheia',         solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.ESTANTE_GRANDE]:       { nome: 'Estante Grande',        solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.BAU_GRANDE]:           { nome: 'Baú Grande',            solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.ARMORS_STAND]:         { nome: 'Suporte Armadura',      solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
+  [BLOCO.BANDEIRA_PADRAO]:      { nome: 'Bandeira Padrão',       solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbdbdbd },
+  [BLOCO.ESCUDO_DECORATIVO]:    { nome: 'Escudo Decorativo',     solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.FLOR_DENDELION]:       { nome: 'Dente-de-Leão',         solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_TULIPA_R]:        { nome: 'Tulipa Vermelha',       solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_TULIPA_LR]:       { nome: 'Tulipa Laranja',        solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_TULIPA_BR]:       { nome: 'Tulipa Branca',         solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0x33691e, shape: 'flower' },
+  [BLOCO.FLOR_TULIPA_RS]:       { nome: 'Tulipa Rosa',           solido: true, emiteLuz: 0, cor: 0xf48fb1, lateral: 0x33691e, shape: 'flower' },
 };
 
 export const ICONE = {
