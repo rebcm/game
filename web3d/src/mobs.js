@@ -1781,6 +1781,307 @@ export function construirModeloMob(tipo, info) {
       partes.corpo = corpo; partes.cabeca = corpo; partes.pernas = pernas;
       break;
     }
+    // SPRINT MEGA-7: Models 3D para mobs novos (paridade Minecraft)
+    case 'wither': {
+      // Boss: 3 cabeças + corpo esqueleto preto + costas espinhas
+      const corpo = cubo(0.7, 1.4, 0.3, info.cor); corpo.position.y = 1.0; grp.add(corpo);
+      // 3 cabeças
+      const cab1 = cubo(0.5, 0.5, 0.5, info.sec); cab1.position.y = 1.9; grp.add(cab1);
+      const cab2 = cubo(0.4, 0.4, 0.4, info.sec); cab2.position.set(-0.5, 1.7, 0); grp.add(cab2);
+      const cab3 = cubo(0.4, 0.4, 0.4, info.sec); cab3.position.set(0.5, 1.7, 0); grp.add(cab3);
+      // Olhos vermelhos brilhantes em cada cabeça
+      [cab1, cab2, cab3].forEach(c => {
+        const olho = cuboEm(0.05, 0.05, 0.05, 0xff0000, 1.5);
+        olho.position.set(-0.1, 0.05, c.geometry.parameters.depth / 2 + 0.01);
+        c.add(olho);
+        const olho2 = olho.clone(); olho2.position.x = 0.1; c.add(olho2);
+      });
+      // Espinha vertical (tail)
+      const tail = cubo(0.15, 0.4, 0.15, info.cor); tail.position.y = 0.4; grp.add(tail);
+      partes.cabeca = cab1; partes.corpo = corpo;
+    } break;
+    case 'guardian':
+    case 'elder_guardian': {
+      // Cubo gigante com olho central laranja brilhante
+      const big = tipo === 'elder_guardian' ? 1.4 : 1.0;
+      const corpo = cubo(0.9 * big, 0.9 * big, 0.9 * big, info.cor);
+      corpo.position.y = 0.5 * big; grp.add(corpo);
+      // Olho central laranja
+      const olho = cuboEm(0.3 * big, 0.3 * big, 0.05, info.sec, 1.0);
+      olho.position.set(0, 0.5 * big, 0.46 * big); corpo.add(olho);
+      // Espinhos (4 ao redor)
+      for (let i = 0; i < 4; i++) {
+        const s = cubo(0.1, 0.5 * big, 0.1, info.cor);
+        const ang = (i / 4) * Math.PI * 2;
+        s.position.set(Math.cos(ang) * 0.55 * big, 0.5 * big, Math.sin(ang) * 0.55 * big);
+        grp.add(s);
+      }
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'warden': {
+      // Bicho gigante deepslate com runas azuis brilhantes nas costas
+      const corpo = cubo(0.9, 1.6, 0.5, info.cor); corpo.position.y = 1.2; grp.add(corpo);
+      const cabeca = cubo(0.7, 0.5, 0.5, info.cor); cabeca.position.y = 2.2; grp.add(cabeca);
+      // Runas azuis na cabeça (pulsam)
+      const runa1 = cuboEm(0.25, 0.05, 0.05, info.sec, 1.8);
+      runa1.position.set(0, 0.15, 0.27); cabeca.add(runa1);
+      const runa2 = cuboEm(0.05, 0.20, 0.05, info.sec, 1.8);
+      runa2.position.set(-0.1, 0, 0.27); cabeca.add(runa2);
+      // Braços longos
+      const bracoE = cubo(0.25, 1.6, 0.25, info.cor); bracoE.position.set(-0.6, 1.0, 0); grp.add(bracoE);
+      const bracoD = cubo(0.25, 1.6, 0.25, info.cor); bracoD.position.set(0.6, 1.0, 0); grp.add(bracoD);
+      // Pernas
+      const pernaE = cubo(0.3, 0.6, 0.3, info.cor); pernaE.position.set(-0.2, 0.3, 0); grp.add(pernaE);
+      const pernaD = cubo(0.3, 0.6, 0.3, info.cor); pernaD.position.set(0.2, 0.3, 0); grp.add(pernaD);
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.bracoE = bracoE; partes.bracoD = bracoD;
+      partes.pernaE = pernaE; partes.pernaD = pernaD;
+    } break;
+    case 'phantom': {
+      // Manta voadora roxa-escura com olhos
+      const corpo = cubo(1.2, 0.15, 0.7, info.cor); corpo.position.y = 0.5; grp.add(corpo);
+      // 2 olhos brilhantes
+      const olhoE = cuboEm(0.1, 0.05, 0.05, info.sec, 1.5);
+      olhoE.position.set(-0.2, 0.55, 0.3); grp.add(olhoE);
+      const olhoD = olhoE.clone(); olhoD.position.x = 0.2; grp.add(olhoD);
+      // Asas
+      const asaE = cubo(0.6, 0.05, 0.4, info.cor); asaE.position.set(-0.7, 0.5, 0); grp.add(asaE);
+      const asaD = asaE.clone(); asaD.position.x = 0.7; grp.add(asaD);
+      partes.cabeca = corpo; partes.corpo = corpo; partes.asaE = asaE; partes.asaD = asaD;
+    } break;
+    case 'pillager':
+    case 'vindicator': {
+      // Humanoid + cores específicas
+      const corpo = cubo(0.5, 0.7, 0.3, info.cor); corpo.position.y = 1.0; grp.add(corpo);
+      const cabeca = cubo(0.45, 0.5, 0.45, info.sec); cabeca.position.y = 1.6; grp.add(cabeca);
+      // Nariz característico (illager)
+      const nariz = cubo(0.1, 0.15, 0.2, 0xa1887f); nariz.position.set(0, 1.55, 0.3); grp.add(nariz);
+      // Pernas
+      const pE = cubo(0.2, 0.6, 0.2, 0x4a4a4a); pE.position.set(-0.15, 0.3, 0); grp.add(pE);
+      const pD = pE.clone(); pD.position.x = 0.15; grp.add(pD);
+      // Braço com arma (crossbow ou machado)
+      const braco = cubo(0.2, 0.5, 0.2, info.cor); braco.position.set(0.4, 1.1, 0); grp.add(braco);
+      partes.cabeca = cabeca; partes.corpo = corpo;
+      partes.pernaE = pE; partes.pernaD = pD; partes.braco = braco;
+    } break;
+    case 'evoker': {
+      // Robe escuro + dourado
+      const corpo = cubo(0.6, 1.0, 0.3, info.cor); corpo.position.y = 0.85; grp.add(corpo);
+      const cabeca = cubo(0.45, 0.5, 0.45, 0xa1887f); cabeca.position.y = 1.6; grp.add(cabeca);
+      // Capa dourada
+      const capa = cubo(0.7, 0.3, 0.05, info.sec); capa.position.set(0, 1.2, 0.16); grp.add(capa);
+      // Mãos brilhantes (magic)
+      const mao = cuboEm(0.15, 0.15, 0.15, info.sec, 1.0);
+      mao.position.set(0.4, 1.0, 0); grp.add(mao);
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.mao = mao;
+    } break;
+    case 'vex': {
+      // Pequena fada hostil
+      const corpo = cubo(0.3, 0.4, 0.2, info.cor); corpo.position.y = 0.5; grp.add(corpo);
+      const cabeca = cubo(0.2, 0.2, 0.2, info.cor); cabeca.position.y = 0.85; grp.add(cabeca);
+      // Olhos vermelhos
+      const olho = cuboEm(0.05, 0.05, 0.05, info.sec, 1.5);
+      olho.position.set(-0.05, 0.85, 0.11); grp.add(olho);
+      const olho2 = olho.clone(); olho2.position.x = 0.05; grp.add(olho2);
+      // Asas pequenas
+      const asaE = cubo(0.25, 0.2, 0.05, 0xeceff1); asaE.position.set(-0.2, 0.6, -0.1); grp.add(asaE);
+      const asaD = asaE.clone(); asaD.position.x = 0.2; grp.add(asaD);
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.asaE = asaE; partes.asaD = asaD;
+    } break;
+    case 'ravager': {
+      // Bicho gigante com chifres
+      const corpo = cubo(1.4, 1.0, 1.6, info.cor); corpo.position.y = 0.7; grp.add(corpo);
+      const cabeca = cubo(0.9, 0.7, 0.7, info.cor); cabeca.position.set(0, 0.9, 0.95); grp.add(cabeca);
+      // Chifres pretos
+      const chif1 = cubo(0.15, 0.4, 0.15, info.sec); chif1.position.set(-0.3, 1.4, 1.0); grp.add(chif1);
+      const chif2 = chif1.clone(); chif2.position.x = 0.3; grp.add(chif2);
+      // 4 pernas grossas
+      for (const [px, pz] of [[-0.5, -0.6], [0.5, -0.6], [-0.5, 0.6], [0.5, 0.6]]) {
+        const p = cubo(0.3, 0.5, 0.3, info.cor); p.position.set(px, 0.25, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'horse':
+    case 'donkey':
+    case 'mule': {
+      // Cavalo: corpo retangular + cabeça inclinada + 4 pernas
+      const corpo = cubo(0.6, 0.7, 1.4, info.cor); corpo.position.y = 0.95; grp.add(corpo);
+      const cabeca = cubo(0.4, 0.5, 0.4, info.cor); cabeca.position.set(0, 1.4, 0.85); grp.add(cabeca);
+      // Crina
+      const crina = cubo(0.1, 0.3, 0.5, info.sec); crina.position.set(0, 1.4, 0.4); grp.add(crina);
+      // Orelhas
+      const orE = cubo(0.05, 0.15, 0.05, info.cor); orE.position.set(-0.15, 1.65, 0.85); grp.add(orE);
+      const orD = orE.clone(); orD.position.x = 0.15; grp.add(orD);
+      // 4 pernas
+      for (const [px, pz] of [[-0.2, -0.55], [0.2, -0.55], [-0.2, 0.55], [0.2, 0.55]]) {
+        const p = cubo(0.18, 0.6, 0.18, info.sec); p.position.set(px, 0.3, pz); grp.add(p);
+      }
+      // Cauda
+      const cauda = cubo(0.1, 0.4, 0.1, info.sec); cauda.position.set(0, 1.0, -0.7); grp.add(cauda);
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.cauda = cauda;
+    } break;
+    case 'llama': {
+      const corpo = cubo(0.5, 1.0, 1.2, info.cor); corpo.position.y = 1.0; grp.add(corpo);
+      const cabeca = cubo(0.4, 0.4, 0.3, info.cor); cabeca.position.set(0, 1.7, 0.55); grp.add(cabeca);
+      // Pescoço longo
+      const pesc = cubo(0.3, 0.7, 0.3, info.cor); pesc.position.set(0, 1.5, 0.5); grp.add(pesc);
+      for (const [px, pz] of [[-0.18, -0.5], [0.18, -0.5], [-0.18, 0.5], [0.18, 0.5]]) {
+        const p = cubo(0.15, 0.6, 0.15, info.sec); p.position.set(px, 0.3, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'strider': {
+      const corpo = cubo(0.7, 0.7, 1.0, info.cor); corpo.position.y = 1.0; grp.add(corpo);
+      // Pernas longas (caminha em lava)
+      const pE = cubo(0.15, 1.0, 0.15, info.cor); pE.position.set(-0.3, 0.5, 0); grp.add(pE);
+      const pD = pE.clone(); pD.position.x = 0.3; grp.add(pD);
+      // Listras amarelas
+      const listra = cubo(0.71, 0.1, 1.01, info.sec); listra.position.y = 1.0; grp.add(listra);
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'piglin':
+    case 'zombified_piglin': {
+      const corpo = cubo(0.5, 0.8, 0.3, info.cor); corpo.position.y = 1.0; grp.add(corpo);
+      const cabeca = cubo(0.5, 0.5, 0.5, info.cor); cabeca.position.y = 1.6; grp.add(cabeca);
+      // Focinho de porco
+      const focinho = cubo(0.3, 0.2, 0.15, 0xa1887f); focinho.position.set(0, 1.55, 0.3); grp.add(focinho);
+      // Olhos
+      const olho = cuboEm(0.06, 0.06, 0.05, 0xfafafa, 0.3);
+      olho.position.set(-0.1, 1.7, 0.26); grp.add(olho);
+      const olho2 = olho.clone(); olho2.position.x = 0.1; grp.add(olho2);
+      for (const [px, pz] of [[-0.15, -0.05], [0.15, -0.05]]) {
+        const p = cubo(0.2, 0.5, 0.2, info.cor); p.position.set(px, 0.3, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'hoglin':
+    case 'zoglin': {
+      const corpo = cubo(1.0, 0.9, 1.5, info.cor); corpo.position.y = 0.7; grp.add(corpo);
+      const cabeca = cubo(0.7, 0.5, 0.5, info.cor); cabeca.position.set(0, 0.95, 0.95); grp.add(cabeca);
+      // Presas
+      const pres1 = cubo(0.1, 0.15, 0.1, 0xfafafa); pres1.position.set(-0.2, 0.85, 1.18); grp.add(pres1);
+      const pres2 = pres1.clone(); pres2.position.x = 0.2; grp.add(pres2);
+      for (const [px, pz] of [[-0.35, -0.5], [0.35, -0.5], [-0.35, 0.5], [0.35, 0.5]]) {
+        const p = cubo(0.2, 0.4, 0.2, info.sec); p.position.set(px, 0.2, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'endermite':
+    case 'silverfish': {
+      // Pequenos
+      const corpo = cubo(0.35, 0.25, 0.25, info.cor); corpo.position.y = 0.15; grp.add(corpo);
+      // Olhos brilhantes
+      const olho = cuboEm(0.05, 0.05, 0.05, info.sec, 1.0);
+      olho.position.set(-0.08, 0.18, 0.13); grp.add(olho);
+      const olho2 = olho.clone(); olho2.position.x = 0.08; grp.add(olho2);
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'goat': {
+      const corpo = cubo(0.5, 0.7, 1.0, info.cor); corpo.position.y = 0.7; grp.add(corpo);
+      const cabeca = cubo(0.4, 0.4, 0.4, info.cor); cabeca.position.set(0, 1.05, 0.65); grp.add(cabeca);
+      // Chifres
+      const ch1 = cubo(0.05, 0.25, 0.05, info.sec); ch1.position.set(-0.1, 1.3, 0.6); grp.add(ch1);
+      const ch2 = ch1.clone(); ch2.position.x = 0.1; grp.add(ch2);
+      for (const [px, pz] of [[-0.18, -0.35], [0.18, -0.35], [-0.18, 0.35], [0.18, 0.35]]) {
+        const p = cubo(0.15, 0.4, 0.15, info.sec); p.position.set(px, 0.2, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'panda': {
+      const corpo = cubo(0.9, 0.9, 1.3, info.cor); corpo.position.y = 0.6; grp.add(corpo);
+      const cabeca = cubo(0.7, 0.6, 0.7, info.cor); cabeca.position.set(0, 1.05, 0.7); grp.add(cabeca);
+      // Olhos pretos
+      const olhoE = cubo(0.18, 0.18, 0.05, info.sec); olhoE.position.set(-0.18, 1.05, 1.05); grp.add(olhoE);
+      const olhoD = olhoE.clone(); olhoD.position.x = 0.18; grp.add(olhoD);
+      // Orelhas pretas
+      const orE = cubo(0.15, 0.15, 0.05, info.sec); orE.position.set(-0.25, 1.4, 0.65); grp.add(orE);
+      const orD = orE.clone(); orD.position.x = 0.25; grp.add(orD);
+      // 4 pernas
+      for (const [px, pz] of [[-0.3, -0.5], [0.3, -0.5], [-0.3, 0.5], [0.3, 0.5]]) {
+        const p = cubo(0.2, 0.4, 0.2, info.sec); p.position.set(px, 0.2, pz); grp.add(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'bat': {
+      const corpo = cubo(0.2, 0.2, 0.2, info.cor); corpo.position.y = 0.4; grp.add(corpo);
+      // Asas
+      const asaE = cubo(0.4, 0.05, 0.3, info.sec); asaE.position.set(-0.3, 0.4, 0); grp.add(asaE);
+      const asaD = asaE.clone(); asaD.position.x = 0.3; grp.add(asaD);
+      partes.cabeca = corpo; partes.corpo = corpo; partes.asaE = asaE; partes.asaD = asaD;
+    } break;
+    case 'squid': {
+      const corpo = cubo(0.6, 0.6, 0.6, info.cor); corpo.position.y = 0.7; grp.add(corpo);
+      // 8 tentáculos
+      for (let i = 0; i < 8; i++) {
+        const ang = (i / 8) * Math.PI * 2;
+        const t = cubo(0.08, 0.6, 0.08, info.cor);
+        t.position.set(Math.cos(ang) * 0.25, 0.3, Math.sin(ang) * 0.25);
+        grp.add(t);
+      }
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'dolphin': {
+      const corpo = cubo(0.5, 0.5, 1.5, info.cor); corpo.position.y = 0.5; grp.add(corpo);
+      // Bico
+      const bico = cubo(0.2, 0.2, 0.3, info.cor); bico.position.set(0, 0.5, 0.85); grp.add(bico);
+      // Barriga clara
+      const barriga = cubo(0.51, 0.2, 1.51, info.sec); barriga.position.y = 0.35; grp.add(barriga);
+      // Nadadeira dorsal
+      const nad = cubo(0.05, 0.3, 0.3, info.cor); nad.position.set(0, 0.85, 0); grp.add(nad);
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'shulker': {
+      // Caixa fechada
+      const corpo = cubo(0.85, 0.85, 0.85, info.sec); corpo.position.y = 0.45; grp.add(corpo);
+      // Tampa pequena (top piece roxa)
+      const tampa = cubo(0.6, 0.3, 0.6, info.cor); tampa.position.y = 0.95; grp.add(tampa);
+      partes.cabeca = tampa; partes.corpo = corpo;
+    } break;
+    case 'spider_jockey': {
+      // Aranha base + esqueleto em cima
+      const corpoAranha = cubo(0.7, 0.45, 0.55, info.cor); corpoAranha.position.y = 0.4; grp.add(corpoAranha);
+      // 8 pernas pretas
+      for (let i = 0; i < 8; i++) {
+        const ang = (i / 8) * Math.PI * 2;
+        const p = cubo(0.06, 0.3, 0.06, info.cor);
+        p.position.set(Math.cos(ang) * 0.4, 0.2, Math.sin(ang) * 0.4);
+        grp.add(p);
+      }
+      // Esqueleto em cima
+      const esq = cubo(0.4, 0.6, 0.25, info.sec); esq.position.y = 1.0; grp.add(esq);
+      const cabEsq = cubo(0.4, 0.4, 0.4, info.sec); cabEsq.position.y = 1.5; grp.add(cabEsq);
+      partes.cabeca = cabEsq; partes.corpo = corpoAranha;
+    } break;
+    case 'frog_temperate':
+    case 'frog_warm':
+    case 'frog_cold': {
+      // Sapo colorido — copia model base
+      const corpo = cubo(0.45, 0.35, 0.35, info.cor); corpo.position.y = 0.2; grp.add(corpo);
+      const cabeca = cubo(0.4, 0.25, 0.4, info.cor); cabeca.position.set(0, 0.45, 0.05); grp.add(cabeca);
+      // Olhos enormes
+      const olho = cuboEm(0.12, 0.12, 0.12, info.sec, 0.6);
+      olho.position.set(-0.13, 0.6, 0.15); grp.add(olho);
+      const olho2 = olho.clone(); olho2.position.x = 0.13; grp.add(olho2);
+      partes.cabeca = cabeca; partes.corpo = corpo;
+    } break;
+    case 'tadpole': {
+      // Girino
+      const corpo = cubo(0.2, 0.15, 0.3, info.cor); corpo.position.y = 0.1; grp.add(corpo);
+      const cauda = cubo(0.05, 0.05, 0.25, info.sec); cauda.position.set(0, 0.1, -0.3); grp.add(cauda);
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
+    case 'glow_squid_var': {
+      const corpo = cubo(0.5, 0.5, 0.5, info.cor); corpo.position.y = 0.6; grp.add(corpo);
+      // Glow azul brilhante
+      const glow = cuboEm(0.55, 0.55, 0.55, info.sec, 0.5); glow.position.y = 0.6; grp.add(glow);
+      for (let i = 0; i < 6; i++) {
+        const ang = (i / 6) * Math.PI * 2;
+        const t = cuboEm(0.06, 0.5, 0.06, info.sec, 0.4);
+        t.position.set(Math.cos(ang) * 0.2, 0.25, Math.sin(ang) * 0.2);
+        grp.add(t);
+      }
+      partes.cabeca = corpo; partes.corpo = corpo;
+    } break;
     default: {
       const corpo = cubo(0.6, 0.7, 0.4, info.cor);
       corpo.position.y = 0.45; grp.add(corpo);
@@ -1833,6 +2134,40 @@ function _dimsMob(tipo) {
     case 'wandering_trader': return { raio: 0.30, altura: 1.85 };
     case 'snow_golem': return { raio: 0.30, altura: 1.85 };
     case 'ghast':      return { raio: 0.85, altura: 1.40 };
+    // SPRINT MEGA-7: bounding boxes para mobs novos
+    case 'wither':     return { raio: 0.50, altura: 2.50 };
+    case 'guardian':   return { raio: 0.50, altura: 1.0 };
+    case 'elder_guardian': return { raio: 0.70, altura: 1.4 };
+    case 'warden':     return { raio: 0.50, altura: 2.80 };
+    case 'phantom':    return { raio: 0.65, altura: 0.40 };
+    case 'pillager':
+    case 'vindicator':
+    case 'evoker':     return { raio: 0.30, altura: 1.85 };
+    case 'vex':        return { raio: 0.20, altura: 0.85 };
+    case 'ravager':    return { raio: 0.85, altura: 1.55 };
+    case 'horse':
+    case 'donkey':
+    case 'mule':       return { raio: 0.40, altura: 1.65 };
+    case 'llama':      return { raio: 0.30, altura: 1.90 };
+    case 'strider':    return { raio: 0.40, altura: 1.65 };
+    case 'piglin':
+    case 'zombified_piglin': return { raio: 0.30, altura: 1.85 };
+    case 'hoglin':
+    case 'zoglin':     return { raio: 0.55, altura: 1.40 };
+    case 'endermite':
+    case 'silverfish': return { raio: 0.20, altura: 0.30 };
+    case 'goat':       return { raio: 0.27, altura: 1.35 };
+    case 'panda':      return { raio: 0.55, altura: 1.20 };
+    case 'bat':        return { raio: 0.18, altura: 0.55 };
+    case 'squid':
+    case 'glow_squid_var': return { raio: 0.40, altura: 1.20 };
+    case 'dolphin':    return { raio: 0.45, altura: 0.65 };
+    case 'shulker':    return { raio: 0.45, altura: 1.20 };
+    case 'spider_jockey': return { raio: 0.45, altura: 1.80 };
+    case 'frog_temperate':
+    case 'frog_warm':
+    case 'frog_cold':  return { raio: 0.20, altura: 0.50 };
+    case 'tadpole':    return { raio: 0.18, altura: 0.18 };
     // Humanóides hostis (zumbi/esqueleto/creeper)
     default:           return { raio: 0.30, altura: 1.80 };
   }
@@ -2530,13 +2865,24 @@ export class MobManager {
       }
       return;
     }
-    // Nether: ghast voador OU magma_cube OU blaze. Cap mobs em 8.
+    // Nether: ghast voador OU magma_cube OU blaze + Piglin/Hoglin/Strider/Zombified Piglin (paridade Minecraft)
     if (state.world?.dimensao === 'nether') {
-      if (this.mobs.length >= 8) return;
+      if (this.mobs.length >= 10) return;
       const r = Math.random();
-      if (r < 0.40) this.spawn('magma_cube', x, y, z);
-      else if (r < 0.70) this.spawn('blaze', x, y + 4, z);
-      else this.spawn('ghast', x, y + 8, z);
+      if (r < 0.20) this.spawn('magma_cube', x, y, z);
+      else if (r < 0.30) this.spawn('blaze', x, y + 4, z);
+      else if (r < 0.40) this.spawn('ghast', x, y + 8, z);
+      else if (r < 0.55) this.spawn('piglin', x, y, z);
+      else if (r < 0.65) this.spawn('hoglin', x, y, z);
+      else if (r < 0.72) this.spawn('zoglin', x, y, z);
+      else if (r < 0.85) this.spawn('zombified_piglin', x, y, z);
+      else if (r < 0.92) this.spawn('strider', x, y, z); // próximo a lava
+      else this.spawn('phantom', x, y + 6, z); // raro
+      return;
+    }
+    // End: Shulker em superfícies elevadas (raros)
+    if (state.world?.dimensao === 'end' && y > 30 && Math.random() < 0.10) {
+      this.spawn('shulker', x, y, z);
       return;
     }
     if (luzMax <= 7) {
@@ -2557,6 +2903,13 @@ export class MobManager {
       if (y < 30) tipos.push('slime');
       if (Math.random() < 0.05) tipos.push('enderman');
       if (Math.random() < 0.04) tipos.push('witch'); // raro à noite
+      // SPRINT MEGA-8: hostis novos noturnos
+      if (Math.random() < 0.05) tipos.push('phantom'); // voador insônia
+      if (Math.random() < 0.03) tipos.push('pillager'); // raro
+      if (Math.random() < 0.02) tipos.push('vindicator'); // raro
+      if (y < 12 && Math.random() < 0.10) tipos.push('silverfish'); // mineshaft deep
+      if (Math.random() < 0.03 && y < 5) tipos.push('warden'); // SUPER RARO em deep
+      if (Math.random() < 0.02) tipos.push('spider_jockey');
       // Drowned: spawn em (ou sobre) AGUA, durante a noite
       if (blocoChao === BLOCO.AGUA || world.get(x, y, z) === BLOCO.AGUA) {
         tipos.push('drowned'); tipos.push('drowned'); // peso 2× pra dominar em água
@@ -2608,7 +2961,33 @@ export class MobManager {
         if (Math.random() < 0.15) tipos.push('urso_polar');
         // Raposa: passiva ágil (taiga)
         if (Math.random() < 0.20) tipos.push('raposa');
+        // SPRINT MEGA-8: Goat (montanha/snowy)
+        if (Math.random() < 0.10) tipos.push('goat');
       }
+      // SPRINT MEGA-8: Mobs específicos por bioma (Cherry/Mangrove/Bamboo/Mushroom)
+      const biomaAtual = world.biomaEm?.(x, z);
+      if (biomaAtual === 'bamboo_jungle' && Math.random() < 0.30) tipos.push('panda');
+      if (biomaAtual === 'mangrove_swamp' && Math.random() < 0.25) {
+        tipos.push('frog_temperate', 'frog_warm', 'frog_cold');
+      }
+      if (biomaAtual === 'cherry_grove' && Math.random() < 0.10) tipos.push('bee');
+      if (biomaAtual === 'mushroom_fields' && Math.random() < 0.40) tipos.push('mooshroom');
+      // Bat em cavernas (luz baixa mas dia)
+      if (luzMax >= 9 && y < 25 && Math.random() < 0.05) tipos.push('bat');
+      // Squid/Dolphin em água
+      if ((blocoChao === BLOCO.AGUA || world.get(x, y, z) === BLOCO.AGUA)) {
+        if (Math.random() < 0.20) tipos.push('squid');
+        if (Math.random() < 0.10) tipos.push('dolphin');
+      }
+      // Horse em plains (mob mount)
+      if (blocoChao === BLOCO.GRAMA && Math.random() < 0.05) {
+        const r2 = Math.random();
+        if (r2 < 0.5) tipos.push('horse');
+        else if (r2 < 0.8) tipos.push('donkey');
+        else tipos.push('llama');
+      }
+      // Endermite raro (drop enderman)
+      if (Math.random() < 0.005) tipos.push('endermite');
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo
       if (Math.random() < 0.008) tipos.push('wandering_trader'); // muito raro

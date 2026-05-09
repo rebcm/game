@@ -2249,6 +2249,63 @@ function loop(now) {
                 state.mobMgr.spawn('snow_golem', a.x + 0.5, a.y - 1.5, a.z + 0.5);
                 state.ui.toast('☃ Snow Golem invocado!');
               }
+              // SPRINT MEGA-8: Build Iron Golem (T-shape pumpkin + ferro)
+              // CARVED_PUMPKIN sobre BLOCO_FERRO central + 2 BLOCO_FERRO laterais (T)
+              if (sel.b === BLOCO.CARVED_PUMPKIN &&
+                  state.world.get(a.x, a.y - 1, a.z) === BLOCO.BLOCO_FERRO &&
+                  state.world.get(a.x, a.y - 2, a.z) === BLOCO.BLOCO_FERRO &&
+                  ((state.world.get(a.x - 1, a.y - 1, a.z) === BLOCO.BLOCO_FERRO &&
+                    state.world.get(a.x + 1, a.y - 1, a.z) === BLOCO.BLOCO_FERRO) ||
+                   (state.world.get(a.x, a.y - 1, a.z - 1) === BLOCO.BLOCO_FERRO &&
+                    state.world.get(a.x, a.y - 1, a.z + 1) === BLOCO.BLOCO_FERRO))) {
+                // Limpa os 4 blocos + spawn iron_golem
+                state.world.set(a.x, a.y, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 1, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 2, a.z, BLOCO.AR);
+                if (state.world.get(a.x - 1, a.y - 1, a.z) === BLOCO.BLOCO_FERRO) {
+                  state.world.set(a.x - 1, a.y - 1, a.z, BLOCO.AR);
+                  state.world.set(a.x + 1, a.y - 1, a.z, BLOCO.AR);
+                } else {
+                  state.world.set(a.x, a.y - 1, a.z - 1, BLOCO.AR);
+                  state.world.set(a.x, a.y - 1, a.z + 1, BLOCO.AR);
+                }
+                state.mobMgr.spawn('iron_golem', a.x + 0.5, a.y - 1.5, a.z + 0.5);
+                state.ui.toast('🤖 Iron Golem invocado!');
+              }
+              // SPRINT MEGA-8: Wither summon ritual
+              // CRANIO_WITHER sobre 4 SOUL_SAND em T-shape (3 horizontais + 1 vertical)
+              // Cabeça central no topo + 2 cabeças nas laterais
+              if (sel.b === BLOCO.CRANIO_WITHER &&
+                  state.world.get(a.x, a.y - 1, a.z) === BLOCO.SOUL_SAND &&
+                  state.world.get(a.x, a.y - 2, a.z) === BLOCO.SOUL_SAND &&
+                  ((state.world.get(a.x - 1, a.y - 1, a.z) === BLOCO.SOUL_SAND &&
+                    state.world.get(a.x + 1, a.y - 1, a.z) === BLOCO.SOUL_SAND &&
+                    state.world.get(a.x - 1, a.y, a.z) === BLOCO.CRANIO_WITHER &&
+                    state.world.get(a.x + 1, a.y, a.z) === BLOCO.CRANIO_WITHER) ||
+                   (state.world.get(a.x, a.y - 1, a.z - 1) === BLOCO.SOUL_SAND &&
+                    state.world.get(a.x, a.y - 1, a.z + 1) === BLOCO.SOUL_SAND &&
+                    state.world.get(a.x, a.y, a.z - 1) === BLOCO.CRANIO_WITHER &&
+                    state.world.get(a.x, a.y, a.z + 1) === BLOCO.CRANIO_WITHER))) {
+                // Limpa todos blocos do ritual + spawn wither
+                state.world.set(a.x, a.y, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 1, a.z, BLOCO.AR);
+                state.world.set(a.x, a.y - 2, a.z, BLOCO.AR);
+                if (state.world.get(a.x - 1, a.y - 1, a.z) === BLOCO.SOUL_SAND) {
+                  state.world.set(a.x - 1, a.y - 1, a.z, BLOCO.AR);
+                  state.world.set(a.x + 1, a.y - 1, a.z, BLOCO.AR);
+                  state.world.set(a.x - 1, a.y, a.z, BLOCO.AR);
+                  state.world.set(a.x + 1, a.y, a.z, BLOCO.AR);
+                } else {
+                  state.world.set(a.x, a.y - 1, a.z - 1, BLOCO.AR);
+                  state.world.set(a.x, a.y - 1, a.z + 1, BLOCO.AR);
+                  state.world.set(a.x, a.y, a.z - 1, BLOCO.AR);
+                  state.world.set(a.x, a.y, a.z + 1, BLOCO.AR);
+                }
+                state.mobMgr.spawn('wither', a.x + 0.5, a.y - 1.5, a.z + 0.5);
+                state.ui.toast('💀💀💀 WITHER INVOCADO! Boss do Nether!');
+                Audio.creeperBoom?.() || Audio.tnt?.();
+                state.renderer?.aplicarShake?.(1.0);
+              }
               // Areia colocada no ar cai na hora (gravidade)
               if (sel.b === BLOCO.AREIA) {
                 state.world.aplicarGravidadeBlocos(a.x, a.y - 1, a.z);
