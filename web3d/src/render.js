@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 25, CELL = 32;
+  const COLS = 8, ROWS = 26, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -3527,6 +3527,15 @@ function criarAtlas() {
   // 2 concretos (cells 196-197)
   pintar(196, '#c62828', '#8b0000', 0.45);                        // concreto vermelho
   pintar(197, '#1565c0', '#0d47a1', 0.45);                        // concreto azul
+  pintar(198, '#2e7d32', '#1b5e20', 0.45);                        // concreto verde
+  pintar(199, '#f9a825', '#f57f17', 0.45);                        // concreto amarelo
+  pintar(200, '#fafafa', '#cfd8dc', 0.45);                        // concreto branco
+  pintar(201, '#212121', '#000000', 0.45);                        // concreto preto
+  // Terracotas (cor mais terrosa, com manchas via pintarPedra)
+  pintarPedra(202, '#b55a3a', '#8b3e23', '#d6755a', 0.40);        // terracota vermelha
+  pintarPedra(203, '#4a5e9a', '#2c3d6c', '#7385bb', 0.40);        // terracota azul
+  pintarPedra(204, '#c9a05a', '#a67d3a', '#e8c280', 0.40);        // terracota amarela
+  pintarPedra(205, '#d6c8b8', '#b09f88', '#f0e5d4', 0.30);        // terracota branca
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -3745,6 +3754,14 @@ function criarAtlas() {
   mapa[BLOCO.LA_CINZA]       = { top: 195, side: 195, bottom: 195 };
   mapa[BLOCO.CONCRETO_R]     = { top: 196, side: 196, bottom: 196 };
   mapa[BLOCO.CONCRETO_A]     = { top: 197, side: 197, bottom: 197 };
+  mapa[BLOCO.CONCRETO_V]     = { top: 198, side: 198, bottom: 198 };
+  mapa[BLOCO.CONCRETO_AM]    = { top: 199, side: 199, bottom: 199 };
+  mapa[BLOCO.CONCRETO_BR]    = { top: 200, side: 200, bottom: 200 };
+  mapa[BLOCO.CONCRETO_PR]    = { top: 201, side: 201, bottom: 201 };
+  mapa[BLOCO.TERRACOTA_R]    = { top: 202, side: 202, bottom: 202 };
+  mapa[BLOCO.TERRACOTA_A]    = { top: 203, side: 203, bottom: 203 };
+  mapa[BLOCO.TERRACOTA_AM]   = { top: 204, side: 204, bottom: 204 };
+  mapa[BLOCO.TERRACOTA_BR]   = { top: 205, side: 205, bottom: 205 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
