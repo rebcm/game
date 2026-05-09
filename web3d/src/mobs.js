@@ -103,6 +103,31 @@ export const MOB_INFO = {
     drops: () => Math.random() < 0.3 ? [{ i: ITEM.COURO, q: 1 }] : [],
     cor: 0xc6a45e, sec: 0x8d6e3f, // bege deserto + marrom
   },
+  // Axolote: anfíbio aquático rosa fofo
+  axolote: {
+    hp: 14, vel: 1.0, hostil: false,
+    drops: () => Math.random() < 0.3 ? [{ i: ITEM.PEIXE, q: 1 }] : [],
+    cor: 0xf48fb1, sec: 0xc2185b, // rosa + magenta
+    voa: true, // nada livre na água
+  },
+  // Raposa: passiva da taiga, ágil, drop carne
+  raposa: {
+    hp: 10, vel: 2.4, hostil: false,
+    drops: () => [
+      ...(Math.random() < 0.5 ? [{ i: ITEM.CARNE_CRUA, q: 1 }] : []),
+      ...(Math.random() < 0.10 ? [{ i: ITEM.MACA, q: 1 }] : []),
+    ],
+    cor: 0xff7043, sec: 0xfafafa, // laranja + branco
+  },
+  // Blaze: hostil voador do Nether (chama)
+  blaze: {
+    hp: 20, vel: 1.4, hostil: true, dano: 4, alcance: 8.0,
+    drops: () => Math.random() < 0.7 ? [{ i: ITEM.CARVAO, q: 1 + Math.floor(Math.random()*2) }] : [],
+    cor: 0xfdd835, sec: 0xff9800, // amarelo + laranja
+    voa: true,
+    luminoso: true,
+    resistenteSol: true,
+  },
   // Glow Squid: lula passiva aquática brilhante (emissive ciano)
   glow_squid: {
     hp: 10, vel: 0.5, hostil: false,
@@ -994,6 +1019,112 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
       break;
     }
+    case 'axolote': {
+      // Anfíbio rosa pequeno: corpo + cabeça grande + 4 patinhas + cauda
+      const corpo = cubo(0.30, 0.20, 0.40, info.cor);
+      corpo.position.y = 0.25; grp.add(corpo);
+      const cabeca = cubo(0.26, 0.22, 0.22, info.cor);
+      cabeca.position.set(0, 0.30, 0.26); grp.add(cabeca);
+      olhosPretos(cabeca, 0.09, 0.04, 0.115, 0.04, 0.025);
+      // Boca rosa-escura
+      const boca = cubo(0.10, 0.02, 0.02, info.sec);
+      boca.position.set(0, -0.06, 0.115); cabeca.add(boca);
+      // 6 antenas/guelras coloridas (3 de cada lado)
+      for (const sx of [-0.13, 0.13]) {
+        for (let i = 0; i < 3; i++) {
+          const ant = cubo(0.04, 0.02, 0.06, info.sec);
+          ant.position.set(sx, 0.05 - i * 0.04, -0.05); cabeca.add(ant);
+        }
+      }
+      // Cauda longa (3 segmentos diminuindo)
+      for (let s = 0; s < 3; s++) {
+        const seg = cubo(0.10 - s * 0.02, 0.06, 0.08, info.cor);
+        seg.position.set(0, 0.25, -0.20 - s * 0.08); grp.add(seg);
+      }
+      // 4 patinhas
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const p = cubo(0.05, 0.06, 0.05, info.sec);
+        p.position.x = (i % 2 === 0 ? -0.13 : 0.13);
+        p.position.y = 0.12;
+        p.position.z = (i < 2 ? 0.10 : -0.10);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
+      break;
+    }
+    case 'raposa': {
+      // Raposa laranja com peito branco + cauda longa fofa
+      const corpo = cubo(0.45, 0.30, 0.70, info.cor);
+      corpo.position.y = 0.55; grp.add(corpo);
+      // Peito branco
+      const peito = cubo(0.30, 0.20, 0.20, info.sec);
+      peito.position.set(0, 0.50, 0.30); grp.add(peito);
+      // Cabeça laranja com focinho branco
+      const cabeca = cubo(0.40, 0.34, 0.38, info.cor);
+      cabeca.position.set(0, 0.78, 0.40); grp.add(cabeca);
+      olhosPretos(cabeca, 0.13, 0.04, 0.195, 0.05, 0.04);
+      // Focinho branco
+      const focinho = cubo(0.20, 0.16, 0.14, info.sec);
+      focinho.position.set(0, -0.06, 0.16); cabeca.add(focinho);
+      // Nariz preto
+      const nariz = cubo(0.06, 0.04, 0.04, 0x000000);
+      nariz.position.set(0, 0.04, 0.075); focinho.add(nariz);
+      // 2 orelhas triangulares pretas
+      for (const sx of [-0.14, 0.14]) {
+        const o = cubo(0.10, 0.12, 0.06, info.cor);
+        o.position.set(sx, 0.20, -0.05); cabeca.add(o);
+        const oInt = cubo(0.06, 0.08, 0.04, 0x000000);
+        oInt.position.set(0, -0.01, 0.025); o.add(oInt);
+      }
+      // Cauda longa fofa (3 segmentos com ponta branca)
+      for (let s = 0; s < 3; s++) {
+        const corCauda = s === 2 ? info.sec : info.cor;
+        const seg = cubo(0.18 - s * 0.02, 0.20, 0.18, corCauda);
+        seg.position.set(0, 0.55, -0.40 - s * 0.16); grp.add(seg);
+      }
+      // 4 patas
+      const pernas = [];
+      for (let i = 0; i < 4; i++) {
+        const p = pernaComPivot(0.10, 0.32, 0.10, 0x4e342e, 0.32);
+        p.position.x = (i % 2 === 0 ? -0.15 : 0.15);
+        p.position.z = (i < 2 ? 0.20 : -0.20);
+        grp.add(p); pernas.push(p);
+      }
+      partes.cabeca = cabeca; partes.corpo = corpo; partes.pernas = pernas;
+      break;
+    }
+    case 'blaze': {
+      // Blaze: cabeça flutuante + 8 hastes amarelas em volta + chamas
+      const matBril = new THREE.MeshLambertMaterial({
+        color: info.cor, emissive: info.cor, emissiveIntensity: 0.7,
+      });
+      const matHaste = new THREE.MeshLambertMaterial({
+        color: info.sec, emissive: info.sec, emissiveIntensity: 0.5,
+      });
+      // Cabeça grande emissive
+      const cabeca = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.55), matBril);
+      cabeca.position.y = 1.05; grp.add(cabeca);
+      // Olhos pretos
+      olhosPretos(cabeca, 0.11, 0.02, 0.285, 0.07, 0.04);
+      // 8 hastes flutuantes ao redor (rotacionando livre)
+      for (let i = 0; i < 8; i++) {
+        const ang = (i / 8) * Math.PI * 2;
+        const haste = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.50, 0.10), matHaste);
+        const r = 0.45;
+        haste.position.set(Math.cos(ang) * r, 1.0 + Math.sin(i * 0.5) * 0.2, Math.sin(ang) * r);
+        grp.add(haste);
+      }
+      // 4 chamas no topo
+      for (let i = 0; i < 4; i++) {
+        const ang = (i / 4) * Math.PI * 2;
+        const chama = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.20, 0.08), matBril);
+        chama.position.set(Math.cos(ang) * 0.20, 1.55, Math.sin(ang) * 0.20);
+        grp.add(chama);
+      }
+      partes.cabeca = cabeca;
+      break;
+    }
     case 'glow_squid': {
       // Cabeça/manto cônico ciano + 8 tentáculos pendurados (4 longos + 4 curtos)
       // Material emissive (brilha sozinho na água escura)
@@ -1417,6 +1548,9 @@ function _dimsMob(tipo) {
     case 'bee':      return { raio: 0.16, altura: 0.30 };
     case 'glow_squid': return { raio: 0.22, altura: 0.90 };
     case 'camelo':   return { raio: 0.55, altura: 2.20 };
+    case 'axolote':  return { raio: 0.20, altura: 0.32 };
+    case 'raposa':   return { raio: 0.30, altura: 0.95 };
+    case 'blaze':    return { raio: 0.30, altura: 1.50 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
@@ -2125,15 +2259,13 @@ export class MobManager {
       }
       return;
     }
-    // Nether: ghast voador OU magma_cube no chão. Cap mobs em 6.
+    // Nether: ghast voador OU magma_cube OU blaze. Cap mobs em 8.
     if (state.world?.dimensao === 'nether') {
-      if (this.mobs.length >= 6) return;
-      // 60% magma_cube no chão, 40% ghast voando alto
-      if (Math.random() < 0.60) {
-        this.spawn('magma_cube', x, y, z);
-      } else {
-        this.spawn('ghast', x, y + 8, z);
-      }
+      if (this.mobs.length >= 8) return;
+      const r = Math.random();
+      if (r < 0.40) this.spawn('magma_cube', x, y, z);
+      else if (r < 0.70) this.spawn('blaze', x, y + 4, z);
+      else this.spawn('ghast', x, y + 8, z);
       return;
     }
     if (luzMax <= 7) {
@@ -2159,6 +2291,8 @@ export class MobManager {
         tipos.push('drowned'); tipos.push('drowned'); // peso 2× pra dominar em água
         // Glow Squid: passivo aquático, brilhante (chance moderada)
         if (Math.random() < 0.40) tipos.push('glow_squid');
+        // Axolote: anfíbio aquático rosa (raro, 20%)
+        if (Math.random() < 0.20) tipos.push('axolote');
       }
       // Stray: substitui esqueleto em chão de NEVE (taiga/montanhas)
       if (blocoChao === BLOCO.NEVE) {
@@ -2201,6 +2335,8 @@ export class MobManager {
       } else if (blocoChao === BLOCO.NEVE) {
         // Urso polar: passivo neutro em taiga (chão de NEVE)
         if (Math.random() < 0.15) tipos.push('urso_polar');
+        // Raposa: passiva ágil (taiga)
+        if (Math.random() < 0.20) tipos.push('raposa');
       }
       if (Math.random() < 0.03) tipos.push('villager'); // muito raro (em "vilas")
       if (Math.random() < 0.015) tipos.push('iron_golem'); // raríssimo

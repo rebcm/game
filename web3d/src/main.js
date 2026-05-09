@@ -737,6 +737,10 @@ function init() {
   state.inv.adicionar({ b: BLOCO.WARPED_HYPHAE, q: 16 });
   state.inv.adicionar({ b: BLOCO.FROGLIGHT_VERDE, q: 4 });
   state.inv.adicionar({ b: BLOCO.FROGLIGHT_ROXO, q: 4 });
+  state.inv.adicionar({ b: BLOCO.MELANCIA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.MELANCIA_GLISTER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.GIRASSOL, q: 8 });
+  state.inv.adicionar({ b: BLOCO.ABACAXI, q: 4 });
   state.inv.adicionar({ i: ITEM.REDSTONE, q: 32 });
   state.inv.adicionar({ i: ITEM.PRISMARINE_SHARD, q: 16 });
   state.inv.adicionar({ b: BLOCO.BANDEIRA_R, q: 4 });

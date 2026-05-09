@@ -313,8 +313,12 @@ export const BLOCO = {
   // Froglights (luzes orgânicas dos sapos)
   FROGLIGHT_VERDE:257, // verdant froglight
   FROGLIGHT_ROXO: 258, // pearlescent froglight
+  MELANCIA:       259, // melancia (top + lado verde + interior vermelho)
+  MELANCIA_GLISTER:260, // melancia dourada (cura mais)
+  GIRASSOL:       261, // girassol (decoração) - shape flower
+  ABACAXI:        262, // abacaxi (decoração)
 };
-export const N_BLOCOS = 259;
+export const N_BLOCOS = 263;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -595,6 +599,10 @@ export const BLOCO_INFO = {
   [BLOCO.WARPED_HYPHAE]:     { nome: 'Hifa Warped',      solido: true, emiteLuz: 0, cor: 0x2c8a8a, lateral: 0x1d5d5d },
   [BLOCO.FROGLIGHT_VERDE]:   { nome: 'Froglight Verde',  solido: true, emiteLuz: 15, cor: 0xa5d6a7, lateral: 0x66bb6a },
   [BLOCO.FROGLIGHT_ROXO]:    { nome: 'Froglight Roxo',   solido: true, emiteLuz: 15, cor: 0xce93d8, lateral: 0xab47bc },
+  [BLOCO.MELANCIA]:        { nome: 'Melancia',         solido: true, emiteLuz: 0, cor: 0x4caf50, lateral: 0x2e7d32 },
+  [BLOCO.MELANCIA_GLISTER]:{ nome: 'Melancia Dourada', solido: true, emiteLuz: 4, cor: 0xffd54f, lateral: 0xf9a825 },
+  [BLOCO.GIRASSOL]:        { nome: 'Girassol',         solido: false,emiteLuz: 0, cor: 0xffeb3b, lateral: 0x2e7d32, shape: 'flower' },
+  [BLOCO.ABACAXI]:         { nome: 'Abacaxi',          solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0x2e7d32 },
 };
 
 export const ICONE = {
@@ -1098,6 +1106,14 @@ export const RECEITAS = [
   // Froglights: 4 slimeballs + 1 luz (proxy de drop sapo+magma cube)
   { custos: [{i: ITEM.SLIMEBALL, q: 4}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.FROGLIGHT_VERDE, q: 1}, wb: true },
   { custos: [{i: ITEM.SLIMEBALL, q: 4}, {b: BLOCO.AMETHYST, q: 1}], saida: {b: BLOCO.FROGLIGHT_ROXO, q: 1}, wb: true },
+  // Melancia: 9 sementes (proxy de slice)
+  { custos: [{i: ITEM.SEMENTE, q: 9}], saida: {b: BLOCO.MELANCIA, q: 1}, wb: true },
+  // Melancia Dourada: 1 melancia + 8 ouro
+  { custos: [{b: BLOCO.MELANCIA, q: 1}, {i: ITEM.OURO, q: 8}], saida: {b: BLOCO.MELANCIA_GLISTER, q: 1}, wb: true },
+  // Girassol: 1 muda + 1 trigo + 1 flor amarela
+  { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TRIGO, q: 1}, {b: BLOCO.FLOR_AMARELA, q: 1}], saida: {b: BLOCO.GIRASSOL, q: 1}, wb: true },
+  // Abacaxi: 1 muda + 4 trigo
+  { custos: [{i: ITEM.MUDA, q: 1}, {i: ITEM.TRIGO, q: 4}], saida: {b: BLOCO.ABACAXI, q: 1}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

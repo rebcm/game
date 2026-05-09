@@ -1030,6 +1030,80 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Melancia: verde escuro com padrão de listras + sementes
+  function pintarMelancia(idx, dourada) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    if (dourada) {
+      // Melancia dourada: amarelo brilhante
+      ctx.fillStyle = '#fdd835';
+      ctx.fillRect(x0, y0, CELL, CELL);
+      ctx.fillStyle = '#ffeb3b';
+      for (let py = 4; py < CELL; py += 7) {
+        ctx.fillRect(x0, y0 + py, CELL, 2);
+      }
+      // Sementes douradas brilhantes
+      ctx.fillStyle = '#fff176';
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.30, 5, 2, idx * 9301 + 49297);
+      ctx.fillStyle = '#ffffff';
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.20, 7, 1, idx * 9301 + 7331);
+    } else {
+      // Melancia normal: verde com listras
+      ctx.fillStyle = '#388e3c';
+      ctx.fillRect(x0, y0, CELL, CELL);
+      // Listras verticais escuras (verde escuro)
+      ctx.fillStyle = '#1b5e20';
+      for (let px = 4; px < CELL; px += 4) {
+        ctx.fillRect(x0 + px, y0, 2, CELL);
+      }
+      // Listras claras (verde claro)
+      ctx.fillStyle = '#66bb6a';
+      for (let px = 6; px < CELL; px += 4) {
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
+      // Sementes pretas no centro (3x3)
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(x0 + 12, y0 + 8,  2, 1);
+      ctx.fillRect(x0 + 18, y0 + 12, 2, 1);
+      ctx.fillRect(x0 + 14, y0 + 16, 2, 1);
+      ctx.fillRect(x0 + 20, y0 + 20, 2, 1);
+      ctx.fillRect(x0 + 10, y0 + 24, 2, 1);
+    }
+  }
+
+  // Abacaxi: amarelo com padrão diamante + folhas verdes em cima
+  function pintarAbacaxi(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base amarela
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão diamante (escamas do abacaxi)
+    ctx.fillStyle = '#a1887f';
+    for (let py = 4; py < CELL - 4; py += 6) {
+      for (let px = 4; px < CELL - 4; px += 6) {
+        const off = (py / 6) % 2 === 0 ? 0 : 3;
+        ctx.fillRect(x0 + px + off, y0 + py, 3, 1);
+        ctx.fillRect(x0 + px + off, y0 + py + 1, 3, 1);
+      }
+    }
+    // Highlights amarelos
+    ctx.fillStyle = '#fff176';
+    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.25, 5, 1, idx * 9301 + 49297);
+    // Coroa de folhas verdes em cima
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 12, y0 + 1, 8, 4);
+    ctx.fillStyle = '#1b5e20';
+    for (const sx of [-1, 1]) {
+      ctx.fillRect(x0 + 16 + sx * 5, y0 + 1, 1, 4);
+    }
+    ctx.fillStyle = '#66bb6a';
+    ctx.fillRect(x0 + 14, y0 + 2, 2, 2);
+    ctx.fillRect(x0 + 17, y0 + 2, 2, 2);
+  }
+
   // Pedra Esculpida (chiseled): cor base + padrão geométrico central
   function pintarChiseled(idx, base, escuro, claro) {
     const col = idx % COLS;
@@ -3750,6 +3824,10 @@ function criarAtlas() {
   pintarHyphae(233, '#2c8a8a', '#1d5d5d', '#4cb8b8');             // warped hyphae
   pintarFroglight(234, '#a5d6a7', '#66bb6a', '#c5e1a5');          // froglight verde
   pintarFroglight(235, '#ce93d8', '#ab47bc', '#e1bee7');          // froglight roxo
+  pintarMelancia(236, false);                                     // melancia
+  pintarMelancia(237, true);                                      // melancia dourada
+  pintarFlor(238, '#ffeb3b', '#a05a30');                         // girassol amarelo
+  pintarAbacaxi(239);                                             // abacaxi
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4020,6 +4098,10 @@ function criarAtlas() {
   mapa[BLOCO.WARPED_HYPHAE]    = { top: 233, side: 233, bottom: 233 };
   mapa[BLOCO.FROGLIGHT_VERDE]  = { top: 234, side: 234, bottom: 234 };
   mapa[BLOCO.FROGLIGHT_ROXO]   = { top: 235, side: 235, bottom: 235 };
+  mapa[BLOCO.MELANCIA]         = { top: 236, side: 236, bottom: 236 };
+  mapa[BLOCO.MELANCIA_GLISTER] = { top: 237, side: 237, bottom: 237 };
+  mapa[BLOCO.GIRASSOL]         = { top: 238, side: 238, bottom: 238 };
+  mapa[BLOCO.ABACAXI]          = { top: 239, side: 239, bottom: 239 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
