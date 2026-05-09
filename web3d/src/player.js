@@ -55,6 +55,45 @@ export class Player {
 
   atualizar(dt, world) {
     if (this.morto || this.pausado) return;
+    // SPRINT MEGA-17: Mounted on rideable mob (segue o mob)
+    if (this._montado && this._montado.vivo?.()) {
+      // Player segue o mob, override input direção
+      const fwdM = _tmpVecFwd.set(0, 0, 0);
+      this.camera.getWorldDirection(fwdM);
+      fwdM.y = 0;
+      if (fwdM.lengthSq() > 1e-6) fwdM.normalize();
+      // Player controla mob via WASD
+      const dx = fwdM.x * this.input.fwd;
+      const dz = fwdM.z * this.input.fwd;
+      const len = Math.hypot(dx, dz);
+      const speed = (this._montado.tipo === 'horse' ? 5 : 3) * dt;
+      if (len > 0) {
+        this._montado.x += (dx / len) * speed;
+        this._montado.z += (dz / len) * speed;
+      }
+      // Sneak desce
+      if (this.sneak) {
+        this._montado = null;
+        state.ui?.toast?.('🚶 Desmontou');
+      } else {
+        // Player segue mob 1 bloco acima
+        this.pos.set(this._montado.x, this._montado.y + 1, this._montado.z);
+        this.camera.position.copy(this.pos);
+        return;
+      }
+    } else if (this._montado && !this._montado.vivo?.()) {
+      this._montado = null;
+    }
+    // SPRINT MEGA-17: Elytra glide — sprint+jump no ar = glide
+    if (this._elytraEquipada && !this.noChao && this.input.sprint && this.input.jump) {
+      // Glide: vy decai mais devagar, vx/vz boostado
+      this.vel.y = Math.max(this.vel.y, -0.5);
+      const fwdE = _tmpVecFwd.set(0, 0, 0);
+      this.camera.getWorldDirection(fwdE);
+      this.vel.x = fwdE.x * 8;
+      this.vel.z = fwdE.z * 8;
+      state.ui?.toast?.('🪽 Glide!');
+    }
     // Direção da câmera (apenas horizontal)
     const fwd = _tmpVecFwd.set(0, 0, 0);
     this.camera.getWorldDirection(fwd);

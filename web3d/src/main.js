@@ -96,6 +96,50 @@ function atacarMob() {
     }
     return;
   }
+  // SPRINT MEGA-18: Crossbow — charge similar ao arco mas multishot/piercing
+  const usandoCrossbow = sel && sel.i === ITEM.CROSSBOW && state.inv.contar(undefined, ITEM.FLECHA) > 0;
+  if (usandoCrossbow) {
+    if (!state.player.crossbowCharging) {
+      state.player.crossbowCharging = true;
+      state.player.crossbowCharge = 0;
+      Audio.bowDraw();
+    }
+    return;
+  }
+  // SPRINT MEGA-18: Trident Riptide — chuva → arremessa player (não a arma!)
+  if (sel?.i === ITEM.TRIDENTE && sel?.encant?.riptide && state.weather === 'rain') {
+    const fwd = state.renderer.camera.getWorldDirection({});
+    state.player.vel.x = fwd.x * 18;
+    state.player.vel.y = Math.max(8, fwd.y * 18);
+    state.player.vel.z = fwd.z * 18;
+    state.ui?.toast?.('🌪 RIPTIDE! Arremessado!');
+    Audio.colocar?.();
+    return;
+  }
+  // SPRINT MEGA-18: Mace Smash — se cair de altura, dano massivo + AoE
+  if (sel?.i === ITEM.MACE && !state.player.noChao && state.player.vel.y < -0.5) {
+    const m = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
+    if (m) {
+      // Dano = base + 0.5 × altura caída
+      const altura = (state.player.spawnY || state.player.pos.y) - state.player.pos.y;
+      const danoSmash = Math.max(6, 6 + altura * 0.5);
+      const finalDano = sel.encant?.density ? danoSmash * (1 + 0.25 * sel.encant.density) : danoSmash;
+      m.tomarDano?.(Math.round(finalDano), 0, 0);
+      // AoE: hit mobs próximos
+      for (const o of state.mobMgr.mobs) {
+        if (o === m) continue;
+        const dist = Math.hypot(o.x - m.x, o.z - m.z);
+        if (dist < 3) o.tomarDano?.(Math.round(finalDano * 0.5), 0, 0);
+      }
+      // Wind Burst: pulo após smash
+      if (sel.encant?.wind_burst) {
+        state.player.vel.y = 12;
+      }
+      state.ui?.toast?.(`🔨 SMASH! ${Math.round(finalDano)} dano`);
+      state.renderer?.aplicarShake?.(0.4);
+      return;
+    }
+  }
   const m = state.mobMgr.maisProximo(state.player, ALCANCE_BLOCO);
   if (!m) return;
   const isCrit = !state.player.noChao && state.player.vel.y < -0.3 && state.player.modo === 'survival';
@@ -157,6 +201,40 @@ function atacarMob() {
     const xp = MOB_INFO[m.tipo].hostil ? 5 : 2;
     spawnXPOrb(xp, m.x, m.y + 0.5, m.z);
     state.ui.toast(`${m.tipo} derrotado! ${isCrit ? '⚡ CRÍTICO! ' : ''}(+${xp} XP)`);
+    // SPRINT MEGA-19: Bad Omen ao matar pillager captain (10% chance dos pillagers serem captains)
+    if (m.tipo === 'pillager' && Math.random() < 0.10) {
+      state.player.efeitos = state.player.efeitos || {};
+      state.player.efeitos.bad_omen = Date.now() + 6000000; // 100 min
+      state.ui.toast('🏴 BAD OMEN! Vai trigger raid em vila!');
+    }
+    // SPRINT MEGA-20: Sculk spread — XP drop dentro range de Sculk Catalyst
+    state._sculkSpread = state._sculkSpread || [];
+    if (state.world?.dimensao !== 'nether') {
+      // Verifica se há SCULK_CATALYST em raio 8
+      for (let dx = -8; dx <= 8; dx += 4) {
+        for (let dz = -8; dz <= 8; dz += 4) {
+          const bx = Math.floor(m.x + dx), bz = Math.floor(m.z + dz);
+          for (let by = Math.floor(m.y - 4); by <= Math.floor(m.y + 4); by += 2) {
+            if (state.world.get(bx, by, bz) === BLOCO.SCULK_CATALYST) {
+              // Spread sculk em volta do mob
+              for (let sx = -2; sx <= 2; sx++) {
+                for (let sz = -2; sz <= 2; sz++) {
+                  if (Math.random() < 0.30) {
+                    const tx = Math.floor(m.x + sx), tz = Math.floor(m.z + sz);
+                    const ty = Math.floor(m.y);
+                    if (state.world.get(tx, ty - 1, tz) !== BLOCO.AR &&
+                        state.world.get(tx, ty - 1, tz) !== BLOCO.AGUA) {
+                      state.world.set(tx, ty - 1, tz, BLOCO.SCULK);
+                    }
+                  }
+                }
+              }
+              state.ui.toast('🟢 SCULK SPREAD!');
+            }
+          }
+        }
+      }
+    }
     if (MOB_INFO[m.tipo].hostil) Achievements.unlock('PRIMEIRO_MOB');
     if (m.tipo === 'ender_dragon') Achievements.unlock('SLAY_DRAGON');
     Save.incrementarStat('mobsKilled');
@@ -522,7 +600,36 @@ function soltarArco() {
   const dano = Math.round(2 + charge * 8);   // 2 (tap) → 10 (full)
   const vel  = 18 + charge * 22;             // 18 → 40 m/s
   spawnArrow(state.renderer.camera.position, dirCam, dano, vel);
+  // Flame enchant: incendeia mob alvo
+  // Power enchant: +25% dano por nível (já no dano)
+  // Infinity: não consome flecha
+  const sel = state.inv.itemSelecionado();
+  if (sel?.encant?.infinity) {
+    state.inv.adicionar({ i: ITEM.FLECHA, q: 1 }); // restaura
+  }
   Audio.bowRelease();
+  // SPRINT MEGA-18: Crossbow release com Multishot/Quick Charge/Piercing
+  if (state.player.crossbowCharging && sel?.i === ITEM.CROSSBOW) {
+    state.player.crossbowCharging = false;
+    const crossCharge = state.player.crossbowCharge || 1;
+    state.player.crossbowCharge = 0;
+    if (crossCharge < 0.30 && !sel.encant?.quick_charge) return;
+    if (state.inv.contar(undefined, ITEM.FLECHA) <= 0) return;
+    state.inv.consumir(undefined, ITEM.FLECHA, 1);
+    const dirCam2 = state.renderer.camera.getWorldDirection(_tmpVecAux).clone();
+    // Multishot: 3 flechas com spread
+    const numShots = sel.encant?.multishot ? 3 : 1;
+    for (let i = 0; i < numShots; i++) {
+      const offsetAng = (i - (numShots - 1) / 2) * 0.15;
+      const dir = {
+        x: dirCam2.x * Math.cos(offsetAng) + dirCam2.z * Math.sin(offsetAng),
+        y: dirCam2.y,
+        z: dirCam2.z * Math.cos(offsetAng) - dirCam2.x * Math.sin(offsetAng),
+      };
+      spawnArrow(state.renderer.camera.position, dir, 8, 30);
+    }
+    Audio.bowRelease();
+  }
 }
 
 // === Comer item da hotbar ===
@@ -597,6 +704,38 @@ function comerSlot() {
     state.inv.consumirAtual();
     state.ui.toast('🟣 Teleport!');
     Audio.enderTeleport?.() || Audio.colocar?.();
+    return;
+  }
+  // SPRINT MEGA-18: Splash potion — arremessa em vez de beber
+  if (info?.splash && info?.pocao) {
+    const fwd = state.renderer.camera.getWorldDirection({});
+    const px = state.player.pos.x, py = state.player.pos.y + 1.5, pz = state.player.pos.z;
+    if (state.particulas?.spawnArrow) {
+      state.particulas.spawnArrow(px, py, pz, fwd.x * 12, fwd.y * 12, fwd.z * 12, 0);
+    }
+    // Aplica efeito em radius 4 ao redor de onde flecha cai (placeholder: aplica em mobs próximos)
+    setTimeout(() => {
+      const efeito = info.pocao;
+      for (const m of state.mobMgr?.mobs || []) {
+        const dist = Math.hypot(m.x - px, m.z - pz);
+        if (dist < 6) {
+          if (efeito === 'harm') m.tomarDano?.(6, 0, 0);
+          else if (efeito === 'heal') { /* heal mobs */ }
+          else if (efeito === 'poison') m.tomarDano?.(2, 0, 0);
+        }
+      }
+      state.ui.toast(`💥 Splash ${efeito}!`);
+    }, 800);
+    state.inv.consumirAtual();
+    return;
+  }
+  // SPRINT MEGA-18: Lingering potion — cria área de efeito 8s
+  if (info?.lingering && info?.pocao) {
+    const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+    state.lingeringClouds = state.lingeringClouds || [];
+    state.lingeringClouds.push({ x: px, y: py, z: pz, efeito: info.pocao, life: 8 });
+    state.ui.toast(`☁ Lingering ${info.pocao}!`);
+    state.inv.consumirAtual();
     return;
   }
   // Poções: efeitos imediatos ou timer
@@ -779,9 +918,11 @@ function dormir() {
     if (state.player.pos) {
       state.player.spawnPoint = { x: state.player.pos.x, y: state.player.pos.y, z: state.player.pos.z };
     }
+    // SPRINT MEGA-19: zerar insomnia counter
+    state.player.diasSemDormir = 0;
     // Remove phantoms (paridade MC — phantoms só atacam quando insônia)
-    if (state.mobs?.lista) {
-      state.mobs.lista = state.mobs.lista.filter(m => m.tipo !== 'phantom');
+    if (state.mobMgr?.mobs) {
+      state.mobMgr.mobs = state.mobMgr.mobs.filter(m => m.tipo !== 'phantom');
     }
     overlay?.classList?.add('hidden');
     state.ui.toast('Bom dia! ☀️ Spawn ressetado!');
@@ -1927,6 +2068,46 @@ function loop(now) {
         }
       }
     }
+    // SPRINT MEGA-19: Insomnia tracking — incrementa ao atingir noite (sun < 0.4)
+    const sunPrev = state._sunPrev || 1;
+    const sunNow = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
+    if (sunPrev > 0.4 && sunNow <= 0.4) {
+      // Acabou de virar noite — incrementa contador
+      state.player.diasSemDormir = (state.player.diasSemDormir || 0) + 1;
+      if (state.player.diasSemDormir >= 3) {
+        state.ui?.toast?.(`⚠ Insônia ${state.player.diasSemDormir} dias! Phantoms aproximam!`);
+      }
+    }
+    state._sunPrev = sunNow;
+    // SPRINT MEGA-18: Lingering cloud tick
+    if (state.lingeringClouds?.length) {
+      for (let i = state.lingeringClouds.length - 1; i >= 0; i--) {
+        const c = state.lingeringClouds[i];
+        c.life -= dt;
+        if (c.life <= 0) {
+          state.lingeringClouds.splice(i, 1);
+          continue;
+        }
+        // Aplica efeito cada 1s em mobs próximos
+        c._tickAcc = (c._tickAcc || 0) + dt;
+        if (c._tickAcc >= 1.0) {
+          c._tickAcc = 0;
+          for (const m of state.mobMgr?.mobs || []) {
+            const dist = Math.hypot(m.x - c.x, m.z - c.z);
+            if (dist < 4) {
+              if (c.efeito === 'harm') m.tomarDano?.(2, 0, 0);
+              else if (c.efeito === 'poison') m.tomarDano?.(1, 0, 0);
+              else if (c.efeito === 'fire_res' || c.efeito === 'regen') m.queimando = 0;
+            }
+          }
+          // Player também recebe se em range
+          const dp = Math.hypot(state.player.pos.x - c.x, state.player.pos.z - c.z);
+          if (dp < 4 && (c.efeito === 'heal' || c.efeito === 'regen' || c.efeito === 'fire_res')) {
+            aplicarPocao(c.efeito);
+          }
+        }
+      }
+    }
     state.tempoDia = (state.tempoDia + dt / DIA_SEGUNDOS) % 1;
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(state.tempoDia * Math.PI * 2 - Math.PI / 2));
     state.mobMgr.atualizar(dt, state.world, state.player, sun);
@@ -2108,6 +2289,86 @@ function loop(now) {
       // Villager OU Wandering Trader: abre painel de trades
       if (mAlvo && (mAlvo.tipo === 'villager' || mAlvo.tipo === 'wandering_trader')) {
         abrirTradeVillager(mAlvo);
+        return;
+      }
+      // SPRINT MEGA-17: Montar em mob rideable (horse/donkey/mule/llama/strider/pig)
+      // Precisa SELA na hotbar OU já tá com sela aplicada
+      const mobInfo = mAlvo ? state.mobMgr.MOB_INFO?.[mAlvo.tipo] : null;
+      if (mAlvo && mobInfo?.rideable) {
+        if (mAlvo._comSela || sel?.i === ITEM.SELA) {
+          if (sel?.i === ITEM.SELA) {
+            mAlvo._comSela = true;
+            state.inv.consumirAtual();
+            state.ui.toast(`🐎 Sela colocada em ${mAlvo.tipo}!`);
+            return;
+          }
+          // Já tem sela: monta!
+          state.player._montado = mAlvo;
+          state.ui.toast(`🐎 Montado em ${mAlvo.tipo}! (sneak para descer)`);
+          Audio.colocar?.();
+          return;
+        } else {
+          state.ui.toast('🐴 Precisa colocar sela primeiro');
+          return;
+        }
+      }
+      // Wolf tame com OSSO
+      if (mAlvo && sel?.i === ITEM.OSSO && mAlvo.tipo === 'lobo' && !mAlvo.domesticado) {
+        if (Math.random() < 0.33) {
+          mAlvo.domesticado = true;
+          mAlvo.amigavel = true;
+          state.inv.consumirAtual();
+          state.ui.toast('🐺 Lobo domesticado!');
+        } else {
+          state.inv.consumirAtual();
+          state.ui.toast('🐺 Lobo não aceitou (tente novamente)');
+        }
+        return;
+      }
+      // Cat tame com PEIXE
+      if (mAlvo && sel?.i === ITEM.PEIXE && mAlvo.tipo === 'cat' && !mAlvo.domesticado) {
+        if (Math.random() < 0.33) {
+          mAlvo.domesticado = true;
+          mAlvo.amigavel = true;
+          state.inv.consumirAtual();
+          state.ui.toast('🐱 Gato domesticado!');
+        } else {
+          state.inv.consumirAtual();
+          state.ui.toast('🐱 Gato esnobou (tente novamente)');
+        }
+        return;
+      }
+      // Parrot tame com SEMENTE
+      if (mAlvo && sel?.i === ITEM.SEMENTE && mAlvo.tipo === 'papagaio' && !mAlvo.domesticado) {
+        if (Math.random() < 0.33) {
+          mAlvo.domesticado = true;
+          mAlvo.amigavel = true;
+          state.inv.consumirAtual();
+          state.ui.toast('🦜 Papagaio domesticado!');
+        }
+        return;
+      }
+      // Boat — interagir colocar boat se hand
+      if (sel?.i >= ITEM.BARCO_OAK && sel?.i <= ITEM.BARCO_CHEST) {
+        // Spawn boat ao redor (placeholder)
+        state.ui.toast('🛶 Barco colocado (paridade futura: dirigir WASD)');
+        state.inv.consumirAtual();
+        return;
+      }
+      // Minecart — colocar em rail próximo
+      if (sel?.i >= ITEM.MINECART && sel?.i <= ITEM.MINECART_SPAWN) {
+        state.ui.toast('🛒 Vagonete colocado (paridade futura: rolar em rails)');
+        state.inv.consumirAtual();
+        return;
+      }
+      // Elytra — equipar como peitoral
+      if (sel?.i === ITEM.ELYTRA) {
+        if (state.inv.equipar?.('torso', sel)) {
+          state.ui.toast('🪽 Elytra equipada! Sprint+Jump no ar pra glide!');
+        } else {
+          state.player._elytraEquipada = true;
+          state.ui.toast('🪽 Elytra ativa!');
+        }
         return;
       }
       // Ordenhar vaca: BUCKET vazio + vaca → BUCKET_LEITE
