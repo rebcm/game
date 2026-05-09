@@ -774,8 +774,17 @@ export const BLOCO = {
   SLAB_GLAZED_BR:      891, SLAB_GLAZED_PR:      892, SLAB_GLAZED_CN:      893, SLAB_GLAZED_MR:      894,
   ESCADA_GLAZED_RS:    895, ESCADA_GLAZED_BR:    896, ESCADA_GLAZED_PR:    897, ESCADA_GLAZED_CN:    898,
   ESCADA_GLAZED_MR:    899, PAREDE_GLAZED_R:     900, PAREDE_GLAZED_A:     901, PAREDE_GLAZED_V:     902,
+  // Sprint 31: 32 — escadas/lajes/walls madeira + andaimes + outros (903-934)
+  SLAB_MANGROVE:       903, ESCADA_MANGROVE:     904, FENCE_GATE_MANGROVE: 905, FENCE_GATE_CHERRY:   906,
+  SLAB_BAMBU_PR:       907, ESCADA_BAMBU_PR:     908, ESCADA_BAMBOO_MOS2:  909, ESCADA_DRIED_KELP2:  910,
+  PAREDE_MANGROVE:     911, PAREDE_CHERRY:       912, PAREDE_BIRCH:        913, PAREDE_SPRUCE:       914,
+  PAREDE_ACACIA:       915, PAREDE_JUNGLE:       916, PAREDE_DARK_OAK:     917, PAREDE_OAK:          918,
+  SLAB_LANTERN:        919, SLAB_BANDEIRA_R:     920, SLAB_BANDEIRA_A:     921, SLAB_BANDEIRA_V:     922,
+  SLAB_BANDEIRA_AM:    923, SLAB_BANDEIRA_BR:    924, SLAB_BANDEIRA_PR:    925, SLAB_BANDEIRA_LR:    926,
+  PILAR_QUARTZO:       927, PILAR_PURPUR:        928, PILAR_BASALT:        929, PILAR_HAY:           930,
+  PILAR_BONE:          931, PILAR_NETHER_W:      932, PILAR_PURPUR_C:      933, PILAR_PRISMARINE:    934,
 };
-export const N_BLOCOS = 903;
+export const N_BLOCOS = 935;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1729,6 +1738,39 @@ export const BLOCO_INFO = {
   [BLOCO.PAREDE_GLAZED_R]:    { nome: 'Parede Glazed Verm.',solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'wall' },
   [BLOCO.PAREDE_GLAZED_A]:    { nome: 'Parede Glazed Azul', solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'wall' },
   [BLOCO.PAREDE_GLAZED_V]:    { nome: 'Parede Glazed Verde',solido: true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'wall' },
+  // Sprint 31: 32 escadas/lajes/walls madeira + andaimes + outros (903-934)
+  [BLOCO.SLAB_MANGROVE]:      { nome: 'Laje Mangrove',     solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'slab' },
+  [BLOCO.ESCADA_MANGROVE]:    { nome: 'Escada Mangrove',   solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'stairs' },
+  [BLOCO.FENCE_GATE_MANGROVE]:{ nome: 'Portão Mangrove',   solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'fence' },
+  [BLOCO.FENCE_GATE_CHERRY]:  { nome: 'Portão Cerejeira',  solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'fence' },
+  [BLOCO.SLAB_BAMBU_PR]:      { nome: 'Laje Bambu Pranchas',solido:true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'slab' },
+  [BLOCO.ESCADA_BAMBU_PR]:    { nome: 'Escada Bambu Pr.',  solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'stairs' },
+  [BLOCO.ESCADA_BAMBOO_MOS2]: { nome: 'Escada Bambu Mos2', solido: true, emiteLuz: 0, cor: 0xc8a951, lateral: 0xa0863e, shape: 'stairs' },
+  [BLOCO.ESCADA_DRIED_KELP2]: { nome: 'Escada Alga Seca2', solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20, shape: 'stairs' },
+  [BLOCO.PAREDE_MANGROVE]:    { nome: 'Parede Mangrove',   solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'wall' },
+  [BLOCO.PAREDE_CHERRY]:      { nome: 'Parede Cerejeira',  solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'wall' },
+  [BLOCO.PAREDE_BIRCH]:       { nome: 'Parede Bétula',     solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'wall' },
+  [BLOCO.PAREDE_SPRUCE]:      { nome: 'Parede Pinheiro',   solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'wall' },
+  [BLOCO.PAREDE_ACACIA]:      { nome: 'Parede Acácia',     solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'wall' },
+  [BLOCO.PAREDE_JUNGLE]:      { nome: 'Parede Selva',      solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'wall' },
+  [BLOCO.PAREDE_DARK_OAK]:    { nome: 'Parede Carv.Esc.',  solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'wall' },
+  [BLOCO.PAREDE_OAK]:         { nome: 'Parede Carvalho',   solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'wall' },
+  [BLOCO.SLAB_LANTERN]:       { nome: 'Laje Lanterna',     solido: true, emiteLuz: 14,cor: 0xfdd835, lateral: 0xa05a30, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_R]:    { nome: 'Laje Bandeira Verm.',solido:true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_A]:    { nome: 'Laje Bandeira Azul',solido: true, emiteLuz: 0, cor: 0x1565c0, lateral: 0x0d47a1, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_V]:    { nome: 'Laje Bandeira Verde',solido:true, emiteLuz: 0, cor: 0x2e7d32, lateral: 0x1b5e20, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_AM]:   { nome: 'Laje Bandeira Amar.',solido:true, emiteLuz: 0, cor: 0xf9a825, lateral: 0xf57f17, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_BR]:   { nome: 'Laje Bandeira Br.', solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_PR]:   { nome: 'Laje Bandeira Pr.', solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x000000, shape: 'slab' },
+  [BLOCO.SLAB_BANDEIRA_LR]:   { nome: 'Laje Bandeira Lar.',solido: true, emiteLuz: 0, cor: 0xff9800, lateral: 0xe65100, shape: 'slab' },
+  [BLOCO.PILAR_QUARTZO]:      { nome: 'Pilar Quartzo',     solido: true, emiteLuz: 0, cor: 0xfafafa, lateral: 0xeeeeee },
+  [BLOCO.PILAR_PURPUR]:       { nome: 'Pilar Purpur',      solido: true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a },
+  [BLOCO.PILAR_BASALT]:       { nome: 'Pilar Basalto',     solido: true, emiteLuz: 0, cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.PILAR_HAY]:          { nome: 'Pilar Feno',        solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0xa1875a },
+  [BLOCO.PILAR_BONE]:         { nome: 'Pilar Osso',        solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1 },
+  [BLOCO.PILAR_NETHER_W]:     { nome: 'Pilar Nether Wart', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
+  [BLOCO.PILAR_PURPUR_C]:     { nome: 'Pilar Purpur Centr.',solido:true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a },
+  [BLOCO.PILAR_PRISMARINE]:   { nome: 'Pilar Prismarine',  solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f },
 };
 
 export const ICONE = {
