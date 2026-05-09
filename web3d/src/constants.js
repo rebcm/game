@@ -783,8 +783,17 @@ export const BLOCO = {
   SLAB_BANDEIRA_AM:    923, SLAB_BANDEIRA_BR:    924, SLAB_BANDEIRA_PR:    925, SLAB_BANDEIRA_LR:    926,
   PILAR_QUARTZO:       927, PILAR_PURPUR:        928, PILAR_BASALT:        929, PILAR_HAY:           930,
   PILAR_BONE:          931, PILAR_NETHER_W:      932, PILAR_PURPUR_C:      933, PILAR_PRISMARINE:    934,
+  // Sprint 32: 32 — botões + placas + sinais + bonus (935-966)
+  BTN_BIRCH:           935, BTN_SPRUCE:          936, BTN_ACACIA:          937, BTN_JUNGLE:          938,
+  BTN_DARK_OAK:        939, BTN_CHERRY:          940, BTN_MANGROVE:        941, BTN_BAMBU:           942,
+  PLATE_BIRCH:         943, PLATE_SPRUCE:        944, PLATE_ACACIA:        945, PLATE_JUNGLE:        946,
+  PLATE_DARK_OAK:      947, PLATE_CHERRY:        948, PLATE_MANGROVE:      949, PLATE_FERRO:         950,
+  SIGN_OAK:            951, SIGN_BIRCH:          952, SIGN_SPRUCE:         953, SIGN_ACACIA:         954,
+  SIGN_JUNGLE:         955, SIGN_DARK_OAK:       956, SIGN_CHERRY:         957, SIGN_MANGROVE:       958,
+  HANGING_SIGN_OAK:    959, HANGING_SIGN_BIRCH:  960, HANGING_SIGN_SPRUCE: 961, HANGING_SIGN_ACACIA: 962,
+  HANGING_SIGN_JUNGLE: 963, HANGING_SIGN_DARK:   964, HANGING_SIGN_CHERRY: 965, HANGING_SIGN_MANGROVE:966,
 };
-export const N_BLOCOS = 935;
+export const N_BLOCOS = 967;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -1771,6 +1780,39 @@ export const BLOCO_INFO = {
   [BLOCO.PILAR_NETHER_W]:     { nome: 'Pilar Nether Wart', solido: true, emiteLuz: 0, cor: 0xc62828, lateral: 0x8b0000 },
   [BLOCO.PILAR_PURPUR_C]:     { nome: 'Pilar Purpur Centr.',solido:true, emiteLuz: 0, cor: 0xab47bc, lateral: 0x6a1b9a },
   [BLOCO.PILAR_PRISMARINE]:   { nome: 'Pilar Prismarine',  solido: true, emiteLuz: 0, cor: 0x4dd0e1, lateral: 0x00838f },
+  // Sprint 32: 32 botões + placas + sinais (935-966)
+  [BLOCO.BTN_BIRCH]:          { nome: 'Botão Bétula',      solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'button' },
+  [BLOCO.BTN_SPRUCE]:         { nome: 'Botão Pinheiro',    solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'button' },
+  [BLOCO.BTN_ACACIA]:         { nome: 'Botão Acácia',      solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'button' },
+  [BLOCO.BTN_JUNGLE]:         { nome: 'Botão Selva',       solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'button' },
+  [BLOCO.BTN_DARK_OAK]:       { nome: 'Botão Carv.Esc.',   solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'button' },
+  [BLOCO.BTN_CHERRY]:         { nome: 'Botão Cerejeira',   solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'button' },
+  [BLOCO.BTN_MANGROVE]:       { nome: 'Botão Mangrove',    solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'button' },
+  [BLOCO.BTN_BAMBU]:          { nome: 'Botão Bambu',       solido: true, emiteLuz: 0, cor: 0x8bc34a, lateral: 0x558b2f, shape: 'button' },
+  [BLOCO.PLATE_BIRCH]:        { nome: 'Placa Bétula',      solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'plate' },
+  [BLOCO.PLATE_SPRUCE]:       { nome: 'Placa Pinheiro',    solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'plate' },
+  [BLOCO.PLATE_ACACIA]:       { nome: 'Placa Acácia',      solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'plate' },
+  [BLOCO.PLATE_JUNGLE]:       { nome: 'Placa Selva',       solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.PLATE_DARK_OAK]:     { nome: 'Placa Carv.Esc.',   solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'plate' },
+  [BLOCO.PLATE_CHERRY]:       { nome: 'Placa Cerejeira',   solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'plate' },
+  [BLOCO.PLATE_MANGROVE]:     { nome: 'Placa Mangrove',    solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.PLATE_FERRO]:        { nome: 'Placa Ferro',       solido: true, emiteLuz: 0, cor: 0xeceff1, lateral: 0xbcaaa4, shape: 'plate' },
+  [BLOCO.SIGN_OAK]:           { nome: 'Placa Carvalho',    solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.SIGN_BIRCH]:         { nome: 'Placa Bétula',      solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'plate' },
+  [BLOCO.SIGN_SPRUCE]:        { nome: 'Placa Pinheiro',    solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'plate' },
+  [BLOCO.SIGN_ACACIA]:        { nome: 'Placa Acácia',      solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'plate' },
+  [BLOCO.SIGN_JUNGLE]:        { nome: 'Placa Selva',       solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.SIGN_DARK_OAK]:      { nome: 'Placa Carv.Esc.',   solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'plate' },
+  [BLOCO.SIGN_CHERRY]:        { nome: 'Placa Cerejeira',   solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'plate' },
+  [BLOCO.SIGN_MANGROVE]:      { nome: 'Placa Mangrove',    solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_OAK]:    { nome: 'Placa Susp. Carv.', solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_BIRCH]:  { nome: 'Placa Susp. Bét.', solido: true, emiteLuz: 0, cor: 0xfff8e1, lateral: 0xeceff1, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_SPRUCE]: { nome: 'Placa Susp. Pin.', solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_ACACIA]: { nome: 'Placa Susp. Acá.', solido: true, emiteLuz: 0, cor: 0xff7043, lateral: 0xbf360c, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_JUNGLE]: { nome: 'Placa Susp. Sel.', solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_DARK]:   { nome: 'Placa Susp. C.E.', solido: true, emiteLuz: 0, cor: 0x3e2723, lateral: 0x1a0e08, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_CHERRY]: { nome: 'Placa Susp. Cer.', solido: true, emiteLuz: 0, cor: 0xf8bbd0, lateral: 0xec407a, shape: 'plate' },
+  [BLOCO.HANGING_SIGN_MANGROVE]:{nome:'Placa Susp. Man.',  solido: true, emiteLuz: 0, cor: 0x8d6e63, lateral: 0x6d4c41, shape: 'plate' },
 };
 
 export const ICONE = {
