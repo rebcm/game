@@ -124,8 +124,14 @@ export const BLOCO = {
   ANDESITO_POL:   83,
   PEDRA_LISA:     84, // smooth stone (smelt de pedra)
   TIJOLO_MUSGO:   85, // tijolo de pedra com musgo
+  ARENITO:        86, // sandstone amarelo padrão
+  ARENITO_LISO:   87, // smooth sandstone (sem grãos)
+  ARENITO_CORTADO:88, // chiseled sandstone (com símbolos)
+  TIJOLO_NETHER:  89, // nether brick (vermelho-escuro)
+  NETHER_CORTADO: 90, // chiseled nether brick
+  PAVIMENTO:      91, // cobblestone (pedras irregulares cinza)
 };
-export const N_BLOCOS = 86;
+export const N_BLOCOS = 92;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -220,6 +226,12 @@ export const BLOCO_INFO = {
   [BLOCO.ANDESITO_POL]:  { nome: 'Andesito Polido',  solido: true,  emiteLuz: 0,  cor: 0xb0b0b0, lateral: 0x9e9e9e },
   [BLOCO.PEDRA_LISA]:    { nome: 'Pedra Lisa',       solido: true,  emiteLuz: 0,  cor: 0xb8b8b8, lateral: 0xa0a0a0 },
   [BLOCO.TIJOLO_MUSGO]:  { nome: 'Tijolo c/ Musgo',  solido: true,  emiteLuz: 0,  cor: 0xc0d0a0, lateral: 0xa0b88a },
+  [BLOCO.ARENITO]:       { nome: 'Arenito',          solido: true,  emiteLuz: 0,  cor: 0xfdd8a0, lateral: 0xe6c389 },
+  [BLOCO.ARENITO_LISO]:  { nome: 'Arenito Liso',     solido: true,  emiteLuz: 0,  cor: 0xfde2b2, lateral: 0xfde2b2 },
+  [BLOCO.ARENITO_CORTADO]:{nome:'Arenito Cortado',  solido: true,  emiteLuz: 0,  cor: 0xfdd8a0, lateral: 0xe6c389 },
+  [BLOCO.TIJOLO_NETHER]: { nome: 'Tijolo do Nether', solido: true,  emiteLuz: 0,  cor: 0x4a0e0e, lateral: 0x2d0707 },
+  [BLOCO.NETHER_CORTADO]:{ nome: 'Nether Cortado',  solido: true,  emiteLuz: 0,  cor: 0x4a0e0e, lateral: 0x2d0707 },
+  [BLOCO.PAVIMENTO]:     { nome: 'Pavimento',        solido: true,  emiteLuz: 0,  cor: 0x7a7a7a, lateral: 0x5e5e5e },
 };
 
 export const ICONE = {
@@ -463,6 +475,18 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PEDRA, q: 4}], saida: {b: BLOCO.PEDRA_LISA, q: 4}, wb: true },
   // Tijolo c/ musgo: 1 tijolo + 1 muda → 1 tijolo musgo (proxy mossy)
   { custos: [{b: BLOCO.TIJOLO, q: 1}, {i: ITEM.MUDA, q: 1}], saida: {b: BLOCO.TIJOLO_MUSGO, q: 1}, wb: true },
+  // Arenito: 4 areia → 1 arenito (paridade MC)
+  { custos: [{b: BLOCO.AREIA, q: 4}], saida: {b: BLOCO.ARENITO, q: 1}, wb: true },
+  // Arenito Liso: smelt do arenito (proxy: 1 arenito + 1 carvão)
+  { custos: [{b: BLOCO.ARENITO, q: 1}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.ARENITO_LISO, q: 1}, wb: false },
+  // Arenito Cortado: 4 arenito → 4 cortado
+  { custos: [{b: BLOCO.ARENITO, q: 4}], saida: {b: BLOCO.ARENITO_CORTADO, q: 4}, wb: true },
+  // Tijolo do Nether: 4 netherrack + 1 carvão → 4 tijolos
+  { custos: [{b: BLOCO.NETHERRACK, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO_NETHER, q: 4}, wb: true },
+  // Nether Cortado: 4 tijolos do nether → 4 cortados
+  { custos: [{b: BLOCO.TIJOLO_NETHER, q: 4}], saida: {b: BLOCO.NETHER_CORTADO, q: 4}, wb: true },
+  // Pavimento: 4 pedras → 4 pavimento (cobblestone — paridade quase invertida MC)
+  { custos: [{b: BLOCO.PEDRA, q: 4}], saida: {b: BLOCO.PAVIMENTO, q: 4}, wb: true },
   // Tijolo: 4 argila + 1 carvão (proxy de smelt fornalha) → 4 tijolos
   { custos: [{b: BLOCO.ARGILA, q: 4}, {i: ITEM.CARVAO, q: 1}], saida: {b: BLOCO.TIJOLO, q: 4}, wb: false },
   // Magma: 4 obsidiana + 1 carvão (proxy de magma cream — sem magma cream)

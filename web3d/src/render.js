@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 11, CELL = 32;
+  const COLS = 8, ROWS = 12, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1030,6 +1030,110 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
+  // Arenito (sandstone): bege com grãos pseudo-aleatórios
+  function pintarArenito(idx, variante) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base bege
+    ctx.fillStyle = '#fde2b2';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    if (variante === 'liso') {
+      // Liso: gradiente sutil (top mais claro)
+      ctx.fillStyle = '#fff8e1';
+      ctx.fillRect(x0, y0, CELL, 8);
+      ctx.fillStyle = '#fdd7a8';
+      ctx.fillRect(x0, y0 + CELL - 8, CELL, 8);
+      ctx.fillStyle = '#e6c389';
+      ctx.fillRect(x0, y0, CELL, 1);
+      ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    } else if (variante === 'cortado') {
+      // Cortado: símbolo central (espiral/glifo)
+      ctx.fillStyle = '#a08254';
+      ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+      ctx.fillStyle = '#fde2b2';
+      ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, CELL - 12);
+      // Símbolo cruz central
+      ctx.fillStyle = '#a08254';
+      ctx.fillRect(x0 + CELL/2 - 1, y0 + 9, 2, CELL - 18);
+      ctx.fillRect(x0 + 9, y0 + CELL/2 - 1, CELL - 18, 2);
+      ctx.fillRect(x0 + CELL/2 - 3, y0 + CELL/2 - 3, 6, 6);
+      ctx.fillStyle = '#fde2b2';
+      ctx.fillRect(x0 + CELL/2 - 2, y0 + CELL/2 - 2, 4, 4);
+    } else {
+      // Padrão: grãos pequenos uniformes (stratified)
+      let seed = idx * 9301 + 49297;
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#e6c389', 0.55, 4, 2, seed);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#fff8e1', 0.40, 5, 1, seed + 4441);
+    }
+  }
+
+  // Tijolo do Nether: padrão de tijolos vermelho-escuro com mortar preto
+  function pintarTijoloNether(idx, cortado) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#4a0e0e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#1a0000';
+    if (cortado) {
+      // Cortado: padrão central de cruz + bordas
+      ctx.fillRect(x0, y0, CELL, 2);
+      ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+      ctx.fillRect(x0, y0, 2, CELL);
+      ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+      ctx.fillRect(x0 + CELL/2 - 1, y0 + 4, 2, CELL - 8);
+      ctx.fillRect(x0 + 4, y0 + CELL/2 - 1, CELL - 8, 2);
+      // Centro elevado mais claro
+      ctx.fillStyle = '#7a1a1a';
+      ctx.fillRect(x0 + CELL/2 - 4, y0 + CELL/2 - 4, 8, 8);
+    } else {
+      // Padrão de tijolos (mortar preto)
+      ctx.fillRect(x0, y0 + 15, CELL, 2);
+      ctx.fillRect(x0 + 10, y0,      2, 15);
+      ctx.fillRect(x0 + 22, y0,      2, 15);
+      ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
+      ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
+      ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
+      // Highlights vermelhos sutis
+      spawnPontosUniforme(x0, y0, CELL, CELL, '#7a1a1a', 0.30, 6, 1, idx * 9301 + 49297);
+    }
+  }
+
+  // Pavimento (cobblestone): pedras irregulares cinza com mortar escuro
+  function pintarPavimento(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Mortar escuro como base
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // 8 "pedras" irregulares (retângulos diversos)
+    const pedras = [
+      { x: 1,  y: 1,  w: 12, h: 9  },
+      { x: 14, y: 1,  w: 9,  h: 8  },
+      { x: 24, y: 1,  w: 7,  h: 12 },
+      { x: 1,  y: 11, w: 8,  h: 7  },
+      { x: 10, y: 10, w: 11, h: 10 },
+      { x: 22, y: 14, w: 9,  h: 8  },
+      { x: 1,  y: 19, w: 14, h: 12 },
+      { x: 16, y: 21, w: 15, h: 10 },
+    ];
+    for (const p of pedras) {
+      // Pedra principal (cinza médio)
+      ctx.fillStyle = '#7a7a7a';
+      ctx.fillRect(x0 + p.x, y0 + p.y, p.w, p.h);
+      // Highlight superior (luz cima)
+      ctx.fillStyle = '#a0a0a0';
+      ctx.fillRect(x0 + p.x, y0 + p.y, p.w, 1);
+      ctx.fillRect(x0 + p.x, y0 + p.y, 1, p.h);
+      // Sombra inferior direita
+      ctx.fillStyle = '#5e5e5e';
+      ctx.fillRect(x0 + p.x + p.w - 1, y0 + p.y, 1, p.h);
+      ctx.fillRect(x0 + p.x, y0 + p.y + p.h - 1, p.w, 1);
+    }
+  }
+
   // Variante polida: cor base + faixas verticais escuras finas (acabamento)
   function pintarPolido(idx, base, escuro, claro) {
     const col = idx % COLS;
@@ -1909,6 +2013,12 @@ function criarAtlas() {
   pintarPolido(82, '#b0b0b0', '#7a7a7a', '#d0d0d0');         // andesito polido
   pintarPedraLisa(83);                                       // pedra lisa (smooth)
   pintarTijoloMusgo(84);                                     // tijolo com musgo
+  pintarArenito(85, null);                                   // arenito padrão
+  pintarArenito(86, 'liso');                                 // arenito liso (gradient)
+  pintarArenito(87, 'cortado');                              // arenito cortado (cruz)
+  pintarTijoloNether(88, false);                             // tijolo do nether
+  pintarTijoloNether(89, true);                              // nether cortado
+  pintarPavimento(90);                                       // pavimento (cobblestone)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1999,6 +2109,12 @@ function criarAtlas() {
   mapa[BLOCO.ANDESITO_POL]   = { top: 82, side: 82, bottom: 82 };
   mapa[BLOCO.PEDRA_LISA]     = { top: 83, side: 83, bottom: 83 };
   mapa[BLOCO.TIJOLO_MUSGO]   = { top: 84, side: 84, bottom: 84 };
+  mapa[BLOCO.ARENITO]        = { top: 85, side: 85, bottom: 85 };
+  mapa[BLOCO.ARENITO_LISO]   = { top: 86, side: 86, bottom: 86 };
+  mapa[BLOCO.ARENITO_CORTADO]= { top: 87, side: 87, bottom: 87 };
+  mapa[BLOCO.TIJOLO_NETHER]  = { top: 88, side: 88, bottom: 88 };
+  mapa[BLOCO.NETHER_CORTADO] = { top: 89, side: 89, bottom: 89 };
+  mapa[BLOCO.PAVIMENTO]      = { top: 90, side: 90, bottom: 90 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
