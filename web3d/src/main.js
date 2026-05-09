@@ -921,6 +921,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.MANGROVE_LOG, q: 8 });
   state.inv.adicionar({ b: BLOCO.MANGROVE_PRANCHA, q: 16 });
   state.inv.adicionar({ b: BLOCO.CHERRY_LOG, q: 8 });
+  // Sprint 4: madeiras+plantas 1.20+
+  state.inv.adicionar({ b: BLOCO.CHERRY_PRANCHA, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CHERRY_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.MANGROVE_FOLHA, q: 8 });
+  state.inv.adicionar({ b: BLOCO.MANGROVE_RAIZ, q: 8 });
+  state.inv.adicionar({ b: BLOCO.AZALEA, q: 4 });
+  state.inv.adicionar({ b: BLOCO.AZALEA_FLOWER, q: 4 });
+  state.inv.adicionar({ b: BLOCO.PINK_PETALS, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CACTUS_FLOWER, q: 4 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });

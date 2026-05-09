@@ -483,8 +483,17 @@ export const BLOCO = {
   MANGROVE_LOG:        420, // tronco mangrove (vermelho)
   MANGROVE_PRANCHA:    421, // pranchas mangrove
   CHERRY_LOG:          422, // tronco cerejeira (rosa)
+  // Sprint 4: madeiras+plantas 1.20+ (423-430)
+  CHERRY_PRANCHA:      423, // pranchas cerejeira
+  CHERRY_FOLHA:        424, // folhas rosa cerejeira
+  MANGROVE_FOLHA:      425, // folhas verdes mangrove
+  MANGROVE_RAIZ:       426, // raízes aéreas (haste)
+  AZALEA:              427, // planta azaléia (verde)
+  AZALEA_FLOWER:       428, // azaléia florida (rosa)
+  PINK_PETALS:         429, // pétalas rosa (carpet floral)
+  CACTUS_FLOWER:       430, // flor cacto 1.20
 };
-export const N_BLOCOS = 423;
+export const N_BLOCOS = 431;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -931,6 +940,15 @@ export const BLOCO_INFO = {
   [BLOCO.MANGROVE_LOG]:      { nome: 'Tronco Mangrove',    solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e },
   [BLOCO.MANGROVE_PRANCHA]:  { nome: 'Pranchas Mangrove',  solido: true, emiteLuz: 0,  cor: 0x8d6e63, lateral: 0x6d4c41 },
   [BLOCO.CHERRY_LOG]:        { nome: 'Tronco Cerejeira',   solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xc2185b },
+  // Sprint 4: madeiras+plantas 1.20+ (423-430)
+  [BLOCO.CHERRY_PRANCHA]:    { nome: 'Pranchas Cerejeira', solido: true, emiteLuz: 0,  cor: 0xf8bbd0, lateral: 0xec407a },
+  [BLOCO.CHERRY_FOLHA]:      { nome: 'Folhas Cerejeira',   solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xf06292 },
+  [BLOCO.MANGROVE_FOLHA]:    { nome: 'Folhas Mangrove',    solido: true, emiteLuz: 0,  cor: 0x558b2f, lateral: 0x33691e },
+  [BLOCO.MANGROVE_RAIZ]:     { nome: 'Raiz Mangrove',      solido: true, emiteLuz: 0,  cor: 0x6d4c41, lateral: 0x4e342e, shape: 'fence' },
+  [BLOCO.AZALEA]:            { nome: 'Azaléia',            solido: true, emiteLuz: 0,  cor: 0x66bb6a, lateral: 0x388e3c, shape: 'flower' },
+  [BLOCO.AZALEA_FLOWER]:     { nome: 'Azaléia Florida',    solido: true, emiteLuz: 0,  cor: 0xf06292, lateral: 0x66bb6a, shape: 'flower' },
+  [BLOCO.PINK_PETALS]:       { nome: 'Pétalas Rosa',       solido: true, emiteLuz: 0,  cor: 0xf48fb1, lateral: 0xf48fb1, shape: 'plate' },
+  [BLOCO.CACTUS_FLOWER]:     { nome: 'Flor de Cacto',      solido: true, emiteLuz: 0,  cor: 0xfdd835, lateral: 0x388e3c, shape: 'flower' },
 };
 
 export const ICONE = {
@@ -1782,6 +1800,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.MANGROVE_LOG, q: 1}], saida: {b: BLOCO.MANGROVE_PRANCHA, q: 4} },
   { custos: [{b: BLOCO.TERRA, q: 4}, {b: BLOCO.LAMA, q: 1}], saida: {b: BLOCO.MANGROVE_LOG, q: 1}, wb: true },
   { custos: [{b: BLOCO.MADEIRA, q: 4}, {b: BLOCO.FLOR_VERMELHA, q: 1}], saida: {b: BLOCO.CHERRY_LOG, q: 1}, wb: true },
+  // Sprint 4: madeiras+plantas 1.20+ (423-430)
+  { custos: [{b: BLOCO.CHERRY_LOG, q: 1}], saida: {b: BLOCO.CHERRY_PRANCHA, q: 4} },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.FLOR_VERMELHA, q: 1}], saida: {b: BLOCO.CHERRY_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 4}, {b: BLOCO.LAMA, q: 1}], saida: {b: BLOCO.MANGROVE_FOLHA, q: 4}, wb: true },
+  { custos: [{b: BLOCO.MANGROVE_LOG, q: 2}], saida: {b: BLOCO.MANGROVE_RAIZ, q: 4}, wb: true },
+  { custos: [{b: BLOCO.FOLHA, q: 2}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.AZALEA, q: 1}, wb: true },
+  { custos: [{b: BLOCO.AZALEA, q: 1}, {b: BLOCO.FLOR_VERMELHA, q: 1}], saida: {b: BLOCO.AZALEA_FLOWER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.CHERRY_FOLHA, q: 1}], saida: {b: BLOCO.PINK_PETALS, q: 4} },
+  { custos: [{b: BLOCO.CACTO, q: 1}, {b: BLOCO.FLOR_AMARELA, q: 1}], saida: {b: BLOCO.CACTUS_FLOWER, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

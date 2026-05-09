@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 38, CELL = 32;
+  const COLS = 8, ROWS = 39, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -2020,6 +2020,209 @@ function criarAtlas() {
     ctx.fillStyle = '#880e4f';
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Cherry Pranchas: rosa pastel com grão de prancha rosa
+  function pintarCherryPrancha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#f8bbd0';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#ec407a';
+    // 4 fileiras horizontais
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    // Divisões verticais
+    ctx.fillStyle = '#c2185b';
+    ctx.fillRect(x0 + 11, y0,      1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // Pintinhas brancas
+    ctx.fillStyle = '#fce4ec';
+    let s = idx * 11 + 23;
+    for (let i = 0; i < 16; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Cherry Folha: folhas rosa pastel + flores brancas
+  function pintarCherryFolha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#f48fb1';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let s = idx * 17 + 41;
+    for (let i = 0; i < 80; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const pick = (s / 233280);
+      ctx.fillStyle = pick < 0.3 ? '#f06292' : pick < 0.6 ? '#fce4ec' : pick < 0.85 ? '#ffffff' : '#c2185b';
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Mangrove Folha: verde-escuro com gotas (raízes pendentes)
+  function pintarMangroveFolha(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#33691e';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let s = idx * 13 + 37;
+    for (let i = 0; i < 70; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const pick = (s / 233280);
+      ctx.fillStyle = pick < 0.4 ? '#558b2f' : pick < 0.7 ? '#1b5e20' : pick < 0.9 ? '#7cb342' : '#827717';
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Raízes pendentes (gotas marrons)
+    ctx.fillStyle = '#5d4037';
+    for (let i = 4; i < CELL; i += 8) {
+      ctx.fillRect(x0 + i, y0 + CELL - 4, 1, 4);
+    }
+  }
+
+  // Mangrove Raiz: feixe de raízes finas verticais
+  function pintarMangroveRaiz(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Várias raízes verticais
+    ctx.fillStyle = '#6d4c41';
+    for (let i = 2; i < CELL; i += 3) {
+      ctx.fillRect(x0 + i, y0 + ((i * 7) % 6), 1, CELL - ((i * 7) % 6));
+    }
+    ctx.fillStyle = '#8d6e63';
+    for (let i = 1; i < CELL; i += 3) {
+      ctx.fillRect(x0 + i, y0 + ((i * 11) % 8) + 8, 1, 6);
+    }
+    // Conexões horizontais (fios)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0 + 12, CELL, 1);
+    ctx.fillRect(x0, y0 + 24, CELL, 1);
+  }
+
+  // Azaléia: arbusto verde compacto
+  function pintarAzalea(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2515';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Folhagem central
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 6, y0 + 8, 20, 20);
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 8, y0 + 10, 16, 16);
+    ctx.fillStyle = '#43a047';
+    ctx.fillRect(x0 + 10, y0 + 12, 12, 12);
+    // Pontos de folhas mais claras
+    ctx.fillStyle = '#66bb6a';
+    let s = idx * 7 + 17;
+    for (let i = 0; i < 30; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = 8 + Math.floor((s / 233280) * 16);
+      s = (s * 9301 + 49297) % 233280;
+      const py = 8 + Math.floor((s / 233280) * 18);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Tronco curto na base
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 14, y0 + 26, 4, 5);
+  }
+
+  // Azaléia Florida: igual mas com flores rosa por cima
+  function pintarAzaleaFlower(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2515';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 6, y0 + 8, 20, 20);
+    ctx.fillStyle = '#43a047';
+    ctx.fillRect(x0 + 8, y0 + 10, 16, 16);
+    // Flores rosa (4 ao redor + 1 central)
+    const flores = [[10, 12], [20, 12], [10, 22], [20, 22], [15, 17]];
+    for (const [px, py] of flores) {
+      ctx.fillStyle = '#f06292';
+      ctx.fillRect(x0 + px, y0 + py, 4, 4);
+      ctx.fillStyle = '#f48fb1';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 2, 2);
+      ctx.fillStyle = '#fdd835';
+      ctx.fillRect(x0 + px + 1, y0 + py + 1, 1, 1);
+    }
+    // Tronco curto
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 14, y0 + 26, 4, 5);
+  }
+
+  // Pink Petals: pétalas rosa caídas (carpet)
+  function pintarPinkPetals(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#558b2f';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Várias pétalas rosa de tamanhos pequenos
+    let s = idx * 23 + 43;
+    for (let i = 0; i < 25; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * (CELL - 4));
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * (CELL - 4));
+      s = (s * 9301 + 49297) % 233280;
+      const tipo = (s / 233280);
+      ctx.fillStyle = tipo < 0.3 ? '#f48fb1' : tipo < 0.6 ? '#f06292' : tipo < 0.85 ? '#fce4ec' : '#ec407a';
+      ctx.fillRect(x0 + px, y0 + py, 3, 2);
+      ctx.fillStyle = '#fdd835';
+      if (tipo < 0.4) ctx.fillRect(x0 + px + 1, y0 + py, 1, 1);
+    }
+  }
+
+  // Cactus Flower: flor amarela pequena no topo de cacto
+  function pintarCactusFlower(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a2515';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Cacto verde no centro
+    ctx.fillStyle = '#388e3c';
+    ctx.fillRect(x0 + 12, y0 + 14, 8, 16);
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(x0 + 13, y0 + 14, 1, 16);
+    ctx.fillRect(x0 + 19, y0 + 14, 1, 16);
+    // Flor amarela no topo
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 10, y0 + 8, 12, 6);
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 12, y0 + 9, 8, 4);
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0 + 14, y0 + 10, 4, 2);
+    // Espinhos
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 11, y0 + 18, 1, 1);
+    ctx.fillRect(x0 + 20, y0 + 18, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 24, 1, 1);
+    ctx.fillRect(x0 + 20, y0 + 24, 1, 1);
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -4834,6 +5037,15 @@ function criarAtlas() {
   pintarMangroveLog(297);
   pintarMangrovePrancha(298);
   pintarCherryLog(299);
+  // Sprint 4: madeiras+plantas (cells 300-307)
+  pintarCherryPrancha(300);
+  pintarCherryFolha(301);
+  pintarMangroveFolha(302);
+  pintarMangroveRaiz(303);
+  pintarAzalea(304);
+  pintarAzaleaFlower(305);
+  pintarPinkPetals(306);
+  pintarCactusFlower(307);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -5283,6 +5495,15 @@ function criarAtlas() {
   mapa[BLOCO.MANGROVE_LOG]          = { top: 297, side: 297, bottom: 297 };
   mapa[BLOCO.MANGROVE_PRANCHA]      = { top: 298, side: 298, bottom: 298 };
   mapa[BLOCO.CHERRY_LOG]            = { top: 299, side: 299, bottom: 299 };
+  // Sprint 4: madeiras+plantas (cells 300-307)
+  mapa[BLOCO.CHERRY_PRANCHA]        = { top: 300, side: 300, bottom: 300 };
+  mapa[BLOCO.CHERRY_FOLHA]          = { top: 301, side: 301, bottom: 301 };
+  mapa[BLOCO.MANGROVE_FOLHA]        = { top: 302, side: 302, bottom: 302 };
+  mapa[BLOCO.MANGROVE_RAIZ]         = { top: 303, side: 303, bottom: 303 };
+  mapa[BLOCO.AZALEA]                = { top: 304, side: 304, bottom: 304 };
+  mapa[BLOCO.AZALEA_FLOWER]         = { top: 305, side: 305, bottom: 305 };
+  mapa[BLOCO.PINK_PETALS]           = { top: 306, side: 306, bottom: 306 };
+  mapa[BLOCO.CACTUS_FLOWER]         = { top: 307, side: 307, bottom: 307 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
