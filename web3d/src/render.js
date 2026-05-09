@@ -8233,7 +8233,8 @@ export class Renderer {
     gctx.fillRect(0, 0, 64, 64);
     const glowTex = new THREE.CanvasTexture(glowCnv);
     for (let i = 0; i < 8; i++) {
-      const l = new THREE.PointLight(0xffaa44, 0.0, 12, 2);
+      // FIX visual: cor mais quente (laranja-amarelo MC), intensidade 0 (set on demand)
+      const l = new THREE.PointLight(0xffb050, 0.0, 14, 2);
       l.visible = false;
       this.scene.add(l);
       this.poolLuzes.push(l);
@@ -9098,7 +9099,7 @@ export class Renderer {
       if (c) {
         l.visible = true;
         l.position.set(c.x, c.y, c.z);
-        l.intensity = c.nivel / 15 * 0.8;
+        l.intensity = c.nivel / 15 * 1.2;  // FIX: mais brilhante (warm point lights MC)
         l.distance = c.nivel + 1;
         l.color.setHex(c.nivel >= 15 ? 0xff6622 : 0xffaa55);
         // Glow sprite acompanha (escala proporcional à intensidade)
