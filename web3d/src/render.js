@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 33, CELL = 32;
+  const COLS = 8, ROWS = 34, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -1428,6 +1428,133 @@ function criarAtlas() {
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
     spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+  }
+
+  // Bookshelf Chiseled: estante com 1 livro central destacado
+  function pintarBookshelfChiseled(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Espaço dos livros (mais escuro)
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0 + 4, y0 + 5, CELL - 8, 22);
+    // 1 livro central destacado (mais largo, dourado)
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 12, y0 + 6, 8, 20);
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 13, y0 + 7, 1, 18);
+    // Faixas douradas decorativas
+    ctx.fillStyle = '#a05a30';
+    ctx.fillRect(x0 + 12, y0 + 10, 8, 1);
+    ctx.fillRect(x0 + 12, y0 + 22, 8, 1);
+    // Livros laterais menores (vermelhos/azuis)
+    ctx.fillStyle = '#c62828';
+    ctx.fillRect(x0 + 5, y0 + 6, 5, 20);
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(x0 + 22, y0 + 6, 5, 20);
+  }
+
+  // Jukebox: madeira escura com gemstone azul/diamante no topo
+  function pintarJukebox(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda escura
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0, y0, 2, CELL);
+    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    // Gemstone diamante central
+    ctx.fillStyle = '#4dd0e1';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Linhas decorativas (madeira tipo amplificador)
+    ctx.fillStyle = '#8d6e63';
+    for (let py = 26; py < CELL - 2; py += 2) {
+      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 1);
+    }
+  }
+
+  // Daylight Detector: vidro azul-claro semi-transparente sobre madeira
+  function pintarDaylightDetector(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base de madeira
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Vidro detector central
+    ctx.fillStyle = '#80deea';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    ctx.fillStyle = '#b3e5fc';
+    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, CELL - 12);
+    // Reflexos brancos (cristal)
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 8, y0 + 8, 4, 1);
+    ctx.fillRect(x0 + 8, y0 + 9, 2, 1);
+    // Bordas escuras
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+  }
+
+  // Note Block: madeira com pauta musical no topo (5 linhas + nota)
+  function pintarNoteBlock(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#8d6e63';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Pauta musical (5 linhas horizontais)
+    ctx.fillStyle = '#3e2723';
+    for (let i = 0; i < 5; i++) {
+      ctx.fillRect(x0 + 4, y0 + 6 + i * 4, CELL - 8, 1);
+    }
+    // Nota musical (círculo + haste)
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 12, y0 + 16, 4, 4);
+    ctx.fillRect(x0 + 16, y0 + 6,  1, 14);
+    // Borda escura
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+  }
+
+  // Bell: sino dourado com base preta
+  function pintarBell(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Sino dourado (campana)
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 8,  y0 + 6,  16, 16);
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 10, y0 + 8,  12, 10);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 12, y0 + 10, 8, 4);
+    // Topo (alça)
+    ctx.fillStyle = '#a05a30';
+    ctx.fillRect(x0 + 14, y0 + 2,  4, 4);
+    ctx.fillRect(x0 + 12, y0 + 4,  8, 2);
+    // Base/badalo
+    ctx.fillStyle = '#a05a30';
+    ctx.fillRect(x0 + 14, y0 + 22, 4, 6);
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0 + 15, y0 + 26, 2, 2);
   }
 
   // Target Block: branco com 4 anéis vermelhos concêntricos (alvo)
@@ -4075,6 +4202,15 @@ function criarAtlas() {
   pintarBarrel(261);
   pintarCampfire(262);
   pintar(263, '#33691e', '#1b5e20', 0.40);                          // dried kelp
+  pintarBookshelfChiseled(264);                                     // bookshelf chiseled
+  pintarJukebox(265);                                               // jukebox
+  // End Rod reusa pintor da tocha branca com glow (cell 266)
+  pintarVela(266, '#fafafa', '#bdbdbd');                           // end rod (visual tocha branca)
+  pintar(267, '#fff59d', '#ffeb3b', 0.30);                         // light block (amarelo claro)
+  pintarDaylightDetector(268);                                     // daylight detector
+  pintarNoteBlock(269);                                             // note block
+  pintarBell(270);                                                  // bell
+  pintar(271, '#558b2f', '#33691e', 0.50);                         // sea pickle (verde-escuro)
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -4444,6 +4580,14 @@ function criarAtlas() {
   mapa[BLOCO.BARREL]               = { top: 261, side: 261, bottom: 261 };
   mapa[BLOCO.CAMPFIRE]             = { top: 262, side: 262, bottom: 262 };
   mapa[BLOCO.DRIED_KELP_BLOCK]     = { top: 263, side: 263, bottom: 263 };
+  mapa[BLOCO.BOOKSHELF_CHISELED]   = { top: 44, side: 264, bottom: 44 };
+  mapa[BLOCO.JUKEBOX]              = { top: 265, side: 265, bottom: 265 };
+  mapa[BLOCO.END_ROD]              = { top: 266, side: 266, bottom: 266 };
+  mapa[BLOCO.LIGHT_BLOCK]          = { top: 267, side: 267, bottom: 267 };
+  mapa[BLOCO.DAYLIGHT_DETECTOR]    = { top: 268, side: 268, bottom: 268 };
+  mapa[BLOCO.NOTE_BLOCK]           = { top: 269, side: 269, bottom: 269 };
+  mapa[BLOCO.BELL]                 = { top: 270, side: 270, bottom: 270 };
+  mapa[BLOCO.SEA_PICKLE]           = { top: 271, side: 271, bottom: 271 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

@@ -409,8 +409,16 @@ export const BLOCO = {
   BARREL:              348,
   CAMPFIRE:            349,
   DRIED_KELP_BLOCK:    350,
+  BOOKSHELF_CHISELED:  351,
+  JUKEBOX:             352,
+  END_ROD:             353,
+  LIGHT_BLOCK:         354,
+  DAYLIGHT_DETECTOR:   355,
+  NOTE_BLOCK:          356,
+  BELL:                357,
+  SEA_PICKLE:          358,
 };
-export const N_BLOCOS = 351;
+export const N_BLOCOS = 359;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -783,6 +791,14 @@ export const BLOCO_INFO = {
   [BLOCO.BARREL]:         { nome: 'Barril',         solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
   [BLOCO.CAMPFIRE]:       { nome: 'Acampamento',    solido: true, emiteLuz: 14, cor: 0xff9800, lateral: 0x6d4c41 },
   [BLOCO.DRIED_KELP_BLOCK]:{ nome: 'Bloco Alga Seca',solido: true, emiteLuz: 0, cor: 0x33691e, lateral: 0x1b5e20 },
+  [BLOCO.BOOKSHELF_CHISELED]:{ nome:'Estante Esculp.', solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0xa1887f },
+  [BLOCO.JUKEBOX]:        { nome: 'Jukebox',          solido: true, emiteLuz: 0, cor: 0x6d4c41, lateral: 0x4e342e },
+  [BLOCO.END_ROD]:        { nome: 'Haste do End',     solido: false,emiteLuz: 14, cor: 0xfafafa, lateral: 0xeceff1, shape: 'torch' },
+  [BLOCO.LIGHT_BLOCK]:    { nome: 'Bloco de Luz',     solido: false,emiteLuz: 15, cor: 0xfff59d, lateral: 0xfff59d },
+  [BLOCO.DAYLIGHT_DETECTOR]:{ nome:'Detector de Luz',  solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x6d4c41 },
+  [BLOCO.NOTE_BLOCK]:     { nome: 'Bloco de Nota',    solido: true, emiteLuz: 0, cor: 0xa1887f, lateral: 0x8d6e63 },
+  [BLOCO.BELL]:           { nome: 'Sino',             solido: true, emiteLuz: 0, cor: 0xfdd835, lateral: 0xf9a825 },
+  [BLOCO.SEA_PICKLE]:     { nome: 'Pepino-do-mar',    solido: false,emiteLuz: 6,  cor: 0x558b2f, lateral: 0x33691e, shape: 'pot' },
 };
 
 export const ICONE = {
@@ -1545,6 +1561,15 @@ export const RECEITAS = [
   { custos: [{i: ITEM.PRANCHAS, q: 6}, {b: BLOCO.SLAB_MADEIRA, q: 2}], saida: {b: BLOCO.BARREL, q: 1}, wb: true },
   { custos: [{i: ITEM.PAU, q: 3}, {i: ITEM.CARVAO, q: 1}, {i: ITEM.PRANCHAS, q: 3}], saida: {b: BLOCO.CAMPFIRE, q: 1}, wb: true },
   { custos: [{b: BLOCO.LA_VERDE, q: 9}], saida: {b: BLOCO.DRIED_KELP_BLOCK, q: 1}, wb: true },
+  // Mais 8 blocos especiais
+  { custos: [{b: BLOCO.ESTANTE, q: 4}, {b: BLOCO.SLAB_MADEIRA, q: 2}], saida: {b: BLOCO.BOOKSHELF_CHISELED, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 8}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.JUKEBOX, q: 1}, wb: true },
+  { custos: [{i: ITEM.BLAZE_ROD, q: 1}, {i: ITEM.PE_COELHO, q: 1}, {b: BLOCO.LUZ, q: 1}], saida: {b: BLOCO.END_ROD, q: 4}, wb: true },
+  { custos: [{i: ITEM.GLOWSTONE_DUST, q: 4}, {i: ITEM.NETHER_STAR, q: 1}], saida: {b: BLOCO.LIGHT_BLOCK, q: 4}, wb: true },
+  { custos: [{b: BLOCO.SLAB_MADEIRA, q: 3}, {b: BLOCO.LUZ, q: 1}, {i: ITEM.QUARTZO_BRUTO, q: 3}], saida: {b: BLOCO.DAYLIGHT_DETECTOR, q: 1}, wb: true },
+  { custos: [{i: ITEM.PRANCHAS, q: 8}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.NOTE_BLOCK, q: 1}, wb: true },
+  { custos: [{b: BLOCO.BLOCO_OURO, q: 1}, {b: BLOCO.OBSIDIANA, q: 4}], saida: {b: BLOCO.BELL, q: 1}, wb: true },
+  { custos: [{i: ITEM.SLIMEBALL, q: 4}], saida: {b: BLOCO.SEA_PICKLE, q: 4}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },
