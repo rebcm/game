@@ -18,7 +18,7 @@ import { state } from './state.js';
 // Pinta texturas pixeladas 32×32 px num canvas único 8×4 células = 256×128.
 // Retorna {texture, mapa} onde mapa[BLOCO.X] = {top, side, bottom} (índices).
 function criarAtlas() {
-  const COLS = 8, ROWS = 41, CELL = 32;
+  const COLS = 8, ROWS = 42, CELL = 32;
   const W = COLS * CELL, H = ROWS * CELL;
   const cnv = document.createElement('canvas');
   cnv.width = W; cnv.height = H;
@@ -2713,6 +2713,286 @@ function criarAtlas() {
       ctx.fillRect(x0 + i, y0 + 2, 2, 1);
       ctx.fillRect(x0 + i, y0 + 18, 2, 1);
     }
+  }
+
+  // Tuff Bricks: tijolos cinza sólidos (1.21)
+  function pintarTuffBricks(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#707070';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de tijolos
+    ctx.fillStyle = '#505050';
+    ctx.fillRect(x0, y0 + 7,  CELL, 1);
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
+    ctx.fillRect(x0, y0 + 23, CELL, 1);
+    ctx.fillRect(x0 + 7,  y0,      1, 7);
+    ctx.fillRect(x0 + 15, y0,      1, 7);
+    ctx.fillRect(x0 + 23, y0,      1, 7);
+    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
+    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
+    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
+    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
+    // Manchas de granito (tuff tem partículas escuras)
+    ctx.fillStyle = '#404040';
+    let s = idx * 17 + 31;
+    for (let i = 0; i < 18; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    ctx.fillStyle = '#909090';
+    s = idx * 11 + 17;
+    for (let i = 0; i < 14; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Chiseled Tuff: tuff esculpido com colunas verticais
+  function pintarChiseledTuff(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#707070';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Coluna central (vertical decorativa)
+    ctx.fillStyle = '#909090';
+    ctx.fillRect(x0 + 8, y0 + 2, 16, CELL - 4);
+    ctx.fillStyle = '#505050';
+    ctx.fillRect(x0 + 8, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + 23, y0 + 2, 1, CELL - 4);
+    // Linhas horizontais decorativas
+    ctx.fillStyle = '#404040';
+    ctx.fillRect(x0 + 6, y0 + 6,  20, 1);
+    ctx.fillRect(x0 + 6, y0 + 25, 20, 1);
+    // Centro com diamante decorativo
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Pontos cinzas
+    ctx.fillStyle = '#404040';
+    let s = idx * 13 + 19;
+    for (let i = 0; i < 12; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Chiseled Tuff Bricks: tijolos esculpidos com padrão central
+  function pintarChiseledTuffBricks(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#707070';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda externa em moldura
+    ctx.fillStyle = '#505050';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
+    // Diamante central
+    ctx.fillStyle = '#909090';
+    ctx.fillRect(x0 + 12, y0 + 6,  8, 1);
+    ctx.fillRect(x0 + 10, y0 + 8,  12, 1);
+    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
+    ctx.fillRect(x0 + 10, y0 + 22, 12, 1);
+    ctx.fillRect(x0 + 12, y0 + 24, 8, 1);
+    ctx.fillStyle = '#505050';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#bdbdbd';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Manchas
+    ctx.fillStyle = '#404040';
+    let s = idx * 17 + 23;
+    for (let i = 0; i < 10; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const px = Math.floor((s / 233280) * CELL);
+      s = (s * 9301 + 49297) % 233280;
+      const py = Math.floor((s / 233280) * CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+  }
+
+  // Chiseled Copper: cobre esculpido com hexágonos
+  function pintarChiseledCopper(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#c97a4d';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão diagonal (gravação)
+    ctx.fillStyle = '#a45a30';
+    for (let i = 0; i < CELL; i += 4) {
+      ctx.fillRect(x0 + i, y0, 1, CELL);
+    }
+    // Hexágono central decorativo
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 12, y0 + 8,  8, 1);
+    ctx.fillRect(x0 + 10, y0 + 9,  12, 1);
+    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
+    ctx.fillRect(x0 + 10, y0 + 22, 12, 1);
+    ctx.fillRect(x0 + 12, y0 + 23, 8, 1);
+    // Centro com gema
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#a45a30';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Highlight superior
+    ctx.fillStyle = '#e8a070';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+  }
+
+  // Copper Bulb: bulbo brilhante (luz 15)
+  function pintarCopperBulb(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Cobre escuro como base
+    ctx.fillStyle = '#a45a30';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Anel de cobre
+    ctx.fillStyle = '#c97a4d';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    // Bulbo brilhante (esfera amarela)
+    ctx.fillStyle = '#f57f17';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Halo brilhante (cruz)
+    ctx.fillStyle = '#fff176';
+    ctx.fillRect(x0 + 15, y0 + 4, 2, 4);
+    ctx.fillRect(x0 + 15, y0 + 24, 2, 4);
+    ctx.fillRect(x0 + 4, y0 + 15, 4, 2);
+    ctx.fillRect(x0 + 24, y0 + 15, 4, 2);
+  }
+
+  // Copper Grate: grade de cobre (estrutura aberta)
+  function pintarCopperGrate(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Fundo escuro (espaços abertos)
+    ctx.fillStyle = '#1a1008';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Barras horizontais
+    ctx.fillStyle = '#c97a4d';
+    for (let y = 0; y < CELL; y += 6) {
+      ctx.fillRect(x0, y0 + y, CELL, 2);
+    }
+    // Barras verticais
+    for (let x = 0; x < CELL; x += 6) {
+      ctx.fillRect(x0 + x, y0, 2, CELL);
+    }
+    // Highlights (cobre claro nas junções)
+    ctx.fillStyle = '#e8a070';
+    for (let y = 0; y < CELL; y += 6) {
+      for (let x = 0; x < CELL; x += 6) {
+        ctx.fillRect(x0 + x, y0 + y, 1, 1);
+      }
+    }
+    // Sombras
+    ctx.fillStyle = '#a45a30';
+    for (let y = 1; y < CELL; y += 6) {
+      ctx.fillRect(x0, y0 + y, CELL, 1);
+    }
+  }
+
+  // Trial Spawner: caixa preta com olho/cristal central
+  function pintarTrialSpawner(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Padrão de obsidiana
+    ctx.fillStyle = '#0a0a0a';
+    for (let i = 0; i < CELL; i += 4) {
+      for (let j = 0; j < CELL; j += 4) {
+        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 2, 2);
+      }
+    }
+    // Borda de runas (laranja-marrom)
+    ctx.fillStyle = '#a05a30';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
+    // Cristal central (laranja brilhante)
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
+    ctx.fillStyle = '#fffde7';
+    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Pontos de luz (4 cantos do cristal)
+    ctx.fillStyle = '#ff5252';
+    ctx.fillRect(x0 + 8, y0 + 8, 1, 1);
+    ctx.fillRect(x0 + 23, y0 + 8, 1, 1);
+    ctx.fillRect(x0 + 8, y0 + 23, 1, 1);
+    ctx.fillRect(x0 + 23, y0 + 23, 1, 1);
+  }
+
+  // Vault: cofre com chave/fechadura (1.21)
+  function pintarVault(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Borda de metal escuro
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Frente do vault (placa pesada)
+    ctx.fillStyle = '#616161';
+    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
+    ctx.fillStyle = '#9e9e9e';
+    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, 1);
+    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
+    // Fechadura/buraco de chave central
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x0 + 12, y0 + 10, 8, 12);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x0 + 13, y0 + 11, 6, 10);
+    // Buraco da chave
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 14, y0 + 13, 4, 4);
+    ctx.fillRect(x0 + 15, y0 + 17, 2, 4);
+    ctx.fillStyle = '#fff8e1';
+    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+    // 4 parafusos nos cantos
+    ctx.fillStyle = '#a45a30';
+    ctx.fillRect(x0 + 7,  y0 + 7,  2, 2);
+    ctx.fillRect(x0 + 23, y0 + 7,  2, 2);
+    ctx.fillRect(x0 + 7,  y0 + 23, 2, 2);
+    ctx.fillRect(x0 + 23, y0 + 23, 2, 2);
+    ctx.fillStyle = '#fdd835';
+    ctx.fillRect(x0 + 7,  y0 + 7,  1, 1);
+    ctx.fillRect(x0 + 23, y0 + 7,  1, 1);
+    ctx.fillRect(x0 + 7,  y0 + 23, 1, 1);
+    ctx.fillRect(x0 + 23, y0 + 23, 1, 1);
   }
 
   // Bookshelf Chiseled: estante com 1 livro central destacado
@@ -5554,6 +5834,15 @@ function criarAtlas() {
   pintarMossyCobblestone(321);
   pintarCrackedStoneBricks(322);
   pintarMossyStoneBricks(323);
+  // Sprint 7: MC 1.21 Tricky Trials (cells 324-331)
+  pintarTuffBricks(324);
+  pintarChiseledTuff(325);
+  pintarChiseledTuffBricks(326);
+  pintarChiseledCopper(327);
+  pintarCopperBulb(328);
+  pintarCopperGrate(329);
+  pintarTrialSpawner(330);
+  pintarVault(331);
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -6030,6 +6319,15 @@ function criarAtlas() {
   mapa[BLOCO.MOSSY_COBBLESTONE]     = { top: 321, side: 321, bottom: 321 };
   mapa[BLOCO.CRACKED_STONE_BRICKS]  = { top: 322, side: 322, bottom: 322 };
   mapa[BLOCO.MOSSY_STONE_BRICKS]    = { top: 323, side: 323, bottom: 323 };
+  // Sprint 7: MC 1.21 Tricky Trials (cells 324-331)
+  mapa[BLOCO.TUFF_BRICKS]           = { top: 324, side: 324, bottom: 324 };
+  mapa[BLOCO.CHISELED_TUFF]         = { top: 325, side: 325, bottom: 325 };
+  mapa[BLOCO.CHISELED_TUFF_BRICKS]  = { top: 326, side: 326, bottom: 326 };
+  mapa[BLOCO.CHISELED_COPPER]       = { top: 327, side: 327, bottom: 327 };
+  mapa[BLOCO.COPPER_BULB]           = { top: 328, side: 328, bottom: 328 };
+  mapa[BLOCO.COPPER_GRATE]          = { top: 329, side: 329, bottom: 329 };
+  mapa[BLOCO.TRIAL_SPAWNER]         = { top: 330, side: 330, bottom: 330 };
+  mapa[BLOCO.VAULT]                 = { top: 331, side: 331, bottom: 331 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;

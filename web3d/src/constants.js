@@ -510,8 +510,17 @@ export const BLOCO = {
   MOSSY_COBBLESTONE:   444, // cobblestone com musgo (clássico)
   CRACKED_STONE_BRICKS:445, // tijolos rachados
   MOSSY_STONE_BRICKS:  446, // tijolos com musgo
+  // Sprint 7: Minecraft 1.21 Tricky Trials (447-454)
+  TUFF_BRICKS:         447, // tijolos de tuff (1.21)
+  CHISELED_TUFF:       448, // tuff esculpido
+  CHISELED_TUFF_BRICKS:449, // tijolos tuff esculpidos
+  CHISELED_COPPER:     450, // cobre esculpido (1.21)
+  COPPER_BULB:         451, // bulbo de cobre (luz 15!)
+  COPPER_GRATE:        452, // grade de cobre
+  TRIAL_SPAWNER:       453, // spawner trial chamber
+  VAULT:               454, // cofre (1.21)
 };
-export const N_BLOCOS = 447;
+export const N_BLOCOS = 455;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -985,6 +994,15 @@ export const BLOCO_INFO = {
   [BLOCO.MOSSY_COBBLESTONE]: { nome: 'Cobblestone Musgo',  solido: true, emiteLuz: 0,  cor: 0x6e7e4a, lateral: 0x4d5e35 },
   [BLOCO.CRACKED_STONE_BRICKS]:{nome: 'Tijolos Rachados',  solido: true, emiteLuz: 0,  cor: 0x808080, lateral: 0x606060 },
   [BLOCO.MOSSY_STONE_BRICKS]:{ nome: 'Tijolos c/ Musgo',   solido: true, emiteLuz: 0,  cor: 0x6e8050, lateral: 0x4d5e35 },
+  // Sprint 7: Minecraft 1.21 Tricky Trials (447-454)
+  [BLOCO.TUFF_BRICKS]:       { nome: 'Tijolos de Tuff',    solido: true, emiteLuz: 0,  cor: 0x707070, lateral: 0x505050 },
+  [BLOCO.CHISELED_TUFF]:     { nome: 'Tuff Esculpido',     solido: true, emiteLuz: 0,  cor: 0x707070, lateral: 0x505050 },
+  [BLOCO.CHISELED_TUFF_BRICKS]:{nome: 'Tijolos Tuff Escul.',solido: true, emiteLuz: 0,  cor: 0x707070, lateral: 0x505050 },
+  [BLOCO.CHISELED_COPPER]:   { nome: 'Cobre Esculpido',    solido: true, emiteLuz: 0,  cor: 0xc97a4d, lateral: 0xa45a30 },
+  [BLOCO.COPPER_BULB]:       { nome: 'Bulbo de Cobre',     solido: true, emiteLuz: 15, cor: 0xffd54f, lateral: 0xf57f17 },
+  [BLOCO.COPPER_GRATE]:      { nome: 'Grade de Cobre',     solido: true, emiteLuz: 0,  cor: 0xc97a4d, lateral: 0xa45a30, shape: 'bars' },
+  [BLOCO.TRIAL_SPAWNER]:     { nome: 'Trial Spawner',      solido: true, emiteLuz: 5,  cor: 0x424242, lateral: 0x212121 },
+  [BLOCO.VAULT]:             { nome: 'Vault',              solido: true, emiteLuz: 6,  cor: 0x424242, lateral: 0x212121 },
 };
 
 export const ICONE = {
@@ -1863,6 +1881,15 @@ export const RECEITAS = [
   { custos: [{b: BLOCO.PEDRA, q: 4}, {b: BLOCO.GRAMA, q: 1}], saida: {b: BLOCO.MOSSY_COBBLESTONE, q: 4}, wb: true },
   { custos: [{b: BLOCO.TIJOLO, q: 4}], saida: {b: BLOCO.CRACKED_STONE_BRICKS, q: 4}, wb: true },
   { custos: [{b: BLOCO.TIJOLO, q: 4}, {b: BLOCO.MOSS_BLOCK, q: 1}], saida: {b: BLOCO.MOSSY_STONE_BRICKS, q: 4}, wb: true },
+  // Sprint 7: Minecraft 1.21 Tricky Trials (447-454)
+  { custos: [{b: BLOCO.TUFF, q: 4}], saida: {b: BLOCO.TUFF_BRICKS, q: 4}, wb: true },
+  { custos: [{b: BLOCO.TUFF, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.CHISELED_TUFF, q: 1}, wb: true },
+  { custos: [{b: BLOCO.TUFF_BRICKS, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.CHISELED_TUFF_BRICKS, q: 1}, wb: true },
+  { custos: [{b: BLOCO.COBRE, q: 4}, {b: BLOCO.QUARTZO, q: 1}], saida: {b: BLOCO.CHISELED_COPPER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.COBRE, q: 4}, {b: BLOCO.LUZ, q: 1}, {i: ITEM.REDSTONE, q: 1}], saida: {b: BLOCO.COPPER_BULB, q: 1}, wb: true },
+  { custos: [{b: BLOCO.COBRE, q: 4}], saida: {b: BLOCO.COPPER_GRATE, q: 4}, wb: true },
+  { custos: [{b: BLOCO.OBSIDIANA, q: 4}, {b: BLOCO.SCULK_SHRIEKER, q: 1}, {i: ITEM.NETHER_STAR, q: 1}], saida: {b: BLOCO.TRIAL_SPAWNER, q: 1}, wb: true },
+  { custos: [{b: BLOCO.OBSIDIANA, q: 6}, {b: BLOCO.LUZ, q: 1}, {i: ITEM.DIAMANTE, q: 1}], saida: {b: BLOCO.VAULT, q: 1}, wb: true },
   // Machados (3 do material + 2 paus)
   { custos: [{i: ITEM.PRANCHAS, q: 3}, {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_MADEIRA,  q: 1}, wb: true },
   { custos: [{b: BLOCO.PEDRA, q: 3},   {i: ITEM.PAU, q: 2}], saida: {i: ITEM.MACHADO_PEDRA,    q: 1}, wb: true },

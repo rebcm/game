@@ -948,6 +948,15 @@ function init() {
   state.inv.adicionar({ b: BLOCO.MOSSY_COBBLESTONE, q: 16 });
   state.inv.adicionar({ b: BLOCO.CRACKED_STONE_BRICKS, q: 16 });
   state.inv.adicionar({ b: BLOCO.MOSSY_STONE_BRICKS, q: 16 });
+  // Sprint 7: MC 1.21 Tricky Trials
+  state.inv.adicionar({ b: BLOCO.TUFF_BRICKS, q: 16 });
+  state.inv.adicionar({ b: BLOCO.CHISELED_TUFF, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CHISELED_TUFF_BRICKS, q: 8 });
+  state.inv.adicionar({ b: BLOCO.CHISELED_COPPER, q: 8 });
+  state.inv.adicionar({ b: BLOCO.COPPER_BULB, q: 4 });
+  state.inv.adicionar({ b: BLOCO.COPPER_GRATE, q: 8 });
+  state.inv.adicionar({ b: BLOCO.TRIAL_SPAWNER, q: 1 });
+  state.inv.adicionar({ b: BLOCO.VAULT, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_FERRO, q: 1 });
   state.inv.adicionar({ i: ITEM.MACHADO_DIAMANTE, q: 1 });
   state.inv.adicionar({ i: ITEM.PA_FERRO, q: 1 });
