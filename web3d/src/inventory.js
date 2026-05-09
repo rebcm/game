@@ -137,6 +137,7 @@ export const Drops = {
     if (b === BLOCO.BEDROCK) return false;
     if ([BLOCO.DIAMANTE, BLOCO.OURO].includes(b)) return tier >= 3;
     if (b === BLOCO.FERRO) return tier >= 2;
+    if (b === BLOCO.COBRE_MINERIO) return tier >= 2; // mesmo tier que ferro
     if ([BLOCO.PEDRA, BLOCO.CARVAO].includes(b)) return tier >= 1;
     if (b === BLOCO.OBSIDIANA) return tier >= 4;
     return ![BLOCO.AR].includes(b);
@@ -175,6 +176,11 @@ export const Drops = {
         return out;
       }
       case BLOCO.OURO:     return [{ i: ITEM.OURO, q: 1 }];
+      case BLOCO.COBRE_MINERIO: {
+        // 1-2 lingotes ao minerar (paridade MC: cobre dropa em quantidade)
+        const q = 1 + (Math.random() < 0.4 ? 1 : 0);
+        return [{ i: ITEM.COBRE_LINGOTE, q }];
+      }
       case BLOCO.DIAMANTE: return [{ i: ITEM.DIAMANTE, q: 1 }];
       case BLOCO.CARVAO:   return [{ i: ITEM.CARVAO, q: 1 }];
       case BLOCO.FERRO:    return [{ i: ITEM.FERRO, q: 1 }];

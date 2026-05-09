@@ -110,8 +110,9 @@ export const BLOCO = {
   BANDEIRA_A:     69, // bandeira azul
   BANDEIRA_V:     70, // bandeira verde
   BANDEIRA_AM:    71, // bandeira amarela
+  COBRE_MINERIO:  72, // minério de cobre (gera em pedra, smelt → lingote)
 };
-export const N_BLOCOS = 72;
+export const N_BLOCOS = 73;
 
 // Metadata de cada bloco. NENHUM bloco é transparente neste jogo.
 // `solido` controla colisão. `emiteLuz` 0..15 (paridade Minecraft).
@@ -192,6 +193,7 @@ export const BLOCO_INFO = {
   [BLOCO.BANDEIRA_A]:    { nome: 'Bandeira Azul',    solido: true,  emiteLuz: 0,  cor: 0x1565c0, lateral: 0x0d47a1 },
   [BLOCO.BANDEIRA_V]:    { nome: 'Bandeira Verde',   solido: true,  emiteLuz: 0,  cor: 0x2e7d32, lateral: 0x1b5e20 },
   [BLOCO.BANDEIRA_AM]:   { nome: 'Bandeira Amarela', solido: true,  emiteLuz: 0,  cor: 0xf9a825, lateral: 0xf57f17 },
+  [BLOCO.COBRE_MINERIO]: { nome: 'Minério de Cobre', solido: true,  emiteLuz: 0,  cor: 0x8e7060, lateral: 0x6b5448 },
 };
 
 export const ICONE = {

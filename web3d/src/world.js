@@ -329,6 +329,8 @@ export class World {
             if (y < 6 && hh < 3) b = BLOCO.DIAMANTE;
             else if (y < 10 && hh < 6) b = BLOCO.OURO;
             else if (y < 14 && hh < 14) b = BLOCO.FERRO;
+            // Cobre: bem comum (16-32 abundância), nível 8-30 (paridade MC)
+            else if (y >= 8 && y <= 30 && hh < 28) b = BLOCO.COBRE_MINERIO;
             else if (hh < 26) b = BLOCO.CARVAO;
             else b = BLOCO.PEDRA;
           } else if (y < h) {

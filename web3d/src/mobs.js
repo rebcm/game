@@ -97,6 +97,17 @@ export const MOB_INFO = {
     cor: 0xef9a9a, sec: 0xc62828, // rosa vaca + vermelho cogumelo
     mooshroom: true, // permite right-click com tigela
   },
+  // Magma Cube: slime do Nether, vermelho-laranja, dano alto, queima
+  magma_cube: {
+    hp: 12, vel: 2.0, hostil: true, dano: 4, alcance: 1.4,
+    drops: () => [
+      ...(Math.random() < 0.5 ? [{ i: ITEM.SLIMEBALL, q: 1 }] : []),
+      ...(Math.random() < 0.30 ? [{ b: BLOCO.MAGMA, q: 1 }] : []),
+    ],
+    cor: 0xff5722, sec: 0xbf360c, // laranja vivo + vermelho escuro
+    pula: true,
+    nether: true, // só spawna no Nether
+  },
   // Sapo: anfíbio passivo, salta, vive em grama perto da água
   sapo: {
     hp: 5, vel: 1.6, hostil: false,
@@ -926,10 +937,13 @@ export function construirModeloMob(tipo, info) {
       partes.cabeca = cabeca; partes.pernas = pernas; partes.corpo = corpo;
       break;
     }
+    case 'magma_cube':
     case 'slime': {
       // Corpo gelatinoso semi-transparente
       const corpoMat = new THREE.MeshLambertMaterial({
         color: info.cor, transparent: true, opacity: 0.78,
+        emissive: tipo === 'magma_cube' ? 0xff5722 : 0x000000,
+        emissiveIntensity: tipo === 'magma_cube' ? 0.4 : 0,
       });
       const corpo = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.95, 0.95), corpoMat);
       corpo.position.y = 0.48; grp.add(corpo);
@@ -1260,6 +1274,7 @@ function _dimsMob(tipo) {
     case 'sapo':     return { raio: 0.20, altura: 0.30 };
     case 'lobo':     return { raio: 0.30, altura: 0.85 };
     case 'slime':    return { raio: 0.42, altura: 0.55 };
+    case 'magma_cube': return { raio: 0.42, altura: 0.55 };
     case 'vaca':     return { raio: 0.45, altura: 1.40 };
     case 'mooshroom': return { raio: 0.45, altura: 1.40 };
     case 'porco':    return { raio: 0.32, altura: 1.05 };
@@ -1968,10 +1983,15 @@ export class MobManager {
       }
       return;
     }
-    // Nether: só spawna ghast (e só lá). Skip restante das regras.
+    // Nether: ghast voador OU magma_cube no chão. Cap mobs em 6.
     if (state.world?.dimensao === 'nether') {
-      if (this.mobs.length >= 4) return;
-      this.spawn('ghast', x, y + 8, z); // alto no ar
+      if (this.mobs.length >= 6) return;
+      // 60% magma_cube no chão, 40% ghast voando alto
+      if (Math.random() < 0.60) {
+        this.spawn('magma_cube', x, y, z);
+      } else {
+        this.spawn('ghast', x, y + 8, z);
+      }
       return;
     }
     if (luzMax <= 7) {

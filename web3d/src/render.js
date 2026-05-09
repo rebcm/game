@@ -952,6 +952,42 @@ function criarAtlas() {
     ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
     ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
   }
+  // Minério de Cobre: pedra base + clusters cor cobre (laranja-marrom)
+  function pintarCobreMinerio(idx) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Base de pedra (igual à pedra normal mas mais cinza)
+    ctx.fillStyle = '#7E7E7E';
+    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    ctx.fillStyle = '#5E5E5E';
+    for (let py = 0; py < CELL; py += 2) {
+      for (let px = 0; px < CELL; px += 2) {
+        seed = (seed * 9301 + 49297) % 233280;
+        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
+    }
+    // 5 clusters de cobre (laranja-marrom) espalhados pseudo-aleatoriamente
+    const clusters = [
+      { x: 6,  y: 8 },
+      { x: 22, y: 5 },
+      { x: 12, y: 18 },
+      { x: 24, y: 22 },
+      { x: 4,  y: 26 },
+    ];
+    for (const c of clusters) {
+      // Centro escuro
+      ctx.fillStyle = '#a04e1c';
+      ctx.fillRect(x0 + c.x, y0 + c.y, 4, 4);
+      // Borda mais clara (3D)
+      ctx.fillStyle = '#e07a3b';
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 2, 2);
+      ctx.fillStyle = '#ff9d5e';
+      ctx.fillRect(x0 + c.x + 1, y0 + c.y + 1, 1, 1);
+    }
+  }
+
   // Bandeira: mastro preto à esquerda + pano colorido à direita com onda
   function pintarBandeira(idx, corBase, corEscura, corClara) {
     const col = idx % COLS;
@@ -1660,6 +1696,7 @@ function criarAtlas() {
   pintarBandeira(67, '#1565c0', '#0d47a1', '#4fc3f7');     // bandeira azul
   pintarBandeira(68, '#2e7d32', '#1b5e20', '#66bb6a');     // bandeira verde
   pintarBandeira(69, '#f9a825', '#f57f17', '#ffd54f');     // bandeira amarela
+  pintarCobreMinerio(70);                                   // minério de cobre
 
   // Mapa: [BLOCO.X] = { top, side, bottom }
   const mapa = {};
@@ -1736,6 +1773,7 @@ function criarAtlas() {
   mapa[BLOCO.BANDEIRA_A]     = { top: 67, side: 67, bottom: 67 };
   mapa[BLOCO.BANDEIRA_V]     = { top: 68, side: 68, bottom: 68 };
   mapa[BLOCO.BANDEIRA_AM]    = { top: 69, side: 69, bottom: 69 };
+  mapa[BLOCO.COBRE_MINERIO]  = { top: 70, side: 70, bottom: 70 };
 
   const texture = new THREE.CanvasTexture(cnv);
   texture.magFilter = THREE.NearestFilter;
