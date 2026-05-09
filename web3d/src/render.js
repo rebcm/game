@@ -6477,12 +6477,13 @@ function criarAtlas() {
   pintarLaColorida(194, '#424242', '#616161', '#212121');          // lã preta
   pintarLaColorida(195, '#9e9e9e', '#bdbdbd', '#616161');          // lã cinza
   // 2 concretos (cells 196-197)
-  pintar(196, '#c62828', '#8b0000', 0.45);                        // concreto vermelho
-  pintar(197, '#1565c0', '#0d47a1', 0.45);                        // concreto azul
-  pintar(198, '#2e7d32', '#1b5e20', 0.45);                        // concreto verde
-  pintar(199, '#f9a825', '#f57f17', 0.45);                        // concreto amarelo
-  pintar(200, '#fafafa', '#cfd8dc', 0.45);                        // concreto branco
-  pintar(201, '#212121', '#000000', 0.45);                        // concreto preto
+  // SPRINT VISUAL-7: Concreto premium com gradient + bevel
+  pintarPremium(196, '#ef5350', '#8b0000', '#c62828', 0.5);       // concreto vermelho premium
+  pintarPremium(197, '#42a5f5', '#0d47a1', '#1565c0', 0.5);       // concreto azul premium
+  pintarPremium(198, '#66bb6a', '#1b5e20', '#2e7d32', 0.5);       // concreto verde premium
+  pintarPremium(199, '#ffeb3b', '#f57f17', '#f9a825', 0.5);       // concreto amarelo premium
+  pintarPremium(200, '#ffffff', '#cfd8dc', '#eceff1', 0.4);       // concreto branco premium
+  pintarPremium(201, '#424242', '#000000', '#212121', 0.4);       // concreto preto premium
   // Terracotas (cor mais terrosa, com manchas via pintarPedra)
   pintarPedra(202, '#b55a3a', '#8b3e23', '#d6755a', 0.40);        // terracota vermelha
   pintarPedra(203, '#4a5e9a', '#2c3d6c', '#7385bb', 0.40);        // terracota azul

@@ -16,6 +16,7 @@ export class Particulas {
     this.geoSmoke = new THREE.SphereGeometry(0.12, 6, 4);
     this.geoDrip = new THREE.SphereGeometry(0.06, 5, 4);
     this.lista = [];
+    this.partes = []; // SPRINT VISUAL-6: leaf/snow/pollen/spark
     this.materiaisCache = new Map();
     this.ambientAcc = 0;
   }
@@ -129,6 +130,75 @@ export class Particulas {
     this.scene.add(m);
     this.lista.push(m);
   }
+  // SPRINT VISUAL-6: Particles ambientes premium
+  // Pétala caindo de árvore (cherry leaves)
+  spawnLeafFalling(cx, cy, cz, cor = 0x66bb6a) {
+    if (!this.scene) return;
+    // Cap pra evitar overload
+    if (this.partes && this.partes.length > 100) return;
+    const geo = new THREE.PlaneGeometry(0.10, 0.10);
+    const mat = new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(cx + Math.random() * 0.5, cy, cz + Math.random() * 0.5);
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    state.scene.add(mesh);
+    this.partes.push({
+      mesh, life: 8, maxLife: 8,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.4 + Math.random() * 0.2,
+      vz: (Math.random() - 0.5) * 0.3,
+      rotZ: (Math.random() - 0.5) * 2,
+      type: 'leaf',
+    });
+  }
+  // Floco de neve caindo
+  spawnSnowflake(cx, cy, cz) {
+    if (!this.scene) return;
+    const geo = new THREE.PlaneGeometry(0.06, 0.06);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(cx + Math.random() * 0.5, cy, cz + Math.random() * 0.5);
+    state.scene.add(mesh);
+    this.partes.push({
+      mesh, life: 5, maxLife: 5,
+      vx: Math.sin(Date.now() / 1000) * 0.15,
+      vy: -0.3,
+      vz: Math.cos(Date.now() / 1000) * 0.15,
+      type: 'snow',
+    });
+  }
+  // Pollen de bee (amarelo brilhante)
+  spawnPollen(cx, cy, cz) {
+    if (!this.scene) return;
+    const geo = new THREE.PlaneGeometry(0.05, 0.05);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffeb3b, transparent: true, opacity: 0.9, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(cx, cy, cz);
+    state.scene.add(mesh);
+    this.partes.push({
+      mesh, life: 3, maxLife: 3,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.3,
+      vz: (Math.random() - 0.5) * 0.4,
+      type: 'pollen',
+    });
+  }
+  // Faíscas premium para tochas (laranja brilhante)
+  spawnTorchSpark(cx, cy, cz) {
+    if (!this.scene) return;
+    const geo = new THREE.SphereGeometry(0.025, 4, 3);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 1.0 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(cx + 0.5, cy + 0.6, cz + 0.5);
+    state.scene.add(mesh);
+    this.partes.push({
+      mesh, life: 1.0, maxLife: 1.0,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: 0.8 + Math.random() * 0.3,
+      vz: (Math.random() - 0.5) * 0.2,
+      type: 'spark',
+    });
+  }
   emitirAmbient(world, player) {
     if (!world || !player) return;
     const px = Math.floor(player.pos.x), py = Math.floor(player.pos.y), pz = Math.floor(player.pos.z);
@@ -144,6 +214,18 @@ export class Particulas {
           if (b === BLOCO.FORNALHA && Math.random() < 0.25) {
             const f = world.fornalhaEstados.get(World.keyXYZ(x, y, z));
             if (f && f.combustivel) this.spawnSmoke(x, y, z);
+          }
+          // SPRINT VISUAL-6: pétalas caindo de cherry leaves
+          if (b === BLOCO.CHERRY_FOLHA && Math.random() < 0.005 && world.get(x, y - 1, z) === BLOCO.AR) {
+            this.spawnLeafFalling(x, y - 0.2, z, 0xf48fb1);
+          }
+          // Folhas verdes ocasionais
+          if ((b === BLOCO.FOLHA || b === BLOCO.JUNGLE_FOLHA) && Math.random() < 0.002 && world.get(x, y - 1, z) === BLOCO.AR) {
+            this.spawnLeafFalling(x, y - 0.2, z, 0x66bb6a);
+          }
+          // Faíscas em tochas
+          if (b === BLOCO.TOCHA && Math.random() < 0.10) {
+            this.spawnTorchSpark(x, y, z);
           }
           if (b === BLOCO.LAVA) {
             if (Math.random() < 0.05 && world.get(x, y + 1, z) === BLOCO.AR) this.spawnLavaSpark(x, y, z);
@@ -211,6 +293,45 @@ export class Particulas {
       if (u.life <= 0) {
         this.scene.remove(p);
         this.lista.splice(i, 1);
+      }
+    }
+    // SPRINT VISUAL-6: tick partes premium (leaf, snow, pollen, spark)
+    if (this.partes && this.partes.length) {
+      for (let i = this.partes.length - 1; i >= 0; i--) {
+        const p = this.partes[i];
+        if (!p.mesh) { this.partes.splice(i, 1); continue; }
+        // Físicas por tipo
+        if (p.type === 'leaf') {
+          // Pétala caindo: drift sinusoidal + rotação
+          p.vx = Math.sin(p.life * 2) * 0.3;
+          p.vz = Math.cos(p.life * 1.5) * 0.3;
+          p.mesh.rotation.z += (p.rotZ || 1) * dt;
+          p.mesh.rotation.y += dt;
+        } else if (p.type === 'snow') {
+          // Floco: drift mais lento
+          p.vx = Math.sin(p.life * 0.5) * 0.2;
+        } else if (p.type === 'pollen') {
+          // Polen: zig-zag
+          p.vx += (Math.random() - 0.5) * 0.5 * dt;
+          p.vz += (Math.random() - 0.5) * 0.5 * dt;
+          p.vy += (Math.random() - 0.5) * 0.2 * dt;
+        } else if (p.type === 'spark') {
+          // Faisca: gravidade + slowdown
+          p.vy -= 4 * dt;
+          p.vx *= 0.92; p.vz *= 0.92;
+        }
+        p.mesh.position.x += p.vx * dt;
+        p.mesh.position.y += p.vy * dt;
+        p.mesh.position.z += p.vz * dt;
+        // Fade out
+        const k = p.life / p.maxLife;
+        if (p.mesh.material) p.mesh.material.opacity = 0.95 * k;
+        p.life -= dt;
+        if (p.life <= 0) {
+          if (this.scene && p.mesh.parent === this.scene) this.scene.remove(p.mesh);
+          else if (state.scene) state.scene.remove(p.mesh);
+          this.partes.splice(i, 1);
+        }
       }
     }
   }
