@@ -1246,103 +1246,85 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
   }
 
-  // Rooted Dirt: marrom com raízes finas escuras espalhadas
+  // Paridade MC rooted_dirt: terra + raízes pequenas + speckle.
   function pintarRootedDirt(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#8d6e63';
+    // Base dirt (mesma paleta de pintarTerra)
+    ctx.fillStyle = '#866043';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Ruído de terra
     let seed = idx * 9301 + 49297;
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5d4037', 0.40, 4, 2, seed);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#a1887f', 0.30, 5, 1, seed + 4441);
-    // Raízes (linhas curvas escuras)
-    ctx.fillStyle = '#3e2723';
-    // Raiz 1 (zigzag horizontal)
-    ctx.fillRect(x0 + 4,  y0 + 8,  3, 1);
-    ctx.fillRect(x0 + 6,  y0 + 9,  3, 1);
-    ctx.fillRect(x0 + 8,  y0 + 10, 3, 1);
-    // Raiz 2 (zigzag diagonal)
-    ctx.fillRect(x0 + 18, y0 + 4,  3, 1);
-    ctx.fillRect(x0 + 20, y0 + 5,  3, 1);
-    ctx.fillRect(x0 + 22, y0 + 7,  3, 1);
-    // Raiz 3 (vertical fina)
-    ctx.fillRect(x0 + 12, y0 + 18, 1, 8);
-    ctx.fillRect(x0 + 13, y0 + 25, 2, 1);
-    // Raiz 4 (mais à direita)
-    ctx.fillRect(x0 + 24, y0 + 16, 1, 6);
-    ctx.fillRect(x0 + 25, y0 + 22, 2, 1);
-    // Pontos brancos (fungos/sementes)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#fafafa', 0.10, 8, 1, seed + 7331);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6B4A30', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9A7556', 0.18, 2, 1, seed + 7919);
+    // 3-4 raízes finas (linhas escuras curtas)
+    ctx.fillStyle = '#3E2723';
+    ctx.fillRect(x0 + 2, y0 + 4, 3, 1);
+    ctx.fillRect(x0 + 4, y0 + 5, 1, 2);
+    ctx.fillRect(x0 + 9, y0 + 2, 1, 3);
+    ctx.fillRect(x0 + 10, y0 + 4, 2, 1);
+    ctx.fillRect(x0 + 6, y0 + 9, 1, 4);
+    ctx.fillRect(x0 + 12, y0 + 11, 1, 3);
+    ctx.fillRect(x0 + 13, y0 + 13, 1, 1);
+    // Pontos brancos esparsos (fungos)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FAFAFA', 0.06, 4, 1, seed + 7331);
   }
 
-  // Glazed Terracota: cor vibrante com padrão geométrico (paridade MC)
+  // Paridade MC glazed_terracotta: padrão geométrico vibrante.
+  // CELL=16: borda 1px + padrão diamante central + centro contrastante.
   function pintarGlazed(idx, base, claro, escuro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão central diamante (X)
-    ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 6, y0 + 6, 20, 4);
-    ctx.fillRect(x0 + 6, y0 + CELL - 10, 20, 4);
-    ctx.fillRect(x0 + 6, y0 + 6, 4, 20);
-    ctx.fillRect(x0 + CELL - 10, y0 + 6, 4, 20);
-    // Centro grande contrastante
-    ctx.fillStyle = escuro;
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // 4 cantos com pontos decorativos
-    ctx.fillStyle = '#ffffff';
-    for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
-      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
-    }
-    // Cruz na borda
-    ctx.fillStyle = escuro;
-    ctx.fillRect(x0 + CELL/2 - 1, y0 + 2, 2, 2);
-    ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL - 4, 2, 2);
-    ctx.fillRect(x0 + 2, y0 + CELL/2 - 1, 2, 2);
-    ctx.fillRect(x0 + CELL - 4, y0 + CELL/2 - 1, 2, 2);
-    // Borda escura
+    // Borda externa escura
     ctx.fillStyle = escuro;
     ctx.fillRect(x0, y0, CELL, 1);
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     ctx.fillRect(x0, y0, 1, CELL);
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Padrão diamante central (frame claro 2px)
+    ctx.fillStyle = claro;
+    ctx.fillRect(x0 + 3, y0 + 3, CELL - 6, 2);
+    ctx.fillRect(x0 + 3, y0 + CELL - 5, CELL - 6, 2);
+    ctx.fillRect(x0 + 3, y0 + 3, 2, CELL - 6);
+    ctx.fillRect(x0 + CELL - 5, y0 + 3, 2, CELL - 6);
+    // Centro escuro 4×4
+    ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    // Highlight branco central 2×2
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // 4 pontos brancos nos cantos (decoração)
+    for (const [cx, cy] of [[2, 2], [CELL - 3, 2], [2, CELL - 3], [CELL - 3, CELL - 3]]) {
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
+    }
   }
 
-  // Conduit: cristal aquático ciano-prismarine com 4 nodos brilhantes
+  // Paridade MC conduit: cristal aquático com olho central + 4 olhos nos cantos.
   function pintarConduit(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Base ciano escuro
-    ctx.fillStyle = '#00838f';
+    ctx.fillStyle = '#00838F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de "casca" em volta
-    ctx.fillStyle = '#4dd0e1';
+    // Camadas concêntricas (3 anéis 1px cada)
+    ctx.fillStyle = '#4DD0E1';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    ctx.fillStyle = '#80DEEA';
     ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    ctx.fillStyle = '#80deea';
-    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
-    // Núcleo branco-azulado
-    ctx.fillStyle = '#b2ebf2';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#e0f7fa';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // 4 olhos nos cantos (caracteristica do conduit)
-    ctx.fillStyle = '#ffeb3b';
-    for (const [cx, cy] of [[6, 6], [22, 6], [6, 22], [22, 22]]) {
-      ctx.fillRect(x0 + cx, y0 + cy, 4, 4);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 2, 2);
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 1, 1);
-      ctx.fillStyle = '#ffeb3b';
+    // Núcleo branco-azulado central
+    ctx.fillStyle = '#B2EBF2';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#E0F7FA';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // 4 olhos nos cantos (1×1 amarelo + pupila preta 1px center pro maior, mas em CELL=16 = 1×1 só)
+    const cantos = [[2, 2], [CELL - 3, 2], [2, CELL - 3], [CELL - 3, CELL - 3]];
+    for (const [cx, cy] of cantos) {
+      ctx.fillStyle = '#FFEB3B';
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
     }
   }
 
@@ -1516,29 +1498,29 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Anvil Damaged: bigorna com rachaduras visíveis (mais escuras)
+  // Anvil damaged: aço escuro + plataforma + rachaduras + ferrugem.
   function pintarAnvilDamaged(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Reusa lógica básica da bigorna (yunque) mas com rachaduras
-    ctx.fillStyle = '#3a3a3a';
+    ctx.fillStyle = '#3A3A3A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 4, y0 + 6, CELL - 8, CELL - 12);
-    ctx.fillStyle = '#5a5a5a';
-    ctx.fillRect(x0 + 8, y0 + 10, CELL - 16, CELL - 20);
-    // Rachaduras zigzag
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(x0 + 9,  y0 + 11, 1, 4);
-    ctx.fillRect(x0 + 10, y0 + 14, 1, 3);
-    ctx.fillRect(x0 + 11, y0 + 16, 1, 4);
-    ctx.fillRect(x0 + 18, y0 + 12, 1, 6);
-    ctx.fillRect(x0 + 17, y0 + 17, 2, 1);
-    // Marcas vermelhas (ferrugem/danos)
-    ctx.fillStyle = '#5d2535';
-    ctx.fillRect(x0 + 12, y0 + 18, 2, 1);
-    ctx.fillRect(x0 + 19, y0 + 19, 2, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#2A2A2A', 0.22, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5A5A5A', 0.16, 2, 1, seed + 7919);
+    // Plataforma central (igual anvil topo, mas com defeitos)
+    ctx.fillStyle = '#5A5A5A';
+    ctx.fillRect(x0 + 4, y0 + 5, 8, 6);
+    // Rachaduras zigzag (4 fissuras 1px curtas)
+    ctx.fillStyle = '#0A0A0A';
+    ctx.fillRect(x0 + 5, y0 + 6, 1, 2);
+    ctx.fillRect(x0 + 6, y0 + 8, 1, 2);
+    ctx.fillRect(x0 + 9, y0 + 6, 1, 3);
+    ctx.fillRect(x0 + 10, y0 + 8, 2, 1);
+    // Ferrugem (vermelho-marrom pontual)
+    ctx.fillStyle = '#5D2535';
+    ctx.fillRect(x0 + 7, y0 + 10, 2, 1);
+    ctx.fillRect(x0 + 11, y0 + 9, 1, 1);
   }
 
   // Paridade MC decorated_pot: vaso terracota com banda dourada decorativa.
