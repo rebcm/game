@@ -1186,6 +1186,85 @@ function abrirPainelBrewing(x, y, z) {
   try { document.exitPointerLock?.(); } catch (_) {}
 }
 
+// Loom: 12 padrões de banner (paridade MC). Cada pattern = 1 banner + 1 dye.
+// Player escolhe pattern visualmente; sistema gera item BANNER com sel.pattern.
+function abrirPainelLoom() {
+  const PATTERNS = [
+    { id: 'cross',     nome: 'Cruz',          desenho: 'M2 0 H6 V2 H8 V6 H6 V8 H2 V6 H0 V2 H2 Z' },
+    { id: 'stripe_v',  nome: 'Faixa Vertical', desenho: 'M3 0 H5 V8 H3 Z' },
+    { id: 'stripe_h',  nome: 'Faixa Horizontal',desenho: 'M0 3 H8 V5 H0 Z' },
+    { id: 'border',    nome: 'Borda',         desenho: 'M0 0 H8 V8 H0 V0 Z M1 1 V7 H7 V1 H1 Z' },
+    { id: 'diagonal',  nome: 'Diagonal',      desenho: 'M0 0 L8 8 L8 6 L2 0 Z' },
+    { id: 'half_h',    nome: 'Metade Horizontal', desenho: 'M0 0 H8 V4 H0 Z' },
+    { id: 'half_v',    nome: 'Metade Vertical', desenho: 'M0 0 H4 V8 H0 Z' },
+    { id: 'circle',    nome: 'Círculo',       desenho: 'M3 2 H5 V3 H6 V5 H5 V6 H3 V5 H2 V3 H3 Z' },
+    { id: 'triangle',  nome: 'Triângulo',     desenho: 'M4 1 L6 5 L2 5 Z' },
+    { id: 'chevron',   nome: 'Chevron',       desenho: 'M0 4 L4 0 L8 4 L8 6 L4 2 L0 6 Z' },
+    { id: 'flower',    nome: 'Flor',          desenho: 'M3 1 H5 V3 H7 V5 H5 V7 H3 V5 H1 V3 H3 Z' },
+    { id: 'skull',     nome: 'Caveira',       desenho: 'M2 1 H6 V5 H5 V7 H3 V5 H2 Z M3 2 V3 H4 V2 Z M5 2 V3 H6 V2 Z' },
+  ];
+  const CORES = [
+    { id: 'red',     cor: '#C62828', nome: 'Vermelho' },
+    { id: 'blue',    cor: '#1565C0', nome: 'Azul' },
+    { id: 'yellow',  cor: '#FDD835', nome: 'Amarelo' },
+    { id: 'green',   cor: '#558B2F', nome: 'Verde' },
+    { id: 'purple',  cor: '#7B1FA2', nome: 'Roxo' },
+    { id: 'orange',  cor: '#F57C00', nome: 'Laranja' },
+    { id: 'white',   cor: '#FAFAFA', nome: 'Branco' },
+    { id: 'black',   cor: '#212121', nome: 'Preto' },
+  ];
+  let modal = document.getElementById('painel-loom');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'painel-loom';
+    modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#2a1d3f;color:#fafafa;padding:20px;border:3px solid #c2185b;font-family:"Press Start 2P",monospace;font-size:8px;z-index:100;border-radius:8px;width:560px;max-height:80vh;overflow-y:auto;';
+    document.body.appendChild(modal);
+  }
+  let corSel = 'red';
+  const renderPattern = (p, c) => {
+    const cor = CORES.find(cc => cc.id === c)?.cor || '#C62828';
+    return `<svg viewBox="0 0 8 8" width="64" height="64" style="background:#5d4037;display:block">
+      <path d="${p.desenho}" fill="${cor}" />
+    </svg>`;
+  };
+  const render = () => {
+    modal.innerHTML = `
+      <h3 style="color:#c2185b;text-align:center;margin:0 0 12px;font-size:10px;">🏴 Loom — Banner Patterns</h3>
+      <div style="margin-bottom:10px;color:#bbb;font-size:7px;">Cor selecionada: <span id="loom-cor-atual" style="color:${CORES.find(c => c.id === corSel)?.cor};">${CORES.find(c => c.id === corSel)?.nome}</span></div>
+      <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;">
+        ${CORES.map(c => `<button class="loom-cor" data-cor="${c.id}" style="width:32px;height:32px;background:${c.cor};border:${corSel === c.id ? '3px solid #fff' : '1px solid rgba(255,255,255,0.3)'};cursor:pointer;border-radius:4px;" title="${c.nome}"></button>`).join('')}
+      </div>
+      <div style="color:#80deea;font-size:8px;margin:8px 0 6px;">Escolha o padrão (custa: 1 Bandeira + 1 corante):</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        ${PATTERNS.map(p => `<button class="loom-pat" data-pat="${p.id}" style="padding:4px;background:#1a1a1a;border:1px solid #444;cursor:pointer;color:#fff;font-family:inherit;font-size:6px;border-radius:4px;display:flex;flex-direction:column;align-items:center;gap:2px;">${renderPattern(p, corSel)}<span>${p.nome}</span></button>`).join('')}
+      </div>
+      <button id="loom-close" style="margin-top:14px;width:100%;padding:8px;background:#666;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;border-radius:4px;">Fechar [X]</button>
+    `;
+    modal.querySelectorAll('.loom-cor').forEach(btn => {
+      btn.onclick = () => { corSel = btn.dataset.cor; render(); };
+    });
+    modal.querySelectorAll('.loom-pat').forEach(btn => {
+      btn.onclick = () => {
+        const pat = PATTERNS.find(pp => pp.id === btn.dataset.pat);
+        if (!pat) return;
+        if (state.inv.contar?.(undefined, ITEM.BANNER_PADRAO) < 1) {
+          state.ui.toast('Precisa Bandeira Padrão'); return;
+        }
+        // Banner final guarda pattern + cor pra renderização futura
+        state.inv.consumir(undefined, ITEM.BANNER_PADRAO, 1);
+        const banner = { i: ITEM.PRINCIPLES_BANNER, q: 1, pattern: pat.id, cor: corSel, nomeCustom: `${pat.nome} ${CORES.find(c => c.id === corSel)?.nome}` };
+        state.inv.adicionar(banner);
+        Audio.colocar?.();
+        state.ui.toast(`🏴 Banner: ${pat.nome} ${CORES.find(c => c.id === corSel)?.nome}!`);
+      };
+    });
+    document.getElementById('loom-close').onclick = () => modal.remove();
+  };
+  render();
+  modal.style.display = 'block';
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
 // === Painel da fornalha ===
 function abrirPainelFornalha(x, y, z) {
   state.fornalhaAtivaCoords = { x, y, z };
@@ -2932,15 +3011,12 @@ function loop(now) {
             state.ui.toast('🪨 Precisa de Pedra na hotbar');
           }
         }
-        // Loom — cria banner com pattern (simplificado)
+        // Loom — abre painel de seleção de padrão (12 patterns paridade MC)
         else if (blocoAlvo === BLOCO.LOOM) {
-          if (state.inv.contar?.(undefined, ITEM.BANNER_PADRAO) >= 1) {
-            state.inv.consumir(undefined, ITEM.BANNER_PADRAO, 1);
-            state.inv.adicionar({ i: ITEM.PRINCIPLES_BANNER, q: 1 });
-            state.ui.toast('🏴 Loom: Banner com padrão custom');
-            Audio.colocar?.();
-          } else {
+          if (state.inv.contar?.(undefined, ITEM.BANNER_PADRAO) < 1) {
             state.ui.toast('🏴 Loom — precisa de Bandeira Padrão');
+          } else {
+            abrirPainelLoom();
           }
         }
         // Cartography Table — copia mapa
