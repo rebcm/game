@@ -2872,35 +2872,13 @@ function loop(now) {
             state.ui.toast(`✏️ Sign: "${texto.slice(0, 30)}"`);
           }
         }
-        // Item Frame — coloca item da hotbar dentro
-        else if (blocoAlvo === BLOCO.MOLDURA || blocoAlvo === BLOCO.MOLDURA_BRILHANTE) {
-          const sel = state.inv.itemSelecionado();
-          if (sel?.i !== undefined || sel?.b !== undefined) {
-            state.itemFrames = state.itemFrames || new Map();
-            state.itemFrames.set(World.keyXYZ(t.x, t.y, t.z), { ...sel, q: 1 });
-            state.inv.consumirAtual();
-            state.ui.toast(`🖼️ Item Frame: item exibido`);
-          } else {
-            // Já tem item: rotaciona ou retira
-            const k = World.keyXYZ(t.x, t.y, t.z);
-            if (state.itemFrames?.has(k)) {
-              const item = state.itemFrames.get(k);
-              state.inv.adicionar(item);
-              state.itemFrames.delete(k);
-              state.ui.toast('🖼️ Item retirado da Frame');
-            }
-          }
-        }
-        // Painting placement — substitui parede por pintura
+        // SPRINT VISUAL-FIX: Item Frame removido (BLOCO inexistente, não funcional)
+        // SPRINT VISUAL-FIX: Painting placement — usa LA_VERMELHA como placeholder
         else if (state.inv.itemSelecionado()?.i === ITEM.PINTURA) {
-          state.world.set(t.x, t.y, t.z, BLOCO.PINTURA || BLOCO.LA_VERMELHA);
+          state.world.set(t.x, t.y, t.z, BLOCO.LA_VERMELHA);
           state.inv.consumirAtual();
           state.ui.toast('🎨 Pintura colocada!');
           Audio.colocar?.();
-        }
-        // Cauldron — interação com balde água
-        else if (blocoAlvo === BLOCO.CALDEIRAO || blocoAlvo === BLOCO.QUARTZO) {
-          // Skip por enquanto
         }
         else if (blocoAlvo === BLOCO.BOLO) {
           // Comer bolo: restaura fome (4) + 1 hp em survival, consome bloco.
