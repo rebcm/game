@@ -1179,6 +1179,122 @@ function abrirPainelBrewing(x, y, z) {
   try { document.exitPointerLock?.(); } catch (_) {}
 }
 
+// Mapa fullscreen: renderiza chunks já carregados em vista top-down + player marker.
+// Suporta MAPA_TESOURO_I (visão geral) e MAPA_BUSSOLA (busca recovery).
+function abrirPainelMapa(sel) {
+  let modal = document.getElementById('painel-mapa');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'painel-mapa';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);color:#fafafa;font-family:"Press Start 2P",monospace;font-size:9px;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;';
+    document.body.appendChild(modal);
+  }
+  const isBussola = sel?.i === ITEM.MAPA_BUSSOLA;
+  modal.innerHTML = `
+    <div style="margin-bottom:10px;color:#fdd835;font-size:11px;">${isBussola ? '🧭 Bússola Recovery' : '🗺️ Mapa do Tesouro'}</div>
+    <canvas id="mapa-canvas" width="640" height="640" style="background:#0d2818;border:3px solid #fdd835;image-rendering:pixelated;"></canvas>
+    <div id="mapa-info" style="margin-top:10px;color:#bbb;font-size:7px;line-height:1.6;text-align:center;"></div>
+    <button id="mapa-close" style="margin-top:14px;padding:8px 20px;background:#666;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;border-radius:4px;">Fechar [E/X]</button>
+  `;
+  const cnv = document.getElementById('mapa-canvas');
+  const cctx = cnv.getContext('2d');
+  const W = cnv.width, H = cnv.height;
+  const RAIO = 64; // 128 blocos visíveis (64 cada lado)
+  const ESC = W / (RAIO * 2);
+  const px0 = Math.floor(state.player.pos.x);
+  const pz0 = Math.floor(state.player.pos.z);
+  // Cores por bloco-topo (paleta voxel)
+  const COR = {
+    1: '#5DAB54', 2: '#866043', 3: '#7E7E7E', 4: '#DBC380',
+    5: '#9E7C5C', 6: '#3F7029', 12: '#F5F5F5', 16: '#2C8FCF',
+    17: '#D44515', 25: '#525252', 23: '#8D6E63', // sand_red, etc
+  };
+  cctx.fillStyle = '#0d2818';
+  cctx.fillRect(0, 0, W, H);
+  let chunksRevelados = 0;
+  for (let dz = -RAIO; dz < RAIO; dz++) {
+    for (let dx = -RAIO; dx < RAIO; dx++) {
+      const wx = px0 + dx, wz = pz0 + dz;
+      if (!state.world?.hasChunk?.(Math.floor(wx / 16), Math.floor(wz / 16))) continue;
+      chunksRevelados++;
+      // Topo sólido
+      let y = 60, b = 0;
+      while (y > 0) {
+        b = state.world.get(wx, y, wz);
+        if (b !== 0) break;
+        y--;
+      }
+      // Sombreamento por altura: y alto → mais claro, y baixo → mais escuro
+      const cor = COR[b] || '#444';
+      const lum = Math.max(0.4, Math.min(1.2, y / 50));
+      cctx.fillStyle = _ajustarLum(cor, lum);
+      cctx.fillRect((dx + RAIO) * ESC, (dz + RAIO) * ESC, Math.ceil(ESC), Math.ceil(ESC));
+    }
+  }
+  // Player marker (seta apontando direção que olha)
+  const cx = W / 2, cy = H / 2;
+  const camDir = state.renderer?.camera?.getWorldDirection?.(new THREE.Vector3());
+  const ang = camDir ? Math.atan2(camDir.x, camDir.z) : 0;
+  cctx.save();
+  cctx.translate(cx, cy);
+  cctx.rotate(-ang);
+  cctx.fillStyle = '#ff5252';
+  cctx.beginPath();
+  cctx.moveTo(0, -8);
+  cctx.lineTo(6, 6);
+  cctx.lineTo(0, 3);
+  cctx.lineTo(-6, 6);
+  cctx.closePath();
+  cctx.fill();
+  cctx.strokeStyle = '#fff';
+  cctx.lineWidth = 1;
+  cctx.stroke();
+  cctx.restore();
+  // Info: coordenadas + chunks revelados
+  const info = document.getElementById('mapa-info');
+  if (info) {
+    info.innerHTML = `
+      Coords: <span style="color:#80deea;">X ${px0} · Z ${pz0}</span> · Y ${Math.floor(state.player.pos.y)}<br>
+      Chunks revelados: <span style="color:#fdd835;">${chunksRevelados}</span> · Raio: ${RAIO * 2}×${RAIO * 2} blocos<br>
+      ${isBussola ? '<span style="color:#ce93d8;">🧭 Aponta pra última morte</span>' : '<span style="color:#fff176;">⭐ Marcador vermelho = sua posição</span>'}
+    `;
+  }
+  // Bússola Recovery: marca local da última morte (state.player.deathPoint)
+  if (isBussola && state.player.deathPoint) {
+    const dp = state.player.deathPoint;
+    const ddx = dp.x - px0, ddz = dp.z - pz0;
+    if (Math.abs(ddx) < RAIO && Math.abs(ddz) < RAIO) {
+      const mx = (ddx + RAIO) * ESC;
+      const mz = (ddz + RAIO) * ESC;
+      cctx.fillStyle = '#9c27b0';
+      cctx.fillRect(mx - 4, mz - 4, 8, 8);
+      cctx.fillStyle = '#fff';
+      cctx.fillRect(mx - 1, mz - 1, 2, 2);
+    }
+  }
+  // Close handlers
+  const fechar = () => modal.remove();
+  document.getElementById('mapa-close').onclick = fechar;
+  modal.onclick = (e) => { if (e.target === modal) fechar(); };
+  const escHandler = (e) => {
+    if (e.code === 'KeyE' || e.code === 'KeyX' || e.code === 'Escape') {
+      fechar();
+      window.removeEventListener('keydown', escHandler);
+    }
+  };
+  window.addEventListener('keydown', escHandler);
+  try { document.exitPointerLock?.(); } catch (_) {}
+}
+
+function _ajustarLum(cor, fator) {
+  // Multiplica RGB por fator, clamp 0-255. Cor em formato #RRGGBB.
+  const n = parseInt(cor.slice(1), 16);
+  const r = Math.min(255, Math.max(0, ((n >> 16) & 255) * fator)) | 0;
+  const g = Math.min(255, Math.max(0, ((n >> 8) & 255) * fator)) | 0;
+  const b = Math.min(255, Math.max(0, (n & 255) * fator)) | 0;
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+
 // Loom: 12 padrões de banner (paridade MC). Cada pattern = 1 banner + 1 dye.
 // Player escolhe pattern visualmente; sistema gera item BANNER com sel.pattern.
 function abrirPainelLoom() {
@@ -2742,6 +2858,11 @@ function loop(now) {
           state.ui.toast('🛒 Vagonete posicionado!');
         }
         state.inv.consumirAtual();
+        return;
+      }
+      // Mapa do Tesouro / Bússola Recovery — abre modal fullscreen
+      if (sel?.i === ITEM.MAPA_TESOURO_I || sel?.i === ITEM.MAPA_BUSSOLA) {
+        abrirPainelMapa(sel);
         return;
       }
       // Elytra — equipar como peitoral
