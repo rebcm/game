@@ -141,7 +141,7 @@ export class Particulas {
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(cx + Math.random() * 0.5, cy, cz + Math.random() * 0.5);
     mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    state.scene.add(mesh);
+    this.scene.add(mesh);
     this.partes.push({
       mesh, life: 8, maxLife: 8,
       vx: (Math.random() - 0.5) * 0.3,
@@ -158,7 +158,7 @@ export class Particulas {
     const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(cx + Math.random() * 0.5, cy, cz + Math.random() * 0.5);
-    state.scene.add(mesh);
+    this.scene.add(mesh);
     this.partes.push({
       mesh, life: 5, maxLife: 5,
       vx: Math.sin(Date.now() / 1000) * 0.15,
@@ -174,7 +174,7 @@ export class Particulas {
     const mat = new THREE.MeshBasicMaterial({ color: 0xffeb3b, transparent: true, opacity: 0.9, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(cx, cy, cz);
-    state.scene.add(mesh);
+    this.scene.add(mesh);
     this.partes.push({
       mesh, life: 3, maxLife: 3,
       vx: (Math.random() - 0.5) * 0.4,
@@ -190,7 +190,7 @@ export class Particulas {
     const mat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 1.0 });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(cx + 0.5, cy + 0.6, cz + 0.5);
-    state.scene.add(mesh);
+    this.scene.add(mesh);
     this.partes.push({
       mesh, life: 1.0, maxLife: 1.0,
       vx: (Math.random() - 0.5) * 0.2,
@@ -328,8 +328,7 @@ export class Particulas {
         if (p.mesh.material) p.mesh.material.opacity = 0.95 * k;
         p.life -= dt;
         if (p.life <= 0) {
-          if (this.scene && p.mesh.parent === this.scene) this.scene.remove(p.mesh);
-          else if (state.scene) state.scene.remove(p.mesh);
+          if (this.scene && p.mesh.parent) this.scene.remove(p.mesh);
           this.partes.splice(i, 1);
         }
       }
