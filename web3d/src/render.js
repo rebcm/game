@@ -2547,239 +2547,192 @@ function criarAtlas() {
     ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Chiseled Tuff Bricks: tijolos esculpidos com padrão central
+  // Chiseled Tuff Bricks: tuff + moldura + cristal central decorativo.
   function pintarChiseledTuffBricks(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#707070';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda externa em moldura
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#404040', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#909090', 0.16, 2, 1, seed + 7919);
+    // Moldura externa
     ctx.fillStyle = '#505050';
     ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
     ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
-    // Diamante central
+    // Diamante central (4×4 pontos cardinais)
     ctx.fillStyle = '#909090';
-    ctx.fillRect(x0 + 12, y0 + 6,  8, 1);
-    ctx.fillRect(x0 + 10, y0 + 8,  12, 1);
-    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
-    ctx.fillRect(x0 + 10, y0 + 22, 12, 1);
-    ctx.fillRect(x0 + 12, y0 + 24, 8, 1);
+    ctx.fillRect(x0 + 6, y0 + 5, 4, 1);
+    ctx.fillRect(x0 + 5, y0 + 6, 6, 4);
+    ctx.fillRect(x0 + 6, y0 + 10, 4, 1);
+    // Centro escuro
     ctx.fillStyle = '#505050';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#bdbdbd';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Manchas
-    ctx.fillStyle = '#404040';
-    let s = idx * 17 + 23;
-    for (let i = 0; i < 10; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // Highlight branco
+    ctx.fillStyle = '#BDBDBD';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Chiseled Copper: cobre esculpido com hexágonos
+  // Chiseled Copper: cobre + padrão decorativo central.
   function pintarChiseledCopper(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#c97a4d';
+    ctx.fillStyle = '#C97A4D';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão diagonal (gravação)
-    ctx.fillStyle = '#a45a30';
-    for (let i = 0; i < CELL; i += 4) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
-    }
-    // Hexágono central decorativo
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 12, y0 + 8,  8, 1);
-    ctx.fillRect(x0 + 10, y0 + 9,  12, 1);
-    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
-    ctx.fillRect(x0 + 10, y0 + 22, 12, 1);
-    ctx.fillRect(x0 + 12, y0 + 23, 8, 1);
-    // Centro com gema
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#a45a30';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Highlight superior
-    ctx.fillStyle = '#e8a070';
-    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A45A30', 0.22, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#E8A070', 0.16, 2, 1, seed + 7919);
+    // Hexágono decorativo central (4×4)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 6, y0 + 5, 4, 1);
+    ctx.fillRect(x0 + 5, y0 + 6, 6, 4);
+    ctx.fillRect(x0 + 6, y0 + 10, 4, 1);
+    // Centro gema branca
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#A45A30';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Copper Bulb: bulbo brilhante (luz 15)
+  // Copper Bulb: bulbo brilhante (luz nível 15) — anel cobre + núcleo amarelo bright.
   function pintarCopperBulb(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Cobre escuro como base
-    ctx.fillStyle = '#a45a30';
+    // Anel de cobre externo
+    ctx.fillStyle = '#A45A30';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Anel de cobre
-    ctx.fillStyle = '#c97a4d';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    // Bulbo brilhante (esfera amarela)
-    ctx.fillStyle = '#f57f17';
-    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#ffeb3b';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#fffde7';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Halo brilhante (cruz)
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 15, y0 + 4, 2, 4);
-    ctx.fillRect(x0 + 15, y0 + 24, 2, 4);
-    ctx.fillRect(x0 + 4, y0 + 15, 4, 2);
-    ctx.fillRect(x0 + 24, y0 + 15, 4, 2);
+    ctx.fillStyle = '#C97A4D';
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Núcleo brilhante 8×8 amarelo bright
+    ctx.fillStyle = '#F57F17';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 8);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    ctx.fillStyle = '#FFEB3B';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#FFFDE7';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Copper Grate: grade de cobre (estrutura aberta)
+  // Copper Grate: grade de cobre (barras finas em + cruz com fundo escuro).
   function pintarCopperGrate(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Fundo escuro (espaços abertos)
-    ctx.fillStyle = '#1a1008';
+    ctx.fillStyle = '#1A1008';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Barras horizontais
-    ctx.fillStyle = '#c97a4d';
-    for (let y = 0; y < CELL; y += 6) {
-      ctx.fillRect(x0, y0 + y, CELL, 2);
+    // Barras horizontais (a cada 4px)
+    ctx.fillStyle = '#C97A4D';
+    for (let y = 0; y < CELL; y += 4) {
+      ctx.fillRect(x0, y0 + y, CELL, 1);
     }
     // Barras verticais
-    for (let x = 0; x < CELL; x += 6) {
-      ctx.fillRect(x0 + x, y0, 2, CELL);
+    for (let x = 0; x < CELL; x += 4) {
+      ctx.fillRect(x0 + x, y0, 1, CELL);
     }
-    // Highlights (cobre claro nas junções)
-    ctx.fillStyle = '#e8a070';
-    for (let y = 0; y < CELL; y += 6) {
-      for (let x = 0; x < CELL; x += 6) {
+    // Highlight cobre claro nas junções
+    ctx.fillStyle = '#E8A070';
+    for (let y = 0; y < CELL; y += 4) {
+      for (let x = 0; x < CELL; x += 4) {
         ctx.fillRect(x0 + x, y0 + y, 1, 1);
       }
     }
-    // Sombras
-    ctx.fillStyle = '#a45a30';
-    for (let y = 1; y < CELL; y += 6) {
-      ctx.fillRect(x0, y0 + y, CELL, 1);
     }
   }
 
-  // Trial Spawner: caixa preta com olho/cristal central
+  // Trial Spawner: caixa escura com cristal central laranja brilhante (1.21).
   function pintarTrialSpawner(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#212121';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de obsidiana
-    ctx.fillStyle = '#0a0a0a';
-    for (let i = 0; i < CELL; i += 4) {
-      for (let j = 0; j < CELL; j += 4) {
-        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 2, 2);
-      }
-    }
-    // Borda de runas (laranja-marrom)
-    ctx.fillStyle = '#a05a30';
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#0A0A0A', 0.30, 2, 1, seed + 1009);
+    // Borda de runas (cobre escuro)
+    ctx.fillStyle = '#A05A30';
     ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
     ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
-    // Cristal central (laranja brilhante)
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
-    ctx.fillStyle = '#ff9800';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#fffde7';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // Pontos de luz (4 cantos do cristal)
-    ctx.fillStyle = '#ff5252';
-    ctx.fillRect(x0 + 8, y0 + 8, 1, 1);
-    ctx.fillRect(x0 + 23, y0 + 8, 1, 1);
-    ctx.fillRect(x0 + 8, y0 + 23, 1, 1);
-    ctx.fillRect(x0 + 23, y0 + 23, 1, 1);
+    // Cristal central 6×6 brilhante laranja
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    ctx.fillStyle = '#FF9800';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FFFDE7';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Vault: cofre com chave/fechadura (1.21)
+  // Vault: cofre com fechadura central dourada (1.21).
   function pintarVault(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#212121';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda de metal escuro
-    ctx.fillStyle = '#424242';
-    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
-    // Frente do vault (placa pesada)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#424242', 0.20, 2, 1, seed + 1009);
+    // Frente metálica (placa)
     ctx.fillStyle = '#616161';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    ctx.fillStyle = '#9e9e9e';
-    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, 1);
-    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
-    // Fechadura/buraco de chave central
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(x0 + 12, y0 + 10, 8, 12);
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 13, y0 + 11, 6, 10);
-    // Buraco da chave
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 14, y0 + 13, 4, 4);
-    ctx.fillRect(x0 + 15, y0 + 17, 2, 4);
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
-    // 4 parafusos nos cantos
-    ctx.fillStyle = '#a45a30';
-    ctx.fillRect(x0 + 7,  y0 + 7,  2, 2);
-    ctx.fillRect(x0 + 23, y0 + 7,  2, 2);
-    ctx.fillRect(x0 + 7,  y0 + 23, 2, 2);
-    ctx.fillRect(x0 + 23, y0 + 23, 2, 2);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 7,  y0 + 7,  1, 1);
-    ctx.fillRect(x0 + 23, y0 + 7,  1, 1);
-    ctx.fillRect(x0 + 7,  y0 + 23, 1, 1);
-    ctx.fillRect(x0 + 23, y0 + 23, 1, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, CELL - 4, CELL - 4, '#9E9E9E', 0.16, 2, 1, seed + 7919);
+    // Buraco da chave central (5×6)
+    ctx.fillStyle = '#0A0A0A';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    // Símbolo dourado de chave (2×2 + cauda 1×2)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 6, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 8, 1, 2);
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 7, y0 + 6, 1, 1);
+    // 4 parafusos nos cantos (1×1)
+    ctx.fillStyle = '#A45A30';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 3, y0 + CELL - 4, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + CELL - 4, 1, 1);
   }
 
-  // Pitcher Plant: planta carnívora roxa (1.20)
+  // Pitcher Plant: caule verde + jarra roxa (1.20).
   function pintarPitcherPlant(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a0a2a';
+    ctx.fillStyle = '#1A0A2A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Caule verde central
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 14, y0 + 18, 4, 12);
-    ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(x0 + 14, y0 + 18, 1, 12);
-    // "Jarra" roxa central (forma de pitcher)
-    ctx.fillStyle = '#4a148c';
-    ctx.fillRect(x0 + 9, y0 + 8, 14, 12);
-    ctx.fillStyle = '#6a1b9a';
-    ctx.fillRect(x0 + 10, y0 + 9, 12, 10);
-    ctx.fillStyle = '#7b1fa2';
-    ctx.fillRect(x0 + 11, y0 + 10, 10, 8);
+    // Caule verde (1×6 base)
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 7, y0 + 9, 2, 7);
+    ctx.fillStyle = '#1B5E20';
+    ctx.fillRect(x0 + 7, y0 + 9, 1, 7);
+    // Jarra roxa (8×7 centralizada)
+    ctx.fillStyle = '#4A148C';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 7);
+    ctx.fillStyle = '#6A1B9A';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 5);
+    ctx.fillStyle = '#7B1FA2';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 3);
     // Topo aberto da jarra (escuro)
-    ctx.fillStyle = '#1a0a2a';
-    ctx.fillRect(x0 + 11, y0 + 6, 10, 4);
-    // Borda da abertura
-    ctx.fillStyle = '#9c27b0';
-    ctx.fillRect(x0 + 11, y0 + 6, 10, 1);
-    ctx.fillRect(x0 + 11, y0 + 9, 10, 1);
-    // Padrão decorativo (linhas verticais)
-    ctx.fillStyle = '#ce93d8';
-    ctx.fillRect(x0 + 13, y0 + 11, 1, 6);
-    ctx.fillRect(x0 + 18, y0 + 11, 1, 6);
+    ctx.fillStyle = '#1A0A2A';
+    ctx.fillRect(x0 + 5, y0 + 3, 6, 2);
+    // Borda da abertura clara
+    ctx.fillStyle = '#9C27B0';
+    ctx.fillRect(x0 + 5, y0 + 3, 6, 1);
+    // Linhas verticais decorativas (claras)
+    ctx.fillStyle = '#CE93D8';
+    ctx.fillRect(x0 + 6, y0 + 6, 1, 3);
+    ctx.fillRect(x0 + 9, y0 + 6, 1, 3);
   }
 
   // Pitcher Crop: planta brotando (cresce em fases)
