@@ -83,17 +83,23 @@ function criarAtlas() {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Paridade MC dirt: base marrom sólida + speckle de 2-3 tons.
-    // Sem gradient, sem grumos artificiais, sem pedrinhas — só ruído tonal.
-    ctx.fillStyle = '#866043';  // base dirt MC-like
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    // Tom escuro (~30% pixels)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6b4a30', 0.32, 2, 1, seed + 1009);
-    // Tom muito escuro (~15%, simula matéria orgânica/gravetos)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#4f3520', 0.16, 2, 1, seed + 7919);
-    // Tom claro (~18%, simula areia/grão claro)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9a7556', 0.18, 2, 1, seed + 1573);
+    // Paleta dirt determinística (mesma usada em pintarGramaLado).
+    // Pesos: base (4×), escuro (3×), claro (2×), muito-escuro (1×).
+    const paleta = [
+      '#866043', '#866043', '#866043', '#866043',
+      '#6B4A30', '#6B4A30', '#6B4A30',
+      '#9A7556', '#9A7556',
+      '#4F3520',
+    ];
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
   }
 
   function pintar(idx, corBase, corRuido = null, intensidadeRuido = 0.45) {
@@ -217,34 +223,35 @@ function criarAtlas() {
   // Folha PREMIUM com depth (tons múltiplos + transparência simulada)
   // FIX visual MC-like: folha agora tem variação tonal SUAVE (sem flores brilhantes
   // que pareciam "estrelas amarelas"). Pixels alternados em padrão denso, sem buracos pretos.
-  // Paridade MC oak/spruce/birch leaves: pixel-art flat. Base = corMedio,
-  // speckle de tons claro/escuro distribuído com bucket pequeno (alta densidade).
-  // Sem elipses, sem alpha-blending, sem layers — folhagem MC é speckle puro.
-  // Flores/frutos como pixels isolados (cherry blossom: 1-2 pixels rosa).
+  // Folha (variantes oak/spruce/birch/cherry/etc): clumps 2×2 com 3 tons +
+  // speckle 1×1 pra quebrar grade. Flores/frutos opcionais como pixels isolados.
   function pintarFolhaPremium(idx, corClaro, corMedio, corEscuro, corFlor = null) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base sólida = tom médio
-    ctx.fillStyle = corMedio;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    // Speckle escuro (~32% pixels — sombras entre folhas)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corEscuro, 0.32, 2, 1, seed + 1009);
-    // Speckle claro (~28% pixels — highlights luz solar)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corClaro, 0.28, 2, 1, seed + 7919);
-    // Tom muito escuro pontual (~10% — vãos profundos)
+    // Calcula tom muito-escuro (60% do escuro) pra clumps profundos
     const hex = (h) => {
       const n = parseInt(h.slice(1), 16);
       return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
     };
     const cE = hex(corEscuro);
-    const corMaisEscuro = `rgb(${(cE[0] * 0.6) | 0},${(cE[1] * 0.6) | 0},${(cE[2] * 0.6) | 0})`;
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corMaisEscuro, 0.10, 3, 1, seed + 1573);
-    // Flores/frutos: 3-5 pixels isolados (não elipses)
+    const corMaisEscuro = `rgb(${(cE[0] * 0.65) | 0},${(cE[1] * 0.65) | 0},${(cE[2] * 0.65) | 0})`;
+    // Paleta: base (5×), médio-escuro (3×), claro (2×), muito escuro (1×)
+    const paleta = [
+      corMedio, corMedio, corMedio, corMedio, corMedio,
+      corEscuro, corEscuro, corEscuro,
+      corClaro, corClaro,
+      corMaisEscuro,
+    ];
+    pintarHashClumps(x0, y0, paleta, idx * 73 + 19, 2);
+    // Speckle 1×1 sobreposto pra quebrar grade dos clumps 2×2
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corEscuro, 0.10, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corClaro, 0.06, 2, 1, seed + 7919);
+    // Flores/frutos: 2-4 pixels isolados (cherry blossom rosa, etc)
     if (corFlor) {
       ctx.fillStyle = corFlor;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         seed = (seed * 9301 + 49297) % 233280;
         const px = (seed % CELL);
         seed = (seed * 9301 + 49297) % 233280;
@@ -367,18 +374,38 @@ function criarAtlas() {
   // FIX MC-like: Grama topo MC autêntica — verde médio uniforme com variação
   // tonal SUTIL. SEM flores (eram pontos amarelos/brancos brilhantes).
   // SEM pontos pretos esparsos (causavam aspecto "buraqueado").
+  // Hash determinístico 2D — pinta cada pixel escolhendo da paleta com base
+  // em hash(px, py, seed). Paleta com pesos: itens repetidos aparecem mais.
+  // Diferente de spawnPontos*: produz padrão pixel-art "desenhado" e
+  // reproduzível por bloco, não estatístico/randômico.
+  function pintarHashPixels(x0, y0, paleta, seed) {
+    let s = seed >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        // xorshift 32-bit per-pixel
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        h = (h ^ (h >>> 16)) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+  }
+
+  // Paridade voxel grass top: paleta de 4 verdes balanceada com pesos.
+  // Pixels mais escuros aparecem em "tufos" de 1-2 com vizinhos similares.
   function pintarGramaTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Paridade MC grass top (1.13+): cor sólida verde + speckle de 3 tons.
-    // Sem gradient, sem blade strokes — pixel-art flat estilo MC.
-    ctx.fillStyle = '#6CB144';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#4F8E36', 0.30, 2, 1, seed + 1009);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#3A6E28', 0.13, 2, 1, seed + 7919);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7DBE57', 0.22, 2, 1, seed + 1573);
+    // Paleta com pesos: base verde médio (8), claro (3), escuro (3), muito escuro (2)
+    const paleta = [
+      '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144',
+      '#7DBE57', '#7DBE57', '#7DBE57',
+      '#4F8E36', '#4F8E36', '#4F8E36',
+      '#3A6E28', '#3A6E28',
+    ];
+    pintarHashPixels(x0, y0, paleta, idx * 73 + 109);
   }
 
   // ============================================================
@@ -448,69 +475,108 @@ function criarAtlas() {
   }
 
   // Madeira topo: anéis concêntricos de log (paridade Minecraft oak).
-  // Paridade MC oak log (top): base bege + speckle de tons + pith pequeno.
-  // Sem anéis radiais nem gradient — voxel/pixel-art ortogonal.
+  // Oak log top: anéis concêntricos pixel-art ortogonal. Cor escolhida por
+  // distância do centro mod 3 (anel claro, médio, escuro alternados).
   function pintarMadeiraTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base oak heartwood (tom quente)
-    ctx.fillStyle = '#9C7C4A';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    // Speckle escuro fibras (~28%)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7A5C32', 0.28, 2, 1, seed + 1009);
-    // Speckle muito escuro (~12%)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5A4222', 0.12, 2, 1, seed + 7919);
-    // Speckle claro fibras (~16%)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#B89668', 0.16, 2, 1, seed + 1573);
-    // Pith central simples (1 pixel escuro no centro 8,8 pra CELL=16)
+    // Paleta heartwood/sapwood
+    const tons = ['#9C7C4A', '#A88660', '#8A6638', '#7A5C32'];
+    const cx = CELL >> 1, cy = CELL >> 1;
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        const dx = px - cx, dy = py - cy;
+        const dist = Math.max(Math.abs(dx), Math.abs(dy));
+        // Anel base por distância + jitter por hash pra organicidade
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        const jitter = (h & 1);
+        const ring = (dist + jitter) % 3;
+        ctx.fillStyle = tons[ring];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+    // Pith central 2×2 escuro (medula)
     ctx.fillStyle = '#4A3418';
-    ctx.fillRect(x0 + (CELL >> 1) - 1, y0 + (CELL >> 1) - 1, 2, 2);
+    ctx.fillRect(x0 + cx - 1, y0 + cy - 1, 2, 2);
   }
 
-  // Paridade MC oak log (side): vertical bark grain — listras verticais
-  // de tons mais escuros. Sem knots em cruz, sem gradient horizontal.
+  // Oak log side: vertical bark grain forte. Cada coluna tem hash próprio
+  // que define seu tom (column-biased), criando estrias verticais coerentes.
+  // Knots: 1-2 pixels escuros pontuais (NUNCA cruzes).
   function pintarMadeiraLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base oak side
-    ctx.fillStyle = '#9C7C4A';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    const grainTons = ['#7A5C32', '#5A4222', '#B89668'];
-    // Listras verticais full-height: ~40% das 16 colunas têm listra escura/clara
+    // Paleta de bark
+    const colTons = ['#9C7C4A', '#9C7C4A', '#9C7C4A', '#A88660', '#7A5C32', '#7A5C32', '#5A4222', '#B89668'];
+    let s = (idx * 73 + 109) >>> 0;
+    // 1) Pinta cada coluna como uma estria vertical de cor primária
     for (let px = 0; px < CELL; px++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const r = seed / 233280;
-      if (r < 0.30) {
-        // Listra escura/médio-escura full height
-        ctx.fillStyle = grainTons[(seed >> 5) % 2]; // só os 2 escuros
-        ctx.fillRect(x0 + px, y0, 1, CELL);
-      } else if (r < 0.45) {
-        // Listra clara full height (highlight fibra)
-        ctx.fillStyle = grainTons[2];
-        ctx.fillRect(x0 + px, y0, 1, CELL);
+      let h = (px * 2654435761) ^ s;
+      h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+      ctx.fillStyle = colTons[h % colTons.length];
+      ctx.fillRect(x0 + px, y0, 1, CELL);
+    }
+    // 2) Variação vertical por linha: ~25% pixels recebem tom alternativo
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ (s + 7);
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        if ((h & 3) === 0) {
+          ctx.fillStyle = colTons[(h >>> 2) % colTons.length];
+          ctx.fillRect(x0 + px, y0 + py, 1, 1);
+        }
       }
     }
-    // Speckle horizontal sutil pra quebrar regularidade das listras
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5A4222', 0.10, 3, 1, seed + 3137);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#B89668', 0.08, 3, 1, seed + 9281);
+    // 3) Bordas (top/bottom) ligeiramente escurecidas (anéis de pith visíveis nas faces)
+    ctx.fillStyle = '#5A4222';
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, 1, '#5A4222', 0.40, 2, 1, seed + 311);
+    seed = spawnPontosUniforme(x0, y0 + CELL - 1, CELL, 1, '#5A4222', 0.40, 2, 1, seed + 911);
+    // 4) 1 knot pontual: pixel único escuro (não cruz)
+    seed = (seed * 9301 + 49297) % 233280;
+    const knotX = (seed % CELL);
+    seed = (seed * 9301 + 49297) % 233280;
+    const knotY = 2 + (seed % (CELL - 4));
+    ctx.fillStyle = '#3A2818';
+    ctx.fillRect(x0 + knotX, y0 + knotY, 1, 1);
   }
 
-  // Paridade MC oak leaves: pixel-art flat com 4 tons de verde.
+  // Helper: hash determinístico em CLUMPS — cada bloco 2×2 tem cor uniforme,
+  // criando padrão "desenhado" com leaflets/folículos visíveis. Ideal pra folha.
+  function pintarHashClumps(x0, y0, paleta, seed, blocoPx = 2) {
+    let s = seed >>> 0;
+    for (let by = 0; by < CELL; by += blocoPx) {
+      for (let bx = 0; bx < CELL; bx += blocoPx) {
+        let h = (bx * 73856093) ^ (by * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        h = (h ^ (h >>> 16)) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + bx, y0 + by, blocoPx, blocoPx);
+      }
+    }
+  }
+
+  // Paridade voxel oak leaves: clumps 2×2 de 4 tons (leaflets visíveis).
   function pintarFolha(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base: verde médio (folha tinted oak)
-    ctx.fillStyle = '#5A9234';
-    ctx.fillRect(x0, y0, CELL, CELL);
+    // Paleta verde-folha: base (5×), médio-escuro (3×), escuro (2×), claro (2×)
+    const paleta = [
+      '#5A9234', '#5A9234', '#5A9234', '#5A9234', '#5A9234',
+      '#447528', '#447528', '#447528',
+      '#2F5A1C', '#2F5A1C',
+      '#6FA940', '#6FA940',
+    ];
+    pintarHashClumps(x0, y0, paleta, idx * 73 + 19, 2);
+    // Speckle 1×1 sobreposto pra quebrar regularidade dos blocos 2×2
     let seed = idx * 9301 + 49297;
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#447528', 0.32, 2, 1, seed + 1009);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#2F5A1C', 0.14, 2, 1, seed + 7919);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6FA940', 0.24, 2, 1, seed + 1573);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#2F5A1C', 0.10, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7CC149', 0.06, 2, 1, seed + 7919);
   }
 
   // Paridade MC glass: cor base claríssima + frame escuro fino + sparkle leve.
@@ -5556,42 +5622,49 @@ function criarAtlas() {
 
   // Pinta lateral de grass block: marrom embaixo com faixa verde no topo
   // (paridade Minecraft — grama "desce" 8px pelos lados antes de virar terra).
+  // Grama lado: faixa verde no topo (4px) + dirt body (12px), borda irregular
+  // entre eles. Hash determinístico em ambas as zonas.
   function pintarGramaLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Paridade MC grass_block_side (overlay): faixa verde irregular no
-    // topo + corpo de dirt. CELL=16 → faixa 4-5px no topo (proporção MC).
     const FAIXA = 4;
-    // Corpo: dirt MC-like (mesma paleta que pintarTerra)
-    ctx.fillStyle = '#866043';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    seed = spawnPontosUniforme(x0, y0 + FAIXA, CELL, CELL - FAIXA, '#6b4a30', 0.32, 2, 1, seed + 1009);
-    seed = spawnPontosUniforme(x0, y0 + FAIXA, CELL, CELL - FAIXA, '#4f3520', 0.16, 2, 1, seed + 7919);
-    seed = spawnPontosUniforme(x0, y0 + FAIXA, CELL, CELL - FAIXA, '#9a7556', 0.18, 2, 1, seed + 1573);
-    // Faixa verde no topo (mesma cor do grass_top)
-    ctx.fillStyle = '#6CB144';
-    ctx.fillRect(x0, y0, CELL, FAIXA);
-    // Borda irregular grass→dirt (alguns pixels verdes "descem" mais)
-    for (let px = 0; px < CELL; px++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const r = seed / 233280;
-      if (r < 0.40) {
-        // verde desce 1 pixel
-        ctx.fillStyle = '#4F8E36';
-        ctx.fillRect(x0 + px, y0 + FAIXA, 1, 1);
-      } else if (r < 0.55) {
-        // verde desce 2 pixels (raro)
-        ctx.fillStyle = '#4F8E36';
-        ctx.fillRect(x0 + px, y0 + FAIXA, 1, 1);
-        ctx.fillStyle = '#3A6E28';
-        ctx.fillRect(x0 + px, y0 + FAIXA + 1, 1, 1);
+    let s = (idx * 73 + 109) >>> 0;
+    // Paleta dirt (mesma de pintarTerra)
+    const dirtPal = [
+      '#866043', '#866043', '#866043', '#866043',
+      '#6B4A30', '#6B4A30', '#6B4A30',
+      '#9A7556', '#9A7556',
+      '#4F3520',
+    ];
+    // Paleta grass (mesma de pintarGramaTopo)
+    const grassPal = [
+      '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144', '#6CB144',
+      '#7DBE57', '#7DBE57', '#7DBE57',
+      '#4F8E36', '#4F8E36', '#4F8E36',
+      '#3A6E28', '#3A6E28',
+    ];
+    // Pinta cada pixel via hash
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        let cor;
+        if (py < FAIXA) {
+          cor = grassPal[h % grassPal.length];
+        } else if (py === FAIXA) {
+          // Borda irregular: ~40% verde desce; ~50% dirt; ~10% transição mid
+          const slot = h % 10;
+          if (slot < 4) cor = '#4F8E36';
+          else if (slot < 5) cor = '#3A6E28';
+          else cor = dirtPal[(h >>> 4) % dirtPal.length];
+        } else {
+          cor = dirtPal[h % dirtPal.length];
+        }
+        ctx.fillStyle = cor;
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
       }
     }
-    // Speckle sutil dentro da faixa verde
-    seed = spawnPontosUniforme(x0, y0, CELL, FAIXA, '#4F8E36', 0.25, 2, 1, seed + 2017);
-    seed = spawnPontosUniforme(x0, y0, CELL, FAIXA, '#3A6E28', 0.10, 2, 1, seed + 5333);
   }
 
   // === Pinta cada bloco ===
