@@ -1565,8 +1565,11 @@ export class World {
 
   // === Iluminação 15 níveis (skylight + blocklight) ===
   // Skylight vertical: desce do topo, fica em 15 enquanto não bater opaco.
-  // Blocklight: BFS partindo de fontes emissivas, decaindo 1 por bloco.
-  // BFS é per-chunk (não cruza bordas) — simplificação aceitável.
+  // Skylight lateral: BFS horizontal com -1 por bloco. Propagação cross-chunk
+  // implementada via "puxar" luz das bordas dos vizinhos calculados +
+  // marcar vizinhos como luzDirty quando empurraríamos luz maior pra eles.
+  // Converge em 2-3 passadas de recalcLuzChunk pelo getLightAt.
+  // Blocklight: mesma lógica (BFS de fontes emissivas + cross-chunk dirty).
   recalcLuzChunk(chunk) {
     const cs = CHUNK_SIZE;
     chunk.light.fill(0);
@@ -1581,7 +1584,46 @@ export class World {
         }
       }
     }
-    // 1b) Skylight lateral BFS — propaga horizontalmente com -1 por bloco
+    // Helpers cross-chunk
+    const tryPullFromNeighbor = (ncx, ncz, mapEdge, queue, channelShift) => {
+      const n = this.chunks.get(chunkKey(ncx, ncz));
+      if (!n || n.luzDirty) return;
+      // Pra cada pixel na borda do vizinho, ler luz e tentar propagar pra dentro.
+      for (let a = 0; a < cs; a++) {
+        for (let y = 0; y < WORLD_Y; y++) {
+          const [nlx, nlz, mylx, mylz] = mapEdge(a);
+          const ni = Chunk.idx(nlx, y, nlz);
+          const nlvl = (n.light[ni] >> channelShift) & 0x0F;
+          if (nlvl <= 1) continue;
+          const novo = nlvl - 1;
+          const i = Chunk.idx(mylx, y, mylz);
+          if (BLOCO_INFO[chunk.blocks[i]].solido) continue;
+          const cur = (chunk.light[i] >> channelShift) & 0x0F;
+          if (cur >= novo) continue;
+          if (channelShift === 4) {
+            chunk.light[i] = ((novo & 0x0F) << 4) | (chunk.light[i] & 0x0F);
+          } else {
+            chunk.light[i] = (chunk.light[i] & 0xF0) | (novo & 0x0F);
+          }
+          queue.push(mylx, y, mylz, novo);
+        }
+      }
+    };
+    const markCrossChunkDirty = (vx, vy, vz, novo, channelShift) => {
+      // vx/vz fora de [0, cs). Marca vizinho como dirty se nossa luz seria
+      // maior que a luz atual no pixel correspondente do vizinho.
+      const dx = vx < 0 ? -1 : (vx >= cs ? 1 : 0);
+      const dz = vz < 0 ? -1 : (vz >= cs ? 1 : 0);
+      const neighbor = this.chunks.get(chunkKey(chunk.cx + dx, chunk.cz + dz));
+      if (!neighbor) return;
+      const nx = ((vx % cs) + cs) % cs;
+      const nz = ((vz % cs) + cs) % cs;
+      const ni = Chunk.idx(nx, vy, nz);
+      if (BLOCO_INFO[neighbor.blocks[ni]].solido) return;
+      const cur = (neighbor.light[ni] >> channelShift) & 0x0F;
+      if (cur < novo) neighbor.luzDirty = true;
+    };
+    // 1b) Skylight lateral BFS
     const skyQ = [];
     for (let lx = 0; lx < cs; lx++) {
       for (let lz = 0; lz < cs; lz++) {
@@ -1592,15 +1634,24 @@ export class World {
         }
       }
     }
+    // Puxa luz das bordas dos 4 chunks vizinhos calculados
+    tryPullFromNeighbor(chunk.cx - 1, chunk.cz, (a) => [cs - 1, a, 0, a],         skyQ, 4);
+    tryPullFromNeighbor(chunk.cx + 1, chunk.cz, (a) => [0,      a, cs - 1, a],    skyQ, 4);
+    tryPullFromNeighbor(chunk.cx, chunk.cz - 1, (a) => [a, cs - 1, a, 0],         skyQ, 4);
+    tryPullFromNeighbor(chunk.cx, chunk.cz + 1, (a) => [a, 0,      a, cs - 1],    skyQ, 4);
+    // BFS principal
     let sH = 0;
     while (sH < skyQ.length) {
       const lx = skyQ[sH++], y = skyQ[sH++], lz = skyQ[sH++], lvl = skyQ[sH++];
       if (lvl <= 1) continue;
       const novo = lvl - 1;
       const vizinhos = [[lx-1,y,lz],[lx+1,y,lz],[lx,y-1,lz],[lx,y+1,lz],[lx,y,lz-1],[lx,y,lz+1]];
-      for (const [vx,vy,vz] of vizinhos) {
-        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) continue;
+      for (const [vx, vy, vz] of vizinhos) {
         if (vy < 0 || vy >= WORLD_Y) continue;
+        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) {
+          markCrossChunkDirty(vx, vy, vz, novo, 4);
+          continue;
+        }
         const vi = Chunk.idx(vx, vy, vz);
         if (BLOCO_INFO[chunk.blocks[vi]].solido) continue;
         const curSky = (chunk.light[vi] >> 4) & 0x0F;
@@ -1609,7 +1660,7 @@ export class World {
         skyQ.push(vx, vy, vz, novo);
       }
     }
-    // 2) Blocklight BFS — fila plana com 4 entries por nó (lx, y, lz, level)
+    // 2) Blocklight BFS — fontes emissivas
     const queue = [];
     for (let lx = 0; lx < cs; lx++) {
       for (let lz = 0; lz < cs; lz++) {
@@ -1624,12 +1675,15 @@ export class World {
         }
       }
     }
+    // Puxa blocklight das bordas dos 4 vizinhos
+    tryPullFromNeighbor(chunk.cx - 1, chunk.cz, (a) => [cs - 1, a, 0, a],         queue, 0);
+    tryPullFromNeighbor(chunk.cx + 1, chunk.cz, (a) => [0,      a, cs - 1, a],    queue, 0);
+    tryPullFromNeighbor(chunk.cx, chunk.cz - 1, (a) => [a, cs - 1, a, 0],         queue, 0);
+    tryPullFromNeighbor(chunk.cx, chunk.cz + 1, (a) => [a, 0,      a, cs - 1],    queue, 0);
+    // BFS principal blocklight
     let head = 0;
     while (head < queue.length) {
-      const lx = queue[head++];
-      const y  = queue[head++];
-      const lz = queue[head++];
-      const lvl = queue[head++];
+      const lx = queue[head++], y = queue[head++], lz = queue[head++], lvl = queue[head++];
       if (lvl <= 1) continue;
       const novo = lvl - 1;
       const cand = [
@@ -1639,12 +1693,13 @@ export class World {
       ];
       for (let k = 0; k < 6; k++) {
         const vx = cand[k][0], vy = cand[k][1], vz = cand[k][2];
-        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) continue;
         if (vy < 0 || vy >= WORLD_Y) continue;
+        if (vx < 0 || vx >= cs || vz < 0 || vz >= cs) {
+          markCrossChunkDirty(vx, vy, vz, novo, 0);
+          continue;
+        }
         const i = Chunk.idx(vx, vy, vz);
-        const bv = chunk.blocks[i];
-        // Luz não passa por blocos sólidos.
-        if (BLOCO_INFO[bv].solido) continue;
+        if (BLOCO_INFO[chunk.blocks[i]].solido) continue;
         const luzAtual = chunk.light[i] & 0x0F;
         if (luzAtual >= novo) continue;
         chunk.light[i] = (chunk.light[i] & 0xF0) | (novo & 0x0F);
