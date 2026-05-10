@@ -4657,22 +4657,15 @@ function criarAtlas() {
   }
 
   // Tijolo de Lama: padrão de tijolos com tons de areia/lama
+  // Paridade MC mud_bricks: tijolos de barro 2×2 grid (CELL=16).
   function pintarTijoloLama(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#a0855e';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Mortar mais escuro
-    ctx.fillStyle = '#6b5337';
-    ctx.fillRect(x0, y0 + 15, CELL, 2);
-    ctx.fillRect(x0 + 10, y0,      2, 15);
-    ctx.fillRect(x0 + 22, y0,      2, 15);
-    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
-    // Highlights claros
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#c2a07a', 0.25, 5, 1, idx * 9301 + 49297);
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#A0855E', '#6B5337');
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8C7349', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#C2A07A', 0.18, 2, 1, seed + 7919);
   }
 
   // Soul Sand: marrom escuro com 3 faces tristes (almas presas no Nether)
@@ -4910,69 +4903,64 @@ function criarAtlas() {
     }
   }
 
-  // Tijolo do Nether: padrão de tijolos vermelho-escuro com mortar preto
+  // Paridade MC nether_bricks: vermelho-escuro com mortar preto.
   function pintarTijoloNether(idx, cortado) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#4a0e0e';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#1a0000';
+    let seed = idx * 9301 + 49297;
     if (cortado) {
-      // Cortado: padrão central de cruz + bordas
-      ctx.fillRect(x0, y0, CELL, 2);
-      ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-      ctx.fillRect(x0, y0, 2, CELL);
-      ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
-      ctx.fillRect(x0 + CELL/2 - 1, y0 + 4, 2, CELL - 8);
-      ctx.fillRect(x0 + 4, y0 + CELL/2 - 1, CELL - 8, 2);
-      // Centro elevado mais claro
-      ctx.fillStyle = '#7a1a1a';
-      ctx.fillRect(x0 + CELL/2 - 4, y0 + CELL/2 - 4, 8, 8);
+      // Chiseled nether bricks: base + moldura + cruz central
+      ctx.fillStyle = '#4A0E0E';
+      ctx.fillRect(x0, y0, CELL, CELL);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7A1A1A', 0.20, 2, 1, seed + 1009);
+      // Moldura
+      ctx.fillStyle = '#1A0000';
+      ctx.fillRect(x0, y0, CELL, 1);
+      ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+      ctx.fillRect(x0, y0, 1, CELL);
+      ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+      // Cruz central
+      ctx.fillRect(x0 + (CELL >> 1) - 1, y0 + 2, 2, CELL - 4);
+      ctx.fillRect(x0 + 2, y0 + (CELL >> 1) - 1, CELL - 4, 2);
     } else {
-      // Padrão de tijolos (mortar preto)
-      ctx.fillRect(x0, y0 + 15, CELL, 2);
-      ctx.fillRect(x0 + 10, y0,      2, 15);
-      ctx.fillRect(x0 + 22, y0,      2, 15);
-      ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
-      ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
-      ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
-      // Highlights vermelhos sutis
-      spawnPontosUniforme(x0, y0, CELL, CELL, '#7a1a1a', 0.30, 6, 1, idx * 9301 + 49297);
+      // Nether bricks padrão — usa helper de brick layout
+      _pintarBrickLayout(x0, y0, '#4A0E0E', '#1A0000');
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7A1A1A', 0.18, 2, 1, seed + 1009);
     }
   }
 
-  // Pavimento (cobblestone): pedras irregulares cinza com mortar escuro
+  // Paridade MC cobblestone: pedras irregulares cinza com mortar escuro.
+  // CELL=16: 4 pedras ~6×6 com seams 1px entre elas.
   function pintarPavimento(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Mortar escuro como base
-    ctx.fillStyle = '#3a3a3a';
+    // Mortar escuro
+    ctx.fillStyle = '#3A3A3A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 8 "pedras" irregulares (retângulos diversos)
+    let seed = idx * 9301 + 49297;
+    // 4 pedras (top-left, top-right, bottom-left, bottom-right)
     const pedras = [
-      { x: 1,  y: 1,  w: 12, h: 9  },
-      { x: 14, y: 1,  w: 9,  h: 8  },
-      { x: 24, y: 1,  w: 7,  h: 12 },
-      { x: 1,  y: 11, w: 8,  h: 7  },
-      { x: 10, y: 10, w: 11, h: 10 },
-      { x: 22, y: 14, w: 9,  h: 8  },
-      { x: 1,  y: 19, w: 14, h: 12 },
-      { x: 16, y: 21, w: 15, h: 10 },
+      { x: 1, y: 1, w: 6, h: 6 },
+      { x: 8, y: 1, w: 7, h: 7 },
+      { x: 1, y: 8, w: 7, h: 7 },
+      { x: 9, y: 9, w: 6, h: 6 },
     ];
     for (const p of pedras) {
-      // Pedra principal (cinza médio)
-      ctx.fillStyle = '#7a7a7a';
+      // Pedra base
+      ctx.fillStyle = '#7A7A7A';
       ctx.fillRect(x0 + p.x, y0 + p.y, p.w, p.h);
-      // Highlight superior (luz cima)
-      ctx.fillStyle = '#a0a0a0';
+      // Highlight (top + left 1px)
+      ctx.fillStyle = '#9A9A9A';
       ctx.fillRect(x0 + p.x, y0 + p.y, p.w, 1);
       ctx.fillRect(x0 + p.x, y0 + p.y, 1, p.h);
-      // Sombra inferior direita
-      ctx.fillStyle = '#5e5e5e';
+      // Sombra (bottom + right)
+      ctx.fillStyle = '#5E5E5E';
       ctx.fillRect(x0 + p.x + p.w - 1, y0 + p.y, 1, p.h);
       ctx.fillRect(x0 + p.x, y0 + p.y + p.h - 1, p.w, 1);
+      // Speckle interno
+      seed = spawnPontosUniforme(x0 + p.x + 1, y0 + p.y + 1, p.w - 2, p.h - 2, '#8A8A8A', 0.20, 2, 1, seed + 1009);
     }
   }
 
@@ -5015,27 +5003,16 @@ function criarAtlas() {
     ctx.fillRect(x0 + 2, y0 + 4, CELL - 4, 1);
   }
 
-  // Tijolo com musgo: tijolos clássicos com manchas verdes orgânicas
+  // Tijolos avermelhados com musgo verde — usa helper brick layout.
   function pintarTijoloMusgo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base de tijolo vermelho
-    ctx.fillStyle = '#a13b22';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de tijolos (mortar branco-cinza)
-    ctx.fillStyle = '#888888';
-    // Linha horizontal meio
-    ctx.fillRect(x0, y0 + 15, CELL, 2);
-    // Linhas verticais alternadas (offset por linha)
-    ctx.fillRect(x0 + 10, y0,      2, 15);
-    ctx.fillRect(x0 + 22, y0,      2, 15);
-    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
-    // Manchas verdes (musgo distribuído uniformemente)
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#558b2f', 0.50, 4, 3, idx * 9301 + 49297);
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#7cb342', 0.30, 5, 2, idx * 9301 + 7331);
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#A13B22', '#7C2A18');
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7C2A18', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#558B2F', 0.20, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7CB342', 0.10, 2, 1, seed + 1573);
   }
 
   // Argila: azul-cinza uniforme com manchas mais claras (textura suave)
@@ -5050,33 +5027,32 @@ function criarAtlas() {
     seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#b8bccc', 0.40, 5, 1, seed + 4441);
   }
 
-  // Bambu: tronco verde claro com nós marcados em forma de anel
+  // Bambu: tronco vertical verde claro com 3 nós horizontais.
   function pintarBambu(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro pra dar contraste
-    ctx.fillStyle = '#1b5e20';
+    // Fundo escuro
+    ctx.fillStyle = '#1B5E20';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Tronco vertical centrado (ocupa ~12px de largura)
-    ctx.fillStyle = '#8bc34a';
-    ctx.fillRect(x0 + 10, y0, 12, CELL);
-    // Sombra direita do tronco (3D)
-    ctx.fillStyle = '#558b2f';
-    ctx.fillRect(x0 + 19, y0, 3, CELL);
-    // Highlight esquerdo (brilho)
-    ctx.fillStyle = '#aed581';
-    ctx.fillRect(x0 + 11, y0, 2, CELL);
-    // 3 nós (anéis horizontais escuros)
-    ctx.fillStyle = '#33691e';
-    for (let py = 5; py < CELL; py += 11) {
-      ctx.fillRect(x0 + 10, y0 + py, 12, 2);
+    // Tronco central (6×CELL)
+    ctx.fillStyle = '#8BC34A';
+    ctx.fillRect(x0 + 5, y0, 6, CELL);
+    // Sombra direita
+    ctx.fillStyle = '#558B2F';
+    ctx.fillRect(x0 + 9, y0, 2, CELL);
+    // Highlight esquerdo
+    ctx.fillStyle = '#AED581';
+    ctx.fillRect(x0 + 5, y0, 1, CELL);
+    // 3 nós horizontais escuros
+    ctx.fillStyle = '#33691E';
+    for (let py = 2; py < CELL; py += 6) {
+      ctx.fillRect(x0 + 5, y0 + py, 6, 1);
     }
-    // Folhinhas verdes saindo dos nós (decoração)
-    ctx.fillStyle = '#7cb342';
-    ctx.fillRect(x0 + 5,  y0 + 4,  4, 2);
-    ctx.fillRect(x0 + 23, y0 + 15, 4, 2);
-    ctx.fillRect(x0 + 5,  y0 + 25, 4, 2);
+    // 2 folhinhas saindo (1px decorativo)
+    ctx.fillStyle = '#7CB342';
+    ctx.fillRect(x0 + 2, y0 + 3, 3, 1);
+    ctx.fillRect(x0 + 11, y0 + 9, 3, 1);
   }
 
   // Bloco de Mel: dourado translúcido (visualmente) com gotas brilhantes
@@ -5116,34 +5092,33 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Lily Pad: folha verde redonda flutuante + nervuras + 1 flor branca
+  // Lily Pad: folha verde redonda + recorte + flor branca central.
   function pintarLilyPad(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro (água debaixo)
-    ctx.fillStyle = '#1565c0';
+    // Fundo água
+    ctx.fillStyle = '#1565C0';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Forma circular da folha (verde médio)
-    ctx.fillStyle = '#388e3c';
-    // Aproximação de círculo com 4 retângulos
-    ctx.fillRect(x0 + 4,  y0 + 8,  24, 16);
-    ctx.fillRect(x0 + 8,  y0 + 4,  16, 24);
-    // Centro mais escuro (sombra natural)
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 8,  y0 + 12, 16, 8);
-    // Nervuras radiais (4 linhas saindo do centro)
-    ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(x0 + 16, y0 + 6,  1, 20); // vertical
-    ctx.fillRect(x0 + 6,  y0 + 16, 20, 1); // horizontal
-    // Recorte radial pequeno (caracteristica da vitória-régia)
-    ctx.fillStyle = '#1565c0';
-    ctx.fillRect(x0 + 14, y0 + 4, 4, 6);
-    // Flor branca pequena central
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+    // Folha (aproximação circular com 2 retângulos cruzados)
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 2, y0 + 4, 12, 8);
+    ctx.fillRect(x0 + 4, y0 + 2, 8, 12);
+    // Centro mais escuro
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 4, y0 + 6, 8, 4);
+    // Nervuras (cruz)
+    ctx.fillStyle = '#1B5E20';
+    ctx.fillRect(x0 + 7, y0 + 3, 1, 10);
+    ctx.fillRect(x0 + 3, y0 + 7, 10, 1);
+    // Recorte (V no topo — característico)
+    ctx.fillStyle = '#1565C0';
+    ctx.fillRect(x0 + 7, y0 + 2, 1, 2);
+    // Flor branca central 2×2
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
   // Minério de Cobre: pedra base + clusters cor cobre (laranja-marrom)
