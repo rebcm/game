@@ -3215,33 +3215,9 @@ function criarAtlas() {
     _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.35);
   }
 
-  // Genérico: pinta pranchas (4 fileiras horizontais com divisões verticais alternadas)
+  // Pranchas variante: delega a pintarPlanksColorida (MC-compliant flat).
   function pintarPranchaVariante(idx, corBase, corDiv, corMancha) {
-    const col = idx % COLS;
-    const row = Math.floor(idx / COLS);
-    const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = corBase;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = corDiv;
-    // 4 fileiras horizontais
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    // Divisões verticais alternadas
-    ctx.fillRect(x0 + 11, y0,      1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // Manchas
-    ctx.fillStyle = corMancha;
-    let s = idx * 11 + 19;
-    for (let i = 0; i < 16; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    pintarPlanksColorida(idx, corBase, corDiv, corMancha);
   }
 
   // Bookshelf Chiseled: estante madeira + 3 livros (vermelho/dourado/azul).
@@ -5098,109 +5074,79 @@ function criarAtlas() {
     seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#1a0000', 0.55, 4, 1, seed + 5001);
   }
 
-  // Lanterna: estrutura escura de ferro com janela de vidro brilhante
+  // Lanterna: ferro escuro + janela amarela bright + frame de barras.
   function pintarLanterna(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Estrutura preta de ferro
     ctx.fillStyle = '#212121';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Janela amarela brilhante no centro (luz interna)
-    ctx.fillStyle = '#ffeb3b';
-    ctx.fillRect(x0 + 6, y0 + 8, 20, 18);
-    // Glowing core (mais brilhante no meio)
-    ctx.fillStyle = '#fffde7';
-    ctx.fillRect(x0 + 10, y0 + 12, 12, 10);
-    // Núcleo branco
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 6);
-    // Grades de ferro horizontais (3 barras)
+    // Topo ferro
     ctx.fillStyle = '#424242';
-    ctx.fillRect(x0 + 6, y0 + 13, 20, 1);
-    ctx.fillRect(x0 + 6, y0 + 18, 20, 1);
-    ctx.fillRect(x0 + 6, y0 + 22, 20, 1);
-    // Grades verticais (suporte)
-    ctx.fillRect(x0 + 14, y0 + 8, 1, 18);
-    ctx.fillRect(x0 + 17, y0 + 8, 1, 18);
-    // Topo cônico de ferro (chapéu)
+    ctx.fillRect(x0 + 4, y0 + 1, 8, 3);
+    // Anel pendurar
+    ctx.fillStyle = '#9E9E9E';
+    ctx.fillRect(x0 + 7, y0, 2, 1);
+    // Janela amarela bright
+    ctx.fillStyle = '#FFEB3B';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 8);
+    ctx.fillStyle = '#FFFDE7';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 5);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 3);
+    // Grades verticais (frame ferro)
     ctx.fillStyle = '#424242';
-    ctx.fillRect(x0 + 4,  y0 + 4, CELL - 8, 4);
-    ctx.fillStyle = '#616161';
-    ctx.fillRect(x0 + 8,  y0 + 2, CELL - 16, 2);
-    // Anel de pendurar (parte de cima)
-    ctx.fillStyle = '#9e9e9e';
-    ctx.fillRect(x0 + 14, y0,     4, 2);
-    ctx.fillRect(x0 + 13, y0 + 1, 6, 1);
+    ctx.fillRect(x0 + 7, y0 + 5, 1, 8);
+    ctx.fillRect(x0 + 4, y0 + 5, 1, 8);
+    ctx.fillRect(x0 + 11, y0 + 5, 1, 8);
+    // Base
+    ctx.fillRect(x0 + 4, y0 + 13, 8, 2);
   }
 
-  // Vela: cera colorida vertical + chama amarela no topo + pavio escuro
+  // Vela: cera vertical 2×6 + pavio + chama 3 layers + glow.
   function pintarVela(idx, corCera, corCeraEscura) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro (espaço ao redor da vela)
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cera (cilindro vertical centrado, ocupando 8px de largura)
+    // Cera (3×8 vertical)
     ctx.fillStyle = corCera;
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 18);
-    // Borda escura da cera (lateral)
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 9);
     ctx.fillStyle = corCeraEscura;
-    ctx.fillRect(x0 + 12, y0 + 12, 1, 18);
-    ctx.fillRect(x0 + 19, y0 + 12, 1, 18);
-    // Pingo de cera derretida no topo (round)
+    ctx.fillRect(x0 + 6, y0 + 6, 1, 9);
+    ctx.fillRect(x0 + 9, y0 + 6, 1, 9);
+    // Topo arredondado
     ctx.fillStyle = corCera;
-    ctx.fillRect(x0 + 13, y0 + 11, 6, 1);
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 1);
     // Pavio preto
     ctx.fillStyle = '#212121';
-    ctx.fillRect(x0 + 15, y0 + 6,  2, 6);
-    // Chama: 3 layers (vermelho-laranja-amarelo-branco)
-    ctx.fillStyle = '#ef5350';
-    ctx.fillRect(x0 + 14, y0 + 2, 4, 5);
-    ctx.fillStyle = '#ffa726';
-    ctx.fillRect(x0 + 14, y0 + 3, 4, 3);
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 15, y0 + 3, 2, 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 4, 1, 1);
-    // Glow ao redor da chama (tom amarelo translúcido)
-    ctx.fillStyle = 'rgba(255, 235, 100, 0.18)';
-    ctx.fillRect(x0 + 11, y0 + 1, 10, 8);
+    ctx.fillRect(x0 + 7, y0 + 3, 2, 3);
+    // Chama (3 layers)
+    ctx.fillStyle = '#EF5350';
+    ctx.fillRect(x0 + 7, y0 + 1, 2, 3);
+    ctx.fillStyle = '#FFA726';
+    ctx.fillRect(x0 + 7, y0 + 1, 2, 2);
+    ctx.fillStyle = '#FFF176';
+    ctx.fillRect(x0 + 7, y0 + 2, 1, 1);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 1, 1, 1);
   }
 
-  // Cobre (3 estados): metálico com padrão de placas + manchas de oxidação
+  // Cobre (3 estados): flat + speckle + oxidação opcional.
   function pintarCobre(idx, base, claro, escuro, manchaOx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de placas verticais (rebites/junções)
-    ctx.fillStyle = escuro;
-    ctx.fillRect(x0 + 10, y0, 1, CELL);
-    ctx.fillRect(x0 + 21, y0, 1, CELL);
-    ctx.fillRect(x0, y0 + 10, CELL, 1);
-    ctx.fillRect(x0, y0 + 21, CELL, 1);
-    // Highlights claros (brilho metálico nos cantos das placas)
-    ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 2,  y0 + 2,  6, 1);
-    ctx.fillRect(x0 + 13, y0 + 2,  5, 1);
-    ctx.fillRect(x0 + 24, y0 + 2,  5, 1);
-    ctx.fillRect(x0 + 2,  y0 + 13, 6, 1);
-    ctx.fillRect(x0 + 13, y0 + 13, 5, 1);
-    ctx.fillRect(x0 + 24, y0 + 13, 5, 1);
-    // Manchas de oxidação distribuídas uniformemente (sem clusters)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.22, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.18, 2, 1, seed + 7919);
+    // Manchas oxidação (verde) se aplicável
     if (manchaOx > 0) {
-      spawnPontosUniforme(x0, y0, CELL, CELL, '#5fb89e', manchaOx * 0.7, 4, 2,
-        idx * 9301 + 49297);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5FB89E', manchaOx * 0.5, 2, 1, seed + 1573);
     }
-    // Borda escura sutil
-    ctx.fillStyle = escuro;
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0, y0, 1, CELL);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Cogumelo gigante: chapéu colorido com bolinhas brancas (vermelho) ou liso (marrom)
