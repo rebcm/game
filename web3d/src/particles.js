@@ -253,7 +253,12 @@ export class Particulas {
     this.ambientAcc += dt;
     if (this.ambientAcc >= 0.4) {
       this.ambientAcc = 0;
-      if (state.world && state.player) this.emitirAmbient(state.world, state.player);
+      if (state.world && state.player) {
+        try { this.emitirAmbient(state.world, state.player); }
+        catch (e) {
+          if (!this._ambErrLogged) { console.warn('emitirAmbient failed:', e); this._ambErrLogged = true; }
+        }
+      }
     }
     // Cave drip ambient: subterrâneo (sem skylight) toca som esporádico
     // de gota d'água. Paridade Minecraft "cave ambience".
