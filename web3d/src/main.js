@@ -27,7 +27,7 @@ import {
   castFishingLine, atualizarFishingBobber,
   lancarFoguete, atualizarFireworks,
   lancarTridente, atualizarTridents,
-  spawnSplashPotion, atualizarPotionProjectiles,
+  spawnSplashPotion, atualizarPotionProjectiles, spawnLingeringParticles,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
@@ -2489,6 +2489,12 @@ function loop(now) {
         if (c.life <= 0) {
           state.lingeringClouds.splice(i, 1);
           continue;
+        }
+        // Spawna partículas visuais swirling 1×/100ms (persistência da névoa)
+        c._partAcc = (c._partAcc || 0) + dt;
+        if (c._partAcc >= 0.10) {
+          c._partAcc = 0;
+          spawnLingeringParticles(c.x, c.y, c.z, c.cor || '#9c27b0', c.raio || 4);
         }
         // Aplica efeito cada 1s em mobs próximos
         c._tickAcc = (c._tickAcc || 0) + dt;

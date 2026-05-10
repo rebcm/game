@@ -739,6 +739,22 @@ export function atualizarPotionProjectiles(dt) {
   }
 }
 
+// Spawna 3-5 partículas swirling no raio da nuvem lingering. Chamado
+// 1×/100ms enquanto a nuvem existe — produz névoa visível persistente.
+export function spawnLingeringParticles(cx, cy, cz, cor, raio = 4) {
+  if (!state.renderer) return;
+  const scene = state.renderer.scene;
+  const n = 3 + ((Math.random() * 3) | 0);
+  for (let i = 0; i < n; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const r = Math.sqrt(Math.random()) * raio;
+    const x = cx + Math.cos(ang) * r;
+    const z = cz + Math.sin(ang) * r;
+    const y = cy + 0.1 + Math.random() * 0.6;
+    _spawnPotionRastro(scene, x, y, z, cor, 0.3);
+  }
+}
+
 // =====================================================================
 // FishingBobber — bóia de pesca lançada pela vara.
 // Voa em arco, cai por gravidade até pousar em água ou bloco sólido.
