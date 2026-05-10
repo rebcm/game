@@ -1153,84 +1153,79 @@ function criarAtlas() {
     ctx.fillRect(x0 + 7, y0 + 1, 2, 1);
   }
 
-  // Pedra Esculpida (chiseled): cor base + padrão geométrico central
+  // Paridade MC chiseled_stone (chiseled_quartz/sandstone/etc): borda
+  // dupla com 2 pilares centrais decorativos. CELL=16 → moldura 12×12
+  // com 2 listras escuras + 1 ponto branco central.
   function pintarChiseled(idx, base, escuro, claro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão central elevado (estilo "pillar" chiseled)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.16, 3, 1, seed + 1009);
+    // Moldura externa (1px escura ao redor)
     ctx.fillStyle = escuro;
-    // Borda externa do padrão
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 1);
-    ctx.fillRect(x0 + 4, y0 + CELL - 5, CELL - 8, 1);
-    ctx.fillRect(x0 + 4, y0 + 4, 1, CELL - 8);
-    ctx.fillRect(x0 + CELL - 5, y0 + 4, 1, CELL - 8);
-    // Inner box
-    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, 1);
-    ctx.fillRect(x0 + 6, y0 + CELL - 7, CELL - 12, 1);
-    // Pilares verticais (3 colunas)
-    ctx.fillRect(x0 + 10, y0 + 7, 1, CELL - 14);
-    ctx.fillRect(x0 + 15, y0 + 7, 1, CELL - 14);
-    ctx.fillRect(x0 + CELL - 11, y0 + 7, 1, CELL - 14);
-    // Highlights claros
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
+    // 2 pilares verticais decorativos (centro)
+    ctx.fillRect(x0 + 6, y0 + 4, 1, CELL - 8);
+    ctx.fillRect(x0 + 9, y0 + 4, 1, CELL - 8);
+    // Centro 2×2 claro (highlight)
     ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 5, y0 + 5, 1, CELL - 10);
-    ctx.fillRect(x0 + 5, y0 + 5, CELL - 10, 1);
-    // Centro decorativo
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL/2 - 1, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
-  // Hyphae (caule sem casca): grão em todas as direções (texture vertical+horizontal)
+  // Paridade MC stripped_hyphae/wood: vertical bark grain (sem anéis circulares).
   function pintarHyphae(idx, base, escuro, claro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão circular interno (corte transversal do caule)
-    ctx.fillStyle = escuro;
-    // Anéis concêntricos
-    for (let r = 4; r < 16; r += 4) {
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, 1);
-      ctx.fillRect(x0 + 16 - r, y0 + 16 + r - 1, r * 2, 1);
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 1, r * 2);
-      ctx.fillRect(x0 + 16 + r - 1, y0 + 16 - r, 1, r * 2);
+    let seed = idx * 9301 + 49297;
+    // Listras verticais (~35% colunas escuras/claras)
+    for (let px = 0; px < CELL; px++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = seed / 233280;
+      if (r < 0.25) {
+        ctx.fillStyle = escuro;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      } else if (r < 0.40) {
+        ctx.fillStyle = claro;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
     }
-    // Centro claro (medula)
-    ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Manchas escuras pseudo-aleatórias
-    spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.20, 6, 1, idx * 9301 + 49297);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.10, 3, 1, seed + 3137);
   }
 
-  // Froglight: cilindro brilhante interior + 4 nodos colorid + ranhuras
+  // Paridade MC ochre/verdant/pearlescent_froglight: vertical glow stripes.
   function pintarFroglight(idx, base, claro, brilho) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras horizontais escuras (segmentos do cilindro)
+    // Listras verticais brilhantes (3 stripes de luz)
+    ctx.fillStyle = brilho;
+    ctx.fillRect(x0 + 4, y0, 1, CELL);
+    ctx.fillRect(x0 + 8, y0, 2, CELL);
+    ctx.fillRect(x0 + 12, y0, 1, CELL);
+    // Stripes claras laterais (highlight)
     ctx.fillStyle = claro;
-    for (let py = 4; py < CELL; py += 7) {
-      ctx.fillRect(x0, y0 + py, CELL, 1);
-    }
-    // Núcleo brilhante central
-    ctx.fillStyle = brilho;
-    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#fffde7';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // 4 pontos brilhantes nos cantos
-    ctx.fillStyle = brilho;
-    for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
-      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+    ctx.fillRect(x0 + 3, y0, 1, CELL);
+    ctx.fillRect(x0 + 11, y0, 1, CELL);
+    // Sparkle branco central
+    ctx.fillStyle = '#FFFFFF';
+    let seed = idx * 9301 + 49297;
+    for (let i = 0; i < 4; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const sx = 8 + (seed % 2);
+      seed = (seed * 9301 + 49297) % 233280;
+      const sy = (seed % CELL);
+      ctx.fillRect(x0 + sx, y0 + sy, 1, 1);
     }
     // Borda escura sutil
     ctx.fillStyle = claro;
