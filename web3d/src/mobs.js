@@ -421,6 +421,20 @@ export const MOB_INFO = {
     cor: 0x6d4c41, sec: 0x3e2723,
     rideable: true,
   },
+  // Boat — veículo aquático driveable (sem AI). Drop madeira ao destruir.
+  boat: {
+    hp: 10, vel: 0, hostil: false,
+    drops: () => [{ i: ITEM.PRANCHAS, q: 4 }],
+    cor: 0x9c7c4a, sec: 0x6d4c41,
+    rideable: true, veiculo: true, naoSeMove: true,
+  },
+  // Minecart — veículo de trilho. Drop ferro ao destruir.
+  minecart: {
+    hp: 6, vel: 0, hostil: false,
+    drops: () => [{ i: ITEM.FERRO, q: 5 }],
+    cor: 0x6d4c41, sec: 0x424242,
+    rideable: true, veiculo: true, naoSeMove: true,
+  },
   // Donkey — inventory extra
   donkey: {
     hp: 22, vel: 1.8, hostil: false,
@@ -1901,6 +1915,33 @@ export function construirModeloMob(tipo, info) {
       }
       partes.cabeca = cabeca; partes.corpo = corpo;
     } break;
+    case 'boat': {
+      // Casco baixo retangular madeira + 2 bancos + remos laterais
+      const casco = cubo(1.6, 0.30, 0.9, info.cor); casco.position.y = 0.20; grp.add(casco);
+      // Borda elevada (gunwale)
+      ctx_unused: {
+        const bordaF = cubo(1.6, 0.10, 0.10, info.sec); bordaF.position.set(0, 0.40, 0.45); grp.add(bordaF);
+        const bordaT = bordaF.clone(); bordaT.position.z = -0.45; grp.add(bordaT);
+        const bordaE = cubo(0.10, 0.10, 0.9, info.sec); bordaE.position.set(-0.80, 0.40, 0); grp.add(bordaE);
+        const bordaD = bordaE.clone(); bordaD.position.x = 0.80; grp.add(bordaD);
+      }
+      // Banco central
+      const banco = cubo(0.3, 0.10, 0.6, info.sec); banco.position.set(0, 0.45, 0); grp.add(banco);
+      partes.corpo = casco; partes.cabeca = casco;
+    } break;
+    case 'minecart': {
+      // Caixa metálica baixa + 4 rodas pequenas
+      const caixa = cubo(0.9, 0.50, 0.8, info.cor); caixa.position.y = 0.30; grp.add(caixa);
+      // Bordas escuras
+      const bordaF = cubo(0.9, 0.10, 0.05, info.sec); bordaF.position.set(0, 0.55, 0.40); grp.add(bordaF);
+      const bordaT = bordaF.clone(); bordaT.position.z = -0.40; grp.add(bordaT);
+      // 4 rodas (cilindros achatados representados por cubos pequenos)
+      for (const [rx, rz] of [[-0.40, -0.30], [0.40, -0.30], [-0.40, 0.30], [0.40, 0.30]]) {
+        const roda = cubo(0.10, 0.20, 0.20, 0x212121);
+        roda.position.set(rx, 0.10, rz); grp.add(roda);
+      }
+      partes.corpo = caixa; partes.cabeca = caixa;
+    } break;
     case 'horse':
     case 'donkey':
     case 'mule': {
@@ -2148,6 +2189,8 @@ function _dimsMob(tipo) {
     case 'horse':
     case 'donkey':
     case 'mule':       return { raio: 0.40, altura: 1.65 };
+    case 'boat':       return { raio: 0.55, altura: 0.40 };
+    case 'minecart':   return { raio: 0.45, altura: 0.40 };
     case 'llama':      return { raio: 0.30, altura: 1.90 };
     case 'strider':    return { raio: 0.40, altura: 1.65 };
     case 'piglin':

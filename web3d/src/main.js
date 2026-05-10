@@ -2723,16 +2723,31 @@ function loop(now) {
         }
         return;
       }
-      // Boat — interagir colocar boat se hand
+      // Boat — spawn mob driveable (right-click pra montar, WASD pra dirigir)
       if (sel?.i >= ITEM.BARCO_OAK && sel?.i <= ITEM.BARCO_CHEST) {
-        // Spawn boat ao redor (placeholder)
-        state.ui.toast('🛶 Barco colocado (paridade futura: dirigir WASD)');
+        const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        const fwd = state.renderer.camera.getWorldDirection(new THREE.Vector3());
+        const sx = px + fwd.x * 1.5, sy = py, sz = pz + fwd.z * 1.5;
+        if (state.mobMgr?.spawn) {
+          state.mobMgr.spawn('boat', sx, sy, sz);
+          state.ui.toast('🛶 Barco posicionado! Clique direito pra montar, WASD pra navegar');
+        } else {
+          state.ui.toast('🛶 Barco posicionado!');
+        }
         state.inv.consumirAtual();
         return;
       }
-      // Minecart — colocar em rail próximo
+      // Minecart — spawn mob driveable
       if (sel?.i >= ITEM.MINECART && sel?.i <= ITEM.MINECART_SPAWN) {
-        state.ui.toast('🛒 Vagonete colocado (paridade futura: rolar em rails)');
+        const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        const fwd = state.renderer.camera.getWorldDirection(new THREE.Vector3());
+        const sx = px + fwd.x * 1.5, sy = py, sz = pz + fwd.z * 1.5;
+        if (state.mobMgr?.spawn) {
+          state.mobMgr.spawn('minecart', sx, sy, sz);
+          state.ui.toast('🛒 Vagonete posicionado! Clique direito pra montar, WASD pra mover');
+        } else {
+          state.ui.toast('🛒 Vagonete posicionado!');
+        }
         state.inv.consumirAtual();
         return;
       }
