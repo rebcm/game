@@ -5008,43 +5008,41 @@ function criarAtlas() {
     }
   }
 
-  // Bandeira: mastro preto à esquerda + pano colorido à direita com onda
+  // Bandeira: mastro à esquerda + pano colorido com cruz central decorativa.
   function pintarBandeira(idx, corBase, corEscura, corClara) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro neutro (não-bandeira)
-    ctx.fillStyle = '#3e2723';
+    // Fundo escuro
+    ctx.fillStyle = '#3E2723';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Mastro preto à esquerda (1/4 da largura)
+    // Mastro preto (1×CELL)
     ctx.fillStyle = '#212121';
-    ctx.fillRect(x0 + 4, y0 + 2, 3, CELL - 4);
-    // Topo dourado do mastro (ponta)
+    ctx.fillRect(x0 + 2, y0 + 1, 1, CELL - 2);
+    // Ponta dourada topo
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(x0 + 3, y0,     5, 3);
-    // Pano colorido (parte direita, ondulada nas bordas)
+    ctx.fillRect(x0 + 1, y0, 3, 1);
+    // Pano colorido (10×11 dir)
     ctx.fillStyle = corBase;
-    ctx.fillRect(x0 + 9, y0 + 4, 20, 22);
+    ctx.fillRect(x0 + 4, y0 + 2, 10, 11);
     // Borda escura
     ctx.fillStyle = corEscura;
-    ctx.fillRect(x0 + 9, y0 + 4, 20, 1);
-    ctx.fillRect(x0 + 9, y0 + 25, 20, 1);
-    ctx.fillRect(x0 + 9, y0 + 4, 1, 22);
-    ctx.fillRect(x0 + 28, y0 + 4, 1, 22);
-    // Padrão decorativo central (cruz simples)
+    ctx.fillRect(x0 + 4, y0 + 2, 10, 1);
+    ctx.fillRect(x0 + 4, y0 + 12, 10, 1);
+    ctx.fillRect(x0 + 4, y0 + 2, 1, 11);
+    ctx.fillRect(x0 + 13, y0 + 2, 1, 11);
+    // Cruz central
     ctx.fillStyle = corEscura;
-    ctx.fillRect(x0 + 18, y0 + 8, 2, 14);
-    ctx.fillRect(x0 + 12, y0 + 14, 14, 2);
-    // Highlights claros (efeito 3D do tecido)
+    ctx.fillRect(x0 + 8, y0 + 4, 2, 7);
+    ctx.fillRect(x0 + 5, y0 + 7, 8, 2);
+    // Highlight claro (efeito tecido)
     ctx.fillStyle = corClara;
-    ctx.fillRect(x0 + 11, y0 + 6, 5, 1);
-    ctx.fillRect(x0 + 11, y0 + 7, 1, 4);
-    // Borda inferior ondulada (efeito vento)
+    ctx.fillRect(x0 + 5, y0 + 3, 3, 1);
+    // Onda inferior
     ctx.fillStyle = corEscura;
-    ctx.fillRect(x0 + 9,  y0 + 26, 3, 1);
-    ctx.fillRect(x0 + 14, y0 + 27, 3, 1);
-    ctx.fillRect(x0 + 19, y0 + 26, 3, 1);
-    ctx.fillRect(x0 + 24, y0 + 27, 3, 1);
+    ctx.fillRect(x0 + 5, y0 + 13, 1, 1);
+    ctx.fillRect(x0 + 8, y0 + 14, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 13, 1, 1);
   }
 
   // Magma: superfície vermelha-escura com rachaduras laranja-brilhantes
@@ -5265,29 +5263,29 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Vidro colorido (genérico): cor saturada com molduras escuras + reflexo
+  // Vidro colorido (genérico): cor saturada + frame escuro 1px + sparkle.
   function pintarVidroColorido(idx, corBase, corBorda) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Cor preenchida (translúcida visualmente, mas opaca)
     ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda externa (moldura escura tipo metal)
+    // Frame escuro 1px
     ctx.fillStyle = corBorda;
-    ctx.fillRect(x0,            y0,            CELL, 2);
-    ctx.fillRect(x0,            y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0,            y0,            2,    CELL);
-    ctx.fillRect(x0 + CELL - 2, y0,            2,    CELL);
-    // Cruz central (caixilho)
-    ctx.fillRect(x0 + CELL / 2 - 1, y0, 2, CELL);
-    ctx.fillRect(x0, y0 + CELL / 2 - 1, CELL, 2);
-    // Reflexo branco diagonal (efeito vidro)
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillRect(x0 + 4,  y0 + 4,  4, 1);
-    ctx.fillRect(x0 + 5,  y0 + 5,  3, 1);
-    ctx.fillRect(x0 + 18, y0 + 18, 4, 1);
-    ctx.fillRect(x0 + 19, y0 + 19, 3, 1);
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Reflexo sparkle (3 pontos brancos)
+    ctx.fillStyle = '#FFFFFF';
+    let seed = idx * 9301 + 49297;
+    for (let i = 0; i < 3; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = 2 + (seed % (CELL - 4));
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = 2 + (seed % (CELL - 4));
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
   }
 
   // Lã colorida (genérica): padrão de fios distribuídos uniformemente
@@ -5360,86 +5358,81 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
   }
 
-  // Trilho: dormentes marrom + 2 rails de aço paralelos
+  // Trilho: dormentes marrom + 2 trilhos verticais aço.
   function pintarRail(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base escura (sombra abaixo do trilho — fica embaixo da slab)
-    ctx.fillStyle = '#3a2818';
+    // Base sombra
+    ctx.fillStyle = '#3A2818';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Dormentes (ties) — barras horizontais marrom
-    ctx.fillStyle = '#6d4c41';
-    for (let py = 4; py < CELL; py += 8) {
-      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 4);
+    // Dormentes (3 barras horizontais)
+    ctx.fillStyle = '#6D4C41';
+    for (let py = 1; py < CELL; py += 5) {
+      ctx.fillRect(x0 + 1, y0 + py, CELL - 2, 2);
     }
-    // Detalhe escuro entre dormentes
-    ctx.fillStyle = '#4e342e';
-    for (let py = 0; py < CELL; py += 8) {
-      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 1);
-    }
-    // 2 trilhos verticais de aço cinza
-    ctx.fillStyle = '#cfd8dc';
-    ctx.fillRect(x0 + 8,  y0, 3, CELL);
-    ctx.fillRect(x0 + 21, y0, 3, CELL);
-    // Highlight superior dos trilhos (brilho)
-    ctx.fillStyle = '#eceff1';
-    ctx.fillRect(x0 + 9,  y0, 1, CELL);
-    ctx.fillRect(x0 + 22, y0, 1, CELL);
+    // 2 trilhos verticais aço
+    ctx.fillStyle = '#CFD8DC';
+    ctx.fillRect(x0 + 4, y0, 1, CELL);
+    ctx.fillRect(x0 + 11, y0, 1, CELL);
+    // Highlight (brilho ferro)
+    ctx.fillStyle = '#ECEFF1';
+    ctx.fillRect(x0 + 5, y0, 1, CELL);
+    ctx.fillRect(x0 + 12, y0, 1, CELL);
   }
 
-  // Teia de aranha: branco com fios em X + pontos central + cantos
+  // Teia de aranha: fios cruzados em + e X + 4 pontos decorativos.
   function pintarTeia(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base preta semi-vazia (efeito teia translúcida visualmente)
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Fios brancos cruzados (vertical, horizontal, 2 diagonais)
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 15, y0,      2, CELL); // vertical
-    ctx.fillRect(x0,      y0 + 15, CELL, 2); // horizontal
-    // Diagonais (linha por linha)
+    // Cruz central
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 7, y0, 1, CELL);
+    ctx.fillRect(x0, y0 + 7, CELL, 1);
+    // Diagonais
     for (let i = 0; i < CELL; i++) {
-      ctx.fillRect(x0 + i,        y0 + i,        1, 1);
-      ctx.fillRect(x0 + (CELL - 1 - i), y0 + i,  1, 1);
+      ctx.fillRect(x0 + i, y0 + i, 1, 1);
+      ctx.fillRect(x0 + (CELL - 1 - i), y0 + i, 1, 1);
     }
-    // Anéis concêntricos da teia (pequenos quadrados nas diagonais)
-    ctx.fillStyle = '#e0e0e0';
-    for (const r of [4, 9, 14]) {
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 2, 2);
-      ctx.fillRect(x0 + 16 + r, y0 + 16 - r, 2, 2);
-      ctx.fillRect(x0 + 16 - r, y0 + 16 + r, 2, 2);
-      ctx.fillRect(x0 + 16 + r, y0 + 16 + r, 2, 2);
+    // Anéis concêntricos (4 pontos por anel)
+    ctx.fillStyle = '#E0E0E0';
+    for (const r of [3, 6]) {
+      ctx.fillRect(x0 + 7 - r, y0 + 7 - r, 1, 1);
+      ctx.fillRect(x0 + 7 + r, y0 + 7 - r, 1, 1);
+      ctx.fillRect(x0 + 7 - r, y0 + 7 + r, 1, 1);
+      ctx.fillRect(x0 + 7 + r, y0 + 7 + r, 1, 1);
     }
   }
 
-  // Beacon: vidro azul cristalino com núcleo brilhante + frame escuro
+  // Beacon: vidro azul cristalino + núcleo bright + 4 reflexos cantos.
   function pintarBeacon(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Frame externo (obsidiana escura)
-    ctx.fillStyle = '#311b92';
+    // Frame externo (obsidiana roxa)
+    ctx.fillStyle = '#311B92';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cristal interno azul/ciano
-    ctx.fillStyle = '#00bcd4';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    // Brilho central (núcleo radiante)
-    ctx.fillStyle = '#80deea';
-    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
-    ctx.fillStyle = '#e0f7fa';
-    ctx.fillRect(x0 + 12, y0 + 12, CELL - 24, CELL - 24);
-    // Núcleo branco
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // Reflexos diagonais (efeito cristal)
-    ctx.fillStyle = '#b2ebf2';
-    ctx.fillRect(x0 + 6,  y0 + 6,  2, 2);
-    ctx.fillRect(x0 + 24, y0 + 6,  2, 2);
-    ctx.fillRect(x0 + 6,  y0 + 24, 2, 2);
-    ctx.fillRect(x0 + 24, y0 + 24, 2, 2);
+    // Cristal azul (12×12 dentro)
+    ctx.fillStyle = '#00BCD4';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 12);
+    // Núcleo radiante (8×8)
+    ctx.fillStyle = '#80DEEA';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 8);
+    // Núcleo claro (4×4)
+    ctx.fillStyle = '#E0F7FA';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    // Centro branco (2×2)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // 4 reflexos cantos (1×1 ciano claro)
+    ctx.fillStyle = '#B2EBF2';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 3, y0 + CELL - 4, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + CELL - 4, 1, 1);
     // Linhas conectando ao núcleo (energia)
     ctx.fillStyle = '#26c6da';
     ctx.fillRect(x0 + 8,  y0 + 16, CELL - 16, 1);
