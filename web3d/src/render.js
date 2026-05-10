@@ -5433,24 +5433,28 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, 1);
     ctx.fillRect(x0 + 3, y0 + CELL - 4, 1, 1);
     ctx.fillRect(x0 + CELL - 4, y0 + CELL - 4, 1, 1);
-    // Linhas conectando ao núcleo (energia)
-    ctx.fillStyle = '#26c6da';
-    ctx.fillRect(x0 + 8,  y0 + 16, CELL - 16, 1);
-    ctx.fillRect(x0 + 16, y0 + 8,  1, CELL - 16);
+    // Linha cruz conectando ao núcleo (energia ciano)
+    ctx.fillStyle = '#26C6DA';
+    ctx.fillRect(x0 + 1, y0 + 7, CELL - 2, 1);
+    ctx.fillRect(x0 + 7, y0 + 1, 1, CELL - 2);
   }
 
-  // Lateral abóbora (ridges verticais sem face)
+  // Lateral abóbora (ridges verticais sem face) — paridade pintarPumpkin sem face.
   function pintarPumpkinLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#e65100';
+    ctx.fillStyle = '#E65100';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#bf360c';
-    for (let px = 4; px < CELL; px += 6) {
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BF360C', 0.18, 2, 1, seed + 1009);
+    // Ridges verticais (4 ranhuras a cada 4px em CELL=16)
+    ctx.fillStyle = '#BF360C';
+    for (let px = 2; px < CELL; px += 4) {
       ctx.fillRect(x0 + px, y0, 1, CELL);
     }
-    ctx.fillStyle = '#ff9800';
+    // Highlights (loop original que veio depois)
+    ctx.fillStyle = '#FF9800';
     for (let px = 1; px < CELL; px += 6) {
       ctx.fillRect(x0 + px, y0, 1, CELL);
     }
