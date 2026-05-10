@@ -2735,238 +2735,200 @@ function criarAtlas() {
     ctx.fillRect(x0 + 9, y0 + 6, 1, 3);
   }
 
-  // Pitcher Crop: planta brotando (cresce em fases)
+  // Pitcher Crop: muda brotando do solo (3 brotos verdes + botão roxo).
   function pintarPitcherCrop(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2510';
+    ctx.fillStyle = '#1A2510';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Solo marrom
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0, y0 + CELL - 4, CELL, 1);
-    // Brotos verdes saindo
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 8,  y0 + 18, 2, 10);
-    ctx.fillRect(x0 + 14, y0 + 14, 2, 14);
-    ctx.fillRect(x0 + 22, y0 + 20, 2, 8);
-    // Folhinhas brotando (verdes)
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(x0 + 6,  y0 + 18, 5, 2);
-    ctx.fillRect(x0 + 12, y0 + 14, 6, 2);
-    ctx.fillRect(x0 + 20, y0 + 20, 5, 2);
-    // Pontos roxos (botões)
-    ctx.fillStyle = '#7b1fa2';
-    ctx.fillRect(x0 + 14, y0 + 12, 2, 2);
-    ctx.fillStyle = '#ce93d8';
-    ctx.fillRect(x0 + 14, y0 + 12, 1, 1);
+    // Solo
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0, y0 + 14, CELL, 2);
+    ctx.fillStyle = '#8D6E63';
+    ctx.fillRect(x0, y0 + 14, CELL, 1);
+    // 3 brotos verdes
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 4, y0 + 9, 1, 5);
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 7);
+    ctx.fillRect(x0 + 11, y0 + 10, 1, 4);
+    // Folhinhas brotando
+    ctx.fillStyle = '#66BB6A';
+    ctx.fillRect(x0 + 3, y0 + 9, 3, 1);
+    ctx.fillRect(x0 + 6, y0 + 7, 3, 1);
+    ctx.fillRect(x0 + 10, y0 + 10, 3, 1);
+    // Botão roxo no broto central
+    ctx.fillStyle = '#7B1FA2';
+    ctx.fillRect(x0 + 7, y0 + 6, 1, 1);
+    ctx.fillStyle = '#CE93D8';
+    ctx.fillRect(x0 + 7, y0 + 5, 1, 1);
   }
 
-  // Torchflower: flor laranja brilhante como tocha
+  // Torchflower: flor laranja "tocha" com caule e folhas.
   function pintarTorchflower(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2510';
+    ctx.fillStyle = '#1A2510';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Caule verde
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 14, y0 + 18, 4, 12);
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 14, y0 + 18, 1, 12);
+    // Caule
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 7, y0 + 9, 2, 6);
     // Folhas laterais
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(x0 + 8,  y0 + 22, 4, 2);
-    ctx.fillRect(x0 + 20, y0 + 22, 4, 2);
-    // Flor "tocha" laranja (cabeça grande)
-    ctx.fillStyle = '#e65100';
-    ctx.fillRect(x0 + 10, y0 + 6,  12, 12);
-    ctx.fillStyle = '#ff9800';
-    ctx.fillRect(x0 + 11, y0 + 7,  10, 10);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 12, y0 + 8,  8, 8);
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 14, y0 + 10, 4, 4);
-    // Chama no topo
-    ctx.fillStyle = '#ff5252';
-    ctx.fillRect(x0 + 14, y0 + 4, 4, 2);
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 15, y0 + 11, 2, 2);
+    ctx.fillStyle = '#66BB6A';
+    ctx.fillRect(x0 + 4, y0 + 11, 3, 1);
+    ctx.fillRect(x0 + 9, y0 + 11, 3, 1);
+    // Cabeça da flor (5×5)
+    ctx.fillStyle = '#E65100';
+    ctx.fillRect(x0 + 5, y0 + 3, 6, 6);
+    ctx.fillStyle = '#FF9800';
+    ctx.fillRect(x0 + 6, y0 + 4, 4, 4);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 2);
+    // Chama topo
+    ctx.fillStyle = '#FF5252';
+    ctx.fillRect(x0 + 7, y0 + 2, 2, 1);
   }
 
-  // Torchflower Crop: muda da torchflower (verde com botão laranja)
+  // Torchflower Crop: muda jovem com botão laranja fechado.
   function pintarTorchflowerCrop(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2510';
+    ctx.fillStyle = '#1A2510';
     ctx.fillRect(x0, y0, CELL, CELL);
     // Solo
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0, y0 + 14, CELL, 2);
     // Caule curto
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 14);
-    // Folhinhas pequenas
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(x0 + 10, y0 + 18, 4, 2);
-    ctx.fillRect(x0 + 18, y0 + 18, 4, 2);
-    ctx.fillRect(x0 + 12, y0 + 22, 8, 2);
-    // Botão laranja (ainda fechado)
-    ctx.fillStyle = '#bf360c';
-    ctx.fillRect(x0 + 12, y0 + 8, 8, 6);
-    ctx.fillStyle = '#e65100';
-    ctx.fillRect(x0 + 13, y0 + 9, 6, 4);
-    ctx.fillStyle = '#ff9800';
-    ctx.fillRect(x0 + 14, y0 + 10, 4, 2);
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 7);
+    // Folhinhas (2 laterais)
+    ctx.fillStyle = '#66BB6A';
+    ctx.fillRect(x0 + 5, y0 + 9, 2, 1);
+    ctx.fillRect(x0 + 9, y0 + 9, 2, 1);
+    // Botão laranja fechado (3×3)
+    ctx.fillStyle = '#BF360C';
+    ctx.fillRect(x0 + 6, y0 + 4, 4, 3);
+    ctx.fillStyle = '#E65100';
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 1);
   }
 
-  // Sniffer Egg: ovo grande marrom-escuro com manchas (1.20)
+  // Sniffer Egg: ovo marrom com manchas verdes (algas pré-históricas).
   function pintarSnifferEgg(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a0a05';
+    ctx.fillStyle = '#1A0A05';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Forma oval do ovo (largura crescente)
-    ctx.fillStyle = '#7d3e1c';
-    for (let y = 0; y < CELL; y++) {
-      const alturaRel = y / CELL;
-      const largura = Math.floor(8 + Math.sin(alturaRel * Math.PI) * 12);
-      const meio = CELL / 2;
-      ctx.fillRect(x0 + meio - largura / 2, y0 + y, largura, 1);
+    // Forma oval do ovo (silhueta orgânica usando função simétrica)
+    ctx.fillStyle = '#7D3E1C';
+    for (let y = 1; y < CELL - 1; y++) {
+      const t = y / (CELL - 1);
+      const half = Math.max(2, Math.floor(7 * Math.sin(t * Math.PI)));
+      ctx.fillRect(x0 + (CELL >> 1) - half, y0 + y, half * 2, 1);
     }
-    // Highlights
-    ctx.fillStyle = '#a05a30';
-    for (let y = 4; y < CELL - 4; y++) {
-      const alturaRel = y / CELL;
-      const largura = Math.floor(6 + Math.sin(alturaRel * Math.PI) * 9);
-      const meio = CELL / 2;
-      ctx.fillRect(x0 + meio - largura / 2, y0 + y, largura, 1);
+    // Interior mais claro
+    ctx.fillStyle = '#A05A30';
+    for (let y = 3; y < CELL - 3; y++) {
+      const t = y / (CELL - 1);
+      const half = Math.max(1, Math.floor(5 * Math.sin(t * Math.PI)));
+      ctx.fillRect(x0 + (CELL >> 1) - half, y0 + y, half * 2, 1);
     }
-    // Manchas verdes (algas da pré-história)
-    ctx.fillStyle = '#33691e';
-    let s = idx * 17 + 33;
-    for (let i = 0; i < 14; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = 8 + Math.floor((s / 233280) * 16);
-      s = (s * 9301 + 49297) % 233280;
-      const py = 4 + Math.floor((s / 233280) * 24);
-      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    // Manchas verdes (algas)
+    let seed = idx * 9301 + 49297;
+    ctx.fillStyle = '#33691E';
+    for (let i = 0; i < 5; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = 4 + (seed % 8);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = 2 + (seed % 12);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
     }
     // Brilho superior
-    ctx.fillStyle = '#c97a4d';
-    ctx.fillRect(x0 + 12, y0 + 6, 4, 2);
-    ctx.fillRect(x0 + 13, y0 + 7, 2, 1);
+    ctx.fillStyle = '#C97A4D';
+    ctx.fillRect(x0 + 6, y0 + 3, 2, 1);
   }
 
-  // Suspicious Sand: areia normal com pontos arqueológicos
+  // Suspicious Sand: areia + marcas arqueológicas escuras (X central).
   function pintarSuspiciousSand(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#fdd835';
+    // Areia base flat (mesma paleta de pintarAreia)
+    ctx.fillStyle = '#DBC788';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de areia
-    ctx.fillStyle = '#f9a825';
-    let s = idx * 11 + 19;
-    for (let i = 0; i < 60; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
-    // Marcas suspeitas (rachaduras retangulares)
-    ctx.fillStyle = '#bf360c';
-    ctx.fillRect(x0 + 8,  y0 + 8,  16, 1);
-    ctx.fillRect(x0 + 8,  y0 + 8,  1,  16);
-    ctx.fillRect(x0 + 8,  y0 + 23, 16, 1);
-    ctx.fillRect(x0 + 23, y0 + 8,  1,  16);
-    // X central (artefato escondido)
-    ctx.fillStyle = '#8b0000';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 1);
-    ctx.fillRect(x0 + 14, y0 + 17, 4, 1);
-    ctx.fillRect(x0 + 14, y0 + 14, 1, 4);
-    ctx.fillRect(x0 + 17, y0 + 14, 1, 4);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BFA85C', 0.25, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#EBDDA8', 0.18, 2, 1, seed + 7919);
+    // Moldura suspeita 1px
+    ctx.fillStyle = '#7C4A18';
+    ctx.fillRect(x0 + 3, y0 + 3, CELL - 6, 1);
+    ctx.fillRect(x0 + 3, y0 + CELL - 4, CELL - 6, 1);
+    ctx.fillRect(x0 + 3, y0 + 3, 1, CELL - 6);
+    ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, CELL - 6);
+    // X central (artefato)
+    ctx.fillStyle = '#8B0000';
+    ctx.fillRect(x0 + 6, y0 + 6, 1, 1);
+    ctx.fillRect(x0 + 9, y0 + 6, 1, 1);
+    ctx.fillRect(x0 + 6, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 9, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
-  // Suspicious Gravel: cascalho cinza com marcas arqueológicas
+  // Suspicious Gravel: cascalho + marcas arqueológicas escuras.
   function pintarSuspiciousGravel(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#9e9e9e';
+    ctx.fillStyle = '#9E9E9E';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de cascalho
-    ctx.fillStyle = '#757575';
-    let s = idx * 13 + 23;
-    for (let i = 0; i < 50; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 2, 2);
-    }
-    // Marcas suspeitas
-    ctx.fillStyle = '#3a3a3a';
-    ctx.fillRect(x0 + 8,  y0 + 8,  16, 1);
-    ctx.fillRect(x0 + 8,  y0 + 8,  1,  16);
-    ctx.fillRect(x0 + 8,  y0 + 23, 16, 1);
-    ctx.fillRect(x0 + 23, y0 + 8,  1,  16);
-    // X central
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#757575', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BDBDBD', 0.18, 2, 1, seed + 7919);
+    // Moldura suspeita
+    ctx.fillStyle = '#3A3A3A';
+    ctx.fillRect(x0 + 3, y0 + 3, CELL - 6, 1);
+    ctx.fillRect(x0 + 3, y0 + CELL - 4, CELL - 6, 1);
+    ctx.fillRect(x0 + 3, y0 + 3, 1, CELL - 6);
+    ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, CELL - 6);
+    // X central (artefato)
     ctx.fillStyle = '#000000';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 1);
-    ctx.fillRect(x0 + 14, y0 + 17, 4, 1);
-    ctx.fillRect(x0 + 14, y0 + 14, 1, 4);
-    ctx.fillRect(x0 + 17, y0 + 14, 1, 4);
+    ctx.fillRect(x0 + 6, y0 + 6, 1, 1);
+    ctx.fillRect(x0 + 9, y0 + 6, 1, 1);
+    ctx.fillRect(x0 + 6, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 9, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
-  // Calibrated Sculk: sensor sculk calibrado (azul brilhante c/ ametista)
+  // Calibrated Sculk: sensor azul brilhante + 4 ametistas nos cantos.
   function pintarCalibratedSculk(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#0a1a2a';
+    ctx.fillStyle = '#0A1A2A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Manchas sculk (azul-escuro)
-    ctx.fillStyle = '#051018';
-    let s = idx * 19 + 41;
-    for (let i = 0; i < 40; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 2, 2);
-    }
-    // Bordas calibradas (ametista)
-    ctx.fillStyle = '#ce93d8';
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#051018', 0.30, 2, 1, seed + 1009);
+    // Borda ametista (1px)
+    ctx.fillStyle = '#CE93D8';
     ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
     ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
     ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
-    // Sensor central (azul brilhante)
-    ctx.fillStyle = '#40c4ff';
-    ctx.fillRect(x0 + 8, y0 + 8, 16, 16);
-    ctx.fillStyle = '#80d4ff';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#e1f5fe';
-    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // 4 antenas (cantos com ametistas)
-    ctx.fillStyle = '#ab47bc';
-    ctx.fillRect(x0 + 4,  y0 + 4,  3, 3);
-    ctx.fillRect(x0 + 25, y0 + 4,  3, 3);
-    ctx.fillRect(x0 + 4,  y0 + 25, 3, 3);
-    ctx.fillRect(x0 + 25, y0 + 25, 3, 3);
-    ctx.fillStyle = '#e1bee7';
-    ctx.fillRect(x0 + 5,  y0 + 5,  1, 1);
-    ctx.fillRect(x0 + 26, y0 + 5,  1, 1);
-    ctx.fillRect(x0 + 5,  y0 + 26, 1, 1);
-    ctx.fillRect(x0 + 26, y0 + 26, 1, 1);
+    // Sensor central (4×4 azul bright)
+    ctx.fillStyle = '#40C4FF';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#80D4FF';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
+    // 4 ametistas pequenas nos cantos (1×1 cada)
+    ctx.fillStyle = '#AB47BC';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 3, y0 + CELL - 4, 1, 1);
+    ctx.fillRect(x0 + CELL - 4, y0 + CELL - 4, 1, 1);
   }
 
   // Genérico: pinta log de madeira variante (casca + anéis verticais)
