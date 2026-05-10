@@ -63,18 +63,27 @@ function criarAtlas() {
   // (sem clusters de pontos pretos aglutinados — qualidade visual MC real).
   // Concreto liso premium (cor parametrizada): gradient + microspeckles
   // sutis + bevel direcional. Para blocos uniformes que ficavam planos.
+  // Concreto: cor sólida flat (concrete em voxel é quase puramente uniforme,
+  // só com variação sutil pra não parecer pintado). Hash determinístico com
+  // paleta de 12 slots, base dominante (8/12).
   function pintarConcretoLiso(idx, corBase, corClaro, corEscuro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Paridade MC concrete: cor sólida com micro-speckle sutil. Sem gradient,
-    // sem bevel — concrete em MC é uma das texturas mais flat do jogo.
-    ctx.fillStyle = corBase;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    // Speckle muito sutil (~15% cada tom, bucket 3 espaçado)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corEscuro, 0.15, 3, 1, seed + 113);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corClaro,  0.15, 3, 1, seed + 947);
+    const paleta = [
+      corBase, corBase, corBase, corBase, corBase, corBase, corBase, corBase,
+      corClaro, corClaro,
+      corEscuro, corEscuro,
+    ];
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
   }
 
   // Terra/dirt premium: gradient marrom + grumos + pedrinhas escuras +
@@ -122,49 +131,58 @@ function criarAtlas() {
     // Noop: AO real vem do shader, não da textura. Mantido como referência
     // pra retrocompatibilidade dos callers existentes.
   }
-  // Pinta bloco com cor base flat + speckle MC-style (1-2 tons).
-  // `corClaro`/`corEscuro` agora são tons MAIS-CLARO e MAIS-ESCURO do speckle;
-  // a base é a média entre eles. Mantém compat com callers `pintarPremium(idx, claro, escuro, ruido, int)`.
+  // Pinta bloco com paleta de 3 tons via hash determinístico. Compat com
+  // signatura legada (corClaro, corEscuro, corRuido). Base = corEscuro (4×),
+  // claro (3×), ruído opcional (1×) — produz look pixel-art "designed".
   function pintarPremium(idx, corClaro, corEscuro, corRuido = null, intensidade = 1.0) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base = corEscuro (era o "fundo" do gradient — mais saturada). MC textures
-    // usam cor base sólida sem gradient.
-    ctx.fillStyle = corEscuro;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Speckle de cor mais clara (~25-35% pixels)
-    const seedBase = idx * 9301 + 49297;
-    const dens = 0.30 * intensidade;
-    spawnPontosUniforme(x0, y0, CELL, CELL, corClaro, dens, 2, 1, seedBase + 113);
-    // Ruído tonal extra opcional
-    if (corRuido) {
-      spawnPontosUniforme(x0, y0, CELL, CELL, corRuido, 0.18 * intensidade, 3, 1, seedBase + 947);
+    const paleta = [
+      corEscuro, corEscuro, corEscuro, corEscuro,
+      corClaro, corClaro, corClaro,
+    ];
+    if (corRuido) paleta.push(corRuido);
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
     }
   }
-  // Pinta block PREMIUM tipo pedra com cracks + variações + AO
+  // Pedra/cobblestone/granite/andesite/etc: hash determinístico + 2 tons +
+  // pequenas manchas minerais (clumps 2×2). Paleta com pesos balanceados.
   function pintarPedraPremium(idx, base, dark, light, intensity = 0.30) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Paridade MC: pedra/cobblestone/etc são FLAT base + speckle de 2 tons.
-    // Sem gradient diagonal, sem cracks artificiais, sem bevel — só ruído.
-    ctx.fillStyle = base;
-    ctx.fillRect(x0, y0, CELL, CELL);
+    // Pesos da paleta — base 5×, escuro 3×, claro 2× (intensity ajusta variação)
+    const paleta = [
+      base, base, base, base, base,
+      dark, dark, dark,
+      light, light,
+    ];
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+    // 3 manchas minerais 2×2 (variação tonal local — simula cristalização)
     let seed = idx * 9301 + 49297;
-    // Speckle escuro (~30% pixels, bucket 2 = bem distribuído em 16x16)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, dark,  0.32 * (1 + intensity), 2, 1, seed + 1009);
-    // Speckle claro (~25% pixels)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, light, 0.26 * (1 + intensity), 2, 1, seed + 7919);
-    // Patches minerais ocasionais (3-4 manchas 2x2 do tom escuro — quebra
-    // monotonia do speckle, simula matriz cristalina natural da rocha)
-    for (let p = 0; p < 4; p++) {
+    for (let p = 0; p < 3; p++) {
       seed = (seed * 9301 + 49297) % 233280;
-      const px = (seed % (CELL - 2));
+      const mx = (seed % (CELL - 2));
       seed = (seed * 9301 + 49297) % 233280;
-      const py = (seed % (CELL - 2));
+      const my = (seed % (CELL - 2));
       ctx.fillStyle = (seed & 1) ? dark : light;
-      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      ctx.fillRect(x0 + mx, y0 + my, 2, 2);
     }
   }
   // Paridade MC ore-block (emerald/lapis/redstone/etc): stone-base flat
@@ -326,48 +344,39 @@ function criarAtlas() {
     }
   }
 
-  // Minério: pedra base + manchas/clusters do veio (paridade Minecraft).
-  // Carvão usa veio escuro, ferro tan, ouro amarelo, diamante ciano.
+  // Minério: stone-base via hash + 4-5 clusters 2×2 do veio com highlight 1px.
+  // Voxel pixel-art: speckle de pedra (paleta 3 tons) + clusters do mineral.
   function pintarMinerio(idx, corVeio, corVeioBrilho) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base de pedra
-    ctx.fillStyle = '#7E7E7E';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#6E6E6E';
-    let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.25) ctx.fillRect(x0 + px, y0 + py, 2, 2);
+    // Stone-base via hash determinístico (mesma paleta que pedra normal)
+    const stonePal = [
+      '#7E7E7E', '#7E7E7E', '#7E7E7E', '#7E7E7E', '#7E7E7E',
+      '#6E6E6E', '#6E6E6E', '#6E6E6E',
+      '#9A9A9A', '#9A9A9A',
+    ];
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = stonePal[h % stonePal.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
       }
     }
-    // 3-5 clusters de veio
-    let s = idx * 7919 + 1234;
-    const clusters = 3 + (s % 3);
+    // 4-5 clusters de veio (2×2 com highlight 1px)
+    let seed = idx * 9301 + 49297;
+    const clusters = 4 + ((seed >> 4) & 1);
     for (let c = 0; c < clusters; c++) {
-      s = (s * 9301 + 49297) % 233280;
-      const cx = (s % 22) + 4;
-      s = (s * 9301 + 49297) % 233280;
-      const cy = (s % 22) + 4;
-      s = (s * 9301 + 49297) % 233280;
-      const tam = 4 + (s % 3);
+      seed = (seed * 9301 + 49297) % 233280;
+      const cx = (seed % (CELL - 2));
+      seed = (seed * 9301 + 49297) % 233280;
+      const cy = (seed % (CELL - 2));
       ctx.fillStyle = corVeio;
-      ctx.fillRect(x0 + cx, y0 + cy, tam, tam);
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
       ctx.fillStyle = corVeioBrilho;
-      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, Math.max(1, tam - 2), Math.max(1, tam - 2));
-      // Chips em volta
-      for (let i = 0; i < 2; i++) {
-        s = (s * 9301 + 49297) % 233280;
-        const ox = cx + ((s % 6) - 3);
-        s = (s * 9301 + 49297) % 233280;
-        const oy = cy + ((s % 6) - 3);
-        if (ox >= 0 && ox < CELL - 2 && oy >= 0 && oy < CELL - 2) {
-          ctx.fillStyle = corVeio;
-          ctx.fillRect(x0 + ox, y0 + oy, 2, 2);
-        }
-      }
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
     }
   }
 
@@ -4111,25 +4120,35 @@ function criarAtlas() {
   }
 
   // Pranchas (Crimson/Warped): tábuas horizontais com grão vertical
-  // Paridade MC planks: 4 tábuas horizontais 4px cada, com seams entre
-  // elas. Knots ocasionais (1 pixel escuro) por tábua.
+  // Planks (todas variantes wood): hash determinístico + grão vertical
+  // sutil + 3 seams horizontais (4 tábuas 4px) + knots ocasionais.
   function pintarPlanksColorida(idx, base, escuro, claro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base
-    ctx.fillStyle = base;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let seed = idx * 9301 + 49297;
-    // Speckle sutil de grão (~15% pixels claros, ~12% escuros)
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro,  0.15, 2, 1, seed + 1009);
-    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.12, 3, 1, seed + 7919);
-    // 3 seams horizontais (separa em 4 tábuas de 4px)
+    // Pinta cada pixel via hash com paleta pesada (base 7×, claro 2×, escuro 1×)
+    const paleta = [
+      base, base, base, base, base, base, base,
+      claro, claro,
+      escuro,
+    ];
+    let s = (idx * 73 + 19) >>> 0;
+    for (let py = 0; py < CELL; py++) {
+      // Bias por coluna pra criar grão vertical sutil (cada coluna tende ao mesmo tom)
+      for (let px = 0; px < CELL; px++) {
+        let h = (px * 73856093) ^ (py * 19349663) ^ s;
+        h = ((h ^ (h >>> 13)) * 1274126177) >>> 0;
+        ctx.fillStyle = paleta[h % paleta.length];
+        ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      }
+    }
+    // 3 seams horizontais (4 tábuas de 4px)
     ctx.fillStyle = escuro;
     ctx.fillRect(x0, y0 +  3, CELL, 1);
     ctx.fillRect(x0, y0 +  7, CELL, 1);
     ctx.fillRect(x0, y0 + 11, CELL, 1);
-    // 1-2 knots por tábua (pixel escuro centralizado)
+    // 1 knot por tábua (~55% probabilidade) — pixel escuro centralizado
+    let seed = idx * 9301 + 49297;
     for (let t = 0; t < 4; t++) {
       seed = (seed * 9301 + 49297) % 233280;
       if ((seed / 233280) < 0.55) {
