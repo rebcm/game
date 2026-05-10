@@ -577,6 +577,169 @@ class Arrow {
 if (typeof window !== 'undefined') window._arrows = window._arrows || [];
 
 // =====================================================================
+// SplashPotion — projétil parabólico que arrebenta em impacto.
+// Aplica `efeito` em player + mobs em raio 4. `lingering=true` deixa
+// nuvem persistente registrada em state.lingeringClouds.
+// =====================================================================
+const POCAO_COR = {
+  heal:'#e91e63', regen:'#ec407a', speed:'#42a5f5', strength:'#ff6f00',
+  fire_res:'#f57c00', noite:'#311b92', invisivel:'#9e9e9e', jump_boost:'#558b2f',
+  slow_fall:'#90caf9', water_breath:'#0097a7', resistencia:'#fafafa',
+  absorption:'#ffd700', turtle_master:'#33691e', haste:'#fdd835',
+  dolphin:'#26c6da', luck:'#76ff03',
+  harm:'#8b0000', weakness:'#5a3a3a', wither:'#1a1a1a', hunger:'#3e2723',
+  blindness:'#212121', nausea:'#4a148c', levitacao:'#80deea', glowing:'#fff176',
+  poison:'#558b2f',
+};
+
+class SplashPotion {
+  constructor(scene, x, y, z, vx, vy, vz, efeito, lingering) {
+    this.scene = scene;
+    this.x = x; this.y = y; this.z = z;
+    this.vx = vx; this.vy = vy; this.vz = vz;
+    this.efeito = efeito;
+    this.lingering = !!lingering;
+    this.life = 5.0;
+    const cor = POCAO_COR[efeito] || '#9c27b0';
+    const geo = new THREE.SphereGeometry(0.18, 8, 6);
+    const mat = new THREE.MeshLambertMaterial({ color: cor });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.set(x, y, z);
+    this.scene.add(this.mesh);
+    this.cor = cor;
+  }
+  atualizar(dt, world, mobMgr) {
+    this.life -= dt;
+    if (this.life <= 0) { this._explodir(mobMgr); return false; }
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.z += this.vz * dt;
+    this.vy -= 12 * dt; // gravidade pesada (potion arc)
+    this.mesh.position.set(this.x, this.y, this.z);
+    // Rastro de partículas (1 a cada 2 frames)
+    if (Math.random() < 0.5) {
+      _spawnPotionRastro(this.scene, this.x, this.y, this.z, this.cor);
+    }
+    if (world.isSolido(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z))) {
+      this._explodir(mobMgr);
+      return false;
+    }
+    return true;
+  }
+  _explodir(mobMgr) {
+    Audio.splash?.() || Audio.flechaImpacto?.();
+    // Burst de 16 partículas radiais
+    for (let i = 0; i < 16; i++) {
+      _spawnPotionRastro(this.scene, this.x, this.y, this.z, this.cor, 1.2);
+    }
+    // Aplica efeito em radius 4
+    const RAIO = 4;
+    const RAIO_SQ = RAIO * RAIO;
+    // Player
+    if (state.player) {
+      const ddx = state.player.pos.x - this.x;
+      const ddy = (state.player.pos.y + 1) - this.y;
+      const ddz = state.player.pos.z - this.z;
+      if (ddx*ddx + ddy*ddy + ddz*ddz < RAIO_SQ) {
+        _aplicarEfeitoPocao(state.player, this.efeito);
+      }
+    }
+    // Mobs
+    if (mobMgr?.mobs) {
+      for (const m of mobMgr.mobs) {
+        const ddx = m.x - this.x;
+        const ddy = (m.y + 1) - this.y;
+        const ddz = m.z - this.z;
+        if (ddx*ddx + ddy*ddy + ddz*ddz < RAIO_SQ) {
+          // Dano direto pra harm/poison/wither
+          if (this.efeito === 'harm') m.tomarDano?.(6, 0, 0);
+          else if (this.efeito === 'wither') m.tomarDano?.(4, 0, 0);
+          else if (this.efeito === 'poison') m.tomarDano?.(2, 0, 0);
+          else if (this.efeito === 'heal' && m.hp != null && m.hpMax != null) {
+            m.hp = Math.min(m.hpMax, m.hp + 4);
+          }
+        }
+      }
+    }
+    // Lingering: registra nuvem persistente
+    if (this.lingering) {
+      state.lingeringClouds = state.lingeringClouds || [];
+      state.lingeringClouds.push({
+        x: this.x, y: this.y, z: this.z,
+        efeito: this.efeito, life: 8, raio: RAIO, cor: this.cor,
+      });
+    }
+    state.ui?.toast?.(`💥 ${this.lingering ? 'Lingering' : 'Splash'} ${this.efeito}!`);
+  }
+  destruir() {
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+  }
+}
+
+function _spawnPotionRastro(scene, x, y, z, cor, vel = 0.5) {
+  const geo = new THREE.SphereGeometry(0.06 + Math.random() * 0.04, 4, 3);
+  const mat = new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: 0.85 });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z);
+  scene.add(m);
+  const ang = Math.random() * Math.PI * 2;
+  _AMBIENT_PARTICLES.push({
+    mesh: m,
+    vx: Math.cos(ang) * vel * (0.3 + Math.random() * 0.7),
+    vy: Math.random() * 0.6,
+    vz: Math.sin(ang) * vel * (0.3 + Math.random() * 0.7),
+    dur: 0.8 + Math.random() * 0.5,
+    age: 0, spin: 0,
+  });
+}
+
+function _aplicarEfeitoPocao(player, efeito) {
+  // Aplica efeito imediato no player. Mapa simplificado de durações (segundos).
+  player.efeitos = player.efeitos || {};
+  const agora = Date.now();
+  const DURACAO = {
+    speed: 60000, strength: 60000, regen: 30000, fire_res: 90000,
+    noite: 120000, invisivel: 60000, jump_boost: 60000, slow_fall: 60000,
+    water_breath: 60000, resistencia: 60000, absorption: 60000,
+    turtle_master: 30000, haste: 60000, dolphin: 30000, luck: 60000,
+    weakness: 60000, hunger: 30000, blindness: 30000, nausea: 30000,
+    levitacao: 15000, glowing: 30000, poison: 20000,
+  };
+  if (efeito === 'heal') {
+    player.hp = Math.min(player.hpMax, (player.hp || 0) + 4);
+  } else if (efeito === 'harm') {
+    player.aplicarDano?.(6, 'splash_harm');
+  } else if (DURACAO[efeito]) {
+    player.efeitos[efeito] = agora + DURACAO[efeito];
+  }
+}
+
+if (typeof window !== 'undefined') window._potions = window._potions || [];
+
+export function spawnSplashPotion(origem, dir, efeito, lingering = false, vel = 14) {
+  if (!state.renderer) return;
+  const vx = dir.x * vel, vy = dir.y * vel + 2, vz = dir.z * vel; // arc inicial
+  const p = new SplashPotion(state.renderer.scene,
+    origem.x + dir.x * 0.6, origem.y + dir.y * 0.6, origem.z + dir.z * 0.6,
+    vx, vy, vz, efeito, lingering);
+  window._potions.push(p);
+  Audio.flechaSolta?.() || Audio.colocar?.();
+}
+
+export function atualizarPotionProjectiles(dt) {
+  if (!state.world || !state.mobMgr) return;
+  for (let i = window._potions.length - 1; i >= 0; i--) {
+    const p = window._potions[i];
+    if (!p.atualizar(dt, state.world, state.mobMgr)) {
+      p.destruir();
+      window._potions.splice(i, 1);
+    }
+  }
+}
+
+// =====================================================================
 // FishingBobber — bóia de pesca lançada pela vara.
 // Voa em arco, cai por gravidade até pousar em água ou bloco sólido.
 // Estados: 'voando' → 'na_agua' (espera bite) → 'mordeu' (janela curta).

@@ -27,6 +27,7 @@ import {
   castFishingLine, atualizarFishingBobber,
   lancarFoguete, atualizarFireworks,
   lancarTridente, atualizarTridents,
+  spawnSplashPotion, atualizarPotionProjectiles,
 } from './particles.js';
 import { UI } from './ui.js';
 import { Save } from './save.js';
@@ -706,35 +707,27 @@ function comerSlot() {
     Audio.enderTeleport?.() || Audio.colocar?.();
     return;
   }
-  // SPRINT MEGA-18: Splash potion — arremessa em vez de beber
+  // Splash potion — arremessa em arc parabólica, explode em radius 4 (paridade MC)
   if (info?.splash && info?.pocao) {
-    const fwd = state.renderer.camera.getWorldDirection({});
-    const px = state.player.pos.x, py = state.player.pos.y + 1.5, pz = state.player.pos.z;
-    if (state.particulas?.spawnArrow) {
-      state.particulas.spawnArrow(px, py, pz, fwd.x * 12, fwd.y * 12, fwd.z * 12, 0);
-    }
-    // Aplica efeito em radius 4 ao redor de onde flecha cai (placeholder: aplica em mobs próximos)
-    setTimeout(() => {
-      const efeito = info.pocao;
-      for (const m of state.mobMgr?.mobs || []) {
-        const dist = Math.hypot(m.x - px, m.z - pz);
-        if (dist < 6) {
-          if (efeito === 'harm') m.tomarDano?.(6, 0, 0);
-          else if (efeito === 'heal') { /* heal mobs */ }
-          else if (efeito === 'poison') m.tomarDano?.(2, 0, 0);
-        }
-      }
-      state.ui.toast(`💥 Splash ${efeito}!`);
-    }, 800);
+    const fwd = state.renderer.camera.getWorldDirection(new THREE.Vector3());
+    const origem = {
+      x: state.player.pos.x,
+      y: state.player.pos.y + 1.5,
+      z: state.player.pos.z,
+    };
+    spawnSplashPotion(origem, fwd, info.pocao, /*lingering=*/false);
     state.inv.consumirAtual();
     return;
   }
-  // SPRINT MEGA-18: Lingering potion — cria área de efeito 8s
+  // Lingering potion — projétil + cria nuvem persistente em raio 4 por 8s
   if (info?.lingering && info?.pocao) {
-    const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
-    state.lingeringClouds = state.lingeringClouds || [];
-    state.lingeringClouds.push({ x: px, y: py, z: pz, efeito: info.pocao, life: 8 });
-    state.ui.toast(`☁ Lingering ${info.pocao}!`);
+    const fwd = state.renderer.camera.getWorldDirection(new THREE.Vector3());
+    const origem = {
+      x: state.player.pos.x,
+      y: state.player.pos.y + 1.5,
+      z: state.player.pos.z,
+    };
+    spawnSplashPotion(origem, fwd, info.pocao, /*lingering=*/true);
     state.inv.consumirAtual();
     return;
   }
@@ -3506,6 +3499,7 @@ function loop(now) {
   atualizarFishingBobber(dt);
   atualizarFireworks(dt);
   atualizarTridents(dt);
+  atualizarPotionProjectiles(dt);
   // Skip ambient triggers + clima em heavy frames pra dar prioridade a
   // chunk loading/mesh build (responsividade da movimentação).
   if (!state._heavyFrame || !state._busy) {
