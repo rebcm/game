@@ -1597,82 +1597,77 @@ function criarAtlas() {
     ctx.fillRect(x0 + 9, y0 + 7, 1, 1);
   }
 
-  // Respawn Anchor: obsidiana com glowstone interna em camadas
+  // Paridade MC respawn_anchor: obsidiana roxa + núcleo amarelo brilhante.
   function pintarRespawnAnchor(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#311b92';
+    ctx.fillStyle = '#311B92';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#4a148c';
-    for (let i = 2; i < CELL - 2; i += 4) {
-      for (let j = 2; j < CELL - 2; j += 4) {
-        ctx.fillRect(x0 + i, y0 + j, 2, 2);
-      }
-    }
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#ffeb3b';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#fffde7';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#1a0a3a';
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#1A0A3A', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#4A148C', 0.20, 2, 1, seed + 7919);
+    // Núcleo brilhante central (4×4)
+    ctx.fillStyle = '#FFF176';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#FFEB3B';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FFFDE7';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
+    // Frame escuro 1px
+    ctx.fillStyle = '#0A001A';
     ctx.fillRect(x0, y0, CELL, 1);
     ctx.fillRect(x0, y0, 1, CELL);
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Lodestone: deepslate cinza com símbolo de bússola central
+  // Paridade MC lodestone: pedra polida + bússola central com agulha N(red)/S(blue).
   function pintarLodestone(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#9e9e9e';
+    ctx.fillStyle = '#9E9E9E';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#bdbdbd';
-    for (let i = 0; i < CELL; i += 8) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
-      ctx.fillRect(x0, y0 + i, CELL, 1);
-    }
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7E7E7E', 0.20, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BDBDBD', 0.18, 2, 1, seed + 7919);
+    // Caixa central da bússola (escuro)
     ctx.fillStyle = '#616161';
-    ctx.fillRect(x0 + 6, y0 + 6, CELL - 12, CELL - 12);
-    ctx.fillStyle = '#bdbdbd';
-    ctx.fillRect(x0 + 8, y0 + 8, CELL - 16, CELL - 16);
-    // N/S/E/W (4 pequenas marcas)
-    ctx.fillStyle = '#c62828';
-    ctx.fillRect(x0 + 15, y0 + 9, 2, 6);
-    ctx.fillStyle = '#1565c0';
-    ctx.fillRect(x0 + 15, y0 + 17, 2, 6);
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 8);
+    // Disco interno claro
+    ctx.fillStyle = '#BDBDBD';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    // Agulha vertical N (red) / S (blue)
+    ctx.fillStyle = '#C62828';
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 3);
+    ctx.fillStyle = '#1565C0';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 3);
+    // Pivot central
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
-  // Reinforced Deepslate: deepslate escuro com runas brilhantes (bloco do Warden)
+  // Paridade MC reinforced_deepslate: deepslate escuro + runas ciano (Warden bloco).
   function pintarReinforcedDS(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#2a2a2a';
-    for (let i = 0; i < CELL; i += 4) {
-      for (let j = 0; j < CELL; j += 4) {
-        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 4, 4);
-      }
-    }
-    // Runas verde-azuladas (efeito Warden)
-    ctx.fillStyle = '#00bcd4';
-    ctx.fillRect(x0 + 7, y0 + 8, 6, 1);
-    ctx.fillRect(x0 + 9, y0 + 9, 1, 6);
-    ctx.fillRect(x0 + 18, y0 + 18, 1, 6);
-    ctx.fillRect(x0 + 18, y0 + 22, 6, 1);
-    ctx.fillStyle = '#80deea';
-    ctx.fillRect(x0 + 9, y0 + 11, 1, 1);
-    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#2A2A2A', 0.34, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#0E0E0E', 0.18, 2, 1, seed + 7919);
+    // Runas ciano (Warden)
+    ctx.fillStyle = '#00BCD4';
+    ctx.fillRect(x0 + 3, y0 + 3, 3, 1);
+    ctx.fillRect(x0 + 4, y0 + 4, 1, 3);
+    ctx.fillRect(x0 + 9, y0 + 9, 1, 3);
+    ctx.fillRect(x0 + 9, y0 + 11, 3, 1);
+    // Sparkle ciano claro
+    ctx.fillStyle = '#80DEEA';
+    ctx.fillRect(x0 + 4, y0 + 4, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 11, 1, 1);
   }
 
   // Moss Block: musgo verde com manchas mais escuras
@@ -1698,117 +1693,108 @@ function criarAtlas() {
     ctx.fillRect(x0, y0, CELL, 1);
   }
 
-  // Big Dripleaf: planta tropical (haste verde + folha grande)
+  // Big dripleaf: haste verde + folha grande no topo (CELL=16 escalado).
   function pintarBigDripleaf(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2515';
+    ctx.fillStyle = '#1A2515';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Haste vertical
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 14, y0 + 12, 4, 18);
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 14, y0 + 12, 1, 18);
-    // Folha grande no topo
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(x0 + 6, y0 + 6, 20, 8);
-    ctx.fillStyle = '#43a047';
-    ctx.fillRect(x0 + 8, y0 + 8, 16, 4);
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 6, y0 + 12, 20, 1);
-    // Veias
-    ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(x0 + 16, y0 + 6, 1, 7);
-    ctx.fillRect(x0 + 10, y0 + 9, 12, 1);
+    // Haste vertical (2px wide)
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 7, y0 + 6, 2, 9);
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 7, y0 + 6, 1, 9);
+    // Folha grande no topo (10×4)
+    ctx.fillStyle = '#66BB6A';
+    ctx.fillRect(x0 + 3, y0 + 3, 10, 4);
+    ctx.fillStyle = '#43A047';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 2);
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 3, y0 + 6, 10, 1);
+    // Veia central
+    ctx.fillStyle = '#1B5E20';
+    ctx.fillRect(x0 + 8, y0 + 3, 1, 4);
   }
 
-  // Chorus Flower: planta do End (roxo + branca)
+  // Chorus flower: bulbo roxo + 4 pétalas + estame branco.
   function pintarChorusFlower(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a0a2e';
+    ctx.fillStyle = '#1A0A2E';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Bulbo central (roxo claro)
-    ctx.fillStyle = '#ce93d8';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#ab47bc';
-    ctx.fillRect(x0 + 11, y0 + 11, 10, 10);
-    // 4 pétalas (cantos)
-    ctx.fillStyle = '#e1bee7';
-    ctx.fillRect(x0 + 6,  y0 + 6,  6, 6);
-    ctx.fillRect(x0 + 20, y0 + 6,  6, 6);
-    ctx.fillRect(x0 + 6,  y0 + 20, 6, 6);
-    ctx.fillRect(x0 + 20, y0 + 20, 6, 6);
-    // Centro branco (estame)
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // Sombras nos cantos das pétalas
-    ctx.fillStyle = '#6a1b9a';
-    ctx.fillRect(x0 + 7,  y0 + 7,  1, 4);
-    ctx.fillRect(x0 + 24, y0 + 7,  1, 4);
-    ctx.fillRect(x0 + 7,  y0 + 24, 1, 1);
-    ctx.fillRect(x0 + 24, y0 + 24, 1, 1);
+    // Bulbo central roxo (6×6)
+    ctx.fillStyle = '#CE93D8';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    ctx.fillStyle = '#AB47BC';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    // 4 pétalas nos cantos (3×3)
+    ctx.fillStyle = '#E1BEE7';
+    ctx.fillRect(x0 + 2,  y0 + 2,  3, 3);
+    ctx.fillRect(x0 + 11, y0 + 2,  3, 3);
+    ctx.fillRect(x0 + 2,  y0 + 11, 3, 3);
+    ctx.fillRect(x0 + 11, y0 + 11, 3, 3);
+    // Estame branco central
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // Sombras das pétalas (1px)
+    ctx.fillStyle = '#6A1B9A';
+    ctx.fillRect(x0 + 2,  y0 + 4,  1, 1);
+    ctx.fillRect(x0 + 13, y0 + 4,  1, 1);
+    ctx.fillRect(x0 + 2,  y0 + 13, 1, 1);
+    ctx.fillRect(x0 + 13, y0 + 13, 1, 1);
   }
 
-  // Pistão: madeira top + ferro central + base laranja
+  // Paridade MC piston: face frontal madeira clara + X central + vigas escuras.
   function pintarPiston(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base laranja-marrom
-    ctx.fillStyle = '#a1887f';
+    // Borda madeira escura
+    ctx.fillStyle = '#A1887F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    // Face frontal (face do pistão — superfície de madeira clara)
-    ctx.fillStyle = '#bcaaa4';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    ctx.fillStyle = '#fdd835';
-    // X central (parafusos)
-    ctx.fillRect(x0 + 14, y0 + 6, 4, 2);
-    ctx.fillRect(x0 + 14, y0 + 24, 4, 2);
-    ctx.fillRect(x0 + 6, y0 + 14, 2, 4);
-    ctx.fillRect(x0 + 24, y0 + 14, 2, 4);
-    // Vigas verticais (madeira escura)
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
-    ctx.fillRect(x0 + CELL - 7, y0 + 6, 1, CELL - 12);
-    // Centro com placa de ferro
-    ctx.fillStyle = '#cfd8dc';
-    ctx.fillRect(x0 + 11, y0 + 11, 10, 10);
-    ctx.fillStyle = '#90a4ae';
-    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8D6E63', 0.18, 2, 1, seed + 1009);
+    // Face frontal central (12×12 madeira clara)
+    ctx.fillStyle = '#BCAAA4';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 12);
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, 12, 12, '#A1887F', 0.16, 2, 1, seed + 7919);
+    // 4 parafusos nas pontas (1×1 cada)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 3, 2, 1);
+    ctx.fillRect(x0 + 7, y0 + 12, 2, 1);
+    ctx.fillRect(x0 + 3, y0 + 7, 1, 2);
+    ctx.fillRect(x0 + 12, y0 + 7, 1, 2);
+    // Vigas verticais escuras (estrutura)
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 10);
+    ctx.fillRect(x0 + 12, y0 + 3, 1, 10);
   }
 
-  // Sticky Piston: igual pistão mas face verde (slime sticky)
+  // Paridade MC sticky_piston: igual piston mas face verde (slime).
   function pintarStickyPiston(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#a1887f';
+    // Borda madeira
+    ctx.fillStyle = '#A1887F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    // Face frontal (slime verde)
-    ctx.fillStyle = '#8bc34a';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    ctx.fillStyle = '#558b2f';
-    for (let i = 6; i < CELL - 6; i += 4) {
-      for (let j = 6; j < CELL - 6; j += 4) {
-        ctx.fillRect(x0 + i, y0 + j, 2, 2);
-      }
-    }
-    ctx.fillStyle = '#aed581';
-    ctx.fillRect(x0 + 5, y0 + 5, CELL - 10, 1);
-    ctx.fillRect(x0 + 5, y0 + 5, 1, CELL - 10);
-    // Vigas verticais
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 6, y0 + 6, 1, CELL - 12);
-    ctx.fillRect(x0 + CELL - 7, y0 + 6, 1, CELL - 12);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8D6E63', 0.18, 2, 1, seed + 1009);
+    // Face frontal slime (12×12 verde)
+    ctx.fillStyle = '#8BC34A';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 12);
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, 12, 12, '#558B2F', 0.20, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, 12, 12, '#AED581', 0.18, 2, 1, seed + 1573);
+    // 2 bolhas slime escuras (efeito gelatinoso)
+    ctx.fillStyle = '#3F6B1E';
+    ctx.fillRect(x0 + 5, y0 + 6, 2, 2);
+    ctx.fillRect(x0 + 9, y0 + 9, 2, 2);
+    // Vigas verticais escuras
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 10);
+    ctx.fillRect(x0 + 12, y0 + 3, 1, 10);
   }
 
   // Repeater: pedra clara + 2 tochas redstone
