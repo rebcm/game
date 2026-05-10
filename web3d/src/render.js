@@ -956,126 +956,112 @@ function criarAtlas() {
     ctx.fillRect(x0 + 13, y0 + 5, 1, 1);
   }
   // Bigorna: preto metálico com riscos verticais (estilo MC anvil)
+  // Paridade MC anvil_top: aço escuro com plataforma central polida.
   function pintarBigornaTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base cinza escuro
-    ctx.fillStyle = '#3a3a3a';
+    ctx.fillStyle = '#4A4A4A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda preta espessa (forma da bigorna no topo)
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 4, y0 + 6, CELL - 8, CELL - 12);
-    // Plataforma de trabalho (mais clara, brilho de aço)
-    ctx.fillStyle = '#5a5a5a';
-    ctx.fillRect(x0 + 8, y0 + 10, CELL - 16, CELL - 20);
-    // Riscos brancos (highlight de aço)
-    ctx.fillStyle = '#888888';
-    ctx.fillRect(x0 + 9,  y0 + 11, CELL - 18, 1);
-    ctx.fillRect(x0 + 9,  y0 + 13, 4, 1);
-    ctx.fillRect(x0 + 19, y0 + 13, 4, 1);
-    // Marcas de uso (riscos diagonais)
-    ctx.fillStyle = '#202020';
-    ctx.fillRect(x0 + 12, y0 + 16, 8, 1);
-    ctx.fillRect(x0 + 14, y0 + 18, 4, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#3A3A3A', 0.20, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5A5A5A', 0.18, 2, 1, seed + 7919);
+    // Plataforma central (8×6 cinza claro)
+    ctx.fillStyle = '#6A6A6A';
+    ctx.fillRect(x0 + 4, y0 + 5, 8, 6);
+    // Borda da plataforma
+    ctx.fillStyle = '#1A1A1A';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 1);
+    ctx.fillRect(x0 + 4, y0 + 11, 8, 1);
+    // Marcas de uso
+    ctx.fillStyle = '#2A2A2A';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 1);
+    ctx.fillRect(x0 + 7, y0 + 9, 2, 1);
   }
+  // Paridade MC anvil_side: silhueta T-invertida (base larga + pescoço).
   function pintarBigornaLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Forma de bigorna: base larga embaixo + cintura estreita + topo médio
-    ctx.fillStyle = '#3a3a3a';
+    // Background escuro (vai aparecer nas "sobras" laterais)
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Base (parte de baixo, ampla)
-    ctx.fillStyle = '#2a2a2a';
-    ctx.fillRect(x0 + 2, y0 + 22, CELL - 4, 8);
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0,     y0 + 28, CELL,    4);
-    // Cintura (meio fino)
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 10, y0 + 14, CELL - 20, 8);
-    // Topo (yunque estendido)
-    ctx.fillStyle = '#2a2a2a';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 10);
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 2, y0,     CELL - 4, 4);
-    // Highlights laterais (aço polido)
-    ctx.fillStyle = '#666666';
-    ctx.fillRect(x0 + 5, y0 + 5, 1, 8);
-    ctx.fillRect(x0 + 4, y0 + 23, 2, 5);
+    // Topo (yunque, 12×3)
+    ctx.fillStyle = '#4A4A4A';
+    ctx.fillRect(x0 + 2, y0, CELL - 4, 3);
+    ctx.fillStyle = '#3A3A3A';
+    ctx.fillRect(x0 + 2, y0 + 3, CELL - 4, 1);
+    // Pescoço/cintura (4×4 centralizada)
+    ctx.fillStyle = '#3A3A3A';
+    ctx.fillRect(x0 + 6, y0 + 4, 4, 5);
+    // Base larga (12×4)
+    ctx.fillStyle = '#4A4A4A';
+    ctx.fillRect(x0 + 2, y0 + 9, CELL - 4, 4);
+    ctx.fillStyle = '#2A2A2A';
+    ctx.fillRect(x0, y0 + 13, CELL, 3);
+    // Highlights de aço polido
+    ctx.fillStyle = '#6A6A6A';
+    ctx.fillRect(x0 + 3, y0 + 1, 1, 2);
+    ctx.fillRect(x0 + 3, y0 + 10, 1, 2);
   }
-  // Colmeia topo: padrão hexagonal de mel (favo) com gotas douradas
+  // Paridade MC beehive_top: madeira amarelada + favo central dourado.
   function pintarColmeiaTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base bege da madeira de cobre
-    ctx.fillStyle = '#a1887f';
+    // Base madeira clara
+    ctx.fillStyle = '#A1887F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão hexagonal central (favo) — 9 hexágonos pequenos
-    ctx.fillStyle = '#fdd835';
-    const hexSize = 8;
-    for (let row2 = 0; row2 < 3; row2++) {
-      for (let col2 = 0; col2 < 3; col2++) {
-        const cx = 6 + col2 * 9;
-        const cy = 6 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
-        if (cx + hexSize < CELL && cy + hexSize < CELL) {
-          ctx.fillRect(x0 + cx, y0 + cy, hexSize, hexSize - 2);
-          ctx.fillRect(x0 + cx + 1, y0 + cy + hexSize - 2, hexSize - 2, 1);
-        }
-      }
-    }
-    // Gotas escuras nos hexágonos (mel mais escuro = bordas)
-    ctx.fillStyle = '#f57f17';
-    for (let row2 = 0; row2 < 3; row2++) {
-      for (let col2 = 0; col2 < 3; col2++) {
-        const cx = 6 + col2 * 9;
-        const cy = 6 + row2 * 8 + (col2 % 2 === 1 ? 4 : 0);
-        if (cx + 4 < CELL && cy + 4 < CELL) {
-          ctx.fillRect(x0 + cx + 2, y0 + cy + 2, 2, 2);
-        }
-      }
-    }
-    // Borda escura
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8D6E63', 0.18, 2, 1, seed + 1009);
+    // Favo central dourado (8×8)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 8);
+    // Padrão hex no favo (4 cells dourado escuro)
+    ctx.fillStyle = '#F57F17';
+    ctx.fillRect(x0 + 5, y0 + 5, 2, 2);
+    ctx.fillRect(x0 + 9, y0 + 5, 2, 2);
+    ctx.fillRect(x0 + 5, y0 + 9, 2, 2);
+    ctx.fillRect(x0 + 9, y0 + 9, 2, 2);
+    // Highlight central
+    ctx.fillStyle = '#FFEB3B';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    // Borda madeira escura (1px)
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
-  // Colmeia lateral: madeira marrom + entrada hexagonal central + tábuas
+  // Paridade MC beehive_side: madeira + entrada escura central + drips.
   function pintarColmeiaLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base madeira clara
-    ctx.fillStyle = '#a1887f';
+    // Base madeira
+    ctx.fillStyle = '#A1887F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras horizontais (tábuas)
-    ctx.fillStyle = '#8d6e63';
-    for (let py = 5; py < CELL; py += 7) {
-      ctx.fillRect(x0, y0 + py, CELL, 1);
-    }
-    // Grão da madeira (linhas verticais sutis)
-    ctx.fillStyle = '#7a5b50';
-    for (let px = 6; px < CELL; px += 9) {
-      ctx.fillRect(x0 + px, y0 + 4, 1, CELL - 8);
-    }
-    // Entrada hexagonal escura (porta da colmeia)
-    ctx.fillStyle = '#3e2723';
-    ctx.fillRect(x0 + 12, y0 + 18, 8, 8);
-    ctx.fillStyle = '#1a0f0a';
-    ctx.fillRect(x0 + 13, y0 + 19, 6, 6);
-    // Mel pingando da entrada (gota dourada)
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 14, y0 + 25, 2, 2);
-    ctx.fillRect(x0 + 17, y0 + 26, 2, 1);
-    // Borda
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#8D6E63', 0.18, 2, 1, seed + 1009);
+    // Listras horizontais (3 tábuas)
+    ctx.fillStyle = '#7A5B50';
+    ctx.fillRect(x0, y0 + 5, CELL, 1);
+    ctx.fillRect(x0, y0 + 11, CELL, 1);
+    // Entrada da colmeia (4×3 escura no meio)
+    ctx.fillStyle = '#3E2723';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 3);
+    ctx.fillStyle = '#1A0F0A';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 2);
+    // Mel pingando (2 gotas douradas)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 10, 1, 2);
+    ctx.fillRect(x0 + 9, y0 + 10, 1, 1);
+    // Borda 1px
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
   // Melancia: verde escuro com padrão de listras + sementes
