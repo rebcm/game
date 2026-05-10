@@ -866,114 +866,94 @@ function criarAtlas() {
 
   // Pumpkin: laranja com ridges + talo verde no topo (cell 34) OU
   // face jack-o-lantern (cell 35 — talhada).
+  // Paridade MC pumpkin: laranja + ridges verticais. Face talhada com olhos
+  // triangulares + boca dentada (CELL=16 → posições 2,7,12 / boca 4×3).
   function pintarPumpkin(idx, talhada) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#e65100';
+    // Base laranja
+    ctx.fillStyle = '#E65100';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Ridges verticais (relevo da abóbora)
-    ctx.fillStyle = '#bf360c';
-    for (let px = 4; px < CELL; px += 8) {
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BF360C', 0.18, 2, 1, seed + 1009);
+    // Ridges verticais (4 ranhuras escuras espaçadas em CELL=16)
+    ctx.fillStyle = '#BF360C';
+    for (let px = 2; px < CELL; px += 4) {
       ctx.fillRect(x0 + px, y0, 1, CELL);
-    }
-    ctx.fillStyle = '#ff9800';
-    for (let px = 1; px < CELL; px += 8) {
-      ctx.fillRect(x0 + px, y0, 2, CELL);
     }
     if (talhada) {
       // Face jack-o-lantern: 2 olhos triangulares + boca dentada
-      ctx.fillStyle = '#fff59d'; // luz interna amarela
-      // Olho esquerdo
-      ctx.fillRect(x0 + 6, y0 + 10, 5, 4);
-      ctx.fillRect(x0 + 7, y0 + 9, 3, 1);
+      ctx.fillStyle = '#FFF59D';
+      // Olho esquerdo (3×2 + 1px topo)
+      ctx.fillRect(x0 + 3, y0 + 5, 3, 2);
+      ctx.fillRect(x0 + 4, y0 + 4, 1, 1);
       // Olho direito
-      ctx.fillRect(x0 + 21, y0 + 10, 5, 4);
-      ctx.fillRect(x0 + 22, y0 + 9, 3, 1);
-      // Boca dentada
-      ctx.fillRect(x0 + 8, y0 + 20, 16, 4);
-      ctx.fillStyle = '#e65100';
-      ctx.fillRect(x0 + 11, y0 + 20, 1, 2); // dente 1
-      ctx.fillRect(x0 + 14, y0 + 20, 1, 2); // dente 2
-      ctx.fillRect(x0 + 17, y0 + 20, 1, 2); // dente 3
-      ctx.fillRect(x0 + 20, y0 + 20, 1, 2); // dente 4
+      ctx.fillRect(x0 + 10, y0 + 5, 3, 2);
+      ctx.fillRect(x0 + 11, y0 + 4, 1, 1);
+      // Boca (8×2)
+      ctx.fillRect(x0 + 4, y0 + 10, 8, 2);
+      // Dentes (1×1 escuros recortando boca)
+      ctx.fillStyle = '#E65100';
+      ctx.fillRect(x0 +  6, y0 + 10, 1, 1);
+      ctx.fillRect(x0 +  9, y0 + 10, 1, 1);
     } else {
-      // Topo: talo verde
-      ctx.fillStyle = '#4caf50';
-      ctx.fillRect(x0 + 14, y0 + 12, 4, 8);
-      ctx.fillStyle = '#388e3c';
-      ctx.fillRect(x0 + 13, y0 + 14, 1, 4);
-      ctx.fillRect(x0 + 18, y0 + 14, 1, 4);
+      // Topo: talo verde no centro
+      ctx.fillStyle = '#4CAF50';
+      ctx.fillRect(x0 + 7, y0 + 6, 2, 4);
+      ctx.fillStyle = '#388E3C';
+      ctx.fillRect(x0 + 6, y0 + 7, 1, 2);
+      ctx.fillRect(x0 + 9, y0 + 7, 1, 2);
     }
   }
-  // Bolo: topo creme com cereja vermelha + decoração
+  // Paridade MC cake_top: creme + cereja central. CELL=16: borda dourada
+  // 1px + cereja 2×2 no centro.
   function pintarBoloTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base creme (cobertura)
-    ctx.fillStyle = '#fff8e1';
+    // Cobertura creme
+    ctx.fillStyle = '#FFF8E1';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda dourada (massa do bolo aparecendo)
-    ctx.fillStyle = '#d4a574';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
-    // Glacê branco
-    ctx.fillStyle = '#ffffff';
+    // Borda dourada
+    ctx.fillStyle = '#D4A574';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
     let seed = idx * 9301 + 49297;
-    for (let py = 4; py < CELL - 4; py += 3) {
-      for (let px = 4; px < CELL - 4; px += 3) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.45) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
-    // Cereja no centro
-    ctx.fillStyle = '#c62828';
-    ctx.fillRect(x0 + 13, y0 + 13, 6, 6);
-    ctx.fillStyle = '#e53935';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ff8a80';
-    ctx.fillRect(x0 + 14, y0 + 14, 2, 2);
-    // Talo verde da cereja
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 16, y0 + 11, 1, 3);
+    seed = spawnPontosUniforme(x0 + 1, y0 + 1, CELL - 2, CELL - 2, '#FFFFFF', 0.18, 2, 1, seed + 1009);
+    // Cereja central (2×2 vermelho com 1px highlight)
+    ctx.fillStyle = '#C62828';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#E53935';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
+    // Talo verde (1px)
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 8, y0 + 6, 1, 1);
   }
-  // Bolo lado: 1/3 creme em cima + 2/3 massa marrom (camadas)
+  // Paridade MC cake_side: cobertura creme topo (4-5px) + massa marrom corpo.
   function pintarBoloLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base massa marrom
-    ctx.fillStyle = '#8d6e63';
+    // Massa marrom (corpo)
+    ctx.fillStyle = '#8D6E63';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Pontos de chocolate/textura
-    ctx.fillStyle = '#5d4037';
     let seed = idx * 9301 + 49297;
-    for (let py = 10; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.20) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
-    // Recheio rosa (camada do meio)
-    ctx.fillStyle = '#f8bbd0';
-    ctx.fillRect(x0, y0 + 18, CELL, 3);
-    ctx.fillStyle = '#f48fb1';
-    ctx.fillRect(x0, y0 + 19, CELL, 1);
-    // Cobertura creme em cima (8px)
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0, y0, CELL, 9);
-    // Drips brancos descendo (efeito glace pingando)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 4,  y0 + 9, 2, 2);
-    ctx.fillRect(x0 + 12, y0 + 9, 1, 4);
-    ctx.fillRect(x0 + 20, y0 + 9, 2, 3);
-    ctx.fillRect(x0 + 27, y0 + 9, 1, 2);
-    // Borda escura no topo
-    ctx.fillStyle = '#d4a574';
-    ctx.fillRect(x0, y0 + 8, CELL, 1);
+    seed = spawnPontosUniforme(x0, y0 + 5, CELL, CELL - 5, '#5D4037', 0.20, 2, 1, seed + 1009);
+    // Cobertura creme no topo (5px)
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0, y0, CELL, 5);
+    // Borda escura entre cobertura e massa
+    ctx.fillStyle = '#D4A574';
+    ctx.fillRect(x0, y0 + 4, CELL, 1);
+    // Drips brancos (efeito glacê pingando)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 +  2, y0 + 5, 1, 2);
+    ctx.fillRect(x0 +  6, y0 + 5, 1, 1);
+    ctx.fillRect(x0 + 10, y0 + 5, 1, 2);
+    ctx.fillRect(x0 + 13, y0 + 5, 1, 1);
   }
   // Bigorna: preto metálico com riscos verticais (estilo MC anvil)
   function pintarBigornaTopo(idx) {
@@ -1117,59 +1097,60 @@ function criarAtlas() {
       ctx.fillStyle = '#ffffff';
       spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.20, 7, 1, idx * 9301 + 7331);
     } else {
-      // Melancia normal: verde com listras
-      ctx.fillStyle = '#388e3c';
+      // Paridade MC melon: verde + listras finas + sementes esparsas (CELL=16).
+      ctx.fillStyle = '#388E3C';
       ctx.fillRect(x0, y0, CELL, CELL);
-      // Listras verticais escuras (verde escuro)
-      ctx.fillStyle = '#1b5e20';
-      for (let px = 4; px < CELL; px += 4) {
-        ctx.fillRect(x0 + px, y0, 2, CELL);
-      }
-      // Listras claras (verde claro)
-      ctx.fillStyle = '#66bb6a';
-      for (let px = 6; px < CELL; px += 4) {
+      // Listras verticais alternadas (escuras 1px + claras 1px)
+      ctx.fillStyle = '#1B5E20';
+      for (let px = 0; px < CELL; px += 4) {
         ctx.fillRect(x0 + px, y0, 1, CELL);
       }
-      // Sementes pretas no centro (3x3)
+      ctx.fillStyle = '#66BB6A';
+      for (let px = 2; px < CELL; px += 4) {
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
+      // Sementes pretas dispersas (CELL=16 → 5 sementes 1px)
+      let s = idx * 7919 + 1234;
       ctx.fillStyle = '#000000';
-      ctx.fillRect(x0 + 12, y0 + 8,  2, 1);
-      ctx.fillRect(x0 + 18, y0 + 12, 2, 1);
-      ctx.fillRect(x0 + 14, y0 + 16, 2, 1);
-      ctx.fillRect(x0 + 20, y0 + 20, 2, 1);
-      ctx.fillRect(x0 + 10, y0 + 24, 2, 1);
+      for (let i = 0; i < 5; i++) {
+        s = (s * 9301 + 49297) % 233280;
+        const sx = (s % CELL);
+        s = (s * 9301 + 49297) % 233280;
+        const sy = (s % CELL);
+        ctx.fillRect(x0 + sx, y0 + sy, 1, 1);
+      }
     }
   }
 
-  // Abacaxi: amarelo com padrão diamante + folhas verdes em cima
+  // Abacaxi (custom block): amarelo escamoso + coroa verde no topo.
+  // CELL=16: padrão escama 2×2 staggered + coroa 4×3 centralizada.
   function pintarAbacaxi(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Base amarela
-    ctx.fillStyle = '#fdd835';
+    ctx.fillStyle = '#FDD835';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão diamante (escamas do abacaxi)
-    ctx.fillStyle = '#a1887f';
-    for (let py = 4; py < CELL - 4; py += 6) {
-      for (let px = 4; px < CELL - 4; px += 6) {
-        const off = (py / 6) % 2 === 0 ? 0 : 3;
-        ctx.fillRect(x0 + px + off, y0 + py, 3, 1);
-        ctx.fillRect(x0 + px + off, y0 + py + 1, 3, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFF176', 0.20, 2, 1, seed + 1009);
+    // Padrão escama (2×1 marrom em diamante staggered, começa após coroa)
+    ctx.fillStyle = '#A1887F';
+    for (let py = 5; py < CELL - 1; py += 3) {
+      const off = ((py - 5) / 3) % 2 === 0 ? 0 : 2;
+      for (let px = 1 + off; px < CELL - 1; px += 4) {
+        ctx.fillRect(x0 + px, y0 + py, 2, 1);
       }
     }
-    // Highlights amarelos
-    ctx.fillStyle = '#fff176';
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.25, 5, 1, idx * 9301 + 49297);
-    // Coroa de folhas verdes em cima
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 12, y0 + 1, 8, 4);
-    ctx.fillStyle = '#1b5e20';
-    for (const sx of [-1, 1]) {
-      ctx.fillRect(x0 + 16 + sx * 5, y0 + 1, 1, 4);
-    }
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(x0 + 14, y0 + 2, 2, 2);
-    ctx.fillRect(x0 + 17, y0 + 2, 2, 2);
+    // Coroa verde no topo (4×3 centralizada)
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 6, y0, 4, 3);
+    // Picos da coroa (1×1 mais escuro nas pontas)
+    ctx.fillStyle = '#1B5E20';
+    ctx.fillRect(x0 + 5, y0,     1, 2);
+    ctx.fillRect(x0 + 10, y0,    1, 2);
+    // Highlight central verde claro
+    ctx.fillStyle = '#66BB6A';
+    ctx.fillRect(x0 + 7, y0 + 1, 2, 1);
   }
 
   // Pedra Esculpida (chiseled): cor base + padrão geométrico central
@@ -2029,34 +2010,9 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Mangrove Pranchas: similar mas mais claro + grão de prancha
+  // Mangrove planks: tons avermelhados + 4 tábuas 4px (paridade pintarPlanksColorida)
   function pintarMangrovePrancha(idx) {
-    const col = idx % COLS;
-    const row = Math.floor(idx / COLS);
-    const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#6d4c41';
-    // 4 fileiras horizontais de pranchas
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    // Divisões verticais (alternadas)
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 11, y0,      1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // Manchas avermelhadas
-    ctx.fillStyle = '#a1605a';
-    let s = idx * 7 + 11;
-    for (let i = 0; i < 18; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    pintarPlanksColorida(idx, '#8D6E63', '#6D4C41', '#A1605A');
   }
 
   // Cherry Log: rosa pastel com listras claras (cerejeira)
@@ -2090,34 +2046,9 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Cherry Pranchas: rosa pastel com grão de prancha rosa
+  // Cherry planks: rosa pastel — delega pra pintarPlanksColorida.
   function pintarCherryPrancha(idx) {
-    const col = idx % COLS;
-    const row = Math.floor(idx / COLS);
-    const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#f8bbd0';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#ec407a';
-    // 4 fileiras horizontais
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    // Divisões verticais
-    ctx.fillStyle = '#c2185b';
-    ctx.fillRect(x0 + 11, y0,      1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 11, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // Pintinhas brancas
-    ctx.fillStyle = '#fce4ec';
-    let s = idx * 11 + 23;
-    for (let i = 0; i < 16; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    pintarPlanksColorida(idx, '#F8BBD0', '#C2185B', '#FCE4EC');
   }
 
   // Cherry Folha: folhas rosa pastel + flores brancas
