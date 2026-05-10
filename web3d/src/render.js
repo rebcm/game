@@ -59,6 +59,49 @@ function criarAtlas() {
 
   // Pinta uma célula sólida com ruído distribuído uniformemente
   // (sem clusters de pontos pretos aglutinados — qualidade visual MC real).
+  // Concreto liso premium (cor parametrizada): gradient + microspeckles
+  // sutis + bevel direcional. Para blocos uniformes que ficavam planos.
+  function pintarConcretoLiso(idx, corBase, corClaro, corEscuro) {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x0 = col * CELL, y0 = row * CELL;
+    // Gradient diagonal (luz superior-esquerda)
+    const grad = ctx.createLinearGradient(x0, y0, x0 + CELL, y0 + CELL);
+    grad.addColorStop(0,   corClaro);
+    grad.addColorStop(0.5, corBase);
+    grad.addColorStop(1,   corEscuro);
+    ctx.fillStyle = grad;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    // Microspeckle MUITO sutil (12 pontos cada tom)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corEscuro, 0.18, 5, 1, seed + 113);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corClaro,  0.20, 5, 1, seed + 947);
+    // Patches tonais maiores (4 manchas 3x3 sutis com alpha)
+    const hex = (h) => {
+      const n = parseInt(h.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const cE = hex(corEscuro);
+    ctx.fillStyle = `rgba(${cE[0]},${cE[1]},${cE[2]},0.25)`;
+    for (let i = 0; i < 4; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % (CELL - 4));
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % (CELL - 4));
+      ctx.fillRect(x0 + px, y0 + py, 3, 3);
+    }
+    // Bevel direcional (highlight TL + shadow BR)
+    ctx.fillStyle = 'rgba(255,255,255,0.20)';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Corner shadow profundo (canto BR)
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.fillRect(x0 + CELL - 2, y0 + CELL - 2, 2, 2);
+  }
+
   // Terra/dirt premium: gradient marrom + grumos + pedrinhas escuras +
   // raízes finas. Original procedural — voxel-style.
   function pintarTerra(idx) {
@@ -291,43 +334,58 @@ function criarAtlas() {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base com gradient diagonal sutil (top-left mais claro, bottom-right mais escuro)
-    const grad = ctx.createLinearGradient(x0, y0, x0 + CELL, y0 + CELL);
-    grad.addColorStop(0, corClaro);
-    grad.addColorStop(0.5, corMedio);
-    grad.addColorStop(1, corEscuro);
-    ctx.fillStyle = grad;
+    // Helper: parse hex pra rgb
+    const hex = (h) => {
+      const n = parseInt(h.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const cR = hex(corMedio);
+    const cL = hex(corClaro);
+    const cE = hex(corEscuro);
+    // Base sólido cor média
+    ctx.fillStyle = corMedio;
     ctx.fillRect(x0, y0, CELL, CELL);
     let seed = idx * 13 + 29;
-    // Clusters de folhas: 14 grupos de 2x2 com variação tonal (volumetria)
-    for (let c = 0; c < 14; c++) {
+    // Patches grandes orgânicos (5-6 manchas 4x4 a 6x6) — dá impressão de
+    // grupos de folhas, sem virar pontilhado caótico
+    for (let p = 0; p < 6; p++) {
       seed = (seed * 9301 + 49297) % 233280;
-      const cx = (seed % (CELL - 2));
+      const sz = 3 + (seed % 3);
       seed = (seed * 9301 + 49297) % 233280;
-      const cy = (seed % (CELL - 2));
+      const px = (seed % (CELL - sz));
       seed = (seed * 9301 + 49297) % 233280;
-      const tier = seed / 233280;
-      ctx.fillStyle = tier < 0.45 ? corEscuro : (tier < 0.78 ? corMedio : corClaro);
-      // Cluster 2x2 com leve recorte
-      ctx.fillRect(x0 + cx,     y0 + cy,     2, 2);
-      // Realce 1px no canto superior-esquerdo do cluster (highlight)
-      if (tier > 0.78) {
-        ctx.fillStyle = corClaro;
-        ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
-      }
+      const py = (seed % (CELL - sz));
+      seed = (seed * 9301 + 49297) % 233280;
+      const isLight = (seed & 1);
+      // Mistura sutil (30% blend) — não troca a cor de vez
+      const mix = isLight ? cL : cE;
+      const a = 0.35;
+      const r = (cR[0] * (1 - a) + mix[0] * a) | 0;
+      const g = (cR[1] * (1 - a) + mix[1] * a) | 0;
+      const b = (cR[2] * (1 - a) + mix[2] * a) | 0;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x0 + px, y0 + py, sz, sz);
     }
-    // Microvariação: 80 pixels individuais para textura fina
-    for (let i = 0; i < 80; i++) {
+    // Mini destaques 1px (lâminas/nervuras) — apenas tons CLAROS pra
+    // criar pontos de luz sem buracos pretos
+    ctx.fillStyle = corClaro;
+    for (let i = 0; i < 22; i++) {
       seed = (seed * 9301 + 49297) % 233280;
       const px = (seed % CELL);
       seed = (seed * 9301 + 49297) % 233280;
       const py = (seed % CELL);
-      seed = (seed * 9301 + 49297) % 233280;
-      const r = (seed / 233280);
-      ctx.fillStyle = r < 0.55 ? corEscuro : corClaro;
       ctx.fillRect(x0 + px, y0 + py, 1, 1);
     }
-    // Flores/frutos sutis (cherry blossom, apple etc.)
+    // Sombras MUITO sutis (alpha low, não pixel sólido escuro)
+    ctx.fillStyle = `rgba(${cE[0]},${cE[1]},${cE[2]},0.45)`;
+    for (let i = 0; i < 16; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    }
+    // Flores/frutos sutis
     if (corFlor) {
       ctx.fillStyle = corFlor;
       for (let i = 0; i < 3; i++) {
@@ -338,7 +396,7 @@ function criarAtlas() {
         ctx.fillRect(x0 + px, y0 + py, 2, 2);
       }
     }
-    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.5);
+    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.4);
   }
 
   // Pinta padrão de tijolos: mortar cinza + tijolos vermelhos staggered + highlight.
@@ -6080,28 +6138,64 @@ function criarAtlas() {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = polido ? '#fff8e1' : '#fafafa';
+    // Gradient diagonal (luz vinda do canto superior)
+    const grad = ctx.createLinearGradient(x0, y0, x0 + CELL, y0 + CELL);
+    if (polido) {
+      grad.addColorStop(0,    '#fffefb');
+      grad.addColorStop(0.5,  '#fff5d8');
+      grad.addColorStop(1,    '#e8d8a8');
+    } else {
+      grad.addColorStop(0,    '#ffffff');
+      grad.addColorStop(0.5,  '#f5f5f0');
+      grad.addColorStop(1,    '#dcdcd0');
+    }
+    ctx.fillStyle = grad;
     ctx.fillRect(x0, y0, CELL, CELL);
     let seed = idx * 9301 + 49297;
     if (polido) {
-      // Polido: padrão de brilho diagonal (chevron)
-      ctx.fillStyle = '#ffffff';
-      for (let py = 0; py < CELL; py += 4) {
+      // Polido: faixas horizontais finas + sparkles cristal
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      for (let py = 1; py < CELL; py += 5) {
         ctx.fillRect(x0, y0 + py, CELL, 1);
       }
-      ctx.fillStyle = '#f5f5dc';
-      ctx.fillRect(x0, y0,            CELL, 1);
-      ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+      // Sombras horizontais entre faixas (depth)
+      ctx.fillStyle = 'rgba(120,100,60,0.10)';
+      for (let py = 3; py < CELL; py += 5) {
+        ctx.fillRect(x0, y0 + py, CELL, 1);
+      }
+      // 6 sparkles diagonais (cristais reflexivos)
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 6; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = 2 + (seed % (CELL - 4));
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = 2 + (seed % (CELL - 4));
+        ctx.fillRect(x0 + px,     y0 + py - 1, 1, 1);
+        ctx.fillRect(x0 + px - 1, y0 + py,     1, 1);
+        ctx.fillRect(x0 + px + 1, y0 + py,     1, 1);
+        ctx.fillRect(x0 + px,     y0 + py + 1, 1, 1);
+      }
     } else {
-      // Quartzo natural: ruído + brilhos cristalinos uniformes
-      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#eeeeee', 0.55, 4, 2, seed);
-      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.40, 8, 3, seed + 9001);
+      // Natural: granulado fino multi-tonal + brilhos
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#e8e8d8', 0.40, 3, 1, seed);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.30, 4, 1, seed + 9001);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#c8c8b8', 0.25, 4, 1, seed + 1573);
+      // 4 cristais maiores 2x2
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 4; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const px = (seed % (CELL - 2));
+        seed = (seed * 9301 + 49297) % 233280;
+        const py = (seed % (CELL - 2));
+        ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      }
     }
-    // Borda escura sutil pra delimitar o bloco (todos)
-    ctx.fillStyle = '#bdbdbd';
+    // Bevel premium: highlight superior + sombra inferior/direita
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
     ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillStyle = 'rgba(140,120,90,0.20)';
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
@@ -6649,12 +6743,12 @@ function criarAtlas() {
   pintarLaColorida(195, '#9e9e9e', '#bdbdbd', '#616161');          // lã cinza
   // 2 concretos (cells 196-197)
   // SPRINT VISUAL-7: Concreto premium com gradient + bevel
-  pintarPremium(196, '#ef5350', '#8b0000', '#c62828', 0.5);       // concreto vermelho premium
-  pintarPremium(197, '#42a5f5', '#0d47a1', '#1565c0', 0.5);       // concreto azul premium
-  pintarPremium(198, '#66bb6a', '#1b5e20', '#2e7d32', 0.5);       // concreto verde premium
-  pintarPremium(199, '#ffeb3b', '#f57f17', '#f9a825', 0.5);       // concreto amarelo premium
-  pintarPremium(200, '#ffffff', '#cfd8dc', '#eceff1', 0.4);       // concreto branco premium
-  pintarPremium(201, '#424242', '#000000', '#212121', 0.4);       // concreto preto premium
+  pintarConcretoLiso(196, '#d44141', '#ef6b6b', '#8b1c1c');        // concreto vermelho premium
+  pintarConcretoLiso(197, '#3a8fd8', '#5fb1f5', '#1a4d8b');        // concreto azul premium
+  pintarConcretoLiso(198, '#5fa854', '#7bc068', '#2e6b29');        // concreto verde premium
+  pintarConcretoLiso(199, '#f0ce2c', '#ffe066', '#c9911a');        // concreto amarelo premium
+  pintarConcretoLiso(200, '#eceff1', '#ffffff', '#bdc3c7');        // concreto branco premium
+  pintarConcretoLiso(201, '#2a2a2a', '#454545', '#0a0a0a');        // concreto preto premium
   // Terracotas (cor mais terrosa, com manchas via pintarPedra)
   pintarPedra(202, '#b55a3a', '#8b3e23', '#d6755a', 0.40);        // terracota vermelha
   pintarPedra(203, '#4a5e9a', '#2c3d6c', '#7385bb', 0.40);        // terracota azul
@@ -8397,7 +8491,7 @@ export class Renderer {
     // vistas de lado, longa distância). Tier low pula pra economizar.
     if (this.atlas?.texture && this.renderer.capabilities) {
       const maxAniso = this.renderer.capabilities.getMaxAnisotropy();
-      this.atlas.texture.anisotropy = Math.min(maxAniso, q.tier === 'low' ? 1 : 4);
+      this.atlas.texture.anisotropy = Math.min(maxAniso, q.tier === 'low' ? 2 : (q.tier === 'medium' ? 8 : 16));
       this.atlas.texture.needsUpdate = true;
     }
     // Highlight do bloco mirado: outline duplo (preto + branco)
