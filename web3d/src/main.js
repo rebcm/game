@@ -1000,13 +1000,21 @@ function abrirPainelBigorna() {
       document.getElementById('painel-bigorna').classList.add('hidden');
     };
   }
-  // SPRINT ANVIL-COMPLETO: Botão REPAIR (precisa material correspondente na hotbar)
+  // Mostra encantamentos do item atual (pra o jogador saber o que vai mergear)
+  const encEl = document.getElementById('bigorna-encants');
+  if (encEl) {
+    if (sel?.encant && Object.keys(sel.encant).length) {
+      encEl.textContent = '✨ ' + Object.entries(sel.encant).map(([k, v]) => `${k} ${v}`).join(' · ');
+    } else {
+      encEl.textContent = '';
+    }
+  }
+  // Botão REPARAR (precisa ferro no inventário + XP)
   const repararBtn = document.getElementById('bigorna-reparar');
   if (repararBtn) {
     repararBtn.onclick = () => {
       const sel2 = state.inv.itemSelecionado();
       if (!sel2?.i) { state.ui.toast('Selecione item ferramenta/armadura'); return; }
-      // Material requerido baseado no item (placeholder: 1 ferro pra todos)
       const matRequired = ITEM.FERRO;
       if (state.inv.contar?.(undefined, matRequired) < 1) {
         state.ui.toast(`Precisa de 1 ${ITEM_INFO[matRequired]?.nome} no inventário`);
@@ -1018,11 +1026,67 @@ function abrirPainelBigorna() {
       }
       state.inv.consumir(undefined, matRequired, 1);
       state.player.xp -= custoXPRepair;
-      sel2.durability = (sel2.durability || 100) + 50; // restaura 50 durabilidade
+      sel2.durability = (sel2.durability || 100) + 50;
       sel2.priorWork = (sel2.priorWork || 0) + 1;
       Audio.colocar?.();
-      state.ui.toast(`🔨 Item reparado! (+50 durabilidade, custou ${custoXPRepair} XP)`);
+      state.ui.toast(`🔨 Reparado! (+50 dur, ${custoXPRepair} XP)`);
       state.ui.atualizarXP?.();
+      document.getElementById('painel-bigorna').classList.add('hidden');
+    };
+  }
+  // Botão COMBINAR — merge encant.: item ativo + item slot 0 (mesmo tipo).
+  // Regra MC: enchants iguais somam +1 (cap maxLvl), enchants diferentes copiam.
+  // Cost = (sum lvls do source) + priorWork + 2.
+  const combinarBtn = document.getElementById('bigorna-combinar');
+  if (combinarBtn) {
+    combinarBtn.onclick = () => {
+      const sel2 = state.inv.itemSelecionado();
+      // Slot 1 da hotbar (índice 0)
+      const fonte = state.inv.hotbar?.[0];
+      if (!sel2?.i) { state.ui.toast('Item ativo precisa ser ferramenta/armadura'); return; }
+      if (!fonte?.i) { state.ui.toast('Coloque o item-fonte no slot 1 da hotbar'); return; }
+      if (sel2.i !== fonte.i) { state.ui.toast('Itens precisam ser do mesmo tipo'); return; }
+      if (sel2 === fonte) { state.ui.toast('Não pode combinar item com ele mesmo'); return; }
+      const fonteEnc = fonte.encant || {};
+      const fonteLvls = Object.values(fonteEnc).reduce((s, v) => s + v, 0);
+      if (fonteLvls === 0) { state.ui.toast('Item-fonte não tem encantamentos pra mesclar'); return; }
+      const custo = custoXPCombine + fonteLvls;
+      if ((state.player.xp || 0) < custo) {
+        state.ui.toast(`Precisa de ${custo} XP (você tem ${state.player.xp})`);
+        return;
+      }
+      // Tabela de níveis máximos (paridade MC simplificada)
+      const MAX_LVL = {
+        sharpness: 5, smite: 5, bane: 5, knockback: 2, fire_aspect: 2, looting: 3, sweeping: 3,
+        protection: 4, projectile_protection: 4, fire_protection: 4, blast_protection: 4,
+        thorns: 3, unbreaking: 3, mending: 1, efficiency: 5, fortune: 3, silk_touch: 1,
+        power: 5, punch: 2, flame: 1, infinity: 1, riptide: 3, channeling: 1, density: 5,
+        wind_burst: 3, breach: 4, multishot: 1, piercing: 4, quick_charge: 3,
+        respiration: 3, aqua_affinity: 1, depth_strider: 3, frost_walker: 2, soul_speed: 3,
+        feather_falling: 4, swift_sneak: 3, luck_of_sea: 3, lure: 3,
+      };
+      // Merge: copia novo do alvo + soma onde já existe
+      sel2.encant = sel2.encant || {};
+      let aplicados = 0;
+      for (const [k, vF] of Object.entries(fonteEnc)) {
+        const cap = MAX_LVL[k] || 5;
+        const vAtual = sel2.encant[k] || 0;
+        const novo = vAtual === vF ? Math.min(cap, vAtual + 1) : Math.max(vAtual, vF);
+        if (novo > vAtual) { sel2.encant[k] = novo; aplicados++; }
+      }
+      if (aplicados === 0) {
+        state.ui.toast('Encantamentos já estão no nível máximo');
+        return;
+      }
+      state.player.xp -= custo;
+      sel2.priorWork = (sel2.priorWork || 0) + 1;
+      // Consome 1 fonte
+      fonte.q -= 1;
+      if (fonte.q <= 0) state.inv.hotbar[0] = null;
+      Audio.colocar?.();
+      state.ui.toast(`✨ ${aplicados} encant. mesclados! (custou ${custo} XP)`);
+      state.ui.atualizarXP?.();
+      state.ui.renderHotbar?.();
       document.getElementById('painel-bigorna').classList.add('hidden');
     };
   }

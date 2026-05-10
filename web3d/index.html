@@ -287,7 +287,7 @@
     <div id="conquistas-lista"></div>
   </div>
 
-  <!-- Painel bigorna: renomeia + repara o item ativo -->
+  <!-- Painel bigorna: renomear + reparar + combinar enchants -->
   <div id="painel-bigorna" class="painel hidden">
     <div class="painel-header">
       <span>⚒ Bigorna</span>
@@ -297,11 +297,14 @@
       <div class="bigorna-info">
         <div class="bigorna-label">Item ativo:</div>
         <div id="bigorna-item">— nada selecionado —</div>
+        <div id="bigorna-encants" class="dica" style="margin-top:4px;color:#80deea;"></div>
       </div>
       <input id="bigorna-nome" type="text" maxlength="24" placeholder="Novo nome…" />
-      <div class="bigorna-custo">Custo: <span id="bigorna-xp">3</span> XP</div>
-      <button id="bigorna-aplicar">Aplicar</button>
-      <div class="dica">Selecione o item na hotbar antes de abrir. Renomear funciona em qualquer item.</div>
+      <div class="bigorna-custo">Renomear: <span id="bigorna-xp">3</span> XP</div>
+      <button id="bigorna-aplicar">Renomear</button>
+      <button id="bigorna-reparar" style="margin-top:6px;background:#558b2f;">🔨 Reparar (+50 dur, 1 ferro)</button>
+      <button id="bigorna-combinar" style="margin-top:6px;background:#0288d1;">✨ Combinar c/ slot 1 (merge encant.)</button>
+      <div class="dica">Combinar: item ativo + item no slot 1 da hotbar mesclam encantamentos (mesmo tipo). Cost ramping aplica a cada uso.</div>
     </div>
   </div>
 
