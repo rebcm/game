@@ -2018,32 +2018,32 @@ function criarAtlas() {
     }
   }
 
-  // Cactus Flower: flor amarela pequena no topo de cacto
+  // Cactus Flower: cacto vertical com flor amarela no topo (CELL=16).
   function pintarCactusFlower(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2515';
+    ctx.fillStyle = '#1A2515';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cacto verde no centro
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 12, y0 + 14, 8, 16);
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 13, y0 + 14, 1, 16);
-    ctx.fillRect(x0 + 19, y0 + 14, 1, 16);
-    // Flor amarela no topo
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 10, y0 + 8, 12, 6);
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 12, y0 + 9, 8, 4);
-    ctx.fillStyle = '#ff9800';
-    ctx.fillRect(x0 + 14, y0 + 10, 4, 2);
-    // Espinhos
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 11, y0 + 18, 1, 1);
-    ctx.fillRect(x0 + 20, y0 + 18, 1, 1);
-    ctx.fillRect(x0 + 11, y0 + 24, 1, 1);
-    ctx.fillRect(x0 + 20, y0 + 24, 1, 1);
+    // Cacto verde 4×8 (parte inferior)
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 8);
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 6, y0 + 7, 1, 8);
+    ctx.fillRect(x0 + 9, y0 + 7, 1, 8);
+    // Flor amarela no topo (6×4)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 5, y0 + 3, 6, 4);
+    ctx.fillStyle = '#FFF176';
+    ctx.fillRect(x0 + 6, y0 + 4, 4, 2);
+    ctx.fillStyle = '#FF9800';
+    ctx.fillRect(x0 + 7, y0 + 4, 2, 1);
+    // Espinhos (4 pontos brancos)
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 5, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 10, y0 + 9, 1, 1);
+    ctx.fillRect(x0 + 5, y0 + 12, 1, 1);
+    ctx.fillRect(x0 + 10, y0 + 12, 1, 1);
   }
 
   // Bamboo Mosaic: padrão entrelaçado de bambu (1.20 — bonito decorativo)
@@ -2939,66 +2939,45 @@ function criarAtlas() {
     seed = spawnPontosUniforme(x0, y0, CELL, CELL, corAnel, 0.10, 3, 1, seed + 3137);
   }
 
-  // 🏆 MARCO 1000! Trono Dourado Supremo — pintor especial icônico
+  // Trono 1000 (marco): vermelho real + xadrez dourado + coroa + brilho.
   function pintarTrono1000(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Base vermelha real
-    ctx.fillStyle = '#8b0000';
+    ctx.fillStyle = '#8B0000';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de tijolos dourados
-    ctx.fillStyle = '#fdd835';
-    for (let i = 0; i < CELL; i += 4) {
-      for (let j = 0; j < CELL; j += 4) {
-        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 4, 4);
+    // Xadrez dourado 2×2
+    ctx.fillStyle = '#FDD835';
+    for (let i = 0; i < CELL; i += 2) {
+      for (let j = 0; j < CELL; j += 2) {
+        if (((i + j) >> 1) & 1) ctx.fillRect(x0 + i, y0 + j, 2, 2);
       }
     }
-    // Coroa central (forma de C)
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 8,  y0 + 4,  16, 4);   // base coroa
-    ctx.fillRect(x0 + 8,  y0 + 8,  4,  6);   // pico esquerda
-    ctx.fillRect(x0 + 14, y0 + 6,  4,  8);   // pico central (alto)
-    ctx.fillRect(x0 + 20, y0 + 8,  4,  6);   // pico direita
-    // Joias coloridas na coroa
-    ctx.fillStyle = '#c62828';
-    ctx.fillRect(x0 + 9,  y0 + 5,  2, 2);
-    ctx.fillRect(x0 + 21, y0 + 5,  2, 2);
-    ctx.fillStyle = '#1565c0';
-    ctx.fillRect(x0 + 15, y0 + 5,  2, 2);
-    // "1000" em formato simples (centro)
-    ctx.fillStyle = '#fff8e1';
-    // 1
-    ctx.fillRect(x0 + 7,  y0 + 18, 1, 6);
-    ctx.fillRect(x0 + 6,  y0 + 19, 3, 1);
-    ctx.fillRect(x0 + 6,  y0 + 23, 3, 1);
-    // 0
-    ctx.fillRect(x0 + 11, y0 + 18, 4, 1);
-    ctx.fillRect(x0 + 11, y0 + 23, 4, 1);
-    ctx.fillRect(x0 + 11, y0 + 19, 1, 4);
-    ctx.fillRect(x0 + 14, y0 + 19, 1, 4);
-    // 0
-    ctx.fillRect(x0 + 17, y0 + 18, 4, 1);
-    ctx.fillRect(x0 + 17, y0 + 23, 4, 1);
-    ctx.fillRect(x0 + 17, y0 + 19, 1, 4);
-    ctx.fillRect(x0 + 20, y0 + 19, 1, 4);
-    // 0
-    ctx.fillRect(x0 + 23, y0 + 18, 4, 1);
-    ctx.fillRect(x0 + 23, y0 + 23, 4, 1);
-    ctx.fillRect(x0 + 23, y0 + 19, 1, 4);
-    ctx.fillRect(x0 + 26, y0 + 19, 1, 4);
-    // Brilho supremo (4 cantos com pontos brancos)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 1,  y0 + 1,  2, 2);
-    ctx.fillRect(x0 + 29, y0 + 1,  2, 2);
-    ctx.fillRect(x0 + 1,  y0 + 29, 2, 2);
-    ctx.fillRect(x0 + 29, y0 + 29, 2, 2);
+    // Coroa central (formato C — base + 3 picos)
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 4, y0 + 2, 8, 2);   // base coroa
+    ctx.fillRect(x0 + 4, y0 + 4, 2, 3);   // pico esq
+    ctx.fillRect(x0 + 7, y0 + 3, 2, 4);   // pico central
+    ctx.fillRect(x0 + 10, y0 + 4, 2, 3);  // pico dir
+    // Joias na coroa
+    ctx.fillStyle = '#C62828';
+    ctx.fillRect(x0 + 4, y0 + 2, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 2, 1, 1);
+    ctx.fillStyle = '#1565C0';
+    ctx.fillRect(x0 + 7, y0 + 2, 1, 1);
+    // Brilho supremo (4 cantos)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0, y0, 1, 1);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, 1, 1);
+    ctx.fillRect(x0 + CELL - 1, y0 + CELL - 1, 1, 1);
     // Borda externa dourada
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0, y0, 1, CELL);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 1, y0, CELL - 2, 1);
+    ctx.fillRect(x0 + 1, y0 + CELL - 1, CELL - 2, 1);
+    ctx.fillRect(x0, y0 + 1, 1, CELL - 2);
+    ctx.fillRect(x0 + CELL - 1, y0 + 1, 1, CELL - 2);
   }
 
   // 🎯 Marco 500! Gilded Blackstone — preto com manchas douradas brilhantes (Nether)
@@ -3079,65 +3058,54 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Genérico: pinta coral subaquático (haste central + bulbos no topo)
+  // Coral subaquático: 3 hastes verticais com bulbos brilhantes.
   function pintarCoral(idx, corBulbo, corHaste, corBrilho) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo azul-escuro (água)
-    ctx.fillStyle = '#0a1a2a';
+    ctx.fillStyle = '#0A1A2A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 3 hastes de coral
+    // 3 hastes verticais finas
     ctx.fillStyle = corHaste;
-    ctx.fillRect(x0 + 7,  y0 + 14, 2, 16);
-    ctx.fillRect(x0 + 15, y0 + 10, 2, 20);
-    ctx.fillRect(x0 + 23, y0 + 16, 2, 14);
-    // Bulbos no topo de cada haste
+    ctx.fillRect(x0 + 3, y0 + 7, 1, 8);
+    ctx.fillRect(x0 + 7, y0 + 5, 1, 10);
+    ctx.fillRect(x0 + 11, y0 + 8, 1, 7);
+    // Bulbos no topo (3×2 cada)
     ctx.fillStyle = corBulbo;
-    ctx.fillRect(x0 + 5,  y0 + 11, 6, 4);
-    ctx.fillRect(x0 + 13, y0 + 7,  6, 4);
-    ctx.fillRect(x0 + 21, y0 + 13, 6, 4);
-    // Pontos brilhantes (luminescência)
+    ctx.fillRect(x0 + 2, y0 + 5, 3, 2);
+    ctx.fillRect(x0 + 6, y0 + 3, 3, 2);
+    ctx.fillRect(x0 + 10, y0 + 6, 3, 2);
+    // Highlights
     ctx.fillStyle = corBrilho;
-    ctx.fillRect(x0 + 7,  y0 + 12, 2, 2);
-    ctx.fillRect(x0 + 15, y0 + 8,  2, 2);
-    ctx.fillRect(x0 + 23, y0 + 14, 2, 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 7,  y0 + 12, 1, 1);
-    ctx.fillRect(x0 + 15, y0 + 8,  1, 1);
-    ctx.fillRect(x0 + 23, y0 + 14, 1, 1);
+    ctx.fillRect(x0 + 3, y0 + 5, 1, 1);
+    ctx.fillRect(x0 + 7, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 6, 1, 1);
     // Solo escuro
-    ctx.fillStyle = '#3e2723';
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillStyle = '#3E2723';
+    ctx.fillRect(x0, y0 + 15, CELL, 1);
   }
 
-  // Genérico: pinta tronco descascado (anéis horizontais, sem casca)
+  // Stripped log: madeira descascada — listras verticais + anéis horizontais sutis.
   function pintarStrippedLog(idx, corBase, corAnel, corHigh) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras verticais sutis (grão da madeira)
-    ctx.fillStyle = corAnel;
-    for (let i = 0; i < CELL; i += 5) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    // Listras verticais (~30% colunas)
+    for (let px = 0; px < CELL; px++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = seed / 233280;
+      if (r < 0.25) {
+        ctx.fillStyle = corAnel;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      } else if (r < 0.40) {
+        ctx.fillStyle = corHigh;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
     }
-    // Anéis horizontais (interior do tronco)
-    ctx.fillStyle = corHigh;
-    ctx.fillRect(x0, y0 + 6,  CELL, 1);
-    ctx.fillRect(x0, y0 + 14, CELL, 1);
-    ctx.fillRect(x0, y0 + 22, CELL, 1);
-    // Manchas claras
-    ctx.fillStyle = corHigh;
-    let s = idx * 13 + 25;
-    for (let i = 0; i < 18; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corHigh, 0.10, 3, 1, seed + 3137);
   }
 
   // Genérico: planta vertical fina (grama alta, samambaia, dead bush, etc)
