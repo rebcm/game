@@ -3276,59 +3276,55 @@ function criarAtlas() {
     }
   }
 
-  // Bookshelf Chiseled: estante com 1 livro central destacado
+  // Bookshelf Chiseled: estante madeira + 3 livros (vermelho/dourado/azul).
   function pintarBookshelfChiseled(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#5d4037';
+    // Madeira frame
+    ctx.fillStyle = '#5D4037';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#8d6e63';
+    ctx.fillStyle = '#8D6E63';
+    ctx.fillRect(x0 + 1, y0 + 1, CELL - 2, CELL - 2);
+    // Espaço dos livros (escuro)
+    ctx.fillStyle = '#3E2723';
     ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
-    // Espaço dos livros (mais escuro)
-    ctx.fillStyle = '#3e2723';
-    ctx.fillRect(x0 + 4, y0 + 5, CELL - 8, 22);
-    // 1 livro central destacado (mais largo, dourado)
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 12, y0 + 6, 8, 20);
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 13, y0 + 7, 1, 18);
-    // Faixas douradas decorativas
-    ctx.fillStyle = '#a05a30';
-    ctx.fillRect(x0 + 12, y0 + 10, 8, 1);
-    ctx.fillRect(x0 + 12, y0 + 22, 8, 1);
-    // Livros laterais menores (vermelhos/azuis)
-    ctx.fillStyle = '#c62828';
-    ctx.fillRect(x0 + 5, y0 + 6, 5, 20);
-    ctx.fillStyle = '#1565c0';
-    ctx.fillRect(x0 + 22, y0 + 6, 5, 20);
+    // Livro vermelho (esquerda, 3×11)
+    ctx.fillStyle = '#C62828';
+    ctx.fillRect(x0 + 3, y0 + 3, 3, 10);
+    // Livro dourado central (4×11)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 6, y0 + 3, 4, 10);
+    ctx.fillStyle = '#A05A30';
+    ctx.fillRect(x0 + 6, y0 + 5, 4, 1);
+    ctx.fillRect(x0 + 6, y0 + 11, 4, 1);
+    // Livro azul (direita, 3×11)
+    ctx.fillStyle = '#1565C0';
+    ctx.fillRect(x0 + 10, y0 + 3, 3, 10);
   }
 
-  // Jukebox: madeira escura com gemstone azul/diamante no topo
+  // Jukebox: madeira escura + gemstone diamante central (4×4) bright.
   function pintarJukebox(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#6d4c41';
+    ctx.fillStyle = '#6D4C41';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda escura
-    ctx.fillStyle = '#3e2723';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
-    // Gemstone diamante central
-    ctx.fillStyle = '#4dd0e1';
-    ctx.fillRect(x0 + 10, y0 + 10, 12, 12);
-    ctx.fillStyle = '#80deea';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    // Linhas decorativas (madeira tipo amplificador)
-    ctx.fillStyle = '#8d6e63';
-    for (let py = 26; py < CELL - 2; py += 2) {
-      ctx.fillRect(x0 + 4, y0 + py, CELL - 8, 1);
-    }
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#5D4037', 0.18, 2, 1, seed + 1009);
+    // Borda escura 1px
+    ctx.fillStyle = '#3E2723';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Gemstone diamante 6×6
+    ctx.fillStyle = '#4DD0E1';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 6);
+    ctx.fillStyle = '#80DEEA';
+    ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
   // Daylight Detector: vidro azul-claro semi-transparente sobre madeira
@@ -3356,51 +3352,49 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Note Block: madeira com pauta musical no topo (5 linhas + nota)
+  // Note Block: madeira oak + pauta de 4 linhas + nota central (CELL=16).
   function pintarNoteBlock(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#8d6e63';
+    ctx.fillStyle = '#8D6E63';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Pauta musical (5 linhas horizontais)
-    ctx.fillStyle = '#3e2723';
-    for (let i = 0; i < 5; i++) {
-      ctx.fillRect(x0 + 4, y0 + 6 + i * 4, CELL - 8, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7C5630', 0.18, 2, 1, seed + 1009);
+    // Pauta (4 linhas horizontais)
+    ctx.fillStyle = '#3E2723';
+    for (let i = 0; i < 4; i++) {
+      ctx.fillRect(x0 + 2, y0 + 4 + i * 2, CELL - 4, 1);
     }
-    // Nota musical (círculo + haste)
+    // Nota (cabeça 2×2 + haste vertical 1×4)
     ctx.fillStyle = '#212121';
-    ctx.fillRect(x0 + 12, y0 + 16, 4, 4);
-    ctx.fillRect(x0 + 16, y0 + 6,  1, 14);
-    // Borda escura
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    ctx.fillRect(x0 + 6, y0 + 8, 2, 2);
+    ctx.fillRect(x0 + 8, y0 + 4, 1, 5);
   }
 
-  // Bell: sino dourado com base preta
+  // Bell: sino dourado com alça e badalo.
   function pintarBell(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Sino dourado (campana)
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 8,  y0 + 6,  16, 16);
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 10, y0 + 8,  12, 10);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 12, y0 + 10, 8, 4);
-    // Topo (alça)
-    ctx.fillStyle = '#a05a30';
-    ctx.fillRect(x0 + 14, y0 + 2,  4, 4);
-    ctx.fillRect(x0 + 12, y0 + 4,  8, 2);
-    // Base/badalo
-    ctx.fillStyle = '#a05a30';
-    ctx.fillRect(x0 + 14, y0 + 22, 4, 6);
+    // Campana (8×8 dourada)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 4, y0 + 3, 8, 8);
+    ctx.fillStyle = '#FFF176';
+    ctx.fillRect(x0 + 5, y0 + 4, 6, 5);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 6, y0 + 5, 4, 2);
+    // Alça topo (cobre)
+    ctx.fillStyle = '#A05A30';
+    ctx.fillRect(x0 + 7, y0 + 1, 2, 2);
+    ctx.fillRect(x0 + 6, y0 + 2, 4, 1);
+    // Badalo
+    ctx.fillStyle = '#A05A30';
+    ctx.fillRect(x0 + 7, y0 + 11, 2, 3);
     ctx.fillStyle = '#212121';
-    ctx.fillRect(x0 + 15, y0 + 26, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 13, 2, 1);
   }
 
   // Target Block: branco com 4 anéis vermelhos concêntricos (alvo)
@@ -4051,73 +4045,67 @@ function criarAtlas() {
   }
 
   // Sculk: azul-escuro com pontos brilhantes ciano (orgânico)
+  // Sculk variants — todas usam base preta-azulada com speckle.
   function pintarSculk(idx, variante) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base preto-azulada
-    ctx.fillStyle = '#0a1a2a';
+    ctx.fillStyle = '#0A1A2A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Manchas mais escuras
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#051018', 0.45, 4, 2, idx * 9301 + 49297);
-    // Padrão orgânico (manchas azuis claras espalhadas)
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#1a3a5a', 0.50, 4, 2, idx * 9301 + 7331);
-    // Pontos super-brilhantes ciano (estrutura sculk)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#051018', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#1A3A5A', 0.30, 2, 1, seed + 7919);
     if (variante === 'plain') {
-      spawnPontosUniforme(x0, y0, CELL, CELL, '#40c4ff', 0.20, 5, 1, idx * 9301 + 12347);
-      spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 7, 1, idx * 9301 + 19999);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#40C4FF', 0.16, 2, 1, seed + 12347);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFFFFF', 0.06, 3, 1, seed + 19999);
     } else if (variante === 'shrieker') {
-      // Shrieker: padrão central de "boca" azul-claro
-      ctx.fillStyle = '#40c4ff';
-      ctx.fillRect(x0 + 8, y0 + 12, 16, 8);
-      ctx.fillStyle = '#0288d1';
-      ctx.fillRect(x0 + 10, y0 + 14, 12, 4);
-      // Dentes/projeções amarelas
-      ctx.fillStyle = '#fff176';
-      for (let bx = 11; bx < 22; bx += 3) {
-        ctx.fillRect(x0 + bx, y0 + 13, 1, 2);
-        ctx.fillRect(x0 + bx, y0 + 18, 1, 2);
+      // Boca central 8×4
+      ctx.fillStyle = '#40C4FF';
+      ctx.fillRect(x0 + 4, y0 + 6, 8, 4);
+      ctx.fillStyle = '#0288D1';
+      ctx.fillRect(x0 + 5, y0 + 7, 6, 2);
+      // Dentes amarelos
+      ctx.fillStyle = '#FFF176';
+      for (let bx = 5; bx < 11; bx += 2) {
+        ctx.fillRect(x0 + bx, y0 + 6, 1, 1);
+        ctx.fillRect(x0 + bx, y0 + 9, 1, 1);
       }
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
     } else if (variante === 'sensor') {
-      // Sensor: 2 antenas ciano + nodo central
-      ctx.fillStyle = '#40c4ff';
-      ctx.fillRect(x0 + 14, y0 + 4,  4, 8);
-      ctx.fillRect(x0 + 14, y0 + 20, 4, 8);
-      ctx.fillRect(x0 + 4,  y0 + 14, 8, 4);
-      ctx.fillRect(x0 + 20, y0 + 14, 8, 4);
-      // Núcleo central
-      ctx.fillStyle = '#80deea';
-      ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
+      // Sensor: cruz ciano + núcleo central
+      ctx.fillStyle = '#40C4FF';
+      ctx.fillRect(x0 + 7, y0 + 2, 2, 4);
+      ctx.fillRect(x0 + 7, y0 + 10, 2, 4);
+      ctx.fillRect(x0 + 2, y0 + 7, 4, 2);
+      ctx.fillRect(x0 + 10, y0 + 7, 4, 2);
+      ctx.fillStyle = '#80DEEA';
+      ctx.fillRect(x0 + 6, y0 + 6, 4, 4);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
     } else if (variante === 'catalyst') {
-      // Catalyst: 4 nodos brilhantes nos cantos + cruz central
-      ctx.fillStyle = '#4dd0e1';
-      ctx.fillRect(x0 + 4,  y0 + 4,  4, 4);
-      ctx.fillRect(x0 + 24, y0 + 4,  4, 4);
-      ctx.fillRect(x0 + 4,  y0 + 24, 4, 4);
-      ctx.fillRect(x0 + 24, y0 + 24, 4, 4);
-      ctx.fillStyle = '#80deea';
-      ctx.fillRect(x0 + CELL/2 - 2, y0 + 8,  4, 16);
-      ctx.fillRect(x0 + 8, y0 + CELL/2 - 2,  16, 4);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x0 + CELL/2 - 1, y0 + CELL/2 - 1, 2, 2);
+      // 4 nodos cantos + cruz central
+      ctx.fillStyle = '#4DD0E1';
+      ctx.fillRect(x0 + 2, y0 + 2, 2, 2);
+      ctx.fillRect(x0 + 12, y0 + 2, 2, 2);
+      ctx.fillRect(x0 + 2, y0 + 12, 2, 2);
+      ctx.fillRect(x0 + 12, y0 + 12, 2, 2);
+      ctx.fillStyle = '#80DEEA';
+      ctx.fillRect(x0 + 7, y0 + 4, 2, 8);
+      ctx.fillRect(x0 + 4, y0 + 7, 8, 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
     } else if (variante === 'vein') {
-      // Vein: padrão de veias finas (curvas)
-      ctx.fillStyle = '#1a3a5a';
-      ctx.fillRect(x0 + 4, y0 + 8,  4, 1);
-      ctx.fillRect(x0 + 8, y0 + 9,  6, 1);
-      ctx.fillRect(x0 + 14, y0 + 10, 8, 1);
-      ctx.fillRect(x0 + 22, y0 + 11, 6, 1);
-      ctx.fillRect(x0 + 4, y0 + 22, 6, 1);
-      ctx.fillRect(x0 + 10, y0 + 21, 8, 1);
-      ctx.fillRect(x0 + 18, y0 + 22, 6, 1);
-      ctx.fillStyle = '#40c4ff';
-      ctx.fillRect(x0 + 8, y0 + 15, 1, 1);
-      ctx.fillRect(x0 + 16, y0 + 18, 1, 1);
-      ctx.fillRect(x0 + 24, y0 + 14, 1, 1);
+      // Veias finas (zigzag horizontal + vertical)
+      ctx.fillStyle = '#1A3A5A';
+      ctx.fillRect(x0 + 2, y0 + 4, 4, 1);
+      ctx.fillRect(x0 + 5, y0 + 5, 4, 1);
+      ctx.fillRect(x0 + 8, y0 + 6, 5, 1);
+      ctx.fillRect(x0 + 2, y0 + 11, 4, 1);
+      ctx.fillRect(x0 + 5, y0 + 12, 5, 1);
+      ctx.fillStyle = '#40C4FF';
+      ctx.fillRect(x0 + 4, y0 + 8, 1, 1);
+      ctx.fillRect(x0 + 10, y0 + 10, 1, 1);
     }
   }
 
@@ -4724,31 +4712,28 @@ function criarAtlas() {
   }
 
   // Amethyst: cristal roxo com facetas + brilhos
+  // Amethyst block: roxo flat + 4 facetas com brilho central.
   function pintarAmethyst(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base roxa
-    ctx.fillStyle = '#7b1fa2';
+    ctx.fillStyle = '#7B1FA2';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Facetas roxas claras (cristais grandes)
-    ctx.fillStyle = '#ab47bc';
-    ctx.fillRect(x0 + 4,  y0 + 4,  10, 10);
-    ctx.fillRect(x0 + 18, y0 + 4,  10, 10);
-    ctx.fillRect(x0 + 4,  y0 + 18, 10, 10);
-    ctx.fillRect(x0 + 18, y0 + 18, 10, 10);
-    // Centros brilhantes
-    ctx.fillStyle = '#e1bee7';
-    ctx.fillRect(x0 + 7,  y0 + 7,  4, 4);
-    ctx.fillRect(x0 + 21, y0 + 7,  4, 4);
-    ctx.fillRect(x0 + 7,  y0 + 21, 4, 4);
-    ctx.fillRect(x0 + 21, y0 + 21, 4, 4);
-    // Highlights brancos
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 8,  y0 + 8,  1, 1);
-    ctx.fillRect(x0 + 22, y0 + 8,  1, 1);
-    ctx.fillRect(x0 + 8,  y0 + 22, 1, 1);
-    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9C27B0', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#4A148C', 0.18, 2, 1, seed + 7919);
+    // 4 facetas claras (cantos)
+    ctx.fillStyle = '#AB47BC';
+    ctx.fillRect(x0 + 1, y0 + 1, 5, 5);
+    ctx.fillRect(x0 + 10, y0 + 1, 5, 5);
+    ctx.fillRect(x0 + 1, y0 + 10, 5, 5);
+    ctx.fillRect(x0 + 10, y0 + 10, 5, 5);
+    // Centros brilhantes (1×1 cada)
+    ctx.fillStyle = '#E1BEE7';
+    ctx.fillRect(x0 + 3, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 12, y0 + 3, 1, 1);
+    ctx.fillRect(x0 + 3, y0 + 12, 1, 1);
+    ctx.fillRect(x0 + 12, y0 + 12, 1, 1);
   }
 
   // Calcite: branca quase pura com pontinhos cinza
