@@ -113,7 +113,12 @@ export function setupInput() {
       case 'KeyS': p.input.fwd = -1; break;
       case 'KeyA': p.input.side = -1; break;
       case 'KeyD': p.input.side = 1; break;
-      case 'Space': p.input.up = 1; p.input.jump = true; break;
+      case 'Space': {
+        p.input.up = 1; p.input.jump = true;
+        // Tap-Space durante glide com elytra → trigger firework boost
+        if (!e.repeat && p._elytraEquipada && !p.noChao) p._fireworkTrigger = true;
+        break;
+      }
       case 'ShiftLeft': case 'ShiftRight':
         if (p.modo === 'creative') p.input.up = -1;
         else p.input.sprint = true;
@@ -456,8 +461,11 @@ export function setupTouchControls() {
     el.addEventListener('mouseup',   bUp);
     el.addEventListener('mouseleave', bUp);
   };
-  btn('jump',   () => { state.player.input.up = 1; state.player.input.jump = true; },
-                () => { state.player.input.up = 0; });
+  btn('jump',   () => {
+    const p = state.player;
+    p.input.up = 1; p.input.jump = true;
+    if (p._elytraEquipada && !p.noChao) p._fireworkTrigger = true;
+  }, () => { state.player.input.up = 0; });
   btn('down',   () => { if (state.player.modo === 'creative') state.player.input.up = -1; },
                 () => { if (state.player.modo === 'creative') state.player.input.up = 0; });
   btn('break',  () => { state.player.holdE = true; },

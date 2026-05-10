@@ -84,16 +84,42 @@ export class Player {
     } else if (this._montado && !this._montado.vivo?.()) {
       this._montado = null;
     }
-    // SPRINT MEGA-17: Elytra glide — sprint+jump no ar = glide
-    if (this._elytraEquipada && !this.noChao && this.input.sprint && this.input.jump) {
-      // Glide: vy decai mais devagar, vx/vz boostado
-      this.vel.y = Math.max(this.vel.y, -0.5);
+    // Elytra glide — sprint+jump no ar = glide horizontal sustentado.
+    // Foguete durante glide: tap-jump consome 1 ITEM.FOGUETE e dá boost
+    // direcional (paridade MC firework rocket boost).
+    const gliding = this._elytraEquipada && !this.noChao && this.input.sprint && this.input.jump;
+    if (gliding) {
       const fwdE = _tmpVecFwd.set(0, 0, 0);
       this.camera.getWorldDirection(fwdE);
-      this.vel.x = fwdE.x * 8;
-      this.vel.z = fwdE.z * 8;
-      state.ui?.toast?.('🪽 Glide!');
+      // Decai boost ativo (se houver)
+      if (this._fireworkBoost > 0) this._fireworkBoost = Math.max(0, this._fireworkBoost - dt);
+      const speedMul = this._fireworkBoost > 0 ? 16 : 8;
+      this.vel.y = Math.max(this.vel.y, -0.5 + (this._fireworkBoost > 0 ? 0.6 : 0));
+      this.vel.x = fwdE.x * speedMul;
+      this.vel.z = fwdE.z * speedMul;
+      // Detecta "tap" extra de jump (jumpFoiSolto + agora pressionou de novo).
+      // Como sprint+jump já estão pressionados, não há "novo" pressionar a detectar
+      // diretamente — usamos um pulse via this._fireworkTrigger setado pelo input.
+      if (this._fireworkTrigger && this._fireworkBoost <= 0) {
+        // Tenta consumir 1 FOGUETE do inventário
+        try {
+          const inv = state.inv;
+          const ITEM_FOGUETE = 244; // ITEM.FOGUETE em constants.js
+          if (inv?.contar?.(undefined, ITEM_FOGUETE) >= 1) {
+            inv.consumir(undefined, ITEM_FOGUETE, 1);
+            this._fireworkBoost = 1.5; // 1.5s de boost
+            // Boost imediato extra (kick de velocidade)
+            this.vel.x = fwdE.x * 18;
+            this.vel.y = Math.max(this.vel.y, fwdE.y * 8);
+            this.vel.z = fwdE.z * 18;
+            Audio.fireworkLaunch?.();
+            state.ui?.toast?.('🎆 Boost!');
+          }
+        } catch (_) {}
+      }
     }
+    // Reset trigger consumido (uma vez por frame)
+    this._fireworkTrigger = false;
     // Direção da câmera (apenas horizontal)
     const fwd = _tmpVecFwd.set(0, 0, 0);
     this.camera.getWorldDirection(fwd);
