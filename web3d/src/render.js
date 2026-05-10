@@ -8481,10 +8481,12 @@ export class Renderer {
       else if (faceIdx === 5) lvz -= 1;
       const luz = world.getLightAt(lvx, lvy, lvz);
       const luzNorm = Math.max(luz.sky, luz.block) / 15;
-      // Cap em 0.85 para evitar saturação visual quando texture clara +
-      // luz alta. Combinado com a redução das luzes globais, blocos
-      // claros (neve, vidro, diamante) deixam de parecer espelhados.
-      const luzFator = 0.10 + 0.75 * luzNorm;
+      // FIX visualização: floresta/sob árvores ficava escuro DEMAIS (era 0.10 min).
+      // Aumentado para 0.32 mínimo — interior de florestas agora visível mesmo
+      // sem skylight direto. Ainda deixa cavernas escuras (luz 0 = 32% escala).
+      // Cap em 0.95 (era 0.85) — texturas claras agora respiram melhor com
+      // saturação 1.18 do shader pós-processing.
+      const luzFator = 0.32 + 0.63 * luzNorm;
       // AO por vértice
       const tab = AO_OFFSETS[faceIdx];
       const ao0 = vertexAOValor(world, sx, sy, sz, tab[0]);
@@ -8937,12 +8939,12 @@ export class Renderer {
   // === Sky / sol / lua / nuvens / estrelas ===
   atualizarCeu(tempoDia, playerPos) {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
-    // Intensidades reduzidas (paridade com Minecraft: visual sem brilho
-    // metálico). A iluminação 15 níveis no vertex color cobre o grosso.
-    this.hemi.intensity    = 0.20 + 0.20 * sun;
-    this.ambient.intensity = 0.10 + 0.12 * sun;
-    this.sol.intensity     = 0.05 + 0.30 * sun;
-    this.luaLuz.intensity  = 0.10 * (1 - sun);
+    // FIX visualização: aumentado fill light pra interior de florestas/áreas sob folhas
+    // não ficar TÃO escuro de dia. Combinado com luzFator min 0.32 = visualização MC-like.
+    this.hemi.intensity    = 0.35 + 0.30 * sun;  // era 0.20 + 0.20
+    this.ambient.intensity = 0.20 + 0.20 * sun;  // era 0.10 + 0.12
+    this.sol.intensity     = 0.10 + 0.45 * sun;  // era 0.05 + 0.30
+    this.luaLuz.intensity  = 0.15 * (1 - sun);   // era 0.10
     if (sun < 0.4) {
       this.hemi.color.setHex(0x4a6ba8);
       this.hemi.groundColor.setHex(0x2e2820);
