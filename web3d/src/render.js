@@ -161,91 +161,58 @@ function criarAtlas() {
       ctx.fillRect(x0 + px, y0 + py, 2, 2);
     }
   }
-  // Pinta diamond/gemstone PREMIUM com cristais brilhantes + sparkle + glow
+  // Paridade MC ore-block (emerald/lapis/redstone/etc): stone-base flat
+  // + clusters 2×2 da cor do gem + 1 sparkle pequeno por cluster.
+  // (Equivalente a _pintarMinerio mas com 2 níveis de tom + sparkle.)
   function pintarGemPremium(idx, corBase, corCristal, corBrilho) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base pedra escura (gradient sutil)
-    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
-    grad.addColorStop(0, '#9c9c9c');
-    grad.addColorStop(1, '#6c6c6c');
-    ctx.fillStyle = grad;
+    // Stone-base flat (corBase é o tom da pedra, não usado pra gradient)
+    ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Stipple stone texture
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#5e5e5e', 0.3, 4, 2, idx * 9301 + 49297);
-    // 3-5 cristais losango (premium)
-    let seed = idx * 7919 + 1234;
-    const numCrystals = 3 + (seed % 3);
-    for (let c = 0; c < numCrystals; c++) {
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E6E6E', 0.30, 2, 1, seed + 113);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A8A8A8', 0.16, 2, 1, seed + 947);
+    // 4-5 clusters 2×2 do gem
+    const numClusters = 4 + (seed % 2);
+    for (let c = 0; c < numClusters; c++) {
       seed = (seed * 9301 + 49297) % 233280;
-      const cx = 4 + (seed % 24);
+      const cx = (seed % (CELL - 2));
       seed = (seed * 9301 + 49297) % 233280;
-      const cy = 4 + (seed % 24);
-      // Losango 3×3 com gradient
+      const cy = (seed % (CELL - 2));
       ctx.fillStyle = corCristal;
-      ctx.fillRect(x0 + cx, y0 + cy, 3, 3);
-      ctx.fillRect(x0 + cx - 1, y0 + cy + 1, 1, 1);
-      ctx.fillRect(x0 + cx + 3, y0 + cy + 1, 1, 1);
-      ctx.fillRect(x0 + cx + 1, y0 + cy - 1, 1, 1);
-      ctx.fillRect(x0 + cx + 1, y0 + cy + 3, 1, 1);
-      // Highlight sparkle no centro (faceta)
+      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+      // Sparkle highlight
       ctx.fillStyle = corBrilho;
-      ctx.fillRect(x0 + cx + 1, y0 + cy + 1, 1, 1);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x0 + cx + 1, y0 + cy, 1, 1); // top sparkle
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
     }
-    // Glints aleatórios extras (4-6 pontos brancos minúsculos)
-    ctx.fillStyle = '#ffffff';
-    for (let i = 0; i < 4; i++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const sx = (seed % CELL);
-      seed = (seed * 9301 + 49297) % 233280;
-      const sy = (seed % CELL);
-      ctx.fillRect(x0 + sx, y0 + sy, 1, 1);
-    }
-    _aplicarBevelPremium(x0, y0, '#9c9c9c', '#5e5e5e', 0.6);
   }
-  // Pinta madeira PREMIUM com grão realista + nós escuros
+  // Paridade MC stripped/log madeira: vertical bark grain + speckle.
+  // Sem gradient, sem knots em cruz — pixel-art voxel ortogonal.
   function pintarMadeiraPremium(idx, corBase, corGrao, corNo) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Gradient base
-    const grad = ctx.createLinearGradient(x0, y0, x0, y0 + CELL);
-    grad.addColorStop(0, corBase);
-    grad.addColorStop(0.5, corBase);
-    grad.addColorStop(1, corGrao);
-    ctx.fillStyle = grad;
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras verticais de grão (cor mais escura)
-    ctx.fillStyle = corGrao;
-    for (let lx = 0; lx < CELL; lx += 3) {
-      ctx.fillRect(x0 + lx, y0, 1, CELL);
-    }
-    // Estrias finas extras (textura grão sutil)
+    // Base
     ctx.fillStyle = corBase;
-    for (let lx = 1; lx < CELL; lx += 4) {
-      ctx.fillRect(x0 + lx, y0 + 2, 1, CELL - 4);
-    }
-    // 1-2 nós da madeira (knots) — gradient circular escuro
+    ctx.fillRect(x0, y0, CELL, CELL);
     let seed = idx * 9301 + 49297;
-    const numKnots = 1 + (seed % 2);
-    for (let n = 0; n < numKnots; n++) {
+    // Listras verticais escuras (~30% colunas)
+    for (let px = 0; px < CELL; px++) {
       seed = (seed * 9301 + 49297) % 233280;
-      const kx = 6 + (seed % 20);
-      seed = (seed * 9301 + 49297) % 233280;
-      const ky = 6 + (seed % 20);
-      // Knot principal
-      ctx.fillStyle = corNo;
-      ctx.fillRect(x0 + kx - 1, y0 + ky, 3, 2);
-      ctx.fillRect(x0 + kx, y0 + ky - 1, 2, 1);
-      ctx.fillRect(x0 + kx, y0 + ky + 2, 2, 1);
-      // Highlight central
-      ctx.fillStyle = corBase;
-      ctx.fillRect(x0 + kx, y0 + ky, 1, 1);
+      const r = seed / 233280;
+      if (r < 0.30) {
+        ctx.fillStyle = corGrao;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      } else if (r < 0.42) {
+        // Listra muito escura (knot vertical, não cruz)
+        ctx.fillStyle = corNo;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
     }
-    _aplicarBevelPremium(x0, y0, corBase, corGrao, 0.6);
+    // Speckle horizontal sutil pra quebrar regularidade
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corGrao, 0.10, 3, 1, seed + 3137);
   }
   // Folha PREMIUM com depth (tons múltiplos + transparência simulada)
   // FIX visual MC-like: folha agora tem variação tonal SUAVE (sem flores brilhantes
@@ -668,39 +635,31 @@ function criarAtlas() {
   }
 
   // Glowstone (luz): amarelo brilhante com células granuladas.
-  // SPRINT VISUAL-8: Glowstone PREMIUM ultra brilhante (vai disparar bloom)
+  // Paridade MC glowstone: amarelo claro flat + clusters bright pra disparar bloom.
+  // Sem gradient radial — a luz emitida é via emissive material no shader.
   function pintarGlowstone(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Gradient radial brilhante (centro mais luminoso)
-    const grad = ctx.createRadialGradient(x0 + CELL/2, y0 + CELL/2, 0, x0 + CELL/2, y0 + CELL/2, CELL/2);
-    grad.addColorStop(0, '#fff9c4');   // centro super brilhante (acima do threshold bloom 0.78)
-    grad.addColorStop(0.4, '#ffeb3b'); // amarelo brilhante
-    grad.addColorStop(0.8, '#FFA830'); // laranja
-    grad.addColorStop(1, '#A07A28');   // borda escura
-    ctx.fillStyle = grad;
+    // Base amarelo-laranja MC glowstone
+    ctx.fillStyle = '#D89035';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cristais brilhantes (bolas de luz internas)
     let seed = idx * 9301 + 49297;
-    ctx.fillStyle = '#ffffff';
-    for (let i = 0; i < 8; i++) {
+    // Speckle laranja escuro (~22%, separação entre cristais)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A06820', 0.22, 2, 1, seed + 1009);
+    // Speckle amarelo médio (~30%, transição)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#F4B848', 0.30, 2, 1, seed + 7919);
+    // Cristais brilhantes (~18%, super-bright pra bloom)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFE680', 0.18, 2, 1, seed + 1573);
+    // 4-5 highlights brancos pontuais (sparkle de cristal)
+    ctx.fillStyle = '#FFFAD0';
+    for (let i = 0; i < 4; i++) {
       seed = (seed * 9301 + 49297) % 233280;
-      const cx = 4 + (seed % (CELL - 8));
+      const px = (seed % CELL);
       seed = (seed * 9301 + 49297) % 233280;
-      const cy = 4 + (seed % (CELL - 8));
-      ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
-      ctx.fillStyle = '#FFE680';
-      ctx.fillRect(x0 + cx - 1, y0 + cy, 1, 2);
-      ctx.fillRect(x0 + cx + 2, y0 + cy, 1, 2);
-      ctx.fillRect(x0 + cx, y0 + cy - 1, 2, 1);
-      ctx.fillRect(x0 + cx, y0 + cy + 2, 2, 1);
-      ctx.fillStyle = '#ffffff'; // próximo
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
     }
-    // Bevel sutil
-    ctx.fillStyle = 'rgba(255,255,255,0.30)';
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0, 1, CELL);
   }
 
   // Lã: branco com leve granulação cinza.
@@ -720,141 +679,159 @@ function criarAtlas() {
     }
   }
 
-  // Tocha: pau marrom centrado com chama no topo.
+  // Paridade MC torch (face): pau central + chama topo. CELL=16: pau 2px
+  // largo no centro (cols 7-8), chama 4×4 no topo.
   function pintarTocha(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#2A1F12';
+    // Background escuro (era preto puro — agora cor de pedra escura pra
+    // não destoar de blocos que tenham torch como sub-tile)
+    ctx.fillStyle = '#1A0F0A';
     ctx.fillRect(x0, y0, CELL, CELL);
+    // Pau central (4px de altura embaixo, 2px wide)
     ctx.fillStyle = '#9C7848';
-    ctx.fillRect(x0 + 14, y0 + 12, 4, 16);
+    ctx.fillRect(x0 + 7, y0 + 6, 2, 9);
+    // Lateral mais escura (sombra do pau)
     ctx.fillStyle = '#6E5232';
-    ctx.fillRect(x0 + 14, y0 + 14, 1, 14);
-    ctx.fillRect(x0 + 17, y0 + 14, 1, 14);
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 8);
+    // Chama amarelo no topo (4×3)
     ctx.fillStyle = '#FFCB47';
-    ctx.fillRect(x0 + 13, y0 + 6, 6, 6);
+    ctx.fillRect(x0 + 6, y0 + 3, 4, 3);
+    // Topo da chama laranja (2×2)
     ctx.fillStyle = '#FF8A2A';
-    ctx.fillRect(x0 + 14, y0 + 4, 4, 6);
+    ctx.fillRect(x0 + 7, y0 + 1, 2, 3);
+    // Brilho interno branco-amarelo (1×2)
     ctx.fillStyle = '#FFEB80';
-    ctx.fillRect(x0 + 15, y0 + 8, 2, 4);
+    ctx.fillRect(x0 + 7, y0 + 4, 1, 2);
   }
 
-  // Baú: planks de madeira com dobradiças metálicas e fechadura dourada.
+  // Paridade MC chest: 3 painéis de madeira + dobradiças ferro + fechadura
+  // ouro. CELL=16 → painéis em x=4 e x=12 (separadores), tampa em y=6.
   function pintarBau(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
+    // Base madeira escura (oak escuro)
     ctx.fillStyle = '#A07242';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#7C5630';
-    ctx.fillRect(x0, y0 + 12, CELL, 1);
-    ctx.fillRect(x0 + 8, y0, 1, CELL);
-    ctx.fillRect(x0 + 24, y0, 1, CELL);
-    ctx.fillStyle = '#3A3A3A';
-    ctx.fillRect(x0 + 4,  y0 + 2, 4, 6);
-    ctx.fillRect(x0 + 24, y0 + 2, 4, 6);
-    ctx.fillRect(x0 + 14, y0 + 13, 4, 6);
-    ctx.fillStyle = '#FFD54F';
-    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
-    ctx.fillStyle = '#7C5630';
     let seed = idx * 9301 + 49297;
-    for (let py = 14; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        if (px === 8 || px === 24) continue;
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.10) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
+    // Speckle grão madeira
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7C5630', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#B88656', 0.10, 3, 1, seed + 7919);
+    // Tampa horizontal (separa lid do body)
+    ctx.fillStyle = '#5A3E22';
+    ctx.fillRect(x0, y0 + 6, CELL, 1);
+    // Separadores verticais (3 painéis de 5/6/5px)
+    ctx.fillRect(x0 + 5, y0, 1, CELL);
+    ctx.fillRect(x0 + 11, y0, 1, CELL);
+    // Dobradiças (2px wide, ferro escuro) nos cantos
+    ctx.fillStyle = '#3A3A3A';
+    ctx.fillRect(x0 + 1, y0 + 1, 2, 4);
+    ctx.fillRect(x0 + 13, y0 + 1, 2, 4);
+    // Fechadura ouro central (2×3 abaixo da tampa)
+    ctx.fillStyle = '#FFD54F';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 3);
+    // Buraco da fechadura (1px preto)
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 1);
   }
 
   // Fornalha: pedra com abertura preta + brasa laranja.
+  // Paridade MC furnace_front: stone-base + abertura preta + brasa laranja.
+  // CELL=16: abertura 8×6 centralizada em y=7..13, brasa 4×2 dentro.
   function pintarFornalha(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#6E6E6E';
+    // Stone background
+    ctx.fillStyle = '#888888';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#5E5E5E';
     let seed = idx * 9301 + 49297;
-    for (let py = 0; py < CELL; py += 2) {
-      for (let px = 0; px < CELL; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.30) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 8, y0 + 14, 16, 14);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E6E6E', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A0A0A0', 0.16, 2, 1, seed + 7919);
+    // Frame da abertura (cinza claro, 10×7)
+    ctx.fillStyle = '#A8A8A8';
+    ctx.fillRect(x0 + 3, y0 + 6, 10, 7);
+    // Abertura preta dentro do frame (8×5)
+    ctx.fillStyle = '#1A1A1A';
+    ctx.fillRect(x0 + 4, y0 + 7, 8, 5);
+    // Brasa laranja na base da abertura (6×2)
     ctx.fillStyle = '#FF6F00';
-    ctx.fillRect(x0 + 10, y0 + 24, 12, 4);
+    ctx.fillRect(x0 + 5, y0 + 10, 6, 2);
+    // Brasa amarela brilhante (4×1)
     ctx.fillStyle = '#FFAB40';
-    ctx.fillRect(x0 + 12, y0 + 25, 8, 2);
-    ctx.fillStyle = '#909090';
-    ctx.fillRect(x0 + 7, y0 + 13, 18, 1);
-    ctx.fillRect(x0 + 7, y0 + 13, 1, 16);
-    ctx.fillRect(x0 + 24, y0 + 13, 1, 16);
+    ctx.fillRect(x0 + 6, y0 + 11, 4, 1);
   }
 
-  // Cama: travesseiro branco no topo, manta vermelha, frame de madeira.
+  // Paridade MC bed: travesseiro branco + manta vermelha + frame madeira.
+  // Esta é a versão "topo" da bed (visão de cima).
   function pintarCama(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
+    // Manta vermelha base
     ctx.fillStyle = '#D32F2F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#F0F0F0';
-    ctx.fillRect(x0 + 4, y0 + 4, 24, 8);
-    ctx.fillStyle = '#D0D0D0';
-    ctx.fillRect(x0 + 4, y0 + 11, 24, 1);
-    ctx.fillStyle = '#6E4F2E';
-    ctx.fillRect(x0,             y0,             2, CELL);
-    ctx.fillRect(x0 + CELL - 2,  y0,             2, CELL);
-    ctx.fillRect(x0,             y0 + CELL - 4, CELL, 4);
-    ctx.fillStyle = '#A02525';
     let seed = idx * 9301 + 49297;
-    for (let py = 14; py < CELL - 4; py += 2) {
-      for (let px = 2; px < CELL - 2; px += 2) {
-        seed = (seed * 9301 + 49297) % 233280;
-        if ((seed / 233280) < 0.15) ctx.fillRect(x0 + px, y0 + py, 2, 2);
-      }
-    }
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A02525', 0.18, 2, 1, seed + 1009);
+    // Travesseiro branco (canto superior, 12×4)
+    ctx.fillStyle = '#F0F0F0';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 4);
+    // Sombra inferior do travesseiro
+    ctx.fillStyle = '#D0D0D0';
+    ctx.fillRect(x0 + 2, y0 + 5, 12, 1);
+    // Frame madeira lateral
+    ctx.fillStyle = '#6E4F2E';
+    ctx.fillRect(x0,             y0,             1, CELL);
+    ctx.fillRect(x0 + CELL - 1,  y0,             1, CELL);
+    ctx.fillRect(x0,             y0 + CELL - 2, CELL, 2);
   }
 
-  // Workbench topo: grid 3x3 de crafting.
+  // Paridade MC crafting_table_top: planks oak + grid 3×3 de slots.
+  // CELL=16: divisores em x=5,10 e y=5,10 (3 colunas/linhas iguais).
   function pintarWorkbenchTopo(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
+    // Planks oak
     ctx.fillStyle = '#8B5E2F';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#5D3F1E';
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E4823', 0.18, 2, 1, seed + 1009);
+    // Divisores grid (escuro)
+    ctx.fillStyle = '#3A2810';
+    ctx.fillRect(x0 +  5, y0,      1, CELL);
     ctx.fillRect(x0 + 10, y0,      1, CELL);
-    ctx.fillRect(x0 + 21, y0,      1, CELL);
+    ctx.fillRect(x0,      y0 +  5, CELL, 1);
     ctx.fillRect(x0,      y0 + 10, CELL, 1);
-    ctx.fillRect(x0,      y0 + 21, CELL, 1);
-    ctx.fillStyle = '#4A3018';
-    ctx.fillRect(x0,            y0,            CELL, 2);
-    ctx.fillRect(x0,            y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0,            y0,            2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0,            2, CELL);
+    // Borda escura completa
+    ctx.fillStyle = '#5D3F1E';
+    ctx.fillRect(x0,            y0,            CELL, 1);
+    ctx.fillRect(x0,            y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0,            y0,            1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0,            1, CELL);
   }
 
-  // Workbench lado: planks com serra estilizada no centro.
+  // Paridade MC crafting_table_side: planks com ferramentas estilizadas.
+  // CELL=16: serra metálica horizontal centralizada.
   function pintarWorkbenchLado(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#8B5E2F';
     ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E4823', 0.18, 2, 1, seed + 1009);
+    // Seam horizontal (separa tabuão superior/inferior)
     ctx.fillStyle = '#5D3F1E';
-    ctx.fillRect(x0, y0 + 10, CELL, 1);
-    ctx.fillRect(x0, y0 + 21, CELL, 1);
-    // Serra (corpo cinza)
+    ctx.fillRect(x0, y0 + 7, CELL, 1);
+    // Serra metálica (corpo cinza horizontal centralizada)
     ctx.fillStyle = '#B0BEC5';
-    ctx.fillRect(x0 + 10, y0 + 14, 16, 4);
-    // Cabo da serra
+    ctx.fillRect(x0 + 5, y0 + 9, 9, 2);
+    // Cabo madeira da serra
     ctx.fillStyle = '#4A3018';
-    ctx.fillRect(x0 + 6, y0 + 14, 4, 4);
+    ctx.fillRect(x0 + 2, y0 + 9, 3, 2);
   }
 
   // Bedrock: chunky 4-pixel blocks com pattern escuro caótico.
@@ -3326,32 +3303,29 @@ function criarAtlas() {
   }
 
   // Genérico: pinta log de madeira variante (casca + anéis verticais)
+  // Variantes de log (birch, spruce, jungle, etc): vertical bark grain
+  // pixel-art flat — listras verticais de tons. Sem anéis radiais.
   function pintarLogVariante(idx, corBase, corCasca, corHigh, corAnel) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = corBase;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras verticais de casca
-    ctx.fillStyle = corCasca;
-    for (let i = 0; i < CELL; i += 4) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    // Listras verticais escuras/claras (~40% colunas)
+    for (let px = 0; px < CELL; px++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = seed / 233280;
+      if (r < 0.30) {
+        ctx.fillStyle = corCasca;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      } else if (r < 0.42) {
+        ctx.fillStyle = corHigh;
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
     }
-    // Highlights claros
-    ctx.fillStyle = corHigh;
-    for (let i = 2; i < CELL; i += 4) {
-      ctx.fillRect(x0 + i, y0 + ((i * 3) % 4), 1, CELL - ((i * 3) % 4));
-    }
-    // Manchas (anéis variados)
-    ctx.fillStyle = corAnel;
-    let s = idx * 17 + 31;
-    for (let i = 0; i < 22; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 2, 1);
-    }
+    // Speckle horizontal sutil (anéis pontuais — não circulares)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, corAnel, 0.10, 3, 1, seed + 3137);
   }
 
   // 🏆 MARCO 1000! Trono Dourado Supremo — pintor especial icônico
@@ -4600,21 +4574,23 @@ function criarAtlas() {
   }
 
   // Esponja: amarela com 9 buracos pretos (esponja seca) ou marrom (molhada)
+  // Paridade MC sponge: cor sólida + grade 2×2 de buracos pequenos.
+  // CELL=16: buracos 2×2 em 4 posições (criando padrão poroso visual).
   function pintarEsponja(idx, base, buraco) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 9 buracos em grid 3x3 (estilo esponja MC)
+    let seed = idx * 9301 + 49297;
+    // Speckle base (textura porosa)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, buraco, 0.28, 2, 1, seed + 1009);
+    // 4 buracos 2×2 estilo sponge MC
     ctx.fillStyle = buraco;
-    for (let by = 4; by < CELL - 4; by += 9) {
-      for (let bx = 4; bx < CELL - 4; bx += 9) {
-        ctx.fillRect(x0 + bx, y0 + by, 4, 4);
-      }
+    const positions = [[3, 3], [10, 3], [3, 10], [10, 10]];
+    for (const [bx, by] of positions) {
+      ctx.fillRect(x0 + bx, y0 + by, 2, 2);
     }
-    // Highlights claros entre buracos
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.20, 5, 1, idx * 9301 + 49297);
   }
 
   // Jack-o-Lantern: pumpkin carved com chama amarela emissiva
@@ -4739,67 +4715,58 @@ function criarAtlas() {
   }
 
   // Slime Block: verde gelatinoso com padrão de bolhas + reflexos
+  // Paridade MC slime_block: verde gelatinoso flat + bolhas pequenas.
+  // CELL=16: 4-5 clusters 2×2 escuros + sparkle highlight branco.
   function pintarSlimeBlock(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#8bc34a';
+    // Base verde slime
+    ctx.fillStyle = '#8BC34A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Bolhas escuras (efeito gelatinoso)
-    ctx.fillStyle = '#558b2f';
-    const bolhas = [
-      { x: 6, y: 8, r: 5 },
-      { x: 18, y: 6, r: 4 },
-      { x: 22, y: 18, r: 5 },
-      { x: 4, y: 22, r: 4 },
-      { x: 14, y: 22, r: 3 },
-    ];
-    for (const b of bolhas) {
-      ctx.fillRect(x0 + b.x, y0 + b.y, b.r, b.r);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#558B2F', 0.22, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#AED581', 0.22, 2, 1, seed + 7919);
+    // 4 bolhas escuras 2×2 (efeito gelatina)
+    ctx.fillStyle = '#3F6B1E';
+    for (let i = 0; i < 4; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % (CELL - 2));
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % (CELL - 2));
+      ctx.fillRect(x0 + px, y0 + py, 2, 2);
+      // Highlight 1px (brilho gelatinoso)
+      ctx.fillStyle = '#C8E6A0';
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+      ctx.fillStyle = '#3F6B1E';
     }
-    // Highlights claros (brilho gelatinoso translúcido)
-    ctx.fillStyle = '#aed581';
-    for (const b of bolhas) {
-      ctx.fillRect(x0 + b.x, y0 + b.y, 1, 1);
-      ctx.fillRect(x0 + b.x + 1, y0 + b.y + 1, 1, 1);
-    }
-    // Reflexo branco diagonal
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 3, y0 + 3, 3, 1);
-    ctx.fillRect(x0 + 4, y0 + 4, 2, 1);
-    // Borda escura
-    ctx.fillStyle = '#33691e';
-    ctx.fillRect(x0, y0, CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0, y0, 1, CELL);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Crying Obsidian: obsidiana com gotas roxo-claro caindo
+  // Paridade MC crying_obsidian: roxo-escuro + lágrimas roxas pontuais.
+  // CELL=16: 3 gotas (1×1 roxo claro com 2px cauda).
   function pintarCryingObsidian(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base obsidiana (roxo-escuro)
-    ctx.fillStyle = '#311b92';
+    // Base obsidiana (preto-arroxeado)
+    ctx.fillStyle = '#1A1126';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Manchas mais escuras
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#1a0a4a', 0.45, 4, 2, idx * 9301 + 49297);
-    // 4 gotas roxo-claro caindo (com cauda vertical)
-    const gotas = [{ x: 6, y: 5 }, { x: 14, y: 8 }, { x: 22, y: 4 }, { x: 26, y: 14 }];
-    for (const g of gotas) {
-      ctx.fillStyle = '#9c27b0';
-      ctx.fillRect(x0 + g.x, y0 + g.y, 3, 3);
-      ctx.fillStyle = '#ba68c8';
-      ctx.fillRect(x0 + g.x + 1, y0 + g.y + 1, 1, 1);
-      // Cauda da gota descendo
-      ctx.fillStyle = '#7b1fa2';
-      ctx.fillRect(x0 + g.x + 1, y0 + g.y + 4, 1, 6);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#3D2950', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#0E0815', 0.18, 2, 1, seed + 7919);
+    // 3 gotas/lágrimas
+    for (let i = 0; i < 3; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const gx = (seed % (CELL - 1));
+      seed = (seed * 9301 + 49297) % 233280;
+      const gy = (seed % (CELL - 4));
+      // Cabeça da gota (1×1 roxo claro)
+      ctx.fillStyle = '#BA68C8';
+      ctx.fillRect(x0 + gx, y0 + gy, 1, 1);
+      // Cauda escurecendo (3px)
+      ctx.fillStyle = '#7B1FA2';
+      ctx.fillRect(x0 + gx, y0 + gy + 1, 1, 3);
     }
-    // Brilho central (energia)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 7, y0 + 6, 1, 1);
-    ctx.fillRect(x0 + 23, y0 + 5, 1, 1);
   }
 
   // Nether Wart Block: cor sólida com padrão orgânico (textura tipo musgo)
