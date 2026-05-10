@@ -8082,7 +8082,7 @@ export class Renderer {
     this.scene.background = new THREE.Color(0x87CEEB);
     // FogExp2: densidade exponencial (mais natural que linear). Densidade
     // calculada pra dar transição suave dentro do view radius.
-    const fogDensidade = 0.014 * (8 / Math.max(4, q.viewRadius || 6));
+    const fogDensidade = 0.0065 * (8 / Math.max(4, q.viewRadius || 6));
     this.scene.fog = new THREE.FogExp2(0x87CEEB, fogDensidade);
 
     // === Luzes globais ===
@@ -8452,7 +8452,7 @@ export class Renderer {
       // sem skylight direto. Ainda deixa cavernas escuras (luz 0 = 32% escala).
       // Cap em 0.95 (era 0.85) — texturas claras agora respiram melhor com
       // saturação 1.18 do shader pós-processing.
-      const luzFator = 0.32 + 0.63 * luzNorm;
+      const luzFator = 0.50 + 0.48 * luzNorm;
       // AO por vértice
       const tab = AO_OFFSETS[faceIdx];
       const ao0 = vertexAOValor(world, sx, sy, sz, tab[0]);
@@ -8907,28 +8907,28 @@ export class Renderer {
     const sun = Math.max(0.05, 0.5 + 0.5 * Math.sin(tempoDia * Math.PI * 2 - Math.PI / 2));
     // FIX visualização: aumentado fill light pra interior de florestas/áreas sob folhas
     // não ficar TÃO escuro de dia. Combinado com luzFator min 0.32 = visualização MC-like.
-    this.hemi.intensity    = 0.35 + 0.30 * sun;  // era 0.20 + 0.20
-    this.ambient.intensity = 0.20 + 0.20 * sun;  // era 0.10 + 0.12
-    this.sol.intensity     = 0.10 + 0.45 * sun;  // era 0.05 + 0.30
-    this.luaLuz.intensity  = 0.15 * (1 - sun);   // era 0.10
+    this.hemi.intensity    = 0.55 + 0.30 * sun;  // FIX brilho: era 0.35+0.30 (noite agora 0.56)
+    this.ambient.intensity = 0.40 + 0.20 * sun;  // FIX brilho: era 0.20+0.20 (noite agora 0.41)
+    this.sol.intensity     = 0.10 + 0.50 * sun;  // dia mais luminoso
+    this.luaLuz.intensity  = 0.40 * (1 - sun);   // FIX noite: era 0.15 (lua agora ilumina 2.7x mais)
     if (sun < 0.4) {
-      this.hemi.color.setHex(0x4a6ba8);
-      this.hemi.groundColor.setHex(0x2e2820);
+      this.hemi.color.setHex(0x6a8ec8);          // azul-noite mais claro (era 0x4a6ba8)
+      this.hemi.groundColor.setHex(0x4a4030);    // chão noturno mais visível
     } else {
-      this.hemi.color.setHex(0xbcd8ff);
-      this.hemi.groundColor.setHex(0x6b5a3f);
+      this.hemi.color.setHex(0xcfe2ff);          // céu dia mais luminoso
+      this.hemi.groundColor.setHex(0x806a4a);    // chão dia mais quente
     }
     // === Sky gradient multi-stop ===
     // 6 keypoints — produz transições ricas: noite escura (azul-violeta),
     // crepúsculo púrpura, sunrise/sunset laranja saturado, golden hour
     // dourado, dia azul claro, meio-dia ciano vibrante.
     const stops = [
-      [0.00, 0x0a0a2a], // deep night
-      [0.12, 0x2a1d56], // twilight violet
-      [0.30, 0xff5a2f], // sunrise/sunset rich orange
-      [0.45, 0xffc873], // golden hour
-      [0.70, 0x87CEEB], // mid day sky
-      [1.00, 0x9adcff], // noon vibrant
+      [0.00, 0x1e2a5a], // night sky (era 0x0a0a2a — agora azul-noite visível)
+      [0.12, 0x4a3a78], // twilight violet (era 0x2a1d56 mais claro)
+      [0.30, 0xff7040], // sunrise/sunset orange (mais saturado)
+      [0.45, 0xffd690], // golden hour
+      [0.70, 0x9bd6f0], // mid day sky claro
+      [1.00, 0xb0e6ff], // noon vibrant
     ];
     // PERF: Cache Color objects pra evitar GC pressure (era ~8 allocations/frame)
     if (!this._skyColorCache) {
