@@ -1346,138 +1346,117 @@ function criarAtlas() {
     }
   }
 
-  // Head genérico (mob): cabeça simplificada com cor + olhos
+  // Head genérico (mob heads): cabeça pixel-art com olhos. CELL=16 → cabeça
+  // 12×12 centralizada com olhos 2×2.
   function pintarHead(idx, base, sombra, corOlhos) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#0a0a0a';
+    // Background escuro (vai aparecer nas bordas)
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cabeça (cubo)
+    // Cabeça base (12×12 centralizada)
     ctx.fillStyle = base;
-    ctx.fillRect(x0 + 6, y0 + 6, 20, 20);
-    // Sombra/borda
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 12);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, 12, 12, sombra, 0.18, 2, 1, seed + 1009);
+    // Borda 1px sombra
     ctx.fillStyle = sombra;
-    ctx.fillRect(x0 + 6,  y0 + 6,  20, 1);
-    ctx.fillRect(x0 + 6,  y0 + 25, 20, 1);
-    ctx.fillRect(x0 + 6,  y0 + 6,  1,  20);
-    ctx.fillRect(x0 + 25, y0 + 6,  1,  20);
-    // Olhos
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 1);
+    ctx.fillRect(x0 + 2, y0 + 13, 12, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, 12);
+    ctx.fillRect(x0 + 13, y0 + 2, 1, 12);
+    // Olhos (2×2 cada, espaçados)
     ctx.fillStyle = corOlhos;
-    ctx.fillRect(x0 + 9,  y0 + 11, 5, 5);
-    ctx.fillRect(x0 + 18, y0 + 11, 5, 5);
-    // Ruído (textura)
-    spawnPontosUniforme(x0 + 7, y0 + 7, 18, 18, sombra, 0.30, 4, 1, idx * 9301 + 49297);
+    ctx.fillRect(x0 + 4, y0 + 6, 2, 2);
+    ctx.fillRect(x0 + 10, y0 + 6, 2, 2);
   }
 
-  // Soul Lantern: lanterna mas com janela ciano (alma)
+  // Paridade MC soul_lantern: ferro escuro + janela ciano com chama interna.
   function pintarSoulLantern(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#212121';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Janela ciano brilhante (almas)
-    ctx.fillStyle = '#40c4ff';
-    ctx.fillRect(x0 + 6, y0 + 8, 20, 18);
-    ctx.fillStyle = '#80deea';
-    ctx.fillRect(x0 + 10, y0 + 12, 12, 10);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 6);
-    // Grades horizontais
+    // Topo da lanterna (frame ferro)
     ctx.fillStyle = '#424242';
-    ctx.fillRect(x0 + 6, y0 + 13, 20, 1);
-    ctx.fillRect(x0 + 6, y0 + 18, 20, 1);
-    ctx.fillRect(x0 + 6, y0 + 22, 20, 1);
-    // Verticais
-    ctx.fillRect(x0 + 14, y0 + 8, 1, 18);
-    ctx.fillRect(x0 + 17, y0 + 8, 1, 18);
-    // Topo
+    ctx.fillRect(x0 + 4, y0 + 1, 8, 3);
+    // Anel para pendurar
+    ctx.fillStyle = '#9E9E9E';
+    ctx.fillRect(x0 + 7, y0, 2, 1);
+    // Janela central ciano (alma)
+    ctx.fillStyle = '#40C4FF';
+    ctx.fillRect(x0 + 5, y0 + 5, 6, 8);
+    // Chama interna (ciano claro)
+    ctx.fillStyle = '#80DEEA';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 5);
+    // Núcleo brilhante (branco)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 3);
+    // Grades verticais (frame ferro)
     ctx.fillStyle = '#424242';
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, 4);
-    ctx.fillStyle = '#616161';
-    ctx.fillRect(x0 + 8, y0 + 2, CELL - 16, 2);
-    // Anel pra pendurar
-    ctx.fillStyle = '#9e9e9e';
-    ctx.fillRect(x0 + 14, y0,     4, 2);
-    ctx.fillRect(x0 + 13, y0 + 1, 6, 1);
+    ctx.fillRect(x0 + 7, y0 + 5, 1, 8);
+    ctx.fillRect(x0 + 4, y0 + 5, 1, 8);
+    ctx.fillRect(x0 + 11, y0 + 5, 1, 8);
+    // Base
+    ctx.fillStyle = '#424242';
+    ctx.fillRect(x0 + 4, y0 + 13, 8, 2);
   }
 
-  // Lâmpada Redstone: madeira marrom com luz amarela quando acesa
+  // Paridade MC redstone_lamp_on: amarelo-laranja flat + speckle bright.
   function pintarLampadaRed(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Base marrom (madeira)
-    ctx.fillStyle = '#8d6e63';
+    // Base laranja-amarelo (lâmpada acesa)
+    ctx.fillStyle = '#FFB74D';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão xadrez de luz amarela (acesa)
-    ctx.fillStyle = '#fdd835';
-    for (let by = 4; by < CELL - 4; by += 6) {
-      for (let bx = 4; bx < CELL - 4; bx += 6) {
-        if ((bx + by) % 12 === 0) {
-          ctx.fillRect(x0 + bx, y0 + by, 4, 4);
-        }
-      }
-    }
-    // Núcleos brancos brilhantes (efeito luz interna)
-    ctx.fillStyle = '#ffffff';
-    for (let by = 5; by < CELL - 5; by += 6) {
-      for (let bx = 5; bx < CELL - 5; bx += 6) {
-        if ((bx + by) % 12 === 1) {
-          ctx.fillRect(x0 + bx, y0 + by, 1, 1);
-        }
-      }
-    }
-    // Bordas escuras
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FF9800', 0.28, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FDD835', 0.22, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFFFFF', 0.10, 3, 1, seed + 1573);
+    // Frame escuro nas bordas (1px)
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Blaze Block: amarelo-laranja com chamas e raios saindo
+  // Blaze block (custom): laranja-fogo + speckle bright pra disparar bloom.
   function pintarBlazeBlock(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#e65100';
+    ctx.fillStyle = '#E65100';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Manchas amarelas brilhantes (fogo)
-    ctx.fillStyle = '#ff9800';
-    for (let by = 0; by < CELL; by += 5) {
-      for (let bx = 0; bx < CELL; bx += 5) {
-        if ((bx + by) % 10 === 0) {
-          ctx.fillRect(x0 + bx, y0 + by, 4, 4);
-        }
-      }
-    }
-    // Núcleos amarelos super-brilhantes
-    ctx.fillStyle = '#fdd835';
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#fdd835', 0.30, 5, 2, idx * 9301 + 49297);
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff176', 0.20, 6, 1, idx * 9301 + 7331);
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 8, 1, idx * 9301 + 12347);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FF9800', 0.30, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FDD835', 0.22, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFF176', 0.14, 2, 1, seed + 1573);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFFFFF', 0.08, 3, 1, seed + 12347);
   }
 
-  // Ender Chest: verde-escuro com pontos/estrelas (gradient End)
+  // Paridade MC ender_chest: verde-escuro + estrelas + fechadura ouro.
   function pintarEnderChest(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#004d40';
+    ctx.fillStyle = '#004D40';
     ctx.fillRect(x0, y0, CELL, CELL);
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#00251f', 0.40, 4, 2, idx * 9301 + 49297);
-    // Estrelinhas brancas (estilo End)
-    ctx.fillStyle = '#80cbc4';
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#80cbc4', 0.30, 5, 1, idx * 9301 + 7331);
-    ctx.fillStyle = '#ffffff';
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.15, 7, 1, idx * 9301 + 12347);
-    // Centro + dobradiças
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(x0 + 14, y0 + 12, 4, 8);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#00251F', 0.32, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#80CBC4', 0.18, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFFFFF', 0.10, 3, 1, seed + 1573);
+    // Tampa horizontal
+    ctx.fillStyle = '#001F1A';
+    ctx.fillRect(x0, y0 + 6, CELL, 1);
+    // Fechadura ouro central (2×3)
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 3);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 1);
   }
 
   // Shulker Box colorido (genérico): cor base + placas escamares + bordas
@@ -1562,72 +1541,60 @@ function criarAtlas() {
     ctx.fillRect(x0 + 19, y0 + 19, 2, 1);
   }
 
-  // Decorated Pot: vaso marrom com padrão decorativo
+  // Paridade MC decorated_pot: vaso terracota com banda dourada decorativa.
   function pintarDecoratedPot(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro
-    ctx.fillStyle = '#0a0a0a';
+    // Background escuro (sobras laterais)
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Pote ovalado (parte central marrom)
-    ctx.fillStyle = '#a1887f';
-    ctx.fillRect(x0 + 8, y0 + 10, 16, 16);
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0 + 10, y0 + 12, 12, 12);
-    // Borda superior decorada
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 6, y0 + 8, 20, 2);
-    // Padrão decorativo central (cruz dourada)
+    // Corpo do pote (12×14 centralizado)
+    ctx.fillStyle = '#A1887F';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 14);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0 + 2, y0 + 2, 12, 14, '#8D6E63', 0.20, 2, 1, seed + 1009);
+    // Banda dourada (decoração horizontal central)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 2, y0 + 7, 12, 2);
+    // Símbolo decorativo central (losango dourado)
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 8);
-    ctx.fillRect(x0 + 12, y0 + 16, 8, 4);
-    // Reflexo branco
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 17, 2, 2);
-    // Base decorada
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 8, y0 + 25, 16, 1);
+    ctx.fillRect(x0 + 7, y0 + 6, 2, 4);
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 2);
+    // Reflexo branco (1px)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
+    // Base/boca do pote (escuro)
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 2, y0 + 15, 12, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 1);
   }
 
-  // 🎯 Command Block (Marco 400!): laranja-marrom com circuito/seta característica
+  // Paridade MC command_block: marrom-laranja + seta dourada apontando.
   function pintarCommandBlock(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Base laranja-marrom
-    ctx.fillStyle = '#a05a30';
+    ctx.fillStyle = '#A05A30';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão diagonal sutil (textura "metal/circuito")
-    ctx.fillStyle = '#7d3e1c';
-    for (let i = 0; i < CELL; i += 4) {
-      for (let j = 0; j < CELL; j += 4) {
-        if (((i + j) >> 2) & 1) ctx.fillRect(x0 + i, y0 + j, 2, 2);
-      }
-    }
-    // Tons mais claros (relevo)
-    ctx.fillStyle = '#c97a4d';
-    ctx.fillRect(x0 + 3, y0 + 3, CELL - 6, 1);
-    ctx.fillRect(x0 + 3, y0 + 3, 1, CELL - 6);
-    // Circle/ring central (símbolo command)
-    ctx.fillStyle = '#3a1a08';
-    ctx.fillRect(x0 + 8,  y0 + 11, 16, 1);
-    ctx.fillRect(x0 + 8,  y0 + 20, 16, 1);
-    ctx.fillRect(x0 + 7,  y0 + 12, 1, 8);
-    ctx.fillRect(x0 + 24, y0 + 12, 1, 8);
-    // Seta direcional (Command Block característico)
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 11, y0 + 15, 8, 2);
-    ctx.fillRect(x0 + 17, y0 + 13, 2, 2);
-    ctx.fillRect(x0 + 19, y0 + 14, 2, 4);
-    ctx.fillRect(x0 + 17, y0 + 18, 2, 2);
-    // Brilho dourado (LED ligado)
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 19, y0 + 15, 1, 2);
-    // Sombra inferior/direita
-    ctx.fillStyle = '#5a3018';
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7D3E1C', 0.22, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#C97A4D', 0.18, 2, 1, seed + 7919);
+    // Anel central preto (silhueta command)
+    ctx.fillStyle = '#3A1A08';
+    ctx.fillRect(x0 + 3, y0 + 4, 10, 1);
+    ctx.fillRect(x0 + 3, y0 + 11, 10, 1);
+    ctx.fillRect(x0 + 3, y0 + 4, 1, 8);
+    ctx.fillRect(x0 + 12, y0 + 4, 1, 8);
+    // Seta dourada (apontando direita)
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 5, y0 + 7, 4, 2);
+    ctx.fillRect(x0 + 8, y0 + 6, 1, 4);
+    ctx.fillRect(x0 + 9, y0 + 7, 1, 2);
+    // LED brilho (1px branco)
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 9, y0 + 7, 1, 1);
   }
 
   // Respawn Anchor: obsidiana com glowstone interna em camadas
