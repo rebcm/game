@@ -4204,36 +4204,40 @@ function criarAtlas() {
     }
   }
 
-  // Jack-o-Lantern: pumpkin carved com chama amarela emissiva
+  // Jack-o-Lantern: pumpkin com face acesa amarelo bright (CELL=16).
   function pintarJackOLantern(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     // Base laranja
-    ctx.fillStyle = '#e65100';
+    ctx.fillStyle = '#E65100';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Ridges verticais
-    ctx.fillStyle = '#bf360c';
-    for (let px = 4; px < CELL; px += 8) {
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#BF360C', 0.18, 2, 1, seed + 1009);
+    // Ridges verticais (4 ranhuras)
+    ctx.fillStyle = '#BF360C';
+    for (let px = 2; px < CELL; px += 4) {
       ctx.fillRect(x0 + px, y0, 1, CELL);
     }
-    ctx.fillStyle = '#ff9800';
-    for (let px = 1; px < CELL; px += 8) {
-      ctx.fillRect(x0 + px, y0, 2, CELL);
-    }
-    // Face brilhante (olhos + boca em chama amarela)
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 6, y0 + 10, 5, 4);
-    ctx.fillRect(x0 + 21, y0 + 10, 5, 4);
-    ctx.fillRect(x0 + 8, y0 + 20, 16, 4);
-    // Núcleo branco super-brilhante (efeito de luz)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 8, y0 + 11, 1, 1);
-    ctx.fillRect(x0 + 23, y0 + 11, 1, 1);
-    ctx.fillRect(x0 + 15, y0 + 21, 2, 1);
-    // Halo difuso ao redor da face (glow)
-    ctx.fillStyle = 'rgba(255, 235, 59, 0.3)';
-    ctx.fillRect(x0 + 4, y0 + 8, CELL - 8, CELL - 12);
+    // Face acesa: olhos triangulares + boca dentada amarelos
+    ctx.fillStyle = '#FFF176';
+    // Olho esquerdo
+    ctx.fillRect(x0 + 3, y0 + 5, 3, 2);
+    ctx.fillRect(x0 + 4, y0 + 4, 1, 1);
+    // Olho direito
+    ctx.fillRect(x0 + 10, y0 + 5, 3, 2);
+    ctx.fillRect(x0 + 11, y0 + 4, 1, 1);
+    // Boca (8×2)
+    ctx.fillRect(x0 + 4, y0 + 10, 8, 2);
+    // Núcleo branco bright (efeito luz)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 4, y0 + 5, 1, 1);
+    ctx.fillRect(x0 + 11, y0 + 5, 1, 1);
+    ctx.fillRect(x0 + 7, y0 + 10, 2, 1);
+    // Dentes recortando a boca
+    ctx.fillStyle = '#E65100';
+    ctx.fillRect(x0 + 6, y0 + 10, 1, 1);
+    ctx.fillRect(x0 + 9, y0 + 10, 1, 1);
   }
 
   // Tinted Glass: vidro escuro (cinza-quase-preto) com reflexos sutis
@@ -4395,49 +4399,29 @@ function criarAtlas() {
     seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#ffffff', 0.10, 7, 1, seed + 7331);
   }
 
-  // Shroomlight: laranja brilhante com padrão de poros
+  // Shroomlight: laranja flat + speckle bright pra disparar bloom.
   function pintarShroomlight(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#ff9800';
+    ctx.fillStyle = '#FF9800';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de poros radial (saindo do centro)
-    ctx.fillStyle = '#fff176';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#ffeb3b';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Anéis radiais (poros do fungo)
-    ctx.fillStyle = '#f57c00';
-    for (const r of [4, 8]) {
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, 1);
-      ctx.fillRect(x0 + 16 - r, y0 + 16 + r - 1, r * 2, 1);
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, 1, r * 2);
-      ctx.fillRect(x0 + 16 + r - 1, y0 + 16 - r, 1, r * 2);
-    }
-    // Pontos brilhantes ao redor (esporos)
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#ffeb3b', 0.20, 5, 1, idx * 9301 + 49297);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#F57C00', 0.20, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFEB3B', 0.28, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFF176', 0.18, 2, 1, seed + 1573);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFFFFF', 0.06, 3, 1, seed + 12347);
   }
 
-  // End Brick: tijolos amarelos do end com mortar escuro
+  // End Brick: tijolos amarelos do end com mortar escuro — usa helper.
   function pintarEndBrick(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#e8d886';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Mortar escuro entre tijolos
-    ctx.fillStyle = '#a08254';
-    ctx.fillRect(x0, y0 + 15, CELL, 2);
-    ctx.fillRect(x0 + 10, y0,      2, 15);
-    ctx.fillRect(x0 + 22, y0,      2, 15);
-    ctx.fillRect(x0 + 4,  y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 16, y0 + 17, 2, 15);
-    ctx.fillRect(x0 + 28, y0 + 17, 2, 15);
-    // Highlights claros
-    spawnPontosUniforme(x0, y0, CELL, CELL, '#fff8e1', 0.20, 5, 1, idx * 9301 + 49297);
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#E8D886', '#A08254');
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#FFF8E1', 0.16, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#C9B870', 0.14, 2, 1, seed + 7919);
   }
 
   // Purpur: roxo manchado com padrão diamante
@@ -4461,70 +4445,47 @@ function criarAtlas() {
     }
   }
 
-  // Prismarine: turquesa com padrão tabuleiro xadrez sutil
+  // Prismarine: turquesa flat com speckle ou layout tijolo (variante brick).
   function pintarPrismarine(idx, base, escuro, claro, brick) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = base;
-    ctx.fillRect(x0, y0, CELL, CELL);
+    let seed = idx * 9301 + 49297;
     if (brick) {
-      // Padrão tijolo (3x3 grid de blocos)
-      ctx.fillStyle = escuro;
-      ctx.fillRect(x0, y0 + 10, CELL, 1);
-      ctx.fillRect(x0, y0 + 21, CELL, 1);
-      ctx.fillRect(x0 + 10, y0,      1, 11);
-      ctx.fillRect(x0 + 21, y0,      1, 11);
-      ctx.fillRect(x0 + 4,  y0 + 11, 1, 10);
-      ctx.fillRect(x0 + 26, y0 + 11, 1, 10);
-      ctx.fillRect(x0 + 14, y0 + 22, 1, 10);
-      ctx.fillStyle = claro;
-      // Highlights diagonais
-      for (let py = 4; py < CELL; py += 11) {
-        ctx.fillRect(x0 + py, y0 + py, 2, 2);
-      }
+      _pintarBrickLayout(x0, y0, base, escuro);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.18, 2, 1, seed + 1009);
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.14, 2, 1, seed + 7919);
     } else {
-      // Padrão xadrez 4x4 sutil
+      ctx.fillStyle = base;
+      ctx.fillRect(x0, y0, CELL, CELL);
+      // Xadrez 4×4 sutil (padrão prismarine clássico)
       ctx.fillStyle = escuro;
-      for (let by = 0; by < CELL; by += 8) {
-        for (let bx = 0; bx < CELL; bx += 8) {
-          if ((bx + by) % 16 === 0) {
-            ctx.fillRect(x0 + bx, y0 + by, 4, 4);
-            ctx.fillRect(x0 + bx + 4, y0 + by + 4, 4, 4);
-          }
+      for (let by = 0; by < CELL; by += 4) {
+        for (let bx = 0; bx < CELL; bx += 4) {
+          if (((bx + by) >> 2) & 1) ctx.fillRect(x0 + bx, y0 + by, 2, 2);
         }
       }
-      ctx.fillStyle = claro;
-      for (let i = 0; i < CELL; i += 4) {
-        ctx.fillRect(x0 + i, y0 + i, 1, 1);
-      }
+      seed = spawnPontosUniforme(x0, y0, CELL, CELL, claro, 0.18, 2, 1, seed + 1009);
     }
   }
 
-  // Sea Lantern: cristalino branco-turquesa com 4 nodos brilhantes centrais
+  // Sea Lantern: cristal turquesa flat + 4 nodos bright nos quadrantes.
   function pintarSeaLantern(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#80cbc4';
+    ctx.fillStyle = '#80CBC4';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 4 nodos brilhantes (cristal-branco)
-    ctx.fillStyle = '#b2dfdb';
-    ctx.fillRect(x0 + 4,  y0 + 4,  10, 10);
-    ctx.fillRect(x0 + 18, y0 + 4,  10, 10);
-    ctx.fillRect(x0 + 4,  y0 + 18, 10, 10);
-    ctx.fillRect(x0 + 18, y0 + 18, 10, 10);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 7,  y0 + 7,  4, 4);
-    ctx.fillRect(x0 + 21, y0 + 7,  4, 4);
-    ctx.fillRect(x0 + 7,  y0 + 21, 4, 4);
-    ctx.fillRect(x0 + 21, y0 + 21, 4, 4);
-    // Núcleo super brilhante
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + 8,  y0 + 8,  1, 1);
-    ctx.fillRect(x0 + 22, y0 + 8,  1, 1);
-    ctx.fillRect(x0 + 8,  y0 + 22, 1, 1);
-    ctx.fillRect(x0 + 22, y0 + 22, 1, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#B2DFDB', 0.30, 2, 1, seed + 1009);
+    // 4 nodos brilhantes (3×3 cada) nos quadrantes
+    const cantos = [[2, 2], [11, 2], [2, 11], [11, 11]];
+    for (const [cx, cy] of cantos) {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x0 + cx, y0 + cy, 3, 3);
+      ctx.fillStyle = '#FFF8E1';
+      ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
+    }
   }
 
   // Minério em pedra normal (base cinza + clusters da cor do minério)
