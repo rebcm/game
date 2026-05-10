@@ -1030,63 +1030,93 @@ function abrirPainelBigorna() {
   try { document.exitPointerLock?.(); } catch (_) {}
 }
 
-// SPRINT BREWING-UI: Painel de Brewing Stand (paridade MC)
+// Brewing Stand UI completa — 21 poções (paridade MC 1.21).
+// Receitas: Pote de Água + Blaze Powder (combustível) + ingrediente.
 function abrirPainelBrewing(x, y, z) {
   state.brewingCoords = { x, y, z };
-  // Cria modal inline se não existir
+  // Catálogo completo de poções: efeito → { saida, ingrediente, ingNome, cor, emoji, label, cat }
+  const POCOES = [
+    // Positivas (azul)
+    { ef: 'heal',         saida: 'POCAO_HEAL',       ing: 'OURO',           ingNome: 'Ouro',          cor: '#c62828', emoji: '❤️',  label: 'Cura',          cat: 'pos' },
+    { ef: 'regen',        saida: 'POCAO_REGEN',      ing: 'TRIGO',          ingNome: 'Trigo',         cor: '#e91e63', emoji: '💗',  label: 'Regeneração',   cat: 'pos' },
+    { ef: 'speed',        saida: 'POCAO_SPEED',      ing: 'PAU',            ingNome: 'Pau',           cor: '#0288d1', emoji: '⚡',  label: 'Velocidade',    cat: 'pos' },
+    { ef: 'strength',     saida: 'POCAO_STRENGTH',   ing: 'FERRO',          ingNome: 'Ferro',         cor: '#e65100', emoji: '💪',  label: 'Força',         cat: 'pos' },
+    { ef: 'fire_res',     saida: 'POCAO_FIRE_RES',   ing: 'MAGMA_CREAM',    ingNome: 'Magma Cream',   cor: '#bf360c', emoji: '🔥',  label: 'Resist. Fogo',  cat: 'pos' },
+    { ef: 'noite',        saida: 'POCAO_NOITE',      ing: 'GLOWSTONE_DUST', ingNome: 'Glowstone Dust',cor: '#311b92', emoji: '🌙',  label: 'Visão Noturna', cat: 'pos' },
+    { ef: 'invisivel',    saida: 'POCAO_INVISIVEL',  ing: 'FERMENTED_EYE',  ingNome: 'Olho Fermentado',cor: '#9e9e9e', emoji: '👻',  label: 'Invisibilidade',cat: 'pos' },
+    { ef: 'jump_boost',   saida: 'POCAO_JUMP',       ing: 'RABBIT_FOOT',    ingNome: 'Pé de Coelho',  cor: '#558b2f', emoji: '🦘',  label: 'Pulo',          cat: 'pos' },
+    { ef: 'slow_fall',    saida: 'POCAO_SLOW_FALL',  ing: 'PHANTOM_MEMBRANE',ingNome: 'Memb. Phantom',cor: '#90caf9', emoji: '🪶',  label: 'Slow Fall',     cat: 'pos' },
+    { ef: 'water_breath', saida: 'POCAO_WATER_BR',   ing: 'PUFFER',         ingNome: 'Baiacu',        cor: '#0097a7', emoji: '🐡',  label: 'Resp. Aquát.',  cat: 'pos' },
+    { ef: 'resistencia',  saida: 'POCAO_RESISTENCIA',ing: 'GHAST_TEAR',     ingNome: 'Lágrima Ghast', cor: '#fafafa', emoji: '🛡',   label: 'Resistência',   cat: 'pos' },
+    { ef: 'absorption',   saida: 'POCAO_ABSORPTION', ing: 'MELANCIA_GLISTER',ingNome: 'Melancia Glis.',cor: '#ffd700', emoji: '🟡',  label: 'Absorção',      cat: 'pos' },
+    { ef: 'turtle_master',saida: 'POCAO_TURTLE',     ing: 'TURTLE_SHELL',   ingNome: 'Casco Tartaruga',cor: '#33691e',emoji: '🐢', label: 'Turtle Master', cat: 'pos' },
+    { ef: 'haste',        saida: 'POCAO_HASTE',      ing: 'OURO_BLOCO',     ingNome: 'Bloco Ouro',    cor: '#fdd835', emoji: '⛏️',  label: 'Pressa',        cat: 'pos' },
+    { ef: 'dolphin',      saida: 'POCAO_DOLPHIN',    ing: 'PRISMARINE_SHARD',ingNome: 'Frag. Prism.', cor: '#26c6da', emoji: '🐬',  label: 'Golfinho',      cat: 'pos' },
+    { ef: 'luck',         saida: 'POCAO_LUCK',       ing: 'RABBIT_FOOT',    ingNome: 'Pé de Coelho',  cor: '#76ff03', emoji: '🍀',  label: 'Sorte',         cat: 'pos' },
+    // Negativas (vermelho/roxo)
+    { ef: 'harm',         saida: 'POCAO_HARM',       ing: 'FERMENTED_EYE',  ingNome: 'Olho Fermentado',cor: '#8b0000',emoji: '☠️', label: 'Dano',          cat: 'neg' },
+    { ef: 'weakness',     saida: 'POCAO_WEAKNESS',   ing: 'FERMENTED_EYE',  ingNome: 'Olho Fermentado',cor: '#5a3a3a',emoji: '🥱', label: 'Fraqueza',      cat: 'neg' },
+    { ef: 'wither',       saida: 'POCAO_WITHER',     ing: 'CARVAO_SOUL',    ingNome: 'Carvão Soul',   cor: '#1a1a1a', emoji: '💀',  label: 'Wither',        cat: 'neg' },
+    { ef: 'hunger',       saida: 'POCAO_HUNGER',     ing: 'CARNE_PODRE',    ingNome: 'Carne Podre',   cor: '#3e2723', emoji: '🤢',  label: 'Fome',          cat: 'neg' },
+    { ef: 'blindness',    saida: 'POCAO_BLINDNESS',  ing: 'TINTA_GLOW',     ingNome: 'Tinta Glow',    cor: '#212121', emoji: '🕶',   label: 'Cegueira',      cat: 'neg' },
+    { ef: 'nausea',       saida: 'POCAO_NAUSEA',     ing: 'PHANTOM_MEMBRANE',ingNome: 'Memb. Phantom',cor: '#4a148c', emoji: '🌀',  label: 'Náusea',        cat: 'neg' },
+    { ef: 'levitacao',    saida: 'POCAO_LEVITACAO',  ing: 'BLAZE_POWDER',   ingNome: 'Pó de Blaze',   cor: '#80deea', emoji: '🎈',  label: 'Levitação',     cat: 'neg' },
+    { ef: 'glowing',      saida: 'POCAO_GLOWING',    ing: 'TINTA_GLOW',     ingNome: 'Tinta Glow',    cor: '#fff176', emoji: '🌟',  label: 'Brilhar',       cat: 'neg' },
+  ].filter(p => ITEM[p.saida] !== undefined && (!p.ing || ITEM[p.ing] !== undefined));
+
   let modal = document.getElementById('painel-brewing');
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'painel-brewing';
-    modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#2a1d3f;color:#fafafa;padding:20px;border:3px solid #fdd835;font-family:"Press Start 2P",monospace;font-size:9px;z-index:100;border-radius:8px;min-width:320px;';
-    modal.innerHTML = `
-      <h3 style="color:#fdd835;text-align:center;margin:0 0 12px;">🧪 Brewing Stand</h3>
-      <div style="margin-bottom:8px;color:#bbb;font-size:8px;">Selecione ingredientes na hotbar:</div>
-      <div id="brewing-info" style="margin-bottom:12px;line-height:1.6;"></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button id="brewing-heal" style="padding:8px;background:#c62828;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🧪 Heal</button>
-        <button id="brewing-speed" style="padding:8px;background:#0288d1;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">⚡ Speed</button>
-        <button id="brewing-strength" style="padding:8px;background:#e65100;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">💪 Strength</button>
-        <button id="brewing-fire" style="padding:8px;background:#bf360c;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🔥 Fire Res</button>
-        <button id="brewing-night" style="padding:8px;background:#311b92;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🌙 Night Vision</button>
-        <button id="brewing-jump" style="padding:8px;background:#558b2f;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">🦘 Jump</button>
-      </div>
-      <button id="brewing-close" style="margin-top:12px;width:100%;padding:6px;background:#666;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;">Fechar [X]</button>
-    `;
+    modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a0a2a;color:#fafafa;padding:20px;border:3px solid #fdd835;font-family:"Press Start 2P",monospace;font-size:8px;z-index:100;border-radius:8px;width:560px;max-height:80vh;overflow-y:auto;box-shadow:0 0 24px rgba(253,216,53,0.4);';
     document.body.appendChild(modal);
   }
-  // Update info
-  const info = document.getElementById('brewing-info');
-  const blazes = state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) || 0;
-  const potes = state.inv.contar?.(undefined, ITEM.POTE_AGUA) || 0;
-  if (info) info.innerHTML = `Blaze Powder: ${blazes}<br>Pote de Água: ${potes}<br><span style="color:#888;font-size:7px;">Custa: 1 BP + 1 PA + ingrediente</span>`;
-  // Brewing actions (cada um = 1 BP + 1 PA + ingrediente específico)
-  const brewing = (efeito, ingrediente, ingNome) => {
-    if (state.inv.contar?.(undefined, ITEM.BLAZE_POWDER) < 1) { state.ui.toast('Precisa Blaze Powder'); return; }
-    if (state.inv.contar?.(undefined, ITEM.POTE_AGUA) < 1) { state.ui.toast('Precisa Pote de Água'); return; }
-    if (ingrediente && state.inv.contar?.(undefined, ingrediente) < 1) {
-      state.ui.toast(`Precisa: ${ingNome}`);
-      return;
-    }
-    state.inv.consumir(undefined, ITEM.BLAZE_POWDER, 1);
-    state.inv.consumir(undefined, ITEM.POTE_AGUA, 1);
-    if (ingrediente) state.inv.consumir(undefined, ingrediente, 1);
-    // Mapa efeito → item poção
-    const pocaoMap = {
-      heal: ITEM.POCAO_HEAL, speed: ITEM.POCAO_SPEED, strength: ITEM.POCAO_STRENGTH,
-      fire_res: ITEM.POCAO_FIRE_RES, noite: ITEM.POCAO_NOITE, jump_boost: ITEM.POCAO_JUMP,
-    };
-    state.inv.adicionar({ i: pocaoMap[efeito] || ITEM.POCAO_HEAL, q: 1 });
-    Audio.colocar?.();
-    state.ui.toast(`🧪 Poção ${efeito} criada!`);
-    abrirPainelBrewing(x, y, z); // refresh
+  const inv = state.inv;
+  const blazes = inv.contar?.(undefined, ITEM.BLAZE_POWDER) || 0;
+  const potes = inv.contar?.(undefined, ITEM.POTE_AGUA) || 0;
+  // Renderiza modal
+  const renderBtn = (p) => {
+    const ingHave = !p.ing || (inv.contar?.(undefined, ITEM[p.ing]) || 0) >= 1;
+    const podeBrew = blazes >= 1 && potes >= 1 && ingHave;
+    const opacity = podeBrew ? '1' : '0.45';
+    return `<button class="brew-btn" data-ef="${p.ef}" style="padding:8px 6px;background:${p.cor};color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:${podeBrew ? 'pointer' : 'not-allowed'};font-family:inherit;font-size:7px;border-radius:4px;opacity:${opacity};text-align:center;line-height:1.5;" title="${p.ingNome}">
+      ${p.emoji} ${p.label}<br><span style="font-size:6px;opacity:0.85;">${p.ingNome}</span>
+    </button>`;
   };
-  document.getElementById('brewing-heal').onclick = () => brewing('heal', ITEM.OURO, 'Ouro');
-  document.getElementById('brewing-speed').onclick = () => brewing('speed', ITEM.PAU, 'Pau');
-  document.getElementById('brewing-strength').onclick = () => brewing('strength', ITEM.FERRO, 'Ferro');
-  document.getElementById('brewing-fire').onclick = () => brewing('fire_res', ITEM.MAGMA_CREAM, 'Magma Cream');
-  document.getElementById('brewing-night').onclick = () => brewing('noite', ITEM.GLOWSTONE_DUST, 'Glowstone Dust');
-  document.getElementById('brewing-jump').onclick = () => brewing('jump_boost', ITEM.RABBIT_FOOT, 'Rabbit Foot');
+  const positivas = POCOES.filter(p => p.cat === 'pos');
+  const negativas = POCOES.filter(p => p.cat === 'neg');
+  modal.innerHTML = `
+    <h3 style="color:#fdd835;text-align:center;margin:0 0 12px;font-size:10px;">🧪 Brewing Stand — Paridade MC</h3>
+    <div style="margin-bottom:10px;color:#bbb;font-size:7px;line-height:1.5;text-align:center;">
+      Combustível: 🟡 ${blazes} Blaze Powder · 💧 ${potes} Pote Água<br>
+      <span style="color:#888;">Cada poção custa: 1 Blaze + 1 Pote + 1 ingrediente</span>
+    </div>
+    <div style="color:#80deea;font-size:8px;margin:10px 0 6px;">✦ Poções Positivas</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">${positivas.map(renderBtn).join('')}</div>
+    <div style="color:#ef5350;font-size:8px;margin:14px 0 6px;">⚠ Poções Negativas / Especiais</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">${negativas.map(renderBtn).join('')}</div>
+    <button id="brewing-close" style="margin-top:14px;width:100%;padding:8px;background:#666;color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:8px;border-radius:4px;">Fechar [X]</button>
+  `;
+  // Handlers
+  modal.querySelectorAll('.brew-btn').forEach(btn => {
+    btn.onclick = () => {
+      const p = POCOES.find(pp => pp.ef === btn.dataset.ef);
+      if (!p) return;
+      if ((inv.contar?.(undefined, ITEM.BLAZE_POWDER) || 0) < 1) { state.ui.toast('Precisa Blaze Powder'); return; }
+      if ((inv.contar?.(undefined, ITEM.POTE_AGUA) || 0) < 1) { state.ui.toast('Precisa Pote de Água'); return; }
+      if (p.ing && (inv.contar?.(undefined, ITEM[p.ing]) || 0) < 1) {
+        state.ui.toast(`Precisa: ${p.ingNome}`);
+        return;
+      }
+      inv.consumir(undefined, ITEM.BLAZE_POWDER, 1);
+      inv.consumir(undefined, ITEM.POTE_AGUA, 1);
+      if (p.ing) inv.consumir(undefined, ITEM[p.ing], 1);
+      inv.adicionar({ i: ITEM[p.saida], q: 1 });
+      Audio.colocar?.();
+      state.ui.toast(`${p.emoji} ${p.label} criada!`);
+      abrirPainelBrewing(x, y, z); // refresh contagem
+    };
+  });
   document.getElementById('brewing-close').onclick = () => modal.remove();
   modal.style.display = 'block';
   try { document.exitPointerLock?.(); } catch (_) {}
