@@ -3397,22 +3397,25 @@ function criarAtlas() {
     ctx.fillRect(x0 + 7, y0 + 13, 2, 1);
   }
 
-  // Target Block: branco com 4 anéis vermelhos concêntricos (alvo)
+  // Target Block: anéis concêntricos vermelhos com bullseye branco.
   function pintarTarget(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#fafafa';
+    // Background branco
+    ctx.fillStyle = '#FAFAFA';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 4 anéis concêntricos vermelhos
-    const cores = ['#fafafa', '#ef9a9a', '#e57373', '#ef5350', '#c62828'];
-    for (let r = 14; r >= 2; r -= 3) {
-      ctx.fillStyle = cores[Math.floor((14 - r) / 3)];
-      ctx.fillRect(x0 + 16 - r, y0 + 16 - r, r * 2, r * 2);
+    // 4 anéis quadrados concêntricos (cada anel 1-2px de espessura)
+    const cores = ['#EF9A9A', '#E57373', '#EF5350', '#C62828'];
+    const tamanhos = [12, 10, 8, 6]; // raios decrescentes
+    for (let i = 0; i < 4; i++) {
+      const r = tamanhos[i] >> 1;
+      ctx.fillStyle = cores[i];
+      ctx.fillRect(x0 + (CELL >> 1) - r, y0 + (CELL >> 1) - r, r * 2, r * 2);
     }
-    // Centro (bullseye)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
+    // Bullseye branco central
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
   }
 
   // Ancient Debris: marrom com manchas roxas brilhantes (raríssimo)
@@ -3529,90 +3532,80 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 9, CELL, 1);
   }
 
-  // Campfire: 3 paus em X com chama amarela no topo
+  // Campfire: 3 paus em cruz/X + brasa central + chamas no topo.
   function pintarCampfire(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 3 paus em X
-    ctx.fillStyle = '#5d4037';
-    for (let i = 0; i < CELL - 2; i++) {
-      ctx.fillRect(x0 + i, y0 + 22 - i / 4, 2, 2); // diagonal
-      ctx.fillRect(x0 + (CELL - 2 - i), y0 + 22 - i / 4, 2, 2); // anti-diag
-    }
-    // Centro: brasa amarela
-    ctx.fillStyle = '#ff9800';
-    ctx.fillRect(x0 + 12, y0 + 12, 8, 8);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Chamas no topo
-    ctx.fillStyle = '#ff6f00';
-    ctx.fillRect(x0 + 10, y0 + 4,  4, 8);
-    ctx.fillRect(x0 + 18, y0 + 4,  4, 8);
-    ctx.fillStyle = '#fdd835';
-    ctx.fillRect(x0 + 11, y0 + 5,  2, 6);
-    ctx.fillRect(x0 + 19, y0 + 5,  2, 6);
+    // 3 paus em formato + (CELL=16)
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 1, y0 + 11, CELL - 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 9, 2, 6);
+    ctx.fillRect(x0 + 4, y0 + 13, 1, 2);
+    ctx.fillRect(x0 + 11, y0 + 13, 1, 2);
+    // Brasa amarela central 4×4
+    ctx.fillStyle = '#FF9800';
+    ctx.fillRect(x0 + 6, y0 + 7, 4, 4);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 8, 1, 1);
+    // Chamas no topo (2 plumes)
+    ctx.fillStyle = '#FF6F00';
+    ctx.fillRect(x0 + 4, y0 + 2, 2, 4);
+    ctx.fillRect(x0 + 10, y0 + 2, 2, 4);
+    ctx.fillStyle = '#FDD835';
+    ctx.fillRect(x0 + 4, y0 + 3, 1, 2);
+    ctx.fillRect(x0 + 10, y0 + 3, 1, 2);
   }
 
-  // Workstation genérica: madeira/pedra com painel central decorativo
+  // Workstation (smithing/brewing/etc): frame + painel central + símbolo.
   function pintarWorkstation(idx, base, escuro, claro, simbolo) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Borda escura (frame da workstation)
+    // Frame escuro 1px
     ctx.fillStyle = escuro;
-    ctx.fillRect(x0, y0, CELL, 2);
-    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
-    ctx.fillRect(x0, y0, 2, CELL);
-    ctx.fillRect(x0 + CELL - 2, y0, 2, CELL);
-    // Painel central (área de trabalho)
+    ctx.fillRect(x0, y0, CELL, 1);
+    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
+    ctx.fillRect(x0, y0, 1, CELL);
+    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    // Painel claro central
     ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 4, y0 + 4, CELL - 8, CELL - 8);
-    // Símbolo central (caractere especial visual)
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, CELL - 4);
+    // Símbolo central (escalado pra ~10×10 área central)
     ctx.fillStyle = escuro;
     if (simbolo === 'hammer') {
-      // Martelo (smithing): retângulo + cabo
-      ctx.fillRect(x0 + 10, y0 + 10, 12, 4);
-      ctx.fillRect(x0 + 14, y0 + 14, 4, 12);
+      ctx.fillRect(x0 + 4, y0 + 4, 8, 2);
+      ctx.fillRect(x0 + 7, y0 + 6, 2, 7);
     } else if (simbolo === 'flask') {
-      // Frasco (brewing): forma de garrafa
-      ctx.fillRect(x0 + 14, y0 + 8,  4, 4);
-      ctx.fillRect(x0 + 12, y0 + 12, 8, 4);
-      ctx.fillRect(x0 + 10, y0 + 16, 12, 8);
+      ctx.fillRect(x0 + 7, y0 + 3, 2, 2);
+      ctx.fillRect(x0 + 6, y0 + 5, 4, 2);
+      ctx.fillRect(x0 + 4, y0 + 7, 8, 5);
     } else if (simbolo === 'fire') {
-      // Chama (furnace/smoker)
-      ctx.fillRect(x0 + 12, y0 + 18, 8, 4);
-      ctx.fillStyle = '#ff9800';
-      ctx.fillRect(x0 + 13, y0 + 14, 6, 4);
-      ctx.fillStyle = '#fdd835';
-      ctx.fillRect(x0 + 14, y0 + 12, 4, 2);
+      ctx.fillRect(x0 + 5, y0 + 11, 6, 2);
+      ctx.fillStyle = '#FF9800';
+      ctx.fillRect(x0 + 6, y0 + 8, 4, 3);
+      ctx.fillStyle = '#FDD835';
+      ctx.fillRect(x0 + 7, y0 + 6, 2, 2);
     } else if (simbolo === 'map') {
-      // Mapa (cartography)
-      ctx.fillRect(x0 + 10, y0 + 10, 12, 1);
-      ctx.fillRect(x0 + 10, y0 + 14, 8, 1);
-      ctx.fillRect(x0 + 10, y0 + 18, 12, 1);
-      ctx.fillRect(x0 + 10, y0 + 22, 6, 1);
+      ctx.fillRect(x0 + 4, y0 + 4, 8, 1);
+      ctx.fillRect(x0 + 4, y0 + 7, 6, 1);
+      ctx.fillRect(x0 + 4, y0 + 10, 8, 1);
     } else if (simbolo === 'arrow') {
-      // Flecha (fletching)
-      ctx.fillRect(x0 + 10, y0 + 16, 12, 2);
-      ctx.fillRect(x0 + 8,  y0 + 14, 2, 6);
-      ctx.fillRect(x0 + 22, y0 + 14, 2, 6);
+      ctx.fillRect(x0 + 4, y0 + 7, 8, 2);
+      ctx.fillRect(x0 + 3, y0 + 6, 1, 4);
+      ctx.fillRect(x0 + 12, y0 + 6, 1, 4);
     } else if (simbolo === 'loom') {
-      // Tear (linhas verticais)
-      for (const px of [10, 14, 18, 22]) ctx.fillRect(x0 + px, y0 + 8, 1, CELL - 16);
-      ctx.fillRect(x0 + 8, y0 + 14, CELL - 16, 1);
+      for (const px of [4, 6, 8, 10]) ctx.fillRect(x0 + px, y0 + 3, 1, 10);
+      ctx.fillRect(x0 + 3, y0 + 7, 10, 1);
     } else if (simbolo === 'saw') {
-      // Serra (stonecutter)
-      ctx.fillRect(x0 + 8, y0 + 16, CELL - 16, 1);
-      for (const px of [9, 12, 15, 18, 21]) {
-        ctx.fillRect(x0 + px, y0 + 14, 2, 2);
-      }
+      ctx.fillRect(x0 + 3, y0 + 8, 10, 1);
+      for (const px of [4, 6, 8, 10]) ctx.fillRect(x0 + px, y0 + 7, 1, 1);
     }
   }
 
@@ -3740,174 +3733,147 @@ function criarAtlas() {
     ctx.fillRect(x0 + 11, y0 + 3, 10, 11);
   }
 
-  // Cogumelo pequeno: chapéu colorido + caule branco
+  // Cogumelo pequeno: chapéu colorido + caule branco curto.
   function pintarCogumeloPeq(idx, corChapeu, comBolinhas) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Caule branco vertical
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 14);
-    ctx.fillStyle = '#bdbdbd';
-    ctx.fillRect(x0 + 14, y0 + 14, 1, 14);
-    // Chapéu (semicírculo aproximado)
+    // Caule branco vertical (2×6 base)
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 7, y0 + 8, 2, 7);
+    ctx.fillStyle = '#BDBDBD';
+    ctx.fillRect(x0 + 7, y0 + 8, 1, 7);
+    // Chapéu (8×4 + 1px topo arredondado)
     ctx.fillStyle = corChapeu;
-    ctx.fillRect(x0 + 8,  y0 + 6,  16, 8);
-    ctx.fillRect(x0 + 10, y0 + 4,  12, 2);
-    // Borda escura do chapéu
+    ctx.fillRect(x0 + 4, y0 + 4, 8, 4);
+    ctx.fillRect(x0 + 5, y0 + 3, 6, 1);
+    // Borda escura inferior
     ctx.fillStyle = '#000000';
-    ctx.fillRect(x0 + 8,  y0 + 14, 16, 1);
-    ctx.fillStyle = '#212121';
-    ctx.fillRect(x0 + 10, y0 + 4,  12, 1);
+    ctx.fillRect(x0 + 4, y0 + 8, 8, 1);
     if (comBolinhas) {
-      // Bolinhas brancas no chapéu (cogumelo amanita)
-      ctx.fillStyle = '#fafafa';
-      ctx.fillRect(x0 + 11, y0 + 8,  2, 2);
-      ctx.fillRect(x0 + 17, y0 + 7,  2, 2);
-      ctx.fillRect(x0 + 14, y0 + 11, 2, 2);
-      ctx.fillRect(x0 + 19, y0 + 11, 2, 2);
+      // 3 bolinhas brancas no chapéu
+      ctx.fillStyle = '#FAFAFA';
+      ctx.fillRect(x0 + 5, y0 + 5, 1, 1);
+      ctx.fillRect(x0 + 9, y0 + 4, 1, 1);
+      ctx.fillRect(x0 + 7, y0 + 6, 1, 1);
     }
   }
 
-  // Caveira de esqueleto: branca com 2 olhos pretos + boca
+  // Caveira: crânio 12×12 + 2 olhos + boca dentada (CELL=16).
   function pintarCaveira(idx, wither) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Crânio (cubo principal)
-    const corBase = wither ? '#424242' : '#eceff1';
-    const corSombra = wither ? '#212121' : '#bdbdbd';
+    const corBase = wither ? '#424242' : '#ECEFF1';
+    const corSombra = wither ? '#212121' : '#BDBDBD';
+    // Crânio
     ctx.fillStyle = corBase;
-    ctx.fillRect(x0 + 6, y0 + 6, 20, 20);
-    // Sombras
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 12);
+    // Sombras (borda 1px)
     ctx.fillStyle = corSombra;
-    ctx.fillRect(x0 + 6,  y0 + 6,  20, 1);
-    ctx.fillRect(x0 + 6,  y0 + 25, 20, 1);
-    ctx.fillRect(x0 + 6,  y0 + 6,  1,  20);
-    ctx.fillRect(x0 + 25, y0 + 6,  1,  20);
-    // 2 olhos pretos grandes
-    const corOlho = wither ? '#1a1a1a' : '#000000';
+    ctx.fillRect(x0 + 2, y0 + 2, 12, 1);
+    ctx.fillRect(x0 + 2, y0 + 13, 12, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, 12);
+    ctx.fillRect(x0 + 13, y0 + 2, 1, 12);
+    // 2 olhos
+    const corOlho = wither ? '#1A1A1A' : '#000000';
     ctx.fillStyle = corOlho;
-    ctx.fillRect(x0 + 9,  y0 + 11, 5, 5);
-    ctx.fillRect(x0 + 18, y0 + 11, 5, 5);
+    ctx.fillRect(x0 + 4, y0 + 5, 2, 3);
+    ctx.fillRect(x0 + 10, y0 + 5, 2, 3);
     if (wither) {
-      // Olhos vermelhos para wither
-      ctx.fillStyle = '#c62828';
-      ctx.fillRect(x0 + 10, y0 + 12, 3, 3);
-      ctx.fillRect(x0 + 19, y0 + 12, 3, 3);
+      ctx.fillStyle = '#C62828';
+      ctx.fillRect(x0 + 4, y0 + 6, 2, 1);
+      ctx.fillRect(x0 + 10, y0 + 6, 2, 1);
     }
-    // Boca (linha horizontal preta com dentes)
+    // Boca dentada (4×2 com 2 dentes recortando)
     ctx.fillStyle = corOlho;
-    ctx.fillRect(x0 + 9, y0 + 19, 14, 3);
-    // Dentes (linhas verticais cortando a boca)
+    ctx.fillRect(x0 + 4, y0 + 10, 8, 2);
     ctx.fillStyle = corBase;
-    ctx.fillRect(x0 + 12, y0 + 19, 1, 3);
-    ctx.fillRect(x0 + 15, y0 + 19, 1, 3);
-    ctx.fillRect(x0 + 18, y0 + 19, 1, 3);
+    ctx.fillRect(x0 + 6, y0 + 10, 1, 2);
+    ctx.fillRect(x0 + 9, y0 + 10, 1, 2);
   }
 
-  // TNT: vermelho com listras pretas + texto "TNT" branco
+  // TNT: vermelho com listras pretas + "TNT" branco.
   function pintarTNT(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#c62828';
+    ctx.fillStyle = '#C62828';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Listras pretas top/bot (cinto explosivo)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0 + 3, CELL, CELL - 6, '#8B0000', 0.18, 2, 1, seed + 1009);
+    // Listras pretas top/bot
     ctx.fillStyle = '#212121';
-    ctx.fillRect(x0, y0,           CELL, 4);
-    ctx.fillRect(x0, y0 + CELL - 4, CELL, 4);
-    // Texto "TNT" central (3 letras estilizadas pixel art)
-    ctx.fillStyle = '#fafafa';
-    // T
-    ctx.fillRect(x0 + 4,  y0 + 12, 5, 1);
-    ctx.fillRect(x0 + 6,  y0 + 12, 1, 8);
-    // N
-    ctx.fillRect(x0 + 12, y0 + 12, 1, 8);
-    ctx.fillRect(x0 + 17, y0 + 12, 1, 8);
-    ctx.fillRect(x0 + 13, y0 + 13, 1, 1);
-    ctx.fillRect(x0 + 14, y0 + 14, 1, 1);
-    ctx.fillRect(x0 + 15, y0 + 15, 1, 1);
-    ctx.fillRect(x0 + 16, y0 + 16, 1, 1);
-    // T
-    ctx.fillRect(x0 + 21, y0 + 12, 5, 1);
-    ctx.fillRect(x0 + 23, y0 + 12, 1, 8);
-    // Bordas escuras nas listras
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(x0, y0 + 4,        CELL, 1);
-    ctx.fillRect(x0, y0 + CELL - 5, CELL, 1);
-    // Manchas vermelhas mais escuras (textura)
-    spawnPontosUniforme(x0, y0 + 4, CELL, CELL - 8, '#8b0000', 0.30, 4, 1, idx * 9301 + 49297);
+    ctx.fillRect(x0, y0, CELL, 2);
+    ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
+    // Texto "TNT" central simplificado (T-N-T usando 1px cada letra)
+    ctx.fillStyle = '#FAFAFA';
+    // T (esq): topo 3px + haste 1px
+    ctx.fillRect(x0 + 1, y0 + 6, 3, 1);
+    ctx.fillRect(x0 + 2, y0 + 7, 1, 4);
+    // N (centro): 2 hastes verticais + diagonal
+    ctx.fillRect(x0 + 5, y0 + 6, 1, 5);
+    ctx.fillRect(x0 + 8, y0 + 6, 1, 5);
+    ctx.fillRect(x0 + 6, y0 + 7, 1, 1);
+    ctx.fillRect(x0 + 7, y0 + 9, 1, 1);
+    // T (dir)
+    ctx.fillRect(x0 + 10, y0 + 6, 3, 1);
+    ctx.fillRect(x0 + 11, y0 + 7, 1, 4);
   }
 
-  // Flor: haste verde fina + pétalas coloridas no topo
+  // Flor: haste vertical + pétalas coloridas no topo + miolo amarelo.
   function pintarFlor(idx, corPet, corMiolo) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro pra realçar
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Haste verde fina vertical (centralizada)
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(x0 + 15, y0 + 14, 2, 16);
-    // Sombra da haste
-    ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(x0 + 16, y0 + 14, 1, 16);
-    // 4 folhas saindo da haste
-    ctx.fillStyle = '#388e3c';
-    ctx.fillRect(x0 + 12, y0 + 18, 3, 1);
-    ctx.fillRect(x0 + 17, y0 + 22, 3, 1);
-    ctx.fillRect(x0 + 13, y0 + 26, 3, 1);
-    // Pétalas coloridas (5 quadrados ao redor do miolo)
+    // Haste vertical (1×7 base)
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 8);
+    // Folha lateral
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(x0 + 5, y0 + 11, 2, 1);
+    // Pétalas (4 ao redor do miolo)
     ctx.fillStyle = corPet;
-    ctx.fillRect(x0 + 12, y0 + 5,  4, 4);  // esq
-    ctx.fillRect(x0 + 16, y0 + 5,  4, 4);  // dir
-    ctx.fillRect(x0 + 14, y0 + 2,  4, 4);  // top
-    ctx.fillRect(x0 + 12, y0 + 9,  4, 4);  // esq-bot
-    ctx.fillRect(x0 + 16, y0 + 9,  4, 4);  // dir-bot
-    // Sombras das pétalas
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(x0 + 12, y0 + 5, 1, 4);
-    ctx.fillRect(x0 + 19, y0 + 5, 1, 4);
-    ctx.fillRect(x0 + 14, y0 + 2, 1, 4);
-    // Miolo amarelo central
+    ctx.fillRect(x0 + 5, y0 + 3, 2, 2); // top-esq
+    ctx.fillRect(x0 + 8, y0 + 3, 2, 2); // top-dir
+    ctx.fillRect(x0 + 5, y0 + 6, 2, 2); // bot-esq
+    ctx.fillRect(x0 + 8, y0 + 6, 2, 2); // bot-dir
+    ctx.fillRect(x0 + 6, y0 + 1, 2, 2); // topo
+    // Miolo amarelo central 2×2
     ctx.fillStyle = corMiolo;
-    ctx.fillRect(x0 + 14, y0 + 6, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 7, 2, 2);
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 5, 1, 1);
   }
 
-  // Vaso de flor: pote de tijolo marrom (vasinho cônico)
+  // Vaso de flor: pote 8×6 marrom com borda clara + linhas decorativas.
   function pintarVasoFlor(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Fundo escuro
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#0A0A0A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Pote (parte central marrom)
-    ctx.fillStyle = '#8d6e63';
-    ctx.fillRect(x0 + 8, y0 + 14, 16, 12);
-    // Borda superior do pote (mais clara)
-    ctx.fillStyle = '#a1887f';
-    ctx.fillRect(x0 + 6, y0 + 12, 20, 2);
-    // Sombra interna do pote
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x0 + 8, y0 + 14, 16, 1);
-    ctx.fillRect(x0 + 8, y0 + 14, 1, 12);
-    ctx.fillRect(x0 + 23, y0 + 14, 1, 12);
-    ctx.fillRect(x0 + 8, y0 + 25, 16, 1);
-    // Padrão decorativo (3 linhas claras horizontais)
-    ctx.fillStyle = '#bcaaa4';
-    ctx.fillRect(x0 + 9, y0 + 17, 14, 1);
-    ctx.fillRect(x0 + 9, y0 + 21, 14, 1);
+    // Pote 8×6 base
+    ctx.fillStyle = '#8D6E63';
+    ctx.fillRect(x0 + 4, y0 + 8, 8, 6);
+    // Borda superior 10×1 mais clara
+    ctx.fillStyle = '#A1887F';
+    ctx.fillRect(x0 + 3, y0 + 7, 10, 1);
+    // Sombras laterais
+    ctx.fillStyle = '#5D4037';
+    ctx.fillRect(x0 + 4, y0 + 8, 1, 6);
+    ctx.fillRect(x0 + 11, y0 + 8, 1, 6);
+    ctx.fillRect(x0 + 4, y0 + 13, 8, 1);
+    // 2 linhas decorativas claras
+    ctx.fillStyle = '#BCAAA4';
+    ctx.fillRect(x0 + 5, y0 + 9, 6, 1);
+    ctx.fillRect(x0 + 5, y0 + 11, 6, 1);
   }
 
   // Grade de Ferro: padrão de barras verticais + horizontal central
@@ -3940,33 +3906,34 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + 14, CELL, 1);
   }
 
-  // Porta colorida (genérico): tábuas verticais + maçaneta + dobradiças
+  // Porta: tábuas verticais + 2 dobradiças + maçaneta dourada.
   function pintarPortaCor(idx, base, escuro, claro, mac) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
-    // 3 tábuas verticais (separadas por linhas escuras)
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, escuro, 0.16, 2, 1, seed + 1009);
+    // 2 seams verticais (3 tábuas)
     ctx.fillStyle = escuro;
+    ctx.fillRect(x0 + 5, y0, 1, CELL);
     ctx.fillRect(x0 + 10, y0, 1, CELL);
-    ctx.fillRect(x0 + 21, y0, 1, CELL);
-    // Highlights claros nas tábuas
+    // Highlights claros (1px por tábua)
     ctx.fillStyle = claro;
-    ctx.fillRect(x0 + 5,  y0, 1, CELL);
-    ctx.fillRect(x0 + 16, y0, 1, CELL);
-    ctx.fillRect(x0 + 26, y0, 1, CELL);
-    // 3 dobradiças (lado esquerdo)
+    ctx.fillRect(x0 + 2, y0, 1, CELL);
+    ctx.fillRect(x0 + 7, y0, 1, CELL);
+    ctx.fillRect(x0 + 12, y0, 1, CELL);
+    // 2 dobradiças metálicas (esq, 2×2 cada)
     ctx.fillStyle = mac;
-    ctx.fillRect(x0 + 1, y0 + 4,  3, 4);
-    ctx.fillRect(x0 + 1, y0 + 14, 3, 4);
-    ctx.fillRect(x0 + 1, y0 + 24, 3, 4);
-    // Maçaneta dourada (lado direito, altura média)
+    ctx.fillRect(x0 + 1, y0 + 2, 2, 2);
+    ctx.fillRect(x0 + 1, y0 + 12, 2, 2);
+    // Maçaneta dourada (dir, altura média)
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(x0 + CELL - 4, y0 + 14, 3, 3);
-    ctx.fillStyle = '#fff8e1';
-    ctx.fillRect(x0 + CELL - 3, y0 + 15, 1, 1);
-    // Borda escura
+    ctx.fillRect(x0 + 13, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FFF8E1';
+    ctx.fillRect(x0 + 13, y0 + 7, 1, 1);
+    // Borda
     ctx.fillStyle = escuro;
     ctx.fillRect(x0, y0, CELL, 1);
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
@@ -3974,7 +3941,7 @@ function criarAtlas() {
     ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
   }
 
-  // Trapdoor: padrão de tábuas + 2 dobradiças
+  // Trapdoor: tábuas horizontais (madeira) ou grade metálica (ferro).
   function pintarTrapdoor(idx, base, escuro, ferro) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
@@ -3982,35 +3949,29 @@ function criarAtlas() {
     ctx.fillStyle = base;
     ctx.fillRect(x0, y0, CELL, CELL);
     if (ferro) {
-      // Trapdoor de ferro: padrão grade metálica
+      // Grade metálica
       ctx.fillStyle = escuro;
-      // Cruz central
-      for (let i = 4; i < CELL; i += 6) {
+      for (let i = 0; i < CELL; i += 4) {
         ctx.fillRect(x0 + i, y0, 1, CELL);
         ctx.fillRect(x0, y0 + i, CELL, 1);
       }
-      // Rebites nos cantos
+      // Rebites
       ctx.fillStyle = '#212121';
-      for (const [cx, cy] of [[3, 3], [CELL-4, 3], [3, CELL-4], [CELL-4, CELL-4]]) {
-        ctx.fillRect(x0 + cx, y0 + cy, 2, 2);
+      for (const [cx, cy] of [[2, 2], [CELL - 3, 2], [2, CELL - 3], [CELL - 3, CELL - 3]]) {
+        ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
       }
     } else {
-      // Trapdoor de madeira: 4 tábuas horizontais + grão vertical
+      // 3 seams horizontais (4 tábuas)
       ctx.fillStyle = escuro;
-      ctx.fillRect(x0, y0 + 7,  CELL, 1);
-      ctx.fillRect(x0, y0 + 15, CELL, 1);
-      ctx.fillRect(x0, y0 + 23, CELL, 1);
-      // Grão vertical
-      ctx.fillStyle = '#7a5b50';
-      for (let px = 5; px < CELL; px += 7) {
-        ctx.fillRect(x0 + px, y0, 1, CELL);
-      }
-      // 2 dobradiças metálicas no topo
+      ctx.fillRect(x0, y0 + 3, CELL, 1);
+      ctx.fillRect(x0, y0 + 7, CELL, 1);
+      ctx.fillRect(x0, y0 + 11, CELL, 1);
+      // 2 dobradiças no topo
       ctx.fillStyle = '#424242';
-      ctx.fillRect(x0 + 6,  y0 + 1, 5, 3);
-      ctx.fillRect(x0 + 21, y0 + 1, 5, 3);
+      ctx.fillRect(x0 + 2, y0 + 1, 2, 1);
+      ctx.fillRect(x0 + 12, y0 + 1, 2, 1);
     }
-    // Borda escura
+    // Borda
     ctx.fillStyle = escuro;
     ctx.fillRect(x0, y0, CELL, 1);
     ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
