@@ -334,69 +334,91 @@ function criarAtlas() {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    // Helper: parse hex pra rgb
     const hex = (h) => {
       const n = parseInt(h.slice(1), 16);
       return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
     };
-    const cR = hex(corMedio);
-    const cL = hex(corClaro);
     const cE = hex(corEscuro);
-    // Base sólido cor média
-    ctx.fillStyle = corMedio;
+    const cM = hex(corMedio);
+    const cC = hex(corClaro);
+    // Base SÓLIDA escura (será coberta por foliage tiles)
+    ctx.fillStyle = corEscuro;
     ctx.fillRect(x0, y0, CELL, CELL);
     let seed = idx * 13 + 29;
-    // Patches grandes orgânicos (5-6 manchas 4x4 a 6x6) — dá impressão de
-    // grupos de folhas, sem virar pontilhado caótico
-    for (let p = 0; p < 6; p++) {
+    const rand = () => {
       seed = (seed * 9301 + 49297) % 233280;
-      const sz = 3 + (seed % 3);
-      seed = (seed * 9301 + 49297) % 233280;
-      const px = (seed % (CELL - sz));
-      seed = (seed * 9301 + 49297) % 233280;
-      const py = (seed % (CELL - sz));
-      seed = (seed * 9301 + 49297) % 233280;
-      const isLight = (seed & 1);
-      // Mistura sutil (30% blend) — não troca a cor de vez
-      const mix = isLight ? cL : cE;
-      const a = 0.35;
-      const r = (cR[0] * (1 - a) + mix[0] * a) | 0;
-      const g = (cR[1] * (1 - a) + mix[1] * a) | 0;
-      const b = (cR[2] * (1 - a) + mix[2] * a) | 0;
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.fillRect(x0 + px, y0 + py, sz, sz);
+      return seed / 233280;
+    };
+    // CAMADA 1: 24 "folhas-base" como elipses tom médio (cobre 90% da área)
+    ctx.save();
+    // Clip pra arcs não sangrarem fora da célula
+    ctx.beginPath();
+    ctx.rect(x0, y0, CELL, CELL);
+    ctx.clip();
+    for (let i = 0; i < 24; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 2.2 + rand() * 1.8;
+      const ry = 2.2 + rand() * 1.8;
+      const rot = rand() * Math.PI;
+      // Tom médio com pequena variação pra dar profundidade
+      const t = (rand() - 0.5) * 30;
+      const r = Math.max(0, Math.min(255, cM[0] + t)) | 0;
+      const g = Math.max(0, Math.min(255, cM[1] + t)) | 0;
+      const b = Math.max(0, Math.min(255, cM[2] + t)) | 0;
+      ctx.fillStyle = `rgba(${r},${g},${b},0.92)`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2);
+      ctx.fill();
     }
-    // Mini destaques 1px (lâminas/nervuras) — apenas tons CLAROS pra
-    // criar pontos de luz sem buracos pretos
-    ctx.fillStyle = corClaro;
-    for (let i = 0; i < 22; i++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const px = (seed % CELL);
-      seed = (seed * 9301 + 49297) % 233280;
-      const py = (seed % CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    // CAMADA 2: 18 "folhas-luz" tom claro menores (highlights orgânicos)
+    for (let i = 0; i < 18; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 1.4 + rand() * 1.2;
+      const ry = 1.4 + rand() * 1.2;
+      const rot = rand() * Math.PI;
+      const a = 0.65 + rand() * 0.30;
+      ctx.fillStyle = `rgba(${cC[0]},${cC[1]},${cC[2]},${a.toFixed(2)})`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2);
+      ctx.fill();
     }
-    // Sombras MUITO sutis (alpha low, não pixel sólido escuro)
-    ctx.fillStyle = `rgba(${cE[0]},${cE[1]},${cE[2]},0.45)`;
-    for (let i = 0; i < 16; i++) {
-      seed = (seed * 9301 + 49297) % 233280;
-      const px = (seed % CELL);
-      seed = (seed * 9301 + 49297) % 233280;
-      const py = (seed % CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    // CAMADA 3: 12 "sombras-vão" tom escuro entre folhas (depth)
+    for (let i = 0; i < 12; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 1.0 + rand() * 1.2;
+      const ry = 1.0 + rand() * 1.2;
+      ctx.fillStyle = `rgba(${cE[0]},${cE[1]},${cE[2]},0.55)`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
-    // Flores/frutos sutis
+    // CAMADA 4: 8 mini-highlights super-claros (cintilação luz solar)
+    const cH = [Math.min(255, cC[0] + 30), Math.min(255, cC[1] + 30), Math.min(255, cC[2] + 30)];
+    ctx.fillStyle = `rgba(${cH[0]},${cH[1]},${cH[2]},0.85)`;
+    for (let i = 0; i < 8; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 0.8 + rand() * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Flores/frutos como elipses pastel (cherry blossom, apple)
     if (corFlor) {
-      ctx.fillStyle = corFlor;
+      const cF = hex(corFlor);
       for (let i = 0; i < 3; i++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const px = 3 + (seed % (CELL - 6));
-        seed = (seed * 9301 + 49297) % 233280;
-        const py = 3 + (seed % (CELL - 6));
-        ctx.fillRect(x0 + px, y0 + py, 2, 2);
+        const cx = x0 + 4 + rand() * (CELL - 8);
+        const cy = y0 + 4 + rand() * (CELL - 8);
+        ctx.fillStyle = `rgba(${cF[0]},${cF[1]},${cF[2]},0.95)`;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 1.8, 1.4, rand() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.4);
+    ctx.restore();
+    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.35);
   }
 
   // Pinta padrão de tijolos: mortar cinza + tijolos vermelhos staggered + highlight.
@@ -2491,45 +2513,18 @@ function criarAtlas() {
 
   // Cherry Folha: folhas rosa pastel + flores brancas
   function pintarCherryFolha(idx) {
-    const col = idx % COLS;
-    const row = Math.floor(idx / COLS);
-    const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#f48fb1';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let s = idx * 17 + 41;
-    for (let i = 0; i < 80; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const pick = (s / 233280);
-      ctx.fillStyle = pick < 0.3 ? '#f06292' : pick < 0.6 ? '#fce4ec' : pick < 0.85 ? '#ffffff' : '#c2185b';
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    pintarFolhaPremium(idx, '#fce4ec', '#f48fb1', '#c2185b', '#ffffff');
   }
 
-  // Mangrove Folha: verde-escuro com gotas (raízes pendentes)
+  // Mangrove Folha: verde tropical denso + gotas/raízes pendentes na base
   function pintarMangroveFolha(idx) {
+    pintarFolhaPremium(idx, '#7cb342', '#558b2f', '#1b5e20');
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#33691e';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    let s = idx * 13 + 37;
-    for (let i = 0; i < 70; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const pick = (s / 233280);
-      ctx.fillStyle = pick < 0.4 ? '#558b2f' : pick < 0.7 ? '#1b5e20' : pick < 0.9 ? '#7cb342' : '#827717';
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
-    // Raízes pendentes (gotas marrons)
-    ctx.fillStyle = '#5d4037';
-    for (let i = 4; i < CELL; i += 8) {
+    // Raízes pendentes na borda inferior (gotas marrons sobrepostas)
+    ctx.fillStyle = 'rgba(93,64,55,0.85)';
+    for (let i = 4; i < CELL; i += 7) {
       ctx.fillRect(x0 + i, y0 + CELL - 4, 1, 4);
     }
   }
@@ -3959,24 +3954,80 @@ function criarAtlas() {
     ctx.fillRect(x0, y0 + CELL - 2, CELL, 2);
   }
 
-  // Genérico: pinta folha variante (textura granulada de folhagem)
+  // Genérico: folha variante orgânica (arcs em camadas alpha-blended,
+  // sem pontos discretos que parecem buracos). Original procedural.
   function pintarFolhaVariante(idx, corBase, corClaro, corEscuro, corExtra) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = corBase;
+    const hex = (h) => {
+      const n = parseInt(h.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const cE = hex(corEscuro);
+    const cB = hex(corBase);
+    const cC = hex(corClaro);
+    const cX = hex(corExtra);
+    ctx.fillStyle = corEscuro;
     ctx.fillRect(x0, y0, CELL, CELL);
-    let s = idx * 13 + 29;
-    for (let i = 0; i < 90; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const pick = (s / 233280);
-      ctx.fillStyle = pick < 0.4 ? corClaro : pick < 0.75 ? corEscuro : pick < 0.9 ? corExtra : corBase;
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
+    let seed = idx * 13 + 29;
+    const rand = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x0, y0, CELL, CELL);
+    ctx.clip();
+    // Camada base orgânica (24 elipses tom base com microvariação)
+    for (let i = 0; i < 24; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 2.2 + rand() * 1.8;
+      const ry = 2.2 + rand() * 1.8;
+      const t = (rand() - 0.5) * 30;
+      const r = Math.max(0, Math.min(255, cB[0] + t)) | 0;
+      const g = Math.max(0, Math.min(255, cB[1] + t)) | 0;
+      const b = Math.max(0, Math.min(255, cB[2] + t)) | 0;
+      ctx.fillStyle = `rgba(${r},${g},${b},0.92)`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, rand() * Math.PI, 0, Math.PI * 2);
+      ctx.fill();
     }
+    // Highlights claros (18 elipses claras)
+    for (let i = 0; i < 18; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 1.4 + rand() * 1.2;
+      const ry = 1.4 + rand() * 1.2;
+      ctx.fillStyle = `rgba(${cC[0]},${cC[1]},${cC[2]},${(0.65 + rand() * 0.3).toFixed(2)})`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, rand() * Math.PI, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Sombras-vão (12 elipses escuras, alpha low)
+    for (let i = 0; i < 12; i++) {
+      const cx = x0 + rand() * CELL;
+      const cy = y0 + rand() * CELL;
+      const rx = 1.0 + rand() * 1.2;
+      const ry = 1.0 + rand() * 1.2;
+      ctx.fillStyle = `rgba(${cE[0]},${cE[1]},${cE[2]},0.55)`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Detalhe extra (5 elipses pequenas tom "extra" — flores, frutos, cones)
+    for (let i = 0; i < 5; i++) {
+      const cx = x0 + 3 + rand() * (CELL - 6);
+      const cy = y0 + 3 + rand() * (CELL - 6);
+      ctx.fillStyle = `rgba(${cX[0]},${cX[1]},${cX[2]},0.88)`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 1.4 + rand() * 0.8, 1.2 + rand() * 0.6,
+                  rand() * Math.PI, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    _aplicarBevelPremium(x0, y0, corClaro, corEscuro, 0.35);
   }
 
   // Genérico: pinta pranchas (4 fileiras horizontais com divisões verticais alternadas)
