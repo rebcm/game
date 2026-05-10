@@ -2627,7 +2627,6 @@ function criarAtlas() {
         ctx.fillRect(x0 + x, y0 + y, 1, 1);
       }
     }
-    }
   }
 
   // Trial Spawner: caixa escura com cristal central laranja brilhante (1.21).
