@@ -58,9 +58,13 @@ else
   echo "  (sem testes pre-check definidos)"
 fi
 
-echo "☁  Publicando no Cloudflare Pages …"
+echo "Publicando no Cloudflare Pages..."
+# FIX: passar commit-message ASCII puro pra evitar erro UTF-8 do CF API
+# (CF API rejeita commit messages com certos caracteres como invalid UTF-8)
+SAFE_MSG="deploy_${VERSION}"
 npx -y wrangler@latest pages deploy "$BUILD" \
   --project-name=construcao-criativa \
-  --commit-dirty=true
+  --commit-dirty=true \
+  --commit-message="$SAFE_MSG"
 
-echo "✅ Deploy concluído com cache-bust v=$VERSION"
+echo "Deploy concluido com cache-bust v=$VERSION"
