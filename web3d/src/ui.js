@@ -52,36 +52,57 @@ export class UI {
     this.renderStatusEffects();
   }
 
+  // PERF: ICONES constante (não recriar a cada call)
+  static _STATUS_ICONES = {
+    speed: '⚡', slowness: '🐌', poison: '☠️', regen: '❤️',
+    strength: '💪', weakness: '💢', fire_res: '🔥', resistencia: '🛡️',
+    slow_fall: '🪶', levitacao: '🎈', invisivel: '👻', noite: '🌙',
+    water_breathing: '🐟', dolphin: '🐬', haste: '⛏️', jump_boost: '🦘',
+    absorption: '💛', wither: '🖤', hunger_effect: '😵',
+    blindness: '🕶️', nausea: '🌀', luck: '🍀', soul_speed: '💨',
+    conduit_power: '🔱', turtle_master: '🐢', glowing: '✨',
+  };
   renderStatusEffects() {
     if (!state.player?.efeitos) return;
-    let bar = document.getElementById('status-effects-bar');
-    if (!bar) {
-      bar = document.createElement('div');
-      bar.id = 'status-effects-bar';
-      bar.style.cssText = 'position:fixed;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:50;font-family:"Press Start 2P",monospace;font-size:8px;';
-      document.body.appendChild(bar);
-    }
-    const efeitos = state.player.efeitos;
-    const ativos = [];
-    const now = Date.now();
-    const ICONES = {
-      speed: '⚡', slowness: '🐌', poison: '☠️', regen: '❤️',
-      strength: '💪', weakness: '💢', fire_res: '🔥', resistencia: '🛡️',
-      slow_fall: '🪶', levitacao: '🎈', invisivel: '👻', noite: '🌙',
-      water_breathing: '🐟', dolphin: '🐬', haste: '⛏️', jump_boost: '🦘',
-      absorption: '💛', wither: '🖤', hunger_effect: '😵',
-      blindness: '🕶️', nausea: '🌀', luck: '🍀', soul_speed: '💨',
-      conduit_power: '🔱', turtle_master: '🐢', glowing: '✨',
-    };
-    for (const [tipo, fim] of Object.entries(efeitos)) {
-      if (fim > now) {
-        const segs = Math.ceil((fim - now) / 1000);
-        const icone = ICONES[tipo] || '✦';
-        ativos.push(`<div style="background:rgba(0,0,0,0.7);padding:4px 6px;border-radius:3px;color:#fafafa;border:1px solid #fdd835;">${icone} ${tipo} ${segs}s</div>`);
+    // PERF: Cache bar element + skip update se nada mudou
+    if (!this._statusBar) {
+      this._statusBar = document.getElementById('status-effects-bar');
+      if (!this._statusBar) {
+        this._statusBar = document.createElement('div');
+        this._statusBar.id = 'status-effects-bar';
+        this._statusBar.style.cssText = 'position:fixed;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:50;font-family:"Press Start 2P",monospace;font-size:8px;';
+        document.body.appendChild(this._statusBar);
       }
     }
-    bar.innerHTML = ativos.join('');
-    bar.style.display = ativos.length ? 'flex' : 'none';
+    const efeitos = state.player.efeitos;
+    const now = Date.now();
+    // Hash dos efeitos ativos (tipo + segs arredondado) — só rebuild se mudou
+    let hash = '';
+    const ativos = [];
+    const ICONES = UI._STATUS_ICONES;
+    for (const tipo in efeitos) {
+      const fim = efeitos[tipo];
+      if (fim > now) {
+        const segs = Math.ceil((fim - now) / 1000);
+        hash += `${tipo}${segs};`;
+        ativos.push({ tipo, segs });
+      }
+    }
+    // Skip DOM update se hash idêntico ao anterior
+    if (this._statusHashAnterior === hash) return;
+    this._statusHashAnterior = hash;
+    if (ativos.length === 0) {
+      this._statusBar.style.display = 'none';
+      this._statusBar.innerHTML = '';
+      return;
+    }
+    let html = '';
+    for (const { tipo, segs } of ativos) {
+      const icone = ICONES[tipo] || '✦';
+      html += `<div style="background:rgba(0,0,0,0.7);padding:4px 6px;border-radius:3px;color:#fafafa;border:1px solid #fdd835;">${icone} ${tipo} ${segs}s</div>`;
+    }
+    this._statusBar.innerHTML = html;
+    this._statusBar.style.display = 'flex';
   }
 
   flashDano() {
@@ -113,7 +134,9 @@ export class UI {
   atualizarDamageNumbers(dt) {
     if (!this._damageNums || !state.renderer) return;
     const cam = state.renderer.camera;
-    const v = new THREE.Vector3();
+    // PERF: Reuse Vector3 ao invés de criar todo frame
+    if (!this._dnVec) this._dnVec = new THREE.Vector3();
+    const v = this._dnVec;
     const w = window.innerWidth, h = window.innerHeight;
     for (let i = this._damageNums.length - 1; i >= 0; i--) {
       const d = this._damageNums[i];

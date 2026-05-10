@@ -1987,35 +1987,50 @@ function loop(now) {
       // - Tier 4 (164 blocos): + Regeneration (50 blocos) + 2× tier
       if (state.beacons && state.beacons.size) {
         const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        // PERF: Cache tier por beacon, recalcular a cada 8s (era todo segundo)
+        state._beaconTierCache = state._beaconTierCache || new Map();
+        const nowMs = Date.now();
         for (const k of state.beacons) {
           const [sx, y, sz] = k.split(',').map(Number);
           if (state.world.get(sx, y, sz) !== BLOCO.BEACON) {
             state.beacons.delete(k);
+            state._beaconTierCache.delete(k);
             state.renderer.removerBeaconBeam(sx, y, sz);
             continue;
           }
-          // Calcular tier da pirâmide (4 níveis abaixo)
-          let tier = 0;
-          for (let lvl = 1; lvl <= 4; lvl++) {
-            let blocosVal = 0;
-            const span = lvl * 2 + 1; // 3,5,7,9
-            const off = lvl;
-            for (let ddx = -off; ddx <= off; ddx++) {
-              for (let ddz = -off; ddz <= off; ddz++) {
-                const b = state.world.get(sx + ddx, y - lvl, sz + ddz);
-                if (b === BLOCO.FERRO || b === BLOCO.OURO ||
-                    b === BLOCO.DIAMANTE || b === BLOCO.NETHERITE_BLOCK ||
-                    b === BLOCO.BLOCO_FERRO || b === BLOCO.BLOCO_OURO ||
-                    b === BLOCO.BLOCO_DIAMANTE || b === BLOCO.BLOCO_ESMERALDA) blocosVal++;
+          // Distance check FIRST (early skip se player longe)
+          const dx = sx - px, dy = y - py, dz = sz - pz;
+          const distSq = dx*dx + dy*dy + dz*dz;
+          if (distSq > 60 * 60) continue; // beyond max possible range, skip everything
+          // Tier cache (revalida a cada 8s)
+          let cached = state._beaconTierCache.get(k);
+          let tier;
+          if (cached && nowMs - cached.lastCheck < 8000) {
+            tier = cached.tier;
+          } else {
+            tier = 0;
+            for (let lvl = 1; lvl <= 4; lvl++) {
+              let blocosVal = 0;
+              const span = lvl * 2 + 1; // 3,5,7,9
+              const off = lvl;
+              const needed = span * span;
+              for (let ddx = -off; ddx <= off; ddx++) {
+                for (let ddz = -off; ddz <= off; ddz++) {
+                  const b = state.world.get(sx + ddx, y - lvl, sz + ddz);
+                  if (b === BLOCO.FERRO || b === BLOCO.OURO ||
+                      b === BLOCO.DIAMANTE || b === BLOCO.NETHERITE_BLOCK ||
+                      b === BLOCO.BLOCO_FERRO || b === BLOCO.BLOCO_OURO ||
+                      b === BLOCO.BLOCO_DIAMANTE || b === BLOCO.BLOCO_ESMERALDA) blocosVal++;
+                }
               }
+              if (blocosVal >= needed) tier = lvl;
+              else break;
             }
-            if (blocosVal >= span * span) tier = lvl;
-            else break;
+            state._beaconTierCache.set(k, { tier, lastCheck: nowMs });
           }
           // Range: 20+10×tier (até 50 blocos no tier 4)
           const range = 20 + 10 * tier;
-          const dx = sx - px, dy = y - py, dz = sz - pz;
-          if (dx*dx + dy*dy + dz*dz > range * range) continue;
+          if (distSq > range * range) continue;
           state.player.efeitos = state.player.efeitos || {};
           // Tier 1+: Speed
           if (tier >= 1) state.player.efeitos.speed = Date.now() + 2200;
@@ -2036,32 +2051,44 @@ function loop(now) {
       // Aplica: water_breathing, +mining underwater, vision underwater
       if (state.conduits && state.conduits.size) {
         const px = state.player.pos.x, py = state.player.pos.y, pz = state.player.pos.z;
+        // PERF: Cache prismarine count + range, revalidar a cada 8s
+        state._conduitCache = state._conduitCache || new Map();
+        const nowMs2 = Date.now();
         for (const k of state.conduits) {
           const [sx, sy, sz] = k.split(',').map(Number);
           if (state.world.get(sx, sy, sz) !== BLOCO.CONDUIT) {
             state.conduits.delete(k);
+            state._conduitCache.delete(k);
             continue;
           }
-          // Conta blocos prismarine ao redor (3×3×3 frame mínimo = 16 blocos)
-          let prismarine = 0;
-          for (let ddx = -2; ddx <= 2; ddx++) {
-            for (let ddy = -2; ddy <= 2; ddy++) {
-              for (let ddz = -2; ddz <= 2; ddz++) {
-                if (Math.abs(ddx) < 2 && Math.abs(ddy) < 2 && Math.abs(ddz) < 2) continue;
-                const b = state.world.get(sx + ddx, sy + ddy, sz + ddz);
-                if (b === BLOCO.PRISMARINE || b === BLOCO.PRISMARINE_BRK ||
-                    b === BLOCO.PRISMARINE_DARK || b === BLOCO.LUZ) prismarine++;
+          // Distance check FIRST com max possível (96 blocos)
+          const dx = sx - px, dy = sy - py, dz = sz - pz;
+          const distSq = dx*dx + dy*dy + dz*dz;
+          if (distSq > 96 * 96) continue;
+          // Cache prismarine count + range
+          let cached = state._conduitCache.get(k);
+          let range;
+          if (cached && nowMs2 - cached.lastCheck < 8000) {
+            range = cached.range;
+          } else {
+            let prismarine = 0;
+            for (let ddx = -2; ddx <= 2; ddx++) {
+              for (let ddy = -2; ddy <= 2; ddy++) {
+                for (let ddz = -2; ddz <= 2; ddz++) {
+                  if (Math.abs(ddx) < 2 && Math.abs(ddy) < 2 && Math.abs(ddz) < 2) continue;
+                  const b = state.world.get(sx + ddx, sy + ddy, sz + ddz);
+                  if (b === BLOCO.PRISMARINE || b === BLOCO.PRISMARINE_BRK ||
+                      b === BLOCO.PRISMARINE_DARK || b === BLOCO.LUZ) prismarine++;
+                }
               }
             }
+            range = prismarine >= 16 ? (32 + Math.floor(prismarine / 7) * 16) : 0;
+            state._conduitCache.set(k, { range, lastCheck: nowMs2 });
           }
-          if (prismarine >= 16) {
-            const range = 32 + Math.floor(prismarine / 7) * 16; // até 96 blocos
-            const dx = sx - px, dy = sy - py, dz = sz - pz;
-            if (dx*dx + dy*dy + dz*dz <= range * range) {
-              state.player.efeitos = state.player.efeitos || {};
-              state.player.efeitos.conduit_power = Date.now() + 2200;
-              state.player.efeitos.water_breathing = Date.now() + 2200;
-            }
+          if (range > 0 && distSq <= range * range) {
+            state.player.efeitos = state.player.efeitos || {};
+            state.player.efeitos.conduit_power = Date.now() + 2200;
+            state.player.efeitos.water_breathing = Date.now() + 2200;
           }
         }
       }
@@ -2267,9 +2294,20 @@ function loop(now) {
         state._biomaAtivo = bioma;
       }
     }
-    state.mobMgr.atualizar(dt, state.world, state.player, sun);
-    state.particulas.atualizar(dt);
-    Multiplayer.atualizar(dt);
+    // PERF/STAB: try/catch defensivo em hot paths — se mob/particle quebrar,
+    // loop principal continua (não trava o jogo)
+    try { state.mobMgr.atualizar(dt, state.world, state.player, sun); }
+    catch (e) {
+      if (!state._mobErrLogged) { console.warn('mobMgr.atualizar failed:', e); state._mobErrLogged = true; }
+    }
+    try { state.particulas.atualizar(dt); }
+    catch (e) {
+      if (!state._partErrLogged) { console.warn('particulas.atualizar failed:', e); state._partErrLogged = true; }
+    }
+    try { Multiplayer.atualizar(dt); }
+    catch (e) {
+      if (!state._mpErrLogged) { console.warn('Multiplayer.atualizar failed:', e); state._mpErrLogged = true; }
+    }
 
     const dirCamera = state.renderer.camera.getWorldDirection(_tmpVecAux);
     ray = raycastBloco(state.world, state.renderer.camera.position, dirCamera, ALCANCE_BLOCO);

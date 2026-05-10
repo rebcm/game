@@ -273,6 +273,17 @@ export class Particulas {
         if (luz.sky < 4 && state.player.pos.y < 32) Audio.caveDrip();
       }
     }
+    // PERF: Cap global anti-leak — se lista cresce demais (ex: lava farm),
+    // remove os mais antigos pra manter framerate
+    const CAP_LISTA = 300;
+    if (this.lista.length > CAP_LISTA) {
+      const remover = this.lista.length - CAP_LISTA;
+      for (let i = 0; i < remover; i++) {
+        const p = this.lista[i];
+        if (p.parent) this.scene.remove(p);
+      }
+      this.lista.splice(0, remover);
+    }
     for (let i = this.lista.length - 1; i >= 0; i--) {
       const p = this.lista[i];
       const u = p.userData;
@@ -302,6 +313,16 @@ export class Particulas {
     }
     // SPRINT VISUAL-6: tick partes premium (leaf, snow, pollen, spark)
     if (this.partes && this.partes.length) {
+      // PERF: Cap global anti-leak
+      const CAP_PARTES = 200;
+      if (this.partes.length > CAP_PARTES) {
+        const remover = this.partes.length - CAP_PARTES;
+        for (let i = 0; i < remover; i++) {
+          const p = this.partes[i];
+          if (p.mesh && p.mesh.parent) this.scene.remove(p.mesh);
+        }
+        this.partes.splice(0, remover);
+      }
       for (let i = this.partes.length - 1; i >= 0; i--) {
         const p = this.partes[i];
         if (!p.mesh) { this.partes.splice(i, 1); continue; }

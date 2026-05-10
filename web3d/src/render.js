@@ -8962,13 +8962,27 @@ export class Renderer {
       [0.70, 0x87CEEB], // mid day sky
       [1.00, 0x9adcff], // noon vibrant
     ];
-    let bg = new THREE.Color(stops[0][1]);
+    // PERF: Cache Color objects pra evitar GC pressure (era ~8 allocations/frame)
+    if (!this._skyColorCache) {
+      this._skyColorCache = {
+        bg: new THREE.Color(),
+        bgTmp1: new THREE.Color(),
+        bgTmp2: new THREE.Color(),
+        topCol: new THREE.Color(),
+        bottomCol: new THREE.Color(),
+        sunCol: new THREE.Color(),
+        col1: new THREE.Color(),
+        col2: new THREE.Color(),
+      };
+    }
+    const _sc = this._skyColorCache;
+    let bg = _sc.bg.setHex(stops[0][1]);
     for (let i = 0; i < stops.length - 1; i++) {
       const [t0, c0] = stops[i];
       const [t1, c1] = stops[i + 1];
       if (sun >= t0 && sun <= t1) {
         const t = (sun - t0) / (t1 - t0);
-        bg = new THREE.Color(c0).lerp(new THREE.Color(c1), t);
+        bg = _sc.bg.copy(_sc.bgTmp1.setHex(c0)).lerp(_sc.bgTmp2.setHex(c1), t);
         break;
       }
     }
@@ -8986,31 +9000,31 @@ export class Renderer {
         Math.cos(ang),
         0.2,
       ).normalize();
-      // Cores zenith vs horizon dinâmicas
-      // Zenith: noite=preto-azul, dia=azul vibrante
-      // Horizon: noite=violeta, dia=amarelo (golden hour) ou claro
-      let topCol, bottomCol, sunCol;
+      // PERF: Reuse Color cache (era 6+ alocações por frame)
+      const topCol = _sc.topCol;
+      const bottomCol = _sc.bottomCol;
+      const sunCol = _sc.sunCol;
       if (sun < 0.15) {
-        topCol = new THREE.Color(0x05051a);    // night zenith deep
-        bottomCol = new THREE.Color(0x1a1040); // night horizon violet
-        sunCol = new THREE.Color(0x404060);
+        topCol.setHex(0x05051a);    // night zenith deep
+        bottomCol.setHex(0x1a1040); // night horizon violet
+        sunCol.setHex(0x404060);
       } else if (sun < 0.35) {
         // Sunrise/sunset
         const t = (sun - 0.15) / 0.20;
-        topCol = new THREE.Color(0x05051a).lerp(new THREE.Color(0x4a90e2), t);
-        bottomCol = new THREE.Color(0xff5a2f);
-        sunCol = new THREE.Color(0xff8030);
+        topCol.copy(_sc.col1.setHex(0x05051a)).lerp(_sc.col2.setHex(0x4a90e2), t);
+        bottomCol.setHex(0xff5a2f);
+        sunCol.setHex(0xff8030);
       } else if (sun < 0.55) {
         // Golden hour
         const t = (sun - 0.35) / 0.20;
-        topCol = new THREE.Color(0x4a90e2);
-        bottomCol = new THREE.Color(0xff5a2f).lerp(new THREE.Color(0xffd9a0), t);
-        sunCol = new THREE.Color(0xffe8b0);
+        topCol.setHex(0x4a90e2);
+        bottomCol.copy(_sc.col1.setHex(0xff5a2f)).lerp(_sc.col2.setHex(0xffd9a0), t);
+        sunCol.setHex(0xffe8b0);
       } else {
         // Dia
-        topCol = new THREE.Color(0x4a90e2);
-        bottomCol = new THREE.Color(0xc7e3ff);
-        sunCol = new THREE.Color(0xffefd0);
+        topCol.setHex(0x4a90e2);
+        bottomCol.setHex(0xc7e3ff);
+        sunCol.setHex(0xffefd0);
       }
       this.skyUniforms.topColor.value.copy(topCol);
       this.skyUniforms.bottomColor.value.copy(bottomCol);
