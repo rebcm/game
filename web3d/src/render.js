@@ -2152,112 +2152,103 @@ function criarAtlas() {
   }
 
   // Frosted Ice: gelo com cristais geométricos (frostwalker)
+  // Frosted Ice: gelo translúcido com cristais sutis.
   function pintarFrostedIce(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#b3e5fc';
+    ctx.fillStyle = '#B3E5FC';
     ctx.fillRect(x0, y0, CELL, CELL);
-    ctx.fillStyle = '#81d4fa';
-    // Padrão de cristais geométricos
-    for (let i = 0; i < CELL; i += 6) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
-      ctx.fillRect(x0, y0 + i, CELL, 1);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#81D4FA', 0.28, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#E1F5FE', 0.22, 2, 1, seed + 7919);
+    // 3 reflexos brancos pontuais
+    ctx.fillStyle = '#FFFFFF';
+    for (let i = 0; i < 3; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const px = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      const py = (seed % CELL);
+      ctx.fillRect(x0 + px, y0 + py, 1, 1);
     }
-    // Manchas brilhantes
-    ctx.fillStyle = '#e1f5fe';
-    for (let i = 3; i < CELL; i += 6) {
-      for (let j = 3; j < CELL; j += 6) {
-        ctx.fillRect(x0 + i, y0 + j, 2, 2);
-      }
-    }
-    // Reflexos (azul claro)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 2, y0 + 2, 4, 1);
-    ctx.fillRect(x0 + 2, y0 + 2, 1, 4);
-    ctx.fillRect(x0 + 24, y0 + 24, 4, 1);
-    ctx.fillRect(x0 + 26, y0 + 24, 1, 4);
   }
 
-  // Vine: cipó verde tradicional pendendo
+  // Vine: cipó verde tradicional (folhagem aleatória).
   function pintarVine(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#1a2510';
+    ctx.fillStyle = '#1A2510';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Folhagem de cipó (verde)
-    ctx.fillStyle = '#33691e';
-    for (let i = 2; i < CELL; i += 4) {
-      ctx.fillRect(x0 + i, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    // Cipós verticais (~4 colunas verdes alternadas)
+    for (let px = 0; px < CELL; px++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      const r = seed / 233280;
+      if (r < 0.30) {
+        ctx.fillStyle = '#33691E';
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      } else if (r < 0.45) {
+        ctx.fillStyle = '#558B2F';
+        ctx.fillRect(x0 + px, y0, 1, CELL);
+      }
     }
-    ctx.fillStyle = '#558b2f';
-    for (let i = 4; i < CELL; i += 4) {
-      ctx.fillRect(x0 + i, y0 + 2, 1, CELL - 2);
-    }
-    // Folhinhas
-    ctx.fillStyle = '#7cb342';
-    let s = idx * 7 + 11;
-    for (let i = 0; i < 30; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 2, 1);
-    }
+    // Folhinhas (pontos verdes claros)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7CB342', 0.18, 2, 1, seed + 3137);
   }
 
-  // Twisting Vines: cipó torcido azul-ciano (Nether warped)
+  // Twisting Vines (Nether warped): cipó central ciano + folhinhas + broto.
   function pintarTwistingVines(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#0a2a2a';
+    ctx.fillStyle = '#0A2A2A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Espiral central torcida (cresce pra cima)
-    ctx.fillStyle = '#00bcd4';
-    for (let y = 4; y < CELL; y += 2) {
-      const offset = Math.sin(y * 0.5) * 3;
-      ctx.fillRect(x0 + 14 + Math.floor(offset), y0 + y, 4, 1);
+    // Cipó central (zigue-zague 2px wide)
+    ctx.fillStyle = '#00BCD4';
+    for (let y = 2; y < CELL; y++) {
+      const offset = (y % 4 < 2) ? 0 : 1;
+      ctx.fillRect(x0 + 7 + offset, y0 + y, 2, 1);
     }
-    // Folhinhas brilhantes
-    ctx.fillStyle = '#80deea';
-    for (let y = 6; y < CELL - 4; y += 4) {
-      const offset = Math.sin(y * 0.5) * 3;
-      ctx.fillRect(x0 + 12 + Math.floor(offset), y0 + y, 1, 1);
-      ctx.fillRect(x0 + 19 + Math.floor(offset), y0 + y, 1, 1);
+    // Folhinhas claras pontuais
+    ctx.fillStyle = '#80DEEA';
+    for (let y = 3; y < CELL; y += 3) {
+      const offset = (y % 4 < 2) ? 0 : 1;
+      ctx.fillRect(x0 + 6 + offset, y0 + y, 1, 1);
+      ctx.fillRect(x0 + 9 + offset, y0 + y, 1, 1);
     }
-    // Topo (broto)
-    ctx.fillStyle = '#4dd0e1';
-    ctx.fillRect(x0 + 14, y0 + 2, 4, 4);
-    ctx.fillStyle = '#e0f7fa';
-    ctx.fillRect(x0 + 15, y0 + 3, 2, 2);
+    // Broto no topo
+    ctx.fillStyle = '#4DD0E1';
+    ctx.fillRect(x0 + 7, y0, 2, 2);
+    ctx.fillStyle = '#E0F7FA';
+    ctx.fillRect(x0 + 7, y0, 1, 1);
   }
 
-  // Weeping Vines: cipó pendente vermelho (Nether crimson)
+  // Weeping Vines (Nether crimson): cipó central vermelho pendente + gota.
   function pintarWeepingVines(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#3a1a1a';
+    ctx.fillStyle = '#3A1A1A';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cipó pendente (cresce pra baixo)
-    ctx.fillStyle = '#c62828';
-    for (let y = 0; y < CELL - 4; y += 2) {
-      const offset = Math.sin(y * 0.4) * 3;
-      ctx.fillRect(x0 + 14 + Math.floor(offset), y0 + y, 4, 1);
+    // Cipó pendente vermelho
+    ctx.fillStyle = '#C62828';
+    for (let y = 0; y < CELL - 2; y++) {
+      const offset = (y % 4 < 2) ? 0 : 1;
+      ctx.fillRect(x0 + 7 + offset, y0 + y, 2, 1);
     }
-    ctx.fillStyle = '#ef5350';
-    for (let y = 2; y < CELL - 4; y += 4) {
-      const offset = Math.sin(y * 0.4) * 3;
-      ctx.fillRect(x0 + 12 + Math.floor(offset), y0 + y, 1, 1);
-      ctx.fillRect(x0 + 19 + Math.floor(offset), y0 + y, 1, 1);
+    // Folhinhas claras
+    ctx.fillStyle = '#EF5350';
+    for (let y = 2; y < CELL - 2; y += 3) {
+      const offset = (y % 4 < 2) ? 0 : 1;
+      ctx.fillRect(x0 + 6 + offset, y0 + y, 1, 1);
+      ctx.fillRect(x0 + 9 + offset, y0 + y, 1, 1);
     }
-    // Pontas pendentes (gotas)
-    ctx.fillStyle = '#8b0000';
-    ctx.fillRect(x0 + 14, y0 + CELL - 4, 4, 4);
-    ctx.fillStyle = '#b71c1c';
-    ctx.fillRect(x0 + 15, y0 + CELL - 3, 2, 2);
+    // Gota pendente vermelho-escuro na base
+    ctx.fillStyle = '#8B0000';
+    ctx.fillRect(x0 + 7, y0 + CELL - 2, 2, 2);
+    ctx.fillStyle = '#B71C1C';
+    ctx.fillRect(x0 + 7, y0 + CELL - 1, 1, 1);
   }
 
   // Scaffolding: andaime de bambu (estrutura aberta)
@@ -2387,248 +2378,173 @@ function criarAtlas() {
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#1a0a2a';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Cristais grandes (forma diamante 3D)
-    ctx.fillStyle = '#7b1fa2';
-    ctx.fillRect(x0 + 12, y0 + 8, 8, 16);
-    ctx.fillStyle = '#9c27b0';
-    ctx.fillRect(x0 + 13, y0 + 9, 6, 14);
-    ctx.fillStyle = '#ab47bc';
-    ctx.fillRect(x0 + 14, y0 + 10, 4, 12);
-    ctx.fillStyle = '#ce93d8';
-    ctx.fillRect(x0 + 14, y0 + 12, 1, 8);
-    ctx.fillRect(x0 + 17, y0 + 12, 1, 8);
-    // Pontas (topo + base)
-    ctx.fillStyle = '#ce93d8';
-    ctx.fillRect(x0 + 14, y0 + 6, 4, 2);
-    ctx.fillRect(x0 + 14, y0 + 24, 4, 2);
-    // Cristais laterais menores
-    ctx.fillStyle = '#9c27b0';
-    ctx.fillRect(x0 + 4, y0 + 14, 4, 8);
-    ctx.fillRect(x0 + 24, y0 + 14, 4, 8);
-    ctx.fillStyle = '#e1bee7';
-    ctx.fillRect(x0 + 5, y0 + 15, 2, 2);
-    ctx.fillRect(x0 + 25, y0 + 15, 2, 2);
-    // Brilho central
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x0 + 15, y0 + 14, 2, 2);
+    // Paridade MC amethyst_cluster: cristal central vertical + 2 laterais.
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#3D2950', 0.30, 2, 1, seed + 1009);
+    // Cristal central vertical (4×8)
+    ctx.fillStyle = '#7B1FA2';
+    ctx.fillRect(x0 + 6, y0 + 4, 4, 8);
+    ctx.fillStyle = '#9C27B0';
+    ctx.fillRect(x0 + 7, y0 + 5, 2, 6);
+    ctx.fillStyle = '#CE93D8';
+    ctx.fillRect(x0 + 7, y0 + 6, 1, 4);
+    // Pontas central (topo/base 2×1)
+    ctx.fillStyle = '#CE93D8';
+    ctx.fillRect(x0 + 7, y0 + 3, 2, 1);
+    ctx.fillRect(x0 + 7, y0 + 12, 2, 1);
+    // Cristal lateral esquerdo (2×3)
+    ctx.fillStyle = '#9C27B0';
+    ctx.fillRect(x0 + 2, y0 + 7, 2, 3);
+    ctx.fillStyle = '#E1BEE7';
+    ctx.fillRect(x0 + 2, y0 + 7, 1, 1);
+    // Cristal lateral direito
+    ctx.fillStyle = '#9C27B0';
+    ctx.fillRect(x0 + 12, y0 + 7, 2, 3);
+    ctx.fillStyle = '#E1BEE7';
+    ctx.fillRect(x0 + 13, y0 + 7, 1, 1);
+    // Brilho central branco
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
-  // Pointed Dripstone: estalactite/estalagmite (pingente de pedra)
+  // Paridade MC pointed_dripstone: triângulo apontando pra baixo.
   function pintarPointedDripstone(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#2a2018';
+    ctx.fillStyle = '#2A2018';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Estalactite triangular (cresce para baixo)
-    ctx.fillStyle = '#8d6e63';
+    // Triângulo apontando pra baixo
+    ctx.fillStyle = '#8D6E63';
     for (let y = 0; y < CELL; y++) {
-      const meio = CELL / 2;
-      const largura = Math.floor((CELL - y) / 2);
-      if (largura > 0) {
-        ctx.fillRect(x0 + meio - largura, y0 + y, largura * 2, 1);
-      }
+      const meio = CELL >> 1;
+      const largura = Math.max(1, (CELL - y) >> 1);
+      ctx.fillRect(x0 + meio - largura, y0 + y, largura * 2, 1);
     }
-    // Highlight central
-    ctx.fillStyle = '#a1887f';
-    for (let y = 0; y < CELL; y++) {
-      const largura = Math.max(1, Math.floor((CELL - y) / 4));
-      const meio = CELL / 2 - 1;
-      ctx.fillRect(x0 + meio, y0 + y, 1, 1);
+    // Highlight central (1px claro)
+    ctx.fillStyle = '#A1887F';
+    for (let y = 0; y < CELL - 2; y++) {
+      ctx.fillRect(x0 + (CELL >> 1) - 1, y0 + y, 1, 1);
     }
-    // Sombra lateral
-    ctx.fillStyle = '#5d4037';
+    // Sombra lateral direita
+    ctx.fillStyle = '#5D4037';
     for (let y = 0; y < CELL; y++) {
-      const meio = CELL / 2;
-      const largura = Math.floor((CELL - y) / 2);
-      if (largura > 0) {
-        ctx.fillRect(x0 + meio + largura - 1, y0 + y, 1, 1);
-      }
+      const meio = CELL >> 1;
+      const largura = Math.max(1, (CELL - y) >> 1);
+      ctx.fillRect(x0 + meio + largura - 1, y0 + y, 1, 1);
     }
   }
 
-  // Mossy Cobblestone: cobble cinza com manchas verdes de musgo
+  // Helper: stone_bricks layout — grid 2×2 de tijolos 8×8 (CELL=16).
+  // 1 seam horizontal central + 2 verticais (top + bottom row, sem stagger).
+  function _pintarBrickLayout(x0, y0, base, escuro) {
+    ctx.fillStyle = base;
+    ctx.fillRect(x0, y0, CELL, CELL);
+    ctx.fillStyle = escuro;
+    // Seam horizontal central
+    ctx.fillRect(x0, y0 + 7, CELL, 1);
+    // Seams verticais (1 por fileira) — top em x=8, bottom em x=8 também
+    ctx.fillRect(x0 + 7, y0, 1, 7);
+    ctx.fillRect(x0 + 7, y0 + 8, 1, 8);
+  }
+
+  // Paridade MC mossy_cobblestone: cobble + manchas musgo verde.
   function pintarMossyCobblestone(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#9e9e9e';
+    // Cobble base
+    ctx.fillStyle = '#888888';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão cobble (irregular)
-    ctx.fillStyle = '#757575';
-    for (let i = 0; i < CELL; i += 6) {
-      for (let j = 0; j < CELL; j += 6) {
-        if (((i + j) >> 1) & 1) ctx.fillRect(x0 + i, y0 + j, 5, 5);
-      }
-    }
-    // Manchas verdes de musgo (cresce)
-    ctx.fillStyle = '#558b2f';
-    let s = idx * 17 + 31;
-    for (let i = 0; i < 25; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const tipo = (s / 233280);
-      ctx.fillStyle = tipo < 0.5 ? '#558b2f' : tipo < 0.8 ? '#33691e' : '#7cb342';
-      ctx.fillRect(x0 + px, y0 + py, 2, 1);
-    }
-    // Bordas
-    ctx.fillStyle = '#424242';
-    ctx.fillRect(x0, y0 + CELL - 1, CELL, 1);
-    ctx.fillRect(x0 + CELL - 1, y0, 1, CELL);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E6E6E', 0.32, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#A0A0A0', 0.18, 2, 1, seed + 7919);
+    // Manchas musgo verdes (3 tons espalhados)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#558B2F', 0.20, 2, 1, seed + 1573);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#33691E', 0.10, 2, 1, seed + 3137);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#7CB342', 0.08, 3, 1, seed + 5333);
   }
 
-  // Cracked Stone Bricks: tijolos rachados (perigosa estrutura)
+  // Paridade MC cracked_stone_bricks: tijolos rachados.
   function pintarCrackedStoneBricks(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#808080';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de tijolos (4 horizontal × 2 vertical)
-    ctx.fillStyle = '#606060';
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    // Divisões verticais alternadas
-    ctx.fillRect(x0 + 7,  y0,      1, 7);
-    ctx.fillRect(x0 + 15, y0,      1, 7);
-    ctx.fillRect(x0 + 23, y0,      1, 7);
-    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // RACHADURAS (preto, diagonais aleatórias)
-    ctx.fillStyle = '#3a3a3a';
-    ctx.fillRect(x0 + 4,  y0 + 4,  1, 8);
-    ctx.fillRect(x0 + 5,  y0 + 5,  1, 4);
-    ctx.fillRect(x0 + 18, y0 + 12, 6, 1);
-    ctx.fillRect(x0 + 20, y0 + 13, 4, 1);
-    ctx.fillRect(x0 + 12, y0 + 20, 1, 6);
-    ctx.fillRect(x0 + 13, y0 + 21, 1, 4);
-    ctx.fillRect(x0 + 24, y0 + 26, 5, 1);
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#7E7E7E', '#5A5A5A');
+    // Speckle base
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E6E6E', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9E9E9E', 0.12, 2, 1, seed + 7919);
+    // Rachaduras: 3-4 fissuras irregulares 1px
+    ctx.fillStyle = '#3A3A3A';
+    for (let i = 0; i < 4; i++) {
+      seed = (seed * 9301 + 49297) % 233280;
+      let cx = (seed % CELL);
+      seed = (seed * 9301 + 49297) % 233280;
+      let cy = (seed % CELL);
+      const len = 3 + (seed % 4);
+      for (let j = 0; j < len; j++) {
+        if (cx >= 0 && cx < CELL && cy >= 0 && cy < CELL) {
+          ctx.fillRect(x0 + cx, y0 + cy, 1, 1);
+        }
+        seed = (seed * 9301 + 49297) % 233280;
+        const dir = seed % 4;
+        if (dir === 0) cx++;
+        else if (dir === 1) cy++;
+        else if (dir === 2) { cx++; cy++; }
+        else { cx--; cy++; }
+      }
+    }
   }
 
-  // Mossy Stone Bricks: tijolos com musgo verde (clássico)
+  // Paridade MC mossy_stone_bricks: stone bricks + musgo verde.
   function pintarMossyStoneBricks(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#6e8050';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de tijolos
-    ctx.fillStyle = '#4d5e35';
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    ctx.fillRect(x0 + 7,  y0,      1, 7);
-    ctx.fillRect(x0 + 15, y0,      1, 7);
-    ctx.fillRect(x0 + 23, y0,      1, 7);
-    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // Manchas de musgo
-    ctx.fillStyle = '#33691e';
-    let s = idx * 19 + 41;
-    for (let i = 0; i < 30; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
-    // Highlights de pedra cinza
-    ctx.fillStyle = '#9e9e9e';
-    for (let i = 2; i < CELL; i += 8) {
-      ctx.fillRect(x0 + i, y0 + 2, 2, 1);
-      ctx.fillRect(x0 + i, y0 + 18, 2, 1);
-    }
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#7E8060', '#5E6045');
+    // Speckle pedra
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#6E7050', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#9E9E9E', 0.10, 2, 1, seed + 3137);
+    // Manchas musgo verdes
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#558B2F', 0.18, 2, 1, seed + 7919);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#33691E', 0.10, 2, 1, seed + 1573);
   }
 
-  // Tuff Bricks: tijolos cinza sólidos (1.21)
+  // Paridade MC tuff_bricks: tijolos cinza sólidos (1.21).
   function pintarTuffBricks(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
-    ctx.fillStyle = '#707070';
-    ctx.fillRect(x0, y0, CELL, CELL);
-    // Padrão de tijolos
-    ctx.fillStyle = '#505050';
-    ctx.fillRect(x0, y0 + 7,  CELL, 1);
-    ctx.fillRect(x0, y0 + 15, CELL, 1);
-    ctx.fillRect(x0, y0 + 23, CELL, 1);
-    ctx.fillRect(x0 + 7,  y0,      1, 7);
-    ctx.fillRect(x0 + 15, y0,      1, 7);
-    ctx.fillRect(x0 + 23, y0,      1, 7);
-    ctx.fillRect(x0 + 11, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 21, y0 + 8,  1, 7);
-    ctx.fillRect(x0 + 7,  y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 15, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 23, y0 + 16, 1, 7);
-    ctx.fillRect(x0 + 11, y0 + 24, 1, CELL - 24);
-    ctx.fillRect(x0 + 21, y0 + 24, 1, CELL - 24);
-    // Manchas de granito (tuff tem partículas escuras)
-    ctx.fillStyle = '#404040';
-    let s = idx * 17 + 31;
-    for (let i = 0; i < 18; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
-    ctx.fillStyle = '#909090';
-    s = idx * 11 + 17;
-    for (let i = 0; i < 14; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    let seed = idx * 9301 + 49297;
+    _pintarBrickLayout(x0, y0, '#707070', '#505050');
+    // Speckle (tuff tem partículas escuras + claras)
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#404040', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#909090', 0.14, 2, 1, seed + 7919);
   }
 
-  // Chiseled Tuff: tuff esculpido com colunas verticais
+  // Paridade MC chiseled_tuff: tuff esculpido com moldura e cristal central.
   function pintarChiseledTuff(idx) {
     const col = idx % COLS;
     const row = Math.floor(idx / COLS);
     const x0 = col * CELL, y0 = row * CELL;
     ctx.fillStyle = '#707070';
     ctx.fillRect(x0, y0, CELL, CELL);
-    // Coluna central (vertical decorativa)
-    ctx.fillStyle = '#909090';
-    ctx.fillRect(x0 + 8, y0 + 2, 16, CELL - 4);
+    let seed = idx * 9301 + 49297;
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#404040', 0.18, 2, 1, seed + 1009);
+    seed = spawnPontosUniforme(x0, y0, CELL, CELL, '#909090', 0.16, 2, 1, seed + 7919);
+    // Moldura externa (1px)
     ctx.fillStyle = '#505050';
-    ctx.fillRect(x0 + 8, y0 + 2, 1, CELL - 4);
-    ctx.fillRect(x0 + 23, y0 + 2, 1, CELL - 4);
-    // Linhas horizontais decorativas
-    ctx.fillStyle = '#404040';
-    ctx.fillRect(x0 + 6, y0 + 6,  20, 1);
-    ctx.fillRect(x0 + 6, y0 + 25, 20, 1);
-    // Centro com diamante decorativo
-    ctx.fillStyle = '#bdbdbd';
-    ctx.fillRect(x0 + 14, y0 + 14, 4, 4);
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(x0 + 15, y0 + 15, 2, 2);
-    // Pontos cinzas
-    ctx.fillStyle = '#404040';
-    let s = idx * 13 + 19;
-    for (let i = 0; i < 12; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      const px = Math.floor((s / 233280) * CELL);
-      s = (s * 9301 + 49297) % 233280;
-      const py = Math.floor((s / 233280) * CELL);
-      ctx.fillRect(x0 + px, y0 + py, 1, 1);
-    }
+    ctx.fillRect(x0 + 2, y0 + 2, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + CELL - 3, CELL - 4, 1);
+    ctx.fillRect(x0 + 2, y0 + 2, 1, CELL - 4);
+    ctx.fillRect(x0 + CELL - 3, y0 + 2, 1, CELL - 4);
+    // Cristal central decorativo (2×2)
+    ctx.fillStyle = '#BDBDBD';
+    ctx.fillRect(x0 + 7, y0 + 7, 2, 2);
+    ctx.fillStyle = '#FAFAFA';
+    ctx.fillRect(x0 + 7, y0 + 7, 1, 1);
   }
 
   // Chiseled Tuff Bricks: tijolos esculpidos com padrão central
